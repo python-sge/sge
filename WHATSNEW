@@ -7,6 +7,15 @@ without any warranty.
 
 ========================================================================
 
+0.20
+------------------------------------------------------------------------
+
+Specification misc changes:
+
+* Objects with the same Z-axis value are now positioned based on
+  creation time (like the Pygame SGE).
+
+
 0.19
 ------------------------------------------------------------------------
 

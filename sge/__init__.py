@@ -83,11 +83,8 @@ example, if an object called ``spam`` has a Z value of ``5`` while an
 object called ``eggs`` has a Z value of ``2``, ``spam`` will obscure
 part or all of ``eggs`` when the two objects overlap.
 
-If two objects with the same Z-axis value overlap, the SGE arbitrarily
-chooses which one is considered to be closer to the viewer.  The SGE is
-allowed to change this decision, but only while the objects in question
-are not overlapping, since changing the decision while the two objects
-are overlapping would cause an undesirable flicker effect.
+If two objects with the same Z-axis value overlap, the object which was
+most recently added to the room is placed in front.
 
 The Game Loop
 -------------
