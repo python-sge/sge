@@ -474,6 +474,8 @@ class Music(object):
             speakers equally (assuming stereo sound is used).
         length: The length of the music in milliseconds.
         playing: Whether or not the music is playing.
+        position: The current position (time) on the music in
+            milliseconds.
 
     Music methods:
         Music.play: Play the music.
