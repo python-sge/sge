@@ -238,10 +238,9 @@ class Sprite(object):
         reel, with the first frame on the far left and the last frame on
         the far right, and no space in between frames.
 
-        If no image is found based on any of the above methods, a fully
-        transparent rectangle will be created at the size specified by
-        ``size``.  If ``size`` is None, it will default to (16, 16) in
-        this case.
+        If no image is found based on any of the above methods, a black
+        rectangle will be created at the size specified by ``size``.  If
+        ``size`` is None, it will default to (16, 16) in this case.
 
         All remaining arguments set the initial properties of the
         sprite; see Sprite.__doc__ for more information.  If ``size``
