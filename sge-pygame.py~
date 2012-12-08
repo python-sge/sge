@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+
+# Stellar Game Engine via Pygame
+# Copyright (C) 2012 Julian Marchant <onpon4@lavabit.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+"""
+
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+__version__ = "0.0.1"
+
+import sys
+import os
+import math
+
+import pygame
+from pygame.locals import *
+
+__all__ = []
+
+DEFAULT_SCREENSIZE = (640, 480)
+DEFAULT_FULLSCREEN = False
+DEFAULT_SCALE = True
+DEFAULT_SCALE_PROPORTIONAL = True
+DEFAULT_SCALE_SMOOTH = False
+DEFAULT_FPS = 30
+DEFAULT_DELTA = False
+DEFAULT_DELTA_MIN = 15
+
+
+class Settings(object):
+
+    """Settings container objects."""
+
+    @property
+    def screensize(self):
+        return self._screensize
+
+    @screensize.setter
+    def screensize(self, value):
+        if self._screensize != value:
+            pass
+
+    @property
+    def fullscreen(self):
+        return self._fullscreen
+
+    @fullscreen.setter
+    def fullscreen(self, value):
+        if self._fullscreen != value:
+            pass
+
+    def __init__(self, screensize, fullscreen, scale, scale_proportional,
+                 scale_smooth, fps, delta, delta_min):
+        pass
+
+
+def init(screensize=(640,480), fullscreen=False, scale=True,
+         scale_proportional=True, scale_smooth=False, fps=30, delta=False,
+         delta_min=15):
+    pass
+
+def restart_game():
+    pass
+
+def end_game():
+    pass
