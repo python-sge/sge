@@ -88,7 +88,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 import sys
 import os
@@ -198,11 +198,16 @@ class Sprite(object):
     """Class which holds information for images and animations.
 
     All sprite objects have the following properties:
-        size: A two-part tuple indicating the size of the sprite in the
-            form (x, y).
-        origin: A two-part tuple indicating the location of the origin
-            (the pixel position in relation to the images to base
-            rendering on) in the form (x, y).
+        width: The width of the sprite in pixels.
+        height: The height of the sprite in pixels.
+        origin_x: The horizontal location of the origin (the pixel
+            position in relation to the images to base rendering on),
+            where the left edge of the image is 0 and origin_x increases
+            toward the right.
+        origin_y: The vertical location of the origin (the pixel
+            position in relation to the images to base rendering on),
+            where the top edge of the image is 0 and origin_y increases
+            toward the bottom.
         transparent: True if the image should support transparency,
             False otherwise.  If the image does not have an alpha
             channel or if the implementation used does not support alpha
@@ -210,13 +215,46 @@ class Sprite(object):
             color being the color of the top-rightmost pixel.
         fps: The suggested rate in frames per second to animate the
             image at.
-        bbox: A tuple in the form (x, y, width, height) indicating the
-            suggested bounding box to use with this sprite.
+        bbox_x: The horizontal location of the top-left corner of the
+            suggested bounding box to use with this sprite, where
+            origin_x is 0 and bbox_x increases toward the right.
+        bbox_y: The vertical location of the top-left corner of the
+            suggested bounding box to use with this sprite, where
+            origin_y is 0 and bbox_y increases toward the bottom.
+        bbox_width: The width of the suggested bounding box in pixels.
+        bbox_height: The height of the suggested bounding box in pixels.
 
     """
 
-    def __init__(self, name, size=None, origin=(0, 0),
-                 transparent=True, fps=DEFAULT_FPS, bbox=None):
+    @property
+    def transparent(self):
+        return self._transparent
+
+    @transparent.setter
+    def transparent(self, value):
+        if self._transparent != value:
+            self._transparent = value
+
+            for image in self._baseimages:
+                if self._transparent:
+                    if image.get_flags() & pygame.SRCALPHA:
+                        alpha_img = image.convert_alpha()
+                        #TODO: Scale image
+                        self._images.append(alpha_img)
+                    else:
+                        colorkey_img = image.convert()
+                        color = image.get_at((image.get_width() - 1, 0))
+                        colorkey_img.set_colorkey(color, pygame.RLEACCEL)
+                        #TODO: Scale image
+                        self._images.append(colorkey_img)
+                else:
+                    img = image.convert()
+                    #TODO: Scale image
+                    self._images.append(img)
+
+    def __init__(self, name, width=None, height=None, origin_x=0, origin_y=0,
+                 transparent=True, fps=DEFAULT_FPS, bbox_x=0, bbox_y=0,
+                 bbox_width=None, bbox_height=None):
         """Create a new Sprite object.
 
         ``name`` indicates the base name of the image files.  Files are
@@ -245,15 +283,107 @@ class Sprite(object):
         the far right, and no space in between frames.
 
         If no image is found based on any of the above methods, a black
-        rectangle will be created at the size specified by ``size``.  If
-        ``size`` is None, it will default to (16, 16) in this case.
+        rectangle will be created at the size specified by ``width`` and
+        ``height``.  If either ``width`` or ``height`` is None, the
+        respective size will default to 16 in this case.
+
+        If ``width`` or ``height`` is set to None, the respective size
+        will be taken from the largest animation frame.  If
+        ``bbox_width`` or ``bbox_height`` is set to None, the respective
+        size will be the respective size of the sprite.
 
         All remaining arguments set the initial properties of the
-        sprite; see Sprite.__doc__ for more information.  If ``size``
-        or ``bbox`` is set to None, the respective property will be
-        the size of the largest animation frame.
+        sprite; see Sprite.__doc__ for more information.
 
         """
+        assert name
+
+        self._transparent = None
+        self._baseimages = []
+        self._images = []
+
+        fnames = os.listdir(os.path.join('data', 'images'))
+        fnames.extend(os.listdir(os.path.join('data', 'sprites')))
+        fnames.extend(os.listdir(os.path.join('data', 'backgrounds')))
+        fname_single = None
+        fname_frames = []
+        fname_strip = None
+
+        for fname in fnames:
+            if fname.startswith(name) and os.path.isfile(fname):
+                root, ext = os.path.splitext(fname)
+                if root.rsplit('-', 1)[0] == name:
+                    split = root.rsplit('-', 1)
+                elif root.split('_', 1)[0] == name:
+                    split = root.rsplit('_', 1)
+                else:
+                    split = (name, '')
+
+                if root == name:
+                    fname_single = fname
+                elif split[1].isdigit():
+                    n = int(split[1])
+                    while len(fname_frames) - 1 < n:
+                        fname_frames.append(None)
+                    fname_frames[n] = fname
+                elif (split[1].startswith('strip') and split[1][5:].isdigit()):
+                    fname_strip = fname
+
+        if fname_single:
+            # Load the single image
+            try:
+                img = pygame.image.load(fname_single)
+                self._baseimages.append(img)
+            except pygame.error:
+                print("Ignored {0}; not a valid image.".format(fname_single))
+
+        if not self._baseimages and any(fname_frames):
+            # Load the multiple images
+            for fname in fname_frames:
+                if fname:
+                    try:
+                        self._baseimages.append(pygame.image.load(fname))
+                    except pygame.error:
+                        print("Ignored {0}; not a valid image.".format(fname))
+
+        if not self._baseimages and fname_strip:
+            # Load the strip (sprite sheet)
+            root, ext = os.path.splitext(fname)
+            assert '-' in root or '_' in root
+            assert (root.rsplit('-', 1)[0] == name or
+                    root.rsplit('_', 1)[0] == name)
+            if root.rsplit('-', 1)[0] == name:
+                split = root.rsplit('-', 1)
+            else:
+                split = root.rsplit('_', 1)
+
+            try:
+                sheet = pygame.image.load(fname_strip)
+                assert split[1][5:].isdigit()
+                n = int(split[1][5:])
+
+                img_w = sheet.get_width() // n
+                img_h = sheet.get_height()
+                for x in xrange(0, img_w * n, img_w):
+                    rect = pygame.Rect(x, 0, img_w, img_h)
+                    img = sheet.subsurface(rect)
+                    self._baseimages.append(img)
+            except pygame.error:
+                print("Ignored {0}; not a valid image.".format(fname_strip))
+
+        if not self._baseimages:
+            # Generate placeholder image
+            img = pygame.Surface((16, 16))
+            self._baseimages.append(img)
+
+        if size is None:
+            w = 0
+            h = 0
+            for image in self._baseimages:
+                w = max(w, image.get_width())
+                h = max(h, image.get_height())
+            size = (w, h)
+
         self.size = size
         self.origin = origin
         self.transparent = transparent
