@@ -85,7 +85,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 import sys
 import os
@@ -146,6 +146,23 @@ class glob(object):
             implementation used does not support smooth scaling, this
             option will always be treated as False.
 
+    Resources:
+        sprites: A dictionary containing all loaded sprites, using their
+            names as the keys.
+        background_layers: A dictionary containing all loaded background
+            layers, using their sprites' names as the keys.
+        backgrounds: A dictionary containing all loaded backgrounds,
+            using their
+        fonts: A dictionary containing all loaded fonts, using their
+            names as the keys.
+        sounds: A dictionary containing all loaded sounds, using their
+            file names as the keys.
+        music: A dictionary containing all loaded music, using their
+            file names as the keys.
+        objects: A dictionary containing all StellarClass objects, using
+            their unique identifiers as the keys.
+        rooms: A list containing all rooms in order of their creation.
+
     Frame rate settings:
         fps: The rate the game should run in frames per second.  Note
             that this is only the maximum; if the computer is not fast
@@ -179,6 +196,16 @@ class glob(object):
     fps = DEFAULT_FPS
     delta = DEFAULT_DELTA
     delta_min = DEFAULT_DELTA_MIN
+
+    # Resources
+    sprites = {}
+    background_layers = {}
+    backgrounds = {}
+    fonts = {}
+    sounds = {}
+    music = {}
+    objects = {}
+    rooms = []
 
     # Controls
     mouse_x = 0
@@ -217,6 +244,10 @@ class Sprite(object):
             origin_y is 0 and bbox_y increases toward the bottom.
         bbox_width: The width of the suggested bounding box in pixels.
         bbox_height: The height of the suggested bounding box in pixels.
+
+    The following read-only attributes are also available:
+        name: The name of the sprite given when it was created.  See
+            Sprite.__init__.__doc__ for more information.
 
     """
 
@@ -321,16 +352,7 @@ class Sprite(object):
             # Generate placeholder image
             pass
 
-        self.width = width
-        self.height = height
-        self.origin_x = origin_x
-        self.origin_y = origin_y
-        self.transparent = transparent
-        self.fps = fps
-        self.bbox_x = bbox_x
-        self.bbox_y = bbox_y
-        self.bbox_width = bbox_width
-        self.bbox_height = bbox_height
+        glob.sprites[name] = self
 
 
 class BackgroundLayer(object):
@@ -355,11 +377,7 @@ class BackgroundLayer(object):
         BackgroundLayer.__doc__ for more information.
 
         """
-        self.sprite = sprite
-        self.x = x
-        self.y = y
-        self.xscroll_rate = xscroll_rate
-        self.yscroll_rate = yscroll_rate
+        glob.background_layers[sprite.name] = self
 
 
 class Background(object):
@@ -376,20 +394,29 @@ class Background(object):
             horizontally.
         yrepeat: Whether or not the background should be repeated
             vertically.
+        id: The unique identifier for this background, used to index
+            glob.backgrounds.
 
     """
 
-    def __init__(self, layers, color, xrepeat=True, yrepeat=True):
+    def __init__(self, layers, color, xrepeat=True, yrepeat=True, id_=None,
+                 **kwargs):
         """Create a background with the given color and layers.
 
         Arguments set the properties of the background.  See
         Background.__doc__ for more information.
 
+        If ``id`` is None, it will be set to an integer not currently
+        used as an ID (the exact number chosen is implementation-
+        specific and may not necessarily be the same between runs).
+
         """
-        self.color = color
-        self.layers = layers
-        self.xrepeat = xrepeat
-        self.yrepeat = yrepeat
+        if 'id' in kwargs:
+            id_ = kwargs['id']
+
+        # Note: this is not how this should be done.  None needs to be
+        # replaced with some integer here, as the docstring says.
+        glob.backgrounds[id_] = self
 
 
 class Font(object):
@@ -473,6 +500,10 @@ class Sound(object):
         length: The length of the sound in milliseconds.
         playing: The number of instances of this sound playing.
 
+    The following read-only attributes are also available:
+        fname: The file name of the sound given when it was created.
+            See Sound.__init__.__doc__ for more information.
+
     Sound methods:
         Sound.play: Play the sound.
         Sound.stop: Stop the sound.
@@ -494,11 +525,7 @@ class Sound(object):
         See Sound.__doc__ for more information.
 
         """
-        self.volume = volume
-        self.balance = balance
-        self.max_play = max_play
-        self.length = 0
-        self.playing = False
+        glob.sounds[fname] = self
 
     def play(self, loops=0, maxtime=None, fade_time=None):
         """Play the sound.
@@ -555,6 +582,10 @@ class Music(object):
         position: The current position (time) on the music in
             milliseconds.
 
+    The following read-only attributes are also available:
+        fname: The file name of the music given when it was created.
+            See Music.__init__.__doc__ for more information.
+
     Music methods:
         Music.play: Play the music.
         Music.queue: Queue the music for playback.
@@ -578,11 +609,7 @@ class Music(object):
         See Music.__doc__ for more information.
 
         """
-        self.volume = volume
-        self.balance = balance
-        self.length = 0
-        self.playing = False
-        self.position = 0
+        glob.music[fname] = self
 
     def play(self, start=0, loops=0, maxtime=None, fade_time=None):
         """Play the music.
@@ -652,6 +679,8 @@ class StellarClass(object):
             rectangle) should be used for collision detection.
         collision_precise: Whether or not precise (pixel-perfect)
             collision detection should be used.
+        id: The unique identifier for this object, used to index
+            glob.objects.
         bbox_left: The position of the left side of the bounding box.
         bbox_right: The position of the right side of the bounding box.
         bbox_top: The position of the top side of the bounding box.
@@ -713,14 +742,24 @@ class StellarClass(object):
     """
 
     def __init__(self, x, y, sprite=None, visible=True, bbox=None,
-                 collision_ellipse=False, collision_precise=False):
+                 collision_ellipse=False, collision_precise=False, id_=None,
+                 **kwargs):
         """Create a new StellarClass object.
 
         Arguments set the properties of the object.  See
         StellarClass.__doc__ for more information.
 
+        If ``id`` is None, it will be set to an integer not currently
+        used as an ID (the exact number chosen is implementation-
+        specific and may not necessarily be the same between runs).
+
         """
-        pass
+        if 'id' in kwargs:
+            id_ = kwargs['id']
+
+        # Note: this is not how this should be done.  None needs to be
+        # replaced with some integer here, as the docstring says.
+        glob.objects[id_] = self
 
     def event_create(self):
         """Create event."""
@@ -823,12 +862,7 @@ class Room(object):
         more information.
 
         """
-        self.objects = objects
-        self.width = width
-        self.height = height
-        self.view = view
-        self.background = background
-        self.persistent = persistent
+        glob.rooms.append(self)
 
     def event_room_start(self):
         """Room start event."""
