@@ -88,7 +88,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 import sys
 import os
@@ -178,13 +178,11 @@ class glob(object):
             their unique identifiers as the keys.
         rooms: A list containing all rooms in order of their creation.
 
-    Read-only variables:
-        mouse_x: The horizontal position of the mouse relative to the
-            top-left corner of the display.
-        mouse_y: The vertical position of the mouse relative to the
-            top-left corner of the display.
-        mouse_xprevious: The previous horizontal position of the mouse.
-        mouse_yprevious: The previous vertical position of the mouse.
+    Other:
+        mouse: A StellarClass object which represents the mouse cursor.
+            Its ID is "mouse" and its bounding box is one pixel.
+            Speed variables are determined by averaging all mouse
+            movement during the last quarter of a second.
 
     """
 
@@ -210,11 +208,8 @@ class glob(object):
     objects = {}
     rooms = []
 
-    # Controls
-    mouse_x = 0
-    mouse_y = 0
-    mouse_xprevious = 0
-    mouse_yprevious = 0
+    # Other
+    mouse = None
 
     # Implementation-specific variables
     xscale = 1.0
@@ -824,21 +819,28 @@ class StellarClass(object):
         sprite: The sprite currently in use by this object.  Set to None
             for no (visible) sprite.
         visible: Whether or not the object should be drawn.
-        bbox: A tuple in the form (x, y, width, height) indicating the
-            rectangle used for collisions, where x and y are relative to
-            the object's ``x`` and ``y`` attributes.  If set to None,
-            the sprite's suggested bounding box will be used.
+        bbox_x: The horizontal location of the top-left corner of the
+            bounding box to use with this object, where x is 0 and
+            bbox_x increases toward the right.
+        bbox_y: The vertical location of the top-left corner of the
+            bounding box to use with this object, where y is 0 and
+            bbox_y increases toward the bottom.
+        bbox_width: The width of the bounding box in pixels.
+        bbox_height: The height of the bounding box in pixels.
         collision_ellipse: Whether or not an ellipse (rather than a
             rectangle) should be used for collision detection.
         collision_precise: Whether or not precise (pixel-perfect)
             collision detection should be used.
         id: The unique identifier for this object, used to index
             glob.objects.
-        bbox_left: The position of the left side of the bounding box.
-        bbox_right: The position of the right side of the bounding box.
-        bbox_top: The position of the top side of the bounding box.
+        bbox_left: The position of the left side of the bounding box
+            (same as bbox_x).
+        bbox_right: The position of the right side of the bounding box
+            (same as bbox_x + bbox_width).
+        bbox_top: The position of the top side of the bounding box
+            (same as bbox_y).
         bbox_bottom: The position of the bottom side of the bounding
-            box.
+            box (same as bbox_y + bbox_height).
         xvelocity: The velocity of the object toward the right.  Default
             is 0.
         yvelocity: The velocity of the object toward the bottom.
@@ -894,13 +896,18 @@ class StellarClass(object):
 
     """
 
-    def __init__(self, x, y, sprite=None, visible=True, bbox=None,
+    def __init__(self, x, y, sprite=None, visible=True, bbox_x=None,
+                 bbox_y=None, bbox_width=None, bbox_height=None,
                  collision_ellipse=False, collision_precise=False, id_=None,
                  **kwargs):
         """Create a new StellarClass object.
 
         Arguments set the properties of the object.  See
         StellarClass.__doc__ for more information.
+
+        If bbox_x, bbox_y, bbox_width, or bbox_height is None, the
+        respective argument will be determined by the sprite's suggested
+        bounding box.
 
         If ``id`` is None, it will be set to an integer not currently
         used as an ID (the exact number chosen is implementation-
