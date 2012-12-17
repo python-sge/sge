@@ -190,6 +190,8 @@ class glob(object):
     mouse_yprevious = 0
 
     # Implementation-specific variables
+    xscale = 1.0
+    yscale = 1.0
     music_queue = []
 
 
@@ -227,6 +229,26 @@ class Sprite(object):
     """
 
     @property
+    def width(self):
+        return self._w
+
+    @width.setter
+    def width(self, value):
+        if self._w != value:
+            self._w = value
+            self.refresh()
+
+    @property
+    def height(self):
+        return self._h
+
+    @height.setter
+    def height(self, value):
+        if self._h != value:
+            self._h = value
+            self.refresh()
+
+    @property
     def transparent(self):
         return self._transparent
 
@@ -234,23 +256,7 @@ class Sprite(object):
     def transparent(self, value):
         if self._transparent != value:
             self._transparent = value
-
-            for image in self._baseimages:
-                if self._transparent:
-                    if image.get_flags() & pygame.SRCALPHA:
-                        alpha_img = image.convert_alpha()
-                        #TODO: Scale image
-                        self._images.append(alpha_img)
-                    else:
-                        colorkey_img = image.convert()
-                        color = image.get_at((image.get_width() - 1, 0))
-                        colorkey_img.set_colorkey(color, pygame.RLEACCEL)
-                        #TODO: Scale image
-                        self._images.append(colorkey_img)
-                else:
-                    img = image.convert()
-                    #TODO: Scale image
-                    self._images.append(img)
+            self.refresh()
 
     def __init__(self, name, width=None, height=None, origin_x=0, origin_y=0,
                  transparent=True, fps=DEFAULT_FPS, bbox_x=0, bbox_y=0,
@@ -389,6 +395,25 @@ class Sprite(object):
         self.transparent = transparent
         self.fps = fps
         self.bbox = bbox
+
+    def refresh(self):
+        # Set the _images list based on the variables.
+        for image in self._baseimages:
+            if self.transparent:
+                if image.get_flags() & pygame.SRCALPHA:
+                    alpha_img = image.convert_alpha()
+                    alpha_img = _scale(alpha_img, self.width, self.height)
+                    self._images.append(alpha_img)
+                else:
+                    colorkey_img = image.convert()
+                    color = image.get_at((image.get_width() - 1, 0))
+                    colorkey_img.set_colorkey(color, pygame.RLEACCEL)
+                    colorkey_img = _scale(colorkey_img, self.width, self.height)
+                    self._images.append(colorkey_img)
+            else:
+                img = image.convert()
+                img = _scale(img, self.width, self.height)
+                self._images.append(img)
 
 
 class BackgroundLayer(object):
@@ -1418,4 +1443,21 @@ def get_joystick_buttons(joystick):
 
     """
     pass
+
+
+def _scale(surface, width, height):
+    # Scale the given surface to the given width and height, taking the
+    # scale factor of the screen into account.
+    width *= glob.xscale
+    height *= glob.yscale
+
+    if glob.scale_smooth:
+        try:
+            new_surf = pygame.transform.smoothscale(surface, (width, height))
+        except pygame.error:
+            new_surf = pygame.transform.scale(surface, (width, height))
+    else:
+        new_surf = pygame.transform.scale(surface, (width, height))
+
+    return new_surf
 
