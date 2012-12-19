@@ -40,6 +40,7 @@ Global variables are stored in the container ``glob``.  See glob.__doc__
 for more information.
 
 Classes:
+    Game: Class which handles the game.
     Sprite: Class used to store images and animations.
     BackgroundLayer: Class used to store a background layer.
     Background: Class used to store parallax-scrolling backgrounds.
@@ -48,32 +49,7 @@ Classes:
     Music: Class used to store and play music.
     StellarClass: Class used for game objects.
     Room: Class used for game rooms, e.g. levels.
-
-Stellar Game Engine uses "events" to let you know when something has
-happened.  They are implemented as functions.  Global events available
-are:
-    event_game_start
-    event_game_end
-    event_step
-    event_key_press
-    event_key_release
-    event_mouse_move
-    event_mouse_button_press
-    event_mouse_button_release
-    event_joystick_axis_move
-    event_joystick_hat_move
-    event_joystick_button_press
-    event_joystick_button_release
-    event_close
-
-Other functions:
-    init: Initialize Stellar Game Engine.
-    restart_game: Restart the game.
-    end_game: End the game.
-    set_mode: Set the display mode.
-    sound_stop_all: Stop all sounds that are currently playing.
-    pause: Pause the game.
-    unpause: Unpause the game.
+    View: Class used for views in rooms.
 
 Implementation-specific information:
 [insert info here]
@@ -85,7 +61,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 
 import sys
 import os
@@ -95,7 +71,8 @@ import json
 # Import implementation-specific libraries like Pygame here
 
 # Except in extreme cases, these constants should not be modified.
-DEFAULT_SCREENSIZE = (640, 480)
+DEFAULT_SCREENWIDTH = 640
+DEFAULT_SCREENHEIGHT = 480
 DEFAULT_FULLSCREEN = False
 DEFAULT_SCALE = 0
 DEFAULT_SCALE_PROPORTIONAL = True
@@ -121,15 +98,19 @@ KEYNAMES = {}
 for pair in KEYS.items():
     KEYNAMES[pair[1]] = pair[0]
 
+# Global variables
+game = None
 
-class glob(object):
 
-    """Container class for "global" variables.
+class Game(object):
 
-    Display settings (do not take effect until set_mode is called):
-        screensize: A two-part tuple indicating the size of the screen,
-            with the first value indicating the horizontal size and the
-            second value indicating the vertical size, in pixels.
+    """Class which handles the game.
+
+    A Game object must be created before anything else is done.
+
+    All Game objects have the following attributes:
+        width: The width of the game's display in pixels.
+        height: The height of the game's display in pixels.
         fullscreen: True if the game should be in fullscreen, False
             otherwise.
         scale: A number indicating a fixed scale factor (e.g. 1 for no
@@ -145,8 +126,18 @@ class glob(object):
             in Stellar Game Engine implementations is optional.  If the
             implementation used does not support smooth scaling, this
             option will always be treated as False.
+        fps: The rate the game should run in frames per second.  Note
+            that this is only the maximum; if the computer is not fast
+            enough, the game may run more slowly.
+        delta: If set to True, delta timing will be enabled, which
+            adjusts speeds and animation rates if the game cannot run at
+            the specified frame rate.
+        delta_min: Delta timing can cause the game to be choppy.  This
+            setting limits this by pretending that the frame rate is
+            never lower than this amount, resulting in the game slowing
+            down like normal if it is.
 
-    Resources:
+    The following read-only attributes are also available:
         sprites: A dictionary containing all loaded sprites, using their
             names as the keys.
         background_layers: A dictionary containing all loaded background
@@ -162,58 +153,485 @@ class glob(object):
         objects: A dictionary containing all StellarClass objects, using
             their unique identifiers as the keys.
         rooms: A list containing all rooms in order of their creation.
-
-    Frame rate settings:
-        fps: The rate the game should run in frames per second.  Note
-            that this is only the maximum; if the computer is not fast
-            enough, the game may run more slowly.
-        delta: If set to True, delta timing will be enabled, which
-            adjusts speeds and animation rates if the game cannot run at
-            the specified frame rate.
-        delta_min: Delta timing can cause the game to be choppy.  This
-            setting limits this by pretending that the frame rate is
-            never lower than this amount, resulting in the game slowing
-            down like normal if it is.
-
-    Other:
         mouse: A StellarClass object which represents the mouse cursor.
             Its ID is "mouse" and its bounding box is one pixel.
             Speed variables are determined by averaging all mouse
             movement during the last quarter of a second.
 
+    Game methods:
+        start: Start the game at the first room.
+        end: Properly end the game.
+        pause: Pause the game.
+        unpause: Unpause the game.
+        draw_dot: Draw a single-pixel dot.
+        draw_line: Draw a line segment between the given points.
+        draw_rectangle: Draw a rectangle at the given position.
+        draw_ellipse: Draw an ellipse at the given position.
+        draw_circle: Draw a circle at the given position.
+        sound_stop_all: Stop playback of all sounds.
+        get_key_pressed: Return whether or not a given key is pressed.
+        get_mouse_button_pressed: Return whether or not a given mouse
+            button is pressed.
+        get_joystick_axis: Return the position of the given axis.
+        get_joystick_hat: Return the position of the given HAT.
+        get_joystick_button_pressed: Return whether or not the given
+            joystick button is pressed.
+        get_joysticks: Return the number of joysticks available.
+        get_joystick_axes: Return the number of axes on the given
+            joystick.
+        get_joystick_hats: Return the number of HATs on the given
+            joystick.
+        get_joystick_buttons: Return the number of buttons on the
+            given joystick.
+
+    Game events are handled by special methods.  Some of these events
+    are immediate, i.e. their timing is based only on when they happened
+    (and exact timing can vary by implementation), and some of them are
+    ordered, i.e. they are always checked and/or called in a specific
+    order.  The immediate Game event methods are:
+        event_game_start
+        event_game_end
+
+    The ordered Game events are (in the following order):
+        event_step
+        event_key_press
+        event_key_release
+        event_mouse_move
+        event_mouse_collision
+        event_mouse_collision_left
+        event_mouse_collision_right
+        event_mouse_collision_top
+        event_mouse_collision_bottom
+        event_mouse_button_press
+        event_mouse_button_release
+        event_joystick_axis_move
+        event_joystick_hat_move
+        event_joystick_button_press
+        event_joystick_button_release
+        event_close
+
     """
 
-    # Display settings
-    screensize = DEFAULT_SCREENSIZE
-    fullscreen = DEFAULT_FULLSCREEN
-    scale = DEFAULT_SCALE
-    scale_proportional = DEFAULT_SCALE_PROPORTIONAL
-    scale_smooth = DEFAULT_SCALE_SMOOTH
+    def __init__(self, width=DEFAULT_SCREENWIDTH, height=DEFAULT_SCREENHEIGHT,
+                 fullscreen=DEFAULT_FULLSCREEN, scale=DEFAULT_SCALE,
+                 scale_proportional=DEFAULT_SCALE_PROPORTIONAL,
+                 scale_smooth=DEFAULT_SCALE_SMOOTH, fps=DEFAULT_FPS,
+                 delta=DEFAULT_DELTA, delta_min=DEFAULT_DELTA_MIN):
+        """Create a new Game object.
 
-    # Frame rate settings
-    fps = DEFAULT_FPS
-    delta = DEFAULT_DELTA
-    delta_min = DEFAULT_DELTA_MIN
+        Arguments set the properties of the game.  See Game.__doc__ for
+        more information.
 
-    # Resources
-    sprites = {}
-    background_layers = {}
-    backgrounds = {}
-    fonts = {}
-    sounds = {}
-    music = {}
-    objects = {}
-    rooms = []
+        """
+        global game
+        game = self
 
-    # Other
-    mouse = None
+    def start(self):
+        """Start the game at the first room.
+
+        Can be called in the middle of a game to start the game over.
+        If you do this, everything will be reset to its original state.
+
+        """
+        pass
+
+    def end(self):
+        """Properly end the game"""
+        global game
+        game = None
+
+    def pause(self, image=None):
+        """Pause the game.
+
+        ``image`` is the image to show when the game is paused.  If set
+        to None, the default image will be shown.  The default image is
+        at the discretion of the Stellar Game Engine implementation, as
+        are any additional visual effects, with the stipulation that the
+        following conditions are met:
+
+            1. The default image must unambiguously demonstrate that the
+                game is paused (the easiest way to do this is to include
+                the word "paused" somewhere in the image).
+            2. The view must stay in place.
+            3. What was going on within the view before the game was
+                paused must remain visible while the game is paused.
+
+        """
+        pass
+
+    def unpause(self):
+        """Unpause the game."""
+        pass
+
+    def draw_dot(self, x, y, color):
+        """Draw a single-pixel dot.
+
+        ``x`` and ``y`` indicate the location in the room to draw the
+        dot, where the left and top edges of the room are 0 and x and y
+        increase toward the right and bottom.  ``color`` indicates the
+        color of the dot.
+
+        """
+        pass
+
+    def draw_line(self, x1, y1, x2, y2, color, thickness=1, anti_alias=False):
+        """Draw a line segment between the given points.
+
+        ``x1``, ``y1``, ``x2``, and ``y2`` indicate the location in the
+        room of the points between which to draw the line segment, where
+        the left and top edges of the room are 0 and x and y increase
+        toward the right and bottom.  ``color`` indicates the color of
+        the line segment.  ``thickness`` indicates the thickness of the
+        line segment in pixels.  ``anti_alias`` indicates whether or not
+        anti-aliasing should be used.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this function will act like ``anti_alias`` is
+        False.
+
+        """
+        pass
+
+    def draw_rectangle(self, x, y, width, height, fill=None, outline=None,
+                       outline_thickness=1):
+        """Draw a rectangle at the given position.
+
+        ``x`` and ``y`` indicate the location in the room to draw the
+        rectangle, where the left and top edges of the room are 0 and x
+        and y increase toward the right and bottom.  ``width`` and
+        ``height`` indicate the size of the rectangle.  ``fill``
+        indicates the color of the fill of the rectangle; set to None
+        for no fill.  ``outline`` indicates the color of the outline of
+        the rectangle; set to None for no outline.
+        ``outline_thickness`` indicates the thickness of the outline in
+        pixels (ignored if there is no outline).
+
+        """
+        pass
+
+    def draw_ellipse(self, x, y, width, height, fill=None, outline=None,
+                     outline_thickness=1, anti_alias=False):
+        """Draw an ellipse at the given position.
+
+        ``x`` and ``y`` indicate the location in the room to draw the
+        ellipse, where the left and top edges of the room are 0 and x
+        and
+        y increase toward the right and bottom.  ``width`` and
+        ``height`` indicate the size of the ellipse.  ``fill`` indicates
+        the color of the fill of the ellipse; set to None for no fill.
+        ``outline`` indicates the color of the outline of the ellipse;
+        set to None for no outline.  ``outline_thickness`` indicates the
+        thickness of the outline in pixels (ignored if there is no
+        outline).  ``anti_alias`` indicates whether or not anti-aliasing
+        should be used on the outline.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this function will act like ``anti_alias`` is
+        False.
+
+        """
+
+    def draw_circle(self, x, y, radius, fill=None, outline=None,
+                    outline_thickness=1):
+        """Draw a circle at the given position.
+
+        ``x`` and ``y`` indicate the location in the room to draw the
+        circle, where the left and top edges of the room are 0 and x and
+        y increase toward the right and bottom.  ``radius`` indicates
+        the radius of the circle in pixels.  ``fill`` indicates the
+        color of the fill of the circle; set to None for no fill.
+        ``outline`` indicates the color of the outline of the circle;
+        set to None for no outline.  ``outline_thickness`` indicates the
+        thickness of the outline in pixels (ignored if there is no
+        outline).  ``anti_alias`` indicates whether or not anti-aliasing
+        should be used on the outline.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this function will act like ``anti_alias`` is
+        False.
+
+        """
+
+    def sound_stop_all(self):
+        """Stop playback of all sounds."""
+        pass
+
+    def get_key_pressed(self, key):
+        """Return whether or not a given key is pressed.
+
+        ``key`` is the key to check.
+
+        """
+        pass
+
+    def get_mouse_button_pressed(self, button):
+        """Return whether or not a given mouse button is pressed.
+
+        ``button`` is the number of the mouse button to check, where 0
+        is the first mouse button.
+
+        """
+        pass
+
+    def get_joystick_axis(self, joystick, axis):
+        """Return the position of the given axis.
+
+        ``joystick`` is the number of the joystick to check, where 0 is
+        the first joystick.  ``axis`` is the number of the axis to
+        check, where 0 is the first axis of the joystick.
+
+        Returned value is a float from -1 to 1, where 0 is centered, -1
+        is all the way to the left or up, and 1 is all the way to the
+        right or down.
+
+        If the joystick or axis requested does not exist, 0 is returned.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.  If the implementation used does not support
+        joysticks, this function will act like the joystick requested
+        does not exist.
+
+        """
+        pass
+
+    def get_joystick_hat(self, joystick, hat):
+        """Return the position of the given HAT.
+
+        ``joystick`` is the number of the joystick to check, where 0 is
+        the first joystick.  ``hat`` is the number of the HAT to check,
+        where 0 is the first HAT of the joystick.
+        
+        Returned value is a tuple in the form (x, y), where x is the
+        horizontal position and y is the vertical position.  Both x and
+        y are 0 (centered), -1 (left or up), or 1 (right or down).
+
+        If the joystick or HAT requested does not exist, (0, 0) is
+        returned.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.  If the implementation used does not support
+        joysticks, this function will act like the joystick requested
+        does not exist.
+
+        """
+        pass
+
+    def get_joystick_button_pressed(self, joystick, button):
+        """Return whether or not the given button is pressed.
+
+        ``joystick`` is the number of the joystick to check, where 0 is
+        the first joystick.  ``button`` is the number of the button to
+        check, where 0 is the first button of the joystick.
+
+        If the joystick or button requested does not exist, False is
+        returned.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.  If the implementation used does not support
+        joysticks, this function will act like the joystick requested
+        does not exist.
+
+        """
+        pass
+
+    def get_joysticks(self):
+        """Return the number of joysticks available.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.  If the implementation used does not support
+        joysticks, this function will always return 0.
+
+        """
+        pass
+
+    def get_joystick_axes(self, joystick):
+        """Return the number of axes available on the given joystick.
+
+        ``joystick`` is the number of the joystick to check, where 0 is
+        the first joystick.  If the given joystick does not exist, 0
+        will be returned.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.  If the implementation used does not support
+        joysticks, this function will act like the joystick requested
+        does not exist.
+
+        """
+        pass
+
+    def get_joystick_hats(self, joystick):
+        """Return the number of HATs available on the given joystick.
+
+        ``joystick`` is the number of the joystick to check, where 0 is
+        the first joystick.  If the given joystick does not exist, 0
+        will be returned.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.  If the implementation used does not support
+        joysticks, this function will act like the joystick requested
+        does not exist.
+
+        """
+        pass
+
+    def get_joystick_buttons(self, joystick):
+        """Return the number of buttons available on the given joystick.
+
+        ``joystick`` is the number of the joystick to check, where 0 is
+        the first joystick.  If the given joystick does not exist, 0
+        will be returned.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.  If the implementation used does not support
+        joysticks, this function will act like the joystick requested
+        does not exist.
+
+        """
+        pass
+
+    def event_game_start(self):
+        """Game start event."""
+        pass
+
+    def event_game_end(self):
+        """Game end event."""
+        pass
+
+    def event_step(self):
+        """Global step event."""
+        pass
+
+    def event_key_press(self, key):
+        """Key press event.
+
+        ``key`` is the key that was pressed.
+
+        """
+        pass
+
+    def event_key_release(self, key):
+        """Key release event.
+
+        ``key`` is the key that was pressed.
+
+        """
+        pass
+
+    def event_mouse_move(self, x, y):
+        """Mouse move event.
+
+        ``x`` and ``y`` indicate the relative movement of the mouse.
+
+        """
+        pass
+
+    def event_mouse_collision(self, other):
+        """Middle/default mouse collision event."""
+        pass
+
+    def event_mouse_collision_left(self, other):
+        """Left mouse collision event."""
+        self.event_mouse_collision(other)
+
+    def event_mouse_collision_right(self, other):
+        """Right mouse collision event."""
+        self.event_mouse_collision(other)
+
+    def event_mouse_collision_top(self, other):
+        """Top mouse collision event."""
+        self.event_mouse_collision(other)
+
+    def event_mouse_collision_bottom(self, other):
+        """Bottom mouse collision event."""
+        self.event_mouse_collision(other)
+
+    def event_mouse_button_press(self, button):
+        """Mouse button press event.
+
+        ``button`` is the number of the mouse button that was pressed,
+        where 0 is the first mouse button.
+
+        """
+        pass
+
+    def event_mouse_button_release(self, button):
+        """Mouse button release event.
+
+        ``button`` is the number of the mouse button that was released,
+        where 0 is the first mouse button.
+
+        """
+        pass
+
+    def event_joystick_axis_move(self, joystick, axis, value):
+        """Joystick axis move event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``axis`` is the number of the axis, where 0 is the
+        first axis.  ``value`` is the tilt of the axis, where 0 is in
+        the center, -1 is tilted all the way to the left or up, and 1 is
+        tilted all the way to the right or down.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_hat_move(self, joystick, hat, x, y):
+        """Joystick HAT move event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``hat`` is the number of the HAT, where 0 is the
+        first HAT.  ``x`` and ``y`` indicate the position of the HAT,
+        where 0 is in the center, -1 is left or up, and 1 is right or
+        down.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_button_press(self, joystick, button):
+        """Joystick button press event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``button`` is the number of the button pressed, where
+        0 is the first button.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_button_release(self, joystick, button):
+        """Joystick button release event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``button`` is the number of the button pressed, where
+        0 is the first button.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_close(self):
+        """Close event (e.g. close button)."""
+        pass
 
 
 class Sprite(object):
 
     """Class which holds information for images and animations.
 
-    All sprite objects have the following properties:
+    All Sprite objects have the following attributes:
         width: The width of the sprite in pixels.
         height: The height of the sprite in pixels.
         origin_x: The horizontal location of the origin (the pixel
@@ -289,6 +707,9 @@ class Sprite(object):
         All remaining arguments set the initial properties of the
         sprite; see Sprite.__doc__ for more information.
 
+        A game object must exist before an object of this class is
+        created.
+
         """
         # This is a way to figure out what image to load.
         assert name
@@ -347,15 +768,14 @@ class Sprite(object):
             # Generate placeholder image
             pass
 
-        glob.sprites[name] = self
-
 
 class BackgroundLayer(object):
 
     """Special class used for background layers.
 
-    All BackgroundLayer objects have the following properties:
-        sprite: The Sprite object used for this layer.
+    All BackgroundLayer objects have the following attributes:
+        sprite: The Sprite object used for this layer.  Can also be the
+            name of a sprite currently loaded into the game.
         x: The horizontal offset of the background.
         y: The vertical offset of the background.
         xscroll_rate: The horizontal speed the layer scrolls as a factor
@@ -371,26 +791,28 @@ class BackgroundLayer(object):
         Arguments set the properties of the layer.  See
         BackgroundLayer.__doc__ for more information.
 
+        A game object must exist before an object of this class is
+        created.
+
         """
-        glob.background_layers[sprite.name] = self
+        pass
 
 
 class Background(object):
 
     """Background class.
 
-    All Background objects have the following properties:
-
+    All Background objects have the following attributes:
         layers: A tuple containing all BackgroundLayer objects used in
-            this background.
+            this background.  These can also be the names of the layers'
+            sprites if they are currently loaded into the game.
         color: A Stellar Game Engine color used in parts of the
             background where there is no layer.
         xrepeat: Whether or not the background should be repeated
             horizontally.
         yrepeat: Whether or not the background should be repeated
             vertically.
-        id: The unique identifier for this background, used to index
-            glob.backgrounds.
+        id: The unique identifier for this background.
 
     """
 
@@ -405,20 +827,21 @@ class Background(object):
         used as an ID (the exact number chosen is implementation-
         specific and may not necessarily be the same between runs).
 
+        A game object must exist before an object of this class is
+        created.
+
         """
+        # Since the docs say that the ``id`` is a valid keyword
+        # argument, you should do this to make sure that that is true.
         if 'id' in kwargs:
             id_ = kwargs['id']
-
-        # Note: this is not how this should be done.  None needs to be
-        # replaced with some integer here, as the docstring says.
-        glob.backgrounds[id_] = self
 
 
 class Font(object):
 
     """Font handling class.
 
-    All Font objects have the following properties:
+    All Font objects have the following attributes:
         name: The name of the font.  Set to None for the default font.
         size: The height of the font in pixels.
         underline: Whether or not underlined rendering is enabled.
@@ -433,6 +856,9 @@ class Font(object):
 
         Arguments set the properties of the font.  See
         Font.__doc__ for more information.
+
+        A game object must exist before an object of this class is
+        created.
 
         """
         pass
@@ -480,7 +906,7 @@ class Sound(object):
 
     """Sound handling class.
 
-    All Sound objects have the following properties:
+    All Sound objects have the following attributes:
         volume: The volume of the sound in percent (0 for no sound, 100
             for max sound).
         balance: The balance of the sound effect on stereo speakers.  A
@@ -519,8 +945,11 @@ class Sound(object):
         All remaining arguments set the initial properties of the sound.
         See Sound.__doc__ for more information.
 
+        A game object must exist before an object of this class is
+        created.
+
         """
-        glob.sounds[fname] = self
+        pass
 
     def play(self, loops=0, maxtime=None, fade_time=None):
         """Play the sound.
@@ -562,7 +991,7 @@ class Music(object):
     Music is mostly the same as sound, but only one can be played at a
     time.
 
-    All Music objects have the following properties:
+    All Music objects have the following attributes:
         volume: The volume of the music in percent (0 for no sound, 100
             for max sound).
         balance: The balance of the music on stereo speakers.  A value
@@ -603,8 +1032,11 @@ class Music(object):
         All remaining arguments set the initial properties of the music.
         See Music.__doc__ for more information.
 
+        A game object must exist before an object of this class is
+        created.
+
         """
-        glob.music[fname] = self
+        pass
 
     def play(self, start=0, loops=0, maxtime=None, fade_time=None):
         """Play the music.
@@ -658,13 +1090,14 @@ class StellarClass(object):
 
     """Class for game objects.
 
-    All StellarClass objects have the following properties:
+    All StellarClass objects have the following attributes:
         x: The horizontal position of the object in the room, where the
             left edge is 0 and x increases toward the right.
         y: The vertical position of the object in the room, where the
             top edge is 0 and y increases toward the bottom.
         sprite: The sprite currently in use by this object.  Set to None
-            for no (visible) sprite.
+            for no (visible) sprite.  Can also be the name of a sprite
+            currently loaded into the game.
         visible: Whether or not the object should be drawn.
         bbox_x: The horizontal location of the top-left corner of the
             bounding box to use with this object, where x is 0 and
@@ -678,8 +1111,7 @@ class StellarClass(object):
             rectangle) should be used for collision detection.
         collision_precise: Whether or not precise (pixel-perfect)
             collision detection should be used.
-        id: The unique identifier for this object, used to index
-            glob.objects.
+        id: The unique identifier for this object.
         bbox_left: The position of the left side of the bounding box
             (same as bbox_x).
         bbox_right: The position of the right side of the bounding box
@@ -721,11 +1153,20 @@ class StellarClass(object):
         xprevious: The previous value of x.
         yprevious: The previous value of y.
 
-    StellarClass events are handled by special methods.  The event
-    methods are:
+    StellarClass methods:
+        set_alarm: Set an alarm.
+        destroy: Destroy the object.
+
+    StellarClass events are handled by special methods.  Some of these
+    events are immediate, i.e. their timing is based only on when they
+    happened (and exact timing can vary by implementation), and some of
+    them are ordered, i.e. they are always checked and/or called in a
+    specific order.  The immediate StellarClass event methods are:
         event_create
         event_animation_end
         event_destroy
+
+    The ordered StellarClass events are (in the following order):
         event_step_begin
         event_alarm
         event_step
@@ -736,10 +1177,6 @@ class StellarClass(object):
         event_collision_bottom
         event_step_end
         event_draw
-
-    Other methods of StellarClass:
-        set_alarm: Set an alarm.
-        destroy: Destroy the object.
 
     """
 
@@ -760,13 +1197,30 @@ class StellarClass(object):
         used as an ID (the exact number chosen is implementation-
         specific and may not necessarily be the same between runs).
 
+        A game object must exist before an object of this class is
+        created.
+
         """
+        # Since the docs say that the ``id`` is a valid keyword
+        # argument, you should do this to make sure that that is true.
         if 'id' in kwargs:
             id_ = kwargs['id']
 
-        # Note: this is not how this should be done.  None needs to be
-        # replaced with some integer here, as the docstring says.
-        glob.objects[id_] = self
+    def set_alarm(self, alarm_id, value):
+        """Set an alarm.
+
+        Set the alarm with the given ``alarm_id`` with the given
+        ``value``.  The alarm will then count down until it reaches 0
+        and set off the alarm event with the same ID.  ``alarm_id`` can
+        be any value.  ``value`` should be a number greater than 0.  You
+        can also set ``value`` to None to disable the alarm.
+
+        """
+        pass
+
+    def destroy(self):
+        """Destroy the object."""
+        pass
 
     def event_create(self):
         """Create event."""
@@ -824,59 +1278,68 @@ class StellarClass(object):
         """Draw event."""
         pass
 
-    def set_alarm(self, alarm_id, value):
-        """Set an alarm.
 
-        Set the alarm with the given ``alarm_id`` with the given
-        ``value``.  The alarm will then count down until it reaches 0
-        and set off the alarm event with the same ID.  ``alarm_id`` can
-        be any value.  ``value`` should be a number greater than 0.  You
-        can also set ``value`` to None to disable the alarm.
+class Mouse(StellarClass):
 
-        """
-        pass
+    def event_collision(self, other):
+        game.event_mouse_collision(other)
+
+    def event_collision_left(self, other):
+        game.event_mouse_collision_left(other)
+
+    def event_collision_right(self, other):
+        game.event_mouse_collision_right(other)
+
+    def event_collision_top(self, other):
+        game.event_mouse_collision_top(other)
+
+    def event_collision_bottom(self, other):
+        game.event_mouse_collision_bottom(other)
 
 
 class Room(object):
 
     """Class for rooms.
 
-    All Room objects have the following properties:
+    All Room objects have the following attributes:
         objects: A tuple containing all StellarClass objects in the
-            room.
+            room.  These can also be the objects' IDs if they are
+            currently loaded into the game.
         width: The width of the room in pixels.
         height: The height of the room in pixels.
-        background: The Background object used.
-        persistent: Whether or not the room should remember its state
-            when it is left.
+        background: The Background object used.  Can also be the ID of a
+            background currently loaded into the game.
 
-    Room events are handled by special methods. The event methods are:
+    The following read-only attributes are also available:
+        room_number: The index of this room in the game, where 0 is the
+            first room, or None if this room has not been added to a
+            game.
+
+    Room methods:
+        add: Add a StellarClass object to the room.
+        start: Start the room.
+        resume: Continue the room from where it left off.
+        end: Go to the next room.
+
+    Room events are handled by special methods.  They are all immediate
+    events, i.e. their timing is based only on when they happened (and
+    exact timing can vary by implementation). The event methods are:
         event_room_start
         event_room_end
-
-    Other methods of Room:
-        add: Add a StellarClass object to the room.
-        restart: Reset the room to its original state.
 
     """
 
     def __init__(self, objects=(), width=DEFAULT_SCREENSIZE[0],
-                 height=DEFAULT_SCREENSIZE[1], view=None, background=None,
-                 persistent=False):
+                 height=DEFAULT_SCREENSIZE[1], view=None, background=None):
         """Create a new Room object.
 
         Arguments set the properties of the room.  See Room.__doc__ for
         more information.
 
+        A game object must exist before an object of this class is
+        created.
+
         """
-        glob.rooms.append(self)
-
-    def event_room_start(self):
-        """Room start event."""
-        pass
-
-    def event_room_end(self):
-        """Room end event."""
         pass
 
     def add(self, obj):
@@ -887,8 +1350,38 @@ class Room(object):
         """
         pass
 
-    def restart(self):
-        """Reset the room to its original state."""
+    def start(self):
+        """Start the room.
+
+        If the room has been changed, reset it to its original state.
+
+        """
+        pass
+
+    def resume(self):
+        """Continue the room from where it left off.
+
+        If the room is unchanged (e.g. has not been started yet), this
+        method behaves in the same way that Room.start does.
+
+        """
+        pass
+
+    def end(self):
+        """Go to the next room.
+
+        If this room is the last room, the game is ended.  Note that
+        this does not reset the state of the room.
+
+        """
+        pass
+
+    def event_room_start(self):
+        """Room start event."""
+        pass
+
+    def event_room_end(self):
+        """Room end event."""
         pass
 
 
@@ -896,7 +1389,7 @@ class View(object):
 
     """Class for room views.
 
-    All View objects have the following properties:
+    All View objects have the following attributes:
         x: The horizontal position of the view in the room, where the
             left edge is 0 and x increases toward the right.
         y: The vertical position of the view in the room, where the top
@@ -918,436 +1411,4 @@ class View(object):
 
         """
         pass
-
-
-def event_game_start():
-    """Game start event."""
-    pass
-
-
-def event_game_end():
-    """Game end event."""
-    pass
-
-
-def event_step():
-    """Global step event."""
-    pass
-
-
-def event_key_press(key):
-    """Key press event.
-
-    ``key`` is the key that was pressed.
-
-    """
-    pass
-
-
-def event_key_release(key):
-    """Key release event.
-
-    ``key`` is the key that was pressed.
-
-    """
-    pass
-
-
-def event_mouse_move(x, y):
-    """Mouse move event.
-
-    ``x`` and ``y`` indicate the relative movement of the mouse.
-
-    """
-    pass
-
-
-def event_mouse_button_press(button):
-    """Mouse button press event.
-
-    ``button`` is the number of the mouse button that was pressed, where
-    0 is the first mouse button.
-
-    """
-    pass
-
-
-def event_mouse_button_release(button):
-    """Mouse button release event.
-
-    ``button`` is the number of the mouse button that was released,
-    where 0 is the first mouse button.
-
-    """
-    pass
-
-
-def event_joystick_axis_move(joystick, axis, value):
-    """Joystick axis move event.
-
-    ``joystick`` is the number of the joystick, where 0 is the first
-    joystick.  ``axis`` is the number of the axis, where 0 is the first
-    axis.  ``value`` is the tilt of the axis, where 0 is in the center,
-    -1 is tilted all the way to the left or up, and 1 is tilted all the
-    way to the right or down.
-
-    Support for joysticks in Stellar Game Engine implementations is
-    optional.
-
-    """
-    pass
-
-
-def event_joystick_hat_move(joystick, hat, x, y):
-    """Joystick HAT move event.
-
-    ``joystick`` is the number of the joystick, where 0 is the first
-    joystick.  ``hat`` is the number of the HAT, where 0 is the first
-    HAT.  ``x`` and ``y`` indicate the position of the HAT, where 0 is
-    in the center, -1 is left or up, and 1 is right or down.
-
-    Support for joysticks in Stellar Game Engine implementations is
-    optional.
-
-    """
-    pass
-
-
-def event_joystick_button_press(joystick, button):
-    """Joystick button press event.
-
-    ``joystick`` is the number of the joystick, where 0 is the first
-    joystick.  ``button`` is the number of the button pressed, where 0
-    is the first button.
-
-    Support for joysticks in Stellar Game Engine implementations is
-    optional.
-
-    """
-    pass
-
-
-def event_joystick_button_release(joystick, button):
-    """Joystick button release event.
-
-    ``joystick`` is the number of the joystick, where 0 is the first
-    joystick.  ``button`` is the number of the button pressed, where 0
-    is the first button.
-
-    Support for joysticks in Stellar Game Engine implementations is
-    optional.
-
-    """
-    pass
-
-
-def event_close():
-    """Close event (e.g. close button)."""
-    pass
-
-
-def init(screensize=DEFAULT_SCREENSIZE, fullscreen=DEFAULT_FULLSCREEN,
-         scale=DEFAULT_SCALE, scale_proportional=DEFAULT_SCALE_PROPORTIONAL,
-         scale_smooth=DEFAULT_SCALE_SMOOTH, fps=DEFAULT_FPS,
-         delta=DEFAULT_DELTA, delta_min=DEFAULT_DELTA_MIN):
-    """Initialize the Stellar Game Engine.  Must be called first.
-
-    Arguments indicate the initial settings used.  See glob.__doc__ for
-    information about the settings.
-
-    """
-    pass
-
-
-def restart_game():
-    """Restart the game."""
-    pass
-
-
-def end_game():
-    """Properly end the game"""
-    pass
-
-
-def set_mode(screensize=None, fullscreen=None, scale=None,
-             scale_proportional=None, scale_smooth=None):
-    """Set the mode of the screen.
-
-    Use any arguments specified that are not None to change the display
-    settings and then do whatever is necessary to cause those changes to
-    take effect on the screen.  Arguments which are not set or are set
-    to None are unchanged.
-
-    See glob.__doc__ for information about the settings.
-
-    """
-    pass
-
-
-def draw_dot(x, y, color):
-    """Draw a single-pixel dot.
-
-    ``x`` and ``y`` indicate the location in the room to draw the dot,
-    where the left and top edges of the room are 0 and x and y increase
-    toward the right and bottom.  ``color`` indicates the color of the
-    dot.
-
-    """
-
-
-def draw_line(x1, y1, x2, y2, color, thickness=1, anti_alias=False):
-    """Draw a line segment between the given points.
-
-    ``x1``, ``y1``, ``x2``, and ``y2`` indicate the location in the
-    room of the points between which to draw the line segment, where
-    the left and top edges of the room are 0 and x and y increase
-    toward the right and bottom.  ``color`` indicates the color of the
-    line segment.  ``thickness`` indicates the thickness of the line
-    segment in pixels.  ``anti_alias`` indicates whether or not
-    anti-aliasing should be used.
-
-    Support for anti-aliasing is optional in Stellar Game Engine
-    implementations.  If the implementation used does not support
-    anti-aliasing, this function will act like ``anti_alias`` is False.
-
-    """
-    pass
-
-
-def draw_rectangle(x, y, width, height, fill=None, outline=None,
-                   outline_thickness=1):
-    """Draw a rectangle at the given position.
-
-    ``x`` and ``y`` indicate the location in the room to draw the
-    rectangle, where the left and top edges of the room are 0 and x and
-    y increase toward the right and bottom.  ``width`` and ``height``
-    indicate the size of the rectangle.  ``fill`` indicates the color
-    of the fill of the rectangle; set to None for no fill.  ``outline``
-    indicates the color of the outline of the rectangle; set to None for
-    no outline.  ``outline_thickness`` indicates the thickness of the
-    outline in pixels (ignored if there is no outline).  ``anti_alias``
-    indicates whether or not anti-aliasing should be used on the
-    outline.
-
-    Support for anti-aliasing is optional in Stellar Game Engine
-    implementations.  If the implementation used does not support
-    anti-aliasing, this function will act like ``anti_alias`` is False.
-
-    """
-
-
-def draw_ellipse(x, y, width, height, fill=None, outline=None,
-                 outline_thickness=1):
-    """Draw an ellipse at the given position.
-
-    ``x`` and ``y`` indicate the location in the room to draw the
-    ellipse, where the left and top edges of the room are 0 and x and
-    y increase toward the right and bottom.  ``width`` and ``height``
-    indicate the size of the ellipse.  ``fill`` indicates the color
-    of the fill of the ellipse; set to None for no fill.  ``outline``
-    indicates the color of the outline of the ellipse; set to None for
-    no outline.  ``outline_thickness`` indicates the thickness of the
-    outline in pixels (ignored if there is no outline).  ``anti_alias``
-    indicates whether or not anti-aliasing should be used on the
-    outline.
-
-    Support for anti-aliasing is optional in Stellar Game Engine
-    implementations.  If the implementation used does not support
-    anti-aliasing, this function will act like ``anti_alias`` is False.
-
-    """
-
-
-def draw_circle(x, y, radius, fill=None, outline=None, outline_thickness=1):
-    """Draw a circle at the given position.
-
-    ``x`` and ``y`` indicate the location in the room to draw the
-    circle, where the left and top edges of the room are 0 and x and
-    y increase toward the right and bottom.  ``radius`` indicates the
-    radius of the circle in pixels.  ``fill`` indicates the color of the
-    fill of the circle; set to None for no fill.  ``outline`` indicates
-    the color of the outline of the circle; set to None for no outline.
-    ``outline_thickness`` indicates the thickness of the outline in
-    pixels (ignored if there is no outline).  ``anti_alias`` indicates
-    whether or not anti-aliasing should be used on the outline.
-
-    Support for anti-aliasing is optional in Stellar Game Engine
-    implementations.  If the implementation used does not support
-    anti-aliasing, this function will act like ``anti_alias`` is False.
-
-    """
-
-
-def sound_stop_all():
-    """Stop playback of all sounds."""
-    pass
-
-
-def pause(image=None):
-    """Pause the game.
-
-    ``image`` is the image to show when the game is paused.  If set to
-    None, the default image will be shown.  The default image is at the
-    discretion of the Stellar Game Engine implementation, as are any
-    additional visual effects, with the stipulation that the following
-    conditions are met:
-
-        1. The default image must unambiguously demonstrate that the
-            game is paused (the easiest way to do this is to include the
-            word "paused" somewhere in the image).
-        2. The view must stay in place.
-        3. What was going on within the view before the game was paused
-            must remain visible while the game is paused.
-
-    """
-    pass
-
-
-def unpause():
-    """Unpause the game."""
-    pass
-
-
-def set_mouse_cursor(sprite):
-    """Set the mouse cursor.
-
-    ``sprite`` is the sprite to set the mouse cursor as.
-
-    """
-    pass
-
-
-def get_key_pressed(key):
-    """Return whether or not a given key is pressed.
-
-    ``key`` is the key to check.
-
-    """
-    pass
-
-
-def get_mouse_button_pressed(button):
-    """Return whether or not a given mouse button is pressed.
-
-    ``button`` is the number of the mouse button to check, where 0 is
-    the first mouse button.
-
-    """
-    pass
-
-
-def get_joystick_axis(joystick, axis):
-    """Return the position of the given axis.
-
-    ``joystick`` is the number of the joystick to check, where 0 is the
-    first joystick.  ``axis`` is the number of the axis to check, where
-    0 is the first axis of the joystick.
-
-    Returned value is a float from -1 to 1, where 0 is centered, -1 is
-    all the way to the left or up, and 1 is all the way to the right or
-    down.
-
-    If the joystick or axis requested does not exist, 0 is returned.
-
-    Support for joysticks in Stellar Game Engine implementations is
-    optional.  If the implementation used does not support joysticks,
-    this function will act like the joystick requested does not exist.
-
-    """
-    pass
-
-
-def get_joystick_hat(joystick, hat):
-    """Return the position of the given HAT.
-
-    ``joystick`` is the number of the joystick to check, where 0 is the
-    first joystick.  ``hat`` is the number of the HAT to check, where 0
-    is the first HAT of the joystick.
-    
-    Returned value is a tuple in the form (x, y), where x is the
-    horizontal position and y is the vertical position.  Both x and y
-    are 0 (centered), -1 (left or up), or 1 (right or down).
-
-    If the joystick or HAT requested does not exist, (0, 0) is returned.
-
-    Support for joysticks in Stellar Game Engine implementations is
-    optional.  If the implementation used does not support joysticks,
-    this function will act like the joystick requested does not exist.
-
-    """
-    pass
-
-
-def get_joystick_button_pressed(joystick, button):
-    """Return whether or not the given button is pressed.
-
-    ``joystick`` is the number of the joystick to check, where 0 is the
-    first joystick.  ``button`` is the number of the button to check,
-    where 0 is the first button of the joystick.
-
-    If the joystick or button requested does not exist, False is
-    returned.
-
-    Support for joysticks in Stellar Game Engine implementations is
-    optional.  If the implementation used does not support joysticks,
-    this function will act like the joystick requested does not exist.
-
-    """
-    pass
-
-
-def get_joysticks():
-    """Return the number of joysticks available.
-
-    Support for joysticks in Stellar Game Engine implementations is
-    optional.  If the implementation used does not support joysticks,
-    this function will always return 0.
-
-    """
-    pass
-
-
-def get_joystick_axes(joystick):
-    """Return the number of axes available on the given joystick.
-
-    ``joystick`` is the number of the joystick to check, where 0 is the
-    first joystick.  If the given joystick does not exist, 0 will be
-    returned.
-
-    Support for joysticks in Stellar Game Engine implementations is
-    optional.  If the implementation used does not support joysticks,
-    this function will act like the joystick requested does not exist.
-
-    """
-    pass
-
-
-def get_joystick_hats(joystick):
-    """Return the number of HATs available on the given joystick.
-
-    ``joystick`` is the number of the joystick to check, where 0 is the
-    first joystick.  If the given joystick does not exist, 0 will be
-    returned.
-
-    Support for joysticks in Stellar Game Engine implementations is
-    optional.  If the implementation used does not support joysticks,
-    this function will act like the joystick requested does not exist.
-
-    """
-    pass
-
-
-def get_joystick_buttons(joystick):
-    """Return whether or not the given joystick exists.
-
-    ``joystick`` is the number of the joystick to check, where 0 is the
-    first joystick.  If the given joystick does not exist, 0 will be
-    returned.
-
-    Support for joysticks in Stellar Game Engine implementations is
-    optional.  If the implementation used does not support joysticks,
-    this function will act like the joystick requested does not exist.
-
-    """
-    pass
 
