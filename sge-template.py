@@ -36,8 +36,9 @@ Constants:
     KEYNAMES: A dictionary containing the key names of all keycodes
         (i.e. the reverse of KEYS).
 
-Global variables are stored in the container ``glob``.  See glob.__doc__
-for more information.
+Global variables:
+    game: Stores the current game.  If there is no game currently, this
+        variable is set to None.
 
 Classes:
     Game: Class which handles the game.
@@ -236,7 +237,7 @@ class Game(object):
         pass
 
     def end(self):
-        """Properly end the game"""
+        """Properly end the game."""
         global game
         game = None
 
@@ -775,7 +776,7 @@ class BackgroundLayer(object):
 
     All BackgroundLayer objects have the following attributes:
         sprite: The Sprite object used for this layer.  Can also be the
-            name of a sprite currently loaded into the game.
+            name of a sprite.
         x: The horizontal offset of the background.
         y: The vertical offset of the background.
         xscroll_rate: The horizontal speed the layer scrolls as a factor
@@ -805,7 +806,7 @@ class Background(object):
     All Background objects have the following attributes:
         layers: A tuple containing all BackgroundLayer objects used in
             this background.  These can also be the names of the layers'
-            sprites if they are currently loaded into the game.
+            sprites.
         color: A Stellar Game Engine color used in parts of the
             background where there is no layer.
         xrepeat: Whether or not the background should be repeated
@@ -831,8 +832,8 @@ class Background(object):
         created.
 
         """
-        # Since the docs say that the ``id`` is a valid keyword
-        # argument, you should do this to make sure that that is true.
+        # Since the docs say that ``id`` is a valid keyword argument,
+        # you should do this to make sure that that is true.
         if 'id' in kwargs:
             id_ = kwargs['id']
 
@@ -1096,8 +1097,7 @@ class StellarClass(object):
         y: The vertical position of the object in the room, where the
             top edge is 0 and y increases toward the bottom.
         sprite: The sprite currently in use by this object.  Set to None
-            for no (visible) sprite.  Can also be the name of a sprite
-            currently loaded into the game.
+            for no (visible) sprite.  Can also be the name of a sprite.
         visible: Whether or not the object should be drawn.
         bbox_x: The horizontal location of the top-left corner of the
             bounding box to use with this object, where x is 0 and
@@ -1201,8 +1201,8 @@ class StellarClass(object):
         created.
 
         """
-        # Since the docs say that the ``id`` is a valid keyword
-        # argument, you should do this to make sure that that is true.
+        # Since the docs say that ``id`` is a valid keyword argument,
+        # you should do this to make sure that that is true.
         if 'id' in kwargs:
             id_ = kwargs['id']
 
@@ -1303,12 +1303,11 @@ class Room(object):
 
     All Room objects have the following attributes:
         objects: A tuple containing all StellarClass objects in the
-            room.  These can also be the objects' IDs if they are
-            currently loaded into the game.
+            room.  These can also be the objects' IDs.
         width: The width of the room in pixels.
         height: The height of the room in pixels.
         background: The Background object used.  Can also be the ID of a
-            background currently loaded into the game.
+            background.
 
     The following read-only attributes are also available:
         room_number: The index of this room in the game, where 0 is the
@@ -1323,14 +1322,14 @@ class Room(object):
 
     Room events are handled by special methods.  They are all immediate
     events, i.e. their timing is based only on when they happened (and
-    exact timing can vary by implementation). The event methods are:
+    exact timing can vary by implementation).  The event methods are:
         event_room_start
         event_room_end
 
     """
 
-    def __init__(self, objects=(), width=DEFAULT_SCREENSIZE[0],
-                 height=DEFAULT_SCREENSIZE[1], view=None, background=None):
+    def __init__(self, objects=(), width=DEFAULT_SCREENWIDTH,
+                 height=DEFAULT_SCREENHEIGHT, view=None, background=None):
         """Create a new Room object.
 
         Arguments set the properties of the room.  See Room.__doc__ for
