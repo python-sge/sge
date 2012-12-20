@@ -62,7 +62,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 
 import sys
 import os
@@ -1154,6 +1154,8 @@ class StellarClass(object):
         yprevious: The previous value of y.
 
     StellarClass methods:
+        collides: Return whether or not this object collides with
+            another.
         set_alarm: Set an alarm.
         destroy: Destroy the object.
 
@@ -1205,6 +1207,20 @@ class StellarClass(object):
         # you should do this to make sure that that is true.
         if 'id' in kwargs:
             id_ = kwargs['id']
+
+    def collides(self, other, x=None, y=None):
+        """Return whether or not this object collides with another.
+
+        ``other`` indicates the object to check for a collision with, or
+        the name of said object.  ``other`` can also be a class to check
+        for collisions with.
+
+        ``x`` and ``y``, indicate the position to check for collisions
+        at.  If unspecified or None, this object's current position will
+        be used.
+
+        """
+        pass
 
     def set_alarm(self, alarm_id, value):
         """Set an alarm.
