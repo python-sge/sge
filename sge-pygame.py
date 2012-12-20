@@ -32,9 +32,6 @@ Constants:
     ALIGN_TOP: Flag indicating alignment to the top.
     ALIGN_MIDDLE: Flag indicating alignment to the vertical middle.
     ALIGN_BOTTOM: Flag indicating alignment to the bottom.
-    KEYS: A dictionary containing the keycodes of all keys.
-    KEYNAMES: A dictionary containing the key names of all keycodes
-        (i.e. the reverse of KEYS).
 
 Global variables:
     game: Stores the current game.  If there is no game currently, this
@@ -65,7 +62,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.7"
+__version__ = "0.0.8"
 
 import sys
 import os
@@ -90,6 +87,13 @@ COLORS = {'white':'#ffffff', 'silver':'#c0c0c0', 'gray':'#808080',
           'green':'#008000', 'aqua':'#00ffff', 'teal':'#008080',
           'blue':'#0000ff', 'navy':'#000080', 'fuchsia':'#ff00ff',
           'purple':'#800080'}
+COLORNAMES = {}
+for pair in COLORS.items():
+    COLORNAMES[pair[1]] = pair[0]
+KEYS = {"0":pygame.K_0, "1":pygame.K_1, "2":pygame.K_2, "3":pygame.K_3, "4":pygame.K_4, "5":pygame.K_5, "6":pygame.K_6, "7":pygame.K_7, "8":pygame.K_8, "9":pygame.K_9, "a":pygame.K_a, "b":pygame.K_b, "c":pygame.K_c, "d":pygame.K_d, "e":pygame.K_e, "f":pygame.K_f, "g":pygame.K_g, "h":pygame.K_h, "i":pygame.K_i, "j":pygame.K_j, "k":pygame.K_k, "l":pygame.K_l, "m":pygame.K_m, "n":pygame.K_n, "o":pygame.K_o, "p":pygame.K_p, "q":pygame.K_q, "r":pygame.K_r, "s":pygame.K_s, "t":pygame.K_t, "u":pygame.K_u, "v":pygame.K_v, "w":pygame.K_w, "x":pygame.K_x, "y":pygame.K_y, "z":pygame.K_z, "alt_left":pygame.K_LALT, "alt_right":pygame.K_RALT, "ampersand":pygame.K_AMPERSAND, "apostrophe":pygame.K_QUOTE, "asterisk":pygame.K_ASTERISK, "at":pygame.K_AT, "backslash":pygame.K_BACKSLASH, "backspace":pygame.K_BACKSPACE, "backtick":pygame.K_BACKQUOTE, "bracket_left":pygame.K_LEFTBRACKET, "bracket_right":pygame.K_RIGHTBRACKET, "break":pygame.K_BREAK, "caps_lock":pygame.K_CAPSLOCK, "caret":pygame.K_CARET, "clear":pygame.K_CLEAR, "colon":pygame.K_COLON, "comma":pygame.K_COMMA, "ctrl_left":pygame.K_LCTRL, "ctrl_right":pygame.K_RCTRL, "delete":pygame.K_DELETE, "dollar":pygame.K_DOLLAR, "down":pygame.K_DOWN, "end":pygame.K_END, "enter":pygame.K_RETURN, "equals":pygame.K_EQUALS, "escape":pygame.K_ESCAPE, "euro":pygame.K_EURO, "exclamation":pygame.K_EXCLAIM, "f1":pygame.K_F1, "f2":pygame.K_F2, "f3":pygame.K_F3, "f4":pygame.K_F4, "f5":pygame.K_F5, "f6":pygame.K_F6, "f7":pygame.K_F7, "f8":pygame.K_F8, "f9":pygame.K_F9, "f10":pygame.K_F10, "f11":pygame.K_F11, "f12":pygame.K_F12, "greater_than":pygame.K_GREATER, "hash":pygame.K_HASH, "help":pygame.K_HELP, "home":pygame.K_HOME, "hyphen":pygame.K_MINUS, "insert":pygame.K_INSERT, "kp_0":pygame.K_KP_0, "kp_1":pygame.K_KP_1, "kp_2":pygame.K_KP_2, "kp_3":pygame.K_KP_3, "kp_4":pygame.K_KP_4, "kp_5":pygame.K_KP_5, "kp_6":pygame.K_KP_6, "kp_7":pygame.K_KP_7, "kp_8":pygame.K_KP_8, "kp_9":pygame.K_KP_9, "kp_divide":pygame.K_KP_DIVIDE, "kp_enter":pygame.K_KP_ENTER, "kp_equals":pygame.K_KP_EQUALS, "kp_minus":pygame.K_KP_MINUS, "kp_multiply":pygame.K_KP_MULTIPLY, "kp_plus":pygame.K_KP_PLUS, "kp_point":pygame.K_KP_PERIOD, "left":pygame.K_LEFT, "less_than":pygame.K_LESS, "menu":pygame.K_MENU, "meta_left":pygame.K_LMETA, "meta_right":pygame.K_RMETA, "mode":pygame.K_MODE, "num_lock":pygame.K_NUMLOCK, "pagedown":pygame.K_PAGEDOWN, "pageup":pygame.K_PAGEUP, "parenthesis_left":pygame.K_LEFTPAREN, "parenthesis_right":pygame.K_RIGHTPAREN, "pause":pygame.K_PAUSE, "period":pygame.K_PERIOD, "plus":pygame.K_PLUS, "power":pygame.K_POWER, "print_screen":pygame.K_PRINT, "question":pygame.K_QUESTION, "quote":pygame.K_QUOTEDBL, "right":pygame.K_RIGHT, "scroll_lock":pygame.K_SCROLLOCK, "semicolon":pygame.K_SEMICOLON, "shift_left":pygame.K_LSHIFT, "shift_right":pygame.K_RSHIFT, "slash":pygame.K_SLASH, "space":pygame.K_SPACE, "super_left":pygame.K_LSUPER, "super_right":pygame.K_RSUPER, "sysrq":pygame.K_SYSREQ, "tab":pygame.K_TAB, "underscore":pygame.K_UNDERSCORE, "up":pygame.K_UP}
+KEYNAMES = {}
+for pair in KEYS.items():
+    KEYNAMES[pair[1]] = pair[0]
 
 ALIGN_LEFT = 2
 ALIGN_CENTER = 3
@@ -97,10 +101,6 @@ ALIGN_RIGHT = 1
 ALIGN_TOP = 2
 ALIGN_MIDDLE = 3
 ALIGN_BOTTOM = 1
-KEYS = {"0":pygame.K_0, "1":pygame.K_1, "2":pygame.K_2, "3":pygame.K_3, "4":pygame.K_4, "5":pygame.K_5, "6":pygame.K_6, "7":pygame.K_7, "8":pygame.K_8, "9":pygame.K_9, "a":pygame.K_a, "b":pygame.K_b, "c":pygame.K_c, "d":pygame.K_d, "e":pygame.K_e, "f":pygame.K_f, "g":pygame.K_g, "h":pygame.K_h, "i":pygame.K_i, "j":pygame.K_j, "k":pygame.K_k, "l":pygame.K_l, "m":pygame.K_m, "n":pygame.K_n, "o":pygame.K_o, "p":pygame.K_p, "q":pygame.K_q, "r":pygame.K_r, "s":pygame.K_s, "t":pygame.K_t, "u":pygame.K_u, "v":pygame.K_v, "w":pygame.K_w, "x":pygame.K_x, "y":pygame.K_y, "z":pygame.K_z, "alt_left":pygame.K_LALT, "alt_right":pygame.K_RALT, "ampersand":pygame.K_AMPERSAND, "apostrophe":pygame.K_QUOTE, "asterisk":pygame.K_ASTERISK, "at":pygame.K_AT, "backslash":pygame.K_BACKSLASH, "backspace":pygame.K_BACKSPACE, "backtick":pygame.K_BACKQUOTE, "bracket_left":pygame.K_LEFTBRACKET, "bracket_right":pygame.K_RIGHTBRACKET, "break":pygame.K_BREAK, "caps_lock":pygame.K_CAPSLOCK, "caret":pygame.K_CARET, "clear":pygame.K_CLEAR, "colon":pygame.K_COLON, "comma":pygame.K_COMMA, "ctrl_left":pygame.K_LCTRL, "ctrl_right":pygame.K_RCTRL, "delete":pygame.K_DELETE, "dollar":pygame.K_DOLLAR, "down":pygame.K_DOWN, "end":pygame.K_END, "enter":pygame.K_RETURN, "equals":pygame.K_EQUALS, "escape":pygame.K_ESCAPE, "euro":pygame.K_EURO, "exclamation":pygame.K_EXCLAIM, "f1":pygame.K_F1, "f2":pygame.K_F2, "f3":pygame.K_F3, "f4":pygame.K_F4, "f5":pygame.K_F5, "f6":pygame.K_F6, "f7":pygame.K_F7, "f8":pygame.K_F8, "f9":pygame.K_F9, "f10":pygame.K_F10, "f11":pygame.K_F11, "f12":pygame.K_F12, "greater_than":pygame.K_GREATER, "hash":pygame.K_HASH, "help":pygame.K_HELP, "home":pygame.K_HOME, "hyphen":pygame.K_MINUS, "insert":pygame.K_INSERT, "kp_0":pygame.K_KP_0, "kp_1":pygame.K_KP_1, "kp_2":pygame.K_KP_2, "kp_3":pygame.K_KP_3, "kp_4":pygame.K_KP_4, "kp_5":pygame.K_KP_5, "kp_6":pygame.K_KP_6, "kp_7":pygame.K_KP_7, "kp_8":pygame.K_KP_8, "kp_9":pygame.K_KP_9, "kp_divide":pygame.K_KP_DIVIDE, "kp_enter":pygame.K_KP_ENTER, "kp_equals":pygame.K_KP_EQUALS, "kp_minus":pygame.K_KP_MINUS, "kp_multiply":pygame.K_KP_MULTIPLY, "kp_plus":pygame.K_KP_PLUS, "kp_point":pygame.K_KP_PERIOD, "left":pygame.K_LEFT, "less_than":pygame.K_LESS, "menu":pygame.K_MENU, "meta_left":pygame.K_LMETA, "meta_right":pygame.K_RMETA, "mode":pygame.K_MODE, "num_lock":pygame.K_NUMLOCK, "pagedown":pygame.K_PAGEDOWN, "pageup":pygame.K_PAGEUP, "parenthesis_left":pygame.K_LEFTPAREN, "parenthesis_right":pygame.K_RIGHTPAREN, "pause":pygame.K_PAUSE, "period":pygame.K_PERIOD, "plus":pygame.K_PLUS, "power":pygame.K_POWER, "print_screen":pygame.K_PRINT, "question":pygame.K_QUESTION, "quote":pygame.K_QUOTEDBL, "right":pygame.K_RIGHT, "scroll_lock":pygame.K_SCROLLOCK, "semicolon":pygame.K_SEMICOLON, "shift_left":pygame.K_LSHIFT, "shift_right":pygame.K_RSHIFT, "slash":pygame.K_SLASH, "space":pygame.K_SPACE, "super_left":pygame.K_LSUPER, "super_right":pygame.K_RSUPER, "sysrq":pygame.K_SYSREQ, "tab":pygame.K_TAB, "underscore":pygame.K_UNDERSCORE, "up":pygame.K_UP}
-KEYNAMES = {}
-for pair in KEYS.items():
-    KEYNAMES[pair[1]] = pair[0]
 
 # Global variables
 game = None
@@ -188,24 +188,24 @@ class Game(object):
         get_joystick_buttons: Return the number of buttons on the
             given joystick.
 
-    Game events are handled by special methods.  Some of these events
-    are immediate, i.e. their timing is based only on when they happened
-    (and exact timing can vary by implementation), and some of them are
-    ordered, i.e. they are always checked and/or called in a specific
-    order.  The immediate Game event methods are:
+    Game events are handled by special methods.  The time that they are
+    called is based on the following events, which happen each frame in
+    the following order and are synchronized among all objects which
+    have them:
+        event_step_begin
+        event_step
+        event_step_end
+
+    The following events are not timed in any particular way, but are
+    called immediately when the engine detects them occurring:
         event_game_start
         event_game_end
 
-    The ordered Game events are (in the following order):
-        event_step
+    The following events are always called (in no particular order)
+    between calls of event_step_begin and event_step:
         event_key_press
         event_key_release
         event_mouse_move
-        event_mouse_collision
-        event_mouse_collision_left
-        event_mouse_collision_right
-        event_mouse_collision_top
-        event_mouse_collision_bottom
         event_mouse_button_press
         event_mouse_button_release
         event_joystick_axis_move
@@ -213,6 +213,14 @@ class Game(object):
         event_joystick_button_press
         event_joystick_button_release
         event_close
+
+    The following events are always called (in no particular order)
+    between calls of event_step and event_step_end:
+        event_mouse_collision
+        event_mouse_collision_left
+        event_mouse_collision_right
+        event_mouse_collision_top
+        event_mouse_collision_bottom
 
     """
     # Implementation-specific variables are:
@@ -510,8 +518,8 @@ class Game(object):
         """Game end event."""
         pass
 
-    def event_step(self):
-        """Global step event."""
+    def event_step_begin(self):
+        """Global begin step event."""
         pass
 
     def event_key_press(self, key):
@@ -537,26 +545,6 @@ class Game(object):
 
         """
         pass
-
-    def event_mouse_collision(self, other):
-        """Middle/default mouse collision event."""
-        pass
-
-    def event_mouse_collision_left(self, other):
-        """Left mouse collision event."""
-        self.event_mouse_collision(other)
-
-    def event_mouse_collision_right(self, other):
-        """Right mouse collision event."""
-        self.event_mouse_collision(other)
-
-    def event_mouse_collision_top(self, other):
-        """Top mouse collision event."""
-        self.event_mouse_collision(other)
-
-    def event_mouse_collision_bottom(self, other):
-        """Bottom mouse collision event."""
-        self.event_mouse_collision(other)
 
     def event_mouse_button_press(self, button):
         """Mouse button press event.
@@ -634,6 +622,34 @@ class Game(object):
 
     def event_close(self):
         """Close event (e.g. close button)."""
+        pass
+
+    def event_step(self):
+        """Global step event."""
+        pass
+
+    def event_mouse_collision(self, other):
+        """Middle/default mouse collision event."""
+        pass
+
+    def event_mouse_collision_left(self, other):
+        """Left mouse collision event."""
+        self.event_mouse_collision(other)
+
+    def event_mouse_collision_right(self, other):
+        """Right mouse collision event."""
+        self.event_mouse_collision(other)
+
+    def event_mouse_collision_top(self, other):
+        """Top mouse collision event."""
+        self.event_mouse_collision(other)
+
+    def event_mouse_collision_bottom(self, other):
+        """Bottom mouse collision event."""
+        self.event_mouse_collision(other)
+
+    def event_step_end(self):
+        """Global end step event."""
         pass
 
 
@@ -1323,26 +1339,28 @@ class StellarClass(object):
         set_alarm: Set an alarm.
         destroy: Destroy the object.
 
-    StellarClass events are handled by special methods.  Some of these
-    events are immediate, i.e. their timing is based only on when they
-    happened (and exact timing can vary by implementation), and some of
-    them are ordered, i.e. they are always checked and/or called in a
-    specific order.  The immediate StellarClass event methods are:
+    StellarClass events are handled by special methods.  The time that
+    they are called is based on the following events, which happen each
+    frame in the following order and are synchronized among all objects
+    which have them:
+        event_step_begin
+        event_step
+        event_step_end
+
+    The following events are not timed in any particular way, but are
+    called immediately when the engine detects them occurring:
         event_create
         event_animation_end
         event_destroy
-
-    The ordered StellarClass events are (in the following order):
-        event_step_begin
         event_alarm
-        event_step
+
+    The following events are always called (in no particular order)
+    between calls of event_step and event_step_end:
         event_collision
         event_collision_left
         event_collision_right
         event_collision_top
         event_collision_bottom
-        event_step_end
-        event_draw
 
     """
 
@@ -1500,9 +1518,15 @@ class Room(object):
         resume: Continue the room from where it left off.
         end: Go to the next room.
 
-    Room events are handled by special methods.  They are all immediate
-    events, i.e. their timing is based only on when they happened (and
-    exact timing can vary by implementation).  The event methods are:
+    Room events are handled by special methods.  The following events
+    happen each frame in the following order and are synchronized among
+    all objects which have them:
+        event_step_begin
+        event_step
+        event_step_end
+
+    The following events are not timed in any particular way, but are
+    called immediately when the engine detects them occurring:
         event_room_start
         event_room_end
 
@@ -1565,6 +1589,18 @@ class Room(object):
 
     def event_room_end(self):
         """Room end event."""
+        pass
+
+    def event_step_begin(self):
+        """Room begin step event."""
+        pass
+
+    def event_step(self):
+        """Room step event."""
+        pass
+
+    def event_step_end(self):
+        """Room end step event."""
         pass
 
 
