@@ -878,10 +878,15 @@ class BackgroundLayer(object):
             of the view scroll speed.
         yscroll_rate: The vertical speed the layer scrolls as a factor
             of the view scroll speed.
+        xrepeat: Whether or not the background should be repeated
+            horizontally.
+        yrepeat: Whether or not the background should be repeated
+            vertically.
 
     """
 
-    def __init__(self, sprite, x, y, xscroll_rate=1, yscroll_rate=1):
+    def __init__(self, sprite, x, y, xscroll_rate=1, yscroll_rate=1,
+                 xrepeat=True, yrepeat=True):
         """Create a background layer object.
 
         Arguments set the properties of the layer.  See
@@ -1318,6 +1323,8 @@ class StellarClass(object):
         yprevious: The previous value of y.
 
     StellarClass methods:
+        collides: Return whether or not this object collides with
+            another.
         set_alarm: Set an alarm.
         destroy: Destroy the object.
 
