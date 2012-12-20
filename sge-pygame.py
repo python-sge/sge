@@ -65,7 +65,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.6"
+__version__ = "0.0.7"
 
 import sys
 import os
@@ -914,16 +914,11 @@ class Background(object):
             sprites.
         color: A Stellar Game Engine color used in parts of the
             background where there is no layer.
-        xrepeat: Whether or not the background should be repeated
-            horizontally.
-        yrepeat: Whether or not the background should be repeated
-            vertically.
         id: The unique identifier for this background.
 
     """
 
-    def __init__(self, layers, color, xrepeat=True, yrepeat=True, id_=None,
-                 **kwargs):
+    def __init__(self, layers, color, id_=None, **kwargs):
         """Create a background with the given color and layers.
 
         Arguments set the properties of the background.  See
