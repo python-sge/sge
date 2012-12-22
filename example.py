@@ -16,7 +16,6 @@ to give a general idea of how it will be used.
 
 import sge
 
-
 class glob(object):
     pop_sound = None
 
