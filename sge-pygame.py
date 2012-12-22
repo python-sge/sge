@@ -81,16 +81,16 @@ DEFAULT_SCALE_SMOOTH = False
 DEFAULT_FPS = 60
 DEFAULT_DELTA = False
 DEFAULT_DELTA_MIN = 15
-COLORS = {'white':'#ffffff', 'silver':'#c0c0c0', 'gray':'#808080',
-          'black':'#000000', 'red':'#ff0000', 'maroon':'#800000',
-          'yellow':'#ffff00', 'olive':'#808000', 'lime':'#00ff00',
-          'green':'#008000', 'aqua':'#00ffff', 'teal':'#008080',
-          'blue':'#0000ff', 'navy':'#000080', 'fuchsia':'#ff00ff',
-          'purple':'#800080'}
+COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
+          'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
+          'yellow': '#ffff00', 'olive': '#808000', 'lime': '#00ff00',
+          'green': '#008000', 'aqua': '#00ffff', 'teal': '#008080',
+          'blue': '#0000ff', 'navy': '#000080', 'fuchsia': '#ff00ff',
+          'purple': '#800080'}
 COLORNAMES = {}
 for pair in COLORS.items():
     COLORNAMES[pair[1]] = pair[0]
-KEYS = {"0":pygame.K_0, "1":pygame.K_1, "2":pygame.K_2, "3":pygame.K_3, "4":pygame.K_4, "5":pygame.K_5, "6":pygame.K_6, "7":pygame.K_7, "8":pygame.K_8, "9":pygame.K_9, "a":pygame.K_a, "b":pygame.K_b, "c":pygame.K_c, "d":pygame.K_d, "e":pygame.K_e, "f":pygame.K_f, "g":pygame.K_g, "h":pygame.K_h, "i":pygame.K_i, "j":pygame.K_j, "k":pygame.K_k, "l":pygame.K_l, "m":pygame.K_m, "n":pygame.K_n, "o":pygame.K_o, "p":pygame.K_p, "q":pygame.K_q, "r":pygame.K_r, "s":pygame.K_s, "t":pygame.K_t, "u":pygame.K_u, "v":pygame.K_v, "w":pygame.K_w, "x":pygame.K_x, "y":pygame.K_y, "z":pygame.K_z, "alt_left":pygame.K_LALT, "alt_right":pygame.K_RALT, "ampersand":pygame.K_AMPERSAND, "apostrophe":pygame.K_QUOTE, "asterisk":pygame.K_ASTERISK, "at":pygame.K_AT, "backslash":pygame.K_BACKSLASH, "backspace":pygame.K_BACKSPACE, "backtick":pygame.K_BACKQUOTE, "bracket_left":pygame.K_LEFTBRACKET, "bracket_right":pygame.K_RIGHTBRACKET, "break":pygame.K_BREAK, "caps_lock":pygame.K_CAPSLOCK, "caret":pygame.K_CARET, "clear":pygame.K_CLEAR, "colon":pygame.K_COLON, "comma":pygame.K_COMMA, "ctrl_left":pygame.K_LCTRL, "ctrl_right":pygame.K_RCTRL, "delete":pygame.K_DELETE, "dollar":pygame.K_DOLLAR, "down":pygame.K_DOWN, "end":pygame.K_END, "enter":pygame.K_RETURN, "equals":pygame.K_EQUALS, "escape":pygame.K_ESCAPE, "euro":pygame.K_EURO, "exclamation":pygame.K_EXCLAIM, "f1":pygame.K_F1, "f2":pygame.K_F2, "f3":pygame.K_F3, "f4":pygame.K_F4, "f5":pygame.K_F5, "f6":pygame.K_F6, "f7":pygame.K_F7, "f8":pygame.K_F8, "f9":pygame.K_F9, "f10":pygame.K_F10, "f11":pygame.K_F11, "f12":pygame.K_F12, "greater_than":pygame.K_GREATER, "hash":pygame.K_HASH, "help":pygame.K_HELP, "home":pygame.K_HOME, "hyphen":pygame.K_MINUS, "insert":pygame.K_INSERT, "kp_0":pygame.K_KP0, "kp1":pygame.K_KP1, "kp2":pygame.K_KP2, "kp3":pygame.K_KP3, "kp4":pygame.K_KP4, "kp5":pygame.K_KP5, "kp6":pygame.K_KP6, "kp7":pygame.K_KP7, "kp_8":pygame.K_KP8, "kp_9":pygame.K_KP9, "kp_divide":pygame.K_KP_DIVIDE, "kp_enter":pygame.K_KP_ENTER, "kp_equals":pygame.K_KP_EQUALS, "kp_minus":pygame.K_KP_MINUS, "kp_multiply":pygame.K_KP_MULTIPLY, "kp_plus":pygame.K_KP_PLUS, "kp_point":pygame.K_KP_PERIOD, "left":pygame.K_LEFT, "less_than":pygame.K_LESS, "menu":pygame.K_MENU, "meta_left":pygame.K_LMETA, "meta_right":pygame.K_RMETA, "mode":pygame.K_MODE, "num_lock":pygame.K_NUMLOCK, "pagedown":pygame.K_PAGEDOWN, "pageup":pygame.K_PAGEUP, "parenthesis_left":pygame.K_LEFTPAREN, "parenthesis_right":pygame.K_RIGHTPAREN, "pause":pygame.K_PAUSE, "period":pygame.K_PERIOD, "plus":pygame.K_PLUS, "power":pygame.K_POWER, "print_screen":pygame.K_PRINT, "question":pygame.K_QUESTION, "quote":pygame.K_QUOTEDBL, "right":pygame.K_RIGHT, "scroll_lock":pygame.K_SCROLLOCK, "semicolon":pygame.K_SEMICOLON, "shift_left":pygame.K_LSHIFT, "shift_right":pygame.K_RSHIFT, "slash":pygame.K_SLASH, "space":pygame.K_SPACE, "super_left":pygame.K_LSUPER, "super_right":pygame.K_RSUPER, "sysrq":pygame.K_SYSREQ, "tab":pygame.K_TAB, "underscore":pygame.K_UNDERSCORE, "up":pygame.K_UP}
+KEYS = {"0": pygame.K_0, "1": pygame.K_1, "2": pygame.K_2, "3": pygame.K_3, "4": pygame.K_4, "5": pygame.K_5, "6": pygame.K_6, "7": pygame.K_7, "8": pygame.K_8, "9": pygame.K_9, "a": pygame.K_a, "b": pygame.K_b, "c": pygame.K_c, "d": pygame.K_d, "e": pygame.K_e, "f": pygame.K_f, "g": pygame.K_g, "h": pygame.K_h, "i": pygame.K_i, "j": pygame.K_j, "k": pygame.K_k, "l": pygame.K_l, "m": pygame.K_m, "n": pygame.K_n, "o": pygame.K_o, "p": pygame.K_p, "q": pygame.K_q, "r": pygame.K_r, "s": pygame.K_s, "t": pygame.K_t, "u": pygame.K_u, "v": pygame.K_v, "w": pygame.K_w, "x": pygame.K_x, "y": pygame.K_y, "z": pygame.K_z, "alt_left": pygame.K_LALT, "alt_right": pygame.K_RALT, "ampersand": pygame.K_AMPERSAND, "apostrophe": pygame.K_QUOTE, "asterisk": pygame.K_ASTERISK, "at": pygame.K_AT, "backslash": pygame.K_BACKSLASH, "backspace": pygame.K_BACKSPACE, "backtick": pygame.K_BACKQUOTE, "bracket_left": pygame.K_LEFTBRACKET, "bracket_right": pygame.K_RIGHTBRACKET, "break": pygame.K_BREAK, "caps_lock": pygame.K_CAPSLOCK, "caret": pygame.K_CARET, "clear": pygame.K_CLEAR, "colon": pygame.K_COLON, "comma": pygame.K_COMMA, "ctrl_left": pygame.K_LCTRL, "ctrl_right": pygame.K_RCTRL, "delete": pygame.K_DELETE, "dollar": pygame.K_DOLLAR, "down": pygame.K_DOWN, "end": pygame.K_END, "enter": pygame.K_RETURN, "equals": pygame.K_EQUALS, "escape": pygame.K_ESCAPE, "euro": pygame.K_EURO, "exclamation": pygame.K_EXCLAIM, "f1": pygame.K_F1, "f2": pygame.K_F2, "f3": pygame.K_F3, "f4": pygame.K_F4, "f5": pygame.K_F5, "f6": pygame.K_F6, "f7": pygame.K_F7, "f8": pygame.K_F8, "f9": pygame.K_F9, "f10": pygame.K_F10, "f11": pygame.K_F11, "f12": pygame.K_F12, "greater_than": pygame.K_GREATER, "hash": pygame.K_HASH, "help": pygame.K_HELP, "home": pygame.K_HOME, "hyphen": pygame.K_MINUS, "insert": pygame.K_INSERT, "kp_0": pygame.K_KP0, "kp1": pygame.K_KP1, "kp2": pygame.K_KP2, "kp3": pygame.K_KP3, "kp4": pygame.K_KP4, "kp5": pygame.K_KP5, "kp6": pygame.K_KP6, "kp7": pygame.K_KP7, "kp_8": pygame.K_KP8, "kp_9": pygame.K_KP9, "kp_divide": pygame.K_KP_DIVIDE, "kp_enter": pygame.K_KP_ENTER, "kp_equals": pygame.K_KP_EQUALS, "kp_minus": pygame.K_KP_MINUS, "kp_multiply": pygame.K_KP_MULTIPLY, "kp_plus": pygame.K_KP_PLUS, "kp_point": pygame.K_KP_PERIOD, "left": pygame.K_LEFT, "less_than": pygame.K_LESS, "menu": pygame.K_MENU, "meta_left": pygame.K_LMETA, "meta_right": pygame.K_RMETA, "mode": pygame.K_MODE, "num_lock": pygame.K_NUMLOCK, "pagedown": pygame.K_PAGEDOWN, "pageup": pygame.K_PAGEUP, "parenthesis_left": pygame.K_LEFTPAREN, "parenthesis_right": pygame.K_RIGHTPAREN, "pause": pygame.K_PAUSE, "period": pygame.K_PERIOD, "plus": pygame.K_PLUS, "power": pygame.K_POWER, "print_screen": pygame.K_PRINT, "question": pygame.K_QUESTION, "quote": pygame.K_QUOTEDBL, "right": pygame.K_RIGHT, "scroll_lock": pygame.K_SCROLLOCK, "semicolon": pygame.K_SEMICOLON, "shift_left": pygame.K_LSHIFT, "shift_right": pygame.K_RSHIFT, "slash": pygame.K_SLASH, "space": pygame.K_SPACE, "super_left": pygame.K_LSUPER, "super_right": pygame.K_RSUPER, "sysrq": pygame.K_SYSREQ, "tab": pygame.K_TAB, "underscore": pygame.K_UNDERSCORE, "up": pygame.K_UP}
 KEYNAMES = {}
 for pair in KEYS.items():
     KEYNAMES[pair[1]] = pair[0]
@@ -421,7 +421,7 @@ class Game(object):
         ``joystick`` is the number of the joystick to check, where 0 is
         the first joystick.  ``hat`` is the number of the HAT to check,
         where 0 is the first HAT of the joystick.
-        
+
         Returned value is a tuple in the form (x, y), where x is the
         horizontal position and y is the vertical position.  Both x and
         y are 0 (centered), -1 (left or up), or 1 (right or down).
@@ -873,7 +873,8 @@ class Sprite(object):
                     colorkey_img = image.convert()
                     color = image.get_at((image.get_width() - 1, 0))
                     colorkey_img.set_colorkey(color, pygame.RLEACCEL)
-                    colorkey_img = _scale(colorkey_img, self.width, self.height)
+                    colorkey_img = _scale(
+                        colorkey_img, self.width, self.height)
                     self._images.append(colorkey_img)
             else:
                 img = image.convert()
@@ -1647,4 +1648,3 @@ def _scale(surface, width, height):
         new_surf = pygame.transform.scale(surface, (width, height))
 
     return new_surf
-

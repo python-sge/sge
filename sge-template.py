@@ -78,16 +78,16 @@ DEFAULT_SCALE_SMOOTH = False
 DEFAULT_FPS = 60
 DEFAULT_DELTA = False
 DEFAULT_DELTA_MIN = 15
-COLORS = {'white':'#ffffff', 'silver':'#c0c0c0', 'gray':'#808080',
-          'black':'#000000', 'red':'#ff0000', 'maroon':'#800000',
-          'yellow':'#ffff00', 'olive':'#808000', 'lime':'#00ff00',
-          'green':'#008000', 'aqua':'#00ffff', 'teal':'#008080',
-          'blue':'#0000ff', 'navy':'#000080', 'fuchsia':'#ff00ff',
-          'purple':'#800080'}
+COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
+          'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
+          'yellow': '#ffff00', 'olive': '#808000', 'lime': '#00ff00',
+          'green': '#008000', 'aqua': '#00ffff', 'teal': '#008080',
+          'blue': '#0000ff', 'navy': '#000080', 'fuchsia': '#ff00ff',
+          'purple': '#800080'}
 COLORNAMES = {}
 for pair in COLORS.items():
     COLORNAMES[pair[1]] = pair[0]
-KEYS = {"0":None, "1":None, "2":None, "3":None, "4":None, "5":None, "6":None, "7":None, "8":None, "9":None, "a":None, "b":None, "c":None, "d":None, "e":None, "f":None, "g":None, "h":None, "i":None, "j":None, "k":None, "l":None, "m":None, "n":None, "o":None, "p":None, "q":None, "r":None, "s":None, "t":None, "u":None, "v":None, "w":None, "x":None, "y":None, "z":None, "alt_left":None, "alt_right":None, "ampersand":None, "apostrophe":None, "asterisk":None, "at":None, "backslash":None, "backspace":None, "backtick":None, "bracket_left":None, "bracket_right":None, "break":None, "caps_lock":None, "caret":None, "clear":None, "colon":None, "comma":None, "ctrl_left":None, "ctrl_right":None, "delete":None, "dollar":None, "down":None, "end":None, "enter":None, "equals":None, "escape":None, "euro":None, "exclamation":None, "f1":None, "f2":None, "f3":None, "f4":None, "f5":None, "f6":None, "f7":None, "f8":None, "f9":None, "f10":None, "f11":None, "f12":None, "greater_than":None, "hash":None, "help":None, "home":None, "hyphen":None, "insert":None, "kp_0":None, "kp_1":None, "kp_2":None, "kp_3":None, "kp_4":None, "kp_5":None, "kp_6":None, "kp_7":None, "kp_8":None, "kp_9":None, "kp_divide":None, "kp_enter":None, "kp_equals":None, "kp_minus":None, "kp_multiply":None, "kp_plus":None, "kp_point":None, "left":None, "less_than":None, "menu":None, "meta_left":None, "meta_right":None, "mode":None, "num_lock":None, "pagedown":None, "pageup":None, "parenthesis_left":None, "parenthesis_right":None, "pause":None, "period":None, "plus":None, "power":None, "print_screen":None, "question":None, "quote":None, "right":None, "scroll_lock":None, "semicolon":None, "shift_left":None, "shift_right":None, "slash":None, "space":None, "super_left":None, "super_right":None, "sysrq":None, "tab":None, "underscore":None, "up":None}
+KEYS = {"0": None, "1": None, "2": None, "3": None, "4": None, "5": None, "6": None, "7": None, "8": None, "9": None, "a": None, "b": None, "c": None, "d": None, "e": None, "f": None, "g": None, "h": None, "i": None, "j": None, "k": None, "l": None, "m": None, "n": None, "o": None, "p": None, "q": None, "r": None, "s": None, "t": None, "u": None, "v": None, "w": None, "x": None, "y": None, "z": None, "alt_left": None, "alt_right": None, "ampersand": None, "apostrophe": None, "asterisk": None, "at": None, "backslash": None, "backspace": None, "backtick": None, "bracket_left": None, "bracket_right": None, "break": None, "caps_lock": None, "caret": None, "clear": None, "colon": None, "comma": None, "ctrl_left": None, "ctrl_right": None, "delete": None, "dollar": None, "down": None, "end": None, "enter": None, "equals": None, "escape": None, "euro": None, "exclamation": None, "f1": None, "f2": None, "f3": None, "f4": None, "f5": None, "f6": None, "f7": None, "f8": None, "f9": None, "f10": None, "f11": None, "f12": None, "greater_than": None, "hash": None, "help": None, "home": None, "hyphen": None, "insert": None, "kp_0": None, "kp_1": None, "kp_2": None, "kp_3": None, "kp_4": None, "kp_5": None, "kp_6": None, "kp_7": None, "kp_8": None, "kp_9": None, "kp_divide": None, "kp_enter": None, "kp_equals": None, "kp_minus": None, "kp_multiply": None, "kp_plus": None, "kp_point": None, "left": None, "less_than": None, "menu":None, "meta_left":None, "meta_right":None, "mode":None, "num_lock":None, "pagedown":None, "pageup":None, "parenthesis_left":None, "parenthesis_right":None, "pause":None, "period":None, "plus":None, "power":None, "print_screen":None, "question":None, "quote":None, "right":None, "scroll_lock":None, "semicolon":None, "shift_left":None, "shift_right":None, "slash":None, "space":None, "super_left":None, "super_right":None, "sysrq":None, "tab":None, "underscore":None, "up":None}
 KEYNAMES = {}
 for pair in KEYS.items():
     KEYNAMES[pair[1]] = pair[0]
@@ -412,7 +412,7 @@ class Game(object):
         ``joystick`` is the number of the joystick to check, where 0 is
         the first joystick.  ``hat`` is the number of the HAT to check,
         where 0 is the first HAT of the joystick.
-        
+
         Returned value is a tuple in the form (x, y), where x is the
         horizontal position and y is the vertical position.  Both x and
         y are 0 (centered), -1 (left or up), or 1 (right or down).
@@ -1458,4 +1458,3 @@ class View(object):
 
         """
         pass
-
