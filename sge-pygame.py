@@ -223,10 +223,28 @@ class Game(object):
         event_mouse_collision_bottom
 
     """
-    # Implementation-specific variables are:
-    # xscale = 1.0
-    # yscale = 1.0
-    # music_queue = []
+
+    @property
+    def width(self):
+        return self._width
+
+    @width.setter
+    def width(self, value):
+        if value != self._width:
+            self._width = value
+            self._set_mode()
+
+    @property
+    def height(self):
+        if value != self._height:
+            self._height = value
+            self._set_mode()
+
+    @property
+    def fullscreen(self):
+        if value != self._fullscreen:
+            self._fullscreen = value
+            self._set_mode()
 
     def __init__(self, width=DEFAULT_SCREENWIDTH, height=DEFAULT_SCREENHEIGHT,
                  fullscreen=DEFAULT_FULLSCREEN, scale=DEFAULT_SCALE,
@@ -243,6 +261,20 @@ class Game(object):
         global game
         game = self
 
+        self._width = width
+        self._height = height
+        self._window_width = width
+        self._window_height = height
+        self._fullscreen = fullscreen
+        self.scale = scale
+        self.scale_proportional = scale_proportional
+        self.scale_smooth = scale_smooth
+        self.fps = fps
+        self.delta = delta
+        self.delta_min = delta_min
+        self.music_queue = []
+        self._set_mode()
+
     def start(self):
         """Start the game at the first room.
 
@@ -255,6 +287,7 @@ class Game(object):
     def end(self):
         """Properly end the game."""
         pygame.quit()
+        self.running = False
         global game
         game = None
 
@@ -651,6 +684,46 @@ class Game(object):
     def event_step_end(self):
         """Global end step event."""
         pass
+
+    def _set_mode(self):
+        # Set the mode of the screen based on self.width, self.height,
+        # and self.fullscreen.
+        info = pygame.display.Info()
+
+        if self.scale != 0:
+            self.xscale = self.scale
+            self.yscale = self.scale
+
+        if self.fullscreen or not info.wm:
+            self.window = pygame.display.set_mode((0, 0),
+                                                  pygame.FULLSCREEN)
+
+            if self.scale == 0:
+                self.xscale = info.current_w / self.width
+                self.yscale = info.current_h / self.height
+
+                if self.scale_proportional:
+                    self._make_scale_proportional()
+        else:
+            # Decide window size
+            if self.scale == 0:
+                self.xscale = self._window_width / self.width
+                self.yscale = self._window_height / self.height
+
+                if self.scale_proportional:
+                    self._make_scale_proportional()
+
+            self.window = pygame.display.set_mode((self.width * self.xscale,
+                                                   self.height * self.yscale))
+
+    def _make_scale_proportional(self):
+        # Fix scaling to make it proportional.
+        if self.xscale / self.yscale > self.width / self.height:
+            # Too wide.
+            self.xscale = self.width * self.yscale / self.height
+        else:
+            # Either just right or too tall.
+            self.yscale = self.height * self.xscale / self.width
 
 
 class Sprite(object):
