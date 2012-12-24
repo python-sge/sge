@@ -59,7 +59,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
 
 import sys
 import os
@@ -825,12 +825,13 @@ class Background(object):
     """Background class.
 
     All Background objects have the following attributes:
-        layers: A tuple containing all BackgroundLayer objects used in
-            this background.  These can also be the names of the layers'
-            sprites.
         color: A Stellar Game Engine color used in parts of the
             background where there is no layer.
         id: The unique identifier for this background.
+
+    The following read-only attributes are also available:
+        layers: A tuple containing all BackgroundLayer objects used in
+            this background.
 
     """
 
@@ -843,6 +844,10 @@ class Background(object):
         If ``id`` is None, it will be set to an integer not currently
         used as an ID (the exact number chosen is implementation-
         specific and may not necessarily be the same between runs).
+
+        In addition to containing actual BackgroundLayer objects,
+        ``layers`` can contain valid names of BackgroundLayer objects'
+        sprites.
 
         A game object must exist before an object of this class is
         created.
@@ -1113,7 +1118,9 @@ class StellarClass(object):
         y: The vertical position of the object in the room, where the
             top edge is 0 and y increases toward the bottom.
         sprite: The sprite currently in use by this object.  Set to None
-            for no (visible) sprite.  Can also be the name of a sprite.
+            for no (visible) sprite.  While it will always be an actual
+            Sprite object or None when read, it can also be set to the
+            ID of a sprite.
         visible: Whether or not the object should be drawn.
         bbox_x: The horizontal location of the top-left corner of the
             bounding box to use with this object, where x is 0 and
@@ -1332,14 +1339,16 @@ class Room(object):
     """Class for rooms.
 
     All Room objects have the following attributes:
-        objects: A tuple containing all StellarClass objects in the
-            room.  These can also be the objects' IDs.
         width: The width of the room in pixels.
         height: The height of the room in pixels.
-        background: The Background object used.  Can also be the ID of a
-            background.
+        views: A list containing all View objects in the room.
+        background: The Background object used.  While it will always be
+            the actual object when read, it can be set to either an
+            actual background object or the ID of a background.
 
     The following read-only attributes are also available:
+        objects: A tuple containing all StellarClass objects in the
+            room.
         room_number: The index of this room in the game, where 0 is the
             first room, or None if this room has not been added to a
             game.
@@ -1365,11 +1374,20 @@ class Room(object):
     """
 
     def __init__(self, objects=(), width=DEFAULT_SCREENWIDTH,
-                 height=DEFAULT_SCREENHEIGHT, view=None, background=None):
+                 height=DEFAULT_SCREENHEIGHT, views=None, background=None):
         """Create a new Room object.
 
         Arguments set the properties of the room.  See Room.__doc__ for
         more information.
+
+        If ``views`` is set to None, a new view will be  created with
+        x=0, y=0, and all other arguments unspecified, which will become
+        the first view of the room.  If ``background`` is set to None, a
+        new background is created with no layers and the color set to
+        "black".
+
+        In addition to containing actual StellarClass objects,
+        ``objects`` can contain valid IDs of StellarClass objects.
 
         A game object must exist before an object of this class is
         created.
@@ -1380,7 +1398,8 @@ class Room(object):
     def add(self, obj):
         """Add a StellarClass object to the room.
 
-        ``obj`` is the StellarClass object to add.
+        ``obj`` is the StellarClass object to add.  It can also be an
+        object's ID.
 
         """
         pass
