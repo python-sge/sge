@@ -1633,11 +1633,26 @@ class Room(object):
         created.
 
         """
-        self.objects = objects
         self.width = width
         self.height = height
-        self.views = views
-        self.background = background
+
+        real_objects = []
+        for obj in objects:
+            if isinstance(obj, StellarClass):
+                real_objects.append(obj)
+            else:
+                real_objects.append(game.objects[obj])
+        self.objects = real_objects
+
+        if views is not None:
+            self.views = list(views)
+        else:
+            self.views = [View(0, 0)]
+
+        if background is not None:
+            self.background = background
+        else:
+            self.background = Background((), 'black')
 
     def add(self, obj):
         """Add a StellarClass object to the room.
