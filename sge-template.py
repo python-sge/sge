@@ -68,6 +68,10 @@ import json
 
 # Import implementation-specific libraries like Pygame here
 
+__all__ = ['Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',
+           'Music', 'StellarClass', 'Room', 'View', 'game', 'ALIGN_LEFT',
+           'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP', 'ALIGN_MIDDLE',
+           'ALIGN_BOTTOM']
 # Except in extreme cases, these constants should not be modified.
 DEFAULT_SCREENWIDTH = 640
 DEFAULT_SCREENHEIGHT = 480
@@ -87,6 +91,7 @@ COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
 COLORNAMES = {}
 for pair in COLORS.items():
     COLORNAMES[pair[1]] = pair[0]
+
 KEYS = {"0": None, "1": None, "2": None, "3": None, "4": None, "5": None, "6": None, "7": None, "8": None, "9": None, "a": None, "b": None, "c": None, "d": None, "e": None, "f": None, "g": None, "h": None, "i": None, "j": None, "k": None, "l": None, "m": None, "n": None, "o": None, "p": None, "q": None, "r": None, "s": None, "t": None, "u": None, "v": None, "w": None, "x": None, "y": None, "z": None, "alt_left": None, "alt_right": None, "ampersand": None, "apostrophe": None, "asterisk": None, "at": None, "backslash": None, "backspace": None, "backtick": None, "bracket_left": None, "bracket_right": None, "break": None, "caps_lock": None, "caret": None, "clear": None, "colon": None, "comma": None, "ctrl_left": None, "ctrl_right": None, "delete": None, "dollar": None, "down": None, "end": None, "enter": None, "equals": None, "escape": None, "euro": None, "exclamation": None, "f1": None, "f2": None, "f3": None, "f4": None, "f5": None, "f6": None, "f7": None, "f8": None, "f9": None, "f10": None, "f11": None, "f12": None, "greater_than": None, "hash": None, "help": None, "home": None, "hyphen": None, "insert": None, "kp_0": None, "kp_1": None, "kp_2": None, "kp_3": None, "kp_4": None, "kp_5": None, "kp_6": None, "kp_7": None, "kp_8": None, "kp_9": None, "kp_divide": None, "kp_enter": None, "kp_equals": None, "kp_minus": None, "kp_multiply": None, "kp_plus": None, "kp_point": None, "left": None, "less_than": None, "menu":None, "meta_left":None, "meta_right":None, "mode":None, "num_lock":None, "pagedown":None, "pageup":None, "parenthesis_left":None, "parenthesis_right":None, "pause":None, "period":None, "plus":None, "power":None, "print_screen":None, "question":None, "quote":None, "right":None, "scroll_lock":None, "semicolon":None, "shift_left":None, "shift_right":None, "slash":None, "space":None, "super_left":None, "super_right":None, "sysrq":None, "tab":None, "underscore":None, "up":None}
 KEYNAMES = {}
 for pair in KEYS.items():
