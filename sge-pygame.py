@@ -1734,6 +1734,10 @@ class View(object):
         Arguments set the properties of the view.  See View.__doc__ for
         more information.
 
+        If ``width`` or ``height`` is set to None, the respective size
+        will be set such that the view takes up all of the space that it
+        can (i.e. game.width - xport or game.height - yport).
+
         """
         self.x = x
         self.y = y
