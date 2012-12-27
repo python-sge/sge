@@ -1740,6 +1740,13 @@ class Room(object):
         self.objects = self._start_objects
 
         self.resume()
+        self.event_room_start()
+        for obj in self.objects:
+            obj.reset()
+            obj.event_create()
+
+        for view in self.views:
+            view.reset()
 
     def resume(self):
         """Continue the room from where it left off.
@@ -1748,7 +1755,10 @@ class Room(object):
         method behaves in the same way that Room.start does.
 
         """
-        pass
+        game.current_room = self
+        game.pygame_sprites.kill()
+        for obj in self.objects:
+            game.pygame_sprites.add(obj.pygame_sprite)
 
     def end(self):
         """Go to the next room.
