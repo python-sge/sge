@@ -328,7 +328,7 @@ class Game(object):
         self.fps = fps
         self.delta = delta
         self.delta_min = delta_min
-        self.music_queue = []
+        self._music_queue = []
         self._set_mode()
 
     def start(self):
@@ -343,7 +343,7 @@ class Game(object):
     def end(self):
         """Properly end the game."""
         pygame.quit()
-        self.running = False
+        self._running = False
         global game
         game = None
 
@@ -747,39 +747,38 @@ class Game(object):
         info = pygame.display.Info()
 
         if self.scale != 0:
-            self.xscale = self.scale
-            self.yscale = self.scale
+            self._xscale = self.scale
+            self._yscale = self.scale
 
         if self.fullscreen or not info.wm:
-            self.window = pygame.display.set_mode((0, 0),
-                                                  pygame.FULLSCREEN)
+            self._window = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
             if self.scale == 0:
-                self.xscale = info.current_w / self.width
-                self.yscale = info.current_h / self.height
+                self._xscale = info.current_w / self.width
+                self._yscale = info.current_h / self.height
 
                 if self.scale_proportional:
                     self._make_scale_proportional()
         else:
             # Decide window size
             if self.scale == 0:
-                self.xscale = self._window_width / self.width
-                self.yscale = self._window_height / self.height
+                self._xscale = self._window_width / self.width
+                self._yscale = self._window_height / self.height
 
                 if self.scale_proportional:
                     self._make_scale_proportional()
 
-            self.window = pygame.display.set_mode((self.width * self.xscale,
-                                                   self.height * self.yscale))
+            self._window = pygame.display.set_mode((self.width * self._xscale,
+                                                   self.height * self._yscale))
 
     def _make_scale_proportional(self):
         # Fix scaling to make it proportional.
-        if self.xscale / self.yscale > self.width / self.height:
+        if self._xscale / self._yscale > self.width / self.height:
             # Too wide.
-            self.xscale = self.width * self.yscale / self.height
+            self._xscale = self.width * self._yscale / self.height
         else:
             # Either just right or too tall.
-            self.yscale = self.height * self.xscale / self.width
+            self._yscale = self.height * self._xscale / self.width
 
 
 class Sprite(object):
@@ -837,7 +836,7 @@ class Sprite(object):
     def height(self, value):
         if self._h != value:
             self._h = value
-            self.refresh()
+            self._refresh()
 
     @property
     def transparent(self):
@@ -847,7 +846,7 @@ class Sprite(object):
     def transparent(self, value):
         if self._transparent != value:
             self._transparent = value
-            self.refresh()
+            self._refresh()
 
     def __init__(self, name, width=None, height=None, origin_x=0, origin_y=0,
                  transparent=True, fps=DEFAULT_FPS, bbox_x=0, bbox_y=0,
@@ -988,9 +987,12 @@ class Sprite(object):
         self.origin = origin
         self.transparent = transparent
         self.fps = fps
-        self.bbox = bbox
+        self.bbox_x = bbox_x
+        self.bbox_y = bbox_y
+        self.bbox_width = bbox_width
+        self.bbox_height = bbox_height
 
-    def refresh(self):
+    def _refresh(self):
         # Set the _images list based on the variables.
         for image in self._baseimages:
             if self.transparent:
@@ -1046,6 +1048,8 @@ class BackgroundLayer(object):
         self.y = y
         self.xscroll_rate = xscroll_rate
         self.yscroll_rate = yscroll_rate
+        self.xrepeat = xrepeat
+        self.yrepeat = yrepeat
 
 
 class Background(object):
@@ -1086,10 +1090,9 @@ class Background(object):
         if 'id' in kwargs:
             id_ = kwargs['id']
 
-        self.color = color
         self.layers = layers
-        self.xrepeat = xrepeat
-        self.yrepeat = yrepeat
+        self.color = color
+        self.id = id_
 
 
 class Font(object):
