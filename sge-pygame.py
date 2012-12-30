@@ -67,7 +67,7 @@ __version__ = "0.0.9"
 import sys
 import os
 import math
-import json
+import weakref
 
 import pygame
 
@@ -346,6 +346,9 @@ class Game(object):
                 room._reset()
 
             self.rooms[0].start()
+        else:
+            self.running = True
+            #TODO: Loop
 
     def end(self):
         """Properly end the game."""
@@ -1846,6 +1849,15 @@ class View(object):
         self.yport = yport
         self.width = width if width else game.width - xport
         self.height = height if height else game.height - yport
+
+
+class _PygameSprite(pygame.sprite.DirtySprite):
+
+    # Handles drawing in this implementation.
+
+    def __init__(self, parent, *groups):
+        super(_PygameSprite, self).__init__(*groups)
+        self.parent = weakref.ref(parent)
 
 
 def _scale(surface, width, height):
