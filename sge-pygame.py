@@ -328,8 +328,11 @@ class Game(object):
         self.fps = fps
         self.delta = delta
         self.delta_min = delta_min
-        self._music_queue = []
         self._set_mode()
+
+        self._music_queue = []
+        self._running = False
+        self._pygame_sprites = pygame.sprite.LayeredDirty()
 
     def start(self):
         """Start the game at the first room.
@@ -338,7 +341,11 @@ class Game(object):
         If you do this, everything will be reset to its original state.
 
         """
-        pass
+        if self.running:
+            for room in self.rooms:
+                room._reset()
+
+            self.rooms[0].start()
 
     def end(self):
         """Properly end the game."""
@@ -1721,6 +1728,8 @@ class Room(object):
         self.room_number = len(game.rooms)
         game.rooms.append(self)
 
+        self._started = False
+
     def add(self, obj):
         """Add a StellarClass object to the room.
 
@@ -1736,20 +1745,9 @@ class Room(object):
         If the room has been changed, reset it to its original state.
 
         """
-        self.width = self._start_width
-        self.height = self._start_height
-        self.views = self._start_views
-        self.background = self._start_background
-        self.objects = self._start_objects
-
-        self.resume()
+        self._reset()
         self.event_room_start()
-        for obj in self.objects:
-            obj.reset()
-            obj.event_create()
-
-        for view in self.views:
-            view.reset()
+        self.resume()
 
     def resume(self):
         """Continue the room from where it left off.
@@ -1760,8 +1758,13 @@ class Room(object):
         """
         game.current_room = self
         game.pygame_sprites.kill()
+
         for obj in self.objects:
             game.pygame_sprites.add(obj.pygame_sprite)
+            if self._started:
+                obj.event_create()
+
+        self._started = True
 
     def end(self):
         """Go to the next room.
@@ -1791,6 +1794,21 @@ class Room(object):
     def event_step_end(self):
         """Room end step event."""
         pass
+
+    def _reset(self):
+        # Reset the room to its original state.
+        self._started = False
+        self.width = self._start_width
+        self.height = self._start_height
+        self.views = self._start_views
+        self.background = self._start_background
+        self.objects = self._start_objects
+
+        for view in self.views:
+            view._reset()
+
+        for obj in self.objects:
+            obj._reset()
 
 
 class View(object):
