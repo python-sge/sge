@@ -62,7 +62,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.9"
+__version__ = "0.0.10"
 
 import sys
 import os
@@ -256,6 +256,16 @@ class Game(object):
     called immediately when the engine detects them occurring:
         event_game_start
         event_game_end
+        event_paused_key_press
+        event_paused_key_release
+        event_paused_mouse_move
+        event_paused_mouse_button_press
+        event_paused_mouse_button_release
+        event_paused_joystick_axis_move
+        event_paused_joystick_hat_move
+        event_paused_joystick_button_press
+        event_paused_joystick_button_release
+        event_paused_close
 
     The following events are always called (in no particular order)
     between calls of event_step_begin and event_step:
@@ -332,6 +342,7 @@ class Game(object):
 
         self._music_queue = []
         self._running = False
+        self._clock = pygame.time.Clock()
         self._pygame_sprites = pygame.sprite.LayeredDirty()
 
     def start(self):
@@ -372,6 +383,11 @@ class Game(object):
             2. The view must stay in place.
             3. What was going on within the view before the game was
                 paused must remain visible while the game is paused.
+
+        While the game is paused, all game events will be halted, all
+        objects will be treated like they don't exist, and all sounds
+        and music will be stopped.  Game events whose names start with
+        "event_paused_" will occur during this time.
 
         """
         pass
@@ -617,6 +633,82 @@ class Game(object):
         """Game end event."""
         pass
 
+    def event_paused_key_press(self, key):
+        """Key press event when paused.
+
+        See event_key_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_key_release(self, key):
+        """Key release event when paused.
+
+        See event_key_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_move(self, x, y):
+        """Mouse move event when paused.
+
+        See event_mouse_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_button_press(self, button):
+        """Mouse button press event when paused.
+
+        See event_mouse_button_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_button_release(self, button):
+        """Mouse button release event when paused.
+
+        See event_mouse_button_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_axis_move(self, joystick, axis, value):
+        """Joystick axis move event when paused.
+
+        See event_joystick_axis_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_hat_move(self, joystick, hat, x, y):
+        """Joystick HAT move event when paused.
+
+        See event_joystick_hat_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_button_press(self, joystick, button):
+        """Joystick button press event when paused.
+
+        See event_joystick_button_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_button_release(self, joystick, button):
+        """Joystick button release event when paused.
+
+        See event_joystick_button_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_close(self):
+        """Close event (e.g. close button) when paused."""
+        pass
+
     def event_step_begin(self):
         """Global begin step event."""
         pass
@@ -778,8 +870,8 @@ class Game(object):
                 if self.scale_proportional:
                     self._make_scale_proportional()
 
-            self._window = pygame.display.set_mode((self.width * self._xscale,
-                                                   self.height * self._yscale))
+            self._window = pygame.display.set_mode(
+                (self.width * self._xscale, self.height * self._yscale))
 
     def _make_scale_proportional(self):
         # Fix scaling to make it proportional.
