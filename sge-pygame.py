@@ -343,6 +343,7 @@ class Game(object):
         self._music_queue = []
         self._running = False
         self._clock = pygame.time.Clock()
+        self._joysticks = []
         self._pygame_sprites = pygame.sprite.LayeredDirty()
 
     def start(self):
@@ -352,14 +353,86 @@ class Game(object):
         If you do this, everything will be reset to its original state.
 
         """
-        if self.running:
+        if self._running:
             for room in self.rooms:
                 room._reset()
 
             self.rooms[0].start()
         else:
-            self.running = True
-            #TODO: Loop
+            self._running = True
+            self.event_game_start()
+            self.rooms[0].start()
+            self._clock.tick()
+
+            while self._running:
+                # Begin Step event
+                self.event_step_begin()
+                for i in self.objects:
+                    self.objects[i].event_step_begin()
+
+                for event in pygame.events.get():
+                    if event.type == pygame.KEYDOWN:
+                        self.event_key_press(event.key)
+                    elif event.type == pygame.KEYUP:
+                        self.event_key_release(event.key)
+                    elif event.type == pygame.MOUSEMOTION:
+                        self.mouse.x, self.mouse.y = event.pos
+                        self.event_mouse_move(*event.rel)
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        self.event_mouse_button_press(event.button)
+                    elif event.type == pygame.MOUSEBUTTONUP:
+                        self.event_mouse_button_release(event.button)
+                    elif event.type == pygame.JOYAXISMOTION:
+                        self.event_joystick_axis_move(event.joy, event.axis,
+                                                      event.value)
+                    elif event.type == pygame.JOYBALLMOTION:
+                        # Limited support for trackballs by pretending
+                        # they're axes.  Since they're acting like axes,
+                        # they must be in the range [-1,1].
+                        n = (self._joysticks[event.joy].get_numaxes() +
+                             2 * event.ball)
+                        xvalue = min(max(-1, event.rel[0]), 1)
+                        yvalue = min(max(-1, event.rel[1]), 1)
+
+                        if xvalue != 0:
+                            self.event_joystick_axis_move(event.joy, n, xvalue)
+                        if yvalue != 0:
+                            self.event_joystick_axis_move(event.joy, n + 1,
+                                                          yvalue)
+                    elif event.type == pygame.JOYHATMOTION:
+                        self.event_joystick_hat_move(event.joy, event.hat,
+                                                     *event.value)
+                    elif event.type == pygame.JOYBUTTONDOWN:
+                        self.event_joystick_button_press(event.joy,
+                                                         event.button)
+                    elif event.type == pygame.JOYBUTTONUP:
+                        self.event_joystick_button_release(event.joy,
+                                                           event.button)
+                    elif event.type == pygame.QUIT:
+                        self.event_close()
+
+                # Step event
+                self.event_step()
+                for i in self.objects:
+                    self.objects[i].event_step_begin()
+
+                if self.delta:
+                    time_passed = min(self._clock.tick(self.fps),
+                                      1000 / self.delta_min)
+                else:
+                    self._clock.tick(self.fps)
+                    time_passed = 1000 / self.fps
+
+                for i in self.objects:
+                    # TODO: Move objects, perform collision events.
+                    pass
+
+                # End Step event
+                self.event_step_end()
+                for i in self.objects:
+                    self.objects[i].event_step_begin()
+
+            self.event_game_end()
 
     def end(self):
         """Properly end the game."""
