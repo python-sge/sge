@@ -424,8 +424,93 @@ class Game(object):
                     time_passed = 1000 / self.fps
 
                 for i in self.objects:
-                    # TODO: Move objects, perform collision events.
-                    pass
+                    obj = self.objects[i]
+
+                    if obj.xvelocity or obj.yvelocity:
+                        obj.x += obj.xvelocity
+                        obj.y += obj.yvelocity
+
+                        # Detect collisions
+                        for j in self.objects:
+                            other = self.objects[j]
+                            if obj.collides(other)
+                                xcollision = not obj.collides(other,
+                                                              x=obj.xprevious)
+                                ycollision = not obj.collides(other,
+                                                              y=obj.yprevious)
+
+                                if xcollision and ycollision:
+                                    # Corner collision; determine
+                                    # direction by distance.
+                                    if obj.xvelocity > 0:
+                                        xdepth = (
+                                            obj.bbox_right - other.bbox_left)
+                                    else:
+                                        xdepth = (
+                                            other.bbox_right - obj.bbox_left)
+
+                                    if obj.yvelocity > 0:
+                                        ydepth = (
+                                            obj.bbox_bottom - other.bbox_top)
+                                    else:
+                                        ydepth = (
+                                            other.bbox_bottom - obj.bbox_top)
+
+                                    if xdepth > ydepth:
+                                        if obj.xvelocity > 0:
+                                            obj.event_collision_right(other)
+                                            other.event_collision_left(obj)
+                                        else:
+                                            obj.event_collision_left(other)
+                                            other.event_collision_right(obj)
+                                    else:
+                                        if obj.yvelocity > 0:
+                                            obj.event_collision_bottom(other)
+                                            other.event_collision_top(obj)
+                                        else:
+                                            obj.event_collision_top(other)
+                                            other.event_collision_bottom(obj)
+
+                                elif xcollision:
+                                    # Horizontal collision only.
+                                    if obj.xvelocity > 0:
+                                        obj.event_collision_right(other)
+                                        other.event_collision_left(obj)
+                                    else:
+                                        obj.event_collision_left(other)
+                                        other.event_collision_right(obj)
+
+                                elif ycollision:
+                                    # Vertical collision only.
+                                    if obj.yvelocity > 0:
+                                        obj.event_collision_bottom(other)
+                                        other.event_collision_top(obj)
+                                    else:
+                                        obj.event_collision_top(other)
+                                        other.event_collision_bottom(obj)
+
+                                elif not obj.collides(other, obj.xprevious,
+                                                      obj.yprevious):
+                                    # Wedge collision (both vertical and
+                                    # horizontal collisions).
+                                    if obj.xvelocity > 0:
+                                        obj.event_collision_right(other)
+                                        other.event_collision_left(obj)
+                                    else:
+                                        obj.event_collision_left(other)
+                                        other.event_collision_right(obj)
+                                    if obj.yvelocity > 0:
+                                        obj.event_collision_bottom(other)
+                                        other.event_collision_top(obj)
+                                    else:
+                                        obj.event_collision_top(other)
+                                        other.event_collision_bottom(obj)
+
+                                else:
+                                    # No directional collision; this is
+                                    # a continuous collision.
+                                    obj.event_collision(other)
+                                    other.event_collision(obj)
 
                 # End Step event
                 self.event_step_end()
