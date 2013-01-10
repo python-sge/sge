@@ -517,6 +517,12 @@ class Game(object):
                 for i in self.objects:
                     self.objects[i].event_step_begin()
 
+                # Redraw
+                self._pygame_sprites.clear(self._window, self._background)
+                self._pygame_sprites.update()
+                dirty = self._pygame_sprites.draw(self._window)
+                pygame.display.update(dirty)
+
             self.event_game_end()
 
     def end(self):
