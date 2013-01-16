@@ -302,14 +302,52 @@ class Game(object):
 
     @property
     def height(self):
+        return self._height
+
+    @height.setter
+    def height(self, value):
         if value != self._height:
             self._height = value
             self._set_mode()
 
     @property
     def fullscreen(self):
+        return self._fullscreen
+
+    @fullscreen.setter
+    def fullscreen(self, value):
         if value != self._fullscreen:
             self._fullscreen = value
+            self._set_mode()
+
+    @property
+    def scale(self):
+        return self._scale
+
+    @scale.setter
+    def scale(self, value):
+        if value != self._scale:
+            self._scale = value
+            self._set_mode()
+
+    @property
+    def scale_proportional(self):
+        return self._scale_proportional
+
+    @scale_proportional.setter
+    def scale_proportional(self, value):
+        if value != self._scale_proportional:
+            self._scale_proportional = value
+            self._set_mode()
+
+    @property
+    def scale_smooth(self):
+        return self._scale_smooth
+
+    @scale_smooth.setter
+    def scale_smooth(self, value):
+        if value != self._scale_smooth:
+            self._scale_smooth = value
             self._set_mode()
 
     def __init__(self, width=DEFAULT_SCREENWIDTH, height=DEFAULT_SCREENHEIGHT,
@@ -332,9 +370,9 @@ class Game(object):
         self._window_width = width
         self._window_height = height
         self._fullscreen = fullscreen
-        self.scale = scale
-        self.scale_proportional = scale_proportional
-        self.scale_smooth = scale_smooth
+        self._scale = scale
+        self._scale_proportional = scale_proportional
+        self._scale_smooth = scale_smooth
         self.fps = fps
         self.delta = delta
         self.delta_min = delta_min
@@ -2110,10 +2148,43 @@ class View(object):
 class _PygameSprite(pygame.sprite.DirtySprite):
 
     # Handles drawing in this implementation.
+    #
+    # Scaling is handled transparently in the update method, which is
+    # always called before drawing.  Everything else is the
+    # responsibility of StellarClass, including animation (the current
+    # frame is grabbed from the _image attribute of the parent object).
+    #
+    # TODO: This is an absolutely horrible way to handle scaling. It can
+    # result in massive lag.  Instead of scaling on the fly whenever a
+    # new image is being used, the scaling should be handled all at once
+    # when the scale change happens.
+
+    @property
+    def image_source(self):
+        return self._image_source
+
+    @image_source.setter(self, value):
+        if self._image_source != value:
+            self._image_source = value
+            w = value.get_width() * game._xscale
+            h = value.get_height() * game._yscale
+            if game.scale_smooth:
+                try:
+                    self.image = pygame.transform.smoothscale(value, (w, h))
+                except pygame.error:
+                    self.image = pygame.transform.scale(value, (w, h))
+            else:
+                self.image = pygame.transform.scale(value, (w, h))
 
     def __init__(self, parent, *groups):
+        # See pygame.sprite.DirtySprite.__init__.__doc__.  ``parent``
+        # is a StellarClass object that this object belongs to.
         super(_PygameSprite, self).__init__(*groups)
         self.parent = weakref.ref(parent)
+        self.image_source = parent._image
+
+    def update(self):
+        self.image_source = parent._image
 
 
 def _scale(surface, width, height):
