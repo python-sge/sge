@@ -1317,22 +1317,48 @@ class Sprite(object):
 
     def _refresh(self):
         # Set the _images list based on the variables.
+        self._images = []
         for image in self._baseimages:
-            if self.transparent:
-                if image.get_flags() & pygame.SRCALPHA:
-                    alpha_img = image.convert_alpha()
-                    alpha_img = _scale(alpha_img, self.width, self.height)
-                    self._images.append(alpha_img)
-                else:
-                    colorkey_img = image.convert()
-                    color = image.get_at((image.get_width() - 1, 0))
-                    colorkey_img.set_colorkey(color, pygame.RLEACCEL)
-                    colorkey_img = _scale(colorkey_img, self.width, self.height)
-                    self._images.append(colorkey_img)
+            img = self._set_transparency(image)
+            img = _scale(img, self.width, self.height)
+            self._images.append({(1, 1):img})
+
+    def _set_transparency(self, image):
+        # Return a copy of the surface with transparency properly set
+        # for this sprite's settings.
+        if self.transparent:
+            if image.get_flags() & pygame.SRCALPHA:
+                return image.convert_alpha()
             else:
-                img = image.convert()
-                img = _scale(img, self.width, self.height)
-                self._images.append(img)
+                colorkey_img = image.convert()
+                color = image.get_at((image.get_width() - 1, 0))
+                colorkey_img.set_colorkey(color, pygame.RLEACCEL)
+                return colorkey_img
+        else:
+            return image.convert()
+
+    def _get_image(self, num, xscale=1, yscale=1):
+        # Return the properly sized surface.
+        if (xscale, yscale) in self._images[num]:
+            return self._images[num][(xscale, yscale)]
+        else:
+            # Hasn't been scaled to this size yet
+            img = self._set_transparency(self._baseimages[num])
+
+            if xscale < 0:
+                xscale = abs(xscale)
+                xflip = True
+            else:
+                xflip = False
+
+            if yscale < 0:
+                yscale = abs(yscale)
+                yflip = True
+            else:
+                yflip = False
+
+            img = pygame.transform.flip(img, xflip, yflip)
+            img = _scale(img, self.width * xscale, self.height * yscale)
 
 
 class BackgroundLayer(object):
@@ -2179,19 +2205,26 @@ class _PygameSprite(pygame.sprite.DirtySprite):
     # blitting where possible (i.e. on one view visible, where the whole
     # image is drawn) and for all other and remaining cases, draw the
     # slow way. More thought needs to go into this.
-    #
-    # TODO: Scaling via the StellarClass object variables not done.
 
     def __init__(self, parent, *groups):
         # See pygame.sprite.DirtySprite.__init__.__doc__.  ``parent``
         # is a StellarClass object that this object belongs to.
         super(_PygameSprite, self).__init__(*groups)
         self.parent = weakref.ref(parent)
-        self.image = parent.sprite._images[parent.image_index]
+        self.image = parent.sprite._get_image(
+            parent.image_index, parent.image_xscale, parent.image_yscale)
         self.rect = self.image.get_rect()
+        self._update_rect()
+        self.dirty = 1
 
     def update(self):
-        self.image = parent.sprite._images[parent.image_index]
+        new_image = parent.sprite._get_image(
+            parent.image_index, parent.image_xscale, parent.image_yscale)
+        if self.image != new_image:
+            self.image = new_image
+            self.dirty = 1
+
+        self._update_rect()
 
     def _update_rect(self):
         #TODO: Only update if it hasn't changed
