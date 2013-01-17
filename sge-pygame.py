@@ -50,10 +50,20 @@ Classes:
     View: Class used for views in rooms.
 
 Implementation-specific information:
-Music supports MP3 and MOD music as well as Ogg.  For starting position
-in MOD music, the pattern order number is used instead of a number of
-milliseconds.  Other formats may also be accepted depending on the
-system.
+Since Pygame supports trackballs, they are implemented as extra analog
+sticks.  Their movement is limited to the range of an analog stick to
+ensure full compatibility.
+
+In addition to Ogg Vorbis, Music supports the following formats:
+
+    MP3 (support limited; use not recommended)
+    MOD
+    XM
+    MIDI
+
+For starting position in MOD files, the pattern order number is used
+instead of the number of milliseconds.  For some other extra formats,
+specifying the starting position may have no effect.
 
 """
 
@@ -1075,6 +1085,10 @@ class Game(object):
             self._window = pygame.display.set_mode(
                 (self.width * self._xscale, self.height * self._yscale))
 
+        # Refresh sprites
+        for sprite in self.sprites:
+            sprite._refresh()
+
     def _make_scale_proportional(self):
         # Fix scaling to make it proportional.
         if self._xscale / self._yscale > self.width / self.height:
@@ -1279,22 +1293,27 @@ class Sprite(object):
             img = pygame.Surface((16, 16))
             self._baseimages.append(img)
 
-        if size is None:
-            w = 0
-            h = 0
+        if width is None:
+            width = 0
             for image in self._baseimages:
-                w = max(w, image.get_width())
-                h = max(h, image.get_height())
-            size = (w, h)
+                width = max(width, image.get_width())
 
-        self.size = size
-        self.origin = origin
-        self.transparent = transparent
+        if height is None:
+            height = 0
+            for image in self._baseimages:
+                height = max(height, image.get_height())
+
+        self._w = width
+        self._h = height
+        self.origin_x = origin_x
+        self.origin_y = origin_y
+        self._transparent = transparent
         self.fps = fps
         self.bbox_x = bbox_x
         self.bbox_y = bbox_y
         self.bbox_width = bbox_width
         self.bbox_height = bbox_height
+        self._refresh()
 
     def _refresh(self):
         # Set the _images list based on the variables.
@@ -2154,46 +2173,40 @@ class _PygameSprite(pygame.sprite.DirtySprite):
     # responsibility of StellarClass, including animation (the current
     # frame is grabbed from the _image attribute of the parent object).
     #
-    # TODO: This is an absolutely horrible way to handle scaling. It can
-    # result in massive lag.  Instead of scaling on the fly whenever a
-    # new image is being used, the scaling should be handled all at once
-    # when the scale change happens.
-
-    @property
-    def image_source(self):
-        return self._image_source
-
-    @image_source.setter(self, value):
-        if self._image_source != value:
-            self._image_source = value
-            w = value.get_width() * game._xscale
-            h = value.get_height() * game._yscale
-            if game.scale_smooth:
-                try:
-                    self.image = pygame.transform.smoothscale(value, (w, h))
-                except pygame.error:
-                    self.image = pygame.transform.scale(value, (w, h))
-            else:
-                self.image = pygame.transform.scale(value, (w, h))
+    # TODO: A problem occurs because of multiple views, making it
+    # difficult to take advantage of Pygame's efficient software
+    # rendering. A solution to this problem is: use the efficient
+    # blitting where possible (i.e. on one view visible, where the whole
+    # image is drawn) and for all other and remaining cases, draw the
+    # slow way. More thought needs to go into this.
+    #
+    # TODO: Scaling via the StellarClass object variables not done.
 
     def __init__(self, parent, *groups):
         # See pygame.sprite.DirtySprite.__init__.__doc__.  ``parent``
         # is a StellarClass object that this object belongs to.
         super(_PygameSprite, self).__init__(*groups)
         self.parent = weakref.ref(parent)
-        self.image_source = parent._image
+        self.image = parent.sprite._images[parent.image_index]
+        self.rect = self.image.get_rect()
 
     def update(self):
-        self.image_source = parent._image
+        self.image = parent.sprite._images[parent.image_index]
+
+    def _update_rect(self):
+        #TODO: Only update if it hasn't changed
+        self.rect = self.image.get_rect()
+        #TODO: Set rect position
+        #TODO: Make sprite dirty
 
 
 def _scale(surface, width, height):
     # Scale the given surface to the given width and height, taking the
     # scale factor of the screen into account.
-    width *= glob.xscale
-    height *= glob.yscale
+    width *= game._xscale
+    height *= game._yscale
 
-    if glob.scale_smooth:
+    if game.scale_smooth:
         try:
             new_surf = pygame.transform.smoothscale(surface, (width, height))
         except pygame.error:
