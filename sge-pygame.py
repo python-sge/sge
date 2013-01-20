@@ -2219,20 +2219,39 @@ class _PygameSprite(pygame.sprite.DirtySprite):
         self.dirty = 1
 
     def update(self):
-        new_image = parent.sprite._get_image(
-            parent.image_index, parent.image_xscale, parent.image_yscale)
-        if self.image != new_image:
-            self.image = new_image
-            self.dirty = 1
+        if self.parent() is not None:
+            new_image = self.parent().sprite._get_image(
+                self.parent().image_index, self.parent().image_xscale,
+                self.parent().image_yscale)
+            if self.image != new_image:
+                self.image = new_image
+                self.dirty = 1
 
-        self._update_rect()
+            self._update_rect()
+        else:
+            self.kill()
 
     def _update_rect(self):
-        new_rect = 
-        #TODO: Only update if it hasn't changed
-        self.rect = self.image.get_rect()
-        #TODO: Set rect position
-        #TODO: Make sprite dirty
+        views = game.current_room.views
+        if (len(views) == 1 and views[0].xport == 0 and views[0].yport == 0 and
+                views[0].width == game.width and
+                views[0].height == game.height):
+            # There is only one view that takes up the whole screen, so
+            # we don't need to worry about it.
+            x = self.parent().x - views[0].x - self.parent().sprite.origin_x
+            y = self.parent().y - views[0].y - self.parent().sprite.origin_y
+            new_rect = self.image.get_rect()
+            new_rect.left = round(x * game._xscale)
+            new_rect.top = round(y * game._yscale)
+
+            if self.rect != new_rect:
+                self.rect = new_rect
+                self.dirty = 1
+        else:
+            # There is something more complicated. Have to account for
+            # the possibility of edges or multiple appearances.
+            # TODO
+            pass
 
 
 def _scale(surface, width, height):
