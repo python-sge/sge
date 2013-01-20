@@ -2199,13 +2199,6 @@ class _PygameSprite(pygame.sprite.DirtySprite):
     # always called before drawing.  Everything else is the
     # responsibility of StellarClass, including animation (the current
     # frame is grabbed from the _image attribute of the parent object).
-    #
-    # TODO: A problem occurs because of multiple views, making it
-    # difficult to take advantage of Pygame's efficient software
-    # rendering. A solution to this problem is: use the efficient
-    # blitting where possible (i.e. on one view visible, where the whole
-    # image is drawn) and for all other and remaining cases, draw the
-    # slow way. More thought needs to go into this.
 
     def __init__(self, parent, *groups):
         # See pygame.sprite.DirtySprite.__init__.__doc__.  ``parent``
