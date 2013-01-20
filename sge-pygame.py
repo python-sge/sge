@@ -2248,10 +2248,85 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                 self.rect = new_rect
                 self.dirty = 1
         else:
-            # There is something more complicated. Have to account for
+            # There is something more complicated.  Have to account for
             # the possibility of edges or multiple appearances.
-            # TODO
-            pass
+            original_used = False
+            self.dirty = 1
+            for view in views:
+                x = self.parent().x - view.x - self.parent().sprite.origin_x
+                y = self.parent().y - view.y - self.parent().sprite.origin_y
+                w = self.image.get_width()
+                h = self.image.get_height()
+                new_rect = self.image.get_rect()
+                new_rect.left = round(x * game._xscale)
+                new_rect.top = round(y * game._yscale)
+                inside_view = (x >= view.xport and
+                               x + w <= view.xport + view.width and
+                               y >= view.yport and
+                               y + h <= view.yport + view.height)
+
+                if not original_used and inside_view:
+                    original_used = True
+                    if self.rect == new_rect:
+                        self.dirty = 0
+                    else:
+                        self.rect = new_rect
+                else:
+                    if inside_view:
+                        img = self.image
+                        rect = new_rect
+                    else:
+                        # Make a cut-off version of the sprite and
+                        # adjust the rect accordingly.
+                        if x < view.xport:
+                            cut_x = view.xport - x
+                            x = view.xport
+                            w -= cut_x
+                        else:
+                            cut_x = 0
+
+                        if x + w > view.xport + view.width:
+                            w -= (x + w) - (view.xport + view.width)
+
+                        if y < view.yport:
+                            cut_y = view.yport - y
+                            y = view.yport
+                            h -= cut_y
+                        else:
+                            cut_y = 0
+
+                        if y + h > view.yport + view.height:
+                            h -= (y + h) - (view.yport + view.height)
+
+                        x = round(x * game._xscale)
+                        y = round(y * game._yscale)
+                        cut_x = round(cut_x * game._xscale)
+                        cut_y = round(cut_y * game._yscale)
+                        w = round(w * game._xscale)
+                        h = round(h * game._yscale)
+                        cut_rect = pygame.Rect(cut_x, cut_y, w, h)
+                        img.self.image.subsurface(cut_rect)
+                        rect = pygame.Rect(x, y, w, h)
+
+                    # Create proxy one-time sprite
+                    proxy = _PygameOneTimeSprite(img, rect)
+                    game._pygame_sprites.add(proxy, layer=self.parent().layer)
+
+
+class _PygameOneTimeSprite(pygame.sprite.DirtySprite):
+
+    # A regular DirtySprite that only displays once, and then destroys
+    # itself.
+
+    def __init__(self, image, rect, *groups):
+        super(_PygameOneTimeSprite, self).__init__(*groups)
+        self.image = image
+        self.rect = rect
+        self.dirty = 1
+
+    def update(self):
+        if not self.dirty:
+            self.kill()
 
 
 def _scale(surface, width, height):
