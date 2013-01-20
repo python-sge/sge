@@ -26,6 +26,8 @@ offered by all implementations.  Any implementation failing to do so is
 incomplete.
 
 Constants:
+    IMPLEMENTATION: A string identifying the how the engine is
+        implemented (e.g. the name of the graphics library used).
     ALIGN_LEFT: Flag indicating alignment to the left.
     ALIGN_CENTER: Flag indicating alignment to the horizontal center.
     ALIGN_RIGHT: Flag indicating alignment to the right.
@@ -72,7 +74,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.11"
+__version__ = "0.0.12"
 
 import sys
 import os
@@ -161,6 +163,7 @@ KEYNAMES = {}
 for pair in KEYS.items():
     KEYNAMES[pair[1]] = pair[0]
 
+IMPLEMENTATION = "Pygame 1.9"
 ALIGN_LEFT = 2
 ALIGN_CENTER = 3
 ALIGN_RIGHT = 1
@@ -1369,8 +1372,12 @@ class BackgroundLayer(object):
     All BackgroundLayer objects have the following attributes:
         sprite: The Sprite object used for this layer.  Can also be the
             name of a sprite.
-        x: The horizontal offset of the background.
-        y: The vertical offset of the background.
+        x: The horizontal offset of the layer.
+        y: The vertical offset of the layer.
+        z: The Z-axis position of the layer in the room, which
+            determines in what order layers are drawn; layers with a
+            higher Z value are drawn in front of layers with a lower Z
+            value.
         xscroll_rate: The horizontal speed the layer scrolls as a factor
             of the view scroll speed.
         yscroll_rate: The vertical speed the layer scrolls as a factor
@@ -1382,7 +1389,7 @@ class BackgroundLayer(object):
 
     """
 
-    def __init__(self, sprite, x, y, xscroll_rate=1, yscroll_rate=1,
+    def __init__(self, sprite, x, y, z, xscroll_rate=1, yscroll_rate=1,
                  xrepeat=True, yrepeat=True):
         """Create a background layer object.
 
@@ -1762,6 +1769,10 @@ class StellarClass(object):
             left edge is 0 and x increases toward the right.
         y: The vertical position of the object in the room, where the
             top edge is 0 and y increases toward the bottom.
+        z: The Z-axis position of the object in the room, which
+            determines in what order objects are drawn; objects with a
+            higher Z value are drawn in front of objects with a lower Z
+            value.
         sprite: The sprite currently in use by this object.  Set to None
             for no (visible) sprite.  While it will always be an actual
             Sprite object or None when read, it can also be set to the
@@ -1852,7 +1863,7 @@ class StellarClass(object):
 
     """
 
-    def __init__(self, x, y, sprite=None, visible=True, bbox_x=None,
+    def __init__(self, x, y, z, sprite=None, visible=True, bbox_x=None,
                  bbox_y=None, bbox_width=None, bbox_height=None,
                  collision_ellipse=False, collision_precise=False, id_=None,
                  **kwargs):
