@@ -61,7 +61,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.12"
+__version__ = "0.0.13"
 
 import sys
 import os
@@ -159,14 +159,14 @@ class Game(object):
             file names as the keys.
         music: A dictionary containing all loaded music, using their
             file names as the keys.
+        objects: A dictionary containing all StellarClass objects in the
+            game, using their unique identifiers as the keys.
         rooms: A list containing all rooms in order of their creation.
         current_room: The Room object which is currently active.
         mouse: A StellarClass object which represents the mouse cursor.
             Its ID is "mouse" and its bounding box is one pixel.
             Speed variables are determined by averaging all mouse
             movement during the last quarter of a second.
-        objects: A dictionary containing all StellarClass objects in the
-            current room, using their unique identifiers as the keys.
 
     Game methods:
         start: Start the game at the first room.
