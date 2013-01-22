@@ -61,7 +61,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.13"
+__version__ = "0.0.14"
 
 import sys
 import os
@@ -1231,11 +1231,11 @@ class StellarClass(object):
             ID of a sprite.
         visible: Whether or not the object should be drawn.
         bbox_x: The horizontal location of the top-left corner of the
-            bounding box to use with this object, where x is 0 and
-            bbox_x increases toward the right.
+            bounding box in relation to x, where 0 is x and bbox_x
+            increases toward the right.
         bbox_y: The vertical location of the top-left corner of the
-            bounding box to use with this object, where y is 0 and
-            bbox_y increases toward the bottom.
+            bounding box in relation to y, where 0 is y and bbox_y
+            increases toward the bottom.
         bbox_width: The width of the bounding box in pixels.
         bbox_height: The height of the bounding box in pixels.
         collision_ellipse: Whether or not an ellipse (rather than a
@@ -1243,14 +1243,14 @@ class StellarClass(object):
         collision_precise: Whether or not precise (pixel-perfect)
             collision detection should be used.
         id: The unique identifier for this object.
-        bbox_left: The position of the left side of the bounding box
-            (same as bbox_x).
+        bbox_left: The position of the left side of the bounding box in
+            the room (same as x + bbox_x).
         bbox_right: The position of the right side of the bounding box
-            (same as bbox_x + bbox_width).
-        bbox_top: The position of the top side of the bounding box.
-            (same as bbox_y)
+            in the room (same as bbox_left + bbox_width).
+        bbox_top: The position of the top side of the bounding box
+            (same as y + bbox_y).
         bbox_bottom: The position of the bottom side of the bounding
-            box (same as bbox_y + bbox_height).
+            box (same as bbox_top + bbox_height).
         xvelocity: The velocity of the object toward the right.  Default
             is 0.
         yvelocity: The velocity of the object toward the bottom.
