@@ -1,0 +1,133 @@
+Following is a list of all of the key identifier strings along with the
+characters they usually generate (where applicable):
+
+* "0"           0
+* "1"           1
+* "2"           2
+* "3"           3
+* "4"           4
+* "5"           5
+* "6"           6
+* "7"           7
+* "8"           8
+* "9"           9
+* "a"           a
+* "b"           b
+* "c"           c
+* "d"           d
+* "e"           e
+* "f"           f
+* "g"           g
+* "h"           h
+* "i"           i
+* "j"           j
+* "k"           k
+* "l"           l
+* "m"           m
+* "n"           n
+* "o"           o
+* "p"           p
+* "q"           q
+* "r"           r
+* "s"           s
+* "t"           t
+* "u"           u
+* "v"           v
+* "w"           w
+* "x"           x
+* "y"           y
+* "z"           z
+* "alt_left"
+* "alt_right"
+* "ampersand"   &
+* "apostrophe"  '
+* "asterisk"    *
+* "at"          @
+* "backslash"   \
+* "backspace"
+* "backtick"    `
+* "bracket_left"    [
+* "bracket_right"   ]
+* "break"
+* "caps_lock"
+* "caret"       ^
+* "clear"
+* "colon"       :
+* "comma"       ,
+* "ctrl_left"
+* "ctrl_right"
+* "delete"
+* "dollar"      $
+* "down"
+* "end"
+* "enter"
+* "equals"      =
+* "escape"
+* "euro"        €
+* "exclamation" !
+* "f1"
+* "f2"
+* "f3"
+* "f4"
+* "f5"
+* "f6"
+* "f7"
+* "f8"
+* "f9"
+* "f10"
+* "f11"
+* "f12"
+* "greater_than"    >
+* "hash"        #
+* "help"
+* "home"
+* "hyphen"      -
+* "insert"
+* "kp_0"        0
+* "kp_1"        1
+* "kp_2"        2
+* "kp_3"        3
+* "kp_4"        4
+* "kp_5"        5
+* "kp_6"        6
+* "kp_7"        7
+* "kp_8"        8
+* "kp_9"        9
+* "kp_divide"   /
+* "kp_enter"
+* "kp_equals"   =
+* "kp_minus"    -
+* "kp_multiply" *
+* "kp_plus"     +
+* "kp_point"    .
+* "left"
+* "less_than"   <
+* "menu"
+* "meta_left"
+* "meta_right"
+* "mode"
+* "num_lock"
+* "pagedown"
+* "pageup"
+* "parenthesis_left"    (
+* "parenthesis_right"   )
+* "pause"
+* "period"      .
+* "plus"        +
+* "power"
+* "print_screen"
+* "question"    ?
+* "quote"       "
+* "right"
+* "scroll_lock"
+* "semicolon"   ;
+* "shift_left"
+* "shift_right"
+* "slash"       /
+* "space"
+* "super_left"
+* "super_right"
+* "sysrq"
+* "tab"
+* "underscore"  _
+* "up"
