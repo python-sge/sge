@@ -74,7 +74,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.13"
+__version__ = "0.0.14"
 
 import sys
 import os
@@ -1780,11 +1780,11 @@ class StellarClass(object):
             ID of a sprite.
         visible: Whether or not the object should be drawn.
         bbox_x: The horizontal location of the top-left corner of the
-            bounding box to use with this object, where x is 0 and
-            bbox_x increases toward the right.
+            bounding box in relation to x, where 0 is x and bbox_x
+            increases toward the right.
         bbox_y: The vertical location of the top-left corner of the
-            bounding box to use with this object, where y is 0 and
-            bbox_y increases toward the bottom.
+            bounding box in relation to y, where 0 is y and bbox_y
+            increases toward the bottom.
         bbox_width: The width of the bounding box in pixels.
         bbox_height: The height of the bounding box in pixels.
         collision_ellipse: Whether or not an ellipse (rather than a
@@ -1792,14 +1792,14 @@ class StellarClass(object):
         collision_precise: Whether or not precise (pixel-perfect)
             collision detection should be used.
         id: The unique identifier for this object.
-        bbox_left: The position of the left side of the bounding box
-            (same as bbox_x).
+        bbox_left: The position of the left side of the bounding box in
+            the room (same as x + bbox_x).
         bbox_right: The position of the right side of the bounding box
-            (same as bbox_x + bbox_width).
+            in the room (same as bbox_left + bbox_width).
         bbox_top: The position of the top side of the bounding box
-            (same as bbox_y).
+            (same as y + bbox_y).
         bbox_bottom: The position of the bottom side of the bounding
-            box (same as bbox_y + bbox_height).
+            box (same as bbox_top + bbox_height).
         xvelocity: The velocity of the object toward the right.  Default
             is 0.
         yvelocity: The velocity of the object toward the bottom.
@@ -1890,6 +1890,25 @@ class StellarClass(object):
         if 'id' in kwargs:
             id_ = kwargs['id']
 
+        self.x = x
+        self.y = y
+        self.z = z
+        self.sprite = sprite
+        self.visible = visible
+        self.bbox_x = bbox_x if bbox_x is not None else sprite.bbox_x
+        self.bbox_y = bbox_y if bbox_y is not None else sprite.bbox_y
+        self.bbox_width = (bbox_width if bbox_width is not None else
+                           sprite.bbox_width)
+        self.bbox_height = (bbox_height if bbox_height is not None else
+                            sprite.bbox_height)
+        self.collision_ellipse = collision_ellipse
+        self.collision_precise = collision_precise
+        self.id = id_
+
+        self._rect = pygame.Rect(self.bbox_x, self.bbox_y, self.bbox_width,
+                                 self.bbox_height)
+        self._set_mask()
+
     def collides(self, other, x=None, y=None):
         """Return whether or not this object collides with another.
 
@@ -1902,7 +1921,25 @@ class StellarClass(object):
         be used.
 
         """
-        pass
+        if x is None:
+            x = self.x
+        if y is None:
+            y = self.y
+
+        # Change x and y to be offset values; these are easier to use.
+        x -= self.x
+        y -= self.y
+
+        if (self.collision_precise or self.collision_ellipse or
+                other.collision_precise or other.collision_ellipse):
+            # Use masks.
+            pass
+        else:
+            # Use bounding boxes.
+            return (self.bbox_left + x < other.bbox_right and
+                    self.bbox_right + x > other.bbox_left and
+                    self.bbox_top + y < other.bbox_bottom and
+                    self.bbox_bottom + y > other.bbox_top)
 
     def set_alarm(self, alarm_id, value):
         """Set an alarm.
@@ -1975,6 +2012,29 @@ class StellarClass(object):
     def event_draw(self):
         """Draw event."""
         pass
+
+    def _set_mask(self):
+        # Properly set the hit mask based on the collision settings.
+        if self.collision_ellipse:
+            # Elliptical mask based on bounding box.
+            # TODO
+            pass
+        elif self.collision_precise:
+            # Mask based on opacity of the current image.
+            left = self.bbox_x + self.sprite.origin_x
+            right = left + self.bbox_width
+            top = self.bbox_y + self.sprite.origin_y
+            bottom = top + self.bbox_height
+
+            mask = self.sprite._get_precise_mask(self.image_index)[left:right]
+            for i in xrange(len(mask)):
+                mask[i] = mask[i][top:bottom]
+
+            self._hitmask = mask
+        else:
+            # Mask is all pixels in the bounding box.
+            self._hitmask = [[False for j in xrange(self.bbox_height)]
+                             for i in xrange(self.bbox_width)]
 
 
 class Mouse(StellarClass):
