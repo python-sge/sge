@@ -1364,6 +1364,11 @@ class Sprite(object):
             img = pygame.transform.flip(img, xflip, yflip)
             img = _scale(img, self.width * xscale, self.height * yscale)
 
+    def _get_precise_mask(self, num):
+        # Return a precise mask (2D list of True/False values) for the
+        # given image index.
+        pass
+
 
 class BackgroundLayer(object):
 
@@ -1933,7 +1938,27 @@ class StellarClass(object):
         if (self.collision_precise or self.collision_ellipse or
                 other.collision_precise or other.collision_ellipse):
             # Use masks.
-            pass
+            self_rect = pygame.Rect(round(self.bbox_left + x),
+                                    round(self.bbox_top + y),
+                                    self.bbox_width, self.bbox_height)
+            other_rect = pygame.Rect(round(other.bbox_left),
+                                     round(other.bbox_top),
+                                     other.bbox_width, other.bbox_height)
+            collide_rect = self_rect.clip(other_rect)
+
+            self_xoffset = collide_rect.left - self_rect.left
+            self_yoffset = collide_rect.top - self_rect.top
+            other_xoffset = collide_rect.left - other_rect.left
+            other_yoffset = collide_rect.top - other_rect.top
+
+            for a in xrange(collide_rect.w):
+                for b in xrange(collide_rect.h):
+                    if (self._hitmask[a + self_xoffset][b + self_yoffset] and
+                        other._hitmask[a + other_xoffset][b + other_yoffset]):
+                        return True
+
+            return False
+                    
         else:
             # Use bounding boxes.
             return (self.bbox_left + x < other.bbox_right and
