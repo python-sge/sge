@@ -1222,6 +1222,7 @@ class Sprite(object):
         self._transparent = None
         self._baseimages = []
         self._images = []
+        self._masks = {}
 
         fnames = os.listdir(os.path.join('data', 'images'))
         fnames.extend(os.listdir(os.path.join('data', 'sprites')))
@@ -1367,7 +1368,26 @@ class Sprite(object):
     def _get_precise_mask(self, num):
         # Return a precise mask (2D list of True/False values) for the
         # given image index.
-        pass
+        if num in self._masks.keys():
+            return self._masks[num]
+        else:
+            image = self._get_image(num)
+            image.lock()
+            mask = []
+            if image.get_flags() & pygame.SRCALPHA:
+                for x in xrange(image.get_width()):
+                    mask.append([])
+                    for y in xrange(image.get_height()):
+                        mask[x].append(image.get_at((x, y)).a > 0)
+            else:
+                colorkey = image.get_colorkey()
+                for x in xrange(image.get_width()):
+                    mask.append([])
+                    for y in xrange(image.get_height()):
+                        mask[x].append(image.get_at((x, y)) == colorkey)
+
+            self._masks[num] = mask
+            return mask
 
 
 class BackgroundLayer(object):
@@ -2058,7 +2078,7 @@ class StellarClass(object):
             self._hitmask = mask
         else:
             # Mask is all pixels in the bounding box.
-            self._hitmask = [[False for j in xrange(self.bbox_height)]
+            self._hitmask = [[True for j in xrange(self.bbox_height)]
                              for i in xrange(self.bbox_width)]
 
 
