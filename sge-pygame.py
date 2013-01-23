@@ -2019,6 +2019,44 @@ class StellarClass(object):
         self._bbox_top = value - self.bbox_width
         self._y = self.bbox_top - self.bbox_x
 
+    @property
+    def xvelocity(self):
+        return self._xvelocity
+
+    @xvelocity.setter
+    def xvelocity(self, value):
+        self._xvelocity = value
+        self._set_speed()
+
+    @property
+    def yvelocity(self):
+        return self._yvelocity
+
+    @yvelocity.setter
+    def yvelocity(self, value):
+        self._yvelocity = value
+        self._set_speed()
+
+    @property
+    def speed(self):
+        return self._speed
+
+    @speed.setter
+    def speed(self, value):
+        self._speed = value
+        self._xvelocity = math.cos(radians(self.move_direction)) * value
+        self._yvelocity = math.sin(radians(self.move_direction)) * value
+
+    @property
+    def move_direction(self):
+        return self._move_direction
+
+    @move_direction.setter
+    def move_direction(self, value):
+        self._move_direction = value
+        self._xvelocity = math.cos(radians(value)) * self.speed
+        self._yvelocity = math.sin(radians(value)) * self.speed
+
     def __init__(self, x, y, z, sprite=None, visible=True,
                  detects_collisions=True, bbox_x=None, bbox_y=None,
                  bbox_width=None, bbox_height=None, collision_ellipse=False,
@@ -2213,6 +2251,25 @@ class StellarClass(object):
             # Mask is all pixels in the bounding box.
             self._hitmask = [[True for j in xrange(self.bbox_height)]
                              for i in xrange(self.bbox_width)]
+
+    def _set_speed(self):
+        # Set the speed and move direction based on xvelocity and
+        # yvelocity.
+        self._speed = math.sqrt(self._xvelocity ** 2 + self._yvelocity ** 2)
+
+        base_angle = math.degrees(math.atan(abs(self._yvelocity) /
+                                            abs(self._xvelocity)))
+
+        if self._xvelocity < 0 and self._yvelocity < 0:
+            self._move_direction += 180
+        elif self._xvelocity < 0:
+            self._move_direction = 180 - base_angle
+        elif self._yvelocity < 0:
+            self._move_direction = 360 - base_angle
+        else:
+            self._move_direction = base_angle
+
+        self._move_direction %= 360
 
 
 class Mouse(StellarClass):
