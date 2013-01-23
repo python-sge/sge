@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Stellar Game Engine - Pygame
-# Copyright (C) 2012 Julian Marchant <onpon4@lavabit.com>
+# Copyright (C) 2012, 2013 Julian Marchant <onpon4@lavabit.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -1368,7 +1368,7 @@ class Sprite(object):
     def _get_precise_mask(self, num):
         # Return a precise mask (2D list of True/False values) for the
         # given image index.
-        if num in self._masks.keys():
+        if num in self._masks:
             return self._masks[num]
         else:
             image = self._get_image(num)
@@ -1473,9 +1473,16 @@ class Background(object):
         if 'id' in kwargs:
             id_ = kwargs['id']
 
-        self.layers = layers
         self.color = color
         self.id = id_
+        self.layers = []
+
+        for layer in layers:
+            if isinstance(layer, BackgroundLayer):
+                self.layers.append(layer)
+            else:
+                if layer in game.background_layers:
+                    self.layers.append(game.background_layers[layer])
 
 
 class Font(object):

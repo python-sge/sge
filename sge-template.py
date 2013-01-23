@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Stellar Game Engine Template
-# Copyright (C) 2012 Julian Marchant <onpon4@lavabit.com>
+# Copyright (C) 2012, 2013 Julian Marchant <onpon4@lavabit.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
