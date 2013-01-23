@@ -74,7 +74,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.14"
+__version__ = "0.0.15"
 
 import sys
 import os
@@ -1811,6 +1811,8 @@ class StellarClass(object):
             Sprite object or None when read, it can also be set to the
             ID of a sprite.
         visible: Whether or not the object should be drawn.
+        detects_collisions: Whether or not the object should be involved
+            in collisions.
         bbox_x: The horizontal location of the top-left corner of the
             bounding box in relation to x, where 0 is x and bbox_x
             increases toward the right.
@@ -1896,10 +1898,10 @@ class StellarClass(object):
 
     """
 
-    def __init__(self, x, y, z, sprite=None, visible=True, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
-                 collision_ellipse=False, collision_precise=False, id_=None,
-                 **kwargs):
+    def __init__(self, x, y, z, sprite=None, visible=True,
+                 detects_collisions=True, bbox_x=None, bbox_y=None,
+                 bbox_width=None, bbox_height=None, collision_ellipse=False,
+                 collision_precise=False, id_=None, **kwargs):
         """Create a new StellarClass object.
 
         Arguments set the properties of the object.  See
@@ -1927,6 +1929,7 @@ class StellarClass(object):
         self.z = z
         self.sprite = sprite
         self.visible = visible
+        self.detects_collisions = detects_collisions
         self.bbox_x = bbox_x if bbox_x is not None else sprite.bbox_x
         self.bbox_y = bbox_y if bbox_y is not None else sprite.bbox_y
         self.bbox_width = (bbox_width if bbox_width is not None else
