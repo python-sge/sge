@@ -392,6 +392,7 @@ class Game(object):
         self.delta_min = delta_min
         self._set_mode()
 
+        self._colliders = []
         self._music_queue = []
         self._running = False
         self._clock = pygame.time.Clock()
@@ -1898,6 +1899,126 @@ class StellarClass(object):
 
     """
 
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        self._x = value
+        self._bbox_left = value + self.bbox_x
+        self._bbox_right = self.bbox_left + self.bbox_width
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, value):
+        self._y = value
+        self._bbox_top = value + self.bbox_y
+        self._bbox_bottom = self.bbox_top + self.bbox_height
+
+    @property
+    def z(self):
+        return self._z
+
+    @z.setter
+    def z(self, value):
+        self._z = value
+        game._pygame_sprites.add(self._pygame_sprite, layer=self._z)
+
+    @property
+    def sprite(self):
+        return self._sprite
+
+    @sprite.setter
+    def sprite(self, value):
+        if isinstance(value, Sprite):
+            self._sprite = value
+        else:
+            self._sprite = game.sprites[value]
+
+    @property
+    def detects_collisions(self):
+        return self._detects_collisions
+
+    @detects_collisions.setter
+    def detects_collisions(self, value):
+        self._detects_collisions = value
+        position = None
+        for i in xrange(len(game._colliders)):
+            if game._colliders[i]() is self:
+                position = i
+                break
+
+        if self._detects_collisions:
+            if position is None:
+                game._colliders.append(weakref.ref(self))
+        else:
+            if position is not None:
+                del game._colliders[position]
+
+    @property
+    def collision_ellipse(self):
+        return self._collision_ellipse
+
+    @collision_ellipse.setter
+    def collision_ellipse(self, value):
+        if value != self._collision_ellipse:
+            self._collision_ellipse = value
+            self._set_mask()
+
+    @property
+    def collision_precise(self):
+        return self._collision_precise
+
+    @collision_precise.setter
+    def collision_precise(self, value):
+        if value != self._collision_precise:
+            self._collision_precise = value
+            self._set_mask()
+
+    @property
+    def bbox_left(self):
+        return self._bbox_left
+
+    @bbox_left.setter
+    def bbox_left(self, value):
+        self._bbox_left = value
+        self._bbox_right = value + self.bbox_width
+        self._x = value - self.bbox_x
+
+    @property
+    def bbox_right(self):
+        return self._bbox_right
+
+    @bbox_right.setter
+    def bbox_right(self, value):
+        self._bbox_right = value
+        self._bbox_left = value - self.bbox_width
+        self._x = self.bbox_left - self.bbox_x
+
+    @property
+    def bbox_top(self):
+        return self._bbox_top
+
+    @bbox_top.setter
+    def bbox_top(self, value):
+        self._bbox_top = value
+        self._bbox_bottom = value + self.bbox_height
+        self._y = value - self.bbox_y
+
+    @property
+    def bbox_bottom(self):
+        return self._bbox_bottom
+
+    @bbox_bottom.setter
+    def bbox_bottom(self, value):
+        self._bbox_bottom = value
+        self._bbox_top = value - self.bbox_width
+        self._y = self.bbox_top - self.bbox_x
+
     def __init__(self, x, y, z, sprite=None, visible=True,
                  detects_collisions=True, bbox_x=None, bbox_y=None,
                  bbox_width=None, bbox_height=None, collision_ellipse=False,
@@ -1924,9 +2045,6 @@ class StellarClass(object):
         if 'id' in kwargs:
             id_ = kwargs['id']
 
-        self.x = x
-        self.y = y
-        self.z = z
         self.sprite = sprite
         self.visible = visible
         self.detects_collisions = detects_collisions
@@ -1942,7 +2060,12 @@ class StellarClass(object):
 
         self._rect = pygame.Rect(self.bbox_x, self.bbox_y, self.bbox_width,
                                  self.bbox_height)
+        self._pygame_sprite = _PygameSprite(self)
         self._set_mask()
+
+        self.x = x
+        self.y = y
+        self.z = z
 
     def collides(self, other, x=None, y=None):
         """Return whether or not this object collides with another.
@@ -2070,11 +2193,7 @@ class StellarClass(object):
 
     def _set_mask(self):
         # Properly set the hit mask based on the collision settings.
-        if self.collision_ellipse:
-            # Elliptical mask based on bounding box.
-            # TODO
-            pass
-        elif self.collision_precise:
+        if self.collision_precise:
             # Mask based on opacity of the current image.
             left = self.bbox_x + self.sprite.origin_x
             right = left + self.bbox_width
@@ -2086,6 +2205,10 @@ class StellarClass(object):
                 mask[i] = mask[i][top:bottom]
 
             self._hitmask = mask
+        elif self.collision_ellipse:
+            # Elliptical mask based on bounding box.
+            # TODO
+            pass
         else:
             # Mask is all pixels in the bounding box.
             self._hitmask = [[True for j in xrange(self.bbox_height)]
@@ -2345,6 +2468,10 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                 self.parent().image_yscale)
             if self.image != new_image:
                 self.image = new_image
+                self.dirty = 1
+
+            if self.visible != self.parent().visible:
+                self.visible = int(self.parent().visible)
                 self.dirty = 1
 
             self._update_rect()
