@@ -420,6 +420,7 @@ class Game(object):
             while self._running:
                 # Begin Step event
                 self.event_step_begin()
+                self.current_room.event_step_begin()
                 for i in self.objects:
                     self.objects[i].event_step_begin()
 
@@ -466,8 +467,9 @@ class Game(object):
 
                 # Step event
                 self.event_step()
+                self.current_room.event_step()
                 for i in self.objects:
-                    self.objects[i].event_step_begin()
+                    self.objects[i].event_step()
 
                 if self.delta:
                     time_passed = min(self._clock.tick(self.fps),
@@ -567,8 +569,9 @@ class Game(object):
 
                 # End Step event
                 self.event_step_end()
+                self.current_room.event_step_end()
                 for i in self.objects:
-                    self.objects[i].event_step_begin()
+                    self.objects[i].event_step_end()
 
                 # Redraw
                 self._pygame_sprites.clear(self._window, self._background)
