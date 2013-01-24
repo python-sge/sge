@@ -2248,12 +2248,18 @@ class StellarClass(object):
             self._hitmask = mask
         elif self.collision_ellipse:
             # Elliptical mask based on bounding box.
-            # TODO
-            pass
+            self._hitmask = [[False for y in xrange(self.bbox_height)]
+                             for x in xrange(self.bbox_width)]
+            a = len(self._hitmask) / 2
+            b = len(self._hitmask[0]) / 2
+            for x in xrange(len(self._hitmask)):
+                for y in xrange(len(self._hitmask[x])):
+                    if ((x - a) / a) ** 2 + ((y - b) / b) ** 2 <= 1:
+                        self._hitmask[x][y] = True
         else:
             # Mask is all pixels in the bounding box.
-            self._hitmask = [[True for j in xrange(self.bbox_height)]
-                             for i in xrange(self.bbox_width)]
+            self._hitmask = [[True for y in xrange(self.bbox_height)]
+                             for x in xrange(self.bbox_width)]
 
     def _set_speed(self):
         # Set the speed and move direction based on xvelocity and
