@@ -1330,7 +1330,7 @@ class Sprite(object):
         for image in self._baseimages:
             img = self._set_transparency(image)
             img = _scale(img, self.width, self.height)
-            self._images.append({(1, 1):img})
+            self._images.append({(1, 1, 0):img})
 
     def _set_transparency(self, image):
         # Return a copy of the surface with transparency properly set
@@ -1346,28 +1346,42 @@ class Sprite(object):
         else:
             return image.convert()
 
-    def _get_image(self, num, xscale=1, yscale=1):
+    def _get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,
+                   blend=None):
         # Return the properly sized surface.
-        if (xscale, yscale) in self._images[num]:
-            return self._images[num][(xscale, yscale)]
+        if (xscale, yscale, rotation) in self._images[num]:
+            return self._images[num][(xscale, yscale, rotation)]
         else:
             # Hasn't been scaled to this size yet
-            img = self._set_transparency(self._baseimages[num])
+            if xscale != 0 and yscale != 0:
+                img = self._set_transparency(self._baseimages[num])
+                xflip = xscale < 0
+                yflip = yscale < 0
+                img = pygame.transform.flip(img, xflip, yflip)
+                img = _scale(img, self.width * abs(xscale),
+                             self.height * abs(yscale))
 
-            if xscale < 0:
-                xscale = abs(xscale)
-                xflip = True
+                if rotation != 0:
+                    img = pygame.transform.rotate(img, rotation)
+
+                if alpha < 255:
+                    if img.get_flags() & pygame.SRCALPHA:
+                        # Have to do this the more difficult way.
+                        # TODO: I'm not sure if this is right.
+                        img.fill((0, 0, 0, 255 - alpha), None,
+                                 pygame.BLEND_RGBA_SUB)
+                    else:
+                        img.set_alpha(alpha, pygame.RLEACCEL)
+
+                if blend is not None:
+                    # TODO: I'm not sure if this is right.
+                    img.fill(blend, None, pygame.BLEND_RGB_MULT)
             else:
-                xflip = False
+                img = pygame.Surface((1, 1))
+                img.set_colorkey((0, 0, 0), pygame.RLEACCEL)
 
-            if yscale < 0:
-                yscale = abs(yscale)
-                yflip = True
-            else:
-                yflip = False
-
-            img = pygame.transform.flip(img, xflip, yflip)
-            img = _scale(img, self.width * xscale, self.height * yscale)
+            self._images[num][(xscale, yscale, rotation)] = img
+            return img
 
     def _get_precise_mask(self, num):
         # Return a precise mask (2D list of True/False values) for the
@@ -1390,6 +1404,7 @@ class Sprite(object):
                     for y in xrange(image.get_height()):
                         mask[x].append(image.get_at((x, y)) == colorkey)
 
+            image.unlock()
             self._masks[num] = mask
             return mask
 
@@ -2524,17 +2539,32 @@ class _PygameSprite(pygame.sprite.DirtySprite):
         self.image = parent.sprite._get_image(
             parent.image_index, parent.image_xscale, parent.image_yscale)
         self.rect = self.image.get_rect()
+        self.x_offset = 0
+        self.y_offset = 0
         self._update_rect()
         self.dirty = 1
 
     def update(self):
         if self.parent() is not None:
-            new_image = self.parent().sprite._get_image(
-                self.parent().image_index, self.parent().image_xscale,
-                self.parent().image_yscale)
+            parent = self.parent()
+            new_image = parent.sprite._get_image(
+                parent.image_index, parent.image_xscale, parent.image_yscale,
+                parent.image_rotation, parent.image_alpha, parent.image_blend)
             if self.image != new_image:
                 self.image = new_image
                 self.dirty = 1
+
+                if parent.image_rotation % 90 != 0:
+                    # Be prepared for size adjustment
+                    rot_size = self.image.get_size()
+                    reg_size = parent.sprite._get_image(
+                        parent.image_index, parent.image_xscale,
+                        parent.image_yscale).get_size()
+                    self.x_offset = (rot_size[0] - reg_size[0]) // 2
+                    self.y_offset = (rot_size[1] - reg_size[1]) // 2
+                else:
+                    self.x_offset = 0
+                    self.y_offset = 0
 
             if self.visible != self.parent().visible:
                 self.visible = int(self.parent().visible)
@@ -2554,8 +2584,8 @@ class _PygameSprite(pygame.sprite.DirtySprite):
             x = self.parent().x - views[0].x - self.parent().sprite.origin_x
             y = self.parent().y - views[0].y - self.parent().sprite.origin_y
             new_rect = self.image.get_rect()
-            new_rect.left = round(x * game._xscale)
-            new_rect.top = round(y * game._yscale)
+            new_rect.left = round(x * game._xscale) - self.x_offset
+            new_rect.top = round(y * game._yscale) - self.y_offset
 
             if self.rect != new_rect:
                 self.rect = new_rect
@@ -2571,8 +2601,8 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                 w = self.image.get_width()
                 h = self.image.get_height()
                 new_rect = self.image.get_rect()
-                new_rect.left = round(x * game._xscale)
-                new_rect.top = round(y * game._yscale)
+                new_rect.left = round(x * game._xscale) - self.x_offset
+                new_rect.top = round(y * game._yscale) - self.y_offset
                 inside_view = (x >= view.xport and
                                x + w <= view.xport + view.width and
                                y >= view.yport and
@@ -2611,8 +2641,8 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                         if y + h > view.yport + view.height:
                             h -= (y + h) - (view.yport + view.height)
 
-                        x = round(x * game._xscale)
-                        y = round(y * game._yscale)
+                        x = round(x * game._xscale) - self.x_offset
+                        y = round(y * game._yscale) - self.y_offset
                         cut_x = round(cut_x * game._xscale)
                         cut_y = round(cut_y * game._yscale)
                         w = round(w * game._xscale)
