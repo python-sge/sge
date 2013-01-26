@@ -1330,7 +1330,7 @@ class Sprite(object):
         for image in self._baseimages:
             img = self._set_transparency(image)
             img = _scale(img, self.width, self.height)
-            self._images.append({(1, 1, 0):img})
+            self._images.append({(1, 1, 0, 255, None):img})
 
     def _set_transparency(self, image):
         # Return a copy of the surface with transparency properly set
@@ -1349,8 +1349,8 @@ class Sprite(object):
     def _get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,
                    blend=None):
         # Return the properly sized surface.
-        if (xscale, yscale, rotation) in self._images[num]:
-            return self._images[num][(xscale, yscale, rotation)]
+        if (xscale, yscale, rotation, alpha, blend) in self._images[num]:
+            return self._images[num][(xscale, yscale, rotation, alpha, blend)]
         else:
             # Hasn't been scaled to this size yet
             if xscale != 0 and yscale != 0:
@@ -1380,7 +1380,7 @@ class Sprite(object):
                 img = pygame.Surface((1, 1))
                 img.set_colorkey((0, 0, 0), pygame.RLEACCEL)
 
-            self._images[num][(xscale, yscale, rotation)] = img
+            self._images[num][(xscale, yscale, rotation, alpha, blend)] = img
             return img
 
     def _get_precise_mask(self, num):
