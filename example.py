@@ -18,6 +18,7 @@ import sge
 
 
 class glob(object):
+    circle = None
     pop_sound = None
 
 
@@ -75,7 +76,8 @@ def main():
     glob.pop_sound = sge.Sound('pop.wav')
 
     # Create objects
-    objects = (Circle(game.width // 2, game.height // 2),)
+    glob.circle = Circle(game.width // 2, game.height // 2)
+    objects = (glob.circle,)
 
     # Create view
     view = sge.View(0, 0)
