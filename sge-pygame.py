@@ -433,9 +433,9 @@ class Game(object):
 
                 for event in pygame.events.get():
                     if event.type == pygame.KEYDOWN:
-                        self.event_key_press(event.key)
+                        self.event_key_press(KEYNAMES[event.key])
                     elif event.type == pygame.KEYUP:
-                        self.event_key_release(event.key)
+                        self.event_key_release(KEYNAMES[event.key])
                     elif event.type == pygame.MOUSEMOTION:
                         self.mouse.x, self.mouse.y = event.pos
                         self.event_mouse_move(*event.rel)
@@ -801,6 +801,8 @@ class Game(object):
         key = key.lower()
         if key in KEYS:
             return pygame.key.get_pressed()[key]
+        else:
+            return False
 
     def get_mouse_button_pressed(self, button):
         """Return whether or not a given mouse button is pressed.
@@ -811,6 +813,8 @@ class Game(object):
         """
         if button < 3:
             return pygame.mouse.get_pressed()[button]
+        else:
+            return False
 
     def get_joystick_axis(self, joystick, axis):
         """Return the position of the given axis.
