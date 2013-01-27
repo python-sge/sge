@@ -2863,4 +2863,16 @@ def _scale(surface, width, height):
 
 def _get_pygame_color(color):
     # Return the proper Pygame color.
-    pass
+    if isinstance(color, basestring):
+        c = color.lower()
+        if c in COLORS:
+            c = COLORS[c]
+
+        return pygame.Color(bytes(c))
+    else:
+        try:
+            while len(color) < 3:
+                color.append(0)
+            return pygame.Color(*color[:4])
+        except TypeError:
+            return pygame.Color(color)
