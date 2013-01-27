@@ -67,6 +67,9 @@ For starting position in MOD files, the pattern order number is used
 instead of the number of milliseconds.  For some other extra formats,
 specifying the starting position may have no effect.
 
+Game.draw_line supports anti-aliasing for lines with a thickness of 1
+only.  No other drawing functions support anti-aliasing.
+
 """
 
 from __future__ import division
@@ -658,6 +661,7 @@ class Game(object):
         False.
 
         """
+        thickness = abs(thickness)
         x = min(x1, x2) - thickness // 2
         y = min(y1, y2) - thickness // 2
         w = abs(x2 - x1) + thickness
@@ -700,7 +704,8 @@ class Game(object):
         of the outline in pixels (ignored if there is no outline).
 
         """
-        if outline_thickness <= 0:
+        outline_thickness = abs(outline_thickness)
+        if outline_thickness == 0:
             outline = None
 
         if fill is None and outline is None:
@@ -719,12 +724,12 @@ class Game(object):
             h += outline_thickness
 
         img = pygame.Surface((w, h))
+        rect = pygame.Rect(x - surf_x, y - surf_y, width, height)
 
         if fill is not None:
-            img.fill(_get_pygame_color(fill))
+            img.fill(_get_pygame_color(fill), rect)
 
         if outline is not None:
-            rect = pygame.Rect(x - surf_x, y - surf_y, width, height)
             c = _get_pygame_color(outline)
             pygame.draw.rect(img, c, rect, outline_thickness)
 
@@ -763,6 +768,46 @@ class Game(object):
         False.
 
         """
+        outline_thickness = abs(outline_thickness)
+        if outline_thickness == 0:
+            outline = None
+
+        if fill is None and outline is None:
+            # There's no point in trying in this case.
+            return
+
+        surf_x = x
+        surf_y = y
+        w = width
+        h = height
+
+        if outline is not None:
+            surf_x -= outline_thickness // 2
+            surf_y -= outline_thickness // 2
+            w += outline_thickness
+            h += outline_thickness
+
+        img = pygame.Surface((w, h))
+        rect = pygame.Rect(x - surf_x, y - surf_y, width, height)
+        colorkey = pygame.Color(255, 255, 255)
+
+        if fill is not None:
+            c = _get_pygame_color(fill)
+            pygame.draw.ellipse(img, c, rect)
+
+            # Prevent the colorkey from being the same color as the
+            # fill.
+            if c.r == colorkey.r:
+                colorkey.r = 0
+
+        if outline is not None:
+            c = _get_pygame_color(outline)
+            pygame.draw.ellipse(img, c, rect, outline_thickness)
+
+            # Prevent the colorkey from being the same color as the
+            # outline.
+            if c.g == colorkey.g:
+                colorkey.g = 0
 
     def draw_circle(self, x, y, z, radius, fill=None, outline=None,
                     outline_thickness=1):
@@ -787,6 +832,46 @@ class Game(object):
         False.
 
         """
+        outline_thickness = abs(outline_thickness)
+        if outline_thickness == 0:
+            outline = None
+
+        if fill is None and outline is None:
+            # There's no point in trying in this case.
+            return
+
+        surf_x = x - radius
+        surf_y = y - radius
+        w = radius * 2
+        h = radius * 2
+
+        if outline is not None:
+            surf_x -= outline_thickness // 2
+            surf_y -= outline_thickness // 2
+            w += outline_thickness
+            h += outline_thickness
+
+        img = pygame.Surface((w, h))
+        pos = (x - surf_x, y - surf_y)
+        colorkey = pygame.Color(255, 255, 255)
+
+        if fill is not None:
+            c = _get_pygame_color(fill)
+            pygame.draw.circle(img, c, pos, radius)
+
+            # Prevent the colorkey from being the same color as the
+            # fill.
+            if c.r == colorkey.r:
+                colorkey.r = 0
+
+        if outline is not None:
+            c = _get_pygame_color(outline)
+            pygame.draw.circle(img, c, pos, radius, outline_thickness)
+
+            # Prevent the colorkey from being the same color as the
+            # outline.
+            if c.g == colorkey.g:
+                colorkey.g = 0
 
     def sound_stop_all(self):
         """Stop playback of all sounds."""
