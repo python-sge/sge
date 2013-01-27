@@ -399,6 +399,13 @@ class Game(object):
         self._joysticks = []
         self._pygame_sprites = pygame.sprite.LayeredDirty()
 
+        # Setup joysticks
+        if pygame.joystick.get_init():
+            for i in xrange(pygame.joystick.get_count()):
+                joy = pygame.joystick.Joystick(i)
+                joy.init()
+                self._joysticks.append(joy)
+
     def start(self):
         """Start the game at the first room.
 
@@ -718,7 +725,9 @@ class Game(object):
         ``key`` is the key to check.
 
         """
-        pass
+        key = key.lower()
+        if key in KEYS:
+            return pygame.key.get_pressed()[key]
 
     def get_mouse_button_pressed(self, button):
         """Return whether or not a given mouse button is pressed.
@@ -727,7 +736,8 @@ class Game(object):
         is the first mouse button.
 
         """
-        pass
+        if button < 3:
+            return pygame.mouse.get_pressed()[button]
 
     def get_joystick_axis(self, joystick, axis):
         """Return the position of the given axis.
@@ -748,7 +758,17 @@ class Game(object):
         does not exist.
 
         """
-        pass
+        if joystick < len(self._joysticks):
+            numaxes = self._joysticks[joystick].get_numaxes()
+            if axis < numaxes:
+                return self._joysticks[joystick].get_axis(axis)
+            else:
+                ball = (axis - numaxes) // 2
+                direction = (axis - numaxes) % 2
+                if ball < self._joysticks[joystick].get_numballs():
+                    return self._joysticks[joystick].get_ball(ball)[direction]
+        else:
+            return 0
 
     def get_joystick_hat(self, joystick, hat):
         """Return the position of the given HAT.
@@ -770,7 +790,11 @@ class Game(object):
         does not exist.
 
         """
-        pass
+        if joystick < len(self._joysticks):
+            if hat < self._joysticks[joystick].get_numhats():
+                return self._joysticks[joystick].get_hat(hat)
+        else:
+            return (0, 0)
 
     def get_joystick_button_pressed(self, joystick, button):
         """Return whether or not the given button is pressed.
@@ -788,7 +812,11 @@ class Game(object):
         does not exist.
 
         """
-        pass
+        if joystick < len(self._joysticks):
+            if button < self._joysticks[joystick].get_numbuttons():
+                return self._joysticks[joystick].get_button(button)
+        else:
+            return False
 
     def get_joysticks(self):
         """Return the number of joysticks available.
@@ -798,7 +826,7 @@ class Game(object):
         joysticks, this function will always return 0.
 
         """
-        pass
+        return len(self._joysticks)
 
     def get_joystick_axes(self, joystick):
         """Return the number of axes available on the given joystick.
@@ -813,7 +841,11 @@ class Game(object):
         does not exist.
 
         """
-        pass
+        if joystick < len(self._joysticks):
+            return (self._joysticks[joystick].get_numaxes() +
+                    self._joysticks[joystick].get_numballs() * 2)
+        else:
+            return 0
 
     def get_joystick_hats(self, joystick):
         """Return the number of HATs available on the given joystick.
@@ -828,7 +860,10 @@ class Game(object):
         does not exist.
 
         """
-        pass
+        if joystick < len(self._joysticks):
+            return self._joysticks[joystick].get_numhats()
+        else:
+            return 0
 
     def get_joystick_buttons(self, joystick):
         """Return the number of buttons available on the given joystick.
@@ -843,7 +878,10 @@ class Game(object):
         does not exist.
 
         """
-        pass
+        if joystick < len(self._joysticks):
+            return self._joysticks[joystick].get_numbuttons()
+        else:
+            return 0
 
     def event_game_start(self):
         """Game start event."""
