@@ -1224,8 +1224,59 @@ class Game(object):
     def _draw_surface(self, image, x, y, z):
         # Draw the surface indicated (used in all draw methods), using
         # the given x and y as locations in the current room, and z.
-        # TODO
-        pass
+        image = _scale(image, *image.get_size())
+        w = image.get_width()
+        h = image.get_height()
+
+        for view in self.views:
+            rel_x = x - view.x
+            rel_y = y - view.y
+            rect = image.get_rect()
+            rect.left = round(rel_x * self._xscale)
+            rect.top = round(rel_y * self._yscale)
+            inside_view = (rel_x >= view.xport and
+                           rel_x + w <= view.xport + view.width and
+                           rel_y >= view.yport and
+                           rel_y + h <= view.yport + view.height)
+
+            if inside_view:
+                img = image
+            else:
+                # Make a cut-off version of the sprite and
+                # adjust the rect accordingly.
+                if rel_x < view.xport:
+                    cut_x = view.xport - rel_x
+                    rel_x = view.xport
+                    w -= cut_x
+                else:
+                    cut_x = 0
+
+                if rel_x + w > view.xport + view.width:
+                    w -= (rel_x + w) - (view.xport + view.width)
+
+                if y < view.yport:
+                    cut_y = view.yport - rel_y
+                    rel_y = view.yport
+                    h -= cut_y
+                else:
+                    cut_y = 0
+
+                if rel_y + h > view.yport + view.height:
+                    h -= (rel_y + h) - (view.yport + view.height)
+
+                rel_x = round(rel_x * self._xscale)
+                rel_y = round(rel_y * self._yscale)
+                cut_x = round(cut_x * self._xscale)
+                cut_y = round(cut_y * self._yscale)
+                w = round(w * self._xscale)
+                h = round(h * self._yscale)
+                cut_rect = pygame.Rect(cut_x, cut_y, w, h)
+                img.self.image.subsurface(cut_rect)
+                rect = pygame.Rect(rel_x, rel_y, w, h)
+
+            # Create proxy one-time sprite
+            proxy = _PygameOneTimeSprite(img, rect)
+            game._pygame_sprites.add(proxy, layer=z)
 
 
 class Sprite(object):
