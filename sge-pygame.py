@@ -633,7 +633,10 @@ class Game(object):
         closer to the viewer.  ``color`` indicates the color of the dot.
 
         """
-        pass
+        img = pygame.Surface((1, 1))
+        img.fill(_get_pygame_color(color))
+        img = _scale(img, 1, 1)
+        self._draw_surface(img, x, y, z)
 
     def draw_line(self, x1, y1, x2, y2, z, color, thickness=1,
                   anti_alias=False):
@@ -655,7 +658,31 @@ class Game(object):
         False.
 
         """
-        pass
+        x = min(x1, x2) - thickness // 2
+        y = min(y1, y2) - thickness // 2
+        w = abs(x2 - x1) + thickness
+        h = abs(y2 - y1) + thickness
+        c = _get_pygame_color(color)
+        startpos = (x1 - x, y1 - y)
+        endpos = (x2 - x, y2 - y)
+        if anti_alias and thickness == 1:
+            img = pygame.Surface((w, h), pygame.SRCALPHA)
+            img.fill(pygame.Color(0, 0, 0, 0))
+            pygame.draw.aaline(img, c, startpos, endpos)
+        else:
+            img = pygame.Surface((w, h))
+            colorkey = pygame.Color(255, 255, 255)
+
+            # Prevent the colorkey from being the same color as the
+            # line.
+            if c.g == colorkey.g:
+                colorkey.g = 0
+
+            img.fill(colorkey)
+            img.set_colorkey(colorkey)
+            pygame.draw.line(img, c, startpos, endpos, thickness)
+
+        self._draw_surface(img, x, y, z)
 
     def draw_rectangle(self, x, y, z, width, height, fill=None, outline=None,
                        outline_thickness=1):
@@ -673,7 +700,45 @@ class Game(object):
         of the outline in pixels (ignored if there is no outline).
 
         """
-        pass
+        if outline_thickness <= 0:
+            outline = None
+
+        if fill is None and outline is None:
+            # There's no point in trying in this case.
+            return
+
+        surf_x = x
+        surf_y = y
+        w = width
+        h = height
+
+        if outline is not None:
+            surf_x -= outline_thickness // 2
+            surf_y -= outline_thickness // 2
+            w += outline_thickness
+            h += outline_thickness
+
+        img = pygame.Surface((w, h))
+
+        if fill is not None:
+            img.fill(_get_pygame_color(fill))
+
+        if outline is not None:
+            rect = pygame.Rect(x - surf_x, y - surf_y, width, height)
+            c = _get_pygame_color(outline)
+            pygame.draw.rect(img, c, rect, outline_thickness)
+
+            if fill is None:
+                colorkey = pygame.Color(255, 255, 255)
+
+                # Prevent the colorkey from being the same color as the
+                # outline.
+                if c.g == colorkey.g:
+                    colorkey.g = 0
+
+                img.set_colorkey(colorkey)
+
+        self._draw_surface(img, surf_x, surf_y, z)
 
     def draw_ellipse(self, x, y, z, width, height, fill=None, outline=None,
                      outline_thickness=1, anti_alias=False):
@@ -1151,6 +1216,12 @@ class Game(object):
         else:
             # Either just right or too tall.
             self._yscale = self.height * self._xscale / self.width
+
+    def _draw_surface(self, image, x, y, z):
+        # Draw the surface indicated (used in all draw methods), using
+        # the given x and y as locations in the current room, and z.
+        # TODO
+        pass
 
 
 class Sprite(object):
@@ -2734,3 +2805,7 @@ def _scale(surface, width, height):
 
     return new_surf
 
+
+def _get_pygame_color(color):
+    # Return the proper Pygame color.
+    pass
