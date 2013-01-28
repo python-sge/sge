@@ -77,7 +77,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.17"
+__version__ = "0.0.18"
 
 import sys
 import os
@@ -2536,16 +2536,29 @@ class StellarClass(object):
         """Set an alarm.
 
         Set the alarm with the given ``alarm_id`` with the given
-        ``value``.  The alarm will then count down until it reaches 0
-        and set off the alarm event with the same ID.  ``alarm_id`` can
-        be any value.  ``value`` should be a number greater than 0.  You
-        can also set ``value`` to None to disable the alarm.
+        ``value``.  The alarm will then reduce by 1 each frame until it
+        reaches 0 and set off the alarm event with the same ID.
+        ``alarm_id`` can be any value.  ``value`` should be a number
+        greater than 0.  You can also set ``value`` to None to disable
+        the alarm.
 
         """
         if value is not None:
             self._alarms[alarm_id] = value
         elif alarm_id in self._alarms:
             del self._alarms[alarm_id]
+
+    def get_alarm(self, alarm_id):
+        """Return the count on an alarm.
+
+        Get the number of frames before the alarm with ``alarm_id`` will
+        go off.  If the alarm has not been set, None will be returned.
+
+        """
+        if alarm_id in self._alarms:
+            return self._alarms[alarm_id]
+        else:
+            return None
 
     def destroy(self):
         """Destroy the object."""
