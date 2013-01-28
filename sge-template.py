@@ -1542,10 +1542,11 @@ class Room(object):
         pass
 
     def end(self):
-        """Go to the next room.
+        """Start the next room.
 
         If this room is the last room, the game is ended.  Note that
-        this does not reset the state of the room.
+        this does not reset the state of this room.  The state of the
+        next room, if any, is reset, however.
 
         """
         pass

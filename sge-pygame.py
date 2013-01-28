@@ -2766,6 +2766,7 @@ class Room(object):
         method behaves in the same way that Room.start does.
 
         """
+        game.current_room.event_room_end()
         game.current_room = self
         game.pygame_sprites.kill()
 
@@ -2777,13 +2778,13 @@ class Room(object):
         self._started = True
 
     def end(self):
-        """Go to the next room.
+        """Start the next room.
 
         If this room is the last room, the game is ended.  Note that
-        this does not reset the state of the room.
+        this does not reset the state of this room.  The state of the
+        next room, if any, is reset, however.
 
         """
-        self.event_room_end()
         next_room = self.room_number + 1
         if next_room < len(game.rooms):
             game.rooms[next_room].start()
