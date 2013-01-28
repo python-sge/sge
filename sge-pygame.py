@@ -434,7 +434,7 @@ class Game(object):
                 for i in self.objects:
                     self.objects[i].event_step_begin()
 
-                for event in pygame.events.get():
+                for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
                         self.event_key_press(KEYNAMES[event.key])
                     elif event.type == pygame.KEYUP:
@@ -484,16 +484,18 @@ class Game(object):
                 if self.delta:
                     time_passed = min(self._clock.tick(self.fps),
                                       1000 / self.delta_min)
+                    delta_mult = time_passed / (1000 / self.fps)
                 else:
                     self._clock.tick(self.fps)
                     time_passed = 1000 / self.fps
+                    delta_mult = 1
 
                 for i in self.objects:
                     obj = self.objects[i]
 
                     if obj.xvelocity or obj.yvelocity:
-                        obj.x += obj.xvelocity
-                        obj.y += obj.yvelocity
+                        obj.x += obj.xvelocity * delta_mult
+                        obj.y += obj.yvelocity * delta_mult
 
                         # Detect collisions
                         for j in self.objects:
@@ -620,11 +622,74 @@ class Game(object):
         "event_paused_" will occur during this time.
 
         """
-        pass
+        self._paused = True
+        screenshot = self._window.copy()
+        background = screenshot.copy()
+        dimmer = pygame.Surface(self._window.get_size(), pygame.SRCALPHA)
+        dimmer.fill(pygame.Color(0, 0, 0, 128))
+        background.blit(dimmer, (0, 0))
+        paused_sprites = pygame.sprite.RenderUpdates()
+        self._clock.tick()
+
+        while self._paused:
+            # Events
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    self.event_paused_key_press(KEYNAMES[event.key])
+                elif event.type == pygame.KEYUP:
+                    self.event_paused_key_release(KEYNAMES[event.key])
+                elif event.type == pygame.MOUSEMOTION:
+                    self.mouse.x, self.mouse.y = event.pos
+                    self.event_paused_mouse_move(*event.rel)
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    self.event_paused_mouse_button_press(event.button)
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    self.event_paused_mouse_button_release(event.button)
+                elif event.type == pygame.JOYAXISMOTION:
+                    self.event_paused_joystick_axis_move(event.joy, event.axis,
+                                                         event.value)
+                elif event.type == pygame.JOYBALLMOTION:
+                    # Limited support for trackballs by pretending
+                    # they're axes.  Since they're acting like axes,
+                    # they must be in the range [-1,1].
+                    n = (self._joysticks[event.joy].get_numaxes() +
+                         2 * event.ball)
+                    xvalue = min(max(-1, event.rel[0]), 1)
+                    yvalue = min(max(-1, event.rel[1]), 1)
+
+                    if xvalue != 0:
+                        self.event_paused_joystick_axis_move(event.joy, n,
+                                                             xvalue)
+                    if yvalue != 0:
+                        self.event_paused_joystick_axis_move(event.joy, n + 1,
+                                                             yvalue)
+                elif event.type == pygame.JOYHATMOTION:
+                    self.event_paused_joystick_hat_move(event.joy, event.hat,
+                                                        *event.value)
+                elif event.type == pygame.JOYBUTTONDOWN:
+                    self.event_paused_joystick_button_press(event.joy,
+                                                            event.button)
+                elif event.type == pygame.JOYBUTTONUP:
+                    self.event_paused_joystick_button_release(event.joy,
+                                                              event.button)
+                elif event.type == pygame.QUIT:
+                    self.event_paused_close()
+
+            # Time management
+            self._clock.tick(self.fps)
+            
+            # Redraw
+            paused_sprites.clear(self._window, background)
+            paused_sprites.update()
+            dirty = paused_sprites.draw(self._window)
+            pygame.display.update(dirty)
+
+        # Restore the look of the screen from before it was paused
+        self._window.blit(screenshot, (0, 0))
 
     def unpause(self):
         """Unpause the game."""
-        pass
+        self._paused = False
 
     def draw_dot(self, x, y, z, color):
         """Draw a single-pixel dot.
@@ -1785,7 +1850,7 @@ class Font(object):
         created.
 
         """
-        pass
+        # TODO
 
     def render(self, text, x, y, width=None, height=None, color="black",
                halign=ALIGN_LEFT, valign=ALIGN_TOP, anti_alias=True):
@@ -1812,7 +1877,7 @@ class Font(object):
         anti-aliasing, this function will act like ``anti_alias`` is False.
 
         """
-        pass
+        # TODO
 
     def get_size(self, text, x, y, width=None, height=None):
         """Return the size of the given rendered text.
@@ -1823,7 +1888,7 @@ class Font(object):
         tuple in the form (width, height).
 
         """
-        pass
+        # TODO
 
 
 class Sound(object):
@@ -1891,7 +1956,7 @@ class Sound(object):
         the sound at full volume.
 
         """
-        pass
+        # TODO
 
     def stop(self, fade_time=None):
         """Stop the sound.
@@ -1901,15 +1966,15 @@ class Sound(object):
         immediately stop the sound.
 
         """
-        pass
+        # TODO
 
     def pause(self):
         """Pause playback of the sound."""
-        pass
+        # TODO
 
     def unpause(self):
         """Resume playback of the sound if paused."""
-        pass
+        # TODO
 
 
 class Music(object):
@@ -2371,6 +2436,18 @@ class StellarClass(object):
         self.collision_precise = collision_precise
         self.id = id_
 
+        self._xvelocity = 0
+        self._yvelocity = 0
+        self._move_direction = 0
+        self._speed = 0
+        self.image_index = 0
+        self.image_fps = self.sprite.fps
+        self.image_xscale = 1
+        self.image_yscale = 1
+        self.image_rotation = 0
+        self.image_alpha = 255
+        self.image_blend = None
+
         self._rect = pygame.Rect(self.bbox_x, self.bbox_y, self.bbox_width,
                                  self.bbox_height)
         self._pygame_sprite = _PygameSprite(self)
@@ -2442,11 +2519,11 @@ class StellarClass(object):
         can also set ``value`` to None to disable the alarm.
 
         """
-        pass
+        # TODO
 
     def destroy(self):
         """Destroy the object."""
-        pass
+        # TODO
 
     def event_create(self):
         """Create event."""
@@ -2668,7 +2745,7 @@ class Room(object):
         object's ID.
 
         """
-        pass
+        # TODO
 
     def start(self):
         """Start the room.
@@ -2704,7 +2781,7 @@ class Room(object):
         this does not reset the state of the room.
 
         """
-        pass
+        # TODO
 
     def event_room_start(self):
         """Room start event."""
