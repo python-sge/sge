@@ -395,6 +395,17 @@ class Game(object):
         self.delta_min = delta_min
         self._set_mode()
 
+        self.sprites = {}
+        self.background_layers = {}
+        self.backgrounds = {}
+        self.fonts = {}
+        self.sounds = {}
+        self.music = {}
+        self.objects = {}
+        self.rooms = []
+        self.current_room = None
+        self.mouse = Mouse()
+
         self._colliders = []
         self._music_queue = []
         self._running = False
@@ -493,6 +504,14 @@ class Game(object):
                 for i in self.objects:
                     obj = self.objects[i]
 
+                    # Alarms
+                    for a in obj._alarms:
+                        obj._alarms[a] -= delta_mult
+                        if obj._alarms[a] <= 0:
+                            del obj._alarms[a]
+                            obj.event_alarm(a)
+
+                    # Movement
                     if obj.xvelocity or obj.yvelocity:
                         obj.x += obj.xvelocity * delta_mult
                         obj.y += obj.yvelocity * delta_mult
@@ -2450,6 +2469,8 @@ class StellarClass(object):
         self.image_alpha = 255
         self.image_blend = None
 
+        self._alarms = {}
+
         self._rect = pygame.Rect(self.bbox_x, self.bbox_y, self.bbox_width,
                                  self.bbox_height)
         self._pygame_sprite = _PygameSprite(self)
@@ -2521,7 +2542,10 @@ class StellarClass(object):
         can also set ``value`` to None to disable the alarm.
 
         """
-        # TODO
+        if value is not None:
+            self._alarms[alarm_id] = value
+        elif alarm_id in self._alarms:
+            del self._alarms[alarm_id]
 
     def destroy(self):
         """Destroy the object."""
@@ -2768,11 +2792,15 @@ class Room(object):
         """
         game.current_room.event_room_end()
         game.current_room = self
-        game.pygame_sprites.kill()
+
+        if not self._started:
+            self.event_room_start()
+
+        game._pygame_sprites.kill()
 
         for obj in self.objects:
-            game.pygame_sprites.add(obj.pygame_sprite)
-            if self._started:
+            game._pygame_sprites.add(obj._pygame_sprite)
+            if not self._started:
                 obj.event_create()
 
         self._started = True
