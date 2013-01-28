@@ -2781,7 +2781,12 @@ class Room(object):
         this does not reset the state of the room.
 
         """
-        # TODO
+        self.event_room_end()
+        next_room = self.room_number + 1
+        if next_room < len(game.rooms):
+            game.rooms[next_room].start()
+        else:
+            game.end()
 
     def event_room_start(self):
         """Room start event."""
