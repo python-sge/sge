@@ -77,7 +77,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.16"
+__version__ = "0.0.17"
 
 import sys
 import os
@@ -757,16 +757,17 @@ class Game(object):
                        outline_thickness=1):
         """Draw a rectangle at the given position.
 
-        ``x`` and ``y`` indicate the location in the room to draw the
-        rectangle, where the left and top edges of the room are 0 and x
-        and y increase toward the right and bottom.  ``z`` indicates the
-        Z-axis position to draw the rectangle, where a higher Z value is
-        closer to the viewer.  ``width`` and ``height`` indicate the
-        size of the rectangle.  ``fill`` indicates the color of the fill
-        of the rectangle; set to None for no fill.  ``outline``
-        indicates the color of the outline of the rectangle; set to None
-        for no outline.  ``outline_thickness`` indicates the thickness
-        of the outline in pixels (ignored if there is no outline).
+        ``x`` and ``y`` indicate the location in the room to position
+        the top-left corner of the rectangle, where the left and top
+        edges of the room are 0 and x and y increase toward the right
+        and bottom.  ``z`` indicates the Z-axis position to draw the
+        rectangle, where a higher Z value is closer to the viewer.
+        ``width`` and ``height`` indicate the size of the rectangle.
+        ``fill`` indicates the color of the fill of the rectangle; set
+        to None for no fill.  ``outline`` indicates the color of the
+        outline of the rectangle; set to None for no outline.
+        ``outline_thickness`` indicates the thickness of the outline in
+        pixels (ignored if there is no outline).
 
         """
         outline_thickness = abs(outline_thickness)
@@ -814,7 +815,8 @@ class Game(object):
                      outline_thickness=1, anti_alias=False):
         """Draw an ellipse at the given position.
 
-        ``x`` and ``y`` indicate the location in the room to draw the
+        ``x`` and ``y`` indicate the location in the room to position
+        the top-left corner of the imaginary rectangle containing the
         ellipse, where the left and top edges of the room are 0 and x
         and y increase toward the right and bottom.  ``z`` indicates the
         Z-axis position to draw the ellipse, where a higher Z value is
@@ -878,18 +880,18 @@ class Game(object):
                     outline_thickness=1):
         """Draw a circle at the given position.
 
-        ``x`` and ``y`` indicate the location in the room to draw the
-        circle, where the left and top edges of the room are 0 and x and
-        y increase toward the right and bottom.  ``z`` indicates the
-        Z-axis position to draw the circle, where a higher Z value is
-        closer to the viewer.  ``radius`` indicates the radius of the
-        circle in pixels.  ``fill`` indicates the color of the fill of
-        the circle; set to None for no fill.  ``outline`` indicates the
-        color of the outline of the circle; set to None for no outline.
-        ``outline_thickness`` indicates the thickness of the outline in
-        pixels (ignored if there is no outline).  ``anti_alias``
-        indicates whether or not anti-aliasing should be used on the
-        outline.
+        ``x`` and ``y`` indicate the location in the room to position
+        the center of the circle, where the left and top edges of the
+        room are 0 and x and y increase toward the right and bottom.
+        ``z`` indicates the Z-axis position to draw the circle, where a
+        higher Z value is closer to the viewer.  ``radius`` indicates
+        the radius of the circle in pixels.  ``fill`` indicates the
+        color of the fill of the circle; set to None for no fill.
+        ``outline`` indicates the color of the outline of the circle;
+        set to None for no outline.  ``outline_thickness`` indicates the
+        thickness of the outline in pixels (ignored if there is no
+        outline).  ``anti_alias`` indicates whether or not anti-aliasing
+        should be used on the outline.
 
         Support for anti-aliasing is optional in Stellar Game Engine
         implementations.  If the implementation used does not support
