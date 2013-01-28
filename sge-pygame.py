@@ -2562,7 +2562,15 @@ class StellarClass(object):
 
     def destroy(self):
         """Destroy the object."""
-        # TODO
+        self._pygame_sprite.kill()
+        del game.objects[self.id]
+
+        for room in game.rooms:
+            new_objects = []
+            for obj in room.objects:
+                if obj is not self:
+                    new_objects.append(obj)
+            room.objects = tuple(new_objects)
 
     def event_create(self):
         """Create event."""
