@@ -519,7 +519,7 @@ class Game(object):
                         # Detect collisions
                         for j in self.objects:
                             other = self.objects[j]
-                            if obj.collides(other)
+                            if obj.collides(other):
                                 xcollision = not obj.collides(other,
                                                               x=obj.xprevious)
                                 ycollision = not obj.collides(other,
@@ -1377,7 +1377,8 @@ class Game(object):
                     self._make_scale_proportional()
 
             self._window = pygame.display.set_mode(
-                (self.width * self._xscale, self.height * self._yscale))
+                (int(self.width * self._xscale),
+                 int(self.height * self._yscale)))
 
         # Refresh sprites
         for sprite in self.sprites:
