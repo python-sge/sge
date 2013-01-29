@@ -393,7 +393,6 @@ class Game(object):
         self.fps = fps
         self.delta = delta
         self.delta_min = delta_min
-        self._set_mode()
 
         self.sprites = {}
         self.background_layers = {}
@@ -405,6 +404,8 @@ class Game(object):
         self.rooms = []
         self.current_room = None
         self.mouse = Mouse()
+
+        self._set_mode()
 
         self._colliders = []
         self._music_queue = []
@@ -451,7 +452,7 @@ class Game(object):
                     elif event.type == pygame.KEYUP:
                         self.event_key_release(KEYNAMES[event.key])
                     elif event.type == pygame.MOUSEMOTION:
-                        self.mouse.x, self.mouse.y = event.pos
+                        self.mouse.mouse_x, self.mouse.mouse_y = event.pos
                         self.event_mouse_move(*event.rel)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         self.event_mouse_button_press(event.button)
@@ -500,6 +501,8 @@ class Game(object):
                     self._clock.tick(self.fps)
                     time_passed = 1000 / self.fps
                     delta_mult = 1
+
+                self.mouse.update_speed(time_passed)
 
                 for i in self.objects:
                     obj = self.objects[i]
@@ -2267,6 +2270,7 @@ class StellarClass(object):
 
     @x.setter
     def x(self, value):
+        self.xprevious = self._x
         self._x = value
         self._bbox_left = value + self.bbox_x
         self._bbox_right = self.bbox_left + self.bbox_width
@@ -2277,6 +2281,7 @@ class StellarClass(object):
 
     @y.setter
     def y(self, value):
+        self.yprevious = self._y
         self._y = value
         self._bbox_top = value + self.bbox_y
         self._bbox_bottom = self.bbox_top + self.bbox_height
@@ -2347,6 +2352,7 @@ class StellarClass(object):
 
     @bbox_left.setter
     def bbox_left(self, value):
+        self.xprevious = self._x
         self._bbox_left = value
         self._bbox_right = value + self.bbox_width
         self._x = value - self.bbox_x
@@ -2357,6 +2363,7 @@ class StellarClass(object):
 
     @bbox_right.setter
     def bbox_right(self, value):
+        self.xprevious = self._x
         self._bbox_right = value
         self._bbox_left = value - self.bbox_width
         self._x = self.bbox_left - self.bbox_x
@@ -2367,6 +2374,7 @@ class StellarClass(object):
 
     @bbox_top.setter
     def bbox_top(self, value):
+        self.yprevious = self._y
         self._bbox_top = value
         self._bbox_bottom = value + self.bbox_height
         self._y = value - self.bbox_y
@@ -2377,6 +2385,7 @@ class StellarClass(object):
 
     @bbox_bottom.setter
     def bbox_bottom(self, value):
+        self.yprevious = self._y
         self._bbox_bottom = value
         self._bbox_top = value - self.bbox_width
         self._y = self.bbox_top - self.bbox_x
@@ -2445,6 +2454,11 @@ class StellarClass(object):
         if 'id' in kwargs:
             id_ = kwargs['id']
 
+        self.xstart = x
+        self.ystart = y
+        self.xprevious = x
+        self.yprevious = y
+
         self.sprite = sprite
         self.visible = visible
         self.detects_collisions = detects_collisions
@@ -2458,6 +2472,9 @@ class StellarClass(object):
         self.collision_precise = collision_precise
         self.id = id_
 
+        self._x = x
+        self._y = y
+        self._z = z
         self._xvelocity = 0
         self._yvelocity = 0
         self._move_direction = 0
@@ -2680,6 +2697,47 @@ class StellarClass(object):
 
 class Mouse(StellarClass):
 
+    @property
+    def x(self):
+        for view in game.views:
+            if (view.xport <= self.mouse_x <= view.xport + view.width and
+                    view.yport <= self.mouse_y <= view.yport + view.height):
+                # We save this value so that if the mouse is in none of
+                # the views, the last known position in a view is used.
+                self._x = self.mouse_x - view.x
+                break
+
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        # Do nothing; we don't want this to be manually set.
+        pass
+
+    @property
+    def y(self):
+        for view in game.views:
+            if (view.xport <= self.mouse_x <= view.xport + view.width and
+                    view.yport <= self.mouse_y <= view.yport + view.height):
+                # We save this value so that if the mouse is in none of
+                # the views, the last known position in a view is used.
+                self._y = self.mouse_y - view.y
+                break
+
+        return self._y
+
+    @y.setter
+    def y(self, value):
+        # Do nothing; we don't want this to be manually set.
+        pass
+
+    def __init__(self):
+        super(Mouse, self).__init__(0, 0, 0)
+        self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
+        self.mouse_xprevious = self.mouse_x
+        self.mouse_yprevious = self.mouse_y
+        previous_positions = []
+
     def event_collision(self, other):
         game.event_mouse_collision(other)
 
@@ -2694,6 +2752,36 @@ class Mouse(StellarClass):
 
     def event_collision_bottom(self, other):
         game.event_mouse_collision_bottom(other)
+
+    def update_speed(self, time_passed):
+        # Update the speed variables.  ``time_passed`` is the number of
+        # milliseconds since the last speed update.
+        self.previous_positions.insert(0, (self.mouse_x - self.mouse_xprevious,
+                                           self.mouse_y - self.mouse_yprevious,
+                                           time_passed))
+        time = 0
+        num_steps = 0
+        total_xvelocity = 0
+        total_yvelocity = 0
+
+        for speed in self.previous_speeds:
+            time += speed[2]
+            if time <= 250:
+                num_steps += 1
+                total_xvelocity += speed[0]
+                total_yvelocity += speed[1]
+
+        self.previous_speeds = self.previous_speeds[:num_steps]
+
+        if num_steps > 0:
+            self.xvelocity = total_xvelocity / num_steps
+            self.yvelocity = total_yvelocity / num_steps
+        else:
+            self.xvelocity = 0
+            self.yvelocity = 0
+
+        self.mouse_xprevious = self.mouse_x
+        self.mouse_yprevious = self.mouse_y
 
 
 class Room(object):
