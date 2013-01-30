@@ -403,7 +403,6 @@ class Game(object):
         self.objects = {}
         self.rooms = []
         self.current_room = None
-        self.mouse = Mouse()
 
         self._set_mode()
 
@@ -413,6 +412,7 @@ class Game(object):
         self._clock = pygame.time.Clock()
         self._joysticks = []
         self._pygame_sprites = pygame.sprite.LayeredDirty()
+        self.mouse = Mouse()
 
         # Setup joysticks
         if pygame.joystick.get_init():
@@ -1569,38 +1569,44 @@ class Sprite(object):
 
         """
         assert name
+        self.name = name
 
         self._transparent = None
         self._baseimages = []
         self._images = []
         self._masks = {}
 
-        fnames = os.listdir(os.path.join('data', 'images'))
-        fnames.extend(os.listdir(os.path.join('data', 'sprites')))
-        fnames.extend(os.listdir(os.path.join('data', 'backgrounds')))
+        paths = [os.path.join('data', 'images'),
+                 os.path.join('data', 'sprites'),
+                 os.path.join('data', 'backgrounds')]
         fname_single = None
         fname_frames = []
         fname_strip = None
 
-        for fname in fnames:
-            if fname.startswith(name) and os.path.isfile(fname):
-                root, ext = os.path.splitext(fname)
-                if root.rsplit('-', 1)[0] == name:
-                    split = root.rsplit('-', 1)
-                elif root.split('_', 1)[0] == name:
-                    split = root.rsplit('_', 1)
-                else:
-                    split = (name, '')
+        for path in paths:
+            if os.path.isdir(path):
+                fnames = os.listdir(path)
+                for fname in fnames:
+                    full_fname = os.path.join(path, fname)
+                    if fname.startswith(name) and os.path.isfile(full_fname):
+                        root, ext = os.path.splitext(fname)
+                        if root.rsplit('-', 1)[0] == name:
+                            split = root.rsplit('-', 1)
+                        elif root.split('_', 1)[0] == name:
+                            split = root.rsplit('_', 1)
+                        else:
+                            split = (name, '')
 
-                if root == name:
-                    fname_single = fname
-                elif split[1].isdigit():
-                    n = int(split[1])
-                    while len(fname_frames) - 1 < n:
-                        fname_frames.append(None)
-                    fname_frames[n] = fname
-                elif (split[1].startswith('strip') and split[1][5:].isdigit()):
-                    fname_strip = fname
+                        if root == name:
+                            fname_single = full_fname
+                        elif split[1].isdigit():
+                            n = int(split[1])
+                            while len(fname_frames) - 1 < n:
+                                fname_frames.append(None)
+                            fname_frames[n] = full_fname
+                        elif (split[1].startswith('strip') and
+                              split[1][5:].isdigit()):
+                            fname_strip = full_fname
 
         if fname_single:
             # Load the single image
@@ -1659,6 +1665,12 @@ class Sprite(object):
             for image in self._baseimages:
                 height = max(height, image.get_height())
 
+        if bbox_width is None:
+            bbox_width = width
+
+        if bbox_height is None:
+            bbox_height = height
+
         self._w = width
         self._h = height
         self.origin_x = origin_x
@@ -1670,6 +1682,7 @@ class Sprite(object):
         self.bbox_width = bbox_width
         self.bbox_height = bbox_height
         self._refresh()
+        game.sprites[name] = self
 
     def _refresh(self):
         # Set the _images list based on the variables.
@@ -2301,7 +2314,7 @@ class StellarClass(object):
 
     @sprite.setter
     def sprite(self, value):
-        if isinstance(value, Sprite):
+        if isinstance(value, Sprite) or value is None:
             self._sprite = value
         else:
             self._sprite = game.sprites[value]
@@ -2462,14 +2475,24 @@ class StellarClass(object):
         self.sprite = sprite
         self.visible = visible
         self.detects_collisions = detects_collisions
-        self.bbox_x = bbox_x if bbox_x is not None else sprite.bbox_x
-        self.bbox_y = bbox_y if bbox_y is not None else sprite.bbox_y
+        if self.sprite is not None:
+            sprite_bbox_x = self.sprite.bbox_x
+            sprite_bbox_y = self.sprite.bbox_y
+            sprite_bbox_width = self.sprite.bbox_width
+            sprite_bbox_height = self.sprite.bbox_height
+        else:
+            sprite_bbox_x = 0
+            sprite_bbox_y = 0
+            sprite_bbox_width = 1
+            sprite_bbox_height = 1
+        self.bbox_x = bbox_x if bbox_x is not None else sprite_bbox_x
+        self.bbox_y = bbox_y if bbox_y is not None else sprite_bbox_y
         self.bbox_width = (bbox_width if bbox_width is not None else
-                           sprite.bbox_width)
+                           sprite_bbox_width)
         self.bbox_height = (bbox_height if bbox_height is not None else
-                            sprite.bbox_height)
-        self.collision_ellipse = collision_ellipse
-        self.collision_precise = collision_precise
+                            sprite_bbox_height)
+        self._collision_ellipse = collision_ellipse
+        self._collision_precise = collision_precise
         self.id = id_
 
         self._x = x
@@ -2480,7 +2503,8 @@ class StellarClass(object):
         self._move_direction = 0
         self._speed = 0
         self.image_index = 0
-        self.image_fps = self.sprite.fps
+        self.image_fps = (self.sprite.fps if self.sprite is not None else
+                          game.fps)
         self.image_xscale = 1
         self.image_yscale = 1
         self.image_rotation = 0
@@ -3000,6 +3024,21 @@ class View(object):
         self.yport = yport
         self.width = width if width else game.width - xport
         self.height = height if height else game.height - yport
+        self._start_x = self.x
+        self._start_y = self.y
+        self._start_xport = self.xport
+        self._start_yport = self.yport
+        self._start_width = self.width
+        self._start_height = self.height
+
+    def _reset(self):
+        # Reset the view to its original state.
+        self.x = self._start_x
+        self.y = self._start_y
+        self.xport = self._start_xport
+        self.yport = self._start_yport
+        self.width = self._start_width
+        self.height = self._start_height
 
 
 class _PygameSprite(pygame.sprite.DirtySprite):
@@ -3016,39 +3055,42 @@ class _PygameSprite(pygame.sprite.DirtySprite):
         # is a StellarClass object that this object belongs to.
         super(_PygameSprite, self).__init__(*groups)
         self.parent = weakref.ref(parent)
-        self.image = parent.sprite._get_image(
-            parent.image_index, parent.image_xscale, parent.image_yscale)
+        self.image = pygame.Surface((1, 1))
+        self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
         self.x_offset = 0
         self.y_offset = 0
-        self._update_rect()
-        self.dirty = 1
 
     def update(self):
         if self.parent() is not None:
             parent = self.parent()
-            new_image = parent.sprite._get_image(
-                parent.image_index, parent.image_xscale, parent.image_yscale,
-                parent.image_rotation, parent.image_alpha, parent.image_blend)
-            if self.image != new_image:
-                self.image = new_image
-                self.dirty = 1
+            if parent.sprite is not None:
+                new_image = parent.sprite._get_image(
+                    parent.image_index, parent.image_xscale,
+                    parent.image_yscale, parent.image_rotation,
+                    parent.image_alpha, parent.image_blend)
+                if self.image != new_image:
+                    self.image = new_image
+                    self.dirty = 1
 
-                if parent.image_rotation % 90 != 0:
-                    # Be prepared for size adjustment
-                    rot_size = self.image.get_size()
-                    reg_size = parent.sprite._get_image(
-                        parent.image_index, parent.image_xscale,
-                        parent.image_yscale).get_size()
-                    self.x_offset = (rot_size[0] - reg_size[0]) // 2
-                    self.y_offset = (rot_size[1] - reg_size[1]) // 2
-                else:
-                    self.x_offset = 0
-                    self.y_offset = 0
+                    if parent.image_rotation % 90 != 0:
+                        # Be prepared for size adjustment
+                        rot_size = self.image.get_size()
+                        reg_size = parent.sprite._get_image(
+                            parent.image_index, parent.image_xscale,
+                            parent.image_yscale).get_size()
+                        self.x_offset = (rot_size[0] - reg_size[0]) // 2
+                        self.y_offset = (rot_size[1] - reg_size[1]) // 2
+                    else:
+                        self.x_offset = 0
+                        self.y_offset = 0
 
-            if self.visible != self.parent().visible:
-                self.visible = int(self.parent().visible)
-                self.dirty = 1
+                if self.visible != self.parent().visible:
+                    self.visible = int(self.parent().visible)
+                    self.dirty = 1
+            else:
+                self.image = pygame.Surface((1, 1))
+                self.image.set_colorkey((0, 0, 0))
 
             self._update_rect()
         else:
@@ -3155,8 +3197,8 @@ class _PygameOneTimeSprite(pygame.sprite.DirtySprite):
 def _scale(surface, width, height):
     # Scale the given surface to the given width and height, taking the
     # scale factor of the screen into account.
-    width *= game._xscale
-    height *= game._yscale
+    width = int(round(width * game._xscale))
+    height = int(round(height * game._yscale))
 
     if game.scale_smooth:
         try:

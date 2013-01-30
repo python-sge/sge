@@ -41,7 +41,7 @@ class Game(sge.Game):
 
 class Circle(sge.StellarClass):
     def __init__(self, x, y):
-        super(Circle, self).__init__(x, y, 'circle', collision_ellipse=True)
+        super(Circle, self).__init__(x, y, 5, 'circle', collision_ellipse=True)
 
     def event_destroy(self):
         CirclePop(self.x, self.y)
@@ -51,7 +51,7 @@ class Circle(sge.StellarClass):
 
 class CirclePop(sge.StellarClass):
     def __init__(self, x, y):
-        super(CirclePop, self).__init__(x, y, 'circle_pop')
+        super(CirclePop, self).__init__(x, y, 5, 'circle_pop')
 
     def event_animation_end(self):
         self.destroy()
@@ -69,7 +69,7 @@ def main():
     fence_sprite = sge.Sprite('fence', transparent=True)
 
     # Load backgrounds
-    layers = (sge.BackgroundLayer(fence_sprite, 0, 380, yrepeat=False),)
+    layers = (sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False),)
     background = sge.Background(layers, 0xffffff)
 
     # Load sounds
@@ -80,10 +80,10 @@ def main():
     objects = (glob.circle,)
 
     # Create view
-    view = sge.View(0, 0)
+    views = (sge.View(0, 0),)
 
     # Create rooms
-    room1 = sge.Room(objects, view=view, background=background)
+    room1 = sge.Room(objects, views=views, background=background)
 
     game.start()
 
