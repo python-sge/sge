@@ -2522,6 +2522,19 @@ class StellarClass(object):
         self.y = y
         self.z = z
 
+        self._start_x = self.x
+        self._start_y = self.y
+        self._start_z = self.z
+        self._start_sprite = self.sprite
+        self._start_visible = self.visible
+        self._start_detects_collisions = self.detects_collisions
+        self._start_bbox_x = self.bbox_x
+        self._start_bbox_y = self.bbox_y
+        self._start_bbox_width = self.bbox_width
+        self._start_bbox_height = self.bbox_height
+        self._start_collision_ellipse = self.collision_ellipse
+        self._start_collision_precise = self.collision_precise
+
     def collides(self, other, x=None, y=None):
         """Return whether or not this object collides with another.
 
@@ -2704,8 +2717,13 @@ class StellarClass(object):
         # yvelocity.
         self._speed = math.sqrt(self._xvelocity ** 2 + self._yvelocity ** 2)
 
-        base_angle = math.degrees(math.atan(abs(self._yvelocity) /
-                                            abs(self._xvelocity)))
+        if self._yvelocity == 0:
+            base_angle = 0
+        elif self._xvelocity == 0:
+            base_angle = 90
+        else:
+            base_angle = math.degrees(math.atan(abs(self._yvelocity) /
+                                                abs(self._xvelocity)))
 
         if self._xvelocity < 0 and self._yvelocity < 0:
             self._move_direction += 180
@@ -2718,20 +2736,38 @@ class StellarClass(object):
 
         self._move_direction %= 360
 
+    def _reset(self):
+        # Reset the object back to its original state.
+        self.x = self._start_x
+        self.y = self._start_y
+        self.z = self._start_z
+        self.sprite = self._start_sprite
+        self.visible = self._start_visible
+        self.detects_collisions = self._start_detects_collisions
+        self.bbox_x = self._start_bbox_x
+        self.bbox_y = self._start_bbox_y
+        self.bbox_width = self._start_bbox_width
+        self.bbox_height = self._start_bbox_height
+        self.collision_ellipse = self._start_collision_ellipse
+        self.collision_precise = self._start_collision_precise
+
 
 class Mouse(StellarClass):
 
     @property
     def x(self):
-        for view in game.views:
-            if (view.xport <= self.mouse_x <= view.xport + view.width and
-                    view.yport <= self.mouse_y <= view.yport + view.height):
-                # We save this value so that if the mouse is in none of
-                # the views, the last known position in a view is used.
-                self._x = self.mouse_x - view.x
-                break
+        if game.current_room is not None:
+            for view in game.current_room.views:
+                if (view.xport <= self.mouse_x <= view.xport + view.width and
+                        view.yport <= self.mouse_y <= view.yport + view.height):
+                    # We save this value so that if the mouse is in none of
+                    # the views, the last known position in a view is used.
+                    self._x = self.mouse_x - view.x
+                    break
 
-        return self._x
+            return self._x
+        else:
+            return 0
 
     @x.setter
     def x(self, value):
@@ -2740,15 +2776,18 @@ class Mouse(StellarClass):
 
     @property
     def y(self):
-        for view in game.views:
-            if (view.xport <= self.mouse_x <= view.xport + view.width and
-                    view.yport <= self.mouse_y <= view.yport + view.height):
-                # We save this value so that if the mouse is in none of
-                # the views, the last known position in a view is used.
-                self._y = self.mouse_y - view.y
-                break
+        if game.current_room is not None:
+            for view in game.current_room.views:
+                if (view.xport <= self.mouse_x <= view.xport + view.width and
+                        view.yport <= self.mouse_y <= view.yport + view.height):
+                    # We save this value so that if the mouse is in none of
+                    # the views, the last known position in a view is used.
+                    self._y = self.mouse_y - view.y
+                    break
 
-        return self._y
+            return self._y
+        else:
+            return 0
 
     @y.setter
     def y(self, value):
@@ -2760,7 +2799,7 @@ class Mouse(StellarClass):
         self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
         self.mouse_xprevious = self.mouse_x
         self.mouse_yprevious = self.mouse_y
-        previous_positions = []
+        self.previous_speeds = []
 
     def event_collision(self, other):
         game.event_mouse_collision(other)
@@ -2780,9 +2819,9 @@ class Mouse(StellarClass):
     def update_speed(self, time_passed):
         # Update the speed variables.  ``time_passed`` is the number of
         # milliseconds since the last speed update.
-        self.previous_positions.insert(0, (self.mouse_x - self.mouse_xprevious,
-                                           self.mouse_y - self.mouse_yprevious,
-                                           time_passed))
+        self.previous_speeds.insert(0, (self.mouse_x - self.mouse_xprevious,
+                                        self.mouse_y - self.mouse_yprevious,
+                                        time_passed))
         time = 0
         num_steps = 0
         total_xvelocity = 0
@@ -2924,13 +2963,16 @@ class Room(object):
         method behaves in the same way that Room.start does.
 
         """
-        game.current_room.event_room_end()
+        if game.current_room is not None:
+            game.current_room.event_room_end()
+
         game.current_room = self
 
         if not self._started:
             self.event_room_start()
 
-        game._pygame_sprites.kill()
+        for sprite in game._pygame_sprites:
+            sprite.kill()
 
         for obj in self.objects:
             game._pygame_sprites.add(obj._pygame_sprite)
