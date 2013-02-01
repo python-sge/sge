@@ -61,7 +61,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.18"
+__version__ = "0.0.19"
 
 import sys
 import os
@@ -152,7 +152,7 @@ class Game(object):
         background_layers: A dictionary containing all loaded background
             layers, using their sprites' names as the keys.
         backgrounds: A dictionary containing all loaded backgrounds,
-            using their
+            using their unique identifiers as the keys.
         fonts: A dictionary containing all loaded fonts, using their
             names as the keys.
         sounds: A dictionary containing all loaded sounds, using their
@@ -901,8 +901,9 @@ class BackgroundLayer(object):
     """Special class used for background layers.
 
     All BackgroundLayer objects have the following attributes:
-        sprite: The Sprite object used for this layer.  Can also be the
-            name of a sprite.
+        sprite: The Sprite object used for this layer.  While it will
+            always be an actual Sprite object when read, it can also be
+            set to the ID of a sprite.
         x: The horizontal offset of the layer.
         y: The vertical offset of the layer.
         z: The Z-axis position of the layer in the room, which
@@ -941,9 +942,9 @@ class Background(object):
     All Background objects have the following attributes:
         color: A Stellar Game Engine color used in parts of the
             background where there is no layer.
-        id: The unique identifier for this background.
 
     The following read-only attributes are also available:
+        id: The unique identifier for this background.
         layers: A tuple containing all BackgroundLayer objects used in
             this background.
 
@@ -1254,7 +1255,6 @@ class StellarClass(object):
             rectangle) should be used for collision detection.
         collision_precise: Whether or not precise (pixel-perfect)
             collision detection should be used.
-        id: The unique identifier for this object.
         bbox_left: The position of the left side of the bounding box in
             the room (same as x + bbox_x).
         bbox_right: The position of the right side of the bounding box
@@ -1291,6 +1291,7 @@ class StellarClass(object):
             for no color blending.  Default is None.
 
     The following read-only attributes are also available:
+        id: The unique identifier for this object.
         xstart: The initial value of x when the object was created.
         ystart: The initial value of y when the object was created.
         xprevious: The previous value of x.

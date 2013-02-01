@@ -77,7 +77,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.18"
+__version__ = "0.0.19"
 
 import sys
 import os
@@ -219,7 +219,7 @@ class Game(object):
         background_layers: A dictionary containing all loaded background
             layers, using their sprites' names as the keys.
         backgrounds: A dictionary containing all loaded backgrounds,
-            using their
+            using their unique identifiers as the keys.
         fonts: A dictionary containing all loaded fonts, using their
             names as the keys.
         sounds: A dictionary containing all loaded sounds, using their
@@ -608,19 +608,20 @@ class Game(object):
                     self.objects[i].event_step_end()
 
                 # Redraw
-                self._pygame_sprites.clear(self._window, self._background)
+                background = self.current_room.background._get_background()
+                self._pygame_sprites.clear(self._window, background)
                 self._pygame_sprites.update()
                 dirty = self._pygame_sprites.draw(self._window)
                 pygame.display.update(dirty)
 
             self.event_game_end()
+            pygame.quit()
+            global game
+            game = None
 
     def end(self):
         """Properly end the game."""
-        pygame.quit()
         self._running = False
-        global game
-        game = None
 
     def pause(self, image=None):
         """Pause the game.
@@ -1774,8 +1775,9 @@ class BackgroundLayer(object):
     """Special class used for background layers.
 
     All BackgroundLayer objects have the following attributes:
-        sprite: The Sprite object used for this layer.  Can also be the
-            name of a sprite.
+        sprite: The Sprite object used for this layer.  While it will
+            always be an actual Sprite object when read, it can also be
+            set to the ID of a sprite.
         x: The horizontal offset of the layer.
         y: The vertical offset of the layer.
         z: The Z-axis position of the layer in the room, which
@@ -1813,6 +1815,10 @@ class BackgroundLayer(object):
         self.xrepeat = xrepeat
         self.yrepeat = yrepeat
 
+    def _get_image(self):
+        # TODO: Add animation support.
+        return self.sprite._get_image(0)
+
 
 class Background(object):
 
@@ -1821,9 +1827,9 @@ class Background(object):
     All Background objects have the following attributes:
         color: A Stellar Game Engine color used in parts of the
             background where there is no layer.
-        id: The unique identifier for this background.
 
     The following read-only attributes are also available:
+        id: The unique identifier for this background.
         layers: A tuple containing all BackgroundLayer objects used in
             this background.
 
@@ -1854,14 +1860,78 @@ class Background(object):
 
         self.color = color
         self.id = id_
-        self.layers = []
+        unsorted_layers = []
+        sorted_layers = []
 
         for layer in layers:
             if isinstance(layer, BackgroundLayer):
-                self.layers.append(layer)
+                unsorted_layers.append(layer)
             else:
                 if layer in game.background_layers:
-                    self.layers.append(game.background_layers[layer])
+                    unsorted_layers.append(game.background_layers[layer])
+
+        for layer in unsorted_layers:
+            i = 0
+            while i < len(sorted_layers) and layer.z >= sorted_layers[i].z:
+                i += 1
+
+            sorted_layers.insert(i, layer)
+
+        self.layers = tuple(sorted_layers)
+
+    def _get_background(self):
+        # Return the static background this frame.
+        background = pygame.Surface((game.width * game._xscale,
+                                     game.height * game._yscale))
+        background.fill(_get_pygame_color(self.color))
+
+        for view in game.current_room.views:
+            view_x = int(round(view.x * game._xscale))
+            view_y = int(round(view.y * game._yscale))
+            view_w = int(round(view.width * game._xscale))
+            view_h = int(round(view.height * game._yscale))
+            # TODO: This fails if the view is too big. The view being
+            # too big would be an error, but this should silently allow
+            # such views anyway.
+            surf = background.subsurface(view_x, view_y, view_w, view_h)
+            for layer in self.layers:
+                image = layer._get_image()
+                x = int(round(layer.x - (view.x * layer.xscroll_rate) *
+                              game._xscale))
+                y = int(round(layer.y - (view.y * layer.yscroll_rate) *
+                              game._yscale))
+                image_w, image_h = image.get_size()
+
+                # These equations bring the position to the largest
+                # values possible while still being less than the
+                # location we're getting the surface at.  This is to
+                # minimize the number of repeat blittings.
+                if layer.xrepeat:
+                    x = ((x % image_w) + (view_x // image_w * image_w) -
+                         image_w)
+                if layer.yrepeat:
+                    y = ((y % image_h) + (view_y // image_h * image_h) -
+                         image_h)
+
+                if layer.xrepeat and layer.yrepeat:
+                    while y < view_y + view_h:
+                        while x < view_x + view_w:
+                            surf.blit(image, (x, y))
+                            x += image_w
+                        y += image_h
+                elif (layer.xrepeat and y < view_y + view_h and
+                      y + image_h > view_y):
+                    while x < view_x + view_w:
+                        surf.blit(image, (x, y))
+                        x += image_w
+                elif (layer.yrepeat and x < view_x + view_w and
+                      x + image_w > view_x):
+                    while y < view_y + view_h:
+                        surf.blit(image, (x, y))
+                        y += image_h
+                elif (x < view_x + view_w and x + image_w > view_x and
+                      y < view_y + view_h and y + image_h > view_y):
+                    surf.blit(image, (x, y))
 
 
 class Font(object):
@@ -2204,7 +2274,6 @@ class StellarClass(object):
             rectangle) should be used for collision detection.
         collision_precise: Whether or not precise (pixel-perfect)
             collision detection should be used.
-        id: The unique identifier for this object.
         bbox_left: The position of the left side of the bounding box in
             the room (same as x + bbox_x).
         bbox_right: The position of the right side of the bounding box
@@ -2241,6 +2310,7 @@ class StellarClass(object):
             for no color blending.  Default is None.
 
     The following read-only attributes are also available:
+        id: The unique identifier for this object.
         xstart: The initial value of x when the object was created.
         ystart: The initial value of y when the object was created.
         xprevious: The previous value of x.
@@ -3134,19 +3204,22 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                 self.image = pygame.Surface((1, 1))
                 self.image.set_colorkey((0, 0, 0))
 
-            self._update_rect()
+            self.update_rect(parent.x, parent.y, parent.z, parent.sprite)
         else:
             self.kill()
 
-    def _update_rect(self):
+    def update_rect(self, x, y, z, sprite):
+        # Update the rect of this Pygame sprite, based on the SGE sprite
+        # and coordinates given.  This involves creating "proxy"
+        # one-time sprites for multiple views if necessary.
         views = game.current_room.views
         if (len(views) == 1 and views[0].xport == 0 and views[0].yport == 0 and
                 views[0].width == game.width and
                 views[0].height == game.height):
             # There is only one view that takes up the whole screen, so
             # we don't need to worry about it.
-            x = self.parent().x - views[0].x - self.parent().sprite.origin_x
-            y = self.parent().y - views[0].y - self.parent().sprite.origin_y
+            x = x - views[0].x - sprite.origin_x
+            y = y - views[0].y - sprite.origin_y
             new_rect = self.image.get_rect()
             new_rect.left = round(x * game._xscale) - self.x_offset
             new_rect.top = round(y * game._yscale) - self.y_offset
@@ -3160,8 +3233,8 @@ class _PygameSprite(pygame.sprite.DirtySprite):
             original_used = False
             self.dirty = 1
             for view in views:
-                x = self.parent().x - view.x - self.parent().sprite.origin_x
-                y = self.parent().y - view.y - self.parent().sprite.origin_y
+                x = x - view.x - sprite.origin_x
+                y = y - view.y - sprite.origin_y
                 w = self.image.get_width()
                 h = self.image.get_height()
                 new_rect = self.image.get_rect()
@@ -3217,7 +3290,7 @@ class _PygameSprite(pygame.sprite.DirtySprite):
 
                     # Create proxy one-time sprite
                     proxy = _PygameOneTimeSprite(img, rect)
-                    game._pygame_sprites.add(proxy, layer=self.parent().z)
+                    game._pygame_sprites.add(proxy, layer=z)
 
 
 class _PygameOneTimeSprite(pygame.sprite.DirtySprite):
