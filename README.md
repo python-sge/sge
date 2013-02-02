@@ -1,5 +1,7 @@
 Stellar Game Engine
+===================
 
+## About
 Stellar Game Engine (also "SGE" or simply "Stellar Engine") is an engine
 for use with Stellar, in order to make its development easier and also
 offer an option to those who want only a game engine without a graphical
@@ -10,8 +12,7 @@ available.  The first implementation developed will likely be one that
 uses Pygame, but an implementation using Pyglet might be developed
 later, for instance.  This allows increased flexibility in Stellar.
 
-Developing an Implementation
-
+## Developing an Implementation
 To develop an implementation of SGE, copy sge-template.py and add in the
 functionality.  In order to prevent confusion, do *not* use docstrings
 on anything that is not included in the template, and do not modify the
