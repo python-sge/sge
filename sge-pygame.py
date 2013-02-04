@@ -1859,7 +1859,17 @@ class Background(object):
             id_ = kwargs['id']
 
         self.color = color
-        self.id = id_
+
+        if id_ is not None:
+            self.id = id_
+        else:
+            id_ = 0
+            while id_ in game.backgrounds:
+                id_ += 1
+            self.id = id_
+
+        game.backgrounds[self.id] = self
+
         unsorted_layers = []
         sorted_layers = []
 
@@ -2563,7 +2573,16 @@ class StellarClass(object):
                             sprite_bbox_height)
         self._collision_ellipse = collision_ellipse
         self._collision_precise = collision_precise
-        self.id = id_
+
+        if id_ is not None:
+            self.id = id_
+        else:
+            id_ = 0
+            while id_ in game.objects:
+                id_ += 1
+            self.id = id_
+
+        game.objects[self.id] = self
 
         self._x = x
         self._y = y
@@ -2621,6 +2640,8 @@ class StellarClass(object):
             x = self.x
         if y is None:
             y = self.y
+        print(x, y)
+        print(other.x, other.y)
 
         # Change x and y to be offset values; these are easier to use.
         x -= self.x
@@ -2864,6 +2885,42 @@ class Mouse(StellarClass):
         # Do nothing; we don't want this to be manually set.
         pass
 
+    @property
+    def bbox_left(self):
+        return self.x
+
+    @bbox_left.setter
+    def bbox_left(self, value):
+        # Do nothing; we don't want this to be manually set.
+        pass
+
+    @property
+    def bbox_right(self):
+        return self.x
+
+    @bbox_right.setter
+    def bbox_right(self, value):
+        # Do nothing; we don't want this to be manually set.
+        pass
+
+    @property
+    def bbox_top(self):
+        return self.y
+
+    @bbox_top.setter
+    def bbox_top(self, value):
+        # Do nothing; we don't want this to be manually set.
+        pass
+
+    @property
+    def bbox_bottom(self):
+        return self.y
+
+    @bbox_bottom.setter
+    def bbox_bottom(self, value):
+        # Do nothing; we don't want this to be manually set.
+        pass
+
     def __init__(self):
         super(Mouse, self).__init__(0, 0, 0)
         self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
@@ -2915,6 +2972,8 @@ class Mouse(StellarClass):
 
         self.mouse_xprevious = self.mouse_x
         self.mouse_yprevious = self.mouse_y
+        self.xprevious = self.x
+        self.yprevious = self.y
 
 
 class Room(object):

@@ -29,11 +29,11 @@ class Game(sge.Game):
 
     def event_mouse_move(self, x, y):
         for obj in self.objects:
-            if isinstance(obj, Circle):
-                if self.mouse.collides(obj, x, y):
-                    glob.circle.image_blend = "red"
+            if isinstance(self.objects[obj], Circle):
+                if self.mouse.collides(self.objects[obj], x, y):
+                    self.objects[obj].image_blend = "red"
                 else:
-                    glob.circle.image_blend = (0, 0, 255)
+                    self.objects[obj].image_blend = (0, 0, 255)
 
     def event_close(self):
         self.end()
