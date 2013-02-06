@@ -61,7 +61,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.19"
+__version__ = "0.0.20"
 
 import sys
 import os
@@ -166,7 +166,9 @@ class Game(object):
         mouse: A StellarClass object which represents the mouse cursor.
             Its ID is "mouse" and its bounding box is one pixel.
             Speed variables are determined by averaging all mouse
-            movement during the last quarter of a second.
+            movement during the last quarter of a second.  Assigning to
+            its ``visible`` attribute controls whether or not the mouse
+            cursor is shown.  Setting its sprite sets the mouse cursor.
 
     Game methods:
         start: Start the game at the first room.

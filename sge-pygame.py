@@ -77,7 +77,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.19"
+__version__ = "0.0.20"
 
 import sys
 import os
@@ -233,7 +233,9 @@ class Game(object):
         mouse: A StellarClass object which represents the mouse cursor.
             Its ID is "mouse" and its bounding box is one pixel.
             Speed variables are determined by averaging all mouse
-            movement during the last quarter of a second.
+            movement during the last quarter of a second.  Assigning to
+            its ``visible`` attribute controls whether or not the mouse
+            cursor is shown.  Setting its sprite sets the mouse cursor.
 
     Game methods:
         start: Start the game at the first room.
@@ -1735,8 +1737,8 @@ class Sprite(object):
                         img.set_alpha(alpha, pygame.RLEACCEL)
 
                 if blend is not None:
-                    # TODO: I'm not sure if this is right.
-                    img.fill(blend, None, pygame.BLEND_RGB_MULT)
+                    img.fill(_get_pygame_color(blend), None,
+                             pygame.BLEND_RGB_MULT)
             else:
                 img = pygame.Surface((1, 1))
                 img.set_colorkey((0, 0, 0), pygame.RLEACCEL)
@@ -2640,8 +2642,6 @@ class StellarClass(object):
             x = self.x
         if y is None:
             y = self.y
-        print(x, y)
-        print(other.x, other.y)
 
         # Change x and y to be offset values; these are easier to use.
         x -= self.x
