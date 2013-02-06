@@ -1372,7 +1372,8 @@ class Game(object):
                 self._yscale = info.current_h / self.height
 
                 if self.scale_proportional:
-                    self._make_scale_proportional()
+                    self._xscale = min(self._xscale, self._yscale)
+                    self._yscale = self._xscale
         else:
             # Decide window size
             if self.scale == 0:
@@ -1380,7 +1381,8 @@ class Game(object):
                 self._yscale = self._window_height / self.height
 
                 if self.scale_proportional:
-                    self._make_scale_proportional()
+                    self._xscale = min(self._xscale, self._yscale)
+                    self._yscale = self._xscale
 
             self._window = pygame.display.set_mode(
                 (int(self.width * self._xscale),
@@ -1389,15 +1391,6 @@ class Game(object):
         # Refresh sprites
         for sprite in self.sprites:
             sprite._refresh()
-
-    def _make_scale_proportional(self):
-        # Fix scaling to make it proportional.
-        if self._xscale / self._yscale > self.width / self.height:
-            # Too wide.
-            self._xscale = self.width * self._yscale / self.height
-        else:
-            # Either just right or too tall.
-            self._yscale = self.height * self._xscale / self.width
 
     def _draw_surface(self, image, x, y, z):
         # Draw the surface indicated (used in all draw methods), using
@@ -2227,6 +2220,7 @@ class Music(object):
         See Music.play.__doc__ for information about the arguments.
 
         """
+        # TODO: Fix
         glob.music_queue.append((self, start, loops, maxtime, fade_time))
 
     def stop(self, fade_time=None):
