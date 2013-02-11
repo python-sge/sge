@@ -2733,6 +2733,7 @@ class StellarClass(object):
 
     def destroy(self):
         """Destroy the object."""
+        self.event_destroy()
         self._pygame_sprite.kill()
         del game.objects[self.id]
 
