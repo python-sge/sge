@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Stellar Game Engine - Pygame
+"""Stellar Game Engine - Pygame 1.9
 
 Stellar Game Engine is a library for Stellar.  It is a game engine
 loosely based on Game Maker.
@@ -34,6 +34,20 @@ Constants:
     ALIGN_TOP: Flag indicating alignment to the top.
     ALIGN_MIDDLE: Flag indicating alignment to the vertical middle.
     ALIGN_BOTTOM: Flag indicating alignment to the bottom.
+    MOUSE_BUTTON_LEFT: The mouse button number which corresponds with
+        the left mouse button.
+    MOUSE_BUTTON_RIGHT: The mouse button number which corresponds with
+        the right mouse button.
+    MOUSE_BUTTON_MIDDLE: The mouse button number which corresponds with
+        the middle mouse button.
+    MOUSE_BUTTON_WHEEL_UP: The mouse button number which corresponds
+        with rolling the mouse wheel up.
+    MOUSE_BUTTON_WHEEL_DOWN: The mouse button number which corresponds
+        with rolling the mouse wheel down.
+    MOUSE_BUTTON_WHEEL_LEFT: The mouse button number which corresponds
+        with tilting the mouse wheel to the left.
+    MOUSE_BUTTON_WHEEL_RIGHT: The mouse button number which corresponds
+        with tilting the mouse wheel to the right.
 
 Global variables:
     game: Stores the current game.  If there is no game currently, this
@@ -77,7 +91,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.20"
+__version__ = "0.0.21"
 
 import sys
 import os
@@ -170,9 +184,16 @@ IMPLEMENTATION = "Pygame 1.9"
 ALIGN_LEFT = 2
 ALIGN_CENTER = 3
 ALIGN_RIGHT = 1
-ALIGN_TOP = 2
-ALIGN_MIDDLE = 3
-ALIGN_BOTTOM = 1
+ALIGN_TOP = 8
+ALIGN_MIDDLE = 12
+ALIGN_BOTTOM = 4
+MOUSE_BUTTON_LEFT = 1
+MOUSE_BUTTON_RIGHT = 3
+MOUSE_BUTTON_MIDDLE = 2
+MOUSE_BUTTON_WHEEL_UP = 4
+MOUSE_BUTTON_WHEEL_DOWN = 5
+MOUSE_BUTTON_WHEEL_LEFT = 6
+MOUSE_BUTTON_WHEEL_RIGHT = 7
 
 # Global variables
 game = None
@@ -1258,8 +1279,9 @@ class Game(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        ``button`` is the number of the mouse button that was pressed,
-        where 0 is the first mouse button.
+        ``button`` is the number of the mouse button that was pressed;
+        these numbers may vary by implementation, so MOUSE_BUTTON_*
+        constants should be used.
 
         """
         pass
@@ -1267,8 +1289,9 @@ class Game(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        ``button`` is the number of the mouse button that was released,
-        where 0 is the first mouse button.
+        ``button`` is the number of the mouse button that was released;
+        these numbers may vary by implementation, so MOUSE_BUTTON_*
+        constants should be used.
 
         """
         pass
@@ -1629,7 +1652,7 @@ class Sprite(object):
 
         if not self._baseimages and fname_strip:
             # Load the strip (sprite sheet)
-            root, ext = os.path.splitext(fname)
+            root, ext = os.path.splitext(os.path.basename(fname_strip))
             assert '-' in root or '_' in root
             assert (root.rsplit('-', 1)[0] == name or
                     root.rsplit('_', 1)[0] == name)

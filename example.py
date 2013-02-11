@@ -35,6 +35,11 @@ class Game(sge.Game):
                 else:
                     self.objects[obj].image_blend = (0, 0, 255)
 
+    def event_mouse_button_press(self, button):
+        if button == sge.MOUSE_BUTTON_LEFT:
+            if glob.circle is not None and self.mouse.collides(glob.circle):
+                glob.circle.destroy()
+
     def event_close(self):
         self.end()
 
@@ -65,7 +70,7 @@ def main():
     circle_sprite = sge.Sprite('circle', 32, 32, 16, 16, True, bbox_x=-16,
                                bbox_y=-16)
     circle_pop_sprite = sge.Sprite('circle_pop', 32, 32, 16, 16, True,
-                                   bbox_x=-16, bbox_y=-16)
+                                   bbox_x=-16, bbox_y=-16, fps=15)
     fence_sprite = sge.Sprite('fence', transparent=True)
 
     # Load backgrounds

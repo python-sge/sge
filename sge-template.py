@@ -905,7 +905,7 @@ class Sprite(object):
 
         elif fname_strip:
             # Load the strip (sprite sheet)
-            root, ext = os.path.splitext(fname)
+            root, ext = os.path.splitext(fname_strip)
             assert '-' in root or '_' in root
             assert (root.rsplit('-', 1)[0] == name or
                     root.rsplit('_', 1)[0] == name)
