@@ -34,6 +34,20 @@ Constants:
     ALIGN_TOP: Flag indicating alignment to the top.
     ALIGN_MIDDLE: Flag indicating alignment to the vertical middle.
     ALIGN_BOTTOM: Flag indicating alignment to the bottom.
+    MOUSE_BUTTON_LEFT: The mouse button number which corresponds with
+        the left mouse button.
+    MOUSE_BUTTON_RIGHT: The mouse button number which corresponds with
+        the right mouse button.
+    MOUSE_BUTTON_MIDDLE: The mouse button number which corresponds with
+        the middle mouse button.
+    MOUSE_BUTTON_WHEEL_UP: The mouse button number which corresponds
+        with rolling the mouse wheel up.
+    MOUSE_BUTTON_WHEEL_DOWN: The mouse button number which corresponds
+        with rolling the mouse wheel down.
+    MOUSE_BUTTON_WHEEL_LEFT: The mouse button number which corresponds
+        with tilting the mouse wheel to the left.
+    MOUSE_BUTTON_WHEEL_RIGHT: The mouse button number which corresponds
+        with tilting the mouse wheel to the right.
 
 Global variables:
     game: Stores the current game.  If there is no game currently, this
@@ -61,7 +75,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.20"
+__version__ = "0.0.21"
 
 import sys
 import os
@@ -103,9 +117,16 @@ IMPLEMENTATION = "Template"
 ALIGN_LEFT = 2
 ALIGN_CENTER = 3
 ALIGN_RIGHT = 1
-ALIGN_TOP = 2
-ALIGN_MIDDLE = 3
-ALIGN_BOTTOM = 1
+ALIGN_TOP = 8
+ALIGN_MIDDLE = 12
+ALIGN_BOTTOM = 4
+MOUSE_BUTTON_LEFT = 0
+MOUSE_BUTTON_RIGHT = 1
+MOUSE_BUTTON_MIDDLE = 2
+MOUSE_BUTTON_WHEEL_UP = 3
+MOUSE_BUTTON_WHEEL_DOWN = 4
+MOUSE_BUTTON_WHEEL_LEFT = 5
+MOUSE_BUTTON_WHEEL_RIGHT = 6
 
 # Global variables
 game = None
@@ -652,8 +673,9 @@ class Game(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        ``button`` is the number of the mouse button that was pressed,
-        where 0 is the first mouse button.
+        ``button`` is the number of the mouse button that was pressed;
+        these numbers may vary by implementation, so MOUSE_BUTTON_*
+        constants should be used.
 
         """
         pass
@@ -661,8 +683,9 @@ class Game(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        ``button`` is the number of the mouse button that was released,
-        where 0 is the first mouse button.
+        ``button`` is the number of the mouse button that was released;
+        these numbers may vary by implementation, so MOUSE_BUTTON_*
+        constants should be used.
 
         """
         pass
