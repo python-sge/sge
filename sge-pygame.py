@@ -439,6 +439,7 @@ class Game(object):
             self._running = True
             self.event_game_start()
             self.rooms[0].start()
+            background = None
             self._clock.tick()
 
             while self._running:
@@ -610,8 +611,13 @@ class Game(object):
                     self.objects[i].event_step_end()
 
                 # Redraw
-                background = self.current_room.background._get_background()
-                self._pygame_sprites.clear(self._window, background)
+                new_background = self.current_room.background._get_background()
+                if new_background != background:
+                    background = new_background
+                    self._window.blit(background, (0, 0))
+                else:
+                    self._pygame_sprites.clear(self._window, background)
+
                 self._pygame_sprites.update()
                 dirty = self._pygame_sprites.draw(self._window)
                 pygame.display.update(dirty)
@@ -1937,6 +1943,8 @@ class Background(object):
                 elif (x < view_x + view_w and x + image_w > view_x and
                       y < view_y + view_h and y + image_h > view_y):
                     surf.blit(image, (x, y))
+
+        return background
 
 
 class Font(object):
