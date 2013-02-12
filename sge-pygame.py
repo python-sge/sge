@@ -500,9 +500,10 @@ class Game(object):
                     elif event.type == pygame.QUIT:
                         self.event_close()
 
+                real_time_passed = self._clock.tick(self.fps)
+
                 if self.delta:
-                    time_passed = min(self._clock.tick(self.fps),
-                                      1000 / self.delta_min)
+                    time_passed = min(real_time_passed, 1000 / self.delta_min)
                     delta_mult = time_passed / (1000 / self.fps)
                 else:
                     self._clock.tick(self.fps)
@@ -510,8 +511,8 @@ class Game(object):
                     delta_mult = 1
 
                 # Step events
-                self.event_step(time_passed)
-                self.current_room.event_step(time_passed)
+                self.event_step(real_time_passed)
+                self.current_room.event_step(real_time_passed)
 
                 # Update background layers
                 for i in self.background_layers:
@@ -520,6 +521,7 @@ class Game(object):
                 # Update objects (including mouse)
                 for obj in self.current_room.objects:
                     obj._update(time_passed, delta_mult)
+                    obj.event_step(real_time_passed)
 
                 # Redraw
                 new_background = self.current_room.background._get_background()
@@ -2847,9 +2849,6 @@ class StellarClass(object):
                             # a continuous collision.
                             self.event_collision(other)
                             other.event_collision(self)
-
-        # Step event
-        self.event_step(time_passed)
 
     def _set_mask(self):
         # Properly set the hit mask based on the collision settings.
