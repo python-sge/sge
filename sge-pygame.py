@@ -458,12 +458,7 @@ class Game(object):
             self._clock.tick()
 
             while self._running:
-                # Begin Step event
-                self.event_step_begin()
-                self.current_room.event_step_begin()
-                for i in self.objects:
-                    self.objects[i].event_step_begin()
-
+                # Pygame events
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
                         self.event_key_press(KEYNAMES[event.key])
@@ -505,12 +500,6 @@ class Game(object):
                     elif event.type == pygame.QUIT:
                         self.event_close()
 
-                # Step event
-                self.event_step()
-                self.current_room.event_step()
-                for i in self.objects:
-                    self.objects[i].event_step()
-
                 if self.delta:
                     time_passed = min(self._clock.tick(self.fps),
                                       1000 / self.delta_min)
@@ -520,110 +509,13 @@ class Game(object):
                     time_passed = 1000 / self.fps
                     delta_mult = 1
 
-                self.mouse.update_speed(time_passed)
+                # Step events
+                self.event_step(time_passed)
+                self.current_room.event_step(time_passed)
 
+                # Update objects (including mouse)
                 for i in self.objects:
-                    obj = self.objects[i]
-
-                    # Alarms
-                    for a in obj._alarms:
-                        obj._alarms[a] -= delta_mult
-                        if obj._alarms[a] <= 0:
-                            del obj._alarms[a]
-                            obj.event_alarm(a)
-
-                    # Movement
-                    if obj.xvelocity or obj.yvelocity:
-                        obj.x += obj.xvelocity * delta_mult
-                        obj.y += obj.yvelocity * delta_mult
-
-                        # Detect collisions
-                        for j in self.objects:
-                            other = self.objects[j]
-                            if obj.collides(other):
-                                xcollision = not obj.collides(other,
-                                                              x=obj.xprevious)
-                                ycollision = not obj.collides(other,
-                                                              y=obj.yprevious)
-
-                                if xcollision and ycollision:
-                                    # Corner collision; determine
-                                    # direction by distance.
-                                    if obj.xvelocity > 0:
-                                        xdepth = (
-                                            obj.bbox_right - other.bbox_left)
-                                    else:
-                                        xdepth = (
-                                            other.bbox_right - obj.bbox_left)
-
-                                    if obj.yvelocity > 0:
-                                        ydepth = (
-                                            obj.bbox_bottom - other.bbox_top)
-                                    else:
-                                        ydepth = (
-                                            other.bbox_bottom - obj.bbox_top)
-
-                                    if xdepth > ydepth:
-                                        if obj.xvelocity > 0:
-                                            obj.event_collision_right(other)
-                                            other.event_collision_left(obj)
-                                        else:
-                                            obj.event_collision_left(other)
-                                            other.event_collision_right(obj)
-                                    else:
-                                        if obj.yvelocity > 0:
-                                            obj.event_collision_bottom(other)
-                                            other.event_collision_top(obj)
-                                        else:
-                                            obj.event_collision_top(other)
-                                            other.event_collision_bottom(obj)
-
-                                elif xcollision:
-                                    # Horizontal collision only.
-                                    if obj.xvelocity > 0:
-                                        obj.event_collision_right(other)
-                                        other.event_collision_left(obj)
-                                    else:
-                                        obj.event_collision_left(other)
-                                        other.event_collision_right(obj)
-
-                                elif ycollision:
-                                    # Vertical collision only.
-                                    if obj.yvelocity > 0:
-                                        obj.event_collision_bottom(other)
-                                        other.event_collision_top(obj)
-                                    else:
-                                        obj.event_collision_top(other)
-                                        other.event_collision_bottom(obj)
-
-                                elif not obj.collides(other, obj.xprevious,
-                                                      obj.yprevious):
-                                    # Wedge collision (both vertical and
-                                    # horizontal collisions).
-                                    if obj.xvelocity > 0:
-                                        obj.event_collision_right(other)
-                                        other.event_collision_left(obj)
-                                    else:
-                                        obj.event_collision_left(other)
-                                        other.event_collision_right(obj)
-                                    if obj.yvelocity > 0:
-                                        obj.event_collision_bottom(other)
-                                        other.event_collision_top(obj)
-                                    else:
-                                        obj.event_collision_top(other)
-                                        other.event_collision_bottom(obj)
-
-                                else:
-                                    # No directional collision; this is
-                                    # a continuous collision.
-                                    obj.event_collision(other)
-                                    other.event_collision(obj)
-
-                # End Step event
-                self.event_step_end()
-                self.current_room.event_step_end()
-                for i in self.objects:
-                    self.objects[i].event_step_end()
+                    self.objects[i]._update(time_passed, delta_mult)
 
                 # Redraw
                 new_background = self.current_room.background._get_background()
@@ -1168,7 +1060,7 @@ class Game(object):
         """
         pass
 
-    def event_step(self):
+    def event_step(self, time_passed):
         """Global step event.
 
         Called once each frame.  ``time_passed`` is the number of
@@ -2799,6 +2691,99 @@ class StellarClass(object):
         """Destroy event."""
         pass
 
+    def _update(self, time_passed, delta_mult):
+        # Update this object (should be called each frame).
+        # Alarms
+        for a in self._alarms.keys():
+            self._alarms[a] -= delta_mult
+            if self._alarms[a] <= 0:
+                del self._alarms[a]
+                self.event_alarm(a)
+
+        # Movement
+        if self.xvelocity or self.yvelocity:
+            self.x += self.xvelocity * delta_mult
+            self.y += self.yvelocity * delta_mult
+
+            # Detect collisions
+            for j in game.objects:
+                other = game.objects[j]
+                if self.collides(other):
+                    xcollision = not self.collides(other, x=self.xprevious)
+                    ycollision = not self.collides(other, y=self.yprevious)
+
+                    if xcollision and ycollision:
+                        # Corner collision; determine
+                        # direction by distance.
+                        if self.xvelocity > 0:
+                            xdepth = (self.bbox_right - other.bbox_left)
+                        else:
+                            xdepth = (other.bbox_right - self.bbox_left)
+
+                        if self.yvelocity > 0:
+                            ydepth = (self.bbox_bottom - other.bbox_top)
+                        else:
+                            ydepth = (other.bbox_bottom - self.bbox_top)
+
+                        if xdepth > ydepth:
+                            if self.xvelocity > 0:
+                                self.event_collision_right(other)
+                                other.event_collision_left(self)
+                            else:
+                                self.event_collision_left(other)
+                                other.event_collision_right(self)
+                        else:
+                            if self.yvelocity > 0:
+                                self.event_collision_bottom(other)
+                                other.event_collision_top(self)
+                            else:
+                                self.event_collision_top(other)
+                                other.event_collision_bottom(self)
+
+                    elif xcollision:
+                        # Horizontal collision only.
+                        if self.xvelocity > 0:
+                            self.event_collision_right(other)
+                            other.event_collision_left(self)
+                        else:
+                            self.event_collision_left(other)
+                            other.event_collision_right(self)
+
+                    elif ycollision:
+                        # Vertical collision only.
+                        if self.yvelocity > 0:
+                            self.event_collision_bottom(other)
+                            other.event_collision_top(self)
+                        else:
+                            self.event_collision_top(other)
+                            other.event_collision_bottom(self)
+
+                    elif not self.collides(other, self.xprevious,
+                                           self.yprevious):
+                        # Wedge collision (both vertical and
+                        # horizontal collisions).
+                        if self.xvelocity > 0:
+                            self.event_collision_right(other)
+                            other.event_collision_left(self)
+                        else:
+                            self.event_collision_left(other)
+                            other.event_collision_right(self)
+                        if self.yvelocity > 0:
+                            self.event_collision_bottom(other)
+                            other.event_collision_top(self)
+                        else:
+                            self.event_collision_top(other)
+                            other.event_collision_bottom(self)
+
+                    else:
+                        # No directional collision; this is
+                        # a continuous collision.
+                        self.event_collision(other)
+                        other.event_collision(self)
+
+        # Step event
+        self.event_step(time_passed)
+
     def _set_mask(self):
         # Properly set the hit mask based on the collision settings.
         if self.collision_precise:
@@ -2967,6 +2952,10 @@ class Mouse(StellarClass):
 
     def event_collision_bottom(self, other):
         game.event_mouse_collision_bottom(other)
+
+    def _update(self, time_passed, delta_mult):
+        self.update_speed(time_passed)
+        super(Mouse, self)._update(time_passed, delta_mult)
 
     def update_speed(self, time_passed):
         # Update the speed variables.  ``time_passed`` is the number of

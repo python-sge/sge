@@ -23,6 +23,12 @@ class glob(object):
 
 
 class Game(sge.Game):
+    def event_create(self):
+        if self.collides(game.mouse):
+            self.image_blend = '#ff0000'
+        else:
+            self.image_blend = 'blue'
+
     def event_key_press(self, key):
         if key == 'escape':
             self.end()
@@ -49,7 +55,8 @@ class Circle(sge.StellarClass):
         super(Circle, self).__init__(x, y, 5, 'circle', collision_ellipse=True)
 
     def event_destroy(self):
-        CirclePop(self.x, self.y)
+        pop = CirclePop(self.x, self.y)
+        pop.image_blend = self.image_blend
         assert glob.pop_sound is not None
         glob.pop_sound.play()
 
