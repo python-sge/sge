@@ -513,9 +513,13 @@ class Game(object):
                 self.event_step(time_passed)
                 self.current_room.event_step(time_passed)
 
+                # Update background layers
+                for i in self.background_layers:
+                    self.background_layers[i]._update(time_passed)
+
                 # Update objects (including mouse)
-                for i in self.objects:
-                    self.objects[i]._update(time_passed, delta_mult)
+                for obj in self.current_room.objects:
+                    obj._update(time_passed, delta_mult)
 
                 # Redraw
                 new_background = self.current_room.background._get_background()
@@ -1733,9 +1737,19 @@ class BackgroundLayer(object):
         self.xrepeat = xrepeat
         self.yrepeat = yrepeat
 
+        self._image_index = 0
+        self._frame_time = 1000 / self.sprite.fps
+        self._count = 0
+
+    def _update(self, time_passed):
+        # Update the animation frame.
+        self._count += time_passed
+        self._image_index += self._count // self._frame_time
+        self._count %= self._frame_time
+        self._image_index %= len(self.sprite._images)
+
     def _get_image(self):
-        # TODO: Add animation support.
-        return self.sprite._get_image(0)
+        return self.sprite._get_image(self._image_index)
 
 
 class Background(object):
@@ -2706,33 +2720,56 @@ class StellarClass(object):
             self.y += self.yvelocity * delta_mult
 
             # Detect collisions
-            for j in game.objects:
-                other = game.objects[j]
-                if self.collides(other):
-                    xcollision = not self.collides(other, x=self.xprevious)
-                    ycollision = not self.collides(other, y=self.yprevious)
+            if self.detects_collisions:
+                for other_ref in game._colliders:
+                    if other_ref() is not None:
+                        other = other_ref()
+                    else:
+                        continue
 
-                    if xcollision and ycollision:
-                        # Corner collision; determine
-                        # direction by distance.
-                        if self.xvelocity > 0:
-                            xdepth = (self.bbox_right - other.bbox_left)
-                        else:
-                            xdepth = (other.bbox_right - self.bbox_left)
+                    if self.collides(other):
+                        xcollision = not self.collides(other, x=self.xprevious)
+                        ycollision = not self.collides(other, y=self.yprevious)
 
-                        if self.yvelocity > 0:
-                            ydepth = (self.bbox_bottom - other.bbox_top)
-                        else:
-                            ydepth = (other.bbox_bottom - self.bbox_top)
+                        if xcollision and ycollision:
+                            # Corner collision; determine
+                            # direction by distance.
+                            if self.xvelocity > 0:
+                                xdepth = (self.bbox_right - other.bbox_left)
+                            else:
+                                xdepth = (other.bbox_right - self.bbox_left)
 
-                        if xdepth > ydepth:
+                            if self.yvelocity > 0:
+                                ydepth = (self.bbox_bottom - other.bbox_top)
+                            else:
+                                ydepth = (other.bbox_bottom - self.bbox_top)
+
+                            if xdepth > ydepth:
+                                if self.xvelocity > 0:
+                                    self.event_collision_right(other)
+                                    other.event_collision_left(self)
+                                else:
+                                    self.event_collision_left(other)
+                                    other.event_collision_right(self)
+                            else:
+                                if self.yvelocity > 0:
+                                    self.event_collision_bottom(other)
+                                    other.event_collision_top(self)
+                                else:
+                                    self.event_collision_top(other)
+                                    other.event_collision_bottom(self)
+
+                        elif xcollision:
+                            # Horizontal collision only.
                             if self.xvelocity > 0:
                                 self.event_collision_right(other)
                                 other.event_collision_left(self)
                             else:
                                 self.event_collision_left(other)
                                 other.event_collision_right(self)
-                        else:
+
+                        elif ycollision:
+                            # Vertical collision only.
                             if self.yvelocity > 0:
                                 self.event_collision_bottom(other)
                                 other.event_collision_top(self)
@@ -2740,46 +2777,28 @@ class StellarClass(object):
                                 self.event_collision_top(other)
                                 other.event_collision_bottom(self)
 
-                    elif xcollision:
-                        # Horizontal collision only.
-                        if self.xvelocity > 0:
-                            self.event_collision_right(other)
-                            other.event_collision_left(self)
-                        else:
-                            self.event_collision_left(other)
-                            other.event_collision_right(self)
+                        elif not self.collides(other, self.xprevious,
+                                               self.yprevious):
+                            # Wedge collision (both vertical and
+                            # horizontal collisions).
+                            if self.xvelocity > 0:
+                                self.event_collision_right(other)
+                                other.event_collision_left(self)
+                            else:
+                                self.event_collision_left(other)
+                                other.event_collision_right(self)
+                            if self.yvelocity > 0:
+                                self.event_collision_bottom(other)
+                                other.event_collision_top(self)
+                            else:
+                                self.event_collision_top(other)
+                                other.event_collision_bottom(self)
 
-                    elif ycollision:
-                        # Vertical collision only.
-                        if self.yvelocity > 0:
-                            self.event_collision_bottom(other)
-                            other.event_collision_top(self)
                         else:
-                            self.event_collision_top(other)
-                            other.event_collision_bottom(self)
-
-                    elif not self.collides(other, self.xprevious,
-                                           self.yprevious):
-                        # Wedge collision (both vertical and
-                        # horizontal collisions).
-                        if self.xvelocity > 0:
-                            self.event_collision_right(other)
-                            other.event_collision_left(self)
-                        else:
-                            self.event_collision_left(other)
-                            other.event_collision_right(self)
-                        if self.yvelocity > 0:
-                            self.event_collision_bottom(other)
-                            other.event_collision_top(self)
-                        else:
-                            self.event_collision_top(other)
-                            other.event_collision_bottom(self)
-
-                    else:
-                        # No directional collision; this is
-                        # a continuous collision.
-                        self.event_collision(other)
-                        other.event_collision(self)
+                            # No directional collision; this is
+                            # a continuous collision.
+                            self.event_collision(other)
+                            other.event_collision(self)
 
         # Step event
         self.event_step(time_passed)
@@ -3064,7 +3083,7 @@ class Room(object):
             self.background = Background((), 'black')
         self._start_background = self.background
 
-        real_objects = []
+        real_objects = [game.mouse]
         for obj in objects:
             if isinstance(obj, StellarClass):
                 real_objects.append(obj)
