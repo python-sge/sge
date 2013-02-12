@@ -1738,15 +1738,24 @@ class BackgroundLayer(object):
         self.yrepeat = yrepeat
 
         self._image_index = 0
-        self._frame_time = 1000 / self.sprite.fps
         self._count = 0
+        if self.sprite.fps != 0:
+            self._frame_time = 1000 / self.sprite.fps
+            if not self._frame_time:
+                # This would be caused by a round-off to 0 resulting
+                # from a much too high frame rate.  It would cause a
+                # division by 0 later, so this is meant to prevent that.
+                self._frame_time = 0.01
+        else:
+            self._frame_time = None
 
     def _update(self, time_passed):
         # Update the animation frame.
-        self._count += time_passed
-        self._image_index += self._count // self._frame_time
-        self._count %= self._frame_time
-        self._image_index %= len(self.sprite._images)
+        if self._frame_time is not None:
+            self._count += time_passed
+            self._image_index += int(self._count // self._frame_time)
+            self._count %= self._frame_time
+            self._image_index %= len(self.sprite._images)
 
     def _get_image(self):
         return self.sprite._get_image(self._image_index)
@@ -2315,7 +2324,9 @@ class StellarClass(object):
     @z.setter
     def z(self, value):
         self._z = value
-        game._pygame_sprites.add(self._pygame_sprite, layer=self._z)
+        if self._pygame_sprite in game._pygame_sprites:
+            self._pygame_sprite.kill()
+            game._pygame_sprites.add(self._pygame_sprite, layer=self._z)
 
     @property
     def sprite(self):
@@ -2450,6 +2461,37 @@ class StellarClass(object):
         self._xvelocity = math.cos(radians(value)) * self.speed
         self._yvelocity = math.sin(radians(value)) * self.speed
 
+    @property
+    def image_index(self):
+        return self._image_index
+
+    @image_index.setter
+    def image_index(self, value):
+        if self.sprite is not None:
+            self._image_index = value
+            while self._image_index >= len(self.sprite._images):
+                self._image_index -= len(self.sprite._images)
+                self.event_animation_end()
+        else:
+            self._image_index = 0
+
+    @property
+    def image_fps(self):
+        return self._fps
+
+    @image_fps.setter
+    def image_fps(self, value):
+        self._fps = abs(value)
+        if self._fps != 0:
+            self._frame_time = 1000 / self._fps
+            if not self._frame_time:
+                # This would be caused by a round-off to 0 resulting
+                # from a much too high frame rate.  It would cause a
+                # division by 0 later, so this is meant to prevent that.
+                self._frame_time = 0.01
+        else:
+            self._frame_time = None
+
     def __init__(self, x, y, z, sprite=None, visible=True,
                  detects_collisions=True, bbox_x=None, bbox_y=None,
                  bbox_width=None, bbox_height=None, collision_ellipse=False,
@@ -2520,9 +2562,9 @@ class StellarClass(object):
         self._yvelocity = 0
         self._move_direction = 0
         self._speed = 0
+        self._anim_count = 0
         self.image_index = 0
-        self.image_fps = (self.sprite.fps if self.sprite is not None else
-                          game.fps)
+        self.image_fps = self.sprite.fps if self.sprite is not None else 0
         self.image_xscale = 1
         self.image_yscale = 1
         self.image_rotation = 0
@@ -2707,6 +2749,12 @@ class StellarClass(object):
 
     def _update(self, time_passed, delta_mult):
         # Update this object (should be called each frame).
+        # Update the animation frame.
+        if self.image_fps:
+            self._anim_count += time_passed
+            self.image_index += int(self._anim_count // self._frame_time)
+            self._anim_count %= self._frame_time
+
         # Alarms
         for a in self._alarms.keys():
             self._alarms[a] -= delta_mult
@@ -2951,7 +2999,7 @@ class Mouse(StellarClass):
         pass
 
     def __init__(self):
-        super(Mouse, self).__init__(0, 0, 0)
+        super(Mouse, self).__init__(0, 0, 0, id='mouse')
         self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
         self.mouse_xprevious = self.mouse_x
         self.mouse_yprevious = self.mouse_y
@@ -3083,19 +3131,16 @@ class Room(object):
             self.background = Background((), 'black')
         self._start_background = self.background
 
-        real_objects = [game.mouse]
-        for obj in objects:
-            if isinstance(obj, StellarClass):
-                real_objects.append(obj)
-            else:
-                real_objects.append(game.objects[obj])
-        self.objects = tuple(real_objects)
-        self._start_objects = self.objects
-
         self.room_number = len(game.rooms)
         game.rooms.append(self)
 
         self._started = False
+
+        self.objects = ()
+        self.add(game.mouse)
+        for obj in objects:
+            self.add(obj)
+        self._start_objects = self.objects
 
     def add(self, obj):
         """Add a StellarClass object to the room.
@@ -3104,7 +3149,15 @@ class Room(object):
         object's ID.
 
         """
-        # TODO
+        if not isinstance(obj, StellarClass):
+            obj = game.objects[obj]
+
+        if obj not in self.objects:
+            new_objects = list(self.objects)
+            new_objects.append(obj)
+            self.objects = tuple(new_objects)
+            game._pygame_sprites.add(obj._pygame_sprite, layer=obj.z)
+            obj.event_create()
 
     def start(self):
         """Start the room.
@@ -3113,7 +3166,6 @@ class Room(object):
 
         """
         self._reset()
-        self.event_room_start()
         self.resume()
 
     def resume(self):
@@ -3126,17 +3178,17 @@ class Room(object):
         if game.current_room is not None:
             game.current_room.event_room_end()
 
-        game.current_room = self
-
-        if not self._started:
-            self.event_room_start()
-
         for sprite in game._pygame_sprites:
             sprite.kill()
 
+        game.current_room = self
+
         for obj in self.objects:
-            game._pygame_sprites.add(obj._pygame_sprite)
-            if not self._started:
+            game._pygame_sprites.add(obj._pygame_sprite, layer=obj.z)
+
+        if not self._started:
+            self.event_room_start()
+            for obj in self.objects:
                 obj.event_create()
 
         self._started = True
@@ -3298,11 +3350,12 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                 if self.visible != self.parent().visible:
                     self.visible = int(self.parent().visible)
                     self.dirty = 1
+
+                self.update_rect(parent.x, parent.y, parent.z, parent.sprite)
             else:
                 self.image = pygame.Surface((1, 1))
                 self.image.set_colorkey((0, 0, 0))
-
-            self.update_rect(parent.x, parent.y, parent.z, parent.sprite)
+                self.dirty = 1
         else:
             self.kill()
 

@@ -57,6 +57,7 @@ class Circle(sge.StellarClass):
     def event_destroy(self):
         pop = CirclePop(self.x, self.y)
         pop.image_blend = self.image_blend
+        sge.game.current_room.add(pop)
         assert glob.pop_sound is not None
         glob.pop_sound.play()
 
