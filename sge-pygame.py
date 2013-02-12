@@ -91,7 +91,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.21"
+__version__ = "0.0.22"
 
 import sys
 import os
@@ -284,18 +284,33 @@ class Game(object):
         get_joystick_buttons: Return the number of buttons on the
             given joystick.
 
-    Game events are handled by special methods.  The time that they are
-    called is based on the following events, which happen each frame in
-    the following order and are synchronized among all objects which
-    have them:
-        event_step_begin
-        event_step
-        event_step_end
+    Game events are handled by special methods.  The exact timing of
+    their calling is implementation-dependent except where otherwise
+    noted.  The methods are:
+        event_game_start: Called when the game starts.  This is only
+            called once (it is not called again when the game restarts)
+            and it is always the first event method called.
+        event_step: Called once each frame.
+        event_key_press: Key press event.
+        event_key_release: Key release event.
+        event_mouse_move: Mouse move event.
+        event_mouse_button_press: Mouse button press event.
+        event_mouse_button_release: Mouse button release event.
+        event_joystick_axis_move: Joystick axis move event.
+        event_joystick_hat_move: Joystick HAT move event.
+        event_joystick_button_press: Joystick button press event.
+        event_joystick_button_release: Joystick button release event.
+        event_close: Close event (e.g. close button).
+        event_mouse_collision: Middle/default mouse collision event.
+        event_mouse_collision_left: Left mouse collision event.
+        event_mouse_collision_right: Right mouse collision event.
+        event_mouse_collision_top: Top mouse collision event.
+        event_mouse_collision_bottom: Bottom mouse collision event.
+        event_game_end: Called when the game ends.  This is only called
+            once and it is always the last event method called.
 
-    The following events are not timed in any particular way, but are
-    called immediately when the engine detects them occurring:
-        event_game_start
-        event_game_end
+    The following alternative events are executed when the game is
+    paused in place of the corresponding normal events:
         event_paused_key_press
         event_paused_key_release
         event_paused_mouse_move
@@ -306,27 +321,6 @@ class Game(object):
         event_paused_joystick_button_press
         event_paused_joystick_button_release
         event_paused_close
-
-    The following events are always called (in no particular order)
-    between calls of event_step_begin and event_step:
-        event_key_press
-        event_key_release
-        event_mouse_move
-        event_mouse_button_press
-        event_mouse_button_release
-        event_joystick_axis_move
-        event_joystick_hat_move
-        event_joystick_button_press
-        event_joystick_button_release
-        event_close
-
-    The following events are always called (in no particular order)
-    between calls of event_step and event_step_end:
-        event_mouse_collision
-        event_mouse_collision_left
-        event_mouse_collision_right
-        event_mouse_collision_top
-        event_mouse_collision_bottom
 
     """
 
@@ -1165,91 +1159,22 @@ class Game(object):
             return 0
 
     def event_game_start(self):
-        """Game start event."""
-        pass
+        """Game start event.
 
-    def event_game_end(self):
-        """Game end event."""
-        pass
-
-    def event_paused_key_press(self, key):
-        """Key press event when paused.
-
-        See event_key_press.__doc__ for more information.
+        Called when the game starts.  This is only called once (it is
+        not called again when the game restarts) and it is always the
+        first event method called.
 
         """
         pass
 
-    def event_paused_key_release(self, key):
-        """Key release event when paused.
+    def event_step(self):
+        """Global step event.
 
-        See event_key_release.__doc__ for more information.
-
-        """
-        pass
-
-    def event_paused_mouse_move(self, x, y):
-        """Mouse move event when paused.
-
-        See event_mouse_move.__doc__ for more information.
+        Called once each frame.  ``time_passed`` is the number of
+        milliseconds that have passed during the last frame.
 
         """
-        pass
-
-    def event_paused_mouse_button_press(self, button):
-        """Mouse button press event when paused.
-
-        See event_mouse_button_press.__doc__ for more information.
-
-        """
-        pass
-
-    def event_paused_mouse_button_release(self, button):
-        """Mouse button release event when paused.
-
-        See event_mouse_button_release.__doc__ for more information.
-
-        """
-        pass
-
-    def event_paused_joystick_axis_move(self, joystick, axis, value):
-        """Joystick axis move event when paused.
-
-        See event_joystick_axis_move.__doc__ for more information.
-
-        """
-        pass
-
-    def event_paused_joystick_hat_move(self, joystick, hat, x, y):
-        """Joystick HAT move event when paused.
-
-        See event_joystick_hat_move.__doc__ for more information.
-
-        """
-        pass
-
-    def event_paused_joystick_button_press(self, joystick, button):
-        """Joystick button press event when paused.
-
-        See event_joystick_button_press.__doc__ for more information.
-
-        """
-        pass
-
-    def event_paused_joystick_button_release(self, joystick, button):
-        """Joystick button release event when paused.
-
-        See event_joystick_button_release.__doc__ for more information.
-
-        """
-        pass
-
-    def event_paused_close(self):
-        """Close event (e.g. close button) when paused."""
-        pass
-
-    def event_step_begin(self):
-        """Global begin step event."""
         pass
 
     def event_key_press(self, key):
@@ -1356,10 +1281,6 @@ class Game(object):
         """Close event (e.g. close button)."""
         pass
 
-    def event_step(self):
-        """Global step event."""
-        pass
-
     def event_mouse_collision(self, other):
         """Middle/default mouse collision event."""
         pass
@@ -1380,8 +1301,89 @@ class Game(object):
         """Bottom mouse collision event."""
         self.event_mouse_collision(other)
 
-    def event_step_end(self):
-        """Global end step event."""
+    def event_game_end(self):
+        """Game end event.
+
+        Called when the game ends.  This is only called once and it is
+        always the last event method called.
+
+        """
+        pass
+
+    def event_paused_key_press(self, key):
+        """Key press event when paused.
+
+        See event_key_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_key_release(self, key):
+        """Key release event when paused.
+
+        See event_key_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_move(self, x, y):
+        """Mouse move event when paused.
+
+        See event_mouse_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_button_press(self, button):
+        """Mouse button press event when paused.
+
+        See event_mouse_button_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_button_release(self, button):
+        """Mouse button release event when paused.
+
+        See event_mouse_button_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_axis_move(self, joystick, axis, value):
+        """Joystick axis move event when paused.
+
+        See event_joystick_axis_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_hat_move(self, joystick, hat, x, y):
+        """Joystick HAT move event when paused.
+
+        See event_joystick_hat_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_button_press(self, joystick, button):
+        """Joystick button press event when paused.
+
+        See event_joystick_button_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_button_release(self, joystick, button):
+        """Joystick button release event when paused.
+
+        See event_joystick_button_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_close(self):
+        """Close event (e.g. close button) when paused."""
         pass
 
     def _set_mode(self):
@@ -2251,7 +2253,8 @@ class Music(object):
         See Music.play.__doc__ for information about the arguments.
 
         """
-        # TODO: Fix
+        # TODO: Fix, this was from back when there was a "glob"; we need
+        # the music queue to exist in the game instance.
         glob.music_queue.append((self, start, loops, maxtime, fade_time))
 
     def stop(self, fade_time=None):
@@ -2359,28 +2362,21 @@ class StellarClass(object):
         set_alarm: Set an alarm.
         destroy: Destroy the object.
 
-    StellarClass events are handled by special methods.  The time that
-    they are called is based on the following events, which happen each
-    frame in the following order and are synchronized among all objects
-    which have them:
-        event_step_begin
-        event_step
-        event_step_end
-
-    The following events are not timed in any particular way, but are
-    called immediately when the engine detects them occurring:
-        event_create
-        event_animation_end
-        event_destroy
-        event_alarm
-
-    The following events are always called (in no particular order)
-    between calls of event_step and event_step_end:
-        event_collision
-        event_collision_left
-        event_collision_right
-        event_collision_top
-        event_collision_bottom
+    StellarClass events are handled by special methods.  The exact
+    timing of their calling is implementation-dependent except where
+    otherwise noted.  The methods are:
+        event_create: Called when the object is created.  It is always
+            called after any room start events occurring at the same
+            time.
+        event_step: Called once each frame.
+        event_alarm: Called when an alarm counter reaches 0.
+        event_collision: Middle/default collision event.
+        event_collision_left: Left collision event.
+        event_collision_right: Right collision event.
+        event_collision_top: Top collision event.
+        event_collision_bottom: Bottom collision event.
+        event_animation_end: Called when an animation cycle ends.
+        event_destroy: Destroy event.
 
     """
 
@@ -2745,31 +2741,30 @@ class StellarClass(object):
             room.objects = tuple(new_objects)
 
     def event_create(self):
-        """Create event."""
+        """Create event.
+
+        Called when the object is created.  It is always called after
+        any room start events occurring at the same time.
+
+        """
         pass
 
-    def event_animation_end(self):
-        """Animation End event."""
-        pass
+    def event_step(self, time_passed):
+        """Step event.
 
-    def event_destroy(self):
-        """Destroy event."""
-        pass
+        Called once each frame.  ``time_passed`` is the number of
+        milliseconds that have passed during the last frame.
 
-    def event_step_begin(self):
-        """Begin Step event."""
+        """
         pass
 
     def event_alarm(self, alarm_id):
         """Alarm event.
 
-        ``alarm_id`` is the ID of the alarm that was set off.
+        Called when an alarm counter reaches 0.  ``alarm_id`` is the ID
+        of the alarm that was set off.
 
         """
-        pass
-
-    def event_step(self):
-        """Step event."""
         pass
 
     def event_collision(self, other):
@@ -2792,12 +2787,16 @@ class StellarClass(object):
         """Bottom collision event."""
         self.event_collision(other)
 
-    def event_step_end(self):
-        """End step event."""
+    def event_animation_end(self):
+        """Animation End event.
+
+        Called when an animation cycle ends.
+
+        """
         pass
 
-    def event_draw(self):
-        """Draw event."""
+    def event_destroy(self):
+        """Destroy event."""
         pass
 
     def _set_mask(self):
@@ -3027,17 +3026,15 @@ class Room(object):
         resume: Continue the room from where it left off.
         end: Go to the next room.
 
-    Room events are handled by special methods.  The following events
-    happen each frame in the following order and are synchronized among
-    all objects which have them:
-        event_step_begin
-        event_step
-        event_step_end
-
-    The following events are not timed in any particular way, but are
-    called immediately when the engine detects them occurring:
-        event_room_start
-        event_room_end
+    Room events are handled by special methods.  The exact timing of
+    their calling is implementation-dependent except where otherwise
+    noted.  The methods are:
+        event_room_start: Called when the room starts.  It is always
+            called after any game start events and before any object
+            create events occurring at the same time.
+        event_step: Called once each frame.
+        event_room_end: Called when the room ends.  It is always called
+            before any game end events occurring at the same time.
 
     """
 
@@ -3151,23 +3148,31 @@ class Room(object):
             game.end()
 
     def event_room_start(self):
-        """Room start event."""
+        """Room start event.
+
+        Called when the room starts.  It is always called after any game
+        start events and before any object create events occurring at
+        the same time.
+
+        """
+        pass
+
+    def event_step(self, time_passed):
+        """Room step event.
+
+        Called once each frame.  ``time_passed`` is the number of
+        milliseconds that have passed during the last frame. 
+
+        """
         pass
 
     def event_room_end(self):
-        """Room end event."""
-        pass
+        """Room end event.
 
-    def event_step_begin(self):
-        """Room begin step event."""
-        pass
+        Called when the room ends.  It is always called before any game
+        end events occurring at the same time.
 
-    def event_step(self):
-        """Room step event."""
-        pass
-
-    def event_step_end(self):
-        """Room end step event."""
+        """
         pass
 
     def _reset(self):
