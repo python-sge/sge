@@ -1082,12 +1082,12 @@ class Sound(object):
             speakers equally (assuming stereo sound is used).
         max_play: The maximum instances of this sound playing permitted.
             Set to 0 for no limit.
-        length: The length of the sound in milliseconds.
-        playing: The number of instances of this sound playing.
 
     The following read-only attributes are also available:
         fname: The file name of the sound given when it was created.
             See Sound.__init__.__doc__ for more information.
+        length: The length of the sound in milliseconds.
+        playing: The number of instances of this sound playing.
 
     Sound methods:
         Sound.play: Play the sound.
