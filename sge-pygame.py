@@ -431,6 +431,12 @@ class Game(object):
         self._pygame_sprites = pygame.sprite.LayeredDirty()
         self.mouse = Mouse()
 
+        # Setup sound channels
+        self._available_channels = []
+        if pygame.mixer.get_init():
+            for i in xrange(pygame.mixer.get_num_channels()):
+                self._available_channels.append(pygame.mixer.Channel(i))
+
         # Setup joysticks
         if pygame.joystick.get_init():
             for i in xrange(pygame.joystick.get_count()):
@@ -1378,6 +1384,31 @@ class Game(object):
             proxy = _PygameOneTimeSprite(img, rect)
             game._pygame_sprites.add(proxy, layer=z)
 
+    def _get_channel(self):
+        # Return a channel for a sound effect to use.
+        assert pygame.mixer.get_init()
+
+        if not self._available_channels:
+            self._add_channels()
+
+        return self._available_channels.pop(0)
+
+    def _release_channel(self, channel):
+        # Release the given channel for other sounds to use.
+        assert pygame.mixer.get_init()
+        self._available_channels.append(channel)
+
+    def _add_channels(self):
+        # Add four channels for playing sounds.
+        assert pygame.mixer.get_init()
+
+        old_num_channels = pygame.mixer.get_num_channels()
+        new_num_channels = old_num_channels + 4
+        pygame.mixer.set_num_channels(new_num_channels)
+
+        for i in xrange(old_num_channels, new_num_channels):
+            self._available_channels.append(pygame.mixer.Channel(i))
+
 
 class Sprite(object):
 
@@ -1970,12 +2001,12 @@ class Sound(object):
             speakers equally (assuming stereo sound is used).
         max_play: The maximum instances of this sound playing permitted.
             Set to 0 for no limit.
-        length: The length of the sound in milliseconds.
-        playing: The number of instances of this sound playing.
 
     The following read-only attributes are also available:
         fname: The file name of the sound given when it was created.
             See Sound.__init__.__doc__ for more information.
+        length: The length of the sound in milliseconds.
+        playing: The number of instances of this sound playing.
 
     Sound methods:
         Sound.play: Play the sound.
@@ -1987,6 +2018,33 @@ class Sound(object):
     Depending on the implementation, other formats may be supported.
 
     """
+
+    @property
+    def max_play(self):
+        return len(self._channels)
+
+    @max_play.setter
+    def max_play(self, value):
+        if self._sound is not None:
+            value = max(0, value)
+            while len(self._channels) < value:
+                self._channels.append(game._get_channel())
+            while len(self._channels) > value:
+                game._release_channel(self._channels.pop(-1))
+
+    @property
+    def length(self):
+        if self._sound is not None:
+            return self._sound.get_length() * 1000
+        else:
+            return 0
+
+    @property
+    def playing(self):
+        if self._sound is not None:
+            return self._sound.get_num_channels()
+        else:
+            return 0
 
     def __init__(self, fname, volume=100, balance=0, max_play=1):
         """Create a new sound object.
@@ -2001,11 +2059,20 @@ class Sound(object):
         created.
 
         """
+        if pygame.mixer.get_init():
+            try:
+                self._sound = pygame.mixer.Sound(fname)
+            except pygame.error:
+                self._sound = None
+        else:
+            self._sound = None
+
+        self._channels = []
+        self._temp_channels = []
+        self.fname = fname
         self.volume = volume
         self.balance = balance
         self.max_play = max_play
-        self.length = 0
-        self.playing = False
 
     def play(self, loops=0, maxtime=None, fade_time=None):
         """Play the sound.
@@ -2019,7 +2086,31 @@ class Sound(object):
         the sound at full volume.
 
         """
-        # TODO
+        if self._sound is not None:
+            if loops is None:
+                loops = -1
+            if maxtime is None:
+                maxtime = 0
+            if fade_time is None:
+                fade_time = 0
+
+            if self.max_play:
+                for channel in self._channels:
+                    if not channel.get_busy():
+                        channel.play(self._sound, loops, maxtime, fade_time)
+                        break
+                else:
+                    self._channels[0].play(self._sound, loops, maxtime,
+                                           fade_time)
+            else:
+                channel = game._get_channel()
+                channel.play(self._sound, loops, maxtime, fade_time)
+                self._temp_channels.append(channel)
+
+            # Clean up old temporary channels
+            while (self._temp_channels and
+                   not self._temp_channels[0].get_busy()):
+                game._release_channel(self._temp_channels.pop(0))
 
     def stop(self, fade_time=None):
         """Stop the sound.
@@ -2029,15 +2120,18 @@ class Sound(object):
         immediately stop the sound.
 
         """
-        # TODO
+        if self._sound is not None:
+            self._sound.stop()
 
     def pause(self):
         """Pause playback of the sound."""
-        # TODO
+        for channel in self._channels:
+            channel.pause()
 
     def unpause(self):
         """Resume playback of the sound if paused."""
-        # TODO
+        for channel in self._channels:
+            channel.unpause()
 
 
 class Music(object):
