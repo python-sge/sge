@@ -395,6 +395,8 @@ class Game(object):
         more information.
 
         """
+        # Settings use CD quality and a smaller buffer size for less lag.
+        pygame.mixer.pre_init(44100, -16, 2, 1024)
         pygame.init()
         global game
         game = self
@@ -2059,9 +2061,10 @@ class Sound(object):
         created.
 
         """
+        soundpath = os.path.join('data', 'sounds', fname)
         if pygame.mixer.get_init():
             try:
-                self._sound = pygame.mixer.Sound(fname)
+                self._sound = pygame.mixer.Sound(soundpath)
             except pygame.error:
                 self._sound = None
         else:

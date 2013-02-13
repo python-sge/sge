@@ -86,7 +86,7 @@ def main():
     background = sge.Background(layers, 0xffffff)
 
     # Load sounds
-    glob.pop_sound = sge.Sound('pop.wav')
+    glob.pop_sound = sge.Sound('pop.ogg')
 
     # Create objects
     glob.circle = Circle(game.width // 2, game.height // 2)
