@@ -75,7 +75,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.24"
+__version__ = "0.0.25"
 
 import sys
 import os
@@ -992,9 +992,10 @@ class Font(object):
         ALIGN_BOTTOM.  ``anti_alias`` indicates whether or not
         anti-aliasing should be used.
 
-        If the text does not fit in the imaginary box specified,
-        ``height`` will be treated as None (i.e. the imaginary box will
-        be vertically resized to fit the text).
+        If the text does not fit in the imaginary box specified, the
+        text that doesn't fit will be cut off at the bottom if valign is
+        ALIGN_TOP, the top if valign is ALIGN_BOTTOM, or equally the top
+        and bottom if valign is ALIGN_MIDDLE.
 
         Support for anti-aliasing is optional in Stellar Game Engine
         implementations.  If the implementation used does not support
