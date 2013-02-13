@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2012 Julian Marchant <onpon4@gmail.com>
+# Copyright 2012, 2013 Julian Marchant <onpon4@lavabit.com>
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -23,12 +23,6 @@ class glob(object):
 
 
 class Game(sge.Game):
-    def event_create(self):
-        if self.collides(game.mouse):
-            self.image_blend = '#ff0000'
-        else:
-            self.image_blend = 'blue'
-
     def event_key_press(self, key):
         if key == 'escape':
             self.end()
@@ -53,6 +47,12 @@ class Game(sge.Game):
 class Circle(sge.StellarClass):
     def __init__(self, x, y):
         super(Circle, self).__init__(x, y, 5, 'circle', collision_ellipse=True)
+
+    def event_create(self):
+        if self.collides(sge.game.mouse):
+            self.image_blend = '#ff0000'
+        else:
+            self.image_blend = 'blue'
 
     def event_destroy(self):
         pop = CirclePop(self.x, self.y)

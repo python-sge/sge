@@ -1685,7 +1685,7 @@ class Sprite(object):
                 if alpha < 255:
                     if img.get_flags() & pygame.SRCALPHA:
                         # Have to do this the more difficult way.
-                        # TODO: I'm not sure if this is right.
+                        # TODO: Needs testing.
                         img.fill((0, 0, 0, 255 - alpha), None,
                                  pygame.BLEND_RGBA_SUB)
                     else:
@@ -3581,6 +3581,11 @@ def _get_pygame_color(color):
             c = COLORS[c]
 
         return pygame.Color(bytes(c))
+    elif isinstance(color, int):
+        r = int((color & 0xff0000) // (256 ** 2))
+        g = int((color & 0x00ff00) // 256)
+        b = color & 0x0000ff
+        return pygame.Color(r, g, b)
     else:
         try:
             while len(color) < 3:
