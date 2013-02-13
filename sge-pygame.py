@@ -1970,7 +1970,9 @@ class Font(object):
 
         ``name`` indicates the name of the font.  This can be either the
         name of a font file, to be located in ./data/fonts or ./fonts,
-        or the name of a system font.
+        or the name of a system font.  If the specified font does not
+        exist in either form, a default, implementation-dependent font
+        will be used.
 
         All remaining arguments set the initial properties of the font.
         See Font.__doc__ for more information.
