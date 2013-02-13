@@ -1711,7 +1711,6 @@ class Sprite(object):
                 if alpha < 255:
                     if img.get_flags() & pygame.SRCALPHA:
                         # Have to do this the more difficult way.
-                        # TODO: Needs testing.
                         img.fill((0, 0, 0, 255 - alpha), None,
                                  pygame.BLEND_RGBA_SUB)
                     else:
@@ -1900,11 +1899,10 @@ class Background(object):
         for view in game.current_room.views:
             view_x = int(round(view.x * game._xscale))
             view_y = int(round(view.y * game._yscale))
-            view_w = int(round(view.width * game._xscale))
-            view_h = int(round(view.height * game._yscale))
-            # TODO: This fails if the view is too big. The view being
-            # too big would be an error, but this should silently allow
-            # such views anyway.
+            view_w = int(round(min(view.width, game.width - view.x) *
+                               game._xscale))
+            view_h = int(round(min(view.height, game.height - view.x) *
+                               game._yscale))
             surf = background.subsurface(view_x, view_y, view_w, view_h)
             for layer in self.layers:
                 image = layer._get_image()
@@ -1926,7 +1924,9 @@ class Background(object):
                          image_h)
 
                 if layer.xrepeat and layer.yrepeat:
+                    xstart = x
                     while y < view_y + view_h:
+                        x = xstart
                         while x < view_x + view_w:
                             surf.blit(image, (x, y))
                             x += image_w
