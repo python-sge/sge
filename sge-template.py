@@ -75,7 +75,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.23"
+__version__ = "0.0.24"
 
 import sys
 import os
@@ -824,8 +824,9 @@ class Sprite(object):
         """Create a new Sprite object.
 
         ``name`` indicates the base name of the image files.  Files are
-        to be located in data/images, data/sprites, or data/backgrounds.
-        If a file with the exact name plus image file extensions is not
+        to be located in ./data/images, ./data/sprites,
+        ./data/backgrounds, ./images, ./sprites, or ./backgrounds.  If a
+        file with the exact name plus image file extensions is not
         available, numbered images will be searched for which have names
         with one of the following formats, where "name" is replaced with
         the specified base file name and "0" can be replaced with any
@@ -865,62 +866,7 @@ class Sprite(object):
         created.
 
         """
-        # This is a way to figure out what image to load.
-        assert name
-
-        fnames = os.listdir(os.path.join('data', 'images'))
-        fnames.extend(os.listdir(os.path.join('data', 'sprites')))
-        fnames.extend(os.listdir(os.path.join('data', 'backgrounds')))
-        fname_single = None
-        fname_frames = []
-        fname_strip = None
-
-        for fname in fnames:
-            if fname.startswith(name) and os.path.isfile(fname):
-                root, ext = os.path.splitext(fname)
-                if root.rsplit('-', 1)[0] == name:
-                    split = root.rsplit('-', 1)
-                elif root.split('_', 1)[0] == name:
-                    split = root.rsplit('_', 1)
-                else:
-                    split = (name, '')
-
-                if root == name:
-                    fname_single = fname
-                elif split[1].isdigit():
-                    n = int(split[1])
-                    while len(fname_frames) - 1 < n:
-                        fname_frames.append(None)
-                    fname_frames[n] = fname
-                elif (split[1].startswith('strip') and split[1][5:].isdigit()):
-                    fname_strip = fname
-
-        if fname_single:
-            # Load the single image
-            pass
-
-        elif any(fname_frames):
-            # Load the multiple images
-            for fname in fname_frames:
-                if fname:
-                    pass
-
-        elif fname_strip:
-            # Load the strip (sprite sheet)
-            root, ext = os.path.splitext(fname_strip)
-            assert '-' in root or '_' in root
-            assert (root.rsplit('-', 1)[0] == name or
-                    root.rsplit('_', 1)[0] == name)
-            if root.rsplit('-', 1)[0] == name:
-                split = root.rsplit('-', 1)
-            else:
-                split = root.rsplit('_', 1)
-
-            # Load sheet here
-
-        else:
-            # Generate placeholder image
-            pass
+        pass
 
 
 class BackgroundLayer(object):
@@ -1018,8 +964,12 @@ class Font(object):
                  italic=False):
         """Create a new Font object.
 
-        Arguments set the properties of the font.  See
-        Font.__doc__ for more information.
+        ``name`` indicates the name of the font.  This can be either the
+        name of a font file, to be located in ./data/fonts or ./fonts,
+        or the name of a system font.
+
+        All remaining arguments set the initial properties of the font.
+        See Font.__doc__ for more information.
 
         A game object must exist before an object of this class is
         created.
@@ -1104,7 +1054,7 @@ class Sound(object):
         """Create a new sound object.
 
         ``fname`` indicates the name of the sound file, to be located in
-        data/sounds.
+        ./data/sounds or ./sounds.
 
         All remaining arguments set the initial properties of the sound.
         See Sound.__doc__ for more information.
@@ -1191,7 +1141,7 @@ class Music(object):
         """Create a new music object.
 
         ``fname`` indicates the name of the sound file, to be located in
-        data/music.
+        ./data/music or ./music.
 
         All remaining arguments set the initial properties of the music.
         See Music.__doc__ for more information.

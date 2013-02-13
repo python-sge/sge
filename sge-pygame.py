@@ -91,7 +91,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.23"
+__version__ = "0.0.24"
 
 import sys
 import os
@@ -1507,8 +1507,9 @@ class Sprite(object):
         """Create a new Sprite object.
 
         ``name`` indicates the base name of the image files.  Files are
-        to be located in data/images, data/sprites, or data/backgrounds.
-        If a file with the exact name plus image file extensions is not
+        to be located in ./data/images, ./data/sprites,
+        ./data/backgrounds, ./images, ./sprites, or ./backgrounds.  If a
+        file with the exact name plus image file extensions is not
         available, numbered images will be searched for which have names
         with one of the following formats, where "name" is replaced with
         the specified base file name and "0" can be replaced with any
@@ -1556,9 +1557,9 @@ class Sprite(object):
         self._images = []
         self._masks = {}
 
-        paths = [os.path.join('data', 'images'),
-                 os.path.join('data', 'sprites'),
-                 os.path.join('data', 'backgrounds')]
+        paths = [os.path.join('data', 'images'), 'images',
+                 os.path.join('data', 'sprites'), 'sprites',
+                 os.path.join('data', 'backgrounds'), 'backgrounds']
         fname_single = None
         fname_frames = []
         fname_strip = None
@@ -1949,11 +1950,14 @@ class Font(object):
     """Font handling class.
 
     All Font objects have the following attributes:
-        name: The name of the font.  Set to None for the default font.
         size: The height of the font in pixels.
         underline: Whether or not underlined rendering is enabled.
         bold: Whether or not bold rendering is enabled.
         italic: Whether or not italic rendering is enabled.
+
+    The following read-only attributes are also available:
+        name: The name of the font given when it was created.  See
+            Sound.__init__.__doc__ for more information.
 
     """
 
@@ -1961,8 +1965,12 @@ class Font(object):
                  italic=False):
         """Create a new Font object.
 
-        Arguments set the properties of the font.  See
-        Font.__doc__ for more information.
+        ``name`` indicates the name of the font.  This can be either the
+        name of a font file, to be located in ./data/fonts or ./fonts,
+        or the name of a system font.
+
+        All remaining arguments set the initial properties of the font.
+        See Font.__doc__ for more information.
 
         A game object must exist before an object of this class is
         created.
@@ -2074,7 +2082,7 @@ class Sound(object):
         """Create a new sound object.
 
         ``fname`` indicates the name of the sound file, to be located in
-        data/sounds.
+        ./data/sounds or ./sounds.
 
         All remaining arguments set the initial properties of the sound.
         See Sound.__doc__ for more information.
@@ -2083,14 +2091,17 @@ class Sound(object):
         created.
 
         """
-        soundpath = os.path.join('data', 'sounds', fname)
+        self._sound = None
+
         if pygame.mixer.get_init():
-            try:
-                self._sound = pygame.mixer.Sound(soundpath)
-            except pygame.error:
-                self._sound = None
-        else:
-            self._sound = None
+            soundpaths = [os.path.join('data', 'sounds', fname),
+                          os.path.join('sounds', fname)]
+            for soundpath in soundpaths:
+                try:
+                    self._sound = pygame.mixer.Sound(soundpath)
+                    break
+                except pygame.error:
+                    pass
 
         self._channels = []
         self._temp_channels = []
@@ -2229,7 +2240,7 @@ class Music(object):
         """Create a new music object.
 
         ``fname`` indicates the name of the sound file, to be located in
-        data/music.
+        ./data/music or ./music.
 
         All remaining arguments set the initial properties of the music.
         See Music.__doc__ for more information.
@@ -2244,6 +2255,15 @@ class Music(object):
         self._timeout = None
         self._fade_time = None
         self._start = 0
+
+        self._full_fname = None
+        if pygame.mixer.get_init():
+            paths = [os.path.join('data', 'music', fname),
+                     os.path.join('music', fname)]
+            for path in paths:
+                if os.path.isfile(path):
+                    self._full_fname = path
+                    break
 
     def play(self, start=0, loops=0, maxtime=None, fade_time=None):
         """Play the music.
@@ -2261,10 +2281,9 @@ class Music(object):
         to immediately play the music at full volume.
 
         """
-        if pygame.mixer.get_init():
+        if self._full_fname is not None:
             if not self.playing:
-                pygame.mixer.music.load(os.path.join('data', 'music',
-                                                     self.fname))
+                pygame.mixer.music.load(self._full_fname)
 
             game._music = self
             self._timeout = maxtime
