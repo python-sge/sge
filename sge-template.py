@@ -80,7 +80,6 @@ __version__ = "0.0.24"
 import sys
 import os
 import math
-import json
 
 # Import implementation-specific libraries like Pygame here
 
