@@ -433,6 +433,7 @@ class Game(object):
         self._pygame_sprites = pygame.sprite.LayeredDirty()
         self.mouse = Mouse()
 
+        self._music = None
         self._music_queue = []
 
         # Setup sound channels
@@ -532,6 +533,25 @@ class Game(object):
                 for obj in self.current_room.objects:
                     obj._update(time_passed, delta_mult)
                     obj.event_step(real_time_passed)
+
+                # Music control
+                if self._music is not None:
+                    if pygame.mixer.music.get_busy():
+                        time_played = pygame.mixer.music.get_pos()
+
+                        if self._music._fade_time:
+                            real_volume = self._music.volume / 100
+                            fade_time = self._music._fade_time
+                            volume = real_volume * time_played / fade_time
+                            pygame.mixer.music.set_volume(volume)
+
+                        if (self._music._timeout and
+                                time_played >= self._music._timeout):
+                            self._music.stop()
+                            
+                    elif self._music_queue:
+                        music = self._music_queue.pop(0)
+                        music[0].play(*music[1:])
 
                 # Redraw
                 new_background = self.current_room.background._get_background()
@@ -2185,10 +2205,10 @@ class Music(object):
     @volume.setter
     def volume(self, value):
         if self._volume != value:
-            self._volume = value
+            self._volume = min(value, 100)
 
             if self.playing:
-                pygame.mixer.music.set_volume(value)
+                pygame.mixer.music.set_volume(value / 100)
 
     @property
     def length(self):
@@ -2196,7 +2216,7 @@ class Music(object):
 
     @property
     def playing(self):
-        return self._playing
+        return game._music is self and pygame.mixer.music.get_busy()
 
     @property
     def position(self):
@@ -2241,24 +2261,30 @@ class Music(object):
         to immediately play the music at full volume.
 
         """
-        if not self.playing:
-            pygame.mixer.music.load(os.path.join('data', 'music', self.fname))
+        if pygame.mixer.get_init():
+            if not self.playing:
+                pygame.mixer.music.load(os.path.join('data', 'music',
+                                                     self.fname))
 
-        self._timeout = maxtime
-        self._fade_time = fade_time
+            game._music = self
+            self._timeout = maxtime
+            self._fade_time = fade_time
 
-        if self.fname.lower().endswith(".mod"):
-            # MOD music is handled differently in Pygame: it uses the
-            # pattern order number rather than the time to indicate the
-            # start time.
-            self._start = 0
-            pygame.mixer.music.play(loops, start)
-        else:
-            self._start = start
-            try:
-                pygame.mixer.music.play(loops, start / 1000)
-            except NotImplementedError:
-                pygame.mixer.music.play(loops)
+            if self._fade_time > 0:
+                pygame.mixer.music.set_volume(0)
+
+            if self.fname.lower().endswith(".mod"):
+                # MOD music is handled differently in Pygame: it uses
+                # the pattern order number rather than the time to
+                # indicate the start time.
+                self._start = 0
+                pygame.mixer.music.play(loops, start)
+            else:
+                self._start = start
+                try:
+                    pygame.mixer.music.play(loops, start / 1000)
+                except NotImplementedError:
+                    pygame.mixer.music.play(loops)
 
     def queue(self, start=0, loops=0, maxtime=None, fade_time=None):
         """Queue the music for playback.
