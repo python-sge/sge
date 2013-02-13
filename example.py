@@ -20,6 +20,7 @@ import sge
 class glob(object):
     circle = None
     pop_sound = None
+    music = None
 
 
 class Game(sge.Game):
@@ -42,6 +43,14 @@ class Game(sge.Game):
 
     def event_close(self):
         self.end()
+
+
+class Room(sge.Room):
+    def event_room_start(self):
+        if glob.music is not None:
+            glob.music.play(loops=None)
+        else:
+            print('No music!')
 
 
 class Circle(sge.StellarClass):
@@ -78,7 +87,7 @@ def main():
     circle_sprite = sge.Sprite('circle', 32, 32, 16, 16, True, bbox_x=-16,
                                bbox_y=-16)
     circle_pop_sprite = sge.Sprite('circle_pop', 32, 32, 16, 16, True,
-                                   bbox_x=-16, bbox_y=-16, fps=15)
+                                   bbox_x=-16, bbox_y=-16, fps=60)
     fence_sprite = sge.Sprite('fence', transparent=True)
 
     # Load backgrounds
@@ -87,6 +96,9 @@ def main():
 
     # Load sounds
     glob.pop_sound = sge.Sound('pop.ogg')
+    
+    # Load music
+    glob.music = sge.Music('WhereWasI.ogg')
 
     # Create objects
     glob.circle = Circle(game.width // 2, game.height // 2)
@@ -96,7 +108,7 @@ def main():
     views = (sge.View(0, 0),)
 
     # Create rooms
-    room1 = sge.Room(objects, views=views, background=background)
+    room1 = Room(objects, views=views, background=background)
 
     game.start()
 

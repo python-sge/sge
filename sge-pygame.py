@@ -538,15 +538,18 @@ class Game(object):
                 if self._music is not None:
                     if pygame.mixer.music.get_busy():
                         time_played = pygame.mixer.music.get_pos()
+                        fade_time = self._music._fade_time
+                        timeout = self._music._timeout
 
-                        if self._music._fade_time:
+                        if fade_time:
                             real_volume = self._music.volume / 100
-                            fade_time = self._music._fade_time
-                            volume = real_volume * time_played / fade_time
-                            pygame.mixer.music.set_volume(volume)
+                            if time_played < fade_time:
+                                volume = real_volume * time_played / fade_time
+                                pygame.mixer.music.set_volume(volume)
+                            else:
+                                pygame.mixer.music.set_volume(real_volume)
 
-                        if (self._music._timeout and
-                                time_played >= self._music._timeout):
+                        if timeout and time_played >= timeout:
                             self._music.stop()
                             
                     elif self._music_queue:
@@ -2215,11 +2218,10 @@ class Music(object):
 
     @volume.setter
     def volume(self, value):
-        if self._volume != value:
-            self._volume = min(value, 100)
+        self._volume = min(value, 100)
 
-            if self.playing:
-                pygame.mixer.music.set_volume(value / 100)
+        if self.playing:
+            pygame.mixer.music.set_volume(value / 100)
 
     @property
     def length(self):
@@ -2284,6 +2286,9 @@ class Music(object):
         if self._full_fname is not None:
             if not self.playing:
                 pygame.mixer.music.load(self._full_fname)
+
+            if loops is None:
+                loops = -1
 
             game._music = self
             self._timeout = maxtime
