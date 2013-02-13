@@ -91,7 +91,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.22"
+__version__ = "0.0.23"
 
 import sys
 import os
@@ -432,6 +432,8 @@ class Game(object):
         self._joysticks = []
         self._pygame_sprites = pygame.sprite.LayeredDirty()
         self.mouse = Mouse()
+
+        self._music_queue = []
 
         # Setup sound channels
         self._available_channels = []
@@ -2154,14 +2156,14 @@ class Music(object):
             feature in Stellar Game Engine implementations is optional.
             If it is unavailable, all music will be played through both
             speakers equally (assuming stereo sound is used).
-        length: The length of the music in milliseconds.
-        playing: Whether or not the music is playing.
-        position: The current position (time) on the music in
-            milliseconds.
 
     The following read-only attributes are also available:
         fname: The file name of the music given when it was created.
             See Music.__init__.__doc__ for more information.
+        length: The length of the music in milliseconds.
+        playing: Whether or not the music is playing.
+        position: The current position (time) on the music in
+            milliseconds.
 
     Music methods:
         Music.play: Play the music.
@@ -2216,7 +2218,7 @@ class Music(object):
         created.
 
         """
-        self._music = fname
+        self.fname = fname
         self.volume = volume
         self.balance = balance
         self._timeout = None
@@ -2240,12 +2242,12 @@ class Music(object):
 
         """
         if not self.playing:
-            pygame.mixer.music.load(self._music)
+            pygame.mixer.music.load(os.path.join('data', 'music', self.fname))
 
         self._timeout = maxtime
         self._fade_time = fade_time
 
-        if self._music.lower().endswith(".mod"):
+        if self.fname.lower().endswith(".mod"):
             # MOD music is handled differently in Pygame: it uses the
             # pattern order number rather than the time to indicate the
             # start time.
@@ -2267,9 +2269,7 @@ class Music(object):
         See Music.play.__doc__ for information about the arguments.
 
         """
-        # TODO: Fix, this was from back when there was a "glob"; we need
-        # the music queue to exist in the game instance.
-        glob.music_queue.append((self, start, loops, maxtime, fade_time))
+        game._music_queue.append((self, start, loops, maxtime, fade_time))
 
     def stop(self, fade_time=None):
         """Stop the music.

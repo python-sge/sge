@@ -75,7 +75,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.22"
+__version__ = "0.0.23"
 
 import sys
 import os
@@ -1165,14 +1165,14 @@ class Music(object):
             feature in Stellar Game Engine implementations is optional.
             If it is unavailable, all music will be played through both
             speakers equally (assuming stereo sound is used).
-        length: The length of the music in milliseconds.
-        playing: Whether or not the music is playing.
-        position: The current position (time) on the music in
-            milliseconds.
 
     The following read-only attributes are also available:
         fname: The file name of the music given when it was created.
             See Music.__init__.__doc__ for more information.
+        length: The length of the music in milliseconds.
+        playing: Whether or not the music is playing.
+        position: The current position (time) on the music in
+            milliseconds.
 
     Music methods:
         Music.play: Play the music.
