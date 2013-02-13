@@ -91,7 +91,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.25"
+__version__ = "0.0.26"
 
 import sys
 import os
@@ -448,6 +448,10 @@ class Game(object):
                 joy = pygame.joystick.Joystick(i)
                 joy.init()
                 self._joysticks.append(joy)
+
+        if not pygame.font.get_init():
+            global Font
+            Font = _FakeFont
 
     def start(self):
         """Start the game at the first room.
@@ -1964,6 +1968,49 @@ class Font(object):
 
     """
 
+    @property
+    def size(self):
+        return self._size
+
+    @size.setter
+    def size(self, value):
+        self._size = value
+        self._font = None
+
+        fontpaths = [os.path.join('data', 'fonts', self.name),
+                     os.path.join('fonts', self.name)]
+
+        for path in fontpaths:
+            if os.path.isfile(path):
+                self._font = pygame.font.Font(path, self._size)
+
+        if self._font is None:
+            self._font = pygame.font.SysFont(self.name)
+
+    @property
+    def underline(self):
+        return self._font.get_underline()
+
+    @underline.setter
+    def underline(self, value):
+        self._font.set_underline(bool(value))
+
+    @property
+    def bold(self):
+        return self._font.get_bold()
+
+    @bold.setter
+    def bold(self, value):
+        self._font.set_bold(bool(value))
+
+    @property
+    def italic(self):
+        return self._font.get_italic()
+
+    @italic.setter
+    def italic(self, value):
+        self._font.set_italic(bool(value))
+
     def __init__(self, name=None, size=12, underline=False, bold=False,
                  italic=False):
         """Create a new Font object.
@@ -1981,23 +2028,29 @@ class Font(object):
         created.
 
         """
-        # TODO
+        assert pygame.font.get_init()
+        self.name = name
+        self.size = size
+        self.underline = underline
+        self.bold = bold
+        self.italic = italic
 
-    def render(self, text, x, y, width=None, height=None, color="black",
+    def render(self, text, x, y, z, width=None, height=None, color="black",
                halign=ALIGN_LEFT, valign=ALIGN_TOP, anti_alias=True):
         """Render the given text to the screen.
 
         ``text`` indicates the text to render.  ``x`` and ``y`` indicate
         the location in the room to render the text, where the left and
         top edges of the room are 0 and x and y increase toward the
-        right and bottom.  ``width`` and ``height`` indicate the size of
-        the imaginary box the text is drawn in; set to None for no
-        imaginary box.  ``color`` indicates the color of the text.
-        ``halign`` indicates the horizontal alignment and can be
-        ALIGN_LEFT, ALIGN_CENTER, or ALIGN_RIGHT. ``valign`` indicates
-        the vertical alignment and can be ALIGN_TOP, ALIGN_MIDDLE, or
-        ALIGN_BOTTOM.  ``anti_alias`` indicates whether or not
-        anti-aliasing should be used.
+        right and bottom.  ``z`` indicates the Z-axis position to render
+        the text, where a higher Z value is closer to the viewer.
+        ``width`` and ``height`` indicate the size of the imaginary box
+        the text is drawn in; set to None for no imaginary box.
+        ``color`` indicates the color of the text.  ``halign`` indicates
+        the horizontal alignment and can be ALIGN_LEFT, ALIGN_CENTER, or
+        ALIGN_RIGHT. ``valign`` indicates the vertical alignment and can
+        be ALIGN_TOP, ALIGN_MIDDLE, or ALIGN_BOTTOM.  ``anti_alias``
+        indicates whether or not anti-aliasing should be used.
 
         If the text does not fit in the imaginary box specified, the
         text that doesn't fit will be cut off at the bottom if valign is
@@ -2009,7 +2062,58 @@ class Font(object):
         anti-aliasing, this function will act like ``anti_alias`` is False.
 
         """
-        # TODO
+        lines = self._split_text(text, width)
+        width, height = self.get_size(text, x, y, width, height)
+        fake_height = self.get_size(text, x, y, width)[1]
+        color = _get_pygame_color(color)
+
+        text_surf = pygame.Surface((width, fake_height), pygame.SRCALPHA)
+        box_surf = pygame.Surface((width, height), pygame.SRCALPHA)
+        text_rect = text_surf.get_rect()
+        box_rect = box_surf.get_rect()
+
+        for i in xrange(len(lines)):
+            rendered_text = self._font.render(lines[i], anti_alias, color)
+            rect = rendered_text.get_rect()
+            rect.top = i * self._font.get_linesize()
+
+            if halign == ALIGN_LEFT:
+                rect.left = text_rect.left
+            elif halign == ALIGN_RIGHT:
+                rect.right = text_rect.right
+            elif halign == ALIGN_CENTER:
+                rect.centerx = text_rect.centerx
+
+            text_surf.blit(rendered_text, rect)
+
+        if valign == ALIGN_TOP:
+            text_rect.top = box_rect.top
+        elif valign == ALIGN_BOTTOM:
+            text_rect.bottom = box_rect.bottom
+        elif valign == ALIGN_MIDDLE:
+            text_rect.centery = box_rect.centery
+
+        box_surf.blit(text_surf, text_rect)
+
+        if halign == ALIGN_LEFT:
+            box_rect.left = x
+        elif halign == ALIGN_RIGHT:
+            box_rect.right = x
+        elif halign == ALIGN_CENTER:
+            box_rect.centerx = x
+        else:
+            box_rect.left = x
+
+        if valign == ALIGN_TOP:
+            box_rect.top = y
+        elif valign == ALIGN_BOTTOM:
+            box_rect.bottom = y
+        elif valign == ALIGN_MIDDLE:
+            box_rect.centery = y
+        else:
+            box_rect.top = y
+
+        game._draw_surface(box_surf, box_rect.left, box_rect.top, z)
 
     def get_size(self, text, x, y, width=None, height=None):
         """Return the size of the given rendered text.
@@ -2020,7 +2124,48 @@ class Font(object):
         tuple in the form (width, height).
 
         """
-        # TODO
+        lines = self._split_text(text, width)
+        text_width = 0
+        text_height = self._font.get_linesize() * len(lines)
+
+        for line in lines:
+            text_width = max(text_width, self._font.size(line)[0])
+
+        if width is not None:
+            text_width = min(text_width, width)
+
+        if height is not None:
+            text_height = min(text_height, height)
+
+        return (text_width, text_height)
+
+    def _split_text(self, text, width=None):
+        # Split the text into lines of the proper size for ``width`` and
+        # return a list of the lines.  If ``width`` is None, only
+        # newlines split the text.
+        lines = text.split('\n')
+
+        if width is None:
+            return lines
+        else:
+            split_text = []
+            for line in lines:
+                if self._font.size(line)[0] <= width:
+                    split_text.append(line)
+                else:
+                    words = line.split(' ')
+                    while words:
+                        # Delete blanks at the beginning.
+                        while words and not words[0]:
+                            del words[0]
+
+                        current_line = words.pop(0) if words else ''
+                        while (words and self._font.size(
+                                ' '.join((current_line, words[0]))) < width):
+                            current_line = ' '.join((current_line,
+                                                     words.pop(0)))
+                        split_text.append(current_line.strip())
+            return split_text
 
 
 class Sound(object):
@@ -3607,6 +3752,26 @@ class _PygameOneTimeSprite(pygame.sprite.DirtySprite):
     def update(self):
         if not self.dirty:
             self.kill()
+
+
+class _FakeFont(object):
+
+    # Fake copy of Font for when pygame.font is not available.
+
+    def __init__(self, name=None, size=12, underline=False, bold=False,
+                 italic=False):
+        self.name = name
+        self.size = size
+        self.underline = underline
+        self.bold = bold
+        self.italic = italic
+
+    def render(self, text, x, y, width=None, height=None, color="black",
+               halign=ALIGN_LEFT, valign=ALIGN_TOP, anti_alias=True):
+        print(text)
+
+    def get_size(self, text, x, y, width=None, height=None):
+        return (1, 1)
 
 
 def _scale(surface, width, height):

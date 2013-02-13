@@ -75,7 +75,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.25"
+__version__ = "0.0.26"
 
 import sys
 import os
@@ -978,21 +978,22 @@ class Font(object):
         """
         pass
 
-    def render(self, text, x, y, width=None, height=None, color="black",
+    def render(self, text, x, y, z, width=None, height=None, color="black",
                halign=ALIGN_LEFT, valign=ALIGN_TOP, anti_alias=True):
         """Render the given text to the screen.
 
         ``text`` indicates the text to render.  ``x`` and ``y`` indicate
         the location in the room to render the text, where the left and
         top edges of the room are 0 and x and y increase toward the
-        right and bottom.  ``width`` and ``height`` indicate the size of
-        the imaginary box the text is drawn in; set to None for no
-        imaginary box.  ``color`` indicates the color of the text.
-        ``halign`` indicates the horizontal alignment and can be
-        ALIGN_LEFT, ALIGN_CENTER, or ALIGN_RIGHT. ``valign`` indicates
-        the vertical alignment and can be ALIGN_TOP, ALIGN_MIDDLE, or
-        ALIGN_BOTTOM.  ``anti_alias`` indicates whether or not
-        anti-aliasing should be used.
+        right and bottom.  ``z`` indicates the Z-axis position to render
+        the text, where a higher Z value is closer to the viewer.
+        ``width`` and ``height`` indicate the size of the imaginary box
+        the text is drawn in; set to None for no imaginary box.
+        ``color`` indicates the color of the text.  ``halign`` indicates
+        the horizontal alignment and can be ALIGN_LEFT, ALIGN_CENTER, or
+        ALIGN_RIGHT. ``valign`` indicates the vertical alignment and can
+        be ALIGN_TOP, ALIGN_MIDDLE, or ALIGN_BOTTOM.  ``anti_alias``
+        indicates whether or not anti-aliasing should be used.
 
         If the text does not fit in the imaginary box specified, the
         text that doesn't fit will be cut off at the bottom if valign is
