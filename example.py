@@ -37,6 +37,7 @@ class Circle(sge.StellarClass):
         super(Circle, self).__init__(x, y, 5, 'circle', collision_precise=True)
 
     def event_create(self):
+        self.image_alpha = 200
         if self.collides(sge.game.mouse):
             self.image_blend = '#ff0000'
         else:
