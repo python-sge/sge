@@ -620,7 +620,7 @@ class Game(object):
                 elif event.type == pygame.KEYUP:
                     self.event_paused_key_release(KEYNAMES[event.key])
                 elif event.type == pygame.MOUSEMOTION:
-                    self.mouse.x, self.mouse.y = event.pos
+                    self.mouse.mouse_x, self.mouse.mouse_y = event.pos
                     self.event_paused_mouse_move(*event.rel)
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     self.event_paused_mouse_button_press(event.button)
@@ -1365,7 +1365,7 @@ class Game(object):
         w = image.get_width()
         h = image.get_height()
 
-        for view in self.views:
+        for view in self.current_room.views:
             rel_x = x - view.x
             rel_y = y - view.y
             rect = image.get_rect()
@@ -1896,8 +1896,8 @@ class Background(object):
 
     def _get_background(self):
         # Return the static background this frame.
-        background = pygame.Surface((game.width * game._xscale,
-                                     game.height * game._yscale))
+        background = pygame.Surface((round(game.width * game._xscale),
+                                     round(game.height * game._yscale)))
         background.fill(_get_pygame_color(self.color))
 
         for view in game.current_room.views:
@@ -1905,7 +1905,7 @@ class Background(object):
             view_y = int(round(view.y * game._yscale))
             view_w = int(round(min(view.width, game.width - view.x) *
                                game._xscale))
-            view_h = int(round(min(view.height, game.height - view.x) *
+            view_h = int(round(min(view.height, game.height - view.y) *
                                game._yscale))
             surf = background.subsurface(view_x, view_y, view_w, view_h)
             for layer in self.layers:
@@ -1985,7 +1985,7 @@ class Font(object):
                 self._font = pygame.font.Font(path, self._size)
 
         if self._font is None:
-            self._font = pygame.font.SysFont(self.name)
+            self._font = pygame.font.SysFont(self.name, self._size)
 
     @property
     def underline(self):
@@ -3224,7 +3224,7 @@ class Mouse(StellarClass):
                         view.yport <= self.mouse_y <= view.yport + view.height):
                     # We save this value so that if the mouse is in none of
                     # the views, the last known position in a view is used.
-                    self._x = self.mouse_x - view.x
+                    self._x = self.mouse_x / game._xscale - view.x
                     break
 
             return self._x
@@ -3244,7 +3244,7 @@ class Mouse(StellarClass):
                         view.yport <= self.mouse_y <= view.yport + view.height):
                     # We save this value so that if the mouse is in none of
                     # the views, the last known position in a view is used.
-                    self._y = self.mouse_y - view.y
+                    self._y = self.mouse_y / game._xscale - view.y
                     break
 
             return self._y

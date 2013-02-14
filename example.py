@@ -19,6 +19,7 @@ import sge
 
 class glob(object):
     circle = None
+    font = None
     pop_sound = None
     music = None
 
@@ -47,15 +48,17 @@ class Game(sge.Game):
 
 class Room(sge.Room):
     def event_room_start(self):
-        if glob.music is not None:
-            glob.music.play(loops=None)
-        else:
-            print('No music!')
+        glob.music.play(loops=None)
+
+    def event_step(self, time_passed):
+        text = 'This is text!\n   This is the second line!\n\nI love text!   '
+        glob.font.render(text, 320, 0, 10, halign=sge.ALIGN_CENTER,
+                         valign=sge.ALIGN_TOP)
 
 
 class Circle(sge.StellarClass):
     def __init__(self, x, y):
-        super(Circle, self).__init__(x, y, 5, 'circle', collision_ellipse=True)
+        super(Circle, self).__init__(x, y, 5, 'circle', collision_precise=True)
 
     def event_create(self):
         if self.collides(sge.game.mouse):
@@ -84,15 +87,18 @@ def main():
     game = Game()
 
     # Load sprites
-    circle_sprite = sge.Sprite('circle', 32, 32, 16, 16, True, bbox_x=-16,
-                               bbox_y=-16)
-    circle_pop_sprite = sge.Sprite('circle_pop', 32, 32, 16, 16, True,
+    circle_sprite = sge.Sprite('circle', 64, 64, 32, 32, True, bbox_x=-32,
+                               bbox_y=-32)
+    circle_pop_sprite = sge.Sprite('circle_pop', 64, 64, 32, 32, True,
                                    bbox_x=-16, bbox_y=-16, fps=60)
     fence_sprite = sge.Sprite('fence', transparent=True)
 
     # Load backgrounds
     layers = (sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False),)
     background = sge.Background(layers, 0xffffff)
+
+    # Load fonts
+    glob.font = sge.Font('Liberation Serif', 20)
 
     # Load sounds
     glob.pop_sound = sge.Sound('pop.ogg')
