@@ -75,7 +75,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.27"
+__version__ = "0.0.28"
 
 import sys
 import os
@@ -1308,6 +1308,18 @@ class StellarClass(object):
         event_animation_end: Called when an animation cycle ends.
         event_destroy: Destroy event.
 
+    The following alternative events are executed when the game is
+    paused in place of the corresponding normal events:
+        event_paused_key_press
+        event_paused_key_release
+        event_paused_mouse_move
+        event_paused_mouse_button_press
+        event_paused_mouse_button_release
+        event_paused_joystick_axis_move
+        event_paused_joystick_hat_move
+        event_paused_joystick_button_press
+        event_paused_joystick_button_release
+
     """
 
     def __init__(self, x, y, z, sprite=None, visible=True,
@@ -1535,6 +1547,78 @@ class StellarClass(object):
         """Destroy event."""
         pass
 
+    def event_paused_key_press(self, key):
+        """Key press event when paused.
+
+        See event_key_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_key_release(self, key):
+        """Key release event when paused.
+
+        See event_key_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_move(self, x, y):
+        """Mouse move event when paused.
+
+        See event_mouse_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_button_press(self, button):
+        """Mouse button press event when paused.
+
+        See event_mouse_button_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_button_release(self, button):
+        """Mouse button release event when paused.
+
+        See event_mouse_button_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_axis_move(self, joystick, axis, value):
+        """Joystick axis move event when paused.
+
+        See event_joystick_axis_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_hat_move(self, joystick, hat, x, y):
+        """Joystick HAT move event when paused.
+
+        See event_joystick_hat_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_button_press(self, joystick, button):
+        """Joystick button press event when paused.
+
+        See event_joystick_button_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_button_release(self, joystick, button):
+        """Joystick button release event when paused.
+
+        See event_joystick_button_release.__doc__ for more information.
+
+        """
+        pass
+
 
 class Mouse(StellarClass):
 
@@ -1598,6 +1682,19 @@ class Room(object):
         event_close: Close event (e.g. close button).
         event_room_end: Called when the room ends.  It is always called
             before any game end events occurring at the same time.
+
+    The following alternative events are executed when the game is
+    paused in place of the corresponding normal events:
+        event_paused_key_press
+        event_paused_key_release
+        event_paused_mouse_move
+        event_paused_mouse_button_press
+        event_paused_mouse_button_release
+        event_paused_joystick_axis_move
+        event_paused_joystick_hat_move
+        event_paused_joystick_button_press
+        event_paused_joystick_button_release
+        event_paused_close
 
     """
 
@@ -1789,6 +1886,82 @@ class Room(object):
         end events occurring at the same time.
 
         """
+        pass
+
+    def event_paused_key_press(self, key):
+        """Key press event when paused.
+
+        See event_key_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_key_release(self, key):
+        """Key release event when paused.
+
+        See event_key_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_move(self, x, y):
+        """Mouse move event when paused.
+
+        See event_mouse_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_button_press(self, button):
+        """Mouse button press event when paused.
+
+        See event_mouse_button_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_button_release(self, button):
+        """Mouse button release event when paused.
+
+        See event_mouse_button_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_axis_move(self, joystick, axis, value):
+        """Joystick axis move event when paused.
+
+        See event_joystick_axis_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_hat_move(self, joystick, hat, x, y):
+        """Joystick HAT move event when paused.
+
+        See event_joystick_hat_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_button_press(self, joystick, button):
+        """Joystick button press event when paused.
+
+        See event_joystick_button_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_button_release(self, joystick, button):
+        """Joystick button release event when paused.
+
+        See event_joystick_button_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_close(self):
+        """Close event (e.g. close button) when paused."""
         pass
 
 
