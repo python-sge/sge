@@ -91,7 +91,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.26"
+__version__ = "0.0.28"
 
 import sys
 import os
@@ -426,15 +426,13 @@ class Game(object):
         self._set_mode()
 
         self._colliders = []
+        self._music = None
         self._music_queue = []
         self._running = False
         self._clock = pygame.time.Clock()
         self._joysticks = []
         self._pygame_sprites = pygame.sprite.LayeredDirty()
         self.mouse = Mouse()
-
-        self._music = None
-        self._music_queue = []
 
         # Setup sound channels
         self._available_channels = []
@@ -476,19 +474,43 @@ class Game(object):
                 # Pygame events
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
-                        self.event_key_press(KEYNAMES[event.key])
+                        k = KEYNAMES[event.key]
+                        self.event_key_press(k)
+                        self.current_room.event_key_press(k)
+                        for obj in self.current_room.objects:
+                            obj.event_key_press(k)
                     elif event.type == pygame.KEYUP:
-                        self.event_key_release(KEYNAMES[event.key])
+                        k = KEYNAMES[event.key]
+                        self.event_key_release(k)
+                        self.current_room.event_key_release(k)
+                        for obj in self.current_room.objects:
+                            obj.event_key_release(k)
                     elif event.type == pygame.MOUSEMOTION:
                         self.mouse.mouse_x, self.mouse.mouse_y = event.pos
                         self.event_mouse_move(*event.rel)
+                        self.current_room.event_mouse_move(*event.rel)
+                        for obj in self.current_room.objects:
+                            obj.event_mouse_move(*event.rel)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         self.event_mouse_button_press(event.button)
+                        self.current_room.event_mouse_button_press(
+                            event.button)
+                        for obj in self.current_room.objects:
+                            obj.event_mouse_button_press(event.button)
                     elif event.type == pygame.MOUSEBUTTONUP:
                         self.event_mouse_button_release(event.button)
+                        self.current_room.event_mouse_button_release(
+                            event.button)
+                        for obj in self.current_room.objects:
+                            obj.event_mouse_button_release(event.button)
                     elif event.type == pygame.JOYAXISMOTION:
                         self.event_joystick_axis_move(event.joy, event.axis,
                                                       event.value)
+                        self.current_room.event_joystick_axis_move(
+                            event.joy, event.axis, event.value)
+                        for obj in self.current_room.objects:
+                            obj.event_joystick_axis_move(event.joy, event.axis,
+                                                         event.value)
                     elif event.type == pygame.JOYBALLMOTION:
                         # Limited support for trackballs by pretending
                         # they're axes.  Since they're acting like axes,
@@ -500,19 +522,45 @@ class Game(object):
 
                         if xvalue != 0:
                             self.event_joystick_axis_move(event.joy, n, xvalue)
+                            self.current_room.event_joystick_axis_move(
+                                event.joy, n, xvalue)
+                            for obj in self.current_room.objects:
+                                obj.event_joystick_axis_move(event.joy, n,
+                                                             xvalue)
                         if yvalue != 0:
                             self.event_joystick_axis_move(event.joy, n + 1,
                                                           yvalue)
+                            self.current_room.event_joystick_axis_move(
+                                event.joy, n + 1, yvalue)
+                            for obj in self.current_room.objects:
+                                obj.event_joystick_axis_move(event.joy, n + 1,
+                                                             yvalue)
                     elif event.type == pygame.JOYHATMOTION:
                         self.event_joystick_hat_move(event.joy, event.hat,
                                                      *event.value)
+                        self.current_room.event_joystick_hat_move(
+                            event.joy, event.hat, *event.value)
+                        for obj in self.current_room.objects:
+                            obj.event_joystick_hat_move(event.joy, event.hat,
+                                                        *event.value)
                     elif event.type == pygame.JOYBUTTONDOWN:
                         self.event_joystick_button_press(event.joy,
                                                          event.button)
+                        self.current_room.event_joystick_button_press(
+                            event.joy, event.button)
+                        for obj in self.current_room.objects:
+                            obj.event_joystick_button_press(event.joy,
+                                                            event.button)
                     elif event.type == pygame.JOYBUTTONUP:
                         self.event_joystick_button_release(event.joy,
                                                            event.button)
+                        self.current_room.event_joystick_button_release(
+                            event.joy, event.button)
+                        for obj in self.current_room.objects:
+                            obj.event_joystick_button_release(event.joy,
+                                                              event.button)
                     elif event.type == pygame.QUIT:
+                        self.current_room.event_close()
                         self.event_close()
 
                 real_time_passed = self._clock.tick(self.fps)
@@ -616,19 +664,43 @@ class Game(object):
             # Events
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    self.event_paused_key_press(KEYNAMES[event.key])
+                    k = KEYNAMES[event.key]
+                    self.event_paused_key_press(k)
+                    self.current_room.event_paused_key_press(k)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_key_press(k)
                 elif event.type == pygame.KEYUP:
-                    self.event_paused_key_release(KEYNAMES[event.key])
+                    k = KEYNAMES[event.key]
+                    self.event_paused_key_release(k)
+                    self.current_room.event_paused_key_release(k)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_key_release(k)
                 elif event.type == pygame.MOUSEMOTION:
                     self.mouse.mouse_x, self.mouse.mouse_y = event.pos
                     self.event_paused_mouse_move(*event.rel)
+                    self.current_room.event_paused_mouse_move(*event.rel)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_mouse_move(*event.rel)
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     self.event_paused_mouse_button_press(event.button)
+                    self.current_room.event_paused_mouse_button_press(
+                        event.button)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_mouse_button_press(event.button)
                 elif event.type == pygame.MOUSEBUTTONUP:
                     self.event_paused_mouse_button_release(event.button)
+                    self.current_room.event_paused_mouse_button_release(
+                        event.button)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_mouse_button_release(event.button)
                 elif event.type == pygame.JOYAXISMOTION:
                     self.event_paused_joystick_axis_move(event.joy, event.axis,
                                                          event.value)
+                    self.current_room.event_paused_joystick_axis_move(
+                        event.joy, event.axis, event.value)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_joystick_axis_move(
+                            event.joy, event.axis, event.value)
                 elif event.type == pygame.JOYBALLMOTION:
                     # Limited support for trackballs by pretending
                     # they're axes.  Since they're acting like axes,
@@ -641,19 +713,45 @@ class Game(object):
                     if xvalue != 0:
                         self.event_paused_joystick_axis_move(event.joy, n,
                                                              xvalue)
+                        self.current_room.event_paused_joystick_axis_move(
+                            event.joy, n, xvalue)
+                        for obj in self.current_room.objects:
+                            obj.event_paused_joystick_axis_move(event.joy, n,
+                                                                xvalue)
                     if yvalue != 0:
                         self.event_paused_joystick_axis_move(event.joy, n + 1,
                                                              yvalue)
+                        self.current_room.event_paused_joystick_axis_move(
+                            event.joy, n + 1, yvalue)
+                        for obj in self.current_room.objects:
+                            obj.event_paused_joystick_axis_move(
+                                event.joy, n + 1, yvalue)
                 elif event.type == pygame.JOYHATMOTION:
                     self.event_paused_joystick_hat_move(event.joy, event.hat,
                                                         *event.value)
+                    self.current_room.event_paused_joystick_hat_move(
+                        event.joy, event.hat, *event.value)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_joystick_hat_move(
+                            event.joy, event.hat, *event.value)
                 elif event.type == pygame.JOYBUTTONDOWN:
                     self.event_paused_joystick_button_press(event.joy,
                                                             event.button)
+                    self.current_room.event_paused_joystick_button_press(
+                        event.joy, event.button)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_joystick_button_press(event.joy,
+                                                               event.button)
                 elif event.type == pygame.JOYBUTTONUP:
                     self.event_paused_joystick_button_release(event.joy,
                                                               event.button)
+                    self.current_room.event_paused_joystick_button_release(
+                        event.joy, event.button)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_joystick_button_release(event.joy,
+                                                                 event.button)
                 elif event.type == pygame.QUIT:
+                    self.current_room.event_paused_close()
                     self.event_paused_close()
 
             # Time management
@@ -2582,6 +2680,16 @@ class StellarClass(object):
             time.
         event_step: Called once each frame.
         event_alarm: Called when an alarm counter reaches 0.
+        event_key_press: Key press event.
+        event_key_release: Key release event.
+        event_mouse_move: Mouse move event.
+        event_mouse_button_press: Mouse button press event.
+        event_mouse_button_release: Mouse button release event.
+        event_joystick_axis_move: Joystick axis move event.
+        event_joystick_hat_move: Joystick HAT move event.
+        event_joystick_button_press: Joystick button press event.
+        event_joystick_button_release: Joystick button release event.
+        event_close: Close event (e.g. close button).
         event_collision: Middle/default collision event.
         event_collision_left: Left collision event.
         event_collision_right: Right collision event.
@@ -2589,6 +2697,18 @@ class StellarClass(object):
         event_collision_bottom: Bottom collision event.
         event_animation_end: Called when an animation cycle ends.
         event_destroy: Destroy event.
+
+    The following alternative events are executed when the game is
+    paused in place of the corresponding normal events:
+        event_paused_key_press
+        event_paused_key_release
+        event_paused_mouse_move
+        event_paused_mouse_button_press
+        event_paused_mouse_button_release
+        event_paused_joystick_axis_move
+        event_paused_joystick_hat_move
+        event_paused_joystick_button_press
+        event_paused_joystick_button_release
 
     """
 
@@ -3012,6 +3132,106 @@ class StellarClass(object):
         """
         pass
 
+    def event_key_press(self, key):
+        """Key press event.
+
+        ``key`` is the key that was pressed.
+
+        """
+        pass
+
+    def event_key_release(self, key):
+        """Key release event.
+
+        ``key`` is the key that was pressed.
+
+        """
+        pass
+
+    def event_mouse_move(self, x, y):
+        """Mouse move event.
+
+        ``x`` and ``y`` indicate the relative movement of the mouse.
+
+        """
+        pass
+
+    def event_mouse_button_press(self, button):
+        """Mouse button press event.
+
+        ``button`` is the number of the mouse button that was pressed;
+        these numbers may vary by implementation, so MOUSE_BUTTON_*
+        constants should be used.
+
+        """
+        pass
+
+    def event_mouse_button_release(self, button):
+        """Mouse button release event.
+
+        ``button`` is the number of the mouse button that was released;
+        these numbers may vary by implementation, so MOUSE_BUTTON_*
+        constants should be used.
+
+        """
+        pass
+
+    def event_joystick_axis_move(self, joystick, axis, value):
+        """Joystick axis move event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``axis`` is the number of the axis, where 0 is the
+        first axis.  ``value`` is the tilt of the axis, where 0 is in
+        the center, -1 is tilted all the way to the left or up, and 1 is
+        tilted all the way to the right or down.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_hat_move(self, joystick, hat, x, y):
+        """Joystick HAT move event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``hat`` is the number of the HAT, where 0 is the
+        first HAT.  ``x`` and ``y`` indicate the position of the HAT,
+        where 0 is in the center, -1 is left or up, and 1 is right or
+        down.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_button_press(self, joystick, button):
+        """Joystick button press event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``button`` is the number of the button pressed, where
+        0 is the first button.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_button_release(self, joystick, button):
+        """Joystick button release event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``button`` is the number of the button pressed, where
+        0 is the first button.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
     def event_collision(self, other):
         """Middle/default collision event."""
         pass
@@ -3042,6 +3262,78 @@ class StellarClass(object):
 
     def event_destroy(self):
         """Destroy event."""
+        pass
+
+    def event_paused_key_press(self, key):
+        """Key press event when paused.
+
+        See event_key_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_key_release(self, key):
+        """Key release event when paused.
+
+        See event_key_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_move(self, x, y):
+        """Mouse move event when paused.
+
+        See event_mouse_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_button_press(self, button):
+        """Mouse button press event when paused.
+
+        See event_mouse_button_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_button_release(self, button):
+        """Mouse button release event when paused.
+
+        See event_mouse_button_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_axis_move(self, joystick, axis, value):
+        """Joystick axis move event when paused.
+
+        See event_joystick_axis_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_hat_move(self, joystick, hat, x, y):
+        """Joystick HAT move event when paused.
+
+        See event_joystick_hat_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_button_press(self, joystick, button):
+        """Joystick button press event when paused.
+
+        See event_joystick_button_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_button_release(self, joystick, button):
+        """Joystick button release event when paused.
+
+        See event_joystick_button_release.__doc__ for more information.
+
+        """
         pass
 
     def _update(self, time_passed, delta_mult):
@@ -3383,8 +3675,31 @@ class Room(object):
             called after any game start events and before any object
             create events occurring at the same time.
         event_step: Called once each frame.
+        event_key_press: Key press event.
+        event_key_release: Key release event.
+        event_mouse_move: Mouse move event.
+        event_mouse_button_press: Mouse button press event.
+        event_mouse_button_release: Mouse button release event.
+        event_joystick_axis_move: Joystick axis move event.
+        event_joystick_hat_move: Joystick HAT move event.
+        event_joystick_button_press: Joystick button press event.
+        event_joystick_button_release: Joystick button release event.
+        event_close: Close event (e.g. close button).
         event_room_end: Called when the room ends.  It is always called
             before any game end events occurring at the same time.
+
+    The following alternative events are executed when the game is
+    paused in place of the corresponding normal events:
+        event_paused_key_press
+        event_paused_key_release
+        event_paused_mouse_move
+        event_paused_mouse_button_press
+        event_paused_mouse_button_release
+        event_paused_joystick_axis_move
+        event_paused_joystick_hat_move
+        event_paused_joystick_button_press
+        event_paused_joystick_button_release
+        event_paused_close
 
     """
 
@@ -3520,6 +3835,110 @@ class Room(object):
         """
         pass
 
+    def event_key_press(self, key):
+        """Key press event.
+
+        ``key`` is the key that was pressed.
+
+        """
+        pass
+
+    def event_key_release(self, key):
+        """Key release event.
+
+        ``key`` is the key that was pressed.
+
+        """
+        pass
+
+    def event_mouse_move(self, x, y):
+        """Mouse move event.
+
+        ``x`` and ``y`` indicate the relative movement of the mouse.
+
+        """
+        pass
+
+    def event_mouse_button_press(self, button):
+        """Mouse button press event.
+
+        ``button`` is the number of the mouse button that was pressed;
+        these numbers may vary by implementation, so MOUSE_BUTTON_*
+        constants should be used.
+
+        """
+        pass
+
+    def event_mouse_button_release(self, button):
+        """Mouse button release event.
+
+        ``button`` is the number of the mouse button that was released;
+        these numbers may vary by implementation, so MOUSE_BUTTON_*
+        constants should be used.
+
+        """
+        pass
+
+    def event_joystick_axis_move(self, joystick, axis, value):
+        """Joystick axis move event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``axis`` is the number of the axis, where 0 is the
+        first axis.  ``value`` is the tilt of the axis, where 0 is in
+        the center, -1 is tilted all the way to the left or up, and 1 is
+        tilted all the way to the right or down.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_hat_move(self, joystick, hat, x, y):
+        """Joystick HAT move event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``hat`` is the number of the HAT, where 0 is the
+        first HAT.  ``x`` and ``y`` indicate the position of the HAT,
+        where 0 is in the center, -1 is left or up, and 1 is right or
+        down.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_button_press(self, joystick, button):
+        """Joystick button press event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``button`` is the number of the button pressed, where
+        0 is the first button.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_button_release(self, joystick, button):
+        """Joystick button release event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``button`` is the number of the button pressed, where
+        0 is the first button.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_close(self):
+        """Close event (e.g. close button)."""
+        pass
+
     def event_room_end(self):
         """Room end event.
 
@@ -3527,6 +3946,82 @@ class Room(object):
         end events occurring at the same time.
 
         """
+        pass
+
+    def event_paused_key_press(self, key):
+        """Key press event when paused.
+
+        See event_key_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_key_release(self, key):
+        """Key release event when paused.
+
+        See event_key_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_move(self, x, y):
+        """Mouse move event when paused.
+
+        See event_mouse_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_button_press(self, button):
+        """Mouse button press event when paused.
+
+        See event_mouse_button_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_mouse_button_release(self, button):
+        """Mouse button release event when paused.
+
+        See event_mouse_button_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_axis_move(self, joystick, axis, value):
+        """Joystick axis move event when paused.
+
+        See event_joystick_axis_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_hat_move(self, joystick, hat, x, y):
+        """Joystick HAT move event when paused.
+
+        See event_joystick_hat_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_button_press(self, joystick, button):
+        """Joystick button press event when paused.
+
+        See event_joystick_button_press.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_button_release(self, joystick, button):
+        """Joystick button release event when paused.
+
+        See event_joystick_button_release.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_close(self):
+        """Close event (e.g. close button) when paused."""
         pass
 
     def _reset(self):
