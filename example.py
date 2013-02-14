@@ -28,33 +28,8 @@ class Game(sge.Game):
         if key == 'escape':
             self.end()
 
-    def event_mouse_move(self, x, y):
-        for obj in self.objects:
-            if isinstance(self.objects[obj], Circle):
-                if self.mouse.collides(self.objects[obj]):
-                    self.objects[obj].image_blend = "red"
-                else:
-                    self.objects[obj].image_blend = (0, 0, 255)
-
-    def event_mouse_button_press(self, button):
-        if button == sge.MOUSE_BUTTON_LEFT:
-            for obj in self.objects:
-                if isinstance(self.objects[obj], Circle):
-                    if self.mouse.collides(self.objects[obj]):
-                        self.objects[obj].destroy()
-
     def event_close(self):
         self.end()
-
-
-class Room(sge.Room):
-    def event_room_start(self):
-        glob.music.play(loops=None)
-
-    def event_step(self, time_passed):
-        text = 'This is text!\n   This is the second line!\n\nI love text!   '
-        glob.font.render(text, 320, 0, 10, halign=sge.ALIGN_CENTER,
-                         valign=sge.ALIGN_TOP)
 
 
 class Circle(sge.StellarClass):
@@ -66,6 +41,17 @@ class Circle(sge.StellarClass):
             self.image_blend = '#ff0000'
         else:
             self.image_blend = 'blue'
+
+    def event_mouse_move(self, x, y):
+        if self.collides(sge.game.mouse):
+            self.image_blend = "red"
+        else:
+            self.image_blend = (0, 0, 255)
+
+    def event_mouse_button_press(self, button):
+        if button == sge.MOUSE_BUTTON_LEFT:
+            if self.collides(sge.game.mouse):
+                self.destroy()
 
     def event_destroy(self):
         pop = CirclePop(self.x, self.y)
@@ -81,6 +67,16 @@ class CirclePop(sge.StellarClass):
 
     def event_animation_end(self):
         self.destroy()
+
+
+class Room(sge.Room):
+    def event_room_start(self):
+        glob.music.play(loops=None)
+
+    def event_step(self, time_passed):
+        text = 'This is text!\nThis is the second line!\n\nI love text!'
+        glob.font.render(text, 320, 0, 10, halign=sge.ALIGN_CENTER,
+                         valign=sge.ALIGN_TOP)
 
 
 def main():
@@ -109,7 +105,10 @@ def main():
 
     # Create objects
     circle = Circle(game.width // 2, game.height // 2)
-    objects = (circle,)
+    circle2 = Circle(32, 48)
+    circle3 = Circle(486, 301)
+    circle4 = Circle(50, 400)
+    objects = (circle, circle2, circle3, circle4)
 
     # Create view
     views = (sge.View(0, 0),)
