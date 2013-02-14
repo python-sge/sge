@@ -18,7 +18,6 @@ import sge
 
 
 class glob(object):
-    circle = None
     font = None
     pop_sound = None
     music = None
@@ -39,8 +38,10 @@ class Game(sge.Game):
 
     def event_mouse_button_press(self, button):
         if button == sge.MOUSE_BUTTON_LEFT:
-            if glob.circle is not None and self.mouse.collides(glob.circle):
-                glob.circle.destroy()
+            for obj in self.objects:
+                if isinstance(self.objects[obj], Circle):
+                    if self.mouse.collides(self.objects[obj]):
+                        self.objects[obj].destroy()
 
     def event_close(self):
         self.end()
@@ -107,8 +108,8 @@ def main():
     glob.music = sge.Music('WhereWasI.ogg')
 
     # Create objects
-    glob.circle = Circle(game.width // 2, game.height // 2)
-    objects = (glob.circle,)
+    circle = Circle(game.width // 2, game.height // 2)
+    objects = (circle,)
 
     # Create view
     views = (sge.View(0, 0),)
