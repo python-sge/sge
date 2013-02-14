@@ -75,7 +75,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.26"
+__version__ = "0.0.27"
 
 import sys
 import os
@@ -1291,6 +1291,15 @@ class StellarClass(object):
             time.
         event_step: Called once each frame.
         event_alarm: Called when an alarm counter reaches 0.
+        event_key_press: Key press event.
+        event_key_release: Key release event.
+        event_mouse_move: Mouse move event.
+        event_mouse_button_press: Mouse button press event.
+        event_mouse_button_release: Mouse button release event.
+        event_joystick_axis_move: Joystick axis move event.
+        event_joystick_hat_move: Joystick HAT move event.
+        event_joystick_button_press: Joystick button press event.
+        event_joystick_button_release: Joystick button release event.
         event_collision: Middle/default collision event.
         event_collision_left: Left collision event.
         event_collision_right: Right collision event.
@@ -1394,6 +1403,106 @@ class StellarClass(object):
         """
         pass
 
+    def event_key_press(self, key):
+        """Key press event.
+
+        ``key`` is the key that was pressed.
+
+        """
+        pass
+
+    def event_key_release(self, key):
+        """Key release event.
+
+        ``key`` is the key that was pressed.
+
+        """
+        pass
+
+    def event_mouse_move(self, x, y):
+        """Mouse move event.
+
+        ``x`` and ``y`` indicate the relative movement of the mouse.
+
+        """
+        pass
+
+    def event_mouse_button_press(self, button):
+        """Mouse button press event.
+
+        ``button`` is the number of the mouse button that was pressed;
+        these numbers may vary by implementation, so MOUSE_BUTTON_*
+        constants should be used.
+
+        """
+        pass
+
+    def event_mouse_button_release(self, button):
+        """Mouse button release event.
+
+        ``button`` is the number of the mouse button that was released;
+        these numbers may vary by implementation, so MOUSE_BUTTON_*
+        constants should be used.
+
+        """
+        pass
+
+    def event_joystick_axis_move(self, joystick, axis, value):
+        """Joystick axis move event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``axis`` is the number of the axis, where 0 is the
+        first axis.  ``value`` is the tilt of the axis, where 0 is in
+        the center, -1 is tilted all the way to the left or up, and 1 is
+        tilted all the way to the right or down.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_hat_move(self, joystick, hat, x, y):
+        """Joystick HAT move event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``hat`` is the number of the HAT, where 0 is the
+        first HAT.  ``x`` and ``y`` indicate the position of the HAT,
+        where 0 is in the center, -1 is left or up, and 1 is right or
+        down.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_button_press(self, joystick, button):
+        """Joystick button press event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``button`` is the number of the button pressed, where
+        0 is the first button.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_button_release(self, joystick, button):
+        """Joystick button release event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``button`` is the number of the button pressed, where
+        0 is the first button.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
     def event_collision(self, other):
         """Middle/default collision event."""
         pass
@@ -1477,6 +1586,16 @@ class Room(object):
             called after any game start events and before any object
             create events occurring at the same time.
         event_step: Called once each frame.
+        event_key_press: Key press event.
+        event_key_release: Key release event.
+        event_mouse_move: Mouse move event.
+        event_mouse_button_press: Mouse button press event.
+        event_mouse_button_release: Mouse button release event.
+        event_joystick_axis_move: Joystick axis move event.
+        event_joystick_hat_move: Joystick HAT move event.
+        event_joystick_button_press: Joystick button press event.
+        event_joystick_button_release: Joystick button release event.
+        event_close: Close event (e.g. close button).
         event_room_end: Called when the room ends.  It is always called
             before any game end events occurring at the same time.
 
@@ -1557,6 +1676,110 @@ class Room(object):
         milliseconds that have passed during the last frame. 
 
         """
+        pass
+
+    def event_key_press(self, key):
+        """Key press event.
+
+        ``key`` is the key that was pressed.
+
+        """
+        pass
+
+    def event_key_release(self, key):
+        """Key release event.
+
+        ``key`` is the key that was pressed.
+
+        """
+        pass
+
+    def event_mouse_move(self, x, y):
+        """Mouse move event.
+
+        ``x`` and ``y`` indicate the relative movement of the mouse.
+
+        """
+        pass
+
+    def event_mouse_button_press(self, button):
+        """Mouse button press event.
+
+        ``button`` is the number of the mouse button that was pressed;
+        these numbers may vary by implementation, so MOUSE_BUTTON_*
+        constants should be used.
+
+        """
+        pass
+
+    def event_mouse_button_release(self, button):
+        """Mouse button release event.
+
+        ``button`` is the number of the mouse button that was released;
+        these numbers may vary by implementation, so MOUSE_BUTTON_*
+        constants should be used.
+
+        """
+        pass
+
+    def event_joystick_axis_move(self, joystick, axis, value):
+        """Joystick axis move event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``axis`` is the number of the axis, where 0 is the
+        first axis.  ``value`` is the tilt of the axis, where 0 is in
+        the center, -1 is tilted all the way to the left or up, and 1 is
+        tilted all the way to the right or down.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_hat_move(self, joystick, hat, x, y):
+        """Joystick HAT move event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``hat`` is the number of the HAT, where 0 is the
+        first HAT.  ``x`` and ``y`` indicate the position of the HAT,
+        where 0 is in the center, -1 is left or up, and 1 is right or
+        down.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_button_press(self, joystick, button):
+        """Joystick button press event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``button`` is the number of the button pressed, where
+        0 is the first button.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_joystick_button_release(self, joystick, button):
+        """Joystick button release event.
+
+        ``joystick`` is the number of the joystick, where 0 is the first
+        joystick.  ``button`` is the number of the button pressed, where
+        0 is the first button.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
+    def event_close(self):
+        """Close event (e.g. close button)."""
         pass
 
     def event_room_end(self):
