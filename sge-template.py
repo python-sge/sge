@@ -52,6 +52,14 @@ Constants:
 Global variables:
     game: Stores the current game.  If there is no game currently, this
         variable is set to None.
+    image_directories: A list of directories where images can be found.
+        Default is ./data/images, ./data/sprites, or ./data/backgrounds.
+    font_directories: A list of directories where font files can be
+        found.  Default is ./data/fonts.
+    sound_directories: A list of directories where sounds can be found.
+        Default is ./data/sounds.
+    music_directories: A list of directories where music files can be
+        found.  Default is ./data/music.
 
 Classes:
     Game: Class which handles the game.
@@ -75,7 +83,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.28"
+__version__ = "0.0.29"
 
 import sys
 import os
@@ -129,6 +137,12 @@ MOUSE_BUTTON_WHEEL_RIGHT = 6
 
 # Global variables
 game = None
+image_directories = [os.path.join('data', 'images'),
+                     os.path.join('data', 'sprites'),
+                     os.path.join('data', 'backgrounds')]
+font_directories = [os.path.join('data', 'fonts')]
+sound_directories = [os.path.join('data', 'sounds')]
+music_directories = [os.path.join('data', 'music')]
 
 
 class Game(object):
@@ -823,13 +837,12 @@ class Sprite(object):
         """Create a new Sprite object.
 
         ``name`` indicates the base name of the image files.  Files are
-        to be located in ./data/images, ./data/sprites,
-        ./data/backgrounds, ./images, ./sprites, or ./backgrounds.  If a
-        file with the exact name plus image file extensions is not
-        available, numbered images will be searched for which have names
-        with one of the following formats, where "name" is replaced with
-        the specified base file name and "0" can be replaced with any
-        integer:
+        to be located in one of the directories specified in
+        ``image_directories``.  If a file with the exact name plus image
+        file extensions is not available, numbered images will be
+        searched for which have names with one of the following formats,
+        where "name" is replaced with the specified base file name and
+        "0" can be replaced with any integer:
 
             name-0
             name_0
@@ -964,10 +977,10 @@ class Font(object):
         """Create a new Font object.
 
         ``name`` indicates the name of the font.  This can be either the
-        name of a font file, to be located in ./data/fonts or ./fonts,
-        or the name of a system font.  If the specified font does not
-        exist in either form, a default, implementation-dependent font
-        will be used.
+        name of a font file, to be located in one of the directories
+        specified in ``font_directories``, or the name of a system
+        font.  If the specified font does not exist in either form, a
+        default, implementation-dependent font will be used.
 
         All remaining arguments set the initial properties of the font.
         See Font.__doc__ for more information.
@@ -1057,7 +1070,7 @@ class Sound(object):
         """Create a new sound object.
 
         ``fname`` indicates the name of the sound file, to be located in
-        ./data/sounds or ./sounds.
+        one of the directories specified in ``sound_directories``.
 
         All remaining arguments set the initial properties of the sound.
         See Sound.__doc__ for more information.
@@ -1144,7 +1157,7 @@ class Music(object):
         """Create a new music object.
 
         ``fname`` indicates the name of the sound file, to be located in
-        ./data/music or ./music.
+        one of the directories specified in ``music_directories``.
 
         All remaining arguments set the initial properties of the music.
         See Music.__doc__ for more information.

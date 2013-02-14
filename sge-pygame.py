@@ -52,6 +52,14 @@ Constants:
 Global variables:
     game: Stores the current game.  If there is no game currently, this
         variable is set to None.
+    image_directories: A list of directories where images can be found.
+        Default is ./data/images, ./data/sprites, or ./data/backgrounds.
+    font_directories: A list of directories where font files can be
+        found.  Default is ./data/fonts.
+    sound_directories: A list of directories where sounds can be found.
+        Default is ./data/sounds.
+    music_directories: A list of directories where music files can be
+        found.  Default is ./data/music.
 
 Classes:
     Game: Class which handles the game.
@@ -91,7 +99,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.28"
+__version__ = "0.0.29"
 
 import sys
 import os
@@ -197,6 +205,12 @@ MOUSE_BUTTON_WHEEL_RIGHT = 7
 
 # Global variables
 game = None
+image_directories = [os.path.join('data', 'images'),
+                     os.path.join('data', 'sprites'),
+                     os.path.join('data', 'backgrounds')]
+font_directories = [os.path.join('data', 'fonts')]
+sound_directories = [os.path.join('data', 'sounds')]
+music_directories = [os.path.join('data', 'music')]
 
 
 class Game(object):
@@ -1612,13 +1626,12 @@ class Sprite(object):
         """Create a new Sprite object.
 
         ``name`` indicates the base name of the image files.  Files are
-        to be located in ./data/images, ./data/sprites,
-        ./data/backgrounds, ./images, ./sprites, or ./backgrounds.  If a
-        file with the exact name plus image file extensions is not
-        available, numbered images will be searched for which have names
-        with one of the following formats, where "name" is replaced with
-        the specified base file name and "0" can be replaced with any
-        integer:
+        to be located in one of the directories specified in
+        ``image_directories``.  If a file with the exact name plus image
+        file extensions is not available, numbered images will be
+        searched for which have names with one of the following formats,
+        where "name" is replaced with the specified base file name and
+        "0" can be replaced with any integer:
 
             name-0
             name_0
@@ -1669,7 +1682,7 @@ class Sprite(object):
         fname_frames = []
         fname_strip = None
 
-        for path in paths:
+        for path in image_directories:
             if os.path.isdir(path):
                 fnames = os.listdir(path)
                 for fname in fnames:
@@ -2075,10 +2088,8 @@ class Font(object):
         self._size = value
         self._font = None
 
-        fontpaths = [os.path.join('data', 'fonts', self.name),
-                     os.path.join('fonts', self.name)]
-
-        for path in fontpaths:
+        for path in font_directories:
+            path = os.path.join(path, self.name)
             if os.path.isfile(path):
                 self._font = pygame.font.Font(path, self._size)
 
@@ -2114,10 +2125,10 @@ class Font(object):
         """Create a new Font object.
 
         ``name`` indicates the name of the font.  This can be either the
-        name of a font file, to be located in ./data/fonts or ./fonts,
-        or the name of a system font.  If the specified font does not
-        exist in either form, a default, implementation-dependent font
-        will be used.
+        name of a font file, to be located in one of the directories
+        specified in ``font_directories``, or the name of a system
+        font.  If the specified font does not exist in either form, a
+        default, implementation-dependent font will be used.
 
         All remaining arguments set the initial properties of the font.
         See Font.__doc__ for more information.
@@ -2253,16 +2264,12 @@ class Font(object):
                 else:
                     words = line.split(' ')
                     while words:
-                        # Delete blanks at the beginning.
-                        while words and not words[0]:
-                            del words[0]
-
-                        current_line = words.pop(0) if words else ''
+                        current_line = words.pop(0)
                         while (words and self._font.size(
                                 ' '.join((current_line, words[0]))) < width):
                             current_line = ' '.join((current_line,
                                                      words.pop(0)))
-                        split_text.append(current_line.strip())
+                        split_text.append(current_line)
             return split_text
 
 
@@ -2331,7 +2338,7 @@ class Sound(object):
         """Create a new sound object.
 
         ``fname`` indicates the name of the sound file, to be located in
-        ./data/sounds or ./sounds.
+        one of the directories specified in ``sound_directories``.
 
         All remaining arguments set the initial properties of the sound.
         See Sound.__doc__ for more information.
@@ -2343,11 +2350,10 @@ class Sound(object):
         self._sound = None
 
         if pygame.mixer.get_init():
-            soundpaths = [os.path.join('data', 'sounds', fname),
-                          os.path.join('sounds', fname)]
-            for soundpath in soundpaths:
+            for path in sound_directories:
+                path = os.path.join(path, fname)
                 try:
-                    self._sound = pygame.mixer.Sound(soundpath)
+                    self._sound = pygame.mixer.Sound(path)
                     break
                 except pygame.error:
                     pass
@@ -2488,7 +2494,7 @@ class Music(object):
         """Create a new music object.
 
         ``fname`` indicates the name of the sound file, to be located in
-        ./data/music or ./music.
+        one of the directories specified in ``music_directories``.
 
         All remaining arguments set the initial properties of the music.
         See Music.__doc__ for more information.
@@ -2506,9 +2512,8 @@ class Music(object):
 
         self._full_fname = None
         if pygame.mixer.get_init():
-            paths = [os.path.join('data', 'music', fname),
-                     os.path.join('music', fname)]
-            for path in paths:
+            for path in music_directories:
+                path = os.path.join(path, fname)
                 if os.path.isfile(path):
                     self._full_fname = path
                     break
