@@ -15,6 +15,7 @@ to give a general idea of how it will be used.
 """
 
 import sge
+import random
 
 
 class glob(object):
@@ -68,6 +69,11 @@ class CirclePop(sge.StellarClass):
 
     def event_animation_end(self):
         self.destroy()
+
+    def event_destroy(self):
+        circle = Circle(random.randint(0, sge.game.width),
+                        random.randint(0, sge.game.height))
+        sge.game.current_room.add(circle)
 
 
 class Room(sge.Room):
