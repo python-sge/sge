@@ -441,6 +441,7 @@ class Game(object):
 
         self._set_mode()
 
+        self._background_changed = False
         self._colliders = []
         self._music = None
         self._music_queue = []
@@ -481,9 +482,11 @@ class Game(object):
             self.rooms[0].start()
         else:
             self._running = True
+            self._background_changed = True
             self.event_game_start()
             self.rooms[0].start()
             background = None
+            numviews = 0
             self._clock.tick()
 
             while self._running:
@@ -584,7 +587,7 @@ class Game(object):
                         self._window_width = event.w
                         self._window_height = event.h
                         self._set_mode()
-                        background = None
+                        self._background_changed = True
 
                 real_time_passed = self._clock.tick(self.fps)
 
@@ -631,18 +634,42 @@ class Game(object):
                         music = self._music_queue.pop(0)
                         music[0].play(*music[1:])
 
+                if numviews != len(self.current_room.views):
+                    numviews = len(self.current_room.views)
+                    self._background_changed = True
+
                 # Redraw
-                new_background = pygame.Surface(self._window.get_size())
-                b = self.current_room.background._get_background()
-                new_background.blit(b, (self._x, self._y))
-                if new_background != background:
-                    background = new_background
+                self._pygame_sprites.update()
+                if self._background_changed or background is None:
+                    w = max(1, self._window.get_width())
+                    h = max(1, self._window.get_height())
+                    background = pygame.Surface((w, h))
+                    b = self.current_room.background._get_background()
+                    background.blit(b, (self._x, self._y))
                     self._window.blit(background, (0, 0))
+                    self._background_changed = False
+                    dirty = self._window.get_rect()
                 else:
                     self._pygame_sprites.clear(self._window, background)
+                    dirty = self._pygame_sprites.draw(self._window)
 
-                self._pygame_sprites.update()
-                dirty = self._pygame_sprites.draw(self._window)
+                top_bar = pygame.Rect(0, 0, w, self._y)
+                bottom_bar = pygame.Rect(0, h - self._y, w, self._y)
+                left_bar = pygame.Rect(0, 0, self._x, h)
+                right_bar = pygame.Rect(w - self._x, 0, self._x, h)
+                if top_bar.h > 0:
+                    self._window.fill((0, 0, 0), top_bar)
+                    dirty.append(top_bar)
+                if bottom_bar.h > 0:
+                    self._window.fill((0, 0, 0), bottom_bar)
+                    dirty.append(bottom_bar)
+                if left_bar.w > 0:
+                    self._window.fill((0, 0, 0), left_bar)
+                    dirty.append(left_bar)
+                if right_bar.w > 0:
+                    self._window.fill((0, 0, 0), right_bar)
+                    dirty.append(right_bar)
+
                 pygame.display.update(dirty)
 
             self.event_game_end()
@@ -783,7 +810,7 @@ class Game(object):
                     self._window_width = event.w
                     self._window_height = event.h
                     self._set_mode()
-                    background = None
+                    self._background_changed = True
 
             # Time management
             self._clock.tick(self.fps)
@@ -1052,7 +1079,7 @@ class Game(object):
 
     def sound_stop_all(self):
         """Stop playback of all sounds."""
-        pass
+        # TODO
 
     def get_key_pressed(self, key):
         """Return whether or not a given key is pressed.
@@ -1482,8 +1509,8 @@ class Game(object):
                     self._xscale = min(self._xscale, self._yscale)
                     self._yscale = self._xscale
 
-            w = self._window.get_width()
-            h = self._window.get_height()
+            w = max(1, self._window.get_width())
+            h = max(1, self._window.get_height())
             self._x = int(round((w - int(round(self.width * self._xscale))) /
                                 2))
             self._y = int(round((h - int(round(self.height * self._yscale))) /
@@ -1512,8 +1539,8 @@ class Game(object):
         # Draw the surface indicated (used in all draw methods), using
         # the given x and y as locations in the current room, and z.
         image = _scale(image, *image.get_size())
-        w = image.get_width()
-        h = image.get_height()
+        w = max(1, image.get_width())
+        h = max(1, image.get_height())
 
         for view in self.current_room.views:
             rel_x = x - view.x
@@ -1778,8 +1805,8 @@ class Sprite(object):
                 assert split[1][5:].isdigit()
                 n = int(split[1][5:])
 
-                img_w = sheet.get_width() // n
-                img_h = sheet.get_height()
+                img_w = max(1, sheet.get_width()) // n
+                img_h = max(1, sheet.get_height())
                 for x in xrange(0, img_w * n, img_w):
                     rect = pygame.Rect(x, 0, img_w, img_h)
                     img = sheet.subsurface(rect)
@@ -1793,12 +1820,12 @@ class Sprite(object):
             self._baseimages.append(img)
 
         if width is None:
-            width = 0
+            width = 1
             for image in self._baseimages:
                 width = max(width, image.get_width())
 
         if height is None:
-            height = 0
+            height = 1
             for image in self._baseimages:
                 height = max(height, image.get_height())
 
@@ -1823,6 +1850,7 @@ class Sprite(object):
 
     def _refresh(self):
         # Set the _images list based on the variables.
+        game._background_changed = True
         self._images = []
         for image in self._baseimages:
             img = self._set_transparency(image)
@@ -1832,7 +1860,7 @@ class Sprite(object):
     def _set_transparency(self, image):
         # Return a copy of the surface with transparency properly set
         # for this sprite's settings.
-        if self.transparent:
+        if self.transparent and image.get_width() > 0:
             if image.get_flags() & pygame.SRCALPHA:
                 return image.convert_alpha()
             else:
@@ -1930,6 +1958,86 @@ class BackgroundLayer(object):
 
     """
 
+    @property
+    def sprite(self):
+        return self._sprite
+
+    @sprite.setter
+    def sprite(self, value):
+        if self._sprite != value:
+            self._sprite = value
+            game._background_changed = True
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        if self._x != value:
+            self._x = value
+            game._background_changed = True
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, value):
+        if self._y != value:
+            self._y = value
+            game._background_changed = True
+
+    @property
+    def z(self):
+        return self._z
+
+    @z.setter
+    def z(self, value):
+        if self._z != value:
+            self._z = value
+            game._background_changed = True
+
+    @property
+    def xscroll_rate(self):
+        return self._xscroll_rate
+
+    @xscroll_rate.setter
+    def xscroll_rate(self, value):
+        if self._xscroll_rate != value:
+            self._xscroll_rate = value
+            game._background_changed = True
+
+    @property
+    def yscroll_rate(self):
+        return self._yscroll_rate
+
+    @yscroll_rate.setter
+    def yscroll_rate(self):
+        if self._yscroll_rate != value:
+            self._yscroll_rate = value
+            game._background_changed = True
+
+    @property
+    def xrepeat(self):
+        return self._xrepeat
+
+    @xrepeat.setter
+    def xrepeat(self, value):
+        if self._xrepeat != value:
+            self._xrepeat = value
+            game._background_changed = True
+
+    @property
+    def yrepeat(self):
+        return self._yrepeat
+
+    @yrepeat.setter
+    def yrepeat(self, value):
+        if self._yrepeat != value:
+            self._yrepeat = value
+            game._background_changed = True
+
     def __init__(self, sprite, x, y, z, xscroll_rate=1, yscroll_rate=1,
                  xrepeat=True, yrepeat=True):
         """Create a background layer object.
@@ -1941,14 +2049,14 @@ class BackgroundLayer(object):
         created.
 
         """
-        self.sprite = sprite
-        self.x = x
-        self.y = y
-        self.z = z
-        self.xscroll_rate = xscroll_rate
-        self.yscroll_rate = yscroll_rate
-        self.xrepeat = xrepeat
-        self.yrepeat = yrepeat
+        self._sprite = sprite
+        self._x = x
+        self._y = y
+        self._z = z
+        self._xscroll_rate = xscroll_rate
+        self._yscroll_rate = yscroll_rate
+        self._xrepeat = xrepeat
+        self._yrepeat = yrepeat
 
         self._image_index = 0
         self._count = 0
@@ -2048,6 +2156,7 @@ class Background(object):
         background = pygame.Surface((round(game.width * game._xscale),
                                      round(game.height * game._yscale)))
         background.fill(_get_pygame_color(self.color))
+        self._last_positions = []
 
         for view in game.current_room.views:
             view_x = int(round(view.x * game._xscale))
@@ -2063,7 +2172,8 @@ class Background(object):
                               game._xscale))
                 y = int(round((layer.y - (view.y * layer.yscroll_rate)) *
                               game._yscale))
-                image_w, image_h = image.get_size()
+                image_w = max(1, image.get_width())
+                image_h = max(1, image.get_height())
 
                 # These equations bring the position to the largest
                 # values possible while still being less than the
@@ -3787,7 +3897,7 @@ class Room(object):
             self.views = list(views)
         else:
             self.views = [View(0, 0)]
-        self._start_views = self.views
+        self._start_views = self.views[:]
 
         if background is not None:
             self.background = background
@@ -4125,6 +4235,66 @@ class View(object):
 
     """
 
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        if self._x != value:
+            self._x = value
+            game._background_changed = True
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, value):
+        if self._y != value:
+            self._y = value
+            game._background_changed = True
+
+    @property
+    def xport(self):
+        return self._xport
+
+    @xport.setter
+    def xport(self, value):
+        if self._xport != value:
+            self._xport = value
+            game._background_changed = True
+
+    @property
+    def yport(self):
+        return self._yport
+
+    @yport.setter
+    def yport(self, value):
+        if self._yport != value:
+            self._yport = value
+            game._background_changed = True
+
+    @property
+    def width(self):
+        return self._width
+
+    @width.setter
+    def width(self, value):
+        if self._width != value:
+            self._width = value
+            game._background_changed = True
+
+    @property
+    def height(self):
+        return self._height
+
+    @height.setter
+    def height(self, value):
+        if self._height != value:
+            self._height = value
+            game._background_changed = True
+
     def __init__(self, x, y, xport=0, yport=0, width=None, height=None):
         """Create a new View object.
 
@@ -4136,12 +4306,12 @@ class View(object):
         can (i.e. game.width - xport or game.height - yport).
 
         """
-        self.x = x
-        self.y = y
-        self.xport = xport
-        self.yport = yport
-        self.width = width if width else game.width - xport
-        self.height = height if height else game.height - yport
+        self._x = x
+        self._y = y
+        self._xport = xport
+        self._yport = yport
+        self._width = width if width else game.width - xport
+        self._height = height if height else game.height - yport
         self._start_x = self.x
         self._start_y = self.y
         self._start_xport = self.xport
@@ -4242,8 +4412,8 @@ class _PygameSprite(pygame.sprite.DirtySprite):
             for view in views:
                 x = x - view.x - sprite.origin_x
                 y = y - view.y - sprite.origin_y
-                w = self.image.get_width()
-                h = self.image.get_height()
+                w = max(1, self.image.get_width())
+                h = max(1, self.image.get_height())
                 new_rect = self.image.get_rect()
                 new_rect.left = round(x * game._xscale) - self.x_offset
                 new_rect.top = round(y * game._yscale) - self.y_offset

@@ -106,7 +106,7 @@ def main():
 
     # Create objects
     circle = Circle(game.width // 2, game.height // 2)
-    circle2 = Circle(32, 48)
+    circle2 = Circle(22, 48)
     circle3 = Circle(486, 301)
     circle4 = Circle(50, 400)
     objects = (circle, circle2, circle3, circle4)
