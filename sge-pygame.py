@@ -502,7 +502,9 @@ class Game(object):
                         for obj in self.current_room.objects:
                             obj.event_key_release(k)
                     elif event.type == pygame.MOUSEMOTION:
-                        self.mouse.mouse_x, self.mouse.mouse_y = event.pos
+                        mx, my = event.pos
+                        self.mouse.mouse_x = mx - self._x
+                        self.mouse.mouse_y = my - self._y
                         self.event_mouse_move(*event.rel)
                         self.current_room.event_mouse_move(*event.rel)
                         for obj in self.current_room.objects:
@@ -578,6 +580,11 @@ class Game(object):
                     elif event.type == pygame.QUIT:
                         self.current_room.event_close()
                         self.event_close()
+                    elif event.type == pygame.VIDEORESIZE:
+                        self._window_width = event.w
+                        self._window_height = event.h
+                        self._set_mode()
+                        background = None
 
                 real_time_passed = self._clock.tick(self.fps)
 
@@ -625,7 +632,9 @@ class Game(object):
                         music[0].play(*music[1:])
 
                 # Redraw
-                new_background = self.current_room.background._get_background()
+                new_background = pygame.Surface(self._window.get_size())
+                b = self.current_room.background._get_background()
+                new_background.blit(b, (self._x, self._y))
                 if new_background != background:
                     background = new_background
                     self._window.blit(background, (0, 0))
@@ -667,6 +676,7 @@ class Game(object):
         "event_paused_" will occur during this time.
 
         """
+        # TODO: Show pause image
         self._paused = True
         screenshot = self._window.copy()
         background = screenshot.copy()
@@ -769,6 +779,11 @@ class Game(object):
                 elif event.type == pygame.QUIT:
                     self.current_room.event_paused_close()
                     self.event_paused_close()
+                elif event.type == pygame.VIDEORESIZE:
+                    self._window_width = event.w
+                    self._window_height = event.h
+                    self._set_mode()
+                    background = None
 
             # Time management
             self._clock.tick(self.fps)
@@ -1466,7 +1481,16 @@ class Game(object):
                 if self.scale_proportional:
                     self._xscale = min(self._xscale, self._yscale)
                     self._yscale = self._xscale
+
+            w = self._window.get_width()
+            h = self._window.get_height()
+            self._x = int(round((w - int(round(self.width * self._xscale))) /
+                                2))
+            self._y = int(round((h - int(round(self.height * self._yscale))) /
+                                2))
         else:
+            self._x = 0
+            self._y = 0
             # Decide window size
             if self.scale == 0:
                 self._xscale = self._window_width / self.width
@@ -1477,12 +1501,12 @@ class Game(object):
                     self._yscale = self._xscale
 
             self._window = pygame.display.set_mode(
-                (int(self.width * self._xscale),
-                 int(self.height * self._yscale)))
+                (int(round(self.width * self._xscale)),
+                 int(round(self.height * self._yscale))), pygame.RESIZABLE)
 
         # Refresh sprites
-        for sprite in self.sprites:
-            sprite._refresh()
+        for s in self.sprites:
+            self.sprites[s]._refresh()
 
     def _draw_surface(self, image, x, y, z):
         # Draw the surface indicated (used in all draw methods), using
@@ -1495,8 +1519,8 @@ class Game(object):
             rel_x = x - view.x
             rel_y = y - view.y
             rect = image.get_rect()
-            rect.left = round(rel_x * self._xscale)
-            rect.top = round(rel_y * self._yscale)
+            rect.left = round(rel_x * self._xscale + self._x)
+            rect.top = round(rel_y * self._yscale + self._y)
             inside_view = (rel_x >= view.xport and
                            rel_x + w <= view.xport + view.width and
                            rel_y >= view.yport and
@@ -1527,10 +1551,10 @@ class Game(object):
                 if rel_y + h > view.yport + view.height:
                     h -= (rel_y + h) - (view.yport + view.height)
 
-                rel_x = round(rel_x * self._xscale)
-                rel_y = round(rel_y * self._yscale)
-                cut_x = round(cut_x * self._xscale)
-                cut_y = round(cut_y * self._yscale)
+                rel_x = round(rel_x * self._xscale) + self._x
+                rel_y = round(rel_y * self._yscale) + self._y
+                cut_x = round(cut_x * self._xscale) + self._x
+                cut_y = round(cut_y * self._yscale) + self._y
                 w = round(w * self._xscale)
                 h = round(h * self._yscale)
                 cut_rect = pygame.Rect(cut_x, cut_y, w, h)
@@ -2035,9 +2059,9 @@ class Background(object):
             surf = background.subsurface(view_x, view_y, view_w, view_h)
             for layer in self.layers:
                 image = layer._get_image()
-                x = int(round(layer.x - (view.x * layer.xscroll_rate) *
+                x = int(round((layer.x - (view.x * layer.xscroll_rate)) *
                               game._xscale))
-                y = int(round(layer.y - (view.y * layer.yscroll_rate) *
+                y = int(round((layer.y - (view.y * layer.yscroll_rate)) *
                               game._yscale))
                 image_w, image_h = image.get_size()
 
@@ -3536,12 +3560,14 @@ class Mouse(StellarClass):
     @property
     def x(self):
         if game.current_room is not None:
+            mouse_x = self.mouse_x / game._xscale
+            mouse_y = self.mouse_y / game._yscale
             for view in game.current_room.views:
-                if (view.xport <= self.mouse_x <= view.xport + view.width and
-                        view.yport <= self.mouse_y <= view.yport + view.height):
+                if (view.xport <= mouse_x <= view.xport + view.width and
+                        view.yport <= mouse_y <= view.yport + view.height):
                     # We save this value so that if the mouse is in none of
                     # the views, the last known position in a view is used.
-                    self._x = self.mouse_x / game._xscale - view.x
+                    self._x = mouse_x - view.x
                     break
 
             return self._x
@@ -3556,12 +3582,14 @@ class Mouse(StellarClass):
     @property
     def y(self):
         if game.current_room is not None:
+            mouse_x = self.mouse_x / game._xscale
+            mouse_y = self.mouse_y / game._yscale
             for view in game.current_room.views:
-                if (view.xport <= self.mouse_x <= view.xport + view.width and
-                        view.yport <= self.mouse_y <= view.yport + view.height):
+                if (view.xport <= mouse_x <= view.xport + view.width and
+                        view.yport <= mouse_y <= view.yport + view.height):
                     # We save this value so that if the mouse is in none of
                     # the views, the last known position in a view is used.
-                    self._y = self.mouse_y / game._xscale - view.y
+                    self._y = mouse_y - view.y
                     break
 
             return self._y
@@ -4200,8 +4228,8 @@ class _PygameSprite(pygame.sprite.DirtySprite):
             x = x - views[0].x - sprite.origin_x
             y = y - views[0].y - sprite.origin_y
             new_rect = self.image.get_rect()
-            new_rect.left = round(x * game._xscale) - self.x_offset
-            new_rect.top = round(y * game._yscale) - self.y_offset
+            new_rect.left = round(x * game._xscale) - self.x_offset + game._x
+            new_rect.top = round(y * game._yscale) - self.y_offset + game._y
 
             if self.rect != new_rect:
                 self.rect = new_rect
