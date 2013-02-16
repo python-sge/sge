@@ -1103,7 +1103,7 @@ class Game(object):
         """
         key = key.lower()
         if key in KEYS:
-            return pygame.key.get_pressed()[key]
+            return pygame.key.get_pressed()[KEYS[key]]
         else:
             return False
 
@@ -3953,7 +3953,8 @@ class Room(object):
             new_objects.append(obj)
             self.objects = tuple(new_objects)
             game._pygame_sprites.add(obj._pygame_sprite, layer=obj.z)
-            obj.event_create()
+            if game.current_room is self and self._started:
+                obj.event_create()
 
     def start(self):
         """Start the room.
@@ -4484,7 +4485,7 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                         w = round(w * game._xscale)
                         h = round(h * game._yscale)
                         cut_rect = pygame.Rect(cut_x, cut_y, w, h)
-                        img.self.image.subsurface(cut_rect)
+                        img = self.image.subsurface(cut_rect)
                         rect = pygame.Rect(x, y, w, h)
 
                     # Create proxy one-time sprite
