@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Stellar Game Engine - Pygame
+# Stellar Game Engine - Pygame 1.9
 # Copyright (C) 2012, 2013 Julian Marchant <onpon4@lavabit.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -74,6 +74,12 @@ Classes:
     View: Class used for views in rooms.
 
 Implementation-specific information:
+This implementation supports hardware rendering, which can improve
+performance in some cases.  It is not enabled by default.  To enable it,
+set ``sge.hardware_rendering`` to True.  To get the best performance
+with hardware rendering, you should use colorkeys instead of alpha
+transparency.
+
 Since Pygame supports trackballs, they are implemented as extra analog
 sticks.  Their movement is limited to the range of an analog stick to
 ensure full compatibility.
@@ -211,6 +217,8 @@ image_directories = [os.path.join('data', 'images'),
 font_directories = [os.path.join('data', 'fonts')]
 sound_directories = [os.path.join('data', 'sounds')]
 music_directories = [os.path.join('data', 'music')]
+
+hardware_rendering = False
 
 
 class Game(object):
@@ -595,7 +603,6 @@ class Game(object):
                     time_passed = min(real_time_passed, 1000 / self.delta_min)
                     delta_mult = time_passed / (1000 / self.fps)
                 else:
-                    self._clock.tick(self.fps)
                     time_passed = 1000 / self.fps
                     delta_mult = 1
 
@@ -670,7 +677,10 @@ class Game(object):
                     self._window.fill((0, 0, 0), right_bar)
                     dirty.append(right_bar)
 
-                pygame.display.update(dirty)
+                if hardware_rendering:
+                    pygame.display.flip()
+                else:
+                    pygame.display.update(dirty)
 
             self.event_game_end()
             pygame.quit()
@@ -819,7 +829,11 @@ class Game(object):
             paused_sprites.clear(self._window, background)
             paused_sprites.update()
             dirty = paused_sprites.draw(self._window)
-            pygame.display.update(dirty)
+
+            if hardware_rendering:
+                pygame.display.flip()
+            else:
+                pygame.display.update(dirty)
 
         # Restore the look of the screen from before it was paused
         self._window.blit(screenshot, (0, 0))
@@ -1499,7 +1513,11 @@ class Game(object):
             self._yscale = self.scale
 
         if self.fullscreen or not info.wm:
-            self._window = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+            flags = pygame.FULLSCREEN
+            if hardware_rendering:
+                flags |= pygame.HWSURFACE | pygame.DOUBLEBUF
+
+            self._window = pygame.display.set_mode((0, 0), flags)
 
             if self.scale == 0:
                 self._xscale = info.current_w / self.width
@@ -1527,9 +1545,13 @@ class Game(object):
                     self._xscale = min(self._xscale, self._yscale)
                     self._yscale = self._xscale
 
+            flags = pygame.RESIZABLE
+            if hardware_rendering:
+                flags |= pygame.HWSURFACE | pygame.DOUBLEBUF
+
             self._window = pygame.display.set_mode(
                 (int(round(self.width * self._xscale)),
-                 int(round(self.height * self._yscale))), pygame.RESIZABLE)
+                 int(round(self.height * self._yscale))), flags)
 
         # Refresh sprites
         for s in self.sprites:
