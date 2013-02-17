@@ -15,13 +15,6 @@ to give a general idea of how it will be used.
 """
 
 import sge
-import random
-
-
-class glob(object):
-    font = None
-    pop_sound = None
-    music = None
 
 
 class Game(sge.Game):
