@@ -8,7 +8,7 @@ import sge
 
 class SimpleTest(unittest.TestCase):
     def equal(self):
-        self.assertTrue('test', 'test')
+        self.assertEqual('test', 'test')
 
 
 if __name__ == '__main__':
