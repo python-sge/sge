@@ -9,6 +9,7 @@ setup(name='sge',
                 'in order to make its development easier and also offer an option to those who want only a game engine without a graphical interface. '
     author='Julian Marchant',
     author_email='onpon4@lavabit.com',
+    license='COPYING',
     url='https://github.com/Coppolaemilio/StellarGameEngine',
     packages=find_packages(),
     include_package_data=True,
