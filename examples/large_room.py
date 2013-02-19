@@ -7,14 +7,15 @@
 # notice and this notice are preserved.  This file is offered as-is,
 # without any warranty.
 
-"""Stellar Game Engine example
+"""Split-screen Example
 
-This is a simple example of a possible game in Stellar Game Engine, just
-to give a general idea of how it will be used.
+This is an example of split-screening being used, where two players see
+two different parts of the room.
 
 """
 
 import sge
+import random
 
 
 class Game(sge.Game):
@@ -28,26 +29,31 @@ class Game(sge.Game):
 
 class Circle(sge.StellarClass):
     def __init__(self, x, y, player=0):
-        super(Circle, self).__init__(x, y, 5, 'circle', collision_precise=True)
+        super(Circle, self).__init__(x, y, 1, 'circle', collision_precise=True)
         self.player = player
+        self.normal_image_blend = ['red', 'blue', 'yellow', 'green'][self.player]
+        self.image_alpha = 128
+
+    def set_color(self):
+        self.image_blend = self.normal_image_blend
+        for obj in sge.game.current_room.objects:
+            if (obj is not self and isinstance(obj, Circle) and
+                    self.collides(obj)):
+                self.image_blend = 'olive'
+                break
 
     def event_create(self):
-        self.image_alpha = 200
-        self.image_blend = 'blue'
+        self.set_color()
 
     def event_step(self, time_passed):
         left_key = ['left', 'a', 'j', 'kp_4'][self.player]
         right_key = ['right', 'd', 'l', 'kp_6'][self.player]
         up_key = ['up', 'w', 'i', 'kp_8'][self.player]
         down_key = ['down', 's', 'k', 'kp_5'][self.player]
-
         self.xvelocity = (sge.game.get_key_pressed(right_key) -
                           sge.game.get_key_pressed(left_key))
         self.yvelocity = (sge.game.get_key_pressed(down_key) -
                           sge.game.get_key_pressed(up_key))
-
-        self.x += self.xvelocity
-        self.y += self.yvelocity
 
         # Limit the circles to inside the room.
         if self.bbox_left < 0:
@@ -59,31 +65,45 @@ class Circle(sge.StellarClass):
         elif self.bbox_bottom >= sge.game.current_room.height:
             self.bbox_bottom = sge.game.current_room.height - 1
 
+        self.set_color()
+
+        # Set view
+        my_view = sge.game.current_room.views[self.player]
+        my_view.x = self.x - (my_view.width // 2)
+        my_view.y = self.y - (my_view.height // 2)
+
+
 def main():
     # Create Game object
-    game = Game()
+    Game(width=320, height=240)
 
     # Load sprites
-    circle_sprite = sge.Sprite('circle', 64, 64, 32, 32, True, bbox_x=-32,
-                               bbox_y=-32)
-    fence_sprite = sge.Sprite('fence', transparent=True)
+    sge.Sprite('circle', 32, 32, 16, 16, transparent=True, bbox_x=-16, bbox_y=-16)
+    fence = sge.Sprite('fence', transparent=True)
 
     # Load backgrounds
-    layers = (sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False),)
-    background = sge.Background(layers, 0xffffff)
+    layers = (sge.BackgroundLayer(fence, 0, 0, 0),)
+    background = sge.Background(layers, 'white')
 
     # Create objects
-    circle = Circle(game.width // 2, game.height // 2)
-    objects = [circle]
+    objects = []
+    for i in xrange(1):
+        circle = Circle(random.randrange(0, 1280), random.randrange(0, 1024),
+                        i)
+        objects.append(circle)
 
-    # Create view
-    views = (sge.View(0, 0),)
+    # Create views
+    views = []
+    for x in xrange(1):
+        for y in xrange(1):
+            views.append(sge.View(0, 0, 320 * x, 240 * y, 320, 240))
 
     # Create rooms
-    room1 = sge.Room(tuple(objects), views=views, background=background)
+    sge.Room(tuple(objects), views=tuple(views), background=background)
 
-    game.start()
+    sge.game.start()
 
 
 if __name__ == '__main__':
     main()
+

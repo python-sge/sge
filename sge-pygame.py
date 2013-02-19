@@ -2187,7 +2187,6 @@ class Background(object):
                                       game._yscale)))
             view_w = int(round(view.width * game._xscale))
             view_h = int(round(view.height * game._yscale))
-            print(view.xport, view.yport)
             surf = background.subsurface(view_x, view_y, view_w, view_h)
             for layer in self.layers:
                 image = layer._get_image()
@@ -2899,6 +2898,9 @@ class StellarClass(object):
         self._bbox_left = value + self.bbox_x
         self._bbox_right = self.bbox_left + self.bbox_width
 
+        if self.visible:
+            self._pygame_sprite.dirty = 1
+
     @property
     def y(self):
         return self._y
@@ -2909,6 +2911,9 @@ class StellarClass(object):
         self._y = value
         self._bbox_top = value + self.bbox_y
         self._bbox_bottom = self.bbox_top + self.bbox_height
+
+        if self.visible:
+            self._pygame_sprite.dirty = 1
 
     @property
     def z(self):
@@ -4269,6 +4274,9 @@ class View(object):
             self._x = value
             game._background_changed = True
 
+            for sprite in game._pygame_sprites:
+                sprite.dirty = 1
+
     @property
     def y(self):
         return self._y
@@ -4278,6 +4286,9 @@ class View(object):
         if self._y != value:
             self._y = value
             game._background_changed = True
+
+            for sprite in game._pygame_sprites:
+                sprite.dirty = 1
 
     @property
     def xport(self):
