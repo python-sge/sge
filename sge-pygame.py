@@ -218,7 +218,7 @@ font_directories = [os.path.join('data', 'fonts')]
 sound_directories = [os.path.join('data', 'sounds')]
 music_directories = [os.path.join('data', 'music')]
 
-hardware_rendering = True
+hardware_rendering = False
 
 
 class Game(object):
@@ -2181,13 +2181,16 @@ class Background(object):
         self._last_positions = []
 
         for view in game.current_room.views:
-            view_x = max(0, int(round(min(view.x, game.width - view.width) *
-                                      game._xscale)))
-            view_y = max(0, int(round(min(view.y, game.height - view.height) *
-                                      game._yscale)))
-            view_w = int(round(view.width * game._xscale))
-            view_h = int(round(view.height * game._yscale))
-            surf = background.subsurface(view_x, view_y, view_w, view_h)
+            view_x = int(round(view.x * game._xscale))
+            view_y = int(round(view.y * game._yscale))
+            view_xport = max(0, int(round(view.xport * game._xscale)))
+            view_yport = max(0, int(round(view.yport * game._yscale)))
+            view_w = int(round(min(view.width, game.width - view.xport) *
+                               game._xscale))
+            view_h = int(round(min(view.height, game.height - view.yport) *
+                               game._yscale))
+            surf = background.subsurface(view_xport, view_yport, view_w,
+                                         view_h)
             for layer in self.layers:
                 image = layer._get_image()
                 x = int(round((layer.x - (view.x * layer.xscroll_rate)) *
