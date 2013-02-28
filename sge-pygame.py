@@ -646,7 +646,6 @@ class Game(object):
                     self._background_changed = True
 
                 # Redraw
-                self._pygame_sprites.update()
                 if self._background_changed or background is None:
                     w = max(1, self._window.get_width())
                     h = max(1, self._window.get_height())
@@ -655,9 +654,12 @@ class Game(object):
                     background.blit(b, (self._x, self._y))
                     self._window.blit(background, (0, 0))
                     self._background_changed = False
+                    self._pygame_sprites.update()
+                    self._pygame_sprites.draw(self._window)
                     dirty = self._window.get_rect()
                 else:
                     self._pygame_sprites.clear(self._window, background)
+                    self._pygame_sprites.update()
                     dirty = self._pygame_sprites.draw(self._window)
 
                 top_bar = pygame.Rect(0, 0, w, self._y)
@@ -2901,8 +2903,8 @@ class StellarClass(object):
         self._bbox_left = value + self.bbox_x
         self._bbox_right = self.bbox_left + self.bbox_width
 
-        if self.visible:
-            self._pygame_sprite.dirty = 1
+        # Cause the Pygame sprite to make itself dirty
+        self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
 
     @property
     def y(self):
@@ -2915,8 +2917,8 @@ class StellarClass(object):
         self._bbox_top = value + self.bbox_y
         self._bbox_bottom = self.bbox_top + self.bbox_height
 
-        if self.visible:
-            self._pygame_sprite.dirty = 1
+        # Cause the Pygame sprite to make itself dirty
+        self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
 
     @property
     def z(self):
@@ -2928,6 +2930,9 @@ class StellarClass(object):
         if self._pygame_sprite in game._pygame_sprites:
             self._pygame_sprite.kill()
             game._pygame_sprites.add(self._pygame_sprite, layer=self._z)
+
+        # Cause the Pygame sprite to make itself dirty
+        self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
 
     @property
     def sprite(self):
@@ -4278,7 +4283,8 @@ class View(object):
             game._background_changed = True
 
             for sprite in game._pygame_sprites:
-                sprite.dirty = 1
+                # Cause the Pygame sprite to make itself dirty
+                sprite.rect = pygame.Rect(0, 0, 1, 1)
 
     @property
     def y(self):
@@ -4291,7 +4297,8 @@ class View(object):
             game._background_changed = True
 
             for sprite in game._pygame_sprites:
-                sprite.dirty = 1
+                # Cause the Pygame sprite to make itself dirty
+                sprite.rect = pygame.Rect(0, 0, 1, 1)
 
     @property
     def xport(self):
@@ -4395,7 +4402,8 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                     parent.image_index, parent.image_xscale,
                     parent.image_yscale, parent.image_rotation,
                     parent.image_alpha, parent.image_blend)
-                if self.image != new_image:
+                if self.image is not new_image:
+                    self.must_redraw = False
                     self.image = new_image
                     self.dirty = 1
 
@@ -4453,8 +4461,10 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                 w = max(1, self.image.get_width())
                 h = max(1, self.image.get_height())
                 new_rect = self.image.get_rect()
-                new_rect.left = round(x * game._xscale) - self.x_offset
-                new_rect.top = round(y * game._yscale) - self.y_offset
+                new_rect.left = (round(x * game._xscale) - self.x_offset +
+                                 game._x)
+                new_rect.top = (round(y * game._yscale) - self.y_offset +
+                                game._y)
                 inside_view = (x >= view.xport and
                                x + w <= view.xport + view.width and
                                y >= view.yport and
