@@ -654,6 +654,10 @@ class Game(object):
                     background.blit(b, (self._x, self._y))
                     self._window.blit(background, (0, 0))
                     self._background_changed = False
+                    for sprite in self._pygame_sprites:
+                        sprite.rect = pygame.Rect(0, 0, 1, 1)
+                        sprite.image = pygame.Surface((1, 1))
+                        sprite.image.set_colorkey((0, 0, 0))
                     self._pygame_sprites.update()
                     self._pygame_sprites.draw(self._window)
                     dirty = self._window.get_rect()
@@ -4282,10 +4286,6 @@ class View(object):
             self._x = value
             game._background_changed = True
 
-            for sprite in game._pygame_sprites:
-                # Cause the Pygame sprite to make itself dirty
-                sprite.rect = pygame.Rect(0, 0, 1, 1)
-
     @property
     def y(self):
         return self._y
@@ -4295,10 +4295,6 @@ class View(object):
         if self._y != value:
             self._y = value
             game._background_changed = True
-
-            for sprite in game._pygame_sprites:
-                # Cause the Pygame sprite to make itself dirty
-                sprite.rect = pygame.Rect(0, 0, 1, 1)
 
     @property
     def xport(self):
