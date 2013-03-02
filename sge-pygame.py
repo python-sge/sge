@@ -2184,7 +2184,6 @@ class Background(object):
         background = pygame.Surface((round(game.width * game._xscale),
                                      round(game.height * game._yscale)))
         background.fill(_get_pygame_color(self.color))
-        self._last_positions = []
 
         for view in game.current_room.views:
             view_x = int(round(view.x * game._xscale))
@@ -2211,32 +2210,30 @@ class Background(object):
                 # location we're getting the surface at.  This is to
                 # minimize the number of repeat blittings.
                 if layer.xrepeat:
-                    x = ((x % image_w) + (view_x // image_w * image_w) -
-                         image_w)
+                    x = (x % image_w) - image_w
                 if layer.yrepeat:
-                    y = ((y % image_h) + (view_y // image_h * image_h) -
-                         image_h)
+                    y = (y % image_h) - image_h
 
                 if layer.xrepeat and layer.yrepeat:
                     xstart = x
-                    while y < view_y + view_h:
+                    while y < surf.get_height():
                         x = xstart
-                        while x < view_x + view_w:
+                        while x < surf.get_width():
                             surf.blit(image, (x, y))
                             x += image_w
                         y += image_h
                 elif (layer.xrepeat and y < view_y + view_h and
                       y + image_h > view_y):
-                    while x < view_x + view_w:
+                    while x < surf.get_width():
                         surf.blit(image, (x, y))
                         x += image_w
                 elif (layer.yrepeat and x < view_x + view_w and
                       x + image_w > view_x):
-                    while y < view_y + view_h:
+                    while y < surf.get_height():
                         surf.blit(image, (x, y))
                         y += image_h
-                elif (x < view_x + view_w and x + image_w > view_x and
-                      y < view_y + view_h and y + image_h > view_y):
+                elif (x < surf.get_width() and x + image_w > 0 and
+                      y < surf.get_height() and y + image_h > 0):
                     surf.blit(image, (x, y))
 
         return background
