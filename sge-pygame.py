@@ -167,9 +167,9 @@ KEYS = {"0": pygame.K_0, "1": pygame.K_1, "2": pygame.K_2, "3": pygame.K_3,
         "f12": pygame.K_F12, "greater_than": pygame.K_GREATER,
         "hash": pygame.K_HASH, "help": pygame.K_HELP, "home": pygame.K_HOME,
         "hyphen": pygame.K_MINUS, "insert": pygame.K_INSERT,
-        "kp_0": pygame.K_KP0, "kp1": pygame.K_KP1, "kp2": pygame.K_KP2,
-        "kp3": pygame.K_KP3, "kp4": pygame.K_KP4, "kp5": pygame.K_KP5,
-        "kp6": pygame.K_KP6, "kp7": pygame.K_KP7, "kp_8": pygame.K_KP8,
+        "kp_0": pygame.K_KP0, "kp_1": pygame.K_KP1, "kp_2": pygame.K_KP2,
+        "kp_3": pygame.K_KP3, "kp_4": pygame.K_KP4, "kp_5": pygame.K_KP5,
+        "kp_6": pygame.K_KP6, "kp_7": pygame.K_KP7, "kp_8": pygame.K_KP8,
         "kp_9": pygame.K_KP9, "kp_divide": pygame.K_KP_DIVIDE,
         "kp_enter": pygame.K_KP_ENTER, "kp_equals": pygame.K_KP_EQUALS,
         "kp_minus": pygame.K_KP_MINUS, "kp_multiply": pygame.K_KP_MULTIPLY,
@@ -4448,9 +4448,11 @@ class _PygameSprite(pygame.sprite.DirtySprite):
             # the possibility of edges or multiple appearances.
             original_used = False
             self.dirty = 1
+            real_x = x
+            real_y = y
             for view in views:
-                x = x - view.x - sprite.origin_x
-                y = y - view.y - sprite.origin_y
+                x = real_x - view.x - sprite.origin_x + view.xport
+                y = real_y - view.y - sprite.origin_y + view.xport
                 w = max(1, self.image.get_width())
                 h = max(1, self.image.get_height())
                 new_rect = self.image.get_rect()
@@ -4462,6 +4464,10 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                                x + w <= view.xport + view.width and
                                y >= view.yport and
                                y + h <= view.yport + view.height)
+                within_view = (x + w >= view.xport and
+                               x <= view.xport + view.width and
+                               y + h >= view.yport and
+                               y <= view.yport + view.height)
 
                 if not original_used and inside_view:
                     original_used = True
@@ -4469,7 +4475,7 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                         self.dirty = 0
                     else:
                         self.rect = new_rect
-                else:
+                elif within_view:
                     if inside_view:
                         img = self.image
                         rect = new_rect
@@ -4509,6 +4515,10 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                     # Create proxy one-time sprite
                     proxy = _PygameOneTimeSprite(img, rect)
                     game._pygame_sprites.add(proxy, layer=z)
+
+            if not original_used:
+                self.image = pygame.Surface((1, 1))
+                self.image.set_colorkey((0, 0, 0))
 
 
 class _PygameOneTimeSprite(pygame.sprite.DirtySprite):

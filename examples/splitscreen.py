@@ -99,7 +99,7 @@ def main():
             views.append(sge.View(0, 0, 320 * x, 240 * y, 320, 240))
 
     # Create rooms
-    sge.Room(tuple(objects), views=tuple(views), background=background)
+    sge.Room(tuple(objects), 1280, 1024, tuple(views), background)
 
     sge.game.start()
 
