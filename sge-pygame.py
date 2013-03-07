@@ -1571,8 +1571,8 @@ class Game(object):
         h = max(1, image.get_height())
 
         for view in self.current_room.views:
-            rel_x = x - view.x
-            rel_y = y - view.y
+            rel_x = x - view.x + view.xport
+            rel_y = y - view.y + view.yport
             rect = image.get_rect()
             rect.left = round(rel_x * self._xscale + self._x)
             rect.top = round(rel_y * self._yscale + self._y)
@@ -1613,7 +1613,7 @@ class Game(object):
                 w = round(w * self._xscale)
                 h = round(h * self._yscale)
                 cut_rect = pygame.Rect(cut_x, cut_y, w, h)
-                img.self.image.subsurface(cut_rect)
+                img = image.subsurface(cut_rect)
                 rect = pygame.Rect(rel_x, rel_y, w, h)
 
             # Create proxy one-time sprite
@@ -4452,7 +4452,7 @@ class _PygameSprite(pygame.sprite.DirtySprite):
             real_y = y
             for view in views:
                 x = real_x - view.x - sprite.origin_x + view.xport
-                y = real_y - view.y - sprite.origin_y + view.xport
+                y = real_y - view.y - sprite.origin_y + view.yport
                 w = max(1, self.image.get_width())
                 h = max(1, self.image.get_height())
                 new_rect = self.image.get_rect()
