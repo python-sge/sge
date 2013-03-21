@@ -1596,7 +1596,7 @@ class Game(object):
                 if rel_x + w > view.xport + view.width:
                     w -= (rel_x + w) - (view.xport + view.width)
 
-                if y < view.yport:
+                if rel_y < view.yport:
                     cut_y = view.yport - rel_y
                     rel_y = view.yport
                     h -= cut_y
@@ -2188,12 +2188,14 @@ class Background(object):
         for view in game.current_room.views:
             view_x = int(round(view.x * game._xscale))
             view_y = int(round(view.y * game._yscale))
-            view_xport = max(0, int(round(view.xport * game._xscale)))
-            view_yport = max(0, int(round(view.yport * game._yscale)))
-            view_w = int(round(min(view.width, game.width - view.xport) *
-                               game._xscale))
-            view_h = int(round(min(view.height, game.height - view.yport) *
-                               game._yscale))
+            view_xport = max(0, min(int(round(view.xport * game._xscale)),
+                                    background.get_width() - 1))
+            view_yport = max(0, min(int(round(view.yport * game._yscale)),
+                                    background.get_height() - 1))
+            view_w = min(int(round(game.width - view.xport * game._xscale)),
+                         background.get_width() - view_xport)
+            view_h = min(int(round(game.height - view.yport * game._yscale)),
+                         background.get_height() - view_yport)
             surf = background.subsurface(view_xport, view_yport, view_w,
                                          view_h)
             for layer in self.layers:

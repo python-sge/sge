@@ -91,8 +91,7 @@ def main():
     # Create objects
     objects = []
     for i in xrange(4):
-        circle = Circle(random.randrange(0, 1280), random.randrange(0, 1024),
-                        i)
+        circle = Circle(64, 64, i)
         objects.append(circle)
 
     # Create views
