@@ -105,7 +105,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.30"
+__version__ = "0.0.31"
 
 import sys
 import os
@@ -2308,6 +2308,15 @@ class Font(object):
         font.  If the specified font does not exist in either form, a
         default, implementation-dependent font will be used.
 
+        ``name`` can also be a list or tuple of fonts to choose from in
+        order of preference.
+
+        Implementations are supposed, but not required, to attempt to
+        use a compatible font where possible. For example, if the font
+        specified is "Times New Roman" and Times New Roman is not
+        available, compatible fonts such as Liberation Serif should be
+        attempted as well.
+
         All remaining arguments set the initial properties of the font.
         See Font.__doc__ for more information.
 
@@ -2316,11 +2325,31 @@ class Font(object):
 
         """
         assert pygame.font.get_init()
-        self.name = name
         self.size = size
         self.underline = underline
         self.bold = bold
         self.italic = italic
+
+        if isinstance(name, basestring):
+            name = (name,)
+
+        self.name = ''
+        compatible_fonts = (
+            ("Liberation Serif", "Tinos", "Times New Roman",
+             "Nimbus Roman No9 L", "Nimbus Roman", "FreeSerif"),
+            ("Liberation Sans", "Arimo", "Arial", "Nimbus Sans L", "FreeSans"),
+            ("Liberation Sans Narrow", "Arial Narrow")
+            ("Liberation Mono", "Cousine", "Courier New", "Courier",
+             "Nimbus Mono L", "FreeMono", "TexGyreCursor", "Courier Prime"))
+        for n in name:
+            for fonts in compatible_fonts:
+                if n in fonts:
+                    n = ','.join(fonts)
+                    break
+
+            self.name = ','.join((self.name, n))
+
+        self.name = self.name[1:]
 
     def render(self, text, x, y, z, width=None, height=None, color="black",
                halign=ALIGN_LEFT, valign=ALIGN_TOP, anti_alias=True):

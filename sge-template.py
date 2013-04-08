@@ -83,7 +83,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.30"
+__version__ = "0.0.31"
 
 import sys
 import os
@@ -995,6 +995,15 @@ class Font(object):
         specified in ``font_directories``, or the name of a system
         font.  If the specified font does not exist in either form, a
         default, implementation-dependent font will be used.
+
+        ``name`` can also be a list or tuple of fonts to choose from in
+        order of preference.
+
+        Implementations are supposed, but not required, to attempt to
+        use a compatible font where possible. For example, if the font
+        specified is "Times New Roman" and Times New Roman is not
+        available, compatible fonts such as Liberation Serif should be
+        attempted as well.
 
         All remaining arguments set the initial properties of the font.
         See Font.__doc__ for more information.
