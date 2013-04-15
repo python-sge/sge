@@ -2325,31 +2325,40 @@ class Font(object):
 
         """
         assert pygame.font.get_init()
-        self.size = size
-        self.underline = underline
-        self.bold = bold
-        self.italic = italic
 
         if isinstance(name, basestring):
             name = (name,)
 
         self.name = ''
         compatible_fonts = (
-            ("Liberation Serif", "Tinos", "Times New Roman",
-             "Nimbus Roman No9 L", "Nimbus Roman", "FreeSerif"),
-            ("Liberation Sans", "Arimo", "Arial", "Nimbus Sans L", "FreeSans"),
-            ("Liberation Sans Narrow", "Arial Narrow")
-            ("Liberation Mono", "Cousine", "Courier New", "Courier",
-             "Nimbus Mono L", "FreeMono", "TexGyreCursor", "Courier Prime"))
-        for n in name:
-            for fonts in compatible_fonts:
-                if n in fonts:
-                    n = ','.join(fonts)
-                    break
+            ("liberation serif", "tinos", "times new roman",
+             "nimbus roman no9 l", "nimbus roman", "freeserif",
+             "dejavu serif"),
+            ("liberation sans", "arimo", "arial", "nimbus sans l", "freesans",
+             "dejavu sans"),
+            ("liberation sans narrow", "arial narrow"),
+            ("liberation mono", "cousine", "courier new", "courier",
+             "nimbus mono l", "freemono", "texgyrecursor", "courier prime",
+             "dejavu sans mono"))
 
-            self.name = ','.join((self.name, n))
+        try:
+            for n in name:
+                for fonts in compatible_fonts:
+                    if n.lower() in fonts:
+                        n = ','.join((n, ','.join(fonts)))
+                        break
+
+                self.name = ','.join((self.name, n))
+        except TypeError:
+            # Most likely a non-iterable value, such as None, so we
+            # assume the default font is to be used.
+            self.name = ''
 
         self.name = self.name[1:]
+        self.size = size
+        self.underline = underline
+        self.bold = bold
+        self.italic = italic
 
     def render(self, text, x, y, z, width=None, height=None, color="black",
                halign=ALIGN_LEFT, valign=ALIGN_TOP, anti_alias=True):
