@@ -654,6 +654,7 @@ class Game(object):
                     background.blit(b, (self._x, self._y))
                     self._window.blit(background, (0, 0))
                     self._background_changed = False
+                    self._pygame_sprites.clear(self._window, background)
                     for sprite in self._pygame_sprites:
                         sprite.rect = pygame.Rect(0, 0, 1, 1)
                         sprite.image = pygame.Surface((1, 1))
