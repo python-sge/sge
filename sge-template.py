@@ -83,7 +83,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.31"
+__version__ = "0.0.32"
 
 import sys
 import os
@@ -845,9 +845,9 @@ class Sprite(object):
 
     """
 
-    def __init__(self, name, width=None, height=None, origin_x=0, origin_y=0,
-                 transparent=True, fps=DEFAULT_FPS, bbox_x=0, bbox_y=0,
-                 bbox_width=None, bbox_height=None):
+    def __init__(self, name=None, width=None, height=None, origin_x=0,
+                 origin_y=0, transparent=True, fps=DEFAULT_FPS, bbox_x=0,
+                 bbox_y=0, bbox_width=None, bbox_height=None):
         """Create a new Sprite object.
 
         ``name`` indicates the base name of the image files.  Files are
@@ -875,10 +875,14 @@ class Sprite(object):
         reel, with the first frame on the far left and the last frame on
         the far right, and no space in between frames.
 
-        If no image is found based on any of the above methods, a black
-        rectangle will be created at the size specified by ``width`` and
-        ``height``.  If either ``width`` or ``height`` is None, the
-        respective size will default to 16 in this case.
+        ``name`` can also be None, in which case the sprite will be a
+        transparent rectangle at the specified size (with both ``width``
+        and ``height`` defaulting to 32 if they are set to None).  The
+        implementation decides what to assign to the sprite's ``name``
+        attribute, but it is always a string.
+
+        If no image is found based on any of the above methods and
+        ``name`` is not None, IOError will be raised.
 
         If ``width`` or ``height`` is set to None, the respective size
         will be taken from the largest animation frame.  If

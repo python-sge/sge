@@ -105,7 +105,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.31"
+__version__ = "0.0.32"
 
 import sys
 import os
@@ -1714,9 +1714,9 @@ class Sprite(object):
             self._transparent = value
             self._refresh()
 
-    def __init__(self, name, width=None, height=None, origin_x=0, origin_y=0,
-                 transparent=True, fps=DEFAULT_FPS, bbox_x=0, bbox_y=0,
-                 bbox_width=None, bbox_height=None):
+    def __init__(self, name=None, width=None, height=None, origin_x=0,
+                 origin_y=0, transparent=True, fps=DEFAULT_FPS, bbox_x=0,
+                 bbox_y=0, bbox_width=None, bbox_height=None):
         """Create a new Sprite object.
 
         ``name`` indicates the base name of the image files.  Files are
@@ -1744,10 +1744,14 @@ class Sprite(object):
         reel, with the first frame on the far left and the last frame on
         the far right, and no space in between frames.
 
-        If no image is found based on any of the above methods, a black
-        rectangle will be created at the size specified by ``width`` and
-        ``height``.  If either ``width`` or ``height`` is None, the
-        respective size will default to 16 in this case.
+        ``name`` can also be None, in which case the sprite will be a
+        transparent rectangle at the specified size (with both ``width``
+        and ``height`` defaulting to 32 if they are set to None).  The
+        implementation decides what to assign to the sprite's ``name``
+        attribute, but it is always a string.
+
+        If no image is found based on any of the above methods and
+        ``name`` is not None, IOError will be raised.
 
         If ``width`` or ``height`` is set to None, the respective size
         will be taken from the largest animation frame.  If
@@ -1761,7 +1765,7 @@ class Sprite(object):
         created.
 
         """
-        assert name
+        print('Creating sprite "{0}"'.format(name))
         self.name = name
 
         self._transparent = None
@@ -1769,83 +1773,101 @@ class Sprite(object):
         self._images = []
         self._masks = {}
 
-        paths = [os.path.join('data', 'images'), 'images',
-                 os.path.join('data', 'sprites'), 'sprites',
-                 os.path.join('data', 'backgrounds'), 'backgrounds']
         fname_single = None
         fname_frames = []
         fname_strip = None
 
-        for path in image_directories:
-            if os.path.isdir(path):
-                fnames = os.listdir(path)
-                for fname in fnames:
-                    full_fname = os.path.join(path, fname)
-                    if fname.startswith(name) and os.path.isfile(full_fname):
-                        root, ext = os.path.splitext(fname)
-                        if root.rsplit('-', 1)[0] == name:
-                            split = root.rsplit('-', 1)
-                        elif root.split('_', 1)[0] == name:
-                            split = root.rsplit('_', 1)
-                        else:
-                            split = (name, '')
+        print("Current image directories:")
+        for d in image_directories:
+            print(os.path.normpath(os.path.abspath(d)))
 
-                        if root == name:
-                            fname_single = full_fname
-                        elif split[1].isdigit():
-                            n = int(split[1])
-                            while len(fname_frames) - 1 < n:
-                                fname_frames.append(None)
-                            fname_frames[n] = full_fname
-                        elif (split[1].startswith('strip') and
-                              split[1][5:].isdigit()):
-                            fname_strip = full_fname
+        if name is not None:
+            for path in image_directories:
+                if os.path.isdir(path):
+                    fnames = os.listdir(path)
+                    for fname in fnames:
+                        full_fname = os.path.join(path, fname)
+                        if fname.startswith(name) and os.path.isfile(full_fname):
+                            root, ext = os.path.splitext(fname)
+                            if root.rsplit('-', 1)[0] == name:
+                                split = root.rsplit('-', 1)
+                            elif root.split('_', 1)[0] == name:
+                                split = root.rsplit('_', 1)
+                            else:
+                                split = (name, '')
 
-        if fname_single:
-            # Load the single image
-            try:
-                img = pygame.image.load(fname_single)
-                self._baseimages.append(img)
-            except pygame.error:
-                print("Ignored {0}; not a valid image.".format(fname_single))
+                            if root == name:
+                                fname_single = full_fname
+                            elif split[1].isdigit():
+                                n = int(split[1])
+                                while len(fname_frames) - 1 < n:
+                                    fname_frames.append(None)
+                                fname_frames[n] = full_fname
+                            elif (split[1].startswith('strip') and
+                                  split[1][5:].isdigit()):
+                                fname_strip = full_fname
 
-        if not self._baseimages and any(fname_frames):
-            # Load the multiple images
-            for fname in fname_frames:
-                if fname:
-                    try:
-                        self._baseimages.append(pygame.image.load(fname))
-                    except pygame.error:
-                        print("Ignored {0}; not a valid image.".format(fname))
-
-        if not self._baseimages and fname_strip:
-            # Load the strip (sprite sheet)
-            root, ext = os.path.splitext(os.path.basename(fname_strip))
-            assert '-' in root or '_' in root
-            assert (root.rsplit('-', 1)[0] == name or
-                    root.rsplit('_', 1)[0] == name)
-            if root.rsplit('-', 1)[0] == name:
-                split = root.rsplit('-', 1)
-            else:
-                split = root.rsplit('_', 1)
-
-            try:
-                sheet = pygame.image.load(fname_strip)
-                assert split[1][5:].isdigit()
-                n = int(split[1][5:])
-
-                img_w = max(1, sheet.get_width()) // n
-                img_h = max(1, sheet.get_height())
-                for x in xrange(0, img_w * n, img_w):
-                    rect = pygame.Rect(x, 0, img_w, img_h)
-                    img = sheet.subsurface(rect)
+            if fname_single:
+                # Load the single image
+                try:
+                    img = pygame.image.load(fname_single)
                     self._baseimages.append(img)
-            except pygame.error:
-                print("Ignored {0}; not a valid image.".format(fname_strip))
+                except pygame.error:
+                    print("Ignored {0}; not a valid image.".format(fname_single))
 
-        if not self._baseimages:
-            # Generate placeholder image
-            img = pygame.Surface((16, 16))
+            if not self._baseimages and any(fname_frames):
+                # Load the multiple images
+                for fname in fname_frames:
+                    if fname:
+                        try:
+                            self._baseimages.append(pygame.image.load(fname))
+                        except pygame.error:
+                            print("Ignored {0}; not a valid image.".format(fname))
+
+            if not self._baseimages and fname_strip:
+                # Load the strip (sprite sheet)
+                root, ext = os.path.splitext(os.path.basename(fname_strip))
+                assert '-' in root or '_' in root
+                assert (root.rsplit('-', 1)[0] == name or
+                        root.rsplit('_', 1)[0] == name)
+                if root.rsplit('-', 1)[0] == name:
+                    split = root.rsplit('-', 1)
+                else:
+                    split = root.rsplit('_', 1)
+
+                try:
+                    sheet = pygame.image.load(fname_strip)
+                    assert split[1][5:].isdigit()
+                    n = int(split[1][5:])
+
+                    img_w = max(1, sheet.get_width()) // n
+                    img_h = max(1, sheet.get_height())
+                    for x in xrange(0, img_w * n, img_w):
+                        rect = pygame.Rect(x, 0, img_w, img_h)
+                        img = sheet.subsurface(rect)
+                        self._baseimages.append(img)
+                except pygame.error:
+                    print("Ignored {0}; not a valid image.".format(fname_strip))
+
+            if not self._baseimages:
+                msg = 'Files for sprite name "{0}" not found.'.format(name)
+                raise IOError(msg)
+        else:
+            # Name is None; default to a blank rectangle.
+            if width is None:
+                width = 32
+            if height is None:
+                height = 32
+
+            # Choose name
+            prefix = "sge-pygame-dynamicsprite"
+            i = 0
+            while "{0}_{1}N".format(prefix, i) in game.sprites:
+                i += 1
+            self.name = "{0}_{1}N".format(prefix, i)
+
+            img = pygame.Surface((width, height))
+            img.set_colorkey((0, 0, 0))
             self._baseimages.append(img)
 
         if width is None:
