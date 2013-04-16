@@ -83,7 +83,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.32"
+__version__ = "0.0.33"
 
 import sys
 import os
@@ -843,6 +843,13 @@ class Sprite(object):
         name: The name of the sprite given when it was created.  See
             Sprite.__init__.__doc__ for more information.
 
+    Sprite methods:
+        draw_dot: Draw a single-pixel dot.
+        draw_line: Draw a line segment between the given points.
+        draw_rectangle: Draw a rectangle at the given position.
+        draw_ellipse: Draw an ellipse at the given position.
+        draw_circle: Draw a circle at the given position.
+
     """
 
     def __init__(self, name=None, width=None, height=None, origin_x=0,
@@ -894,6 +901,112 @@ class Sprite(object):
 
         A game object must exist before an object of this class is
         created.
+
+        """
+        pass
+
+    def draw_dot(self, x, y, color, frame=None):
+        """Draw a single-pixel dot.
+
+        ``x`` and ``y`` indicate the location in the sprite to draw the
+        dot, where x=0, y=0 is the origin and x and y increase toward
+        the right and bottom, respectively.  ``color`` indicates the
+        color of the dot.  ``frame`` indicates the frame of the sprite
+        to draw on, where 0 is the first frame; set to None to draw on
+        all frames.
+
+        """
+        pass
+
+    def draw_line(self, x1, y1, x2, y2, color, thickness=1, anti_alias=False,
+                  frame=None):
+        """Draw a line segment between the given points.
+
+        ``x1``, ``y1``, ``x2``, and ``y2`` indicate the location in the
+        sprite of the points between which to draw the line segment,
+        where x=0, y=0 is the origin and x and y increase toward the
+        right and bottom, respectively.  ``color`` indicates the color
+        of the line segment.  ``thickness`` indicates the thickness of
+        the line segment in pixels.  ``anti_alias`` indicates whether or
+        not anti-aliasing should be used.  ``frame`` indicates the frame
+        of the sprite to draw on, where 0 is the first frame; set to
+        None to draw on all frames.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this method will act like ``anti_alias`` is
+        False.
+
+        """
+        pass
+
+    def draw_rectangle(self, x, y, width, height, fill=None, outline=None,
+                       outline_thickness=1, frame=None):
+        """Draw a rectangle at the given position.
+
+        ``x`` and ``y`` indicate the location in the sprite to position
+        the top-left corner of the rectangle, where x=0, y=0 is the
+        origin and x and y increase toward the right and bottom,
+        respectively.  ``width`` and ``height`` indicate the size of the
+        rectangle.  ``fill`` indicates the color of the fill of the
+        rectangle; set to None for no fill.  ``outline`` indicates the
+        color of the outline of the rectangle; set to None for no
+        outline.  ``outline_thickness`` indicates the thickness of the
+        outline in pixels (ignored if there is no outline).  ``frame``
+        indicates the frame of the sprite to draw on, where 0 is the
+        first frame; set to None to draw on all frames.
+
+        """
+        pass
+
+    def draw_ellipse(self, x, y, width, height, fill=None, outline=None,
+                     outline_thickness=1, anti_alias=False, frame=None):
+        """Draw an ellipse at the given position.
+
+        ``x`` and ``y`` indicate the location in the sprite to position
+        the top-left corner of the imaginary rectangle containing the
+        ellipse, where x=0, y=0 is the origin and x and y increase
+        toward the right and bottom, respectively.  ``width`` and
+        ``height`` indicate the size of the ellipse.  ``fill`` indicates
+        the color of the fill of the ellipse; set to None for no fill.
+        ``outline`` indicates the color of the outline of the ellipse;
+        set to None for no outline.  ``outline_thickness`` indicates the
+        thickness of the outline in pixels (ignored if there is no
+        outline).  ``anti_alias`` indicates whether or not anti-aliasing
+        should be used on the outline.  ``frame`` indicates the frame of
+        the sprite to draw on, where 0 is the first frame; set to None
+        to draw on all frames.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this method will act like ``anti_alias`` is
+        False.
+
+        """
+        pass
+
+    def draw_circle(self, x, y, z, radius, fill=None, outline=None,
+                    outline_thickness=1, frame=None):
+        """Draw a circle at the given position.
+
+        ``x`` and ``y`` indicate the location in the sprite to position
+        the center of the circle, where x=0, y=0 is the origin and x and
+        y increase toward the right and bottom, respectively.
+        ``radius`` indicates the radius of the circle in pixels.
+        ``fill`` indicates the color of the fill of the circle; set to
+        None for no fill.  ``outline`` indicates the color of the
+        outline of the circle; set to None for no outline.
+        ``outline_thickness`` indicates the thickness of the outline in
+        pixels (ignored if there is no outline).  ``anti_alias``
+        indicates whether or not anti-aliasing should be used on the
+        outline.  ``frame`` indicates the frame of the sprite to draw
+        on, where 0 is the first frame; set to None to draw on all
+        frames.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this method will act like ``anti_alias`` is
+        False.
 
         """
         pass
