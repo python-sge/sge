@@ -1095,11 +1095,14 @@ class Font(object):
     """Font handling class.
 
     All Font objects have the following attributes:
-        name: The name of the font.  Set to None for the default font.
         size: The height of the font in pixels.
         underline: Whether or not underlined rendering is enabled.
         bold: Whether or not bold rendering is enabled.
         italic: Whether or not italic rendering is enabled.
+
+    The following read-only attributes are also available:
+        name: The name of the font given when it was created.  See
+            Sound.__init__.__doc__ for more information.
 
     """
 
