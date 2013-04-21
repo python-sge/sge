@@ -72,9 +72,6 @@ class Circle(sge.StellarClass):
         my_view.x = self.x - (my_view.width // 2)
         my_view.y = self.y - (my_view.height // 2)
 
-        sge.game.draw_line(self.x - 64, self.y, self.x + 64, self.y, self.z + 1,
-                           'black')
-
 
 def main():
     # Create Game object

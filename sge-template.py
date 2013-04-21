@@ -83,7 +83,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.33"
+__version__ = "0.0.34"
 
 import sys
 import os
@@ -209,11 +209,6 @@ class Game(object):
         end: Properly end the game.
         pause: Pause the game.
         unpause: Unpause the game.
-        draw_dot: Draw a single-pixel dot.
-        draw_line: Draw a line segment between the given points.
-        draw_rectangle: Draw a rectangle at the given position.
-        draw_ellipse: Draw an ellipse at the given position.
-        draw_circle: Draw a circle at the given position.
         sound_stop_all: Stop playback of all sounds.
         get_key_pressed: Return whether or not a given key is pressed.
         get_mouse_button_pressed: Return whether or not a given mouse
@@ -327,108 +322,6 @@ class Game(object):
     def unpause(self):
         """Unpause the game."""
         pass
-
-    def draw_dot(self, x, y, z, color):
-        """Draw a single-pixel dot.
-
-        ``x`` and ``y`` indicate the location in the room to draw the
-        dot, where the left and top edges of the room are 0 and x and y
-        increase toward the right and bottom.  ``z`` indicates the
-        Z-axis position to draw the dot, where a higher Z value is
-        closer to the viewer.  ``color`` indicates the color of the dot.
-
-        """
-        pass
-
-    def draw_line(self, x1, y1, x2, y2, z, color, thickness=1,
-                  anti_alias=False):
-        """Draw a line segment between the given points.
-
-        ``x1``, ``y1``, ``x2``, and ``y2`` indicate the location in the
-        room of the points between which to draw the line segment, where
-        the left and top edges of the room are 0 and x and y increase
-        toward the right and bottom.  ``z`` indicates the Z-axis
-        position to draw the line, where a higher Z value is closer to
-        the viewer.  ``color`` indicates the color of the line segment.
-        ``thickness`` indicates the thickness of the line segment in
-        pixels.  ``anti_alias`` indicates whether or not anti-aliasing
-        should be used.
-
-        Support for anti-aliasing is optional in Stellar Game Engine
-        implementations.  If the implementation used does not support
-        anti-aliasing, this function will act like ``anti_alias`` is
-        False.
-
-        """
-        pass
-
-    def draw_rectangle(self, x, y, z, width, height, fill=None, outline=None,
-                       outline_thickness=1):
-        """Draw a rectangle at the given position.
-
-        ``x`` and ``y`` indicate the location in the room to position
-        the top-left corner of the rectangle, where the left and top
-        edges of the room are 0 and x and y increase toward the right
-        and bottom.  ``z`` indicates the Z-axis position to draw the
-        rectangle, where a higher Z value is closer to the viewer.
-        ``width`` and ``height`` indicate the size of the rectangle.
-        ``fill`` indicates the color of the fill of the rectangle; set
-        to None for no fill.  ``outline`` indicates the color of the
-        outline of the rectangle; set to None for no outline.
-        ``outline_thickness`` indicates the thickness of the outline in
-        pixels (ignored if there is no outline).
-
-        """
-        pass
-
-    def draw_ellipse(self, x, y, z, width, height, fill=None, outline=None,
-                     outline_thickness=1, anti_alias=False):
-        """Draw an ellipse at the given position.
-
-        ``x`` and ``y`` indicate the location in the room to position
-        the top-left corner of the imaginary rectangle containing the
-        ellipse, where the left and top edges of the room are 0 and x
-        and y increase toward the right and bottom.  ``z`` indicates the
-        Z-axis position to draw the ellipse, where a higher Z value is
-        closer to the viewer.  ``width`` and ``height`` indicate the
-        size of the ellipse.  ``fill`` indicates the color of the fill
-        of the ellipse; set to None for no fill.  ``outline`` indicates
-        the color of the outline of the ellipse; set to None for no
-        outline.  ``outline_thickness`` indicates the thickness of the
-        outline in pixels (ignored if there is no outline).
-        ``anti_alias`` indicates whether or not anti-aliasing should be
-        used on the outline.
-
-        Support for anti-aliasing is optional in Stellar Game Engine
-        implementations.  If the implementation used does not support
-        anti-aliasing, this function will act like ``anti_alias`` is
-        False.
-
-        """
-
-    def draw_circle(self, x, y, z, radius, fill=None, outline=None,
-                    outline_thickness=1):
-        """Draw a circle at the given position.
-
-        ``x`` and ``y`` indicate the location in the room to position
-        the center of the circle, where the left and top edges of the
-        room are 0 and x and y increase toward the right and bottom.
-        ``z`` indicates the Z-axis position to draw the circle, where a
-        higher Z value is closer to the viewer.  ``radius`` indicates
-        the radius of the circle in pixels.  ``fill`` indicates the
-        color of the fill of the circle; set to None for no fill.
-        ``outline`` indicates the color of the outline of the circle;
-        set to None for no outline.  ``outline_thickness`` indicates the
-        thickness of the outline in pixels (ignored if there is no
-        outline).  ``anti_alias`` indicates whether or not anti-aliasing
-        should be used on the outline.
-
-        Support for anti-aliasing is optional in Stellar Game Engine
-        implementations.  If the implementation used does not support
-        anti-aliasing, this function will act like ``anti_alias`` is
-        False.
-
-        """
 
     def sound_stop_all(self):
         """Stop playback of all sounds."""
