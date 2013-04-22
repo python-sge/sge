@@ -105,7 +105,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.34"
+__version__ = "0.0.35"
 
 import sys
 import os
@@ -1434,6 +1434,8 @@ class Sprite(object):
         draw_rectangle: Draw a rectangle at the given position.
         draw_ellipse: Draw an ellipse at the given position.
         draw_circle: Draw a circle at the given position.
+        draw_text: Draw the given text at the given position.
+        draw_clear: Erase everything from the sprite.
 
     """
 
@@ -1619,8 +1621,8 @@ class Sprite(object):
                 i += 1
             self.name = "{0}_{1}N".format(prefix, i)
 
-            img = pygame.Surface((width, height))
-            img.set_colorkey((0, 0, 0))
+            img = pygame.Surface((width, height), pygame.SRCALPHA)
+            img.fill(pygame.Color(0, 0, 0, 0))
             self._baseimages.append(img)
 
         if width is None:
@@ -1826,12 +1828,122 @@ class Sprite(object):
             if frame is None or frame % len(self._baseimages) == i:
                 if fill is not None:
                     c = _get_pygame_color(fill)
-                    pygame.draw.circle(img, c, (x, y), radius)
+                    pygame.draw.circle(self._baseimages[i], c, (x, y), radius)
 
                 if outline is not None:
                     c = _get_pygame_color(outline)
-                    pygame.draw.circle(img, c, (x, y), radius,
+                    pygame.draw.circle(self._baseimages[i], c, (x, y), radius,
                                        outline_thickness)
+
+        self._refresh()
+
+    def draw_text(self, font, text, x, y, width=None, height=None,
+                  color="black", halign=ALIGN_LEFT, valign=ALIGN_TOP,
+                  anti_alias=True, frame=None):
+        """Draw the given text at the given position.
+
+        ``font`` indicates the font to use to draw the text.  ``text``
+        indicates the text to draw.  ``x`` and ``y`` indicate the
+        location in the sprite to position the text, where x=0, y=0 is
+        the origin and x and y increase toward the right and bottom,
+        respectively.  ``width`` and ``height`` indicate the size of the
+        imaginary box the text is drawn in; set to None for no imaginary
+        box.  ``color`` indicates the color of the text.  ``halign``
+        indicates the horizontal alignment of the text and can be
+        ALIGN_LEFT, ALIGN_CENTER, or ALIGN_RIGHT.  ``valign`` indicates
+        the vertical alignment and can be ALIGN_TOP, ALIGN_MIDDLE, or
+        ALIGN_BOTTOM.  ``anti_alias`` indicates whether or not anti-
+        aliasing should be used.  ``frame`` indicates the frame of the
+        sprite to draw on, where 0 is the first frame; set to None to
+        draw on all frames.
+
+        If the text does not fit into the imaginary box specified, the
+        text that doesn't fit will be cut off at the bottom if valign is
+        ALIGN_TOP, the top if valign is ALIGN_BOTTOM, or equally the top
+        and bottom if valign is ALIGN_MIDDLE.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this function will act like ``anti_alias`` is False.
+
+        """
+        if not isinstance(font, Font):
+            font = game.fonts[font]
+
+        lines = font._split_text(text, width)
+        width, height = font.get_size(text, x, y, width, height)
+        fake_height = font.get_size(text, x, y, width)[1]
+        color = _get_pygame_color(color)
+
+        text_surf = pygame.Surface((width, fake_height), pygame.SRCALPHA)
+        box_surf = pygame.Surface((width, height), pygame.SRCALPHA)
+        text_rect = text_surf.get_rect()
+        box_rect = box_surf.get_rect()
+
+        for i in xrange(len(lines)):
+            rendered_text = font._font.render(lines[i], anti_alias, color)
+            rect = rendered_text.get_rect()
+            rect.top = i * font._font.get_linesize()
+
+            if halign == ALIGN_LEFT:
+                rect.left = text_rect.left
+            elif halign == ALIGN_RIGHT:
+                rect.right = text_rect.right
+            elif halign == ALIGN_CENTER:
+                rect.centerx = text_rect.centerx
+
+            text_surf.blit(rendered_text, rect)
+
+        if valign == ALIGN_TOP:
+            text_rect.top = box_rect.top
+        elif valign == ALIGN_BOTTOM:
+            text_rect.bottom = box_rect.bottom
+        elif valign == ALIGN_MIDDLE:
+            text_rect.centery = box_rect.centery
+
+        box_surf.blit(text_surf, text_rect)
+
+        if halign == ALIGN_LEFT:
+            box_rect.left = x
+        elif halign == ALIGN_RIGHT:
+            box_rect.right = x
+        elif halign == ALIGN_CENTER:
+            box_rect.centerx = x
+        else:
+            box_rect.left = x
+
+        if valign == ALIGN_TOP:
+            box_rect.top = y
+        elif valign == ALIGN_BOTTOM:
+            box_rect.bottom = y
+        elif valign == ALIGN_MIDDLE:
+            box_rect.centery = y
+        else:
+            box_rect.top = y
+
+        for i in xrange(len(self._baseimages)):
+            if frame is None or frame % len(self._baseimages) == i:
+                self._baseimages[i].blit(box_surf, box_rect)
+
+        self._refresh()
+
+    def draw_clear(self, frame=None):
+        """Erase everything from the sprite.
+
+        ``frame`` indicates the frame of the sprite to clear, where 0 is
+        the first frame; set to None to clear all frames.
+
+        """
+        for i in xrange(len(self._baseimages)):
+            if frame is None or frame % len(self._baseimages) == i:
+                if self._baseimages[i].get_flags() & pygame.SRCALPHA:
+                    color = pygame.Color(0, 0, 0, 0)
+                else:
+                    color = self._baseimages[i].get_colorkey()
+
+                self._baseimages[i].fill(color)
+
+        self._refresh()
 
     def _refresh(self):
         # Set the _images list based on the variables.
@@ -1949,6 +2061,9 @@ class BackgroundLayer(object):
 
     @sprite.setter
     def sprite(self, value):
+        if not isinstance(value, Sprite):
+            value = game.sprites[value]
+
         if self._sprite != value:
             self._sprite = value
             game._background_changed = True
@@ -2212,6 +2327,9 @@ class Font(object):
         name: The name of the font given when it was created.  See
             Sound.__init__.__doc__ for more information.
 
+    Font methods:
+        get_size: Return the size of the given rendered text.
+
     """
 
     @property
@@ -2316,86 +2434,6 @@ class Font(object):
         self.underline = underline
         self.bold = bold
         self.italic = italic
-
-    def render(self, text, x, y, z, width=None, height=None, color="black",
-               halign=ALIGN_LEFT, valign=ALIGN_TOP, anti_alias=True):
-        """Render the given text to the screen.
-
-        ``text`` indicates the text to render.  ``x`` and ``y`` indicate
-        the location in the room to render the text, where the left and
-        top edges of the room are 0 and x and y increase toward the
-        right and bottom.  ``z`` indicates the Z-axis position to render
-        the text, where a higher Z value is closer to the viewer.
-        ``width`` and ``height`` indicate the size of the imaginary box
-        the text is drawn in; set to None for no imaginary box.
-        ``color`` indicates the color of the text.  ``halign`` indicates
-        the horizontal alignment and can be ALIGN_LEFT, ALIGN_CENTER, or
-        ALIGN_RIGHT. ``valign`` indicates the vertical alignment and can
-        be ALIGN_TOP, ALIGN_MIDDLE, or ALIGN_BOTTOM.  ``anti_alias``
-        indicates whether or not anti-aliasing should be used.
-
-        If the text does not fit in the imaginary box specified, the
-        text that doesn't fit will be cut off at the bottom if valign is
-        ALIGN_TOP, the top if valign is ALIGN_BOTTOM, or equally the top
-        and bottom if valign is ALIGN_MIDDLE.
-
-        Support for anti-aliasing is optional in Stellar Game Engine
-        implementations.  If the implementation used does not support
-        anti-aliasing, this function will act like ``anti_alias`` is False.
-
-        """
-        lines = self._split_text(text, width)
-        width, height = self.get_size(text, x, y, width, height)
-        fake_height = self.get_size(text, x, y, width)[1]
-        color = _get_pygame_color(color)
-
-        text_surf = pygame.Surface((width, fake_height), pygame.SRCALPHA)
-        box_surf = pygame.Surface((width, height), pygame.SRCALPHA)
-        text_rect = text_surf.get_rect()
-        box_rect = box_surf.get_rect()
-
-        for i in xrange(len(lines)):
-            rendered_text = self._font.render(lines[i], anti_alias, color)
-            rect = rendered_text.get_rect()
-            rect.top = i * self._font.get_linesize()
-
-            if halign == ALIGN_LEFT:
-                rect.left = text_rect.left
-            elif halign == ALIGN_RIGHT:
-                rect.right = text_rect.right
-            elif halign == ALIGN_CENTER:
-                rect.centerx = text_rect.centerx
-
-            text_surf.blit(rendered_text, rect)
-
-        if valign == ALIGN_TOP:
-            text_rect.top = box_rect.top
-        elif valign == ALIGN_BOTTOM:
-            text_rect.bottom = box_rect.bottom
-        elif valign == ALIGN_MIDDLE:
-            text_rect.centery = box_rect.centery
-
-        box_surf.blit(text_surf, text_rect)
-
-        if halign == ALIGN_LEFT:
-            box_rect.left = x
-        elif halign == ALIGN_RIGHT:
-            box_rect.right = x
-        elif halign == ALIGN_CENTER:
-            box_rect.centerx = x
-        else:
-            box_rect.left = x
-
-        if valign == ALIGN_TOP:
-            box_rect.top = y
-        elif valign == ALIGN_BOTTOM:
-            box_rect.bottom = y
-        elif valign == ALIGN_MIDDLE:
-            box_rect.centery = y
-        else:
-            box_rect.top = y
-
-        game._draw_surface(box_surf, box_rect.left, box_rect.top, z)
 
     def get_size(self, text, x, y, width=None, height=None):
         """Return the size of the given rendered text.

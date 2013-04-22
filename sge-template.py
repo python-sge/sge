@@ -83,7 +83,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.34"
+__version__ = "0.0.35"
 
 import sys
 import os
@@ -742,6 +742,8 @@ class Sprite(object):
         draw_rectangle: Draw a rectangle at the given position.
         draw_ellipse: Draw an ellipse at the given position.
         draw_circle: Draw a circle at the given position.
+        draw_text: Draw the given text at the given position.
+        draw_clear: Erase everything from the sprite.
 
     """
 
@@ -878,7 +880,7 @@ class Sprite(object):
         """
         pass
 
-    def draw_circle(self, x, y, z, radius, fill=None, outline=None,
+    def draw_circle(self, x, y, radius, fill=None, outline=None,
                     outline_thickness=1, frame=None):
         """Draw a circle at the given position.
 
@@ -900,6 +902,47 @@ class Sprite(object):
         implementations.  If the implementation used does not support
         anti-aliasing, this method will act like ``anti_alias`` is
         False.
+
+        """
+        pass
+
+    def draw_text(self, font, text, x, y, width=None, height=None,
+                  color="black", halign=ALIGN_LEFT, valign=ALIGN_TOP,
+                  anti_alias=True, frame=None):
+        """Draw the given text at the given position.
+
+        ``font`` indicates the font to use to draw the text.  ``text``
+        indicates the text to draw.  ``x`` and ``y`` indicate the
+        location in the sprite to position the text, where x=0, y=0 is
+        the origin and x and y increase toward the right and bottom,
+        respectively.  ``width`` and ``height`` indicate the size of the
+        imaginary box the text is drawn in; set to None for no imaginary
+        box.  ``color`` indicates the color of the text.  ``halign``
+        indicates the horizontal alignment of the text and can be
+        ALIGN_LEFT, ALIGN_CENTER, or ALIGN_RIGHT.  ``valign`` indicates
+        the vertical alignment and can be ALIGN_TOP, ALIGN_MIDDLE, or
+        ALIGN_BOTTOM.  ``anti_alias`` indicates whether or not anti-
+        aliasing should be used.  ``frame`` indicates the frame of the
+        sprite to draw on, where 0 is the first frame; set to None to
+        draw on all frames.
+
+        If the text does not fit into the imaginary box specified, the
+        text that doesn't fit will be cut off at the bottom if valign is
+        ALIGN_TOP, the top if valign is ALIGN_BOTTOM, or equally the top
+        and bottom if valign is ALIGN_MIDDLE.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this function will act like ``anti_alias`` is False.
+
+        """
+        pass
+
+    def draw_clear(self, frame=None):
+        """Erase everything from the sprite.
+
+        ``frame`` indicates the frame of the sprite to clear, where 0 is
+        the first frame; set to None to clear all frames.
 
         """
         pass
@@ -997,6 +1040,9 @@ class Font(object):
         name: The name of the font given when it was created.  See
             Sound.__init__.__doc__ for more information.
 
+    Font methods:
+        get_size: Return the size of the given rendered text.
+
     """
 
     def __init__(self, name=None, size=12, underline=False, bold=False,
@@ -1023,35 +1069,6 @@ class Font(object):
 
         A game object must exist before an object of this class is
         created.
-
-        """
-        pass
-
-    def render(self, text, x, y, z, width=None, height=None, color="black",
-               halign=ALIGN_LEFT, valign=ALIGN_TOP, anti_alias=True):
-        """Render the given text to the screen.
-
-        ``text`` indicates the text to render.  ``x`` and ``y`` indicate
-        the location in the room to render the text, where the left and
-        top edges of the room are 0 and x and y increase toward the
-        right and bottom.  ``z`` indicates the Z-axis position to render
-        the text, where a higher Z value is closer to the viewer.
-        ``width`` and ``height`` indicate the size of the imaginary box
-        the text is drawn in; set to None for no imaginary box.
-        ``color`` indicates the color of the text.  ``halign`` indicates
-        the horizontal alignment and can be ALIGN_LEFT, ALIGN_CENTER, or
-        ALIGN_RIGHT. ``valign`` indicates the vertical alignment and can
-        be ALIGN_TOP, ALIGN_MIDDLE, or ALIGN_BOTTOM.  ``anti_alias``
-        indicates whether or not anti-aliasing should be used.
-
-        If the text does not fit in the imaginary box specified, the
-        text that doesn't fit will be cut off at the bottom if valign is
-        ALIGN_TOP, the top if valign is ALIGN_BOTTOM, or equally the top
-        and bottom if valign is ALIGN_MIDDLE.
-
-        Support for anti-aliasing is optional in Stellar Game Engine
-        implementations.  If the implementation used does not support
-        anti-aliasing, this function will act like ``anti_alias`` is False.
 
         """
         pass
