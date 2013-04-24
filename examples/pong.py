@@ -71,12 +71,12 @@ class Player(sge.StellarClass):
 
     def event_step(self, time_passed):
         self.yvelocity = (sge.game.get_key_pressed(self.down_key) -
-                          sge.game.get_key_pressed(self.up_key)) * 8
+                          sge.game.get_key_pressed(self.up_key)) * 7
 
         if self.bbox_top < 0:
             self.bbox_top = 0
-        elif self.bbox_bottom >= sge.game.height:
-            self.bbox_bottom = sge.game.height - 1
+        elif self.bbox_bottom > sge.game.height:
+            self.bbox_bottom = sge.game.height
 
 
 class Ball(sge.StellarClass):
@@ -87,6 +87,7 @@ class Ball(sge.StellarClass):
         super(Ball, self).__init__(x, y, 1, glob.ball_sprite, id="ball")
 
     def event_create(self):
+        refresh_hud()
         self.serve()
 
     def event_step(self, time_passed):
@@ -97,8 +98,8 @@ class Ball(sge.StellarClass):
             glob.player1.score += 1
             self.serve(-1)
 
-        if self.bbox_bottom >= sge.game.height:
-            self.bbox_bottom = sge.game.height - 1
+        if self.bbox_bottom > sge.game.height:
+            self.bbox_bottom = sge.game.height
             self.yvelocity = -abs(self.yvelocity)
         elif self.bbox_top < 0:
             self.bbox_top = 0
@@ -110,7 +111,7 @@ class Ball(sge.StellarClass):
         elif other is glob.player2:
             self.xvelocity = -abs(self.xvelocity) - 0.5
 
-        self.yvelocity += (self.y - other.y) / 3
+        self.yvelocity += (self.y - other.y) / 5
 
     def serve(self, direction=1):
         self.x = self.xstart

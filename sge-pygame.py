@@ -3065,8 +3065,8 @@ class StellarClass(object):
     def bbox_bottom(self, value):
         self.yprevious = self._y
         self._bbox_bottom = value
-        self._bbox_top = value - self.bbox_width
-        self._y = self.bbox_top - self.bbox_x
+        self._bbox_top = value - self.bbox_height
+        self._y = self.bbox_top - self.bbox_y
 
     @property
     def xvelocity(self):
