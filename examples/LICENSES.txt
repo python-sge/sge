@@ -5,7 +5,10 @@ files used by these examples.
 
 data/images/circle.png
 data/images/circle_pop-[0-12].png
-Author: onpon4
+data/sounds/bounce.wav
+data/sounds/bounce_wall.wav
+data/sounds/score.wav
+Author: onpon4 <http://onpon4.comule.com>
 License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
 Source: N/A
 

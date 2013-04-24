@@ -25,6 +25,9 @@ class glob(object):
     ball_sprite = None
     hud_sprite = None
     hud_font = None
+    bounce_sound = None
+    bounce_wall_sound = None
+    score_sound = None
 
 
 class Game(sge.Game):
@@ -48,6 +51,7 @@ class Player(sge.StellarClass):
         if value != self.v_score:
             self.v_score = value
             refresh_hud()
+            glob.score_sound.play()
 
     def __init__(self, player=1):
         if player == 1:
@@ -93,25 +97,30 @@ class Ball(sge.StellarClass):
     def event_step(self, time_passed):
         if self.bbox_right < -16:
             glob.player2.score += 1
-            self.serve(1)
+            self.serve(-1)
         elif self.bbox_left > sge.game.width + 16:
             glob.player1.score += 1
-            self.serve(-1)
+            self.serve(1)
 
         if self.bbox_bottom > sge.game.height:
             self.bbox_bottom = sge.game.height
             self.yvelocity = -abs(self.yvelocity)
+            glob.bounce_wall_sound.play()
         elif self.bbox_top < 0:
             self.bbox_top = 0
             self.yvelocity = abs(self.yvelocity)
+            glob.bounce_wall_sound.play()
 
     def event_collision(self, other):
         if other is glob.player1:
             self.xvelocity = abs(self.xvelocity) + 0.5
         elif other is glob.player2:
             self.xvelocity = -abs(self.xvelocity) - 0.5
+        else:
+            return
 
         self.yvelocity += (self.y - other.y) / 5
+        glob.bounce_sound.play()
 
     def serve(self, direction=1):
         if glob.player1.score < 10 and glob.player2.score < 10:
@@ -161,7 +170,7 @@ def main():
                                  origin_y=0)
 
     # Load backgrounds
-    layers = (sge.BackgroundLayer(glob.ball_sprite, 320, 0, -10000,
+    layers = (sge.BackgroundLayer(glob.ball_sprite, 316, 0, -10000,
                                   xrepeat=False),)
     background = sge.Background (layers, "black")
 
@@ -169,7 +178,9 @@ def main():
     glob.hud_font = sge.Font('Liberation Mono', 48)
 
     # Load sounds
-    #TODO
+    glob.bounce_sound = sge.Sound('bounce.wav')
+    glob.bounce_wall_sound = sge.Sound('bounce_wall.wav')
+    glob.score_sound = sge.Sound('score.wav')
 
     # Create objects
     Player(1)

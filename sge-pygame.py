@@ -1627,6 +1627,7 @@ class Sprite(object):
             img = pygame.Surface((width, height), pygame.SRCALPHA)
             img.fill(pygame.Color(0, 0, 0, 0))
             self._baseimages.append(img)
+            print("renamed to {0}".format(self.name))
 
         if width is None:
             width = 1
@@ -1655,7 +1656,7 @@ class Sprite(object):
         self.bbox_width = bbox_width
         self.bbox_height = bbox_height
         self._refresh()
-        game.sprites[name] = self
+        game.sprites[self.name] = self
 
     def draw_dot(self, x, y, color, frame=None):
         """Draw a single-pixel dot.
@@ -1795,7 +1796,7 @@ class Sprite(object):
 
         self._refresh()
 
-    def draw_circle(self, x, y, z, radius, fill=None, outline=None,
+    def draw_circle(self, x, y, radius, fill=None, outline=None,
                     outline_thickness=1, frame=None):
         """Draw a circle at the given position.
 
