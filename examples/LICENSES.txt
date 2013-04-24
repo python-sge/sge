@@ -1,0 +1,24 @@
+This file lists the licenses, authors, and sources for all the data
+files used by these examples. 
+
+========================================================================
+
+data/images/circle.png
+data/images/circle_pop-[0-12].png
+Author: onpon4
+License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+Source: N/A
+
+------------------------------------------------------------------------
+
+data/music/WhereWasI.ogg
+Author: yd <http://opengameart.org/users/yd>
+License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+Source: http://opengameart.org/content/where-was-i
+
+------------------------------------------------------------------------
+
+data/sounds/pop.ogg
+Author: kddekadenz <http://opengameart.org/users/kddekadenz>
+License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+Source: http://opengameart.org/content/stove-switch
