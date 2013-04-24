@@ -33,7 +33,7 @@ class Game(sge.Game):
         if key == 'escape':
             self.end()
 
-        def event_close(self):
+    def event_close(self):
         self.end()
 
 
@@ -71,12 +71,12 @@ class Player(sge.StellarClass):
 
     def event_step(self, time_passed):
         self.yvelocity = (sge.game.get_key_pressed(self.down_key) -
-                          sge.game.get_key_pressed(self.up_key)) * 5
+                          sge.game.get_key_pressed(self.up_key)) * 8
 
         if self.bbox_top < 0:
             self.bbox_top = 0
-        elif self.bbox_bottom >= sge.game.current_room.height:
-            self.bbox_bottom = sge.game.current_room.height - 1
+        elif self.bbox_bottom >= sge.game.height:
+            self.bbox_bottom = sge.game.height - 1
 
 
 class Ball(sge.StellarClass):
@@ -97,13 +97,20 @@ class Ball(sge.StellarClass):
             glob.player1.score += 1
             self.serve(-1)
 
+        if self.bbox_bottom >= sge.game.height:
+            self.bbox_bottom = sge.game.height - 1
+            self.yvelocity = -abs(self.yvelocity)
+        elif self.bbox_top < 0:
+            self.bbox_top = 0
+            self.yvelocity = abs(self.yvelocity)
+
     def event_collision(self, other):
         if other is glob.player1:
-            self.xvelocity = abs(xvelocity) + 0.5
+            self.xvelocity = abs(self.xvelocity) + 0.5
         elif other is glob.player2:
-            self.xvelocity = -abs(xvelocity) - 0.5
+            self.xvelocity = -abs(self.xvelocity) - 0.5
 
-        self.yvelocity += (self.y - other.y) / 2
+        self.yvelocity += (self.y - other.y) / 3
 
     def serve(self, direction=1):
         self.x = self.xstart
@@ -129,9 +136,10 @@ def main():
 
     # Load sprites
     glob.paddle_sprite = sge.Sprite(width=8, height=48, origin_x=4,
-                                    origin_y=24)
+                                    origin_y=24, bbox_x=-4, bbox_y=-24)
     glob.paddle_sprite.draw_rectangle(0, 0, 8, 48, "white")
-    glob.ball_sprite = sge.Sprite(width=8, height=8, origin_x=4, origin_y=4)
+    glob.ball_sprite = sge.Sprite(width=8, height=8, origin_x=4, origin_y=4,
+                                  bbox_x=-4, bbox_y=-4)
     glob.ball_sprite.draw_rectangle(0, 0, 8, 8, "white")
     glob.hud_sprite = sge.Sprite(width=320, height=160, origin_x=160,
                                  origin_y=0)
@@ -159,9 +167,9 @@ def main():
     views = (sge.View(0, 0),)
 
     # Create rooms
-    room1 = Room(objects, views=views, background=background)
+    room1 = sge.Room(objects, views=views, background=background)
 
-    game.start()
+    sge.game.start()
 
 
 if __name__ == '__main__':
