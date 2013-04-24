@@ -73,6 +73,9 @@ Classes:
     Room: Class used for game rooms, e.g. levels.
     View: Class used for views in rooms.
 
+Functions:
+    create_object: Create an object in the current room.
+
 Implementation-specific information:
 This implementation supports hardware rendering, which can improve
 performance in some cases.  It is not enabled by default.  To enable it,
@@ -105,7 +108,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.35"
+__version__ = "0.0.36"
 
 import sys
 import os
@@ -4591,6 +4594,20 @@ class _FakeFont(object):
 
     def get_size(self, text, x, y, width=None, height=None):
         return (1, 1)
+
+
+def create_object(cls, *args, **kwargs):
+    """Create an object in the current room.
+
+    ``cls`` is the class (derived from StellarClass) to create an object
+    of.  ``args`` and ``kwargs`` are passed on to cls.__init__ as
+    arguments.
+
+    Calling this function is equivalent to:
+        sge.game.current_room.add(cls(*args, **kwargs))
+
+    """
+    game.current_room.add(cls(*args, **kwargs))
 
 
 def _scale(surface, width, height):

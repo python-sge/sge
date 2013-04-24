@@ -73,6 +73,9 @@ Classes:
     Room: Class used for game rooms, e.g. levels.
     View: Class used for views in rooms.
 
+Functions:
+    create_object: Create an object in the current room.
+
 Implementation-specific information:
 [insert info here]
 
@@ -83,7 +86,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.35"
+__version__ = "0.0.36"
 
 import sys
 import os
@@ -2086,3 +2089,17 @@ class View(object):
         self.yport = yport
         self.width = width if width else game.width - xport
         self.height = height if height else game.height - yport
+
+
+def create_object(cls, *args, **kwargs):
+    """Create an object in the current room.
+
+    ``cls`` is the class (derived from StellarClass) to create an object
+    of.  ``args`` and ``kwargs`` are passed on to cls.__init__ as
+    arguments.
+
+    Calling this function is equivalent to:
+        sge.game.current_room.add(cls(*args, **kwargs))
+
+    """
+    game.current_room.add(cls(*args, **kwargs))
