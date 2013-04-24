@@ -86,7 +86,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.36"
+__version__ = "0.0.37"
 
 import sys
 import os
@@ -97,7 +97,7 @@ import math
 __all__ = ['Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',
            'Music', 'StellarClass', 'Room', 'View', 'game', 'ALIGN_LEFT',
            'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP', 'ALIGN_MIDDLE',
-           'ALIGN_BOTTOM']
+           'ALIGN_BOTTOM', 'create_object']
 # Except in extreme cases, these constants should not be modified.
 DEFAULT_SCREENWIDTH = 640
 DEFAULT_SCREENHEIGHT = 480
