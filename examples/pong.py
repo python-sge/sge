@@ -114,20 +114,35 @@ class Ball(sge.StellarClass):
         self.yvelocity += (self.y - other.y) / 5
 
     def serve(self, direction=1):
-        self.x = self.xstart
-        self.y = self.ystart
-        self.xvelocity = 3 * direction
-        self.yvelocity = 0
+        if glob.player1.score < 10 and glob.player2.score < 10:
+            self.x = self.xstart
+            self.y = self.ystart
+            self.xvelocity = 3 * direction
+            self.yvelocity = 0
+        else:
+            glob.hud_sprite.draw_clear()
+            x = glob.hud_sprite.width / 2
+            p1score = glob.player1.score
+            p2score = glob.player2.score
+            p1text = "WIN" if p1score > p2score else "LOSE"
+            p2text = "WIN" if p2score > p1score else "LOSE"
+            glob.hud_sprite.draw_text(glob.hud_font, p1text, x - 16, 16,
+                                      color="white", halign=sge.ALIGN_RIGHT,
+                                      valign=sge.ALIGN_TOP)
+            glob.hud_sprite.draw_text(glob.hud_font, p2text, x + 16, 16,
+                                      color="white", halign=sge.ALIGN_LEFT,
+                                      valign=sge.ALIGN_TOP)
+            self.destroy()
 
 
 def refresh_hud():
     glob.hud_sprite.draw_clear()
     x = glob.hud_sprite.width / 2
-    glob.hud_sprite.draw_text(glob.hud_font, str(glob.player1.score), x - 8, 8,
-                              color="white", halign=sge.ALIGN_RIGHT,
+    glob.hud_sprite.draw_text(glob.hud_font, str(glob.player1.score), x - 16,
+                              16, color="white", halign=sge.ALIGN_RIGHT,
                               valign=sge.ALIGN_TOP)
-    glob.hud_sprite.draw_text(glob.hud_font, str(glob.player2.score), x + 8, 8,
-                              color="white", halign=sge.ALIGN_LEFT,
+    glob.hud_sprite.draw_text(glob.hud_font, str(glob.player2.score), x + 16,
+                              16, color="white", halign=sge.ALIGN_LEFT,
                               valign=sge.ALIGN_TOP)
 
 
@@ -151,7 +166,7 @@ def main():
     background = sge.Background (layers, "black")
 
     # Load fonts
-    glob.hud_font = sge.Font('Liberation Mono', 80)
+    glob.hud_font = sge.Font('Liberation Mono', 48)
 
     # Load sounds
     #TODO
