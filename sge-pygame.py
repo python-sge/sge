@@ -659,7 +659,7 @@ class Game(object):
                         sprite.image.set_colorkey((0, 0, 0))
                     self._pygame_sprites.update()
                     self._pygame_sprites.draw(self._window)
-                    dirty = self._window.get_rect()
+                    dirty = [self._window.get_rect()]
                 else:
                     self._pygame_sprites.clear(self._window, background)
                     self._pygame_sprites.update()
@@ -1305,70 +1305,22 @@ class Game(object):
             if hardware_rendering:
                 flags |= pygame.HWSURFACE | pygame.DOUBLEBUF
 
+            #self._window = pygame.display.set_mode(
+            #    (int(round(self.width * self._xscale)),
+            #     int(round(self.height * self._yscale))), flags)
             self._window = pygame.display.set_mode(
-                (int(round(self.width * self._xscale)),
-                 int(round(self.height * self._yscale))), flags)
+                (self._window_width, self._window_height), flags)
+
+            w = max(1, self._window.get_width())
+            h = max(1, self._window.get_height())
+            self._x = int(round((w - int(round(self.width * self._xscale))) /
+                                2))
+            self._y = int(round((h - int(round(self.height * self._yscale))) /
+                                2))
 
         # Refresh sprites
         for s in self.sprites:
             self.sprites[s]._refresh()
-
-    def _draw_surface(self, image, x, y, z):
-        # Draw the surface indicated (used in all draw methods), using
-        # the given x and y as locations in the current room, and z.
-        image = _scale(image, *image.get_size())
-        w = max(1, image.get_width())
-        h = max(1, image.get_height())
-
-        for view in self.current_room.views:
-            rel_x = x - view.x + view.xport
-            rel_y = y - view.y + view.yport
-            rect = image.get_rect()
-            rect.left = round(rel_x * self._xscale + self._x)
-            rect.top = round(rel_y * self._yscale + self._y)
-            inside_view = (rel_x >= view.xport and
-                           rel_x + w <= view.xport + view.width and
-                           rel_y >= view.yport and
-                           rel_y + h <= view.yport + view.height)
-
-            if inside_view:
-                img = image
-            else:
-                # Make a cut-off version of the sprite and
-                # adjust the rect accordingly.
-                if rel_x < view.xport:
-                    cut_x = view.xport - rel_x
-                    rel_x = view.xport
-                    w -= cut_x
-                else:
-                    cut_x = 0
-
-                if rel_x + w > view.xport + view.width:
-                    w -= (rel_x + w) - (view.xport + view.width)
-
-                if rel_y < view.yport:
-                    cut_y = view.yport - rel_y
-                    rel_y = view.yport
-                    h -= cut_y
-                else:
-                    cut_y = 0
-
-                if rel_y + h > view.yport + view.height:
-                    h -= (rel_y + h) - (view.yport + view.height)
-
-                rel_x = round(rel_x * self._xscale) + self._x
-                rel_y = round(rel_y * self._yscale) + self._y
-                cut_x = round(cut_x * self._xscale) + self._x
-                cut_y = round(cut_y * self._yscale) + self._y
-                w = round(w * self._xscale)
-                h = round(h * self._yscale)
-                cut_rect = pygame.Rect(cut_x, cut_y, w, h)
-                img = image.subsurface(cut_rect)
-                rect = pygame.Rect(rel_x, rel_y, w, h)
-
-            # Create proxy one-time sprite
-            proxy = _PygameOneTimeSprite(img, rect)
-            game._pygame_sprites.add(proxy, layer=z)
 
     def _get_channel(self):
         # Return a channel for a sound effect to use.
@@ -2268,9 +2220,9 @@ class Background(object):
                                     background.get_width() - 1))
             view_yport = max(0, min(int(round(view.yport * game._yscale)),
                                     background.get_height() - 1))
-            view_w = min(int(round(game.width - view.xport * game._xscale)),
+            view_w = min(int(round((game.width - view.xport) * game._xscale)),
                          background.get_width() - view_xport)
-            view_h = min(int(round(game.height - view.yport * game._yscale)),
+            view_h = min(int(round((game.height - view.yport) * game._yscale)),
                          background.get_height() - view_yport)
             surf = background.subsurface(view_xport, view_yport, view_w,
                                          view_h)
@@ -2291,6 +2243,10 @@ class Background(object):
                     x = (x % image_w) - image_w
                 if layer.yrepeat:
                     y = (y % image_h) - image_h
+
+                # Apply the origin so the positions are as expected.
+                x -= layer.sprite.origin_x
+                y -= layer.sprite.origin_y
 
                 if layer.xrepeat and layer.yrepeat:
                     xstart = x

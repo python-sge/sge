@@ -113,9 +113,11 @@ class Ball(sge.StellarClass):
 
     def event_collision(self, other):
         if other is glob.player1:
-            self.xvelocity = abs(self.xvelocity) + 0.5
+            self.bbox_left = glob.player1.bbox_right + 1
+            self.xvelocity = min(abs(self.xvelocity) + 0.5, 15)
         elif other is glob.player2:
-            self.xvelocity = -abs(self.xvelocity) - 0.5
+            self.bbox_right = glob.player2.bbox_left - 1
+            self.xvelocity = max(-abs(self.xvelocity) - 0.5, -15)
         else:
             return
 
@@ -170,7 +172,7 @@ def main():
                                  origin_y=0)
 
     # Load backgrounds
-    layers = (sge.BackgroundLayer(glob.ball_sprite, 316, 0, -10000,
+    layers = (sge.BackgroundLayer(glob.ball_sprite, 320, 0, -10000,
                                   xrepeat=False),)
     background = sge.Background (layers, "black")
 
