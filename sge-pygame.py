@@ -4599,7 +4599,7 @@ def sound_stop_all():
 
 def music_clear_queue():
     """Clear the music queue."""
-    
+    game._music_queue = []
 
 
 def music_stop_all():
