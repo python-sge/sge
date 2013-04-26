@@ -109,7 +109,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.39"
+__version__ = "0.0.40"
 
 import sys
 import os
@@ -3996,9 +3996,6 @@ class Room(object):
         method behaves in the same way that Room.start does.
 
         """
-        if game.current_room is not None:
-            game.current_room.event_room_end()
-
         for sprite in game._pygame_sprites:
             sprite.kill()
 
@@ -4015,17 +4012,30 @@ class Room(object):
 
         self._started = True
 
-    def end(self):
-        """Start the next room.
+    def end(self, next_room=None, resume=True):
+        """End the current room.
 
-        If this room is the last room, the game is ended.  Note that
-        this does not reset the state of this room.  The state of the
-        next room, if any, is reset, however.
+        ``next_room`` indicates the room number of the room to go to
+        next; if set to None, the room after this one is chosen.
+        ``resume`` indicates whether or not to resume the next room
+        instead of restarting it.  If the room chosen as the next room
+        does not exist, the game is ended.
+
+        This triggers this room's ``event_room_end`` and resets the
+        state of this room.
 
         """
-        next_room = self.room_number + 1
-        if next_room < len(game.rooms):
-            game.rooms[next_room].start()
+        self.event_room_end()
+        self._reset()
+
+        if next_room is None:
+            next_room = self.room_number + 1
+
+        if next_room >= -len(game.rooms) and next_room < len(game.rooms):
+            if resume:
+                game.rooms[next_room].resume()
+            else:
+                game.rooms[next_room].start()
         else:
             game.end()
 
@@ -4035,6 +4045,15 @@ class Room(object):
         Called when the room starts.  It is always called after any game
         start events and before any object create events occurring at
         the same time.
+
+        """
+        pass
+
+    def event_room_end(self):
+        """Room end event.
+
+        Called when the room ends.  It is always called before any game
+        end events occurring at the same time.
 
         """
         pass
@@ -4153,15 +4172,6 @@ class Room(object):
 
         It is always called before any game close events occurring at
         the same time.
-
-        """
-        pass
-
-    def event_room_end(self):
-        """Room end event.
-
-        Called when the room ends.  It is always called before any game
-        end events occurring at the same time.
 
         """
         pass

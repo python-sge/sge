@@ -87,7 +87,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.39"
+__version__ = "0.0.40"
 
 import sys
 import os
@@ -1825,12 +1825,17 @@ class Room(object):
         """
         # TODO
 
-    def end(self):
-        """Start the next room.
+    def end(self, next_room=None, resume=True):
+        """End the current room.
 
-        If this room is the last room, the game is ended.  Note that
-        this does not reset the state of this room.  The state of the
-        next room, if any, is reset, however.
+        ``next_room`` indicates the room number of the room to go to
+        next; if set to None, the room after this one is chosen.
+        ``resume`` indicates whether or not to resume the next room
+        instead of restarting it.  If the room chosen as the next room
+        does not exist, the game is ended.
+
+        This triggers this room's ``event_room_end`` and resets the
+        state of this room.
 
         """
         # TODO
@@ -1841,6 +1846,15 @@ class Room(object):
         Called when the room starts.  It is always called after any game
         start events and before any object create events occurring at
         the same time.
+
+        """
+        pass
+
+    def event_room_end(self):
+        """Room end event.
+
+        Called when the room ends.  It is always called before any game
+        end events occurring at the same time.
 
         """
         pass
@@ -1959,15 +1973,6 @@ class Room(object):
 
         It is always called before any game close events occurring at
         the same time.
-
-        """
-        pass
-
-    def event_room_end(self):
-        """Room end event.
-
-        Called when the room ends.  It is always called before any game
-        end events occurring at the same time.
 
         """
         pass
