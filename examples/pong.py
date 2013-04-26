@@ -82,7 +82,7 @@ class Player(sge.StellarClass):
 
         y = sge.game.height / 2
         self.v_score = 0
-        super(Player, self).__init__(x, y, 0, glob.paddle_sprite, id=objname)
+        super(Player, self).__init__(x, y, 0, objname, glob.paddle_sprite)
 
     def event_step(self, time_passed):
         self.yvelocity = (sge.game.get_key_pressed(self.down_key) -
@@ -99,7 +99,7 @@ class Ball(sge.StellarClass):
     def __init__(self):
         x = sge.game.width / 2
         y = sge.game.height / 2
-        super(Ball, self).__init__(x, y, 1, glob.ball_sprite, id="ball")
+        super(Ball, self).__init__(x, y, 1, "ball", glob.ball_sprite)
 
     def event_create(self):
         refresh_hud()
@@ -199,7 +199,7 @@ def main():
     Player(1)
     Player(2)
     glob.ball = Ball()
-    hud = sge.StellarClass(320, 0, -10, glob.hud_sprite,
+    hud = sge.StellarClass(320, 0, -10, sprite=glob.hud_sprite,
                            detects_collisions=False)
     objects = (glob.player1, glob.player2, glob.ball, hud)
 
