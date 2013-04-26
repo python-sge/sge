@@ -75,6 +75,7 @@ Classes:
 
 Functions:
     create_object: Create an object in the current room.
+    sound_stop_all: Stop playback of all sounds.
 
 Implementation-specific information:
 [insert info here]
@@ -86,7 +87,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.38"
+__version__ = "0.0.39"
 
 import sys
 import os
@@ -212,7 +213,6 @@ class Game(object):
         end: Properly end the game.
         pause: Pause the game.
         unpause: Unpause the game.
-        sound_stop_all: Stop playback of all sounds.
         get_key_pressed: Return whether or not a given key is pressed.
         get_mouse_button_pressed: Return whether or not a given mouse
             button is pressed.
@@ -323,10 +323,6 @@ class Game(object):
 
     def unpause(self):
         """Unpause the game."""
-        pass
-
-    def sound_stop_all(self):
-        """Stop playback of all sounds."""
         pass
 
     def get_key_pressed(self, key):
@@ -2102,3 +2098,8 @@ def create_object(cls, *args, **kwargs):
 
     """
     game.current_room.add(cls(*args, **kwargs))
+
+
+def sound_stop_all(self):
+    """Stop playback of all sounds."""
+    pass
