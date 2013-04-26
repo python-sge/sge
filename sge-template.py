@@ -86,7 +86,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.37"
+__version__ = "0.0.38"
 
 import sys
 import os
@@ -298,14 +298,14 @@ class Game(object):
         global game
         game = None
 
-    def pause(self, image=None):
+    def pause(self, sprite=None):
         """Pause the game.
 
-        ``image`` is the image to show when the game is paused.  If set
-        to None, the default image will be shown.  The default image is
-        at the discretion of the Stellar Game Engine implementation, as
-        are any additional visual effects, with the stipulation that the
-        following conditions are met:
+        ``sprite`` is the sprite to show when the game is paused.  If
+        set to None, a default image will be shown.  The default image
+        is at the discretion of the Stellar Game Engine implementation,
+        as are any additional visual effects, with the stipulation that
+        the following conditions are met:
 
             1. The default image must unambiguously demonstrate that the
                 game is paused (the easiest way to do this is to include
@@ -314,10 +314,9 @@ class Game(object):
             3. What was going on within the view before the game was
                 paused must remain visible while the game is paused.
 
-        While the game is paused, all game events will be halted, all
-        objects will be treated like they don't exist, and all sounds
-        and music will be stopped.  Game events whose names start with
-        "event_paused_" will occur during this time.
+        While the game is paused, all game events will be halted.
+        Events whose names start with "event_paused_" will occur during
+        this time instead.
 
         """
         pass

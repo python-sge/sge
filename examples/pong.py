@@ -35,8 +35,19 @@ class Game(sge.Game):
     def event_key_press(self, key):
         if key == 'escape':
             self.end()
+        elif key == 'p':
+            self.pause()
 
     def event_close(self):
+        self.end()
+
+    def event_paused_key_press(self, key):
+        if key == 'escape':
+            self.end()
+        else:
+            self.unpause()
+
+    def event_paused_close(self):
         self.end()
 
 

@@ -108,7 +108,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.37"
+__version__ = "0.0.38"
 
 import sys
 import os
@@ -696,14 +696,14 @@ class Game(object):
         """Properly end the game."""
         self._running = False
 
-    def pause(self, image=None):
+    def pause(self, sprite=None):
         """Pause the game.
 
-        ``image`` is the image to show when the game is paused.  If set
-        to None, the default image will be shown.  The default image is
-        at the discretion of the Stellar Game Engine implementation, as
-        are any additional visual effects, with the stipulation that the
-        following conditions are met:
+        ``sprite`` is the sprite to show when the game is paused.  If
+        set to None, a default image will be shown.  The default image
+        is at the discretion of the Stellar Game Engine implementation,
+        as are any additional visual effects, with the stipulation that
+        the following conditions are met:
 
             1. The default image must unambiguously demonstrate that the
                 game is paused (the easiest way to do this is to include
@@ -712,23 +712,37 @@ class Game(object):
             3. What was going on within the view before the game was
                 paused must remain visible while the game is paused.
 
-        While the game is paused, all game events will be halted, all
-        objects will be treated like they don't exist, and all sounds
-        and music will be stopped.  Game events whose names start with
-        "event_paused_" will occur during this time.
+        While the game is paused, all game events will be halted.
+        Events whose names start with "event_paused_" will occur during
+        this time instead.
 
         """
-        # TODO: Show pause image
+        if sprite is not None:
+            image = sprite._get_image(0)
+        else:
+            try:
+                image = pygame.image.load('sge_pause.png').convert()
+                image.set_colorkey((255, 0, 255))
+            except pygame.error:
+                image = pygame.Surface((16, 16))
+                image.fill((255, 255, 255), pygame.Rect(0, 0, 4, 16))
+                image.fill((255, 255, 255), pygame.Rect(12, 0, 4, 16))
+                image.set_colorkey((0, 0, 0))
+
+        rect = image.get_rect(center=self._window.get_rect().center)
+
         self._paused = True
         screenshot = self._window.copy()
         background = screenshot.copy()
         dimmer = pygame.Surface(self._window.get_size(), pygame.SRCALPHA)
         dimmer.fill(pygame.Color(0, 0, 0, 128))
         background.blit(dimmer, (0, 0))
-        paused_sprites = pygame.sprite.RenderUpdates()
+        background.blit(image, rect)
+        orig_screenshot = screenshot
+        orig_background = background
         self._clock.tick()
 
-        while self._paused:
+        while self._paused and self._running:
             # Events
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
@@ -826,22 +840,26 @@ class Game(object):
                     self._window_height = event.h
                     self._set_mode()
                     self._background_changed = True
+                    screenshot = pygame.transform.scale(orig_screenshot,
+                                                        (event.w, event.h))
+                    background = pygame.transform.scale(orig_background,
+                                                        (event.w, event.h))
 
             # Time management
             self._clock.tick(self.fps)
             
             # Redraw
-            paused_sprites.clear(self._window, background)
-            paused_sprites.update()
-            dirty = paused_sprites.draw(self._window)
+            self._window.blit(background, (0, 0))
 
             if hardware_rendering:
                 pygame.display.flip()
             else:
-                pygame.display.update(dirty)
+                pygame.display.update()
 
         # Restore the look of the screen from before it was paused
         self._window.blit(screenshot, (0, 0))
+        pygame.display.update()
+        self._background_changed = True
 
     def unpause(self):
         """Unpause the game."""
