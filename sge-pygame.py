@@ -109,7 +109,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.40"
+__version__ = "0.0.41"
 
 import sys
 import os
@@ -3108,10 +3108,13 @@ class StellarClass(object):
         else:
             self._frame_time = None
 
-    def __init__(self, x, y, z, sprite=None, visible=True,
+    def __init__(self, x, y, z, id_=None, sprite=None, visible=True,
                  detects_collisions=True, bbox_x=None, bbox_y=None,
                  bbox_width=None, bbox_height=None, collision_ellipse=False,
-                 collision_precise=False, id_=None, **kwargs):
+                 collision_precise=False, xvelocity=0, yvelocity=0,
+                 image_index=0, image_fps=0, image_xscale=1, image_yscale=1,
+                 image_rotation=0, image_alpha=255, image_blend=None,
+                 **kwargs):
         """Create a new StellarClass object.
 
         Arguments set the properties of the object.  See
@@ -3131,8 +3134,7 @@ class StellarClass(object):
         """
         # Since the docs say that ``id`` is a valid keyword argument,
         # you should do this to make sure that that is true.
-        if 'id' in kwargs:
-            id_ = kwargs['id']
+        id_ = kwargs.setdefault('id', id_)
 
         self.xstart = x
         self.ystart = y
@@ -3178,14 +3180,17 @@ class StellarClass(object):
         self._yvelocity = 0
         self._move_direction = 0
         self._speed = 0
+        self.xvelocity = xvelocity
+        self.yvelocity = yvelocity
         self._anim_count = 0
-        self.image_index = 0
-        self.image_fps = self.sprite.fps if self.sprite is not None else 0
-        self.image_xscale = 1
-        self.image_yscale = 1
-        self.image_rotation = 0
-        self.image_alpha = 255
-        self.image_blend = None
+        self.image_index = image_index
+        self.image_fps = (self.sprite.fps if self.sprite is not None else
+                          image_fps)
+        self.image_xscale = image_xscale
+        self.image_yscale = image_yscale
+        self.image_rotation = image_rotation
+        self.image_alpha = image_alpha
+        self.image_blend = image_blend
 
         self._alarms = {}
 

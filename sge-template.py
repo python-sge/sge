@@ -87,7 +87,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.40"
+__version__ = "0.0.41"
 
 import sys
 import os
@@ -1385,10 +1385,13 @@ class StellarClass(object):
 
     """
 
-    def __init__(self, x, y, z, sprite=None, visible=True,
+    def __init__(self, x, y, z, id_=None, sprite=None, visible=True,
                  detects_collisions=True, bbox_x=None, bbox_y=None,
                  bbox_width=None, bbox_height=None, collision_ellipse=False,
-                 collision_precise=False, id_=None, **kwargs):
+                 collision_precise=False, xvelocity=0, yvelocity=0,
+                 image_index=0, image_fps=0, image_xscale=1, image_yscale=1,
+                 image_rotation=0, image_alpha=255, image_blend=None,
+                 **kwargs):
         """Create a new StellarClass object.
 
         Arguments set the properties of the object.  See
