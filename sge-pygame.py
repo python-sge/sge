@@ -121,7 +121,8 @@ import pygame
 __all__ = ['Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',
            'Music', 'StellarClass', 'Room', 'View', 'game', 'ALIGN_LEFT',
            'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP', 'ALIGN_MIDDLE',
-           'ALIGN_BOTTOM', 'create_object']
+           'ALIGN_BOTTOM', 'create_object', 'sound_stop_all',
+           'music_clear_queue', 'music_stop_all']
 # Except in extreme cases, these constants should not be modified.
 DEFAULT_SCREENWIDTH = 640
 DEFAULT_SCREENHEIGHT = 480
