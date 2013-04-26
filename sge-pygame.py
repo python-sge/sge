@@ -411,7 +411,7 @@ class Game(object):
                  scale_proportional=DEFAULT_SCALE_PROPORTIONAL,
                  scale_smooth=DEFAULT_SCALE_SMOOTH, fps=DEFAULT_FPS,
                  delta=DEFAULT_DELTA, delta_min=DEFAULT_DELTA_MIN):
-        """Create a new Game object.
+        """Create a new Game object and assign it to ``game``.
 
         Arguments set the properties of the game.  See Game.__doc__ for
         more information.
@@ -420,6 +420,7 @@ class Game(object):
         # Settings use CD quality and a smaller buffer size for less lag.
         pygame.mixer.pre_init(44100, -16, 2, 1024)
         pygame.init()
+
         global game
         game = self
 
@@ -2187,8 +2188,7 @@ class Background(object):
         """
         # Since the docs say that ``id`` is a valid keyword argument,
         # you should do this to make sure that that is true.
-        if 'id' in kwargs:
-            id_ = kwargs['id']
+        id_ = kwargs.setdefault('id', id_)
 
         self.color = color
 
@@ -4581,9 +4581,23 @@ def create_object(cls, *args, **kwargs):
     game.current_room.add(cls(*args, **kwargs))
 
 
-def sound_stop_all(self):
+def sound_stop_all():
     """Stop playback of all sounds."""
-    # TODO
+    for i in game.sounds:
+        game.sounds[i].stop()
+
+
+def music_clear_queue():
+    """Clear the music queue."""
+    
+
+
+def music_stop_all():
+    """Stop playback of any music and clear the queue."""
+    for i in game.music:
+        game.music[i].stop()
+
+    music_clear_queue()
 
 
 def _scale(surface, width, height):

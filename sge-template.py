@@ -275,14 +275,13 @@ class Game(object):
                  scale_proportional=DEFAULT_SCALE_PROPORTIONAL,
                  scale_smooth=DEFAULT_SCALE_SMOOTH, fps=DEFAULT_FPS,
                  delta=DEFAULT_DELTA, delta_min=DEFAULT_DELTA_MIN):
-        """Create a new Game object.
+        """Create a new Game object and assign it to ``game``.
 
         Arguments set the properties of the game.  See Game.__doc__ for
         more information.
 
         """
-        global game
-        game = self
+        # TODO
 
     def start(self):
         """Start the game at the first room.
@@ -291,12 +290,11 @@ class Game(object):
         If you do this, everything will be reset to its original state.
 
         """
-        pass
+        # TODO
 
     def end(self):
         """Properly end the game."""
-        global game
-        game = None
+        # TODO
 
     def pause(self, sprite=None):
         """Pause the game.
@@ -319,11 +317,11 @@ class Game(object):
         this time instead.
 
         """
-        pass
+        # TODO
 
     def unpause(self):
         """Unpause the game."""
-        pass
+        # TODO
 
     def get_key_pressed(self, key):
         """Return whether or not a given key is pressed.
@@ -331,7 +329,7 @@ class Game(object):
         ``key`` is the key to check.
 
         """
-        pass
+        # TODO
 
     def get_mouse_button_pressed(self, button):
         """Return whether or not a given mouse button is pressed.
@@ -340,7 +338,7 @@ class Game(object):
         is the first mouse button.
 
         """
-        pass
+        # TODO
 
     def get_joystick_axis(self, joystick, axis):
         """Return the position of the given axis.
@@ -361,7 +359,7 @@ class Game(object):
         does not exist.
 
         """
-        pass
+        # TODO
 
     def get_joystick_hat(self, joystick, hat):
         """Return the position of the given HAT.
@@ -383,7 +381,7 @@ class Game(object):
         does not exist.
 
         """
-        pass
+        # TODO
 
     def get_joystick_button_pressed(self, joystick, button):
         """Return whether or not the given button is pressed.
@@ -401,7 +399,7 @@ class Game(object):
         does not exist.
 
         """
-        pass
+        # TODO
 
     def get_joysticks(self):
         """Return the number of joysticks available.
@@ -411,7 +409,7 @@ class Game(object):
         joysticks, this function will always return 0.
 
         """
-        pass
+        # TODO
 
     def get_joystick_axes(self, joystick):
         """Return the number of axes available on the given joystick.
@@ -426,7 +424,7 @@ class Game(object):
         does not exist.
 
         """
-        pass
+        # TODO
 
     def get_joystick_hats(self, joystick):
         """Return the number of HATs available on the given joystick.
@@ -441,7 +439,7 @@ class Game(object):
         does not exist.
 
         """
-        pass
+        # TODO
 
     def get_joystick_buttons(self, joystick):
         """Return the number of buttons available on the given joystick.
@@ -456,7 +454,7 @@ class Game(object):
         does not exist.
 
         """
-        pass
+        # TODO
 
     def event_game_start(self):
         """Game start event.
@@ -796,7 +794,7 @@ class Sprite(object):
         created.
 
         """
-        pass
+        # TODO
 
     def draw_dot(self, x, y, color, frame=None):
         """Draw a single-pixel dot.
@@ -809,7 +807,7 @@ class Sprite(object):
         all frames.
 
         """
-        pass
+        # TODO
 
     def draw_line(self, x1, y1, x2, y2, color, thickness=1, anti_alias=False,
                   frame=None):
@@ -831,7 +829,7 @@ class Sprite(object):
         False.
 
         """
-        pass
+        # TODO
 
     def draw_rectangle(self, x, y, width, height, fill=None, outline=None,
                        outline_thickness=1, frame=None):
@@ -850,7 +848,7 @@ class Sprite(object):
         first frame; set to None to draw on all frames.
 
         """
-        pass
+        # TODO
 
     def draw_ellipse(self, x, y, width, height, fill=None, outline=None,
                      outline_thickness=1, anti_alias=False, frame=None):
@@ -876,7 +874,7 @@ class Sprite(object):
         False.
 
         """
-        pass
+        # TODO
 
     def draw_circle(self, x, y, radius, fill=None, outline=None,
                     outline_thickness=1, frame=None):
@@ -902,7 +900,7 @@ class Sprite(object):
         False.
 
         """
-        pass
+        # TODO
 
     def draw_text(self, font, text, x, y, width=None, height=None,
                   color="black", halign=ALIGN_LEFT, valign=ALIGN_TOP,
@@ -934,7 +932,7 @@ class Sprite(object):
         anti-aliasing, this function will act like ``anti_alias`` is False.
 
         """
-        pass
+        # TODO
 
     def draw_clear(self, frame=None):
         """Erase everything from the sprite.
@@ -943,7 +941,7 @@ class Sprite(object):
         the first frame; set to None to clear all frames.
 
         """
-        pass
+        # TODO
 
 
 class BackgroundLayer(object):
@@ -982,7 +980,7 @@ class BackgroundLayer(object):
         created.
 
         """
-        pass
+        # TODO
 
 
 class Background(object):
@@ -1020,8 +1018,9 @@ class Background(object):
         """
         # Since the docs say that ``id`` is a valid keyword argument,
         # you should do this to make sure that that is true.
-        if 'id' in kwargs:
-            id_ = kwargs['id']
+        id_ = kwargs.setdefault('id', id_)
+
+        # TODO
 
 
 class Font(object):
@@ -1069,7 +1068,7 @@ class Font(object):
         created.
 
         """
-        pass
+        # TODO
 
     def get_size(self, text, x, y, width=None, height=None):
         """Return the size of the given rendered text.
@@ -1080,7 +1079,7 @@ class Font(object):
         tuple in the form (width, height).
 
         """
-        pass
+        # TODO
 
 
 class Sound(object):
@@ -1130,7 +1129,7 @@ class Sound(object):
         created.
 
         """
-        pass
+        # TODO
 
     def play(self, loops=0, maxtime=None, fade_time=None):
         """Play the sound.
@@ -1144,7 +1143,7 @@ class Sound(object):
         the sound at full volume.
 
         """
-        pass
+        # TODO
 
     def stop(self, fade_time=None):
         """Stop the sound.
@@ -1154,15 +1153,15 @@ class Sound(object):
         immediately stop the sound.
 
         """
-        pass
+        # TODO
 
     def pause(self):
         """Pause playback of the sound."""
-        pass
+        # TODO
 
     def unpause(self):
         """Resume playback of the sound if paused."""
-        pass
+        # TODO
 
 
 class Music(object):
@@ -1217,7 +1216,7 @@ class Music(object):
         created.
 
         """
-        pass
+        # TODO
 
     def play(self, start=0, loops=0, maxtime=None, fade_time=None):
         """Play the music.
@@ -1235,7 +1234,7 @@ class Music(object):
         to immediately play the music at full volume.
 
         """
-        pass
+        # TODO
 
     def queue(self, start=0, loops=0, maxtime=None, fade_time=None):
         """Queue the music for playback.
@@ -1246,7 +1245,7 @@ class Music(object):
         See Music.play.__doc__ for information about the arguments.
 
         """
-        pass
+        # TODO
 
     def stop(self, fade_time=None):
         """Stop the music.
@@ -1256,15 +1255,15 @@ class Music(object):
         immediately stop the music.
 
         """
-        pass
+        # TODO
 
     def pause(self):
         """Pause playback of the music."""
-        pass
+        # TODO
 
     def unpause(self):
         """Resume playback of the music if paused."""
-        pass
+        # TODO
 
 
 class StellarClass(object):
@@ -1409,8 +1408,9 @@ class StellarClass(object):
         """
         # Since the docs say that ``id`` is a valid keyword argument,
         # you should do this to make sure that that is true.
-        if 'id' in kwargs:
-            id_ = kwargs['id']
+        id_ = kwargs.setdefault('id', id_)
+
+        # TODO
 
     def collides(self, other, x=None, y=None):
         """Return whether or not this object collides with another.
@@ -1424,7 +1424,7 @@ class StellarClass(object):
         be used.
 
         """
-        pass
+        # TODO
 
     def set_alarm(self, alarm_id, value):
         """Set an alarm.
@@ -1437,7 +1437,7 @@ class StellarClass(object):
         the alarm.
 
         """
-        pass
+        # TODO
 
     def get_alarm(self, alarm_id):
         """Return the count on an alarm.
@@ -1446,11 +1446,11 @@ class StellarClass(object):
         go off.  If the alarm has not been set, None will be returned.
 
         """
-        pass
+        # TODO
 
     def destroy(self):
         """Destroy the object."""
-        pass
+        # TODO
 
     def event_create(self):
         """Create event.
@@ -1692,6 +1692,13 @@ class StellarClass(object):
 
 class Mouse(StellarClass):
 
+    # TODO: This class is not technically required, but it's easier to
+    # implement the Game.mouse attribute this way.  Because users are
+    # not supposed to use this class (it is only to be used internally),
+    # there are no docs for it and it doesn't have to behave a certain
+    # way.  See Game.__doc__ for more information about how the
+    # Game.mouse attribute should behave.
+
     def event_collision(self, other):
         game.event_mouse_collision(other)
 
@@ -1790,7 +1797,7 @@ class Room(object):
         created.
 
         """
-        pass
+        # TODO
 
     def add(self, obj):
         """Add a StellarClass object to the room.
@@ -1799,7 +1806,7 @@ class Room(object):
         object's ID.
 
         """
-        pass
+        # TODO
 
     def start(self):
         """Start the room.
@@ -1807,7 +1814,7 @@ class Room(object):
         If the room has been changed, reset it to its original state.
 
         """
-        pass
+        # TODO
 
     def resume(self):
         """Continue the room from where it left off.
@@ -1816,7 +1823,7 @@ class Room(object):
         method behaves in the same way that Room.start does.
 
         """
-        pass
+        # TODO
 
     def end(self):
         """Start the next room.
@@ -1826,7 +1833,7 @@ class Room(object):
         next room, if any, is reset, however.
 
         """
-        pass
+        # TODO
 
     def event_room_start(self):
         """Room start event.
@@ -2078,12 +2085,7 @@ class View(object):
         can (i.e. game.width - xport or game.height - yport).
 
         """
-        self.x = x
-        self.y = y
-        self.xport = xport
-        self.yport = yport
-        self.width = width if width else game.width - xport
-        self.height = height if height else game.height - yport
+        # TODO
 
 
 def create_object(cls, *args, **kwargs):
@@ -2100,6 +2102,20 @@ def create_object(cls, *args, **kwargs):
     game.current_room.add(cls(*args, **kwargs))
 
 
-def sound_stop_all(self):
+def sound_stop_all():
     """Stop playback of all sounds."""
-    pass
+    for i in game.sounds:
+        game.sounds[i].stop()
+
+
+def music_clear_queue():
+    """Clear the music queue."""
+    # TODO
+
+
+def music_stop_all():
+    """Stop playback of any music and clear the queue."""
+    for i in game.music:
+        game.music[i].stop()
+
+    music_clear_queue()
