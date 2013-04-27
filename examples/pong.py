@@ -85,8 +85,8 @@ class Player(sge.StellarClass):
         super(Player, self).__init__(x, y, 0, objname, glob.paddle_sprite)
 
     def event_step(self, time_passed):
-        self.yvelocity = (sge.game.get_key_pressed(self.down_key) -
-                          sge.game.get_key_pressed(self.up_key)) * 7
+        self.yvelocity = (sge.get_key_pressed(self.down_key) -
+                          sge.get_key_pressed(self.up_key)) * 7
 
         if self.bbox_top < 0:
             self.bbox_top = 0
