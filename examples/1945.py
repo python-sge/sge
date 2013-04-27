@@ -21,6 +21,12 @@ from __future__ import unicode_literals
 import sge
 
 
+class glob(object):
+
+    lives = 3
+    score = 0
+
+
 class Game(sge.Game):
 
     def event_key_press(self, key):
@@ -51,7 +57,12 @@ class Player(sge.StellarClass):
         self.right_key = 'right'
         x = sge.game.width / 2
         y = sge.game.height - 64
-        super(Player, self).__init__(x, y, 10, 'player', '1945_playerplane')
+        super(Player, self).__init__(x, y, 10, 'player', '1945_playerplane',
+                                     collision_precise=True)
+
+    def event_create(self):
+        self.can_shoot = True
+        self.upgrade_level = 0
 
     def event_step(self, time_passed):
         self.xvelocity = (sge.get_key_pressed(self.right_key) -
@@ -67,3 +78,47 @@ class Player(sge.StellarClass):
             self.bbox_top = 0
         elif self.bbox_bottom > sge.game.height:
             self.bbox_bottom = sge.game.height
+
+        if self.can_shoot and sge.get_key_pressed('space'):
+            self.shoot()
+
+    def event_key_press(self, key):
+        if key == 'space':
+            # can_shoot is ignored, allowing a player to shoot faster by
+            # pressing the space bar repeatedly.
+            self.shoot()
+
+    def event_alarm(self, alarm_id):
+        if alarm_id == 'shoot':
+            self.can_shoot = True
+
+    def event_collision(self, other):
+        pass
+
+    def shoot(self):
+        self.can_shoot = False
+        self.set_alarm('shoot', 30)
+
+        sge.create_object(PlayerBullet, self.x - 5, self.y, 0)
+        sge.create_object(PlayerBullet, self.x + 5, self.y, 0)
+
+        if self.upgrade_level >= 1:
+            sge.create_object(PlayerBullet, self.x, self.y, 90)
+            sge.create_object(PlayerBullet, self.x, self.y, -90)
+
+        if self.upgrade_level >= 2:
+            sge.create_object(PlayerBullet, self.x, self.y, 180)
+
+        if self.upgrade_level >= 3:
+            sge.create_object(PlayerBullet, self.x, self.y, 45)
+            sge.create_object(PlayerBullet, self.x, self.y, -45)
+
+
+class PlayerBullet(sge.StellarClass):
+
+    def __init__(self, x, y, rotation=0):
+        super(PlayerBullet, self).__init__(x, y, 3, sprite='1945_playerbullet',
+                                           collision_precise=True)
+        self.speed = 12
+        self.move_direction = rotation + 90
+        self.image_rotation = rotation
