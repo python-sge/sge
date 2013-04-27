@@ -1,41 +1,42 @@
 This file lists the licenses, authors, and sources for all the data
-files used by these examples.
+files included with SGE.
 
 ========================================================================
 
-data/images/circle.png
-data/images/circle_pop-*.png
-data/sounds/bounce.wav
-data/sounds/bounce_wall.wav
-data/sounds/score.wav
+./sge_pause.png
+./examples/data/images/circle.png
+./examples/data/images/circle_pop-*.png
+./examples/data/sounds/bounce.wav
+./examples/data/sounds/bounce_wall.wav
+./examples/data/sounds/score.wav
 Author: onpon4 <http://onpon4.comule.com>
 License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
 Source: N/A
 
 ------------------------------------------------------------------------
 
-data/images/1945_*.png
+./examples/data/images/1945_*.png
 Author: Ari Feldman
 License: Common Public License <http://opensource.org/licenses/cpl1.0.php>
 Source: http://www.widgetworx.com/widgetworx/portfolio/spritelib.html
 
 ------------------------------------------------------------------------
 
-data/music/WhereWasI.ogg
+./examples/data/music/WhereWasI.ogg
 Author: yd <http://opengameart.org/users/yd>
 License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
 Source: http://opengameart.org/content/where-was-i
 
 ------------------------------------------------------------------------
 
-data/music/DST-TowerDefenseTheme_1.ogg
+./examples/data/music/DST-TowerDefenseTheme_1.ogg
 Author: 
 License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
 Source: 
 
 ------------------------------------------------------------------------
 
-data/sounds/pop.ogg
+./examples/data/sounds/pop.ogg
 Author: kddekadenz <http://opengameart.org/users/kddekadenz>
 License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
 Source: http://opengameart.org/content/stove-switch
