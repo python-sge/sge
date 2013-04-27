@@ -13,7 +13,15 @@ A simple two-player Pong game.
 
 """
 
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import sge
+
+if "Pygame" in sge.IMPLEMENTATION:
+    sge.real_trackballs = True
 
 
 class glob(object):
@@ -66,6 +74,7 @@ class Player(sge.StellarClass):
 
     def __init__(self, player=1):
         if player == 1:
+            self.joystick = 0
             self.up_key = "w"
             self.down_key = "s"
             x = 32
@@ -73,6 +82,7 @@ class Player(sge.StellarClass):
             glob.player1 = self
             self.hit_direction = 1
         else:
+            self.joystick = 1
             self.up_key = "up"
             self.down_key = "down"
             x = sge.game.width - 32
@@ -82,16 +92,31 @@ class Player(sge.StellarClass):
 
         y = sge.game.height / 2
         self.v_score = 0
+        self.axis_motion = 0
         super(Player, self).__init__(x, y, 0, objname, glob.paddle_sprite)
 
     def event_step(self, time_passed):
-        self.yvelocity = (sge.get_key_pressed(self.down_key) -
-                          sge.get_key_pressed(self.up_key)) * 7
+        if self.axis_motion:
+            self.yvelocity = self.axis_motion * 4
+        else:
+            self.yvelocity = (sge.get_key_pressed(self.down_key) -
+                              sge.get_key_pressed(self.up_key)) * 4
 
         if self.bbox_top < 0:
             self.bbox_top = 0
         elif self.bbox_bottom > sge.game.height:
             self.bbox_bottom = sge.game.height
+
+        self.axis_motion = 0
+
+    def event_joystick_axis_move(self, joystick, axis, value):
+        # Note: This is designed for trackballs and doesn't work very
+        # well with actual joysticks.  It only works when there is
+        # constant axis movement, which is consistent with the
+        # behavior of trackballs.
+        if joystick == self.joystick and axis / 2 != axis // 2:
+            if abs(value) > abs(self.axis_motion):
+                self.axis_motion = value
 
 
 class Ball(sge.StellarClass):
@@ -125,21 +150,21 @@ class Ball(sge.StellarClass):
     def event_collision(self, other):
         if other is glob.player1:
             self.bbox_left = glob.player1.bbox_right + 1
-            self.xvelocity = min(abs(self.xvelocity) + 0.5, 15)
+            self.xvelocity = min(abs(self.xvelocity) + 0.2, 15)
         elif other is glob.player2:
             self.bbox_right = glob.player2.bbox_left - 1
-            self.xvelocity = max(-abs(self.xvelocity) - 0.5, -15)
+            self.xvelocity = max(-abs(self.xvelocity) - 0.2, -15)
         else:
             return
 
-        self.yvelocity += (self.y - other.y) / 5
+        self.yvelocity += (self.y - other.y) / 12
         glob.bounce_sound.play()
 
     def serve(self, direction=1):
         if glob.player1.score < 10 and glob.player2.score < 10:
             self.x = self.xstart
             self.y = self.ystart
-            self.xvelocity = 3 * direction
+            self.xvelocity = 2 * direction
             self.yvelocity = 0
         else:
             glob.hud_sprite.draw_clear()
@@ -170,7 +195,7 @@ def refresh_hud():
 
 def main():
     # Create Game object
-    Game(640, 480, False, 0, True, False, 60, False)
+    Game(640, 480, False, 0, True, False, 120, False)
 
     # Load sprites
     glob.paddle_sprite = sge.Sprite(width=8, height=48, origin_x=4,

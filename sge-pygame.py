@@ -100,7 +100,8 @@ transparency.
 
 Since Pygame supports trackballs, they are implemented as extra analog
 sticks.  Their movement is limited to the range of an analog stick to
-ensure full compatibility.
+ensure full compatibility.  You can disable this limitation by setting
+``sge.real_trackballs`` to True.
 
 In addition to Ogg Vorbis, Music supports the following formats:
 
@@ -241,6 +242,7 @@ sound_directories = [os.path.join('data', 'sounds')]
 music_directories = [os.path.join('data', 'music')]
 
 hardware_rendering = False
+real_trackballs = False
 
 
 class Game(object):
@@ -546,27 +548,32 @@ class Game(object):
                     elif event.type == pygame.JOYBALLMOTION:
                         # Limited support for trackballs by pretending
                         # they're axes.  Since they're acting like axes,
-                        # they must be in the range [-1,1].
+                        # they must be in the range [-1,1] unless the
+                        # special variable real_trackballs is True.
                         n = (self._joysticks[event.joy].get_numaxes() +
                              2 * event.ball)
-                        xvalue = min(max(-1, event.rel[0]), 1)
-                        yvalue = min(max(-1, event.rel[1]), 1)
+                        
+                        if real_trackballs:
+                            xvalue = event.rel[0]
+                            yvalue = event.rel[1]
+                        else:
+                            xvalue = min(max(-1, event.rel[0]), 1)
+                            yvalue = min(max(-1, event.rel[1]), 1)
 
-                        if xvalue != 0:
-                            self.event_joystick_axis_move(event.joy, n, xvalue)
-                            self.current_room.event_joystick_axis_move(
-                                event.joy, n, xvalue)
-                            for obj in self.current_room.objects:
-                                obj.event_joystick_axis_move(event.joy, n,
-                                                             xvalue)
-                        if yvalue != 0:
-                            self.event_joystick_axis_move(event.joy, n + 1,
-                                                          yvalue)
-                            self.current_room.event_joystick_axis_move(
-                                event.joy, n + 1, yvalue)
-                            for obj in self.current_room.objects:
-                                obj.event_joystick_axis_move(event.joy, n + 1,
-                                                             yvalue)
+                        # x-axis
+                        self.event_joystick_axis_move(event.joy, n, xvalue)
+                        self.current_room.event_joystick_axis_move(
+                            event.joy, n, xvalue)
+                        for obj in self.current_room.objects:
+                            obj.event_joystick_axis_move(event.joy, n, xvalue)
+                        
+                        # y-axis
+                        self.event_joystick_axis_move(event.joy, n + 1, yvalue)
+                        self.current_room.event_joystick_axis_move(
+                            event.joy, n + 1, yvalue)
+                        for obj in self.current_room.objects:
+                            obj.event_joystick_axis_move(event.joy, n + 1,
+                                                         yvalue)
                     elif event.type == pygame.JOYHATMOTION:
                         self.event_joystick_hat_move(event.joy, event.hat,
                                                      *event.value)
@@ -791,28 +798,35 @@ class Game(object):
                 elif event.type == pygame.JOYBALLMOTION:
                     # Limited support for trackballs by pretending
                     # they're axes.  Since they're acting like axes,
-                    # they must be in the range [-1,1].
+                    # they must be in the range [-1,1] unless the
+                    # special variable real_trackballs is True.
                     n = (self._joysticks[event.joy].get_numaxes() +
                          2 * event.ball)
-                    xvalue = min(max(-1, event.rel[0]), 1)
-                    yvalue = min(max(-1, event.rel[1]), 1)
 
-                    if xvalue != 0:
-                        self.event_paused_joystick_axis_move(event.joy, n,
-                                                             xvalue)
-                        self.current_room.event_paused_joystick_axis_move(
-                            event.joy, n, xvalue)
-                        for obj in self.current_room.objects:
-                            obj.event_paused_joystick_axis_move(event.joy, n,
-                                                                xvalue)
-                    if yvalue != 0:
-                        self.event_paused_joystick_axis_move(event.joy, n + 1,
-                                                             yvalue)
-                        self.current_room.event_paused_joystick_axis_move(
+                    if real_trackballs:
+                        xvalue = event.rel[0]
+                        yvalue = event.rel[1]
+                    else:
+                        xvalue = min(max(-1, event.rel[0]), 1)
+                        yvalue = min(max(-1, event.rel[1]), 1)
+
+                    # x-axis
+                    self.event_paused_joystick_axis_move(event.joy, n,
+                                                         xvalue)
+                    self.current_room.event_paused_joystick_axis_move(
+                        event.joy, n, xvalue)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_joystick_axis_move(event.joy, n,
+                                                            xvalue)
+
+                    # y-axis
+                    self.event_paused_joystick_axis_move(event.joy, n + 1,
+                                                         yvalue)
+                    self.current_room.event_paused_joystick_axis_move(
+                        event.joy, n + 1, yvalue)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_joystick_axis_move(
                             event.joy, n + 1, yvalue)
-                        for obj in self.current_room.objects:
-                            obj.event_paused_joystick_axis_move(
-                                event.joy, n + 1, yvalue)
                 elif event.type == pygame.JOYHATMOTION:
                     self.event_paused_joystick_hat_move(event.joy, event.hat,
                                                         *event.value)
