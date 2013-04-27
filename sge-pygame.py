@@ -76,6 +76,20 @@ Classes:
 Functions:
     create_object: Create an object in the current room.
     sound_stop_all: Stop playback of all sounds.
+    get_key_pressed: Return whether or not a given key is pressed.
+    get_mouse_button_pressed: Return whether or not a given mouse
+        button is pressed.
+    get_joystick_axis: Return the position of the given axis.
+    get_joystick_hat: Return the position of the given HAT.
+    get_joystick_button_pressed: Return whether or not the given
+        joystick button is pressed.
+    get_joysticks: Return the number of joysticks available.
+    get_joystick_axes: Return the number of axes on the given
+        joystick.
+    get_joystick_hats: Return the number of HATs on the given
+        joystick.
+    get_joystick_buttons: Return the number of buttons on the
+        given joystick.
 
 Implementation-specific information:
 This implementation supports hardware rendering, which can improve
@@ -109,7 +123,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.41"
+__version__ = "0.0.42"
 
 import sys
 import os
@@ -122,7 +136,10 @@ __all__ = ['Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',
            'Music', 'StellarClass', 'Room', 'View', 'game', 'ALIGN_LEFT',
            'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP', 'ALIGN_MIDDLE',
            'ALIGN_BOTTOM', 'create_object', 'sound_stop_all',
-           'music_clear_queue', 'music_stop_all']
+           'music_clear_queue', 'music_stop_all', 'get_key_pressed',
+           'get_mouse_button_pressed', 'get_joystick_axis', 'get_joystick_hat',
+           'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_axes',
+           'get_joystick_hats', 'get_joystick_buttons']
 # Except in extreme cases, these constants should not be modified.
 DEFAULT_SCREENWIDTH = 640
 DEFAULT_SCREENHEIGHT = 480
@@ -290,20 +307,6 @@ class Game(object):
         end: Properly end the game.
         pause: Pause the game.
         unpause: Unpause the game.
-        get_key_pressed: Return whether or not a given key is pressed.
-        get_mouse_button_pressed: Return whether or not a given mouse
-            button is pressed.
-        get_joystick_axis: Return the position of the given axis.
-        get_joystick_hat: Return the position of the given HAT.
-        get_joystick_button_pressed: Return whether or not the given
-            joystick button is pressed.
-        get_joysticks: Return the number of joysticks available.
-        get_joystick_axes: Return the number of axes on the given
-            joystick.
-        get_joystick_hats: Return the number of HATs on the given
-            joystick.
-        get_joystick_buttons: Return the number of buttons on the
-            given joystick.
 
     Game events are handled by special methods.  The exact timing of
     their calling is implementation-dependent except where otherwise
@@ -866,174 +869,6 @@ class Game(object):
     def unpause(self):
         """Unpause the game."""
         self._paused = False
-
-    def get_key_pressed(self, key):
-        """Return whether or not a given key is pressed.
-
-        ``key`` is the key to check.
-
-        """
-        key = key.lower()
-        if key in KEYS:
-            return pygame.key.get_pressed()[KEYS[key]]
-        else:
-            return False
-
-    def get_mouse_button_pressed(self, button):
-        """Return whether or not a given mouse button is pressed.
-
-        ``button`` is the number of the mouse button to check, where 0
-        is the first mouse button.
-
-        """
-        if button < 3:
-            return pygame.mouse.get_pressed()[button]
-        else:
-            return False
-
-    def get_joystick_axis(self, joystick, axis):
-        """Return the position of the given axis.
-
-        ``joystick`` is the number of the joystick to check, where 0 is
-        the first joystick.  ``axis`` is the number of the axis to
-        check, where 0 is the first axis of the joystick.
-
-        Returned value is a float from -1 to 1, where 0 is centered, -1
-        is all the way to the left or up, and 1 is all the way to the
-        right or down.
-
-        If the joystick or axis requested does not exist, 0 is returned.
-
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.  If the implementation used does not support
-        joysticks, this function will act like the joystick requested
-        does not exist.
-
-        """
-        if joystick < len(self._joysticks):
-            numaxes = self._joysticks[joystick].get_numaxes()
-            if axis < numaxes:
-                return self._joysticks[joystick].get_axis(axis)
-            else:
-                ball = (axis - numaxes) // 2
-                direction = (axis - numaxes) % 2
-                if ball < self._joysticks[joystick].get_numballs():
-                    return self._joysticks[joystick].get_ball(ball)[direction]
-        else:
-            return 0
-
-    def get_joystick_hat(self, joystick, hat):
-        """Return the position of the given HAT.
-
-        ``joystick`` is the number of the joystick to check, where 0 is
-        the first joystick.  ``hat`` is the number of the HAT to check,
-        where 0 is the first HAT of the joystick.
-
-        Returned value is a tuple in the form (x, y), where x is the
-        horizontal position and y is the vertical position.  Both x and
-        y are 0 (centered), -1 (left or up), or 1 (right or down).
-
-        If the joystick or HAT requested does not exist, (0, 0) is
-        returned.
-
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.  If the implementation used does not support
-        joysticks, this function will act like the joystick requested
-        does not exist.
-
-        """
-        if joystick < len(self._joysticks):
-            if hat < self._joysticks[joystick].get_numhats():
-                return self._joysticks[joystick].get_hat(hat)
-        else:
-            return (0, 0)
-
-    def get_joystick_button_pressed(self, joystick, button):
-        """Return whether or not the given button is pressed.
-
-        ``joystick`` is the number of the joystick to check, where 0 is
-        the first joystick.  ``button`` is the number of the button to
-        check, where 0 is the first button of the joystick.
-
-        If the joystick or button requested does not exist, False is
-        returned.
-
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.  If the implementation used does not support
-        joysticks, this function will act like the joystick requested
-        does not exist.
-
-        """
-        if joystick < len(self._joysticks):
-            if button < self._joysticks[joystick].get_numbuttons():
-                return self._joysticks[joystick].get_button(button)
-        else:
-            return False
-
-    def get_joysticks(self):
-        """Return the number of joysticks available.
-
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.  If the implementation used does not support
-        joysticks, this function will always return 0.
-
-        """
-        return len(self._joysticks)
-
-    def get_joystick_axes(self, joystick):
-        """Return the number of axes available on the given joystick.
-
-        ``joystick`` is the number of the joystick to check, where 0 is
-        the first joystick.  If the given joystick does not exist, 0
-        will be returned.
-
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.  If the implementation used does not support
-        joysticks, this function will act like the joystick requested
-        does not exist.
-
-        """
-        if joystick < len(self._joysticks):
-            return (self._joysticks[joystick].get_numaxes() +
-                    self._joysticks[joystick].get_numballs() * 2)
-        else:
-            return 0
-
-    def get_joystick_hats(self, joystick):
-        """Return the number of HATs available on the given joystick.
-
-        ``joystick`` is the number of the joystick to check, where 0 is
-        the first joystick.  If the given joystick does not exist, 0
-        will be returned.
-
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.  If the implementation used does not support
-        joysticks, this function will act like the joystick requested
-        does not exist.
-
-        """
-        if joystick < len(self._joysticks):
-            return self._joysticks[joystick].get_numhats()
-        else:
-            return 0
-
-    def get_joystick_buttons(self, joystick):
-        """Return the number of buttons available on the given joystick.
-
-        ``joystick`` is the number of the joystick to check, where 0 is
-        the first joystick.  If the given joystick does not exist, 0
-        will be returned.
-
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.  If the implementation used does not support
-        joysticks, this function will act like the joystick requested
-        does not exist.
-
-        """
-        if joystick < len(self._joysticks):
-            return self._joysticks[joystick].get_numbuttons()
-        else:
-            return 0
 
     def event_game_start(self):
         """Game start event.
@@ -4614,6 +4449,175 @@ def music_stop_all():
         game.music[i].stop()
 
     music_clear_queue()
+
+
+def get_key_pressed(key):
+    """Return whether or not a given key is pressed.
+
+    ``key`` is the key to check.
+
+    """
+    key = key.lower()
+    if key in KEYS:
+        return pygame.key.get_pressed()[KEYS[key]]
+    else:
+        return False
+
+def get_mouse_button_pressed(button):
+    """Return whether or not a given mouse button is pressed.
+
+    ``button`` is the number of the mouse button to check, where 0
+    is the first mouse button.
+
+    """
+    if button < 3:
+        return pygame.mouse.get_pressed()[button]
+    else:
+        return False
+
+def get_joystick_axis(joystick, axis):
+    """Return the position of the given axis.
+
+    ``joystick`` is the number of the joystick to check, where 0 is
+    the first joystick.  ``axis`` is the number of the axis to
+    check, where 0 is the first axis of the joystick.
+
+    Returned value is a float from -1 to 1, where 0 is centered, -1
+    is all the way to the left or up, and 1 is all the way to the
+    right or down.
+
+    If the joystick or axis requested does not exist, 0 is returned.
+
+    Support for joysticks in Stellar Game Engine implementations is
+    optional.  If the implementation used does not support
+    joysticks, this function will act like the joystick requested
+    does not exist.
+
+    """
+    if joystick < len(game._joysticks):
+        numaxes = game._joysticks[joystick].get_numaxes()
+        if axis < numaxes:
+            return game._joysticks[joystick].get_axis(axis)
+        else:
+            ball = (axis - numaxes) // 2
+            direction = (axis - numaxes) % 2
+            if ball < game._joysticks[joystick].get_numballs():
+                return game._joysticks[joystick].get_ball(ball)[direction]
+    else:
+        return 0
+
+def get_joystick_hat(joystick, hat):
+    """Return the position of the given HAT.
+
+    ``joystick`` is the number of the joystick to check, where 0 is
+    the first joystick.  ``hat`` is the number of the HAT to check,
+    where 0 is the first HAT of the joystick.
+
+    Returned value is a tuple in the form (x, y), where x is the
+    horizontal position and y is the vertical position.  Both x and
+    y are 0 (centered), -1 (left or up), or 1 (right or down).
+
+    If the joystick or HAT requested does not exist, (0, 0) is
+    returned.
+
+    Support for joysticks in Stellar Game Engine implementations is
+    optional.  If the implementation used does not support
+    joysticks, this function will act like the joystick requested
+    does not exist.
+
+    """
+    if joystick < len(game._joysticks):
+        if hat < game._joysticks[joystick].get_numhats():
+            return game._joysticks[joystick].get_hat(hat)
+    else:
+        return (0, 0)
+
+def get_joystick_button_pressed(joystick, button):
+    """Return whether or not the given button is pressed.
+
+    ``joystick`` is the number of the joystick to check, where 0 is
+    the first joystick.  ``button`` is the number of the button to
+    check, where 0 is the first button of the joystick.
+
+    If the joystick or button requested does not exist, False is
+    returned.
+
+    Support for joysticks in Stellar Game Engine implementations is
+    optional.  If the implementation used does not support
+    joysticks, this function will act like the joystick requested
+    does not exist.
+
+    """
+    if joystick < len(game._joysticks):
+        if button < game._joysticks[joystick].get_numbuttons():
+            return game._joysticks[joystick].get_button(button)
+    else:
+        return False
+
+def get_joysticks():
+    """Return the number of joysticks available.
+
+    Support for joysticks in Stellar Game Engine implementations is
+    optional.  If the implementation used does not support
+    joysticks, this function will always return 0.
+
+    """
+    return len(game._joysticks)
+
+def get_joystick_axes(joystick):
+    """Return the number of axes available on the given joystick.
+
+    ``joystick`` is the number of the joystick to check, where 0 is
+    the first joystick.  If the given joystick does not exist, 0
+    will be returned.
+
+    Support for joysticks in Stellar Game Engine implementations is
+    optional.  If the implementation used does not support
+    joysticks, this function will act like the joystick requested
+    does not exist.
+
+    """
+    if joystick < len(game._joysticks):
+        return (game._joysticks[joystick].get_numaxes() +
+                game._joysticks[joystick].get_numballs() * 2)
+    else:
+        return 0
+
+def get_joystick_hats(joystick):
+    """Return the number of HATs available on the given joystick.
+
+    ``joystick`` is the number of the joystick to check, where 0 is
+    the first joystick.  If the given joystick does not exist, 0
+    will be returned.
+
+    Support for joysticks in Stellar Game Engine implementations is
+    optional.  If the implementation used does not support
+    joysticks, this function will act like the joystick requested
+    does not exist.
+
+    """
+    if joystick < len(game._joysticks):
+        return game._joysticks[joystick].get_numhats()
+    else:
+        return 0
+
+def get_joystick_buttons(joystick):
+    """Return the number of buttons available on the given joystick.
+
+    ``joystick`` is the number of the joystick to check, where 0 is
+    the first joystick.  If the given joystick does not exist, 0
+    will be returned.
+
+    Support for joysticks in Stellar Game Engine implementations is
+    optional.  If the implementation used does not support
+    joysticks, this function will act like the joystick requested
+    does not exist.
+
+    """
+    if joystick < len(game._joysticks):
+        return game._joysticks[joystick].get_numbuttons()
+    else:
+        return 0
 
 
 def _scale(surface, width, height):
