@@ -94,8 +94,16 @@ class Player(sge.StellarClass):
             self.can_shoot = True
 
     def event_collision(self, other):
-        if isinstance(other, Enemy):
-            self.hurt()
+        if not self.exploding:
+            if isinstance(other, Enemy):
+                self.hurt()
+
+    def event_animation_end(self):
+        if self.exploding:
+            self.exploding = False
+            self.sprite = '1945_playerplane'
+            self.x = self.xstart
+            self.y = self.ystart
 
     def shoot(self):
         self.can_shoot = False
@@ -124,7 +132,8 @@ class Player(sge.StellarClass):
     def kill(self):
         if self.lives > 0:
             self.lives -= 1
-            # TODO: Destroy ship
+            self.exploding = True
+            self.sprite = '1945_explosion_large'
         else:
             # TODO: game over
             pass
