@@ -146,16 +146,7 @@ __all__ = ['Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',
            'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_axes',
            'get_joystick_hats', 'get_joystick_buttons', 'hardware_rendering',
            'real_trackballs']
-# Except in extreme cases, these constants should not be modified.
-DEFAULT_SCREENWIDTH = 640
-DEFAULT_SCREENHEIGHT = 480
-DEFAULT_FULLSCREEN = False
-DEFAULT_SCALE = 0
-DEFAULT_SCALE_PROPORTIONAL = True
-DEFAULT_SCALE_SMOOTH = False
-DEFAULT_FPS = 60
-DEFAULT_DELTA = False
-DEFAULT_DELTA_MIN = 15
+
 COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
           'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
           'yellow': '#ffff00', 'olive': '#808000', 'lime': '#00ff00',
@@ -417,11 +408,9 @@ class Game(object):
             self._scale_smooth = value
             self._set_mode()
 
-    def __init__(self, width=DEFAULT_SCREENWIDTH, height=DEFAULT_SCREENHEIGHT,
-                 fullscreen=DEFAULT_FULLSCREEN, scale=DEFAULT_SCALE,
-                 scale_proportional=DEFAULT_SCALE_PROPORTIONAL,
-                 scale_smooth=DEFAULT_SCALE_SMOOTH, fps=DEFAULT_FPS,
-                 delta=DEFAULT_DELTA, delta_min=DEFAULT_DELTA_MIN):
+    def __init__(self, width=640, height=480, fullscreen=False, scale=0,
+                 scale_proportional=True, scale_smooth=False, fps=60,
+                 delta=False, delta_min=15):
         """Create a new Game object and assign it to ``game``.
 
         Arguments set the properties of the game.  See Game.__doc__ for
@@ -738,7 +727,8 @@ class Game(object):
             image = sprite._get_image(0)
         else:
             try:
-                image = pygame.image.load('sge_pause.png').convert()
+                image = pygame.image.load(
+                    os.path.join('sge', 'sge_pause.png')).convert()
                 image.set_colorkey((255, 0, 255))
             except pygame.error:
                 image = pygame.Surface((16, 16))
@@ -1295,8 +1285,8 @@ class Sprite(object):
             self._refresh()
 
     def __init__(self, name=None, width=None, height=None, origin_x=0,
-                 origin_y=0, transparent=True, fps=DEFAULT_FPS, bbox_x=0,
-                 bbox_y=0, bbox_width=None, bbox_height=None):
+                 origin_y=0, transparent=True, fps=60, bbox_x=0, bbox_y=0,
+                 bbox_width=None, bbox_height=None):
         """Create a new Sprite object.
 
         ``name`` indicates the base name of the image files.  Files are
@@ -3774,8 +3764,8 @@ class Room(object):
 
     """
 
-    def __init__(self, objects=(), width=DEFAULT_SCREENWIDTH,
-                 height=DEFAULT_SCREENHEIGHT, views=None, background=None):
+    def __init__(self, objects=(), width=640, height=480, views=None,
+                 background=None):
         """Create a new Room object.
 
         Arguments set the properties of the room.  See Room.__doc__ for
@@ -4482,6 +4472,7 @@ def get_key_pressed(key):
     else:
         return False
 
+
 def get_mouse_button_pressed(button):
     """Return whether or not a given mouse button is pressed.
 
@@ -4493,6 +4484,7 @@ def get_mouse_button_pressed(button):
         return pygame.mouse.get_pressed()[button]
     else:
         return False
+
 
 def get_joystick_axis(joystick, axis):
     """Return the position of the given axis.
@@ -4525,6 +4517,7 @@ def get_joystick_axis(joystick, axis):
     else:
         return 0
 
+
 def get_joystick_hat(joystick, hat):
     """Return the position of the given HAT.
 
@@ -4551,6 +4544,7 @@ def get_joystick_hat(joystick, hat):
     else:
         return (0, 0)
 
+
 def get_joystick_button_pressed(joystick, button):
     """Return whether or not the given button is pressed.
 
@@ -4573,6 +4567,7 @@ def get_joystick_button_pressed(joystick, button):
     else:
         return False
 
+
 def get_joysticks():
     """Return the number of joysticks available.
 
@@ -4582,6 +4577,7 @@ def get_joysticks():
 
     """
     return len(game._joysticks)
+
 
 def get_joystick_axes(joystick):
     """Return the number of axes available on the given joystick.
@@ -4602,6 +4598,7 @@ def get_joystick_axes(joystick):
     else:
         return 0
 
+
 def get_joystick_hats(joystick):
     """Return the number of HATs available on the given joystick.
 
@@ -4619,6 +4616,7 @@ def get_joystick_hats(joystick):
         return game._joysticks[joystick].get_numhats()
     else:
         return 0
+
 
 def get_joystick_buttons(joystick):
     """Return the number of buttons available on the given joystick.
