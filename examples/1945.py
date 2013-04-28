@@ -64,6 +64,7 @@ class Player(sge.StellarClass):
         self.can_shoot = True
         self.upgrade_level = 0
         self.shield = 10
+        self.exploding = False
 
     def event_step(self, time_passed):
         self.xvelocity = (sge.get_key_pressed(self.right_key) -
@@ -104,6 +105,7 @@ class Player(sge.StellarClass):
             self.sprite = '1945_playerplane'
             self.x = self.xstart
             self.y = self.ystart
+            self.shield = 10
 
     def shoot(self):
         self.can_shoot = False
@@ -134,6 +136,7 @@ class Player(sge.StellarClass):
             self.lives -= 1
             self.exploding = True
             self.sprite = '1945_explosion_large'
+            self.image_index = 0
         else:
             # TODO: game over
             pass
@@ -152,3 +155,21 @@ class PlayerBullet(sge.StellarClass):
 class Enemy(sge.StellarClass):
 
     pass
+
+
+class EnemyPlane(Enemy):
+
+    sprite_normal = "1945_enemyplane_green"
+    retreats = True
+    follows_player = False
+    directional_guns = False
+
+    def __init__(self, x, y):
+        super(EnemyPlane, self).__init__(x, y, 5, sprite=self.sprite_normal,
+                                         collision_precise=True, yvelocity=8)
+
+    def event_create(self):
+        self.retreating = False
+
+    def event_step(self, time_passed):
+        pass
