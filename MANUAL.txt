@@ -14,6 +14,29 @@ implementations; for that information, please see the implementation's
 included README file.
 
 
+Contents
+------------------------------------------------------------------------
+
+I. Introduction
+II. Events
+III. Global Variables and Constants
+IV. Classes
+  IV.A. sge.Game
+    IV.A.1. Constructor Method (sge.Game.__init__)
+    IV.A.2. sge.Game.start
+    IV.A.3. sge.Game.end
+    IV.A.4. sge.Game.pause
+    IV.A.5. sge.Game.unpause
+    IV.A.6. sge.Game.event_game_start
+    IV.A.7. sge.Game.event_step
+    IV.A.8. sge.Game.event_key_press
+    IV.A.9. sge.Game.event_key_release
+    IV.A.10. sge.Game.event_mouse_move
+    IV.A.11. sge.Game.event_mouse_button_press
+    IV.A.12. sge.Game.event_mouse_button_release
+    IV.A.13. sge.Game.event_joystick_axis_move
+
+
 I. Introduction
 ------------------------------------------------------------------------
 
@@ -81,5 +104,235 @@ Global variables:
 IV. Classes
 ------------------------------------------------------------------------
 
+Classes are the heart of SGE's operation.  Most functionality in games
+is best implemented via subclassing SGE's classes.
 
+
+  IV.A. sge.Game
+  ----------------------------------------------------------------------
+  
+  This class handles most parts of the game which operate on a global
+  scale, such as global game events.  Before anything else is done with
+  SGE, an object either of this class or of a class derived from this
+  class must be created.
+  
+  When an object of this class is created, it is automatically assigned
+  to sge.game.
+  
+  Note: Do not create multiple sge.Game objects.  Doing so may cause
+  errors.
+  
+  Attributes:
+  * width: The width of the game's display in pixels.
+  * height: The height of the game's display in pixels.
+  * fullscreen: True if the game should be in fullscreen, False
+      otherwise.
+  * scale: A number indicating a fixed scale factor (e.g. 1 for no
+      scaling, 2 for doubled size).  If set to 0, scaling is automatic
+      (causes the game to fit the window or screen).
+  * scale_proportional: If set to True, scaling is always
+      proportional.  If set to False, the image may be stretched to
+      completely fill the game window or screen.  This has no effect
+      unless ``scale`` is 0.
+  * scale_smooth: If set to True, a smooth scaling algorithm will be
+      used, if available.  Otherwise, simple scaling (e.g. pixel
+      doubling) will always be used.  Support for smooth scaling in
+      Stellar Game Engine implementations is optional.  If the
+      implementation used does not support smooth scaling, this option
+      will always be treated as False.
+  * fps: The rate the game should run in frames per second.  Note that
+      this is only the maximum; if the computer is not fast enough, the
+      game may run more slowly.
+  * delta: If set to True, delta timing will be enabled, which adjusts
+      speeds and animation rates if the game cannot run at the specified
+      frame rate.
+  * delta_min: Delta timing can cause the game to be choppy.  This
+      setting limits this by pretending that the frame rate is never
+      lower than this amount, resulting in the game slowing down like
+      normal if it is.
+  
+  Read-Only Attributes:
+  * sprites: A dictionary containing all loaded sprites, using their
+      names as the keys.
+  * background_layers: A dictionary containing all loaded background
+      layers, using their sprites' names as the keys.
+  * backgrounds: A dictionary containing all loaded backgrounds, using
+      their unique identifiers as the keys.
+  * fonts: A dictionary containing all loaded fonts, using their names
+      as the keys.
+  * sounds: A dictionary containing all loaded sounds, using their file
+      names as the keys.
+  * music: A dictionary containing all loaded music, using their file
+      names as the keys.
+  * objects: A dictionary containing all sge.StellarClass objects in the
+      game, using their unique identifiers as the keys.
+  * rooms: A list containing all rooms in order of their creation.
+  * current_room: The Room object which is currently active.
+  * mouse: An sge.StellarClass object which represents the mouse cursor.
+      Its ID is "mouse" and its bounding box is one pixel.  Speed
+      variables are determined by averaging all mouse movement during
+      the last quarter of a second.  Assigning to its ``visible``
+      attribute controls whether or not the mouse cursor is shown.
+      Setting its sprite sets the mouse cursor.
+  
+  
+    IV.A.1. Constructor Method (sge.Game.__init__)
+    --------------------------------------------------------------------
+    
+    sge.Game.__init__(self, width=640, height=480, fullscreen=False,
+        scale=0, scale_proportional=True, scale_smooth=False, fps=60,
+        delta=False, delta_min=15)
+    
+    All arguments are used to set the respective initial attributes of
+    the object.
+    
+    
+    IV.A.2. sge.Game.start
+    --------------------------------------------------------------------
+    
+    sge.Game.start(self)
+    
+    Starts the game in the first room.  This method can also be called
+    at any time during the game to restart the game, resetting
+    everything to its original state.
+    
+    
+    IV.A.3. sge.Game.end
+    --------------------------------------------------------------------
+    
+    sge.Game.end(self)
+    
+    Ends the game.  Please use this rather than sys.exit, as some
+    implementations might do some clean-up here.
+    
+    
+    IV.A.4. sge.Game.pause
+    --------------------------------------------------------------------
+    
+    sge.Game.pause(self, sprite=None)
+    
+    Pauses the game, showing ``sprite`` (an sge.Sprite object) in the
+    center of the screen.  If ``sprite`` is None, a default image is
+    used instead; the exact image used is implementation-dependent.
+    
+    Normal events are not executed while the game is paused.  Instead,
+    events with the same name, but prefixed with "event_paused_" instead
+    of "event_", are executed.  Note that not all events have these
+    alternative "paused" events associated with them.
+    
+    
+    IV.A.5. sge.Game.unpause
+    --------------------------------------------------------------------
+    
+    sge.Game.unpause(self)
+    
+    Unpauses the game.
+    
+    
+    IV.A.6. sge.Game.event_game_start
+    --------------------------------------------------------------------
+    
+    sge.Game.event_game_start(self)
+    
+    Game Start event.  This event is executed when the game starts.  It
+    is only executed once (it is not executed again when the game
+    restarts) and it is always the very first event executed.
+    
+    
+    IV.A.7. sge.Game.event_step
+    --------------------------------------------------------------------
+    
+    sge.Game.event_step(self, time_passed)
+    
+    Step event.  This event is always executed once each frame.
+    ``time_passed`` indicates the number of milliseconds that have
+    passed during the last frame.
+    
+    
+    IV.A.8. sge.Game.event_key_press
+    --------------------------------------------------------------------
+    
+    sge.Game.event_key_press(self, key)
+    
+    Key Press event.  This event is executed when a key on the keyboard
+    is pressed.  ``key`` indicates the identifier string of the key that
+    was pressed (see KEYS.txt for a list of all key identifier strings).
+    
+    
+    IV.A.9. sge.Game.event_key_release
+    --------------------------------------------------------------------
+    
+    sge.Game.event_key_release(self, key)
+    
+    Key Release event.  This event is executed when a key on the
+    keyboard is released.  ``key`` indicates the identifier string of
+    the key that was released (see KEYS.txt for a list of all key
+    identifier strings).
+    
+    
+    IV.A.10. sge.Game.event_mouse_move
+    --------------------------------------------------------------------
+    
+    sge.Game.event_mouse_move(self, x, y)
+    
+    Mouse Move event.  This event is executed when the mouse moves.
+    ``x`` indicates the horizontal relative movement of the mouse, and
+    ``y`` indicates the vertical relative movement of the mouse.
+    
+    
+    IV.A.11. sge.Game.event_mouse_button_press
+    --------------------------------------------------------------------
+    
+    sge.Game.event_mouse_button_press(self, button)
+    
+    Mouse Button Press event.  This event is executed when a mouse
+    button is pressed.  ``button`` indicates the number of the button
+    that was pressed.  What button numbers correspond to what buttons
+    can vary among implementations, so ``button`` should be checked
+    against the following constants:
+    
+    * sge.MOUSE_BUTTON_LEFT
+    * sge.MOUSE_BUTTON_RIGHT
+    * sge.MOUSE_BUTTON_MIDDLE
+    * sge.MOUSE_BUTTON_WHEEL_UP
+    * sge.MOUSE_BUTTON_WHEEL_DOWN
+    * sge.MOUSE_BUTTON_WHEEL_LEFT
+    * sge.MOUSE_BUTTON_WHEEL_RIGHT
+    
+    
+    IV.A.12. sge.Game.event_mouse_button_release
+    --------------------------------------------------------------------
+    
+    sge.Game.event.mouse_button_release(self, button)
+    
+    Mouse Button Release event.  This event is executed when a mouse
+    button is pressed.  ``button`` indicates the number of the button
+    that was pressed.  What button numbers correspond to what buttons
+    can vary among implementations, so ``button`` should be checked
+    against the following constants:
+    
+    * sge.MOUSE_BUTTON_LEFT
+    * sge.MOUSE_BUTTON_RIGHT
+    * sge.MOUSE_BUTTON_MIDDLE
+    * sge.MOUSE_BUTTON_WHEEL_UP
+    * sge.MOUSE_BUTTON_WHEEL_DOWN
+    * sge.MOUSE_BUTTON_WHEEL_LEFT
+    * sge.MOUSE_BUTTON_WHEEL_RIGHT
+    
+    
+    IV.A.13. sge.Game.event_joystick_axis_move
+    --------------------------------------------------------------------
+    
+    sge.Game.event_joystick_axis_move(self, joystick, axis, value)
+    
+    Joystick Axis Move event.  This event is executed when an axis on a
+    joystick changes position.  ``joystick`` indicates the number of the
+    joystick, where 0 is the first joystick.  ``axis`` indicates the
+    number of the axis, where 0 is the first axis.  ``value`` indicates
+    the tilt of the axis, where 0 is in the center, -1 is tilted all the
+    way to the left or up, and 1 is tilted all the way to the right or
+    down.  Note that ``value`` can be any floating-point number between
+    -1 and 1; it is not limited to integral values.
+    
+    Support for joysticks in SGE implementations is optional.
 
