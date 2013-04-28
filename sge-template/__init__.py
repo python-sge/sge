@@ -120,16 +120,7 @@ __all__ = ['Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',
            'get_joystick_axis', 'get_joystick_hat',
            'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_axes',
            'get_joystick_hats', 'get_joystick_buttons']
-# Except in extreme cases, these constants should not be modified.
-DEFAULT_SCREENWIDTH = 640
-DEFAULT_SCREENHEIGHT = 480
-DEFAULT_FULLSCREEN = False
-DEFAULT_SCALE = 0
-DEFAULT_SCALE_PROPORTIONAL = True
-DEFAULT_SCALE_SMOOTH = False
-DEFAULT_FPS = 60
-DEFAULT_DELTA = False
-DEFAULT_DELTA_MIN = 15
+
 COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
           'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
           'yellow': '#ffff00', 'olive': '#808000', 'lime': '#00ff00',
@@ -277,11 +268,9 @@ class Game(object):
 
     """
 
-    def __init__(self, width=DEFAULT_SCREENWIDTH, height=DEFAULT_SCREENHEIGHT,
-                 fullscreen=DEFAULT_FULLSCREEN, scale=DEFAULT_SCALE,
-                 scale_proportional=DEFAULT_SCALE_PROPORTIONAL,
-                 scale_smooth=DEFAULT_SCALE_SMOOTH, fps=DEFAULT_FPS,
-                 delta=DEFAULT_DELTA, delta_min=DEFAULT_DELTA_MIN):
+    def __init__(self, width=640, height=480, fullscreen=False, scale=0,
+                 scale_proportional=True, scale_smooth=False, fps=60,
+                 delta=False, delta_min=15):
         """Create a new Game object and assign it to ``game``.
 
         Arguments set the properties of the game.  See Game.__doc__ for
@@ -618,8 +607,8 @@ class Sprite(object):
     """
 
     def __init__(self, name=None, width=None, height=None, origin_x=0,
-                 origin_y=0, transparent=True, fps=DEFAULT_FPS, bbox_x=0,
-                 bbox_y=0, bbox_width=None, bbox_height=None):
+                 origin_y=0, transparent=True, fps=60, bbox_x=0, bbox_y=0,
+                 bbox_width=None, bbox_height=None):
         """Create a new Sprite object.
 
         ``name`` indicates the base name of the image files.  Files are
@@ -1654,8 +1643,8 @@ class Room(object):
 
     """
 
-    def __init__(self, objects=(), width=DEFAULT_SCREENWIDTH,
-                 height=DEFAULT_SCREENHEIGHT, views=None, background=None):
+    def __init__(self, objects=(), width=640, height=480, views=None,
+                 background=None):
         """Create a new Room object.
 
         Arguments set the properties of the room.  See Room.__doc__ for
