@@ -63,6 +63,7 @@ class Player(sge.StellarClass):
     def event_create(self):
         self.can_shoot = True
         self.upgrade_level = 0
+        self.shield = 10
 
     def event_step(self, time_passed):
         self.xvelocity = (sge.get_key_pressed(self.right_key) -
@@ -93,7 +94,8 @@ class Player(sge.StellarClass):
             self.can_shoot = True
 
     def event_collision(self, other):
-        pass
+        if isinstance(other, Enemy):
+            self.hurt()
 
     def shoot(self):
         self.can_shoot = False
@@ -113,6 +115,20 @@ class Player(sge.StellarClass):
             sge.create_object(PlayerBullet, self.x, self.y, 45)
             sge.create_object(PlayerBullet, self.x, self.y, -45)
 
+    def hurt(self):
+        if self.shield > 0:
+            self.shield -= 1
+        else:
+            self.kill()
+
+    def kill(self):
+        if self.lives > 0:
+            self.lives -= 1
+            # TODO: Destroy ship
+        else:
+            # TODO: game over
+            pass
+
 
 class PlayerBullet(sge.StellarClass):
 
@@ -122,3 +138,8 @@ class PlayerBullet(sge.StellarClass):
         self.speed = 12
         self.move_direction = rotation + 90
         self.image_rotation = rotation
+
+
+class Enemy(sge.StellarClass):
+
+    pass

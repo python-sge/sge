@@ -103,7 +103,7 @@ sticks.  Their movement is limited to the range of an analog stick to
 ensure full compatibility.  You can disable this limitation by setting
 ``sge.real_trackballs`` to True.
 
-In addition to Ogg Vorbis, Music supports the following formats:
+In addition to Ogg Vorbis, sge.Music supports the following formats:
 
     MP3 (support limited; use not recommended)
     MOD
@@ -114,8 +114,9 @@ For starting position in MOD files, the pattern order number is used
 instead of the number of milliseconds.  For some other extra formats,
 specifying the starting position may have no effect.
 
-Game.draw_line supports anti-aliasing for lines with a thickness of 1
-only.  No other drawing functions support anti-aliasing.
+sge.Sprite.draw_line supports anti-aliasing for lines with a thickness
+of 1 only.  sge.Sprite.draw_text supports anti-aliasing in all cases.
+No other drawing functions support anti-aliasing.
 
 """
 
@@ -134,13 +135,17 @@ import weakref
 import pygame
 
 __all__ = ['Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',
-           'Music', 'StellarClass', 'Room', 'View', 'game', 'ALIGN_LEFT',
-           'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP', 'ALIGN_MIDDLE',
-           'ALIGN_BOTTOM', 'create_object', 'sound_stop_all',
-           'music_clear_queue', 'music_stop_all', 'get_key_pressed',
-           'get_mouse_button_pressed', 'get_joystick_axis', 'get_joystick_hat',
+           'Music', 'StellarClass', 'Room', 'View', 'game',
+           'image_directories', 'font_directories', 'sound_directories',
+           'music_directories', 'IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER',
+           'ALIGN_RIGHT', 'ALIGN_TOP', 'ALIGN_MIDDLE', 'ALIGN_BOTTOM',
+           'MOUSE_BUTTON_LEFT', 'MOUSE_BUTTON_RIGHT', 'MOUSE_BUTTON_MIDDLE',
+           'create_object', 'sound_stop_all', 'music_clear_queue',
+           'music_stop_all', 'get_key_pressed', 'get_mouse_button_pressed',
+           'get_joystick_axis', 'get_joystick_hat',
            'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_axes',
-           'get_joystick_hats', 'get_joystick_buttons']
+           'get_joystick_hats', 'get_joystick_buttons', 'hardware_rendering',
+           'real_trackballs']
 # Except in extreme cases, these constants should not be modified.
 DEFAULT_SCREENWIDTH = 640
 DEFAULT_SCREENHEIGHT = 480

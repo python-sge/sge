@@ -110,11 +110,14 @@ import math
 # Import implementation-specific libraries like Pygame here
 
 __all__ = ['Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',
-           'Music', 'StellarClass', 'Room', 'View', 'game', 'ALIGN_LEFT',
-           'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP', 'ALIGN_MIDDLE',
-           'ALIGN_BOTTOM', 'create_object', 'sound_stop_all',
-           'music_clear_queue', 'music_stop_all', 'get_key_pressed',
-           'get_mouse_button_pressed', 'get_joystick_axis', 'get_joystick_hat',
+           'Music', 'StellarClass', 'Room', 'View', 'game',
+           'image_directories', 'font_directories', 'sound_directories',
+           'music_directories', 'IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER',
+           'ALIGN_RIGHT', 'ALIGN_TOP', 'ALIGN_MIDDLE', 'ALIGN_BOTTOM',
+           'MOUSE_BUTTON_LEFT', 'MOUSE_BUTTON_RIGHT', 'MOUSE_BUTTON_MIDDLE',
+           'create_object', 'sound_stop_all', 'music_clear_queue',
+           'music_stop_all', 'get_key_pressed', 'get_mouse_button_pressed',
+           'get_joystick_axis', 'get_joystick_hat',
            'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_axes',
            'get_joystick_hats', 'get_joystick_buttons']
 # Except in extreme cases, these constants should not be modified.

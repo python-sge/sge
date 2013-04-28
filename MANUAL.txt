@@ -1,0 +1,85 @@
+Copyright (C) 2013 Julian Marchant <onpon4@lavabit.com>
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This file is offered as-is,
+without any warranty.
+
+========================================================================
+
+This file documents the Stellar Game Engine API.  It is extended from
+the documentation strings included within the source code.  Note that
+this manual does not cover extra features or other anomalies in specific
+implementations; for that information, please see the implementation's
+included README file.
+
+
+I. Introduction
+------------------------------------------------------------------------
+
+Stellar Game Engine (or "SGE") is a game engine designed for use by
+Stellar.  Its design is loosely based on the proprietary program, Game
+Maker.  The purpose of SGE is to make game development easier, which
+allows more rapid development by experienced game developers and also
+helps less experienced game developers learn how to develop games.
+
+
+II. Events
+------------------------------------------------------------------------
+
+Much like Game Maker, SGE uses an event-based system, with events
+defined by special class methods with names that start with "event_".
+
+Except in certain special cases, events are handled in an arbitrary
+order; if Event A and Event B happen at the same time, one
+implementation might handle Event A first, while another implementation
+might handle Event B first.  Still another implementation might in
+theory even handle Event A first one frame, then handle Event B in
+another.
+
+
+III. Global Variables and Constants
+------------------------------------------------------------------------
+
+Constants:
+* IMPLEMENTATION: A string identifying the how the engine is implemented
+    (e.g. the name of the graphics library used).
+* ALIGN_LEFT: Flag indicating alignment to the left.
+* ALIGN_CENTER: Flag indicating alignment to the horizontal center.
+* ALIGN_RIGHT: Flag indicating alignment to the right.
+* ALIGN_TOP: Flag indicating alignment to the top.
+* ALIGN_MIDDLE: Flag indicating alignment to the vertical middle.
+* ALIGN_BOTTOM: Flag indicating alignment to the bottom.
+* MOUSE_BUTTON_LEFT: The mouse button number which corresponds with the
+    left mouse button.
+* MOUSE_BUTTON_RIGHT: The mouse button number which corresponds with the
+    right mouse button.
+* MOUSE_BUTTON_MIDDLE: The mouse button number which corresponds with
+    the middle mouse button.
+* MOUSE_BUTTON_WHEEL_UP: The mouse button number which corresponds with
+    rolling the mouse wheel up.
+* MOUSE_BUTTON_WHEEL_DOWN: The mouse button number which corresponds
+    with rolling the mouse wheel down.
+* MOUSE_BUTTON_WHEEL_LEFT: The mouse button number which corresponds
+    with tilting the mouse wheel to the left.
+* MOUSE_BUTTON_WHEEL_RIGHT: The mouse button number which corresponds
+    with tilting the mouse wheel to the right.
+
+Global variables:
+* game: Stores the current game.  If there is no game currently, this
+    variable is set to None.
+* image_directories: A list of directories where images can be found.
+    Default is ./data/images, ./data/sprites, or ./data/backgrounds.
+* font_directories: A list of directories where font files can be found.
+    Default is ./data/fonts.
+* sound_directories: A list of directories where sounds can be found.
+    Default is ./data/sounds.
+* music_directories: A list of directories where music files can be
+    found.  Default is ./data/music.
+
+
+IV. Classes
+------------------------------------------------------------------------
+
+
+

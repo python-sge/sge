@@ -1,0 +1,55 @@
+Copyright (C) 2012, 2013 Julian Marchant <onpon4@lavabit.com>
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This file is offered as-is,
+without any warranty.
+
+========================================================================
+
+About SGE
+------------------------------------------------------------------------
+
+Stellar Game Engine (also "SGE" or simply "Stellar Engine") is an engine
+for use with Stellar, in order to make its development easier and also
+offer an option to those who want only a game engine without a graphical
+interface.
+
+SGE is supposed to be able to have differing "implementations"
+available.  The first implementation developed will likely be one that
+uses Pygame, but an implementation using Pyglet might be developed
+later, for instance.  This allows increased flexibility in Stellar.
+
+
+Developing an Implementation
+------------------------------------------------------------------------
+
+To develop an implementation of SGE, copy sge-template and add in the
+functionality.  In order to prevent confusion, do *not* use docstrings
+on anything that is not included in the template, and do not modify the
+docstrings except for adding in the name of the implementation and
+implementation-specific information to the module docstring.  Use normal
+comments to document custom functions specific to a given
+implementation.
+
+Note that, except where otherwise noted, all documented features are
+required for an implementation to be considered complete.
+
+
+Using SGE
+------------------------------------------------------------------------
+
+Available implementations are in folders named as "sge-name", where
+"name" is replaced with the name of the implementation.  To use SGE to
+develop a game, copy the folder of the implementation you want to use to
+the same directory as your main game script and rename it to "sge"
+(note: all lowercase).  You can then import the module "sge".
+
+Note that a given implemenation may have additional dependencies; see
+the implementation's included DEPENDENCIES.txt file to learn about them.
+Also note that "sge-template" is not an implementation, but a template
+for programming new implementations.
+
+See the files contained in the "examples" directory for examples of
+games written for SGE.  See MANUAL.txt for documentation of the SGE API.
+

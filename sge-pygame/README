@@ -1,0 +1,38 @@
+Copyright (C) 2013 Julian Marchant <onpon4@lavabit.com>
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This file is offered as-is,
+without any warranty.
+
+========================================================================
+
+Implementation-Specific Information
+------------------------------------------------------------------------
+
+This implementation supports hardware rendering, which can improve
+performance in some cases.  It is not enabled by default.  To enable it,
+set ``sge.hardware_rendering`` to True.  To get the best performance
+with hardware rendering, you should use colorkeys instead of alpha
+transparency.
+
+Since Pygame supports trackballs, they are implemented as extra analog
+sticks.  Their movement is limited to the range of an analog stick to
+ensure full compatibility.  You can disable this limitation by setting
+``sge.real_trackballs`` to True.
+
+In addition to Ogg Vorbis, sge.Music supports the following formats:
+
+    MP3 (support limited; use not recommended)
+    MOD
+    XM
+    MIDI
+
+For starting position in MOD files, the pattern order number is used
+instead of the number of milliseconds.  For some other extra formats,
+specifying the starting position may have no effect.
+
+sge.Sprite.draw_line supports anti-aliasing for lines with a thickness
+of 1 only.  sge.Sprite.draw_text supports anti-aliasing in all cases.
+No other drawing functions support anti-aliasing.
+
