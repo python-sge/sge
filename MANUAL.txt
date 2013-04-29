@@ -22,6 +22,10 @@ II. SGE Concepts
   II.A. Events
   II.B. The Mouse
   II.C. Colors
+    II.C.1. HTML Color Names
+    II.C.2. RGB(A) Tuples
+    II.C.3. HTML Hex Strings
+    II.C.4. Hexadecimal Integers
 III. Global Variables and Constants
 IV. Classes
   IV.A. sge.Game
@@ -112,7 +116,73 @@ II. SGE Concepts
   II.C. Colors
   ----------------------------------------------------------------------
   
+  Colors can be defined in SGE in a few ways.
   
+    II.C.1. HTML Color Names
+    --------------------------------------------------------------------
+    
+    The sixteen basic HTML colors, written as strings, are accepted by
+    SGE.  These are case-insensitive, so "red" is the same as "Red" or
+    "rEd".  The colors are:
+    
+    * "white"
+    * "silver"
+    * "gray"
+    * "black"
+    * "red"
+    * "maroon"
+    * "yellow"
+    * "olive"
+    * "lime"
+    * "green"
+    * "aqua"
+    * "teal"
+    * "blue"
+    * "navy"
+    * "fuchsia"
+    * "purple"
+    
+    
+    II.C.2. RGB(A) Tuples
+    --------------------------------------------------------------------
+    
+    A tuple containing three or four values is accepted as a color by
+    SGE.  Each index represents a component of a color: first red, then
+    green, then blue, with the values being integers from 0 to 255.  For
+    example, (255, 128, 0) indicates a color with full red intensity,
+    50% green intensity, and no blue intensity, which is a shade of
+    orange.  Note that the colors combine as colors of light, not colors
+    of pigment.
+    
+    The fourth value of the tuple, if specified, indicates the alpha
+    transparency of the color, with the values again being integers from
+    0 to 255.  255 is fully opaque, 0 is fully transparent, and any
+    value in between indicates the amount of transparency; for example,
+    128 is 50% transparent.  If the fourth value is unspecified, it is
+    assumed that the color is fully opaque.
+    
+    RGBA tuples are the only way to specify alpha transparency of colors
+    in SGE.  All other methods for indicating color assume full opacity.
+    
+    
+    II.C.3. HTML Hex Strings
+    --------------------------------------------------------------------
+    
+    An HTML hex string is accepted as a color by SGE.  HTML hex strings
+    are in the format "#RRGGBB", where "RR", "GG", and "BB" are replaced
+    with the red, green, and blue components of the color, respectively,
+    in hexadecimal form.  FF (equivalent to 255 in decimal form) is full
+    intensity of the respective color, and 00 (equivalent to 0 in
+    decimal form) is no intensity of the respective color.  For example,
+    "#FF8000" is the same as (255, 128, 0), or orange.
+    
+    
+    II.C.4. Hexadecimal Integers
+    --------------------------------------------------------------------
+    
+    A hexadecimal integer is accepted as a color by SGE.  This should be
+    in the same form as HTML hex strings, but integral.  For example,
+    0xFF8000 is the same as (255, 128, 0), or orange.
 
 
 III. Global Variables and Constants
@@ -204,6 +274,7 @@ is best implemented via subclassing SGE's classes.
       setting limits this by pretending that the frame rate is never
       lower than this amount, resulting in the game slowing down like
       normal if it is.
+  * grab_input: If set to True, all input will be locked into the game.
   
   Read-Only Attributes:
   * sprites: A dictionary containing all loaded sprites, using their
@@ -452,71 +523,143 @@ is best implemented via subclassing SGE's classes.
     
     sge.Game.event_mouse_collision(self, other)
     
-    Default Mouse Collision event.  This event is executed when
-    sge.game.mouse collides with another object and none of the
-    directional collision events are appropriate.  In particular, this
-    event is executed if the collision was already happening in the
-    previous frame, meaning that the object is colliding with the inside
-    of the mouse. In addition, directional mouse collision events cause
-    this event to execute by default if they are not overridden.
+    Default Mouse Collision event.  This event is executed when another
+    object collides with sge.game.mouse and none of the directional
+    collision events are appropriate.  In particular, this event is
+    executed if the collision was already happening in the previous
+    frame, meaning that the object is colliding with the inside of the
+    mouse. In addition, directional mouse collision events cause this
+    event to execute by default if they are not overridden.  ``other``
+    indicates the other object which was collided with.
     
     
     IV.A.19. sge.Game.event_mouse_collision_left
     --------------------------------------------------------------------
     
+    sge.Game.event_mouse_collision_left(self, other)
+    
+    Left Mouse Collision event.  This event is executed when another
+    object collides with sge.game.mouse from the left.  ``other``
+    indicates the other object which was collided with.
+    
     
     IV.A.20. sge.Game.event_mouse_collision_right
     --------------------------------------------------------------------
+    
+    sge.Game.event_mouse_collision_right(self, other)
+    
+    Right Mouse Collision event.  This event is executed when another
+    object collides with sge.game.mouse from the right.  ``other``
+    indicates the other object which was collided with.
     
     
     IV.A.21. sge.Game.event_mouse_collision_top
     --------------------------------------------------------------------
     
+    sge.Game.event_mouse_collision_top(self, other)
+    
+    Top Mouse Collision event.  This event is executed when another
+    object collides with sge.game.mouse from the top.  ``other``
+    indicates the other object which was collided with.
+    
     
     IV.A.22. sge.Game.event_mouse_collision_bottom
     --------------------------------------------------------------------
+    
+    sge.Game.event_mouse_collision_bottom(self, other)
+    
+    Bottom Mouse Collision event.  This event is executed when another
+    object collides with sge.game.mouse from the bottom.  ``other``
+    indicates the other object which was collided with.
     
     
     IV.A.23. sge.Game.event_game_end
     --------------------------------------------------------------------
     
+    sge.Game.event_game_end(self)
+    
+    Game End event.  This event is executed when the game ends.  It is
+    only executed once and it is always the very last event executed.
+    
     
     IV.A.24. sge.Game.event_paused_key_press
     --------------------------------------------------------------------
+    
+    sge.Game.event_paused_key_press(self, key)
+    
+    Key Press event when the game is paused.
     
     
     IV.A.25. sge.Game.event_paused_key_release
     --------------------------------------------------------------------
     
+    sge.Game.event_paused_key_release(self, key)
+    
+    Key Release event when the game is paused.
+    
     
     IV.A.26. sge.Game.event_paused_mouse_move
     --------------------------------------------------------------------
+    
+    sge.Game.event_paused_mouse_move(self, x, y)
+    
+    Mouse Move event when the game is paused.
     
     
     IV.A.27. sge.Game.event_paused_mouse_button_press
     --------------------------------------------------------------------
     
+    sge.Game.event_paused_mouse_button_press(self, button)
+    
+    Mouse Button Press event when the game is paused.
+    
     
     IV.A.28. sge.Game.event_paused_mouse_button_release
     --------------------------------------------------------------------
+    
+    sge.Game.event_paused_mouse_button_release
+    
+    Mouse Button Release event when the game is paused.
     
     
     IV.A.29. sge.Game.event_paused_joystick_axis_move
     --------------------------------------------------------------------
     
+    sge.Game.event_paused_joystick_axis_move(self, joystick, axis,
+        value)
+    
+    Joystick Axis Move event when the game is paused.
+    
     
     IV.A.30. sge.Game.event_paused_joystick_hat_move
     --------------------------------------------------------------------
+    
+    sge.Game.event_paused_joystick_hat_move(self, joystick, hat, x, y)
+    
+    Joystick HAT Move event when the game is paused.
     
     
     IV.A.31. sge.Game.event_paused_joystick_button_press
     --------------------------------------------------------------------
     
+    sge.Game.event_paused_joystick_button_press(self, joystick, button)
+    
+    Joystick Button Press event when the game is paused.
+    
     
     IV.A.32. sge.Game.event_paused_joystick_button_release
     --------------------------------------------------------------------
     
+    sge.Game.event_paused_joystick_button_release(self, joystick,
+        button)
+    
+    Joystick Button Release event when the game is paused.
+    
     
     IV.A.33. sge.Game.event_paused_close
     --------------------------------------------------------------------
+    
+    sge.Game.event_paused_close(self)
+    
+    Close event when the game is paused.
 
