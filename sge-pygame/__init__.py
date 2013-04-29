@@ -3563,14 +3563,6 @@ class StellarClass(object):
 
 class Mouse(StellarClass):
 
-    # TODO: Speed variables should be reported based on the last 1/4
-    # second of motion.
-
-    # TODO: Setting ``visible`` should set whether or not the mouse is
-    # shown.
-    
-    # TODO: Setting ``sprite`` should set the mouse cursor.
-
     @property
     def x(self):
         if game.current_room is not None:
@@ -3590,8 +3582,10 @@ class Mouse(StellarClass):
 
     @x.setter
     def x(self, value):
-        # Do nothing; we don't want this to be manually set.
-        pass
+        rel_x = (value - self.x) * game._xscale
+        self.mouse_x += rel_x
+        self._x = value
+        pygame.mouse.set_pos(self.mouse_x, self.mouse_y)
 
     @property
     def y(self):
@@ -3612,44 +3606,32 @@ class Mouse(StellarClass):
 
     @y.setter
     def y(self, value):
-        # Do nothing; we don't want this to be manually set.
-        pass
+        rel_y = (value - self.y) * game._yscale
+        self.mouse_y += rel_y
+        self._y = value
+        pygame.mouse.set_pos(self.mouse_x, self.mouse_y)
 
     @property
-    def bbox_left(self):
-        return self.x
+    def sprite(self):
+        return self._sprite
 
-    @bbox_left.setter
-    def bbox_left(self, value):
-        # Do nothing; we don't want this to be manually set.
-        pass
+    @sprite.setter
+    def sprite(self, value):
+        if isinstance(value, Sprite) or value is None:
+            self._sprite = value
+        else:
+            self._sprite = game.sprites[value]
 
-    @property
-    def bbox_right(self):
-        return self.x
-
-    @bbox_right.setter
-    def bbox_right(self, value):
-        # Do nothing; we don't want this to be manually set.
-        pass
+        self.set_cursor()
 
     @property
-    def bbox_top(self):
-        return self.y
+    def visible(self):
+        return self._visible
 
-    @bbox_top.setter
-    def bbox_top(self, value):
-        # Do nothing; we don't want this to be manually set.
-        pass
-
-    @property
-    def bbox_bottom(self):
-        return self.y
-
-    @bbox_bottom.setter
-    def bbox_bottom(self, value):
-        # Do nothing; we don't want this to be manually set.
-        pass
+    @visible.setter
+    def visible(self, value):
+        self._visible = value
+        self.set_cursor()
 
     def __init__(self):
         super(Mouse, self).__init__(0, 0, 0, id='mouse')
@@ -3708,6 +3690,10 @@ class Mouse(StellarClass):
         self.mouse_yprevious = self.mouse_y
         self.xprevious = self.x
         self.yprevious = self.y
+
+    def set_cursor(self):
+        # Set the mouse cursor and visibility state.
+        pygame.mouse.set_visible(self.visible and self.sprite is None)
 
 
 class Room(object):

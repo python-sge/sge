@@ -99,15 +99,11 @@ II. SGE Concepts
   "mouse".
   
   The mouse object differs from most sge.StellarClass objects in a few
-  ways.  Since its position is controlled by SGE, its position cannot
-  be manually set.  Its speed variables also cannot be manually set, and
-  they always report numbers which correspond to the average motion of
-  the mouse during the last quarter of a second.  Setting
-  sge.game.mouse.visible toggles whether or not the mouse cursor itself
-  is visible, and setting sge.game.mouse.sprite sets the mouse cursor to
-  the sprite assigned.  When detecting collisions, the mouse object is
-  always treated as having only a one-pixel bounding box at the position
-  of the mouse, ignoring the regular bounding box attributes.
+  ways.  Its speed variables cannot be manually set, and they always
+  report numbers which correspond to the average motion of the mouse
+  during the last quarter of a second.  Setting sge.game.mouse.visible
+  toggles whether or not the mouse cursor itself is visible, and setting
+  sge.game.mouse.sprite sets the mouse cursor to the sprite assigned.
   
   In all other ways, the mouse object is exactly the same as all other
   sge.StellarClass objects.
