@@ -18,7 +18,10 @@ Contents
 ------------------------------------------------------------------------
 
 I. Introduction
-II. Events
+II. SGE Concepts
+  II.A. Events
+  II.B. The Mouse
+  II.C. Colors
 III. Global Variables and Constants
 IV. Classes
   IV.A. sge.Game
@@ -35,6 +38,26 @@ IV. Classes
     IV.A.11. sge.Game.event_mouse_button_press
     IV.A.12. sge.Game.event_mouse_button_release
     IV.A.13. sge.Game.event_joystick_axis_move
+    IV.A.14. sge.Game.event_joystick_hat_move
+    IV.A.15. sge.Game.event_joystick_button_press
+    IV.A.16. sge.Game.event_joystick_button_release
+    IV.A.17. sge.Game.event_close
+    IV.A.18. sge.Game.event_mouse_collision
+    IV.A.19. sge.Game.event_mouse_collision_left
+    IV.A.20. sge.Game.event_mouse_collision_right
+    IV.A.21. sge.Game.event_mouse_collision_top
+    IV.A.22. sge.Game.event_mouse_collision_bottom
+    IV.A.23. sge.Game.event_game_end
+    IV.A.24. sge.Game.event_paused_key_press
+    IV.A.25. sge.Game.event_paused_key_release
+    IV.A.26. sge.Game.event_paused_mouse_move
+    IV.A.27. sge.Game.event_paused_mouse_button_press
+    IV.A.28. sge.Game.event_paused_mouse_button_release
+    IV.A.29. sge.Game.event_paused_joystick_axis_move
+    IV.A.30. sge.Game.event_paused_joystick_hat_move
+    IV.A.31. sge.Game.event_paused_joystick_button_press
+    IV.A.32. sge.Game.event_paused_joystick_button_release
+    IV.A.33. sge.Game.event_paused_close
 
 
 I. Introduction
@@ -47,18 +70,53 @@ allows more rapid development by experienced game developers and also
 helps less experienced game developers learn how to develop games.
 
 
-II. Events
+II. SGE Concepts
 ------------------------------------------------------------------------
 
-Much like Game Maker, SGE uses an event-based system, with events
-defined by special class methods with names that start with "event_".
+  II.A. Events
+  ----------------------------------------------------------------------
 
-Except in certain special cases, events are handled in an arbitrary
-order; if Event A and Event B happen at the same time, one
-implementation might handle Event A first, while another implementation
-might handle Event B first.  Still another implementation might in
-theory even handle Event A first one frame, then handle Event B in
-another.
+  Much like Game Maker, SGE uses an event-based system, with events
+  defined by special class methods with names that start with "event_".
+
+  Except in certain special cases, events are handled in an arbitrary
+  order; if Event A and Event B happen at the same time, one
+  implementation might handle Event A first, while another
+  implementation might handle Event B first.  Still another
+  implementation might in theory even handle Event A first one frame,
+  then handle Event B in another.
+  
+  
+  II.B. The Mouse
+  ----------------------------------------------------------------------
+  
+  The mouse is handled somewhat unusually in SGE.  Rather than having
+  functions or variables report the mouse position relative to the
+  screen, the mouse position within the room, calculated based on its
+  position on the screen by SGE, is recorded in a special
+  sge.StellarClass object which represents the mouse.  This mouse object
+  can be found as sge.game.mouse, and it has the special object ID,
+  "mouse".
+  
+  The mouse object differs from most sge.StellarClass objects in a few
+  ways.  Since its position is controlled by SGE, its position cannot
+  be manually set.  Its speed variables also cannot be manually set, and
+  they always report numbers which correspond to the average motion of
+  the mouse during the last quarter of a second.  Setting
+  sge.game.mouse.visible toggles whether or not the mouse cursor itself
+  is visible, and setting sge.game.mouse.sprite sets the mouse cursor to
+  the sprite assigned.  When detecting collisions, the mouse object is
+  always treated as having only a one-pixel bounding box at the position
+  of the mouse, ignoring the regular bounding box attributes.
+  
+  In all other ways, the mouse object is exactly the same as all other
+  sge.StellarClass objects.
+  
+  
+  II.C. Colors
+  ----------------------------------------------------------------------
+  
+  
 
 
 III. Global Variables and Constants
@@ -306,8 +364,8 @@ is best implemented via subclassing SGE's classes.
     sge.Game.event.mouse_button_release(self, button)
     
     Mouse Button Release event.  This event is executed when a mouse
-    button is pressed.  ``button`` indicates the number of the button
-    that was pressed.  What button numbers correspond to what buttons
+    button is released.  ``button`` indicates the number of the button
+    that was released.  What button numbers correspond to what buttons
     can vary among implementations, so ``button`` should be checked
     against the following constants:
     
@@ -335,4 +393,134 @@ is best implemented via subclassing SGE's classes.
     -1 and 1; it is not limited to integral values.
     
     Support for joysticks in SGE implementations is optional.
+
+
+    IV.A.14. sge.Game.event_joystick_hat_move
+    --------------------------------------------------------------------
+    
+    sge.Game.event_joystick_hat_move(self, joystick, hat, x, y)
+    
+    Joystick HAT Move event.  This event is executed when a HAT switch
+    (also called the POV hat, POV switch, or d-pad) changes position.
+    ``joystick`` indicates the number of the joystick, where 0 is the
+    first joystick.  ``hat`` indicates the number of the HAT, where 0 is
+    the first HAT.  ``x`` indicates the horizontal position of the HAT,
+    where 0 is in the center, -1 is left, and 1 is right.  ``y``
+    indicates the vertical position of the HAT, where 0 is in the
+    center, -1 is up, and 1 is down.
+    
+    Support for joysticks in SGE implementations is optional.
+    
+    
+    IV.A.15. sge.Game.event_joystick_button_press
+    --------------------------------------------------------------------
+    
+    sge.Game.event_joystick_button_press(self, joystick, button)
+    
+    Joystick Button Press event.  This event is executed when a joystick
+    button is pressed.  ``joystick`` indicates the number of the
+    joystick, where 0 is the first joystick.  ``button`` indicates the
+    number of the button that was pressed, where 0 is the first button
+    on the joystick.
+    
+    Support for joysticks in SGE implementations is optional.
+    
+    
+    IV.A.16. sge.Game.event_joystick_button_release
+    --------------------------------------------------------------------
+    
+    sge.Game.event_joystick_button_release(self, joystick, button)
+    
+    Joystick Button Release event.  This event is executed when a
+    joystick button is released.  ``joystick`` indicates the number of
+    the joystick, where 0 is the first joystick.  ``button`` indicates
+    the number of the button that was released, where 0 is the first
+    button on the joystick.
+    
+    Support for joysticks in SGE implementations is optional.
+
+
+    IV.A.17. sge.Game.event_close
+    --------------------------------------------------------------------
+    
+    sge.Game.event_close(self)
+    
+    Close event.  This event is executed when the operating system tells
+    the game to close, e.g. when the user presses the close button in
+    the window frame.  It is always called after any
+    sge.Room.event_close occurring at the same time.
+    
+    
+    IV.A.18. sge.Game.event_mouse_collision
+    --------------------------------------------------------------------
+    
+    sge.Game.event_mouse_collision(self, other)
+    
+    Default Mouse Collision event.  This event is executed when
+    sge.game.mouse collides with another object and none of the
+    directional collision events are appropriate.  In particular, this
+    event is executed if the collision was already happening in the
+    previous frame, meaning that the object is colliding with the inside
+    of the mouse. In addition, directional mouse collision events cause
+    this event to execute by default if they are not overridden.
+    
+    
+    IV.A.19. sge.Game.event_mouse_collision_left
+    --------------------------------------------------------------------
+    
+    
+    IV.A.20. sge.Game.event_mouse_collision_right
+    --------------------------------------------------------------------
+    
+    
+    IV.A.21. sge.Game.event_mouse_collision_top
+    --------------------------------------------------------------------
+    
+    
+    IV.A.22. sge.Game.event_mouse_collision_bottom
+    --------------------------------------------------------------------
+    
+    
+    IV.A.23. sge.Game.event_game_end
+    --------------------------------------------------------------------
+    
+    
+    IV.A.24. sge.Game.event_paused_key_press
+    --------------------------------------------------------------------
+    
+    
+    IV.A.25. sge.Game.event_paused_key_release
+    --------------------------------------------------------------------
+    
+    
+    IV.A.26. sge.Game.event_paused_mouse_move
+    --------------------------------------------------------------------
+    
+    
+    IV.A.27. sge.Game.event_paused_mouse_button_press
+    --------------------------------------------------------------------
+    
+    
+    IV.A.28. sge.Game.event_paused_mouse_button_release
+    --------------------------------------------------------------------
+    
+    
+    IV.A.29. sge.Game.event_paused_joystick_axis_move
+    --------------------------------------------------------------------
+    
+    
+    IV.A.30. sge.Game.event_paused_joystick_hat_move
+    --------------------------------------------------------------------
+    
+    
+    IV.A.31. sge.Game.event_paused_joystick_button_press
+    --------------------------------------------------------------------
+    
+    
+    IV.A.32. sge.Game.event_paused_joystick_button_release
+    --------------------------------------------------------------------
+    
+    
+    IV.A.33. sge.Game.event_paused_close
+    --------------------------------------------------------------------
 

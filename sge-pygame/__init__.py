@@ -3563,6 +3563,14 @@ class StellarClass(object):
 
 class Mouse(StellarClass):
 
+    # TODO: Speed variables should be reported based on the last 1/4
+    # second of motion.
+
+    # TODO: Setting ``visible`` should set whether or not the mouse is
+    # shown.
+    
+    # TODO: Setting ``sprite`` should set the mouse cursor.
+
     @property
     def x(self):
         if game.current_room is not None:
