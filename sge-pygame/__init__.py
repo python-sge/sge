@@ -125,7 +125,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.42"
+__version__ = "0.0.43"
 
 import sys
 import os
@@ -275,6 +275,8 @@ class Game(object):
             setting limits this by pretending that the frame rate is
             never lower than this amount, resulting in the game slowing
             down like normal if it is.
+        grab_input: If set to True, all input will be locked into the
+            game.
 
     The following read-only attributes are also available:
         sprites: A dictionary containing all loaded sprites, using their
@@ -408,9 +410,17 @@ class Game(object):
             self._scale_smooth = value
             self._set_mode()
 
+    @property
+    def grab_input(self):
+        return pygame.event.get_grab()
+
+    @grab_input.setter
+    def grab_input(self, value):
+        pygame.event.set_grab(value)
+
     def __init__(self, width=640, height=480, fullscreen=False, scale=0,
                  scale_proportional=True, scale_smooth=False, fps=60,
-                 delta=False, delta_min=15):
+                 delta=False, delta_min=15, grab_input=False):
         """Create a new Game object and assign it to ``game``.
 
         Arguments set the properties of the game.  See Game.__doc__ for
@@ -3693,7 +3703,10 @@ class Mouse(StellarClass):
 
     def set_cursor(self):
         # Set the mouse cursor and visibility state.
-        pygame.mouse.set_visible(self.visible and self.sprite is None)
+        if not game.grab_input:
+            pygame.mouse.set_visible(self.visible and self.sprite is None)
+        else:
+            pygame.mouse.set_visible(False)
 
 
 class Room(object):
