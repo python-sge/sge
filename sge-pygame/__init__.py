@@ -125,7 +125,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.43"
+__version__ = "0.0.44"
 
 import sys
 import os
@@ -1467,6 +1467,18 @@ class Sprite(object):
         if bbox_height is None:
             bbox_height = height
 
+        for i in xrange(len(self._baseimages)):
+            if game.scale_smooth:
+                try:
+                    self._baseimages[i] = pygame.transform.smoothscale(
+                        self._baseimages[i], (width, height))
+                except pygame.error:
+                    self._baseimages[i] = pygame.transform.scale(
+                        self._baseimages[i], (width, height))
+            else:
+                self._baseimages[i] = pygame.transform.scale(
+                    self._baseimages[i], (width, height))
+
         self._w = width
         self._h = height
         self.origin_x = origin_x
@@ -1660,6 +1672,27 @@ class Sprite(object):
                     c = _get_pygame_color(outline)
                     pygame.draw.circle(self._baseimages[i], c, (x, y), radius,
                                        outline_thickness)
+
+        self._refresh()
+
+    def draw_sprite(self, sprite, image, x, y, frame=None):
+        """Draw the given sprite at the given position.
+
+        ``sprite`` indicates the sprite to draw.  ``image`` indicates
+        the frame of ``sprite`` to draw, where 0 is the first frame.
+        ``x`` and ``y`` indicate the location in the sprite being drawn
+        on to position ``sprite``.  ``frame`` indicates the frame of the
+        sprite to draw on, where 0 is the first frame; set to None to
+        draw on all frames.
+
+        """
+        x -= sprite.origin_x
+        y -= sprite.origin_y
+        image %= len(sprite._baseimages)
+
+        for i in xrange(len(self._baseimages)):
+            if frame is None or frame % len(self._baseimages) == i:
+                self._baseimages[i].blit(sprite._baseimages[i], (x, y))
 
         self._refresh()
 
@@ -3418,8 +3451,9 @@ class StellarClass(object):
 
         # Movement
         if self.xvelocity or self.yvelocity:
-            self.x += self.xvelocity * delta_mult
-            self.y += self.yvelocity * delta_mult
+            if self.id != "mouse":
+                self.x += self.xvelocity * delta_mult
+                self.y += self.yvelocity * delta_mult
 
             # Detect collisions
             if self.detects_collisions:
@@ -3594,7 +3628,15 @@ class Mouse(StellarClass):
     def x(self, value):
         rel_x = (value - self.x) * game._xscale
         self.mouse_x += rel_x
+
+        self.xprevious = self._x
         self._x = value
+        self._bbox_left = value + self.bbox_x
+        self._bbox_right = self.bbox_left + self.bbox_width
+
+        # Cause the Pygame sprite to make itself dirty
+        self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
+
         pygame.mouse.set_pos(self.mouse_x, self.mouse_y)
 
     @property
@@ -3618,7 +3660,15 @@ class Mouse(StellarClass):
     def y(self, value):
         rel_y = (value - self.y) * game._yscale
         self.mouse_y += rel_y
+
+        self.yprevious = self._y
         self._y = value
+        self._bbox_top = value + self.bbox_y
+        self._bbox_bottom = self.bbox_top + self.bbox_height
+
+        # Cause the Pygame sprite to make itself dirty
+        self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
+
         pygame.mouse.set_pos(self.mouse_x, self.mouse_y)
 
     @property
@@ -3644,11 +3694,12 @@ class Mouse(StellarClass):
         self.set_cursor()
 
     def __init__(self):
-        super(Mouse, self).__init__(0, 0, 0, id='mouse')
+        self._visible = True
         self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
         self.mouse_xprevious = self.mouse_x
         self.mouse_yprevious = self.mouse_y
         self.previous_speeds = []
+        super(Mouse, self).__init__(0, 0, 0, id='mouse')
 
     def event_collision(self, other):
         game.event_mouse_collision(other)

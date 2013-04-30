@@ -101,7 +101,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.43"
+__version__ = "0.0.44"
 
 import sys
 import os
@@ -603,6 +603,7 @@ class Sprite(object):
         draw_rectangle: Draw a rectangle at the given position.
         draw_ellipse: Draw an ellipse at the given position.
         draw_circle: Draw a circle at the given position.
+        draw_sprite: Draw the given sprite at the given position.
         draw_text: Draw the given text at the given position.
         draw_clear: Erase everything from the sprite.
 
@@ -763,6 +764,19 @@ class Sprite(object):
         implementations.  If the implementation used does not support
         anti-aliasing, this method will act like ``anti_alias`` is
         False.
+
+        """
+        # TODO
+
+    def draw_sprite(self, sprite, image, x, y, frame=None):
+        """Draw the given sprite at the given position.
+
+        ``sprite`` indicates the sprite to draw.  ``image`` indicates
+        the frame of ``sprite`` to draw, where 0 is the first frame.
+        ``x`` and ``y`` indicate the location in the sprite being drawn
+        on to position ``sprite``.  ``frame`` indicates the frame of the
+        sprite to draw on, where 0 is the first frame; set to None to
+        draw on all frames.
 
         """
         # TODO
