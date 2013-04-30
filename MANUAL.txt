@@ -62,6 +62,16 @@ IV. Classes
     IV.A.31. sge.Game.event_paused_joystick_button_press
     IV.A.32. sge.Game.event_paused_joystick_button_release
     IV.A.33. sge.Game.event_paused_close
+  IV.B. sge.Sprite
+    IV.B.1. Cunstructor Method (sge.Sprite.__init__)
+    IV.B.2. sge.Sprite.draw_dot
+    IV.B.3. sge.Sprite.draw_line
+    IV.B.4. sge.Sprite.draw_rectangle
+    IV.B.5. sge.Sprite.draw_ellipse
+    IV.B.6. sge.Sprite.draw_circle
+    IV.B.7. sge.Sprite.draw_sprite
+    IV.B.8. sge.Sprite.draw_text
+    IV.B.9. sge.Sprite.draw_clear
 
 
 I. Introduction
@@ -662,4 +672,58 @@ is best implemented via subclassing SGE's classes.
     sge.Game.event_paused_close(self)
     
     Close event when the game is paused.
-
+    
+    
+  IV.B. sge.Sprite
+  ----------------------------------------------------------------------
+  
+  This class stores images and information about how SGE is to use those
+  images.
+  
+  Attributes:
+  * width: The width of the sprite in pixels.
+  * height: The height of the sprite in pixels.
+  * origin_x: The horizontal location of the origin (the pixel position
+      in relation to the images to base rendering on), where the left
+      edge of the image is 0 and origin_x increases toward the right.
+  * origin_y: The vertical location of the origin (the pixel position in
+      relation to the images to base rendering on), where the top edge
+      of the image is 0 and origin_y increases toward the bottom.
+  * transparent: True if the image should support transparency, False
+      otherwise.  If the image does not have an alpha channel or if the
+      implementation used does not support alpha transparency, a
+      colorkey will be used, with the transparent color being the color
+      of the top-rightmost pixel.
+  * fps: The suggested rate in frames per second to animate the image
+      at.
+  * bbox_x: The horizontal location of the top-left corner of the
+      suggested bounding box to use with this sprite, where origin_x is
+      0 and bbox_x increases toward the right.
+  * bbox_y: The vertical location of the top-left corner of the
+      suggested bounding box to use with this sprite, where origin_y is
+      0 and bbox_y increases toward the bottom.
+  * bbox_width: The width of the suggested bounding box in pixels.
+  * bbox_height: The height of the suggested bounding box in pixels.
+  
+  Read-Only Attributes:
+  * name: The name of the sprite given when it was created.
+  
+  
+    IV.B.1. Cunstructor Method (sge.Sprite.__init__)
+    --------------------------------------------------------------------
+    IV.B.2. sge.Sprite.draw_dot
+    -------------------------------------------------------------------
+    IV.B.3. sge.Sprite.draw_line
+    --------------------------------------------------------------------
+    IV.B.4. sge.Sprite.draw_rectangle
+    --------------------------------------------------------------------
+    IV.B.5. sge.Sprite.draw_ellipse
+    --------------------------------------------------------------------
+    IV.B.6. sge.Sprite.draw_circle
+    ------------------------------------------------------------------
+    IV.B.7. sge.Sprite.draw_sprite
+    --------------------------------------------------------------------
+    IV.B.8. sge.Sprite.draw_text
+    --------------------------------------------------------------------
+    IV.B.9. sge.Sprite.draw_clear
+    --------------------------------------------------------------------
