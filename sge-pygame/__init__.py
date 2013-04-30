@@ -230,12 +230,12 @@ MOUSE_BUTTON_WHEEL_RIGHT = 7
 
 # Global variables
 game = None
-image_directories = [os.path.join('data', 'images'),
-                     os.path.join('data', 'sprites'),
-                     os.path.join('data', 'backgrounds')]
-font_directories = [os.path.join('data', 'fonts')]
-sound_directories = [os.path.join('data', 'sounds')]
-music_directories = [os.path.join('data', 'music')]
+image_directories = [os.path.join(sys.argv[0], 'data', 'images'),
+                     os.path.join(sys.argv[0], 'data', 'sprites'),
+                     os.path.join(sys.argv[0], 'data', 'backgrounds')]
+font_directories = [os.path.join(sys.argv[0], 'data', 'fonts')]
+sound_directories = [os.path.join(sys.argv[0], 'data', 'sounds')]
+music_directories = [os.path.join(sys.argv[0], 'data', 'music')]
 
 hardware_rendering = False
 real_trackballs = False
@@ -738,7 +738,8 @@ class Game(object):
         else:
             try:
                 image = pygame.image.load(
-                    os.path.join('sge', 'sge_pause.png')).convert()
+                    os.path.join(os.path.dirname(__file__),
+                                 'sge_pause.png')).convert()
                 image.set_colorkey((255, 0, 255))
             except pygame.error:
                 image = pygame.Surface((16, 16))

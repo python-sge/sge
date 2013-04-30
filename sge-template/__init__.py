@@ -153,12 +153,12 @@ MOUSE_BUTTON_WHEEL_RIGHT = 6
 
 # Global variables
 game = None
-image_directories = [os.path.join('data', 'images'),
-                     os.path.join('data', 'sprites'),
-                     os.path.join('data', 'backgrounds')]
-font_directories = [os.path.join('data', 'fonts')]
-sound_directories = [os.path.join('data', 'sounds')]
-music_directories = [os.path.join('data', 'music')]
+image_directories = [os.path.join(sys.argv[0], 'data', 'images'),
+                     os.path.join(sys.argv[0], 'data', 'sprites'),
+                     os.path.join(sys.argv[0], 'data', 'backgrounds')]
+font_directories = [os.path.join(sys.argv[0], 'data', 'fonts')]
+sound_directories = [os.path.join(sys.argv[0], 'data', 'sounds')]
+music_directories = [os.path.join(sys.argv[0], 'data', 'music')]
 
 
 class Game(object):
