@@ -721,7 +721,37 @@ is best implemented via subclassing SGE's classes.
     object.
     
     The base name is used to find all individual image files which make
-    up this sprite's animation.  First, a file
+    up this sprite's animation.  First, a file who's name consists only
+    of the base name plus a valid image extension is searched for.  If
+    no such image is available, files with names consisting of the base
+    name followed by either an underscore ("_") or a hyphen ("-") and
+    then a positive integer are searched for, to be used as a single
+    animation with the frames ordered by number (the lowest number is
+    the first frame).  If neither of these methods return any results, a
+    file with names consisting of the base name followed by either
+    "_strip" or "-strip" and then an integer is searched for to be used
+    as an animation; the image is split into a number of sections
+    indicated by the number horizontally, like a horizontal reel.
+    
+    The following are all examples of images that will be loaded for a
+    sprite given the base name "foo":
+    * foo.png (single-frame, no animation)
+    * foo-0.png (frame 0; the next frame would be foo-1.png)
+    * foo-strip4.png (split horizontally into four sections)
+    
+    The base name can also be None, in which case the sprite will be a
+    fully transparent rectangle at the specified size (with both
+    ``width`` and ``height`` defaulting to 32 if they are set to None).
+    The implementation decides what to assign to the sprite's ``name``
+    attribute in this case, but it will always be a string.
+    
+    If no image is found based on any of the above methods and the base
+    name is not None, IOError will be raised.
+    
+    If ``width`` or ``height`` is set to None, the respective size will
+    be taken from the largest animation frame.  If ``bbox_width`` or
+    ``bbox_height`` is set to None, it will be taken from ``width`` or
+    ``height``, respectively.
     
     
     IV.B.2. sge.Sprite.draw_dot
