@@ -711,8 +711,21 @@ is best implemented via subclassing SGE's classes.
   
     IV.B.1. Cunstructor Method (sge.Sprite.__init__)
     --------------------------------------------------------------------
+    
+    sge.Sprite.__init__(self, name=None, width=None, height=None,
+        origin_x=0, origin_y=0, transparent=True, fps=60, bbox_x=0,
+        bbox_y=0, bbox_width=None, bbox_height=None)
+    
+    ``name`` indicates the base name of the image files.  All remaining
+    arguments are used to set the respective initial attributes of the
+    object.
+    
+    The base name is used to find all individual image files which make
+    up this sprite's animation.  First, a file
+    
+    
     IV.B.2. sge.Sprite.draw_dot
-    -------------------------------------------------------------------
+    --------------------------------------------------------------------
     IV.B.3. sge.Sprite.draw_line
     --------------------------------------------------------------------
     IV.B.4. sge.Sprite.draw_rectangle
@@ -720,7 +733,7 @@ is best implemented via subclassing SGE's classes.
     IV.B.5. sge.Sprite.draw_ellipse
     --------------------------------------------------------------------
     IV.B.6. sge.Sprite.draw_circle
-    ------------------------------------------------------------------
+    --------------------------------------------------------------------
     IV.B.7. sge.Sprite.draw_sprite
     --------------------------------------------------------------------
     IV.B.8. sge.Sprite.draw_text

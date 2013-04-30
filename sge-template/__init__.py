@@ -990,9 +990,6 @@ class Sound(object):
         Sound.pause: Pause playback of the sound.
         Sound.unpause: Resume playback of the sound if paused.
 
-    Ogg Vorbis and uncompressed WAV are supported at a minimum.
-    Depending on the implementation, other formats may be supported.
-
     """
 
     def __init__(self, fname, volume=100, balance=0, max_play=1):
@@ -1076,9 +1073,6 @@ class Music(object):
         Music.pause: Pause playback of the music.
         Music.unpause: Resume playback of the music if paused.
         Music.restart: Restart music from the beginning.
-
-    Ogg Vorbis is supported at a minimum.  Depending on the
-    implementation, other formats may be supported.
 
     """
 
