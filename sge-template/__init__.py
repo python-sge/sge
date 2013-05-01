@@ -101,7 +101,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.44"
+__version__ = "0.0.45"
 
 import sys
 import os
@@ -120,6 +120,8 @@ __all__ = ['Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',
            'get_joystick_axis', 'get_joystick_hat',
            'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_axes',
            'get_joystick_hats', 'get_joystick_buttons']
+
+PROGRAM_DIR = os.path.dirname(sys.argv[0])
 
 COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
           'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
@@ -153,12 +155,12 @@ MOUSE_BUTTON_WHEEL_RIGHT = 6
 
 # Global variables
 game = None
-image_directories = [os.path.join(sys.argv[0], 'data', 'images'),
-                     os.path.join(sys.argv[0], 'data', 'sprites'),
-                     os.path.join(sys.argv[0], 'data', 'backgrounds')]
-font_directories = [os.path.join(sys.argv[0], 'data', 'fonts')]
-sound_directories = [os.path.join(sys.argv[0], 'data', 'sounds')]
-music_directories = [os.path.join(sys.argv[0], 'data', 'music')]
+image_directories = [os.path.join(PROGRAM_DIR, 'data', 'images'),
+                     os.path.join(PROGRAM_DIR, 'data', 'sprites'),
+                     os.path.join(PROGRAM_DIR, 'data', 'backgrounds')]
+font_directories = [os.path.join(PROGRAM_DIR, 'data', 'fonts')]
+sound_directories = [os.path.join(PROGRAM_DIR, 'data', 'sounds')]
+music_directories = [os.path.join(PROGRAM_DIR, 'data', 'music')]
 
 
 class Game(object):
