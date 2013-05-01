@@ -1219,6 +1219,7 @@ class StellarClass(object):
         collides: Return whether or not this object collides with
             another.
         set_alarm: Set an alarm.
+        get_alarm: Return the count on an alarm.
         destroy: Destroy the object.
 
     StellarClass events are handled by special methods.  The exact

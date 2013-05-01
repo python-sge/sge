@@ -80,6 +80,70 @@ IV. Classes
   IV.E. sge.Font
     IV.E.1. Constructor Method (sge.Font.__init__)
     IV.E.2. sge.Font.get_size
+  IV.F. sge.Sound
+    IV.F.1. Constructor Method (sge.Sound.__init__)
+    IV.F.2. sge.Sound.play
+    IV.F.3. sge.Sound.stop
+    IV.F.4. sge.Sound.pause
+    IV.F.5. sge.Sound.unpause
+  IV.G. sge.Music
+    IV.G.1. Constructor Method (sge.Music.__init__)
+    IV.G.2. sge.Music.play
+    IV.G.3. sge.Music.queue
+    IV.G.4. sge.Music.stop
+    IV.G.5. sge.Music.pause
+    IV.G.6. sge.Music.unpause
+    IV.G.7. sge.Music.restart
+  IV.H. sge.StellarClass
+    IV.H.1. Constructor Method (sge.StellarClass.__init__)
+    IV.H.2. sge.StellarClass.collides
+    IV.H.3. sge.StellarClass.set_alarm
+    IV.H.4. sge.StellarClass.get_alarm
+    IV.H.5. sge.StellarClass.destroy
+    IV.H.6. sge.StellarClass.event_create
+    IV.H.7. sge.StellarClass.event_step
+    IV.H.8. sge.StellarClass.event_alarm
+    IV.H.9. sge.StellarClass.event_key_press
+    IV.H.10. sge.StellarClass.event_key_release
+    IV.H.11. sge.StellarClass.event_mouse_move
+    IV.H.12. sge.StellarClass.event_mouse_button_press
+    IV.H.13. sge.StellarClass.event_mouse_button_release
+    IV.H.14. sge.StellarClass.event_joystick_axis_move
+    IV.H.15. sge.StellarClass.event_joystick_hat_move
+    IV.H.16. sge.StellarClass.event_joystick_button_press
+    IV.H.17. sge.StellarClass.event_joystick_button_release
+    IV.H.18. sge.StellarClass.event_collision
+    IV.H.19. sge.StellarClass.event_collision_left
+    IV.H.20. sge.StellarClass.event_collision_right
+    IV.H.21. sge.StellarClass.event_collision_top
+    IV.H.22. sge.StellarClass.event_collision_bottom
+    IV.H.23. sge.StellarClass.event_animation_end
+    IV.H.24. sge.StellarClass.event_destroy
+    IV.H.25. sge.StellarClass.event_paused_key_press
+    IV.H.26. sge.StellarClass.event_paused_key_release
+    IV.H.27. sge.StellarClass.event_paused_mouse_move
+    IV.H.28. sge.StellarClass.event_paused_mouse_button_press
+    IV.H.29. sge.StellarClass.event_paused_mouse_button_release
+    IV.H.30. sge.StellarClass.event_paused_joystick_axis_move
+    IV.H.31. sge.StellarClass.event_paused_joystick_hat_move
+    IV.H.32. sge.StellarClass.event_paused_joystick_button_press
+    IV.H.33. sge.StellarClass.event_paused_joystick_button_release
+  IV.I. sge.Room
+  IV.J. sge.View
+V. Functions
+  V.A. sge.create_object
+  V.B. sge.sound_stop_all
+  V.C. sge.music_clear_queue
+  V.D. sge.music_stop_all
+  V.E. sge.get_key_pressed
+  V.F. sge.get_mouse_button_pressed
+  V.G. sge.get_joystick_axis
+  V.H. sge.get_joystick_hat
+  V.I. sge.get_joystick_button_pressed
+  V.J. sge.get_joysticks
+  V.K. sge.get_joystick_axes
+  V.L. sge.get_joystick_hats
+  V.M. sge.get_joystick_buttons
 
 
 I. Introduction
@@ -1092,3 +1156,132 @@ is best implemented via subclassing SGE's classes.
     and the size returned reflects the rendering rules therein.  The
     value returned is a tuple in the form (width, height).
 
+
+  IV.F. sge.Sound
+  ----------------------------------------------------------------------
+    IV.F.1. Constructor Method (sge.Sound.__init__)
+    --------------------------------------------------------------------
+    IV.F.2. sge.Sound.play
+    --------------------------------------------------------------------
+    IV.F.3. sge.Sound.stop
+    --------------------------------------------------------------------
+    IV.F.4. sge.Sound.pause
+    --------------------------------------------------------------------
+    IV.F.5. sge.Sound.unpause
+    --------------------------------------------------------------------
+  IV.G. sge.Music
+  ----------------------------------------------------------------------
+    IV.G.1. Constructor Method (sge.Music.__init__)
+    --------------------------------------------------------------------
+    IV.G.2. sge.Music.play
+    --------------------------------------------------------------------
+    IV.G.3. sge.Music.queue
+    --------------------------------------------------------------------
+    IV.G.4. sge.Music.stop
+    --------------------------------------------------------------------
+    IV.G.5. sge.Music.pause
+    --------------------------------------------------------------------
+    IV.G.6. sge.Music.unpause
+    --------------------------------------------------------------------
+    IV.G.7. sge.Music.restart
+    --------------------------------------------------------------------
+  IV.H. sge.StellarClass
+  ----------------------------------------------------------------------
+    IV.H.1. Constructor Method (sge.StellarClass.__init__)
+    --------------------------------------------------------------------
+    IV.H.2. sge.StellarClass.collides
+    --------------------------------------------------------------------
+    IV.H.3. sge.StellarClass.set_alarm
+    --------------------------------------------------------------------
+    IV.H.4. sge.StellarClass.get_alarm
+    --------------------------------------------------------------------
+    IV.H.5. sge.StellarClass.destroy
+    --------------------------------------------------------------------
+    IV.H.6. sge.StellarClass.event_create
+    --------------------------------------------------------------------
+    IV.H.7. sge.StellarClass.event_step
+    --------------------------------------------------------------------
+    IV.H.8. sge.StellarClass.event_alarm
+    --------------------------------------------------------------------
+    IV.H.9. sge.StellarClass.event_key_press
+    --------------------------------------------------------------------
+    IV.H.10. sge.StellarClass.event_key_release
+    --------------------------------------------------------------------
+    IV.H.11. sge.StellarClass.event_mouse_move
+    --------------------------------------------------------------------
+    IV.H.12. sge.StellarClass.event_mouse_button_press
+    --------------------------------------------------------------------
+    IV.H.13. sge.StellarClass.event_mouse_button_release
+    --------------------------------------------------------------------
+    IV.H.14. sge.StellarClass.event_joystick_axis_move
+    --------------------------------------------------------------------
+    IV.H.15. sge.StellarClass.event_joystick_hat_move
+    --------------------------------------------------------------------
+    IV.H.16. sge.StellarClass.event_joystick_button_press
+    --------------------------------------------------------------------
+    IV.H.17. sge.StellarClass.event_joystick_button_release
+    --------------------------------------------------------------------
+    IV.H.18. sge.StellarClass.event_collision
+    --------------------------------------------------------------------
+    IV.H.19. sge.StellarClass.event_collision_left
+    --------------------------------------------------------------------
+    IV.H.20. sge.StellarClass.event_collision_right
+    --------------------------------------------------------------------
+    IV.H.21. sge.StellarClass.event_collision_top
+    --------------------------------------------------------------------
+    IV.H.22. sge.StellarClass.event_collision_bottom
+    --------------------------------------------------------------------
+    IV.H.23. sge.StellarClass.event_animation_end
+    --------------------------------------------------------------------
+    IV.H.24. sge.StellarClass.event_destroy
+    --------------------------------------------------------------------
+    IV.H.25. sge.StellarClass.event_paused_key_press
+    --------------------------------------------------------------------
+    IV.H.26. sge.StellarClass.event_paused_key_release
+    --------------------------------------------------------------------
+    IV.H.27. sge.StellarClass.event_paused_mouse_move
+    --------------------------------------------------------------------
+    IV.H.28. sge.StellarClass.event_paused_mouse_button_press
+    --------------------------------------------------------------------
+    IV.H.29. sge.StellarClass.event_paused_mouse_button_release
+    --------------------------------------------------------------------
+    IV.H.30. sge.StellarClass.event_paused_joystick_axis_move
+    --------------------------------------------------------------------
+    IV.H.31. sge.StellarClass.event_paused_joystick_hat_move
+    --------------------------------------------------------------------
+    IV.H.32. sge.StellarClass.event_paused_joystick_button_press
+    --------------------------------------------------------------------
+    IV.H.33. sge.StellarClass.event_paused_joystick_button_release
+    --------------------------------------------------------------------
+  IV.I. sge.Room
+  ----------------------------------------------------------------------
+  IV.J. sge.View
+  ----------------------------------------------------------------------
+V. Functions
+------------------------------------------------------------------------
+  V.A. sge.create_object
+  ----------------------------------------------------------------------
+  V.B. sge.sound_stop_all
+  ----------------------------------------------------------------------
+  V.C. sge.music_clear_queue
+  ----------------------------------------------------------------------
+  V.D. sge.music_stop_all
+  ----------------------------------------------------------------------
+  V.E. sge.get_key_pressed
+  ----------------------------------------------------------------------
+  V.F. sge.get_mouse_button_pressed
+  ----------------------------------------------------------------------
+  V.G. sge.get_joystick_axis
+  ----------------------------------------------------------------------
+  V.H. sge.get_joystick_hat
+  ----------------------------------------------------------------------
+  V.I. sge.get_joystick_button_pressed
+  ----------------------------------------------------------------------
+  V.J. sge.get_joysticks
+  ----------------------------------------------------------------------
+  V.K. sge.get_joystick_axes
+  ----------------------------------------------------------------------
+  V.L. sge.get_joystick_hats
+  ----------------------------------------------------------------------
+  V.M. sge.get_joystick_buttons
+  ----------------------------------------------------------------------
