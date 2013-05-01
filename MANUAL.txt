@@ -1009,11 +1009,86 @@ is best implemented via subclassing SGE's classes.
     
   IV.D. sge.Background
   ----------------------------------------------------------------------
+  
+  This class stores the layers that make up the background (which
+  contain the information about what images to use and where) as well as
+  the color to use where no image is shown.
+  
+  Attributes:
+  * color: The color used in parts of the background where no layer is
+      shown.
+  
+  Read-Only Attributes:
+  * id: The unique identifier for this background assigned to it when it
+      was created.
+  * layers: A tuple containing all sge.BackgroundLayer objects used in
+      this background.
+  
+  
     IV.D.1. Constructor Method (sge.Background.__init__)
     --------------------------------------------------------------------
+    
+    sge.Background.__init__(self, layers, color, id=None)
+    
+    All arguments are used to set the respective initial attributes of
+    the background.  If ``id`` is None, it will be set to an integer not
+    currently used as an ID (the exact number chosen is determined by
+    the implementation and may vary between runs).
+    
+    
   IV.E. sge.Font
   ----------------------------------------------------------------------
+  
+  This class stores a font for use by Sprite.draw_text.
+  
+  Note that bold and italic rendering could be ugly.  It is better to
+  choose a bold or italic font rather than enabling bold or italic
+  rendering, if possible.
+  
+  Attributes:
+  * size: The height of the font in pixels.
+  * underline: Whether or not underlined rendering is enabled.
+  * bold: Whether or not bold rendering is enabled.
+  * italic: Whether or not italic rendering is enabled.
+  
+  Read-Only Attributes:
+  * name: The name of the font, as specified when it was created.
+  
+  
     IV.E.1. Constructor Method (sge.Font.__init__)
     --------------------------------------------------------------------
+    
+    sge.Font.__init__(self, name=None, size=12, underline=False,
+        bold=False, italic=False)
+    
+    ``name`` indicates the name of the font.  This can be either the
+    name of a font file, to be located in one of the directories
+    specified in sge.font_directories, or the name of a system font.  If
+    the specified font does not exist in either form, a default font
+    will be chosen by SGE (the default font can vary between
+    implementations).   ``name`` can also be a list or tuple of fonts to
+    choose from in order of preference.  All remaining arguments are
+    used to set the respective initial attributes of the font.
+    
+    Note that it is generally not a good practice to rely on system
+    fonts.  A font you have on your system might not be a font that
+    everyone has on their system.  For example, one common font on
+    Windows systems is Times New Roman, but GNU/Linux systems don't
+    usually have this font, instead having fonts like Liberation Serif
+    or DejaVu Serif.  SGE is supposed to make an attempt to match
+    compatible fonts, but this is not required of SGE implementations,
+    so it should not be relied upon.  Instead, choose a font with a
+    free license (such as the SIL Open Font License or the GNU General
+    Public License) and distribute it with your game.
+    
+    
     IV.E.2. sge.Font.get_size
     --------------------------------------------------------------------
+    
+    sge.Font.get_size(self, text, width=None, height=None)
+    
+    Returns the size of a certain string of text when rendered.  All
+    arguments correspond with the same arguments from sge.font.render,
+    and the size returned reflects the rendering rules therein.  The
+    value returned is a tuple in the form (width, height).
+

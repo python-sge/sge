@@ -101,7 +101,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.45"
+__version__ = "0.0.46"
 
 import sys
 import os
@@ -937,7 +937,7 @@ class Font(object):
         order of preference.
 
         Implementations are supposed, but not required, to attempt to
-        use a compatible font where possible. For example, if the font
+        use a compatible font where possible.  For example, if the font
         specified is "Times New Roman" and Times New Roman is not
         available, compatible fonts such as Liberation Serif should be
         attempted as well.
@@ -951,7 +951,7 @@ class Font(object):
         """
         # TODO
 
-    def get_size(self, text, x, y, width=None, height=None):
+    def get_size(self, text, width=None, height=None):
         """Return the size of the given rendered text.
 
         All arguments correspond with the same arguments in Font.render,
