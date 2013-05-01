@@ -781,7 +781,7 @@ is best implemented via subclassing SGE's classes.
     ``thickness`` indicates the thickness of the line segment in pixels.
     ``anti_alias`` indicates whether or not anti-aliasing should be
     used, which uses different color shades to make the line appear
-    smoother.  ``frame`` indicates the frame of the sprite to draw on,
+    straighter.  ``frame`` indicates the frame of the sprite to draw on,
     where 0 is the first frame; set to None to draw on all frames.
     
     Support for anti-aliasing is optional in Stellar Game Engine
@@ -812,7 +812,23 @@ is best implemented via subclassing SGE's classes.
     IV.B.5. sge.Sprite.draw_ellipse
     --------------------------------------------------------------------
     
+    sge.Sprite.draw_ellipse(self, x, y, width, height, fill=None,
+        outline=None, outline_thickness=1, anti_alias=False, frame=None)
     
+    Draws an ellipse on this sprite.  ``x`` and ``y`` indicate the
+    location in the sprite to position the top-left corner of the
+    imaginary rectangle containing the ellipse, where (0,0) is the
+    origin of the sprite and x and y increase toward the right and
+    bottom, respectively.  ``width`` and ``height`` indicate the size of
+    the ellipse.  ``fill``indicates the color of the fill of the
+    ellipse; set to None for no fill.  ``outline`` indicates the color
+    of the outline of the ellipse; set to None for no outline.
+    ``outline_thickness`` indicates the thickness of the outline in
+    pixels (ignored if there is no outline).  ``anti_alias`` indicates
+    whether or not anti-aliasing should be used, which uses different
+    color shades to make the ellipse appear more rounded.  ``frame``
+    indicates the frame of the sprite to draw on, where 0 is the first
+    frame; set to None to draw on all frames.
     
     Support for anti-aliasing is optional in Stellar Game Engine
     implementations.  See the implementation's readme to see if it
@@ -823,7 +839,22 @@ is best implemented via subclassing SGE's classes.
     IV.B.6. sge.Sprite.draw_circle
     --------------------------------------------------------------------
     
+    sge.Sprite.draw_circle(self, x, y, radius, fill=None, outline=None,
+        outline_thickness=1, anti_alias=False, frame=None)
     
+    Draws a circle on this sprite.  ``x`` and ``y`` indicate the
+    location in the sprite to position the center of the circle, where
+    (0,0) is the origin of the sprite and x and y increase toward the
+    right and bottom, respectively.  ``radius`` indicates the radius of
+    the circle in pixels.  ``fill`` indicates the color of the fill of
+    the circle; set to None for no fill.  ``outline`` indicates the
+    color of the outline of the circle; set to None for no outline.
+    ``outline_thickness`` indicates the thickness of the outline in
+    pixels (ignored if there is no outline).  ``anti_alias`` indicates
+    whether or not anti-aliasing should be used, which uses different
+    color shades to make the circle appear more rounded.  ``frame``
+    indicates the frame of the sprite to draw on, where 0 is the first
+    frame; set to None to draw on all frames.
     
     Support for anti-aliasing is optional in Stellar Game Engine
     implementations.  See the implementation's readme to see if it
@@ -834,13 +865,54 @@ is best implemented via subclassing SGE's classes.
     IV.B.7. sge.Sprite.draw_sprite
     --------------------------------------------------------------------
     
+    sge.Sprite.draw_sprite(self, sprite, image, x, y, frame=None)
     
+    Draws another sprite on this sprite.  ``sprite`` indicates the
+    sprite to draw with.  ``image`` indicates the frame of ``sprite`` to
+    draw ``self``, where 0 is the first frame. ``x`` and ``y`` indicate
+    the location in ``self`` to position the origin of ``sprite``, where
+    (0,0) is the origin of ``self`` and x and y increase toward the
+    right and bottom, respectively.  ``frame`` indicates the frame of
+    ``self`` to draw on, where 0 is the first frame; set to None to draw
+    on all frames.
     
     
     IV.B.8. sge.Sprite.draw_text
     --------------------------------------------------------------------
     
+    sge.Sprite.draw_text(self, font, text, x, y, width=None,
+        height=None, color="black", halign=sge.ALIGN_LEFT,
+        valign=sge.ALIGN_TOP, anti_alias=True, frame=None)
     
+    Draws text on this sprite.  ``font`` indicates the font to use to
+    draw the text.  ``text`` indicates the text to draw.  ``x`` and
+    ``y`` indicate the location in the sprite to position the imaginary
+    box containing the text, where (0,0) is the origin of the sprite and
+    x and y increase toward the right and bottom, respectively.
+    ``width`` and ``height`` indicate the size of the imaginary box the
+    text is drawn in; set to None to assign the respective size to
+    whatever is needed to contain the text.  ``color`` indicates the
+    color of the text.  ``halign`` indicates the horizontal alignment of
+    the imaginary box containing the text with respect to ``x`` as well
+    as the horizontal alignment of the text itself and can be
+    sge.ALIGN_LEFT, sge.ALIGN_CENTER, or sge.ALIGN_RIGHT.  ``valign``
+    indicates the vertical alignment of the imaginary box containing the
+    text with respect to ``y`` and can be sge.ALIGN_TOP,
+    sge.ALIGN_MIDDLE, or sge.ALIGN_BOTTOM.  ``anti_alias`` indicates
+    whether or not anti- aliasing should be used, which uses different
+    color shades to to make round shapes appear more round and diagonal
+    lines appear more straight.  ``frame`` indicates the frame of the
+    sprite to draw on, where 0 is the first frame; set to None to draw
+    on all frames.
+    
+    Text is fitted into the imaginary box much like a word processor; if
+    the text is too long to fit in one line, the line will be
+    automatically split into multiple lines.  After applying this rule,
+    if the text does not fit vertically into the imaginary box, text
+    that doesn't fit will be cut off; from the bottom if ``valign`` is
+    sge.ALIGN_TOP, from the top if ``valign`` is sge.ALIGN_BOTTOM, or
+    equally from the top and the bottom if ``valign`` is
+    sge.ALIGN_MIDDLE.
     
     Support for anti-aliasing is optional in Stellar Game Engine
     implementations.  See the implementation's readme to see if it
@@ -851,7 +923,15 @@ is best implemented via subclassing SGE's classes.
     IV.B.9. sge.Sprite.draw_clear
     --------------------------------------------------------------------
     
+    sge.Sprite.draw_clear(self, frame=None)
     
+    Erases everything from frames on this sprite.  ``frame`` indicates
+    the frame of the sprite to clear, where 0 is the first frame; set to
+    None to clear all frames.  Once a frame is cleared, it will be a
+    fully transparent (invisible) rectangle.
     
-    
+    Use this method to re-draw something. For example, you could have a
+    sprite that shows the player's current score; when the score
+    changes, clear the sprite with this method and then draw the new
+    score.
 
