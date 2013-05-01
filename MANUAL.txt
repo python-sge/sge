@@ -26,6 +26,7 @@ II. SGE Concepts
     II.C.2. RGB(A) Tuples
     II.C.3. HTML Hex Strings
     II.C.4. Hexadecimal Integers
+  II.D. Z-Axis
 III. Global Variables and Constants
 IV. Classes
   IV.A. sge.Game
@@ -63,7 +64,7 @@ IV. Classes
     IV.A.32. sge.Game.event_paused_joystick_button_release
     IV.A.33. sge.Game.event_paused_close
   IV.B. sge.Sprite
-    IV.B.1. Cunstructor Method (sge.Sprite.__init__)
+    IV.B.1. Constructor Method (sge.Sprite.__init__)
     IV.B.2. sge.Sprite.draw_dot
     IV.B.3. sge.Sprite.draw_line
     IV.B.4. sge.Sprite.draw_rectangle
@@ -72,6 +73,13 @@ IV. Classes
     IV.B.7. sge.Sprite.draw_sprite
     IV.B.8. sge.Sprite.draw_text
     IV.B.9. sge.Sprite.draw_clear
+  IV.C. sge.BackgroundLayer
+    IV.C.1. Constructor Method (sge.BackgroundLayer.__init__)
+  IV.D. sge.Background
+    IV.D.1. Constructor Method (sge.Background.__init__)
+  IV.E. sge.Font
+    IV.E.1. Constructor Method (sge.Font.__init__)
+    IV.E.2. sge.Font.get_size
 
 
 I. Introduction
@@ -193,6 +201,22 @@ II. SGE Concepts
     A hexadecimal integer is accepted as a color by SGE.  This should be
     in the same form as HTML hex strings, but integral.  For example,
     0xFF8000 is the same as (255, 128, 0), or orange.
+  
+  
+  II.D. Z-Axis
+  ----------------------------------------------------------------------
+  
+  SGE uses a Z-axis attribute to determine where objects are placed in
+  the third dimension.  Objects with a higher Z value are considered to
+  be closer to the viewer.  For example, an object with a Z value of 5
+  is in front of an object with a Z value of 2.
+  
+  The Z-axis is only used to determine how to project images when they
+  overlap. In this case, the object which is in front will partially
+  (or, in some cases, fully) cover the other object.
+  
+  If two objects with the same Z-axis value overlap, SGE arbitrarily
+  chooses which one to project in front.
 
 
 III. Global Variables and Constants
@@ -935,3 +959,61 @@ is best implemented via subclassing SGE's classes.
     changes, clear the sprite with this method and then draw the new
     score.
 
+
+  IV.C. sge.BackgroundLayer
+  ----------------------------------------------------------------------
+  
+  This class stores a sprite and certain information for a layer of a
+  background.  In particular, it stores the location of the layer,
+  whether the layer tiles horizontally, vertically, or both, and the
+  rate at which it scrolls.
+  
+  The attributes xscroll_rate and yscroll_rate indicate the rate that
+  the layer scrolls (or moves) as a factor of the respective movement of
+  the view.  For example, a value of 1 results in the layer scrolling at
+  the same rate as the view, and a value of 2 results in the layer
+  scrolling twice as fast as the view.  By setting different layers to
+  scroll at different rates, you can easily enable a parallax scrolling
+  effect.
+  
+  Attributes:
+  * sprite: The sge.Sprite object used for this layer.  It will be
+      animated if it contains multiple frames.
+  * x: The horizontal position in a background to place the sprite's
+      origin, where 0 is the left edge of the background and x increases
+      toward the right.
+  * y: The vertical position in a background to place the sprite's
+      origin, where 0 is the top edge of the background and y increases
+      toward the bottom.
+  * z: The Z-axis position of the layer in the room, where higher
+      values are closer to the viewer.
+  * xscroll_rate: The horizontal speed the layer scrolls at as a factor
+      of the view's movement.
+  * yscroll_rate: The vertical speed the layer scrolls at as a factor of
+      the view's movement.
+  * xrepeat: Whether or not the layer should be repeated (or tiled)
+      horizontally.
+  * yrepeat: Whether or not the layer should be repeated (or tiled)
+      vertically.
+  
+  
+    IV.C.1. Constructor Method (sge.BackgroundLayer.__init__)
+    --------------------------------------------------------------------
+    
+    sge.BackgroundLayer.__init__(self, sprite, x, y, z, xscroll_rate=1,
+        yscroll_rate=1, xrepeat=True, yrepeat=True)
+    
+    All arguments are used to set the respective initial attributes of
+    the layer.
+    
+    
+  IV.D. sge.Background
+  ----------------------------------------------------------------------
+    IV.D.1. Constructor Method (sge.Background.__init__)
+    --------------------------------------------------------------------
+  IV.E. sge.Font
+  ----------------------------------------------------------------------
+    IV.E.1. Constructor Method (sge.Font.__init__)
+    --------------------------------------------------------------------
+    IV.E.2. sge.Font.get_size
+    --------------------------------------------------------------------

@@ -1936,9 +1936,9 @@ class BackgroundLayer(object):
             of the view scroll speed.
         yscroll_rate: The vertical speed the layer scrolls as a factor
             of the view scroll speed.
-        xrepeat: Whether or not the background should be repeated
+        xrepeat: Whether or not the layer should be repeated
             horizontally.
-        yrepeat: Whether or not the background should be repeated
+        yrepeat: Whether or not the layer should be repeated
             vertically.
 
     """
