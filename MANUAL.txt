@@ -756,17 +756,102 @@ is best implemented via subclassing SGE's classes.
     
     IV.B.2. sge.Sprite.draw_dot
     --------------------------------------------------------------------
+    
+    sge.Sprite.draw_dot(self, x, y, color, frame=None)
+    
+    Draws a single-pixel dot on this sprite.  ``x`` and ``y`` indicate
+    the location in the sprite to draw the dot, where (0,0) is the
+    origin of the sprite and x and y increase toward the right and
+    bottom, respectively.  ``color`` indicates the color of the dot.
+    ``frame`` indicates the frame of the sprite to draw on, where 0 is
+    the first frame; set to None to draw on all frames.
+    
+    
     IV.B.3. sge.Sprite.draw_line
     --------------------------------------------------------------------
+    
+    sge.Sprite.draw_line(self, x1, y1, x2, y2, color, thickness=1,
+        ant_alias=False, frame=None)
+    
+    Draws a line segment on this sprite.  ``x1``, ``y1``, ``x2``, and
+    ``y2`` indicate the locations in the sprite of the two points
+    between which to draw the line segment, where (0,0) is the origin of
+    the sprite and x and y increase toward the right and bottom,
+    respectively.  ``color`` indicates the color of the line segment.
+    ``thickness`` indicates the thickness of the line segment in pixels.
+    ``anti_alias`` indicates whether or not anti-aliasing should be
+    used, which uses different color shades to make the line appear
+    smoother.  ``frame`` indicates the frame of the sprite to draw on,
+    where 0 is the first frame; set to None to draw on all frames.
+    
+    Support for anti-aliasing is optional in Stellar Game Engine
+    implementations.  See the implementation's readme to see if it
+    supports anti-aliasing.  If anti-aliasing is unsupported,
+    ``anti_alias`` will be ignored.
+    
+    
     IV.B.4. sge.Sprite.draw_rectangle
     --------------------------------------------------------------------
+    
+    sge.Sprite.draw_rectangle(self, x, y, width, height, fill=None,
+        outline=None, outline_thickness=1, frame=None)
+    
+    Draws a rectangle on this sprite.  ``x`` and ``y`` indicate the
+    location in the sprite to position the top-left corner of the
+    rectangle, where (0,0) is the origin of the sprite and x and y
+    increase toward the right and bottom, respectively.  ``width`` and
+    ``height`` indicate the size of the rectangle.  ``fill`` indicates
+    the  color of the fill of the rectangle; set to None for no fill.
+    ``outline`` indicates the color of the outline of the rectangle; set
+    to None for no outline.  ``outline_thickness`` indicates the
+    thickness of the outline in pixels (ignored if there is no outline).
+    ``frame`` indicates the frame of the sprite to draw on, where 0 is
+    the first frame; set to None to draw on all frames.
+    
+    
     IV.B.5. sge.Sprite.draw_ellipse
     --------------------------------------------------------------------
+    
+    
+    
+    Support for anti-aliasing is optional in Stellar Game Engine
+    implementations.  See the implementation's readme to see if it
+    supports anti-aliasing.  If anti-aliasing is unsupported,
+    ``anti_alias`` will be ignored.
+    
+    
     IV.B.6. sge.Sprite.draw_circle
     --------------------------------------------------------------------
+    
+    
+    
+    Support for anti-aliasing is optional in Stellar Game Engine
+    implementations.  See the implementation's readme to see if it
+    supports anti-aliasing.  If anti-aliasing is unsupported,
+    ``anti_alias`` will be ignored.
+    
+    
     IV.B.7. sge.Sprite.draw_sprite
     --------------------------------------------------------------------
+    
+    
+    
+    
     IV.B.8. sge.Sprite.draw_text
     --------------------------------------------------------------------
+    
+    
+    
+    Support for anti-aliasing is optional in Stellar Game Engine
+    implementations.  See the implementation's readme to see if it
+    supports anti-aliasing.  If anti-aliasing is unsupported,
+    ``anti_alias`` will be ignored.
+    
+    
     IV.B.9. sge.Sprite.draw_clear
     --------------------------------------------------------------------
+    
+    
+    
+    
+

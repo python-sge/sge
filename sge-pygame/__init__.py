@@ -1658,7 +1658,7 @@ class Sprite(object):
         self._refresh()
 
     def draw_circle(self, x, y, radius, fill=None, outline=None,
-                    outline_thickness=1, frame=None):
+                    outline_thickness=1, anti_alias=False, frame=None):
         """Draw a circle at the given position.
 
         ``x`` and ``y`` indicate the location in the sprite to position
