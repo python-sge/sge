@@ -140,6 +140,9 @@ On some systems, the game will crash if sge.Music attempts to load an
 unsupported format.  Since MP3's support is limited, it is best to avoid
 using it; consider using Ogg instead.
 
+Balance control is not supported in either sge.Sound or sge.Music.
+Sounds and music play through both speakers equally.
+
 sge.Sprite.draw_line supports anti-aliasing for lines with a thickness
 of 1 only.  sge.Sprite.draw_text supports anti-aliasing in all cases.
 No other drawing functions support anti-aliasing.

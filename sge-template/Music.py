@@ -55,7 +55,6 @@ class Music(object):
         Music.stop: Stop the music.
         Music.pause: Pause playback of the music.
         Music.unpause: Resume playback of the music if paused.
-        Music.restart: Restart music from the beginning.
 
     """
 

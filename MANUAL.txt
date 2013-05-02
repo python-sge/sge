@@ -1255,21 +1255,85 @@ is best implemented via subclassing SGE's classes.
   be required for commercial use.  There are many programs which can
   convert your MP3 files to the free Ogg Vorbis format.
   
+  Attributes:
+  * volume: The volume of the music in percent (0 for n sound, 100 for
+      max sound).
+  * balance: The balance of the music on stereo speakers.  A value of 0
+      means centered (an equal amount of play on both speakers), -1
+      means entirely in the left speaker, and 1 means entirely in the
+      right speaker.
+  
+  Read-Only Attributes:
+  * fname: The file name of the music given when it was created.
+  * length: The length of the music in milliseconds.
+  * playing: Whether or not the music is playing.
+  * position: The current position (time) on the music in milliseconds.
+  
   
     IV.G.1. Constructor Method (sge.Music.__init__)
     --------------------------------------------------------------------
+    
+    sge.Music.__init__(self, fname, volume=100, balance=0)
+    
+    ``fname`` indicates the name of the sound file, to be located in
+    one of the directories specified in ``music_directories``.  All
+    remaining arguments set the respective initial attributes of the
+    music.
+    
+    
     IV.G.2. sge.Music.play
     --------------------------------------------------------------------
+    
+    sge.Music.play(self, start=0, loops=0, maxtime=None, fade_time=None)
+    
+    Plays the music.  If some music was already playing when this is
+    called, it will be stopped.  ``start`` indicates the number of
+    milliseconds from the beginning to start at.  ``loops`` indicates
+    the number of extra times to play the sound after it is played the
+    first time; set to -1 or None to loop indefinitely.  ``maxtime``
+    indicates the maximum amount of time to play the sound in
+    milliseconds; set to None for no limit.  ``fade_time`` indicates the
+    time in milliseconds over which to fade the sound in; set to 0 or
+    None to immediately play the music at full volume.
+    
+    
     IV.G.3. sge.Music.queue
     --------------------------------------------------------------------
+    
+    sge.Music.queue(self, start=0, loops=0, maxtime=None,
+        fade_time=None)
+    
+    Queues the music for playback.  This adds the music to a list of
+    music to play in order, after the previous music has finished
+    playing.  All arguments are the
+    
+    
     IV.G.4. sge.Music.stop
     --------------------------------------------------------------------
+    
+    sge.Music.stop(self, fade_time=None)
+    
+    Stops the music.  ``fade_time`` indicates the time in milliseconds
+    over which to fade the sound out before stopping; set to 0 or None
+    to immediately stop the music.
+    
+    
     IV.G.5. sge.Music.pause
     --------------------------------------------------------------------
+    
+    sge.Music.pause(self)
+    
+    Pauses playback of the music.
+    
+    
     IV.G.6. sge.Music.unpause
     --------------------------------------------------------------------
-    IV.G.7. sge.Music.restart
-    --------------------------------------------------------------------
+    
+    sge.Music.unpause(self)
+    
+    Resumes playback of the music if paused.
+    
+    
   IV.H. sge.StellarClass
   ----------------------------------------------------------------------
     IV.H.1. Constructor Method (sge.StellarClass.__init__)
