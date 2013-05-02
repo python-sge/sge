@@ -768,6 +768,11 @@ is best implemented via subclassing SGE's classes.
   This class stores images and information about how SGE is to use those
   images.
   
+  What image formats are supported depends on the implementation of SGE,
+  but image formats that are generally a good choice are PNG, JPEG, and
+  uncompressed BMP.  See the implementation's readme for a full list of
+  supported formats.
+  
   Attributes:
   * width: The width of the sprite in pixels.
   * height: The height of the sprite in pixels.
@@ -1159,18 +1164,98 @@ is best implemented via subclassing SGE's classes.
 
   IV.F. sge.Sound
   ----------------------------------------------------------------------
+  
+  This class stores and plays sound effects.  Note that this is
+  inefficient for large music files; for those, use sge.Music instead.
+  
+  What sound formats are supported depends on the implementation of SGE,
+  but sound formats that are generally a good choice are Ogg Vorbis and
+  uncompressed WAV.  See the implementation's readme for a full list of
+  supported formats.
+  
+  Attributes:
+  * volume: The volume of the sound in percent (0 for no sound, 100 for
+      max sound).
+  * balance: The balance of the sound effect on stereo speakers.  A
+      value of 0 means centered (an equal amount of play on both
+      speakers), -1 means entirely in the left speaker, and 1 means
+      entirely in the right speaker.
+  * max_play: The maximum instances of this sound playing permitted.
+      Set to 0 for no limit.
+  
+  Read-Only Attributes:
+  * fname: The file name of the sound given when it was created.
+  * length: The length of the sound in milliseconds.
+  * playing: The number of instances of this sound playing.
+  
+  
     IV.F.1. Constructor Method (sge.Sound.__init__)
     --------------------------------------------------------------------
+    
+    sge.Sound.__init__(self, fname, volume=100, balance=0, max_play=1)
+    
+    ``fname`` indicates the name of the sound file (e.g. "mysound.wav")
+    to be located in one of the directories specified in
+    sge.sound_directories.  All remaining arguments set the respective
+    initial attributes of the sound.
+    
+    
     IV.F.2. sge.Sound.play
     --------------------------------------------------------------------
+    
+    sge.Sound.play(self, loops=0, maxtime=None, fade_time=None)
+    
+    Plays the sound.  ``loops`` indicates the number of extra times to
+    play the sound after it is played the first time; set to None to
+    loop indefinitely.  ``maxtime`` indicates the maximum amount of time
+    to play the sound in milliseconds; set to None for no limit.
+    ``fade_time`` indicates the time in milliseconds over which to fade
+    the sound in; set to 0 or None to immediately play the sound at full
+    volume.
+    
+    
     IV.F.3. sge.Sound.stop
     --------------------------------------------------------------------
+    
+    sge.Sound.stop(self, fade_time=None)
+    
+    Stops the sound.  ``fade_time`` indicates the time in milliseconds
+    over which to fade the sound out before stopping; set to 0 or None
+    to immediately stop the sound.
+    
+    
     IV.F.4. sge.Sound.pause
     --------------------------------------------------------------------
+    
+    sge.Sound.pause(self)
+    
+    Pauses playback of the sound.
+    
+    
     IV.F.5. sge.Sound.unpause
     --------------------------------------------------------------------
+    
+    sge.Sound.unpause(self)
+    
+    Resumes playback of the sound if paused.
+    
+    
   IV.G. sge.Music
   ----------------------------------------------------------------------
+  
+  This class stores and plays music.  Music is very similar to sound
+  effects, but only one music file can be played at a time, and it is
+  more efficient for larger files than sge.Sound.
+  
+  What music formats are supported depends on the implementation of SGE,
+  but Ogg Vorbis is generally a good choice.  See the implementation's
+  readme for a full list of supported formats.  You should avoid the
+  temptation to use MP3 files; MP3 is a patent-encumbered format, so
+  many systems do not support it and royalties to the patent holder may
+  be required for commercial use.  There are many programs which can
+  convert your MP3 files to the free Ogg Vorbis format.
+  
+  
     IV.G.1. Constructor Method (sge.Music.__init__)
     --------------------------------------------------------------------
     IV.G.2. sge.Music.play
