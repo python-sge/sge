@@ -53,12 +53,16 @@ class StellarClass(object):
             in collisions.
         bbox_x: The horizontal location of the top-left corner of the
             bounding box in relation to x, where 0 is x and bbox_x
-            increases toward the right.
+            increases toward the right.  If set to None, the value
+            recommended by the sprite is used.
         bbox_y: The vertical location of the top-left corner of the
             bounding box in relation to y, where 0 is y and bbox_y
-            increases toward the bottom.
-        bbox_width: The width of the bounding box in pixels.
-        bbox_height: The height of the bounding box in pixels.
+            increases toward the bottom.  If set to None, the value
+            recommended by the sprite is used.
+        bbox_width: The width of the bounding box in pixels.  If set to
+            None, the value recommended by the sprite is used.
+        bbox_height: The height of the bounding box in pixels.  If set
+            to None, the value recommended by the sprite is used.
         collision_ellipse: Whether or not an ellipse (rather than a
             rectangle) should be used for collision detection.
         collision_precise: Whether or not precise (pixel-perfect)
@@ -71,32 +75,25 @@ class StellarClass(object):
             (same as y + bbox_y).
         bbox_bottom: The position of the bottom side of the bounding
             box (same as bbox_top + bbox_height).
-        xvelocity: The velocity of the object toward the right.  Default
-            is 0.
+        xvelocity: The velocity of the object toward the right.
         yvelocity: The velocity of the object toward the bottom.
-            Default is 0.
-        speed: The total (directional) speed of the object.  Default is
-            0.
+        speed: The total (directional) speed of the object.
         move_direction: The direction of the object's movement in
             degrees, with 0 being directly to the right and rotation in
             a positive direction being counter-clockwise.  Default is 0.
         image_index: The animation frame currently being displayed, with
-            0 being the first one.  Default is 0.
-        image_fps: The animation rate in frames per second.  Default is
-            the value recommended by the sprite, or 0 if there is no
-            sprite.
+            0 being the first one.
+        image_fps: The animation rate in frames per second.  If set to
+            None, the value recommended by the sprite is used.
         image_xscale: The horizontal scale factor for the sprite.
-            Default is 1.
-        image_yscale: The vertical scale factor for the sprite.  Default
-            is 1.
+        image_yscale: The vertical scale factor for the sprite.
         image_rotation: The rotation of the sprite, with rotation in a
-            positive direction being counter-clockwise.  Default is 0.
+            positive direction being counter-clockwise.
         image_alpha: The alpha value applied to the entire image, where
             255 is the original image, 128 is half the opacity of the
-            original image, 0 is fully transparent, etc.  Default is
-            255.
+            original image, 0 is fully transparent, etc.
         image_blend: The color to blend with the sprite.  Set to None
-            for no color blending.  Default is None.
+            for no color blending.
 
     The following read-only attributes are also available:
         id: The unique identifier for this object.
@@ -473,11 +470,19 @@ class StellarClass(object):
         the name of said object.  ``other`` can also be a class to check
         for collisions with.
 
-        ``x`` and ``y``, indicate the position to check for collisions
+        ``x`` and ``y`` indicate the position to check for collisions
         at.  If unspecified or None, this object's current position will
         be used.
 
         """
+        if isinstance(other, StellarClass):
+            others = [other]
+        else:
+            others = []
+            for ref in sge.game._colliders:
+                if isinstance(obj(), other):
+                    others.append(obj())
+
         if x is None:
             x = self.x
         if y is None:
@@ -487,36 +492,39 @@ class StellarClass(object):
         x -= self.x
         y -= self.y
 
-        if (self.collision_precise or self.collision_ellipse or
-                other.collision_precise or other.collision_ellipse):
-            # Use masks.
-            self_rect = pygame.Rect(round(self.bbox_left + x),
-                                    round(self.bbox_top + y),
-                                    self.bbox_width, self.bbox_height)
-            other_rect = pygame.Rect(round(other.bbox_left),
-                                     round(other.bbox_top),
-                                     other.bbox_width, other.bbox_height)
-            collide_rect = self_rect.clip(other_rect)
+        for other in others:
+            if (self.collision_precise or self.collision_ellipse or
+                    other.collision_precise or other.collision_ellipse):
+                # Use masks.
+                self_rect = pygame.Rect(round(self.bbox_left + x),
+                                        round(self.bbox_top + y),
+                                        self.bbox_width, self.bbox_height)
+                other_rect = pygame.Rect(round(other.bbox_left),
+                                         round(other.bbox_top),
+                                         other.bbox_width, other.bbox_height)
+                collide_rect = self_rect.clip(other_rect)
 
-            self_xoffset = collide_rect.left - self_rect.left
-            self_yoffset = collide_rect.top - self_rect.top
-            other_xoffset = collide_rect.left - other_rect.left
-            other_yoffset = collide_rect.top - other_rect.top
+                self_xoffset = collide_rect.left - self_rect.left
+                self_yoffset = collide_rect.top - self_rect.top
+                other_xoffset = collide_rect.left - other_rect.left
+                other_yoffset = collide_rect.top - other_rect.top
 
-            for a in xrange(collide_rect.w):
-                for b in xrange(collide_rect.h):
-                    if (self._hitmask[a + self_xoffset][b + self_yoffset] and
-                        other._hitmask[a + other_xoffset][b + other_yoffset]):
-                        return True
+                for a in xrange(collide_rect.w):
+                    for b in xrange(collide_rect.h):
+                        if (self._hitmask[
+                                a + self_xoffset][b + self_yoffset] and
+                            other._hitmask[
+                                a + other_xoffset][b + other_yoffset]):
+                            return True
 
-            return False
-                    
-        else:
-            # Use bounding boxes.
-            return (self.bbox_left + x < other.bbox_right and
-                    self.bbox_right + x > other.bbox_left and
-                    self.bbox_top + y < other.bbox_bottom and
-                    self.bbox_bottom + y > other.bbox_top)
+                return False
+                        
+            else:
+                # Use bounding boxes.
+                return (self.bbox_left + x < other.bbox_right and
+                        self.bbox_right + x > other.bbox_left and
+                        self.bbox_top + y < other.bbox_bottom and
+                        self.bbox_bottom + y > other.bbox_top)
 
     def set_alarm(self, alarm_id, value):
         """Set an alarm.

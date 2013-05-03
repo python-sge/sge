@@ -1336,10 +1336,110 @@ is best implemented via subclassing SGE's classes.
     
   IV.H. sge.StellarClass
   ----------------------------------------------------------------------
+  
+  This class is used for game objects, such as the player, enemies,
+  bullets, and the HUD.  Generally, each type of object has its own
+  subclass of sge.StellarClass.
+  
+  Attributes:
+  * x: The horizontal position of the object in the room, where the left
+      edge of the room is 0 and x increases toward the right.
+  * y: The vertical position of the object in the room, where the top
+      edge of the room is 0 and y increases toward the bottom.
+  * z: The Z-axis position of the object in the room, where higher
+      values are closer to the viewer.
+  * sprite: The sprite currently in use by this object.  Set to None for
+      no sprite.
+  * visible: Whether or not this object's sprite should be projected
+      onto the screen.
+  * detects_collisions: Whether or not this object should be involved in
+      collisions.  Setting this to False can improve performance if the
+      object doesn't need to detect collisions.
+  * bbox_x: The horizontal position of the top-left corner of the
+      bounding box in relation to x, where 0 is x and bbox_x increases
+      toward the right.  If set to None, the value recommended by the
+      sprite is used.
+  * bbox_y: The vertical position of the top-left corner of the bounding
+      box in relation to y, where 0 is y and bbox_y increases toward the
+      bottom.  If set to None, the value recommended by the sprite is
+      used.
+  * bbox_width: The width of the bounding box in pixels.  If set to
+      None, the value recommended by the sprite is used.
+  * bbox_height: The height of the bounding box in pixels.  If set to
+      None, the value recommended by the sprite is used.
+  * collision_ellipse: Whether or not an ellipse should be used for
+      collision detection instead of a rectangle.
+  * collision_precise: Whether or not precise (pixel-perfect) collision
+      detection should be used.  Note that this can be inefficient and
+      in some cases can lead to collision detection errors.
+  * bbox_left: The position of the left side of the bounding box in the
+      room.
+  * bbox_right: The position of the right side of the bounding box in
+      the room.
+  * bbox_top: The position of the top side of the bounding box in the
+      room.
+  * bbox_bottom: The position of the bottom side of the bounding box in
+      the room.
+  * xvelocity: The velocity of the object toward the right.
+  * yvelocity: The velocity of the object toward the bottom.
+  * speed: The total (directional) speed of the object.
+  * move_direction: The direction of the object's movement in degrees,
+      with 0 being directly to the right and rotation in a positive
+      direction being counter-clockwise.
+  * image_index: The animation frame currently being displayed, with 0
+      being the first one.
+  * image_fps: The animation rate in frames per second.  If set to None,
+      the value recommended by the sprite is used.
+  * image_xscale: The horizontal scale factor for the sprite.
+  * image_yscale: The vertical scale factor for the sprite.
+  * image_rotation: The rotation of the sprite, with rotation in a
+      positive direction being counter-clockwise.
+  * image_alpha: The alpha value applied to the entire image, where 255
+      is the original image, 128, is half the opacity of the original
+      image, 0 is fully transparent, etc.
+  * image_blend: The color to blend with the sprite.  Set to None for no
+      color blending.
+  
+  Read-Only Attributes:
+  * id: The unique identifier for this object.
+  * xstart: The initial value of x when the object was created.
+  * ystart: The initial value of y when the object was created.
+  * xprevious: The previous value of x.
+  * yprevious: The previous value of y.
+  
+  
     IV.H.1. Constructor Method (sge.StellarClass.__init__)
     --------------------------------------------------------------------
+    
+    sge.StellarClass.__init__(self, x, y, z, id=None, sprite=None,
+        visible=True, detects_collisions=True, bbox_x=None, bbox_y=None,
+        bbox_width=None, bbox_height=None, collision_ellipse=False,
+        collision_precise=False, xvelocity=0, yvelocity=0,
+        image_index=0, image_fps=0, image_xscale=1, image_yscale=1,
+        image_rotation=0, image_alpha=255, image_blend=None)
+    
+    All arguments set the respective initial attributes of the object.
+    If ``id`` is None, it will be set to an integer not currently used
+    as an ID (the exact number chosen is implementation-dependent and
+    may not be the same between runs).
+    
+    
     IV.H.2. sge.StellarClass.collides
     --------------------------------------------------------------------
+    
+    sge.StellarClass.collides(self, other, x=None, y=None)
+    
+    Returns whether or not this object collides with another.  ``other``
+    indicates the object to check for a collision with.  ``other`` can
+    also be a class to check for collisions with.  ``x`` and ``y``
+    indicate the position to check for collisions at.  If set to None,
+    this object's current position will be used.
+    
+    The normal collision rules will be used when this method is called.
+    For example, if collision_precise is True, precise collision
+    detection will be used.
+    
+    
     IV.H.3. sge.StellarClass.set_alarm
     --------------------------------------------------------------------
     IV.H.4. sge.StellarClass.get_alarm
