@@ -1865,6 +1865,23 @@ is best implemented via subclassing SGE's classes.
   IV.I. sge.Room
   ----------------------------------------------------------------------
   
+  This class stores the settings and objects found in a room.  Rooms are
+  used to create separate parts of the game, such as levels and menu
+  screens.
+  
+  Every game must have at least one room.
+  
+  Attributes:
+  * width: The width of the room in pixels.
+  * height: The height of the room in pixels.
+  * views: A list containing all views in the room.
+  * background: The Background object being used.
+  
+  Read-Only Attributes:
+  * objects: A tuple containing all StellarClass objects in the room.
+  * room_number: The index of this room in the game, where 0 is the
+      first room.
+  
   
     IV.I.1. Constructor Method (sge.Room.__init__)
     --------------------------------------------------------------------
@@ -2179,6 +2196,40 @@ is best implemented via subclassing SGE's classes.
     
   IV.J. sge.View
   ----------------------------------------------------------------------
+  
+  This class controls what the player sees in a room at any given time.
+  Multiple views can exist in a room, and this can be taken advantage
+  for a split-screen effect.
+  
+  Attributes:
+  * x: The horizontal position of the top-left corner of the view in the
+      room, where the left edge of the room is 0 and x increases toward
+      the right.
+  * y: The vertical position of the top-left corner of the view in the
+      room, where the top edge of the room is 0 and y increases toward
+      the bottom.
+  * xport: The horizontal position of the top-left corner of the view on
+      the screen, where the left edge of the screen is 0 and xport
+      increases toward the right.
+  * yport: The vertical position of the top-left corner of the view on
+      the screen, where the top edge of the screen is 0 and yport
+      increases toward the bottom.
+  * width: The width of the view in pixels.
+  * height: The height of the view in pixels.
+  
+  
+    IV.J.1. Constructor Method (sge.View.__init__)
+    --------------------------------------------------------------------
+    
+    sge.View.__init__(self, x, y, xport=0, yport=0, width=None,
+        height=None)
+    
+    All arguments set the respective initial attributes of the room.  If
+    ``width`` or ``height`` is set to None, the respective size will be
+    set such that the view takes up all of the space that it can (i.e.
+    game.width - xport or game.height - yport).
+    
+    
 V. Functions
 ------------------------------------------------------------------------
   V.A. sge.get_key_pressed
