@@ -92,7 +92,7 @@ class Room(object):
         Arguments set the properties of the room.  See Room.__doc__ for
         more information.
 
-        If ``views`` is set to None, a new view will be  created with
+        If ``views`` is set to None, a new view will be created with
         x=0, y=0, and all other arguments unspecified, which will become
         the first view of the room.  If ``background`` is set to None, a
         new background is created with no layers and the color set to
