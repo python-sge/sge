@@ -176,3 +176,9 @@ class Sound(object):
         """Resume playback of the sound if paused."""
         for channel in self._channels:
             channel.unpause()
+
+    @staticmethod
+    def stop_all():
+        """Stop playback of all sounds."""
+        for i in sge.game.sounds:
+            sge.game.sounds[i].stop()    

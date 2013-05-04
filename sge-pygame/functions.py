@@ -24,45 +24,10 @@ import pygame
 import sge
 
 
-__all__ = ['create_object', 'sound_stop_all', 'music_clear_queue',
-           'music_stop_all', 'get_key_pressed', 'get_mouse_button_pressed',
-           'get_joystick_axis', 'get_joystick_hat',
-           'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_axes',
-           'get_joystick_hats', 'get_joystick_buttons', '_scale',
-           '_get_pygame_color']
-
-
-def create_object(cls, *args, **kwargs):
-    """Create an object in the current room.
-
-    ``cls`` is the class (derived from StellarClass) to create an object
-    of.  ``args`` and ``kwargs`` are passed on to cls.__init__ as
-    arguments.
-
-    Calling this function is equivalent to:
-        sge.game.current_room.add(cls(*args, **kwargs))
-
-    """
-    sge.game.current_room.add(cls(*args, **kwargs))
-
-
-def sound_stop_all():
-    """Stop playback of all sounds."""
-    for i in sge.game.sounds:
-        sge.game.sounds[i].stop()
-
-
-def music_clear_queue():
-    """Clear the music queue."""
-    sge.game._music_queue = []
-
-
-def music_stop_all():
-    """Stop playback of any music and clear the queue."""
-    for i in sge.game.music:
-        sge.game.music[i].stop()
-
-    music_clear_queue()
+__all__ = ['get_key_pressed', 'get_mouse_button_pressed', 'get_joystick_axis',
+           'get_joystick_hat', 'get_joystick_button_pressed', 'get_joysticks',
+           'get_joystick_axes', 'get_joystick_hats', 'get_joystick_buttons',
+           '_scale', '_get_pygame_color']
 
 
 def get_key_pressed(key):

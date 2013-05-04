@@ -447,6 +447,17 @@ class StellarClass(object):
         """
         pass
 
+    @classmethod
+    def create(cls, *args, **kwargs):
+        """Create an object of this class in the current room.
+
+        ``args`` and ``kwargs`` are passed to ``cls`` as arguments.
+        Calling this class method is the same as:
+            sge.game.current_room.add(cls(*args, **kwargs))
+
+        """
+        sge.game.current_room.add(cls(*args, **kwargs))
+
 
 class Mouse(StellarClass):
 

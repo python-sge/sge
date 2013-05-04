@@ -119,3 +119,16 @@ class Music(object):
     def unpause(self):
         """Resume playback of the music if paused."""
         # TODO
+
+    @staticmethod
+    def clear_queue():
+        """Clear the music queue."""
+        # TODO
+
+    @staticmethod
+    def stop_all():
+        """Stop playback of any music and clear the queue."""
+        for i in sge.game.music:
+            sge.game.music[i].stop()
+
+        Music.clear_queue()

@@ -193,3 +193,16 @@ class Music(object):
         """Resume playback of the music if paused."""
         if self.playing:
             pygame.mixer.music.unpause()
+
+    @staticmethod
+    def clear_queue():
+        """Clear the music queue."""
+        sge.game._music_queue = []
+
+    @staticmethod
+    def stop_all():
+        """Stop playback of any music and clear the queue."""
+        for i in sge.game.music:
+            sge.game.music[i].stop()
+
+        Music.clear_queue()
