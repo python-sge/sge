@@ -1472,66 +1472,357 @@ is best implemented via subclassing SGE's classes.
     
     IV.H.3. sge.StellarClass.set_alarm
     --------------------------------------------------------------------
+    
+    sge.StellarClass.set_alerm(self, alarm_id, value)
+    
+    Sets the alarm with the given ``alarm_id`` at the given ``value``.
+    The alarm will then reduce by 1 each frame (adjusted with delta
+    timing, if enabled) until it reaches 0, at which point event_alarm
+    will be executed with the same ID as was used here.  ``alarm_id``
+    can be any value.  ``value`` should be a number greater than 0.  You
+    can also set ``value`` to None to disable the alarm if it was
+    set previously.
+    
+    
     IV.H.4. sge.StellarClass.get_alarm
     --------------------------------------------------------------------
+    
+    sge.StellarClass.get_alarm(self, alarm_id)
+    
+    Returns the number of frames (adjusted with delta timing, if
+    enabled) before the alarm event with ``alarm_id`` will execute.  If
+    the alarm has not been set, None will be returned.
+    
+    
     IV.H.5. sge.StellarClass.destroy
     --------------------------------------------------------------------
+    
+    sge.StellarClass.destroy(self)
+    
+    Destroys the object.
+    
+    
     IV.H.6. sge.StellarClass.event_create
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_create(self)
+    
+    Create event.  This event is executed when the object is created.
+    It is always executed after any room start events occurring at the
+    same time.
+    
+    Note that this event is executed when the object is created in a
+    room, not necessarily when it is first created in Python.  In
+    particular, if you create a StellarClass object normally, it is not
+    created in a room until you add it with sge.Room.add.
+    sge.StellarClass.create does this automatically.  Objects included
+    in a rooms initial objects list are also automatically added.
+    
+    
     IV.H.7. sge.StellarClass.event_step
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_step(self, time_passed)
+    
+    Step event.  This event is always executed once each frame.
+    ``time_passed`` indicates the number of milliseconds that have
+    passed during the last frame.
+    
+    
     IV.H.8. sge.StellarClass.event_alarm
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_alarm(self, alarm_id)
+    
+    Alarm event.  This event is executed when an alarm counter reaches
+    0.  ``alarm_id``is the ID of the alarm that was set off.
+    
+    
     IV.H.9. sge.StellarClass.event_key_press
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_key_press(self, key)
+    
+    Key Press event.  This event is executed when a key on the keyboard
+    is pressed.  ``key`` indicates the identifier string of the key that
+    was pressed (see KEYS.txt for a list of all key identifier strings).
+    
+    
     IV.H.10. sge.StellarClass.event_key_release
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_key_release(self, key)
+    
+    Key Release event.  This event is executed when a key on the
+    keyboard is released.  ``key`` indicates the identifier string of
+    the key that was released (see KEYS.txt for a list of all key
+    identifier strings).
+    
+    
     IV.H.11. sge.StellarClass.event_mouse_move
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_mouse_move(self, x, y)
+    
+    Mouse Move event.  This event is executed when the mouse moves.
+    ``x`` indicates the horizontal relative movement of the mouse, and
+    ``y`` indicates the vertical relative movement of the mouse.
+    
+    
     IV.H.12. sge.StellarClass.event_mouse_button_press
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_mouse_button_press(self, button)
+    
+    Mouse Button Press event.  This event is executed when a mouse
+    button is pressed.  ``button`` indicates the number of the button
+    that was pressed.  What button numbers correspond to what buttons
+    can vary among implementations, so ``button`` should be checked
+    against the following constants:
+    
+    * sge.MOUSE_BUTTON_LEFT
+    * sge.MOUSE_BUTTON_RIGHT
+    * sge.MOUSE_BUTTON_MIDDLE
+    * sge.MOUSE_BUTTON_WHEEL_UP
+    * sge.MOUSE_BUTTON_WHEEL_DOWN
+    * sge.MOUSE_BUTTON_WHEEL_LEFT
+    * sge.MOUSE_BUTTON_WHEEL_RIGHT
+    
+    
     IV.H.13. sge.StellarClass.event_mouse_button_release
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_mouse_button_release(self, button)
+    
+    Mouse Button Release event.  This event is executed when a mouse
+    button is released.  ``button`` indicates the number of the button
+    that was released.  What button numbers correspond to what buttons
+    can vary among implementations, so ``button`` should be checked
+    against the following constants:
+    
+    * sge.MOUSE_BUTTON_LEFT
+    * sge.MOUSE_BUTTON_RIGHT
+    * sge.MOUSE_BUTTON_MIDDLE
+    * sge.MOUSE_BUTTON_WHEEL_UP
+    * sge.MOUSE_BUTTON_WHEEL_DOWN
+    * sge.MOUSE_BUTTON_WHEEL_LEFT
+    * sge.MOUSE_BUTTON_WHEEL_RIGHT
+    
+    
     IV.H.14. sge.StellarClass.event_joystick_axis_move
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_joystick_axis_move(self, joystick, axis,
+        value)
+    
+    Joystick Axis Move event.  This event is executed when an axis on a
+    joystick changes position.  ``joystick`` indicates the number of the
+    joystick, where 0 is the first joystick.  ``axis`` indicates the
+    number of the axis, where 0 is the first axis.  ``value`` indicates
+    the tilt of the axis, where 0 is in the center, -1 is tilted all the
+    way to the left or up, and 1 is tilted all the way to the right or
+    down.  Note that ``value`` can be any floating-point number between
+    -1 and 1; it is not limited to integral values.
+    
+    Support for joysticks in SGE implementations is optional.
+    
+    
     IV.H.15. sge.StellarClass.event_joystick_hat_move
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_joystick_hat_move(self, joystick, hat, x, y)
+    
+    Joystick HAT Move event.  This event is executed when a HAT switch
+    (also called the POV hat, POV switch, or d-pad) changes position.
+    ``joystick`` indicates the number of the joystick, where 0 is the
+    first joystick.  ``hat`` indicates the number of the HAT, where 0 is
+    the first HAT.  ``x`` indicates the horizontal position of the HAT,
+    where 0 is in the center, -1 is left, and 1 is right.  ``y``
+    indicates the vertical position of the HAT, where 0 is in the
+    center, -1 is up, and 1 is down.
+    
+    Support for joysticks in SGE implementations is optional.
+    
+    
     IV.H.16. sge.StellarClass.event_joystick_button_press
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_joystick_button_press(self, joystick, button)
+    
+    Joystick Button Press event.  This event is executed when a joystick
+    button is pressed.  ``joystick`` indicates the number of the
+    joystick, where 0 is the first joystick.  ``button`` indicates the
+    number of the button that was pressed, where 0 is the first button
+    on the joystick.
+    
+    Support for joysticks in SGE implementations is optional.
+    
+    
     IV.H.17. sge.StellarClass.event_joystick_button_release
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_joystick_button_release(self, joystick,
+        button)
+    
+    Joystick Button Release event.  This event is executed when a
+    joystick button is released.  ``joystick`` indicates the number of
+    the joystick, where 0 is the first joystick.  ``button`` indicates
+    the number of the button that was released, where 0 is the first
+    button on the joystick.
+    
+    Support for joysticks in SGE implementations is optional.
+    
+    
     IV.H.18. sge.StellarClass.event_collision
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_collision(self, other)
+    
+    Default Collision event.  This event is executed when another object
+    collides with this object and none of the directional collision
+    events are appropriate.  In particular, this event is executed if
+    the collision was already happening in the previous frame, meaning
+    that the object is colliding with the inside of the mouse.  In
+    addition, directional collision events cause this event to execute
+    by default if they are not overridden.  ``other`` indicates the
+    other object which was collided with.
+    
+    
     IV.H.19. sge.StellarClass.event_collision_left
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_collision_left(self, other)
+    
+    Left Collision event.  This event is executed when another object
+    collides with this object from the left.  ``other`` indicates the
+    other object which was collided with.
+    
+    
     IV.H.20. sge.StellarClass.event_collision_right
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_collision_right(self, other)
+    
+    Right Collision event.  This event is executed when another object
+    collides with this object from the right.  ``other`` indicates the
+    other object which was collided with.
+    
+    
     IV.H.21. sge.StellarClass.event_collision_top
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_collision_top(self, other)
+    
+    Top Collision event.  This event is executed when another object
+    collides with this object from the top.  ``other`` indicates the
+    other object which was collided with.
+    
+    
     IV.H.22. sge.StellarClass.event_collision_bottom
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_collision_bottom(self, other)
+    
+    Bottom Collision event.  This event is executed when another object
+    collides with this object from the bottom.  ``other`` indicates the
+    other object which was collided with.
+    
+    
     IV.H.23. sge.StellarClass.event_animation_end
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_animation_end(self)
+    
+    Animation End event.  This event is executed when the animation of
+    this object's sprite reaches the end of a cycle (which is the time
+    when animation returns to frame 0).
+    
+    
     IV.H.24. sge.StellarClass.event_destroy
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_destroy(self):
+    
+    Destroy event.  This event is executed when this object is
+    destroyed.
+    
+    
     IV.H.25. sge.StellarClass.event_paused_key_press
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_paused_key_press(self, key)
+    
+    Key Press event when the game is paused.
+    
+    
     IV.H.26. sge.StellarClass.event_paused_key_release
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_paused_key_release(self, key)
+    
+    Key Release event when the game is paused.
+    
+    
     IV.H.27. sge.StellarClass.event_paused_mouse_move
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_paused_mouse_move(self, x, y)
+    
+    Mouse Move event when the game is paused.
+    
+    
     IV.H.28. sge.StellarClass.event_paused_mouse_button_press
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_paused_mouse_button_press(self, button)
+    
+    Mouse Button Press event when the game is paused.
+    
+    
     IV.H.29. sge.StellarClass.event_paused_mouse_button_release
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_paused_mouse_button_release(self, button)
+    
+    Mouse Button Release event when the game is paused.
+    
+    
     IV.H.30. sge.StellarClass.event_paused_joystick_axis_move
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_paused_joystick_axis_move(self, joystick,
+        axis, value)
+    
+    Joystick Axis Move event when the game is paused.
+    
+    
     IV.H.31. sge.StellarClass.event_paused_joystick_hat_move
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_paused_joystick_hat_move(self, joystick, hat,
+        x, y)
+    
+    Joystick HAT Move event when the game is paused.
+    
+    
     IV.H.32. sge.StellarClass.event_paused_joystick_button_press
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_paused_joystick_button_press(self, joystick,
+        button)
+    
+    Joystick Button Press event when the game is paused.
+    
+    
     IV.H.33. sge.StellarClass.event_paused_joystick_button_release
     --------------------------------------------------------------------
+    
+    sge.StellarClass.event_paused_joystick_button_release(self,
+        joystick, button)
+    
+    Joystick Button Release event when the game is paused.
+    
+    
     IV.H.34. sge.StellarClass.create (class method)
     --------------------------------------------------------------------
     
@@ -1549,29 +1840,21 @@ is best implemented via subclassing SGE's classes.
   ----------------------------------------------------------------------
 V. Functions
 ------------------------------------------------------------------------
-  V.A. sge.create_object
+  V.A. sge.get_key_pressed
   ----------------------------------------------------------------------
-  V.B. sge.sound_stop_all
+  V.B. sge.get_mouse_button_pressed
   ----------------------------------------------------------------------
-  V.C. sge.music_clear_queue
+  V.C. sge.get_joystick_axis
   ----------------------------------------------------------------------
-  V.D. sge.music_stop_all
+  V.D. sge.get_joystick_hat
   ----------------------------------------------------------------------
-  V.E. sge.get_key_pressed
+  V.E. sge.get_joystick_button_pressed
   ----------------------------------------------------------------------
-  V.F. sge.get_mouse_button_pressed
+  V.F. sge.get_joysticks
   ----------------------------------------------------------------------
-  V.G. sge.get_joystick_axis
+  V.G. sge.get_joystick_axes
   ----------------------------------------------------------------------
-  V.H. sge.get_joystick_hat
+  V.H. sge.get_joystick_hats
   ----------------------------------------------------------------------
-  V.I. sge.get_joystick_button_pressed
-  ----------------------------------------------------------------------
-  V.J. sge.get_joysticks
-  ----------------------------------------------------------------------
-  V.K. sge.get_joystick_axes
-  ----------------------------------------------------------------------
-  V.L. sge.get_joystick_hats
-  ----------------------------------------------------------------------
-  V.M. sge.get_joystick_buttons
+  V.I. sge.get_joystick_buttons
   ----------------------------------------------------------------------

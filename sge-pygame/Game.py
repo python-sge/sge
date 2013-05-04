@@ -550,13 +550,13 @@ class Game(object):
             # Events
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    k = KEYNAMES[event.key]
+                    k = sge.KEYNAMES[event.key]
                     self.event_paused_key_press(k)
                     self.current_room.event_paused_key_press(k)
                     for obj in self.current_room.objects:
                         obj.event_paused_key_press(k)
                 elif event.type == pygame.KEYUP:
-                    k = KEYNAMES[event.key]
+                    k = sge.KEYNAMES[event.key]
                     self.event_paused_key_release(k)
                     self.current_room.event_paused_key_release(k)
                     for obj in self.current_room.objects:
