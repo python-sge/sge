@@ -86,6 +86,7 @@ IV. Classes
     IV.F.3. sge.Sound.stop
     IV.F.4. sge.Sound.pause
     IV.F.5. sge.Sound.unpause
+    IV.F.6. sge.Sound.stop_all (static method)
   IV.G. sge.Music
     IV.G.1. Constructor Method (sge.Music.__init__)
     IV.G.2. sge.Music.play
@@ -94,6 +95,8 @@ IV. Classes
     IV.G.5. sge.Music.pause
     IV.G.6. sge.Music.unpause
     IV.G.7. sge.Music.restart
+    IV.G.8. sge.Music.clear_queue (static method)
+    IV.G.9. sge.Music.stop_all (static method)
   IV.H. sge.StellarClass
     IV.H.1. Constructor Method (sge.StellarClass.__init__)
     IV.H.2. sge.StellarClass.collides
@@ -128,22 +131,19 @@ IV. Classes
     IV.H.31. sge.StellarClass.event_paused_joystick_hat_move
     IV.H.32. sge.StellarClass.event_paused_joystick_button_press
     IV.H.33. sge.StellarClass.event_paused_joystick_button_release
+    IV.H.34. sge.StellarClass.create (class method)
   IV.I. sge.Room
   IV.J. sge.View
 V. Functions
-  V.A. sge.create_object
-  V.B. sge.sound_stop_all
-  V.C. sge.music_clear_queue
-  V.D. sge.music_stop_all
-  V.E. sge.get_key_pressed
-  V.F. sge.get_mouse_button_pressed
-  V.G. sge.get_joystick_axis
-  V.H. sge.get_joystick_hat
-  V.I. sge.get_joystick_button_pressed
-  V.J. sge.get_joysticks
-  V.K. sge.get_joystick_axes
-  V.L. sge.get_joystick_hats
-  V.M. sge.get_joystick_buttons
+  V.A. sge.get_key_pressed
+  V.B. sge.get_mouse_button_pressed
+  V.C. sge.get_joystick_axis
+  V.D. sge.get_joystick_hat
+  V.E. sge.get_joystick_button_pressed
+  V.F. sge.get_joysticks
+  V.G. sge.get_joystick_axes
+  V.H. sge.get_joystick_hats
+  V.I. sge.get_joystick_buttons
 
 
 I. Introduction
@@ -1240,6 +1240,16 @@ is best implemented via subclassing SGE's classes.
     Resumes playback of the sound if paused.
     
     
+    IV.F.6. sge.Sound.stop_all (static method)
+    --------------------------------------------------------------------
+    
+    sge.Sound.stop_all()
+    
+    Stops playback of all sounds.
+    
+    This is a static method.
+    
+    
   IV.G. sge.Music
   ----------------------------------------------------------------------
   
@@ -1332,6 +1342,26 @@ is best implemented via subclassing SGE's classes.
     sge.Music.unpause(self)
     
     Resumes playback of the music if paused.
+    
+    
+    IV.G.7. sge.Music.clear_queue (static method)
+    --------------------------------------------------------------------
+    
+    sge.Music.clear_queue()
+    
+    Clears the music queue.
+    
+    This is a static method.
+    
+    
+    IV.G.8. sge.Music.stop_all (static method)
+    --------------------------------------------------------------------
+    
+    sge.Music.stop_all()
+    
+    Stops playback of any music and clears the queue.
+    
+    This is a static method.
     
     
   IV.H. sge.StellarClass
@@ -1502,6 +1532,17 @@ is best implemented via subclassing SGE's classes.
     --------------------------------------------------------------------
     IV.H.33. sge.StellarClass.event_paused_joystick_button_release
     --------------------------------------------------------------------
+    IV.H.34. sge.StellarClass.create (class method)
+    --------------------------------------------------------------------
+    
+    sge.StellarClass.create(cls, *args, **kwargs)
+    
+    Creates an object of this class in the current room.  All arguments
+    (except ``cls``) are passed to the constructor method of ``cls``.
+    
+    This is a class method.
+    
+    
   IV.I. sge.Room
   ----------------------------------------------------------------------
   IV.J. sge.View
