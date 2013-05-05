@@ -183,6 +183,20 @@ Maker.  The purpose of SGE is to make game development easier, which
 allows more rapid development by experienced game developers and also
 helps less experienced game developers learn how to develop games.
 
+Unlike Game Maker, you have freedom with SGE.  SGE is free software
+(where "free" refers to freedom, not price; see
+<http://gnu.org/philosophy/free-sw.html> for more information).  It is
+released under the GNU Lesser General Public License, which means you
+can modify and redistribute it without restriction, and you can use it
+however you wish.
+
+Although the GNU Lesser General Public license does not require it, we
+encourage you to release your games' code under a free software license,
+such as the GNU General Public License, the Expat License (often called
+the "MIT License"), or the Apache 2.0 License.  Doing so is easy, does
+not negatively affect you, and is highly appreciated as a contribution
+to free software.
+
 
 II. SGE Concepts
 ------------------------------------------------------------------------
@@ -2232,21 +2246,130 @@ is best implemented via subclassing SGE's classes.
     
 V. Functions
 ------------------------------------------------------------------------
+
+
   V.A. sge.get_key_pressed
   ----------------------------------------------------------------------
+  
+  sge.get_key_pressed(key)
+  
+  Returns whether or not a given key is pressed.  ``key`` indicates the
+  identifier string of the key to check.
+  
+  
   V.B. sge.get_mouse_button_pressed
   ----------------------------------------------------------------------
+  
+  sge.get_mouse_button_pressed(button)
+  
+  Returns whether or not a given mouse button is pressed.  ``button``
+  indicates the mouse button number to check.  What button numbers
+  correspond to what buttons can vary among implementations, so
+  ``button`` should be checked against the following constants:
+
+  * sge.MOUSE_BUTTON_LEFT
+  * sge.MOUSE_BUTTON_RIGHT
+  * sge.MOUSE_BUTTON_MIDDLE
+  * sge.MOUSE_BUTTON_WHEEL_UP
+  * sge.MOUSE_BUTTON_WHEEL_DOWN
+  * sge.MOUSE_BUTTON_WHEEL_LEFT
+  * sge.MOUSE_BUTTON_WHEEL_RIGHT
+  
+  
   V.C. sge.get_joystick_axis
   ----------------------------------------------------------------------
+  
+  sge.get_joystick_axis(joystick, axis)
+  
+  Returns the position of a joystick axis.  ``joystick`` indicates the
+  number of the joystick to check, where 0 is the first joystick.
+  ``axis`` indicates the number of the axis to check, where 0 is the
+  first axis of the joystick.
+  
+  The returned value is a float from -1 to 1, where 0 is centered, -1 is
+  all the way to the left or up, and 1 is all the way to the right or
+  down.  If the joystick or axis requested does not exist, 0 is
+  returned.
+  
+  Support for joysticks in SGE implementations is optional.
+  
+  
   V.D. sge.get_joystick_hat
   ----------------------------------------------------------------------
+  
+  sge.get_joystick_hat(joystick, hat)
+  
+  Returns the position of a joystick HAT switch (also called the POV
+  hat, POV switch, or d-pad).  ``joystick`` indicates the number of the
+  joystick to check, where 0 is the first joystick.  ``hat`` indicates
+  the number of the HAT to check, where 0 is the first HAT of the
+  joystick.
+  
+  The returned value is a tuple in the form (x, y), where is is the
+  horizontal position and y is the vertical position.  Both x and y can
+  only be 0 (centered), -1 (left or up), or 1 (right or down).  If the
+  joystick or HAT requested does not exist, (0, 0) is returned.
+  
+  Support for joysticks in SGE implementations is optional.
+  
+  
   V.E. sge.get_joystick_button_pressed
   ----------------------------------------------------------------------
+  
+  sge.get_joystick_button_pressed(joystick, button)
+  
+  Returns whether or not the given button is pressed.  ``joystick``
+  indicates the number of the joystick to check, where 0 is the first
+  joystick.  ``button`` indicates the number of the button to check,
+  where 0 is the first button of the joystick.  If the joystick or
+  button requested does not exist, False is returned.
+  
+  Support for joysticks in SGE implementations is optional.
+  
+  
   V.F. sge.get_joysticks
   ----------------------------------------------------------------------
+  
+  sge.get_joysticks()
+  
+  Returns the number of joysticks available.
+  
+  Support for joysticks in SGE implementations is optional.
+  
+  
   V.G. sge.get_joystick_axes
   ----------------------------------------------------------------------
+  
+  sge.get_joystick_axes(joystick)
+  
+  Returns the number of axes available on a joystick.  ``joystick``
+  indicates the number of the joystick to check, where 0 is the first
+  joystick.  If the given joystick does not exist, 0 will be returned.
+  
+  Support for joysticks in SGE implementations is optional.
+  
+  
   V.H. sge.get_joystick_hats
   ----------------------------------------------------------------------
+  
+  sge.get_joystick_hats(joystick)
+  
+  Returns the number of HAT switches (also called POV hats, POV
+  switches, or d-pads) available on a joystick.  ``joystick`` indicates
+  the number of the joystick to check, where 0 is the first joystick.
+  If the given joystick does not exist, 0 will be returned.
+  
+  Support for joysticks in SGE implementations is optional.
+  
+  
   V.I. sge.get_joystick_buttons
   ----------------------------------------------------------------------
+  
+  sge.get_joystick_buttons(joystick)
+  
+  Returns the number of buttons available on a joystick.  ``joystick``
+  indicates the number of the joystick to check, where 0 is the first
+  joystick.  If the given joystick does not exist, 0 will be returned.
+  
+  Support for joysticks in SGE implementations is optional.
+
