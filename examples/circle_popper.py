@@ -86,11 +86,6 @@ class Room(sge.Room):
     def event_room_start(self):
         glob.music.play(loops=None)
 
-##    def event_step(self, time_passed):
-##        text = 'This is text!\nThis is the second line!\n\nI love text!'
-##        glob.font.render(text, 320, 0, 10, halign=sge.ALIGN_CENTER,
-##                         valign=sge.ALIGN_TOP)
-
 
 def main():
     # Create Game object

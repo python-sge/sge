@@ -1,7 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 
+import sys
 from distutils.core import setup
+
+if sys.version_info.major == 3:
+    idir = 'sge-pygame-py3k'
+    ireq = 'pygame >= 1.9.0'
+elif sys.version_info.major == 2 and sys.version_info.minor >= 6:
+    idir = 'sge-pygame'
+    ireq = 'pygame >= 1.9.0'
+else:
+    sys.exit('Python version unsupported.')
 
 setup(name='Stellar Game Engine',
       version='0.2.0',
