@@ -29,10 +29,10 @@ Source: http://opengameart.org/content/where-was-i
 
 ------------------------------------------------------------------------
 
-./examples/data/music/DST-TowerDefenseTheme_1.ogg
-Author: 
+./examples/data/music/DST-TowerDefenseTheme.ogg
+Author: DST <http://opengameart.org/users/dst>
 License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-Source: 
+Source: http://opengameart.org/content/tower-defense-theme
 
 ------------------------------------------------------------------------
 
