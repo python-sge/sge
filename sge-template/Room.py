@@ -54,6 +54,8 @@ class Room(object):
         event_room_start: Called when the room starts.  It is always
             called after any game start events and before any object
             create events occurring at the same time.
+        event_room_end: Called when the room ends.  It is always called
+            before any game end events occurring at the same time.
         event_step: Called once each frame.
         event_key_press: Key press event.
         event_key_release: Key release event.

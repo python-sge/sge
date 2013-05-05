@@ -23,6 +23,7 @@ import sge
 
 class glob(object):
 
+    player = None
     lives = 3
     score = 0
 
@@ -57,6 +58,7 @@ class Player(sge.StellarClass):
         self.right_key = 'right'
         x = sge.game.width / 2
         y = sge.game.height - 64
+        glob.player = self
         super(Player, self).__init__(x, y, 10, 'player', '1945_playerplane',
                                      collision_precise=True)
 
@@ -160,6 +162,8 @@ class Enemy(sge.StellarClass):
 class EnemyPlane(Enemy):
 
     sprite_normal = "1945_enemyplane_green"
+    sprite_flipping = "1945_enemyplane_green_flip"
+    sprite_flipped = "1945_enemyplane_green_flipped"
     retreats = True
     follows_player = False
     directional_guns = False
@@ -168,8 +172,38 @@ class EnemyPlane(Enemy):
         super(EnemyPlane, self).__init__(x, y, 5, sprite=self.sprite_normal,
                                          collision_precise=True, yvelocity=8)
 
+    def retreat(self):
+        self.retreating = True
+        self.turning = True
+        self.sprite = self.sprite_flipping
+        self.image_index = 0
+        self.image_rotation = 0
+        self.xvelocity = 0
+        self.yvelocity = 0
+        
+
     def event_create(self):
         self.retreating = False
+        self.turning = False
 
     def event_step(self, time_passed):
-        pass
+        if not self.retreating:
+            if self.retreats and self.y >= game.height - 32:
+                self.retreat()
+            elif self.follows_player:
+                if self.y < glob.player.y and self.x != glob.player.x:
+                    d = (glob.player.x - self.x) / abs(glob.player.x - self.x)
+                    self.image_rotation = 45 * d
+                    self.xvelocity = 5.7 * d
+                    self.yvelocity = 5.7
+                else:
+                    self.image_rotation = 0
+                    self.xvelocity = 0
+                    self.yvelocity = 8
+
+    def event_animation_end(self):
+        if self.turning:
+            self.turning = False
+            self.sprite = self.sprite_flipped
+            self.image_index = 0
+            self.yvelocity = -8
