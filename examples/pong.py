@@ -20,11 +20,17 @@ from __future__ import unicode_literals
 
 import sge
 
+# The Pygame implementation has extra trackball support.  In Pong,
+# taking advantage of this support is useful.
 if "Pygame" in sge.IMPLEMENTATION:
     sge.real_trackballs = True
 
 
 class glob(object):
+
+    # This class is for global variables.  While not necessary, using a
+    # container class like this is less potentially confusing than using
+    # actual global variables.
 
     player1 = None
     player2 = None
@@ -51,11 +57,15 @@ class Game(sge.Game):
 
     def event_paused_key_press(self, key):
         if key == 'escape':
+            # This allows the player to still exit while the game is
+            # paused, rather than having to unpause first.
             self.end()
         else:
             self.unpause()
 
     def event_paused_close(self):
+        # This allows the player to still exit while the game is paused,
+        # rather than having to unpause first.
         self.end()
 
 
@@ -96,12 +106,14 @@ class Player(sge.StellarClass):
         super(Player, self).__init__(x, y, 0, objname, glob.paddle_sprite)
 
     def event_step(self, time_passed):
+        # Movement
         if self.axis_motion:
             self.yvelocity = self.axis_motion * 4
         else:
             self.yvelocity = (sge.get_key_pressed(self.down_key) -
                               sge.get_key_pressed(self.up_key)) * 4
 
+        # Keep the paddle inside the window
         if self.bbox_top < 0:
             self.bbox_top = 0
         elif self.bbox_bottom > sge.game.height:
@@ -131,6 +143,7 @@ class Ball(sge.StellarClass):
         self.serve()
 
     def event_step(self, time_passed):
+        # Scoring
         if self.bbox_right < -16:
             glob.player2.score += 1
             self.serve(-1)
@@ -138,6 +151,7 @@ class Ball(sge.StellarClass):
             glob.player1.score += 1
             self.serve(1)
 
+        # Bouncing off of the edges
         if self.bbox_bottom > sge.game.height:
             self.bbox_bottom = sge.game.height
             self.yvelocity = -abs(self.yvelocity)
@@ -162,11 +176,13 @@ class Ball(sge.StellarClass):
 
     def serve(self, direction=1):
         if glob.player1.score < 10 and glob.player2.score < 10:
+            # Next round
             self.x = self.xstart
             self.y = self.ystart
             self.xvelocity = 2 * direction
             self.yvelocity = 0
         else:
+            # Game Over!
             glob.hud_sprite.draw_clear()
             x = glob.hud_sprite.width / 2
             p1score = glob.player1.score
@@ -183,6 +199,7 @@ class Ball(sge.StellarClass):
 
 
 def refresh_hud():
+    # This fixes the HUD sprite so that it displays the correct score.
     glob.hud_sprite.draw_clear()
     x = glob.hud_sprite.width / 2
     glob.hud_sprite.draw_text(glob.hud_font, str(glob.player1.score), x - 16,
