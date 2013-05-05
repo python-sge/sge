@@ -16,9 +16,9 @@ offer an option to those who want only a game engine without a graphical
 interface.
 
 SGE is supposed to be able to have differing "implementations"
-available.  The first implementation developed will likely be one that
-uses Pygame, but an implementation using Pyglet might be developed
-later, for instance.  This allows increased flexibility in Stellar.
+available.  The first implementation developed has been one that uses
+Pygame, but an implementation using Pyglet might be developed later, for
+instance.  This allows increased flexibility in Stellar.
 
 
 Developing an Implementation
