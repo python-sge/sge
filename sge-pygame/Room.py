@@ -115,13 +115,13 @@ class Room(object):
         if views is not None:
             self.views = list(views)
         else:
-            self.views = [View(0, 0)]
+            self.views = [sge.View(0, 0)]
         self._start_views = self.views[:]
 
         if background is not None:
             self.background = background
         else:
-            self.background = Background((), 'black')
+            self.background = sge.Background((), 'black')
         self._start_background = self.background
 
         self.room_number = len(sge.game.rooms)
