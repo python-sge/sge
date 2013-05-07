@@ -46,10 +46,12 @@ the same directory as your main game script and rename it to "sge"
 (note: all lowercase).  You can then import the module "sge".
 
 Note that a given implemenation may have additional dependencies; see
-the implementation's included DEPENDENCIES.txt file to learn about them.
+the implementation's included DEPENDENCIES file to learn about them.
 Also note that "sge-template" is not an implementation, but a template
 for programming new implementations.
 
 See the files contained in the "examples" directory for examples of
-games written for SGE.  See MANUAL.txt for documentation of the SGE API.
+games written for SGE.  To run them, you must first add the folder of an
+SGE implementation into the "examples" directory as described above.
+See MANUAL for documentation of the SGE API.
 

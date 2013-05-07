@@ -535,7 +535,7 @@ is best implemented via subclassing SGE's classes.
 
     Key Press event.  This event is executed when a key on the keyboard
     is pressed.  ``key`` indicates the identifier string of the key that
-    was pressed (see KEYS.txt for a list of all key identifier strings).
+    was pressed (see KEYS for a list of all key identifier strings).
 
 
     IV.A.10. sge.Game.event_key_release
@@ -545,7 +545,7 @@ is best implemented via subclassing SGE's classes.
 
     Key Release event.  This event is executed when a key on the
     keyboard is released.  ``key`` indicates the identifier string of
-    the key that was released (see KEYS.txt for a list of all key
+    the key that was released (see KEYS for a list of all key
     identifier strings).
 
 
@@ -1611,7 +1611,7 @@ is best implemented via subclassing SGE's classes.
 
     Key Press event.  This event is executed when a key on the keyboard
     is pressed.  ``key`` indicates the identifier string of the key that
-    was pressed (see KEYS.txt for a list of all key identifier strings).
+    was pressed (see KEYS for a list of all key identifier strings).
 
 
     IV.H.12. sge.StellarClass.event_key_release
@@ -1621,7 +1621,7 @@ is best implemented via subclassing SGE's classes.
 
     Key Release event.  This event is executed when a key on the
     keyboard is released.  ``key`` indicates the identifier string of
-    the key that was released (see KEYS.txt for a list of all key
+    the key that was released (see KEYS for a list of all key
     identifier strings).
 
 
@@ -1994,7 +1994,7 @@ is best implemented via subclassing SGE's classes.
 
     Key Press event.  This event is executed when a key on the keyboard
     is pressed.  ``key`` indicates the identifier string of the key that
-    was pressed (see KEYS.txt for a list of all key identifier strings).
+    was pressed (see KEYS for a list of all key identifier strings).
 
 
     IV.I.10. sge.Room.event_key_release
@@ -2004,7 +2004,7 @@ is best implemented via subclassing SGE's classes.
 
     Key Release event.  This event is executed when a key on the
     keyboard is released.  ``key`` indicates the identifier string of
-    the key that was released (see KEYS.txt for a list of all key
+    the key that was released (see KEYS for a list of all key
     identifier strings).
 
 
