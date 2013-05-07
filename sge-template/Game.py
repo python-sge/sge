@@ -59,6 +59,14 @@ class Game(object):
             down like normal if it is.
         grab_input: If set to True, all input will be locked into the
             game.
+        window_text: The text for the OS to display as the window title,
+            e.g. in the frame of the window.  If set to None, the
+            implementation chooses the text.  Support for this feature
+            in Stellar Game Engine implementations is optional.
+        window_icon: The sprite to use as the window icon.  Only the
+            first frame of the sprite is used.  If set to None, the
+            implementation chooses the icon.  Support for this feature
+            in Stellar Game Engine implementations is optional.
 
     The following read-only attributes are also available:
         sprites: A dictionary containing all loaded sprites, using their
@@ -134,7 +142,8 @@ class Game(object):
 
     def __init__(self, width=640, height=480, fullscreen=False, scale=0,
                  scale_proportional=True, scale_smooth=False, fps=60,
-                 delta=False, delta_min=15, grab_input=False):
+                 delta=False, delta_min=15, grab_input=False,
+                 window_text=None):
         """Create a new Game object and assign it to ``game``.
 
         Arguments set the properties of the game.  See Game.__doc__ for

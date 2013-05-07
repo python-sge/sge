@@ -65,6 +65,14 @@ class Game(object):
             down like normal if it is.
         grab_input: If set to True, all input will be locked into the
             game.
+        window_text: The text for the OS to display as the window title,
+            e.g. in the frame of the window.  If set to None, the
+            implementation chooses the text.  Support for this feature
+            in Stellar Game Engine implementations is optional.
+        window_icon: The sprite to use as the window icon.  Only the
+            first frame of the sprite is used.  If set to None, the
+            implementation chooses the icon.  Support for this feature
+            in Stellar Game Engine implementations is optional.
 
     The following read-only attributes are also available:
         sprites: A dictionary containing all loaded sprites, using their
@@ -206,9 +214,31 @@ class Game(object):
     def grab_input(self, value):
         pygame.event.set_grab(value)
 
+    @property
+    def window_text(self):
+        return pygame.display.get_caption()[0]
+
+    @window_text.setter
+    def window_text(self, value):
+        if value is not None:
+            pygame.display.set_caption(value)
+
+    @property
+    def window_icon(self):
+        return self._window_icon
+
+    @window_icon.setter
+    def window_icon(self, value):
+        if value is not None:
+            self._window_icon = value._baseimages[0]
+            pygame.display.set_icon(self._window_icon)
+        else:
+            self._window_icon = sge.Sprite()
+
     def __init__(self, width=640, height=480, fullscreen=False, scale=0,
                  scale_proportional=True, scale_smooth=False, fps=60,
-                 delta=False, delta_min=15, grab_input=False):
+                 delta=False, delta_min=15, grab_input=False,
+                 window_text=None):
         """Create a new Game object and assign it to ``game``.
 
         Arguments set the properties of the game.  See Game.__doc__ for
@@ -232,6 +262,7 @@ class Game(object):
         self.fps = fps
         self.delta = delta
         self.delta_min = delta_min
+        self.window_text = window_text
 
         self.sprites = {}
         self.background_layers = {}
@@ -271,6 +302,8 @@ class Game(object):
         if not pygame.font.get_init():
             global Font
             Font = _FakeFont
+
+        self.window_icon = None
 
     def start(self):
         """Start the game at the first room.

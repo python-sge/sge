@@ -74,8 +74,6 @@ Classes:
     View: Class used for views in rooms.
 
 Functions:
-    create_object: Create an object in the current room.
-    sound_stop_all: Stop playback of all sounds.
     get_key_pressed: Return whether or not a given key is pressed.
     get_mouse_button_pressed: Return whether or not a given mouse
         button is pressed.
@@ -154,7 +152,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.49"
+__version__ = "0.0.50"
 
 import os
 

@@ -415,6 +415,11 @@ is best implemented via subclassing SGE's classes.
       lower than this amount, resulting in the game slowing down like
       normal if it is.
   * grab_input: If set to True, all input will be locked into the game.
+  * window_text: The text for the OS to display as the window title,
+      e.g. in the frame of the window.  If set to None, the
+      implementation chooses the text.
+  * window_icon: The sprite to use as the window icon.  Only the first
+      frame of the sprite is used.
 
   Read-Only Attributes:
   * sprites: A dictionary containing all loaded sprites, using their
@@ -446,7 +451,7 @@ is best implemented via subclassing SGE's classes.
 
     sge.Game.__init__(self, width=640, height=480, fullscreen=False,
         scale=0, scale_proportional=True, scale_smooth=False, fps=60,
-        delta=False, delta_min=15)
+        delta=False, delta_min=15, window_text=None)
 
     All arguments are used to set the respective initial attributes of
     the object.
