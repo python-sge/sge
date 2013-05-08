@@ -18,6 +18,8 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import math
+
 import sge
 
 
@@ -100,6 +102,7 @@ class Player(sge.StellarClass):
         if not self.exploding:
             if isinstance(other, Enemy):
                 self.hurt()
+                other.kill()
 
     def event_animation_end(self):
         if self.exploding:
@@ -156,7 +159,15 @@ class PlayerBullet(sge.StellarClass):
 
 class Enemy(sge.StellarClass):
 
-    pass
+    def kill(self):
+        pass
+
+
+class EnemyBullet(Enemy):
+
+    def __init__(self, x, y, xvelocity=0, yvelocity=12):
+        super(EnemyBullet, self).__init__(x, y, 2, sprite='1945_enemybullet',
+                                          collision_precise=True)
 
 
 class EnemyPlane(Enemy):
@@ -167,6 +178,7 @@ class EnemyPlane(Enemy):
     retreats = True
     follows_player = False
     directional_guns = False
+    shoot_delay = 45
 
     def __init__(self, x, y):
         super(EnemyPlane, self).__init__(x, y, 5, sprite=self.sprite_normal,
@@ -180,11 +192,11 @@ class EnemyPlane(Enemy):
         self.image_rotation = 0
         self.xvelocity = 0
         self.yvelocity = 0
-        
 
     def event_create(self):
         self.retreating = False
         self.turning = False
+        self.set_alarm('shoot', self.shoot_delay)
 
     def event_step(self, time_passed):
         if not self.retreating:
@@ -201,9 +213,27 @@ class EnemyPlane(Enemy):
                     self.xvelocity = 0
                     self.yvelocity = 8
 
+    def event_alarm(self, alarm_id):
+        if alarm.id == 'shoot':
+            self.shoot()
+            self.set_alarm('shoot', self.shoot_delay)
+
     def event_animation_end(self):
         if self.turning:
             self.turning = False
             self.sprite = self.sprite_flipped
             self.image_index = 0
             self.yvelocity = -8
+
+    def shoot(self):
+        if self.directional_guns:
+            xdistance = glob.player.x - self.x
+            ydistance = glob.player.y - self.y
+            h = math.sqrt(xdistance ** 2 + ydistance ** 2)
+            xvelocity = 12 * xdistance / h
+            yvelocity = 12 * ydistance / h
+        else:
+            xvelocity = 0
+            yvelocity = 12
+
+        EnemyBullet.create(self.x, self.y, xvelocity, yvelocity)

@@ -806,14 +806,19 @@ class StellarClass(object):
 
     @classmethod
     def create(cls, *args, **kwargs):
-        """Create an object of this class in the current room.
+        """Create an object of this class in the current room and return
+        the object created.
 
         ``args`` and ``kwargs`` are passed to ``cls`` as arguments.
         Calling this class method is the same as:
-            sge.game.current_room.add(cls(*args, **kwargs))
+            obj = cls(*args, **kwargs)
+            sge.game.current_room.add(obj)
+            return obj
 
         """
-        sge.game.current_room.add(cls(*args, **kwargs))
+        obj = cls(*args, **kwargs)
+        sge.game.current_room.add(obj)
+        return obj
 
     def _update(self, time_passed, delta_mult):
         # Update this object (should be called each frame).

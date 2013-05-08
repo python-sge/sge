@@ -1875,8 +1875,9 @@ is best implemented via subclassing SGE's classes.
 
     sge.StellarClass.create(cls, *args, **kwargs)
 
-    Creates an object of this class in the current room.  All arguments
-    (except ``cls``) are passed to the constructor method of ``cls``.
+    Creates an object of this class in the current room and returns it.
+    All arguments (except ``cls``) are passed to the constructor method
+    of ``cls``.
 
     This is a class method.
 
