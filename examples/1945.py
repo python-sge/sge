@@ -206,8 +206,9 @@ class EnemyPlane(Enemy):
                 if self.y < glob.player.y and self.x != glob.player.x:
                     d = (glob.player.x - self.x) / abs(glob.player.x - self.x)
                     self.image_rotation = 45 * d
-                    self.xvelocity = 5.7 * d
-                    self.yvelocity = 5.7
+                    angle = math.radians(self.image_rotation + 270)
+                    self.xvelocity = math.cos(angle) * 8
+                    self.yvelocity = math.sin(angle) * 8
                 else:
                     self.image_rotation = 0
                     self.xvelocity = 0
@@ -237,3 +238,82 @@ class EnemyPlane(Enemy):
             yvelocity = 12
 
         EnemyBullet.create(self.x, self.y, xvelocity, yvelocity)
+
+
+def main():
+    # Create Game object
+    Game(480, 800)
+
+    # Load sprites
+    sge.Sprite('1945_enemybullet.png', origin_x=3, origin_y=3,
+               transparent=True, bbox_x=-3, bbox_y=-3)
+    sge.Sprite('1945_enemyplane_blue', origin_x=16, origin_y=16,
+               transparent=True, fps=4, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_enemyplane_blue_flip', origin_x=16, origin_y=16,
+               transparent=True, fps=6, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_enemyplane_blue_flipped', origin_x=16, origin_y=16,
+               transparent=True, fps=4, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_enemyplane_dkgreen', origin_x=16, origin_y=16,
+               transparent=True, fps=4, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_enemyplane_dkgreen_flip', origin_x=16, origin_y=16,
+               transparent=True, fps=6, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_enemyplane_dkgreen_flipped', origin_x=16, origin_y=16,
+               transparent=True, fps=4, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_enemyplane_green', origin_x=16, origin_y=16,
+               transparent=True, fps=4, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_enemyplane_green_flip', origin_x=16, origin_y=16,
+               transparent=True, fps=6, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_enemyplane_green_flipped', origin_x=16, origin_y=16,
+               transparent=True, fps=4, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_enemyplane_orange', origin_x=16, origin_y=16,
+               transparent=True, fps=4, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_enemyplane_white', origin_x=16, origin_y=16,
+               transparent=True, fps=4, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_enemyplane_white_flip', origin_x=16, origin_y=16,
+               transparent=True, fps=6, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_enemyplane_white_flipped', origin_x=16, origin_y=16,
+               transparent=True, fps=4, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_explosion_large', origin_x=32, origin_y=23,
+               transparent=True, fps=5)
+    sge.Sprite('1945_explosion_small', origin_x=16, origin_y=16,
+               transparent=True, fps=6)
+    sge.Sprite('1945_friendlyplane', origin_x=16, origin_y=16,
+               transparent=True, fps=4, bbox_x=-16, bbox_y=-16)
+    sge.Sprite('1945_gameover', origin_x=97, origin_y=6, transparent=True,
+               fps=4)
+    sge.Sprite('1945_getready', origin_x=98, origin_y=6, transparent=True,
+               fps=4)
+    sge.Sprite('1945_hud', transparent=True)
+    sge.Sprite('1945_hud_life', origin_x=13, origin_y=10, transparent=True,
+               bbox_x=-13, bbox_y=-10)
+    sge.Sprite('1945_hud_shieldbar')
+    sge.Sprite('1945_islands', origin_x=32, origin_y=32, transparent=True,
+               fps=0)
+    sge.Sprite('1945_main_menu', transparent=True)
+    sge.Sprite('1945_numbers', transparent=True, fps=0)
+    sge.Sprite('1945_playerbullet', origin_x=3, origin_y=8, transparent=True,
+               bbox_x=-3, bbox_y=-8)
+    sge.Sprite('1945_playerplane', origin_x=29, origin_y=12, transparent=True,
+               fps=4, bbox_x=-29, bbox_y=-12)
+    sge.Sprite('1945_powerup_backguns', origin_x=16, origin_y=10,
+               transparent=True, bbox_x=-16, bbox_y=-10)
+    sge.Sprite('1945_powerup_backup', origin_x=15, origin_y=7,
+               transparent=True, bbox_x=-15, bbox_y=-7)
+    sge.Sprite('1945_powerup_bomb', origin_x=5, origin_y=11, transparent=True,
+               bbox_x=-5, bbox_y=-11)
+    sge.Sprite('1945_powerup_extralife', origin_x=11, origin_y=9,
+               transparent=True, bbox_x=-11, bbox_y=-9)
+    sge.Sprite('1945_powerup_shield', origin_x=10, origin_y=14,
+               transparent=True, bbox_x=-10, bbox_y=-14)
+    sge.Sprite('1945_powerup_sideguns', origin_x=16, origin_y=7,
+               transparent=True, bbox_x=-16, bbox_y=-7)
+    sge.Sprite('1945_powerup_spreadguns', origin_x=16, origin_y=12,
+               transparent=True, bbox_x=-16, bbox_y=-12)
+    sge.Sprite('1945_selection_arrow', origin_x=6, origin_y=6,
+               transparent=True)
+    sge.Sprite('1945_title')
+    sge.Sprite('1945_water')
+
+
+if __name__ == '__main__':
+    main()
