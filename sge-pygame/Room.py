@@ -172,6 +172,7 @@ class Room(object):
         for sprite in sge.game._pygame_sprites:
             sprite.kill()
 
+        self._limit_views()
         sge.game.current_room = self
         sge.game._background_changed = True
 
@@ -432,6 +433,19 @@ class Room(object):
 
         """
         pass
+
+    def _limit_views(self):
+        # Prevent the views from moving outside of the room.
+        for view in self.views:
+            if view.x < 0:
+                view._x = 0
+            elif view.x + view.width > self.width:
+                view._x = self.width - view.width
+
+            if view.y < 0:
+                view._y = 0
+            elif view.y + view.height > self.height:
+                view._y = self.height - view.height
 
     def _reset(self):
         # Reset the room to its original state.

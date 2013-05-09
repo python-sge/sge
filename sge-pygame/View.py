@@ -52,6 +52,7 @@ class View(object):
         if self._x != value:
             self._x = value
             sge.game._background_changed = True
+            sge.game.current_room._limit_views()
 
     @property
     def y(self):
@@ -62,6 +63,7 @@ class View(object):
         if self._y != value:
             self._y = value
             sge.game._background_changed = True
+            sge.game.current_room._limit_views()
 
     @property
     def xport(self):
@@ -92,6 +94,7 @@ class View(object):
         if self._width != value:
             self._width = value
             sge.game._background_changed = True
+            sge.game.current_room._limit_views()
 
     @property
     def height(self):
@@ -102,6 +105,7 @@ class View(object):
         if self._height != value:
             self._height = value
             sge.game._background_changed = True
+            sge.game.current_room._limit_views()
 
     def __init__(self, x, y, xport=0, yport=0, width=None, height=None):
         """Create a new View object.
