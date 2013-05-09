@@ -30,8 +30,10 @@ class Room(object):
     """Class for rooms.
 
     All Room objects have the following attributes:
-        width: The width of the room in pixels.
-        height: The height of the room in pixels.
+        width: The width of the room in pixels.  If set to None,
+            ``sge.game.width`` is used.
+        height: The height of the room in pixels.  If set to None,
+            ``sge.game.height`` is used.
         views: A list containing all View objects in the room.
         background: The Background object used.  While it will always be
             the actual object when read, it can be set to either an
@@ -87,7 +89,7 @@ class Room(object):
 
     """
 
-    def __init__(self, objects=(), width=640, height=480, views=None,
+    def __init__(self, objects=(), width=None, height=None, views=None,
                  background=None):
         """Create a new Room object.
 
@@ -107,10 +109,10 @@ class Room(object):
         created.
 
         """
-        self.width = width
-        self.height = height
-        self._start_width = width
-        self._start_height = height
+        self.width = width if width is not None else sge.game.width
+        self.height = height if height is not None else sge.game.height
+        self._start_width = self.width
+        self._start_height = self.height
 
         if views is not None:
             self.views = list(views)

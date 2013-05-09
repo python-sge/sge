@@ -1003,9 +1003,6 @@ class Game(object):
             if sge.hardware_rendering:
                 flags |= pygame.HWSURFACE | pygame.DOUBLEBUF
 
-            #self._window = pygame.display.set_mode(
-            #    (int(round(self.width * self._xscale)),
-            #     int(round(self.height * self._yscale))), flags)
             self._window = pygame.display.set_mode(
                 (self._window_width, self._window_height), flags)
 
