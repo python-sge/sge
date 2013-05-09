@@ -1210,13 +1210,21 @@ class _PygameSprite(pygame.sprite.DirtySprite):
         # and coordinates given.  This involves creating "proxy"
         # one-time sprites for multiple views if necessary.
         views = sge.game.current_room.views
+
+        origin_x = sprite.origin_x * abs(sprite.image_xscale)
+        origin_y = sprite.origin_y * abs(sprite.image_yscale)
+        if sprite.image_xscale < 0:
+            origin_x = sprite.width - origin_x
+        if sprite.image_yscale < 0:
+            origin_y = sprite.height - origin_y
+
         if (len(views) == 1 and views[0].xport == 0 and views[0].yport == 0 and
                 views[0].width == sge.game.width and
                 views[0].height == sge.game.height):
             # There is only one view that takes up the whole screen, so
             # we don't need to worry about it.
-            x = x - views[0].x - sprite.origin_x
-            y = y - views[0].y - sprite.origin_y
+            x = x - views[0].x - origin_x
+            y = y - views[0].y - origin_y
             new_rect = self.image.get_rect()
             new_rect.left = (round(x * sge.game._xscale) - self.x_offset +
                              sge.game._x)
@@ -1234,8 +1242,8 @@ class _PygameSprite(pygame.sprite.DirtySprite):
             real_x = x
             real_y = y
             for view in views:
-                x = real_x - view.x - sprite.origin_x + view.xport
-                y = real_y - view.y - sprite.origin_y + view.yport
+                x = real_x - view.x - origin_x + view.xport
+                y = real_y - view.y - origin_y + view.yport
                 w = max(1, self.image.get_width())
                 h = max(1, self.image.get_height())
                 new_rect = self.image.get_rect()
