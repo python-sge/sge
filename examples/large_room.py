@@ -94,7 +94,7 @@ def main():
     # Create objects
     objects = []
     for i in xrange(1):
-        circle = Circle(random.randrange(0, 1280), random.randrange(0, 1024),
+        circle = Circle(random.randrange(0, 640), random.randrange(0, 480),
                         i)
         objects.append(circle)
 
@@ -105,7 +105,7 @@ def main():
             views.append(sge.View(0, 0, 320 * x, 240 * y, 320, 240))
 
     # Create rooms
-    sge.Room(tuple(objects), views=tuple(views), background=background)
+    sge.Room(tuple(objects), 640, 480, views=tuple(views), background=background)
 
     sge.game.start()
 

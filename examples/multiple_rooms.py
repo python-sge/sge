@@ -89,10 +89,6 @@ class Room(sge.Room):
     def event_room_start(self):
         glob.music.play(loops=None)
 
-    def event_step(self, time_passed):
-        glob.font.render(self.text, 320, 0, 10, halign=sge.ALIGN_CENTER,
-                         valign=sge.ALIGN_TOP)
-
     def event_key_press(self, key):
         if key == 'space':
             self.end()

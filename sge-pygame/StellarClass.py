@@ -157,8 +157,6 @@ class StellarClass(object):
     def x(self, value):
         self.xprevious = self._x
         self._x = value
-        self._bbox_left = value + self.bbox_x
-        self._bbox_right = self.bbox_left + self.bbox_width
 
         # Cause the Pygame sprite to make itself dirty
         self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
@@ -171,8 +169,6 @@ class StellarClass(object):
     def y(self, value):
         self.yprevious = self._y
         self._y = value
-        self._bbox_top = value + self.bbox_y
-        self._bbox_bottom = self.bbox_top + self.bbox_height
 
         # Cause the Pygame sprite to make itself dirty
         self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
@@ -246,47 +242,35 @@ class StellarClass(object):
 
     @property
     def bbox_left(self):
-        return self._bbox_left
+        return self.x + self.bbox_x
 
     @bbox_left.setter
     def bbox_left(self, value):
-        self.xprevious = self._x
-        self._bbox_left = value
-        self._bbox_right = value + self.bbox_width
-        self._x = value - self.bbox_x
+        self.x = value - self.bbox_x
 
     @property
     def bbox_right(self):
-        return self._bbox_right
+        return self.x + self.bbox_x + self.bbox_width
 
     @bbox_right.setter
     def bbox_right(self, value):
-        self.xprevious = self._x
-        self._bbox_right = value
-        self._bbox_left = value - self.bbox_width
-        self._x = self.bbox_left - self.bbox_x
+        self.x = value - self.bbox_width - self.bbox_x
 
     @property
     def bbox_top(self):
-        return self._bbox_top
+        return self.y + self.bbox_y
 
     @bbox_top.setter
     def bbox_top(self, value):
-        self.yprevious = self._y
-        self._bbox_top = value
-        self._bbox_bottom = value + self.bbox_height
-        self._y = value - self.bbox_y
+        self.y = value - self.bbox_y
 
     @property
     def bbox_bottom(self):
-        return self._bbox_bottom
+        return self.y + self.bbox_y + self.bbox_height
 
     @bbox_bottom.setter
     def bbox_bottom(self, value):
-        self.yprevious = self._y
-        self._bbox_bottom = value
-        self._bbox_top = value - self.bbox_height
-        self._y = self.bbox_top - self.bbox_y
+        self.y = value - self.bbox_height - self.bbox_y
 
     @property
     def xvelocity(self):

@@ -108,11 +108,9 @@ class Background(object):
                                     background.get_width() - 1))
             view_yport = max(0, min(int(round(view.yport * sge.game._yscale)),
                                     background.get_height() - 1))
-            view_w = min(int(round((sge.game.width - view.xport) *
-                                   sge.game._xscale)),
+            view_w = min(view.width * sge.game._xscale,
                          background.get_width() - view_xport)
-            view_h = min(int(round((sge.game.height - view.yport) *
-                                   sge.game._yscale)),
+            view_h = min(view.height * sge.game._yscale,
                          background.get_height() - view_yport)
             surf = background.subsurface(view_xport, view_yport, view_w,
                                          view_h)
