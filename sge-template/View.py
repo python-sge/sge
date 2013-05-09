@@ -29,15 +29,24 @@ class View(object):
 
     All View objects have the following attributes:
         x: The horizontal position of the view in the room, where the
-            left edge is 0 and x increases toward the right.
+            left edge is 0 and x increases toward the right.  When set,
+            if it brings the view outside the room it is in, it will be
+            re-adjusted so that the view is completely inside the room.
         y: The vertical position of the view in the room, where the top
-            edge is 0 and y increases toward the bottom.
+            edge is 0 and y increases toward the bottom.  When set, if
+            it brings the view outside the room it is in, it will be
+            re-adjusted so that the view is completely inside the room.
         xport: The horizontal position of the view on the screen, where
             the left edge is 0 and xport increases toward the right.
         yport: The vertical position of the view on the screen, where
             the top edge is 0 and yport increases toward the bottom.
-        width: The width of the view in pixels.
-        height: The height of the view in pixels.
+        width: The width of the view in pixels.  When set, if it results
+            in the view being outside the room it is in, ``x`` will be
+            adjusted so that the view is completely inside the room.
+        height: The height of the view in pixels.  When set, if it
+            results in the view being outside the room it is in, ``y``
+            will be adjusted so that the view is completely inside the
+            room.
 
     """
 
