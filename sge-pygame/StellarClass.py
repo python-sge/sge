@@ -202,6 +202,8 @@ class StellarClass(object):
         else:
             self._sprite = sge.game.sprites[value]
 
+        self.image_index = self.image_index % len(self._sprite._images)
+
     @property
     def detects_collisions(self):
         return self._detects_collisions

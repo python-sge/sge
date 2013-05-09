@@ -640,6 +640,7 @@ class Sprite(object):
 
     def _get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,
                    blend=None):
+        num %= len(self._images)
         # Return the properly sized surface.
         if (xscale, yscale, rotation, alpha, blend) in self._images[num]:
             return self._images[num][(xscale, yscale, rotation, alpha, blend)]
