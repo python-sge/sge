@@ -69,8 +69,9 @@ class Game(object):
             e.g. in the frame of the window.  If set to None, the
             implementation chooses the text.  Support for this feature
             in Stellar Game Engine implementations is optional.
-        window_icon: The sprite to use as the window icon.  Only the
-            first frame of the sprite is used.  If set to None, the
+        window_icon: The name of the image file to use as the window
+            icon, to be located in one of the directories specified in
+            ``sge.image_directories``.  If set to None, the
             implementation chooses the icon.  Support for this feature
             in Stellar Game Engine implementations is optional.
 
@@ -229,16 +230,22 @@ class Game(object):
 
     @window_icon.setter
     def window_icon(self, value):
+        self._window_icon = value
         if value is not None:
-            self._window_icon = value._baseimages[0]
-            pygame.display.set_icon(self._window_icon)
-        else:
-            self._window_icon = sge.Sprite()
+            for path in sge.image_directories:
+                try:
+                    image = pygame.image.load(os.path.join(path, value))
+                    pygame.display.set_icon(image)
+                    break
+                except pygame.error:
+                    continue
+
+                print('This shouldn\'t show. Remove me.')
 
     def __init__(self, width=640, height=480, fullscreen=False, scale=0,
                  scale_proportional=True, scale_smooth=False, fps=60,
                  delta=False, delta_min=15, grab_input=False,
-                 window_text=None):
+                 window_text=None, window_icon=None):
         """Create a new Game object and assign it to ``game``.
 
         Arguments set the properties of the game.  See Game.__doc__ for
@@ -263,6 +270,7 @@ class Game(object):
         self.delta = delta
         self.delta_min = delta_min
         self.window_text = window_text
+        self.window_icon = window_icon
 
         self.sprites = {}
         self.background_layers = {}

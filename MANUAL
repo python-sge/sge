@@ -418,8 +418,10 @@ is best implemented via subclassing SGE's classes.
   * window_text: The text for the OS to display as the window title,
       e.g. in the frame of the window.  If set to None, the
       implementation chooses the text.
-  * window_icon: The sprite to use as the window icon.  Only the first
-      frame of the sprite is used.
+  * window_icon: The name of the image file to use as the window icon,
+      to be located in one of the directories specified in
+      sge.image_directories.  If set to None, the implementation chooses
+      the icon.
 
   Read-Only Attributes:
   * sprites: A dictionary containing all loaded sprites, using their

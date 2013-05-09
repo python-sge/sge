@@ -63,8 +63,9 @@ class Game(object):
             e.g. in the frame of the window.  If set to None, the
             implementation chooses the text.  Support for this feature
             in Stellar Game Engine implementations is optional.
-        window_icon: The sprite to use as the window icon.  Only the
-            first frame of the sprite is used.  If set to None, the
+        window_icon: The name of the image file to use as the window
+            icon, to be located in one of the directories specified in
+            ``sge.image_directories``.  If set to None, the
             implementation chooses the icon.  Support for this feature
             in Stellar Game Engine implementations is optional.
 
@@ -143,7 +144,7 @@ class Game(object):
     def __init__(self, width=640, height=480, fullscreen=False, scale=0,
                  scale_proportional=True, scale_smooth=False, fps=60,
                  delta=False, delta_min=15, grab_input=False,
-                 window_text=None):
+                 window_text=None, window_icon=None):
         """Create a new Game object and assign it to ``game``.
 
         Arguments set the properties of the game.  See Game.__doc__ for
