@@ -390,6 +390,7 @@ class StellarClass(object):
         self.xprevious = x
         self.yprevious = y
 
+        self._image_index = image_index
         self.sprite = sprite
         self.visible = visible
         self.detects_collisions = detects_collisions
@@ -432,7 +433,6 @@ class StellarClass(object):
         self.xvelocity = xvelocity
         self.yvelocity = yvelocity
         self._anim_count = 0
-        self.image_index = image_index
         self.image_fps = (self.sprite.fps if self.sprite is not None else
                           image_fps)
         self.image_xscale = image_xscale
@@ -1197,7 +1197,8 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                     self.visible = int(self.parent().visible)
                     self.dirty = 1
 
-                self.update_rect(parent.x, parent.y, parent.z, parent.sprite)
+                self.update_rect(parent.x, parent.y, parent.z, parent.sprite,
+                                 parent.image_xscale, parent.image_yscale)
             else:
                 self.image = pygame.Surface((1, 1))
                 self.image.set_colorkey((0, 0, 0))
@@ -1205,18 +1206,21 @@ class _PygameSprite(pygame.sprite.DirtySprite):
         else:
             self.kill()
 
-    def update_rect(self, x, y, z, sprite):
+    def update_rect(self, x, y, z, sprite, image_xscale, image_yscale):
         # Update the rect of this Pygame sprite, based on the SGE sprite
         # and coordinates given.  This involves creating "proxy"
         # one-time sprites for multiple views if necessary.
         views = sge.game.current_room.views
 
-        origin_x = sprite.origin_x * abs(sprite.image_xscale)
-        origin_y = sprite.origin_y * abs(sprite.image_yscale)
-        if sprite.image_xscale < 0:
-            origin_x = sprite.width - origin_x
-        if sprite.image_yscale < 0:
-            origin_y = sprite.height - origin_y
+        if image_xscale >= 0:
+            origin_x = sprite.origin_x * abs(image_xscale)
+        else:
+            origin_x = (sprite.width - sprite.origin_x) * abs(image_xscale)
+
+        if image_yscale >= 0:
+            origin_y = sprite.origin_y * abs(image_yscale)
+        else:
+            origin_y = (sprite.height - sprite.origin_y) * abs(image_yscale)
 
         if (len(views) == 1 and views[0].xport == 0 and views[0].yport == 0 and
                 views[0].width == sge.game.width and
