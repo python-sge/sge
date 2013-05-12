@@ -314,6 +314,23 @@ def main():
     sge.Sprite('1945_title')
     sge.Sprite('1945_water')
 
+    # Load backgrounds
+    water_layer = sge.BackgroundLayer('1945_water', 0, 0, -10000)
+    layers = (water_layer,)
+    background = sge.Background(layers, "#083681")
+
+    # Load sounds
+    #TODO
+
+    # Create objects
+    #TODO
+    objects = ()
+
+    # Create rooms
+    sge.Room(objects, background=background)
+
+    sge.game.start()
+
 
 if __name__ == '__main__':
     main()
