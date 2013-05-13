@@ -25,6 +25,8 @@ class Background(object):
     """Background class.
 
     All Background objects have the following attributes:
+        x: The horizontal position of the background in the room.
+        y: The vertical position of the background in the room.
         color: A Stellar Game Engine color used in parts of the
             background where there is no layer.
 
@@ -35,7 +37,7 @@ class Background(object):
 
     """
 
-    def __init__(self, layers, color, id_=None, **kwargs):
+    def __init__(self, layers, color, x=0, y=0, id_=None, **kwargs):
         """Create a background with the given color and layers.
 
         Arguments set the properties of the background.  See

@@ -32,6 +32,8 @@ class Background(object):
     """Background class.
 
     All Background objects have the following attributes:
+        x: The horizontal position of the background in the room.
+        y: The vertical position of the background in the room.
         color: A Stellar Game Engine color used in parts of the
             background where there is no layer.
 
@@ -42,7 +44,7 @@ class Background(object):
 
     """
 
-    def __init__(self, layers, color, id_=None, **kwargs):
+    def __init__(self, layers, color, x=0, y=0, id_=None, **kwargs):
         """Create a background with the given color and layers.
 
         Arguments set the properties of the background.  See
@@ -65,6 +67,8 @@ class Background(object):
         id_ = kwargs.setdefault('id', id_)
 
         self.color = color
+        self.x = x
+        self.y = y
 
         if id_ is not None:
             self.id = id_
@@ -116,10 +120,12 @@ class Background(object):
                                          view_h)
             for layer in self.layers:
                 image = layer._get_image()
-                x = int(round((layer.x - (view.x * layer.xscroll_rate)) *
-                              sge.game._xscale))
-                y = int(round((layer.y - (view.y * layer.yscroll_rate)) *
-                              sge.game._yscale))
+                x = int(round(
+                    (self.x + layer.x - (view.x * layer.xscroll_rate)) *
+                    sge.game._xscale))
+                y = int(round(
+                    (self.y + layer.y - (view.y * layer.yscroll_rate)) *
+                    sge.game._yscale))
                 image_w = max(1, image.get_width())
                 image_h = max(1, image.get_height())
 

@@ -1152,6 +1152,8 @@ is best implemented via subclassing SGE's classes.
   the color to use where no image is shown.
 
   Attributes:
+  * x: The horizontal position of the background in the room.
+  * y: The vertical position of the background in the room.
   * color: The color used in parts of the background where no layer is
       shown.
 
@@ -1165,7 +1167,7 @@ is best implemented via subclassing SGE's classes.
     IV.D.1. Constructor Method (sge.Background.__init__)
     --------------------------------------------------------------------
 
-    sge.Background.__init__(self, layers, color, id=None)
+    sge.Background.__init__(self, layers, color, x=0, y=0, id=None)
 
     All arguments are used to set the respective initial attributes of
     the background.  If ``id`` is None, it will be set to an integer not
