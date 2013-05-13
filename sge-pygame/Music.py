@@ -94,7 +94,10 @@ class Music(object):
         """Create a new music object.
 
         ``fname`` indicates the name of the sound file, to be located in
-        one of the directories specified in ``music_directories``.
+        one of the directories specified in ``music_directories``.  If
+        set to None, this object will not actually play any music
+        (useful as a placeholder, for example).  If ``fname`` is neither
+        a valid sound file nor None, IOError will be raised.
 
         All remaining arguments set the initial properties of the music.
         See Music.__doc__ for more information.
@@ -110,13 +113,23 @@ class Music(object):
         self._fade_time = None
         self._start = 0
 
-        self._full_fname = None
-        if pygame.mixer.get_init():
-            for path in sge.music_directories:
-                path = os.path.join(path, fname)
-                if os.path.isfile(path):
-                    self._full_fname = path
-                    break
+        if self.fname is not None:
+            self._full_fname = None
+            if pygame.mixer.get_init():
+                for path in sge.music_directories:
+                    path = os.path.join(path, fname)
+                    if os.path.isfile(path):
+                        self._full_fname = path
+                        break
+
+            if self._full_fname is None:
+                print("Directories searched:")
+                for d in sge.music_directories:
+                    print(os.path.normpath(os.path.abspath(d)))
+                msg = 'File "{0}" not found.'.format(self.fname)
+                raise IOError(msg)
+        else:
+            self._full_fname = None
 
     def play(self, start=0, loops=0, maxtime=None, fade_time=None):
         """Play the music.

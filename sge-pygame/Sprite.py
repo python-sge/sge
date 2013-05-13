@@ -168,10 +168,6 @@ class Sprite(object):
         fname_frames = []
         fname_strip = None
 
-        print("Current image directories:")
-        for d in sge.image_directories:
-            print(os.path.normpath(os.path.abspath(d)))
-
         if name is not None:
             for path in sge.image_directories:
                 if os.path.isdir(path):
@@ -241,6 +237,9 @@ class Sprite(object):
                     print("Ignored {0}; not a valid image.".format(fname_strip))
 
             if not self._baseimages:
+                print("Directories searched:")
+                for d in sge.image_directories:
+                    print(os.path.normpath(os.path.abspath(d)))
                 msg = 'Files for sprite name "{0}" not found.'.format(name)
                 raise IOError(msg)
         else:

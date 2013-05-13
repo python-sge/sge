@@ -91,7 +91,10 @@ class Sound(object):
         """Create a new sound object.
 
         ``fname`` indicates the name of the sound file, to be located in
-        one of the directories specified in ``sound_directories``.
+        one of the directories specified in ``sound_directories``.  If
+        set to None, this object will not actually play any music
+        (useful as a placeholder, for example).  If ``fname`` is neither
+        a valid sound file nor None, IOError will be raised.
 
         All remaining arguments set the initial properties of the sound.
         See Sound.__doc__ for more information.
@@ -100,16 +103,25 @@ class Sound(object):
         created.
 
         """
-        self._sound = None
+        if fname is not None:
+            self._sound = None
+            if pygame.mixer.get_init():
+                for path in sge.sound_directories:
+                    path = os.path.join(path, fname)
+                    try:
+                        self._sound = pygame.mixer.Sound(path)
+                        break
+                    except pygame.error:
+                        pass
 
-        if pygame.mixer.get_init():
-            for path in sge.sound_directories:
-                path = os.path.join(path, fname)
-                try:
-                    self._sound = pygame.mixer.Sound(path)
-                    break
-                except pygame.error:
-                    pass
+            if self._sound is None:
+                print("Directories searched:")
+                for d in sge.music_directories:
+                    print(os.path.normpath(os.path.abspath(d)))
+                msg = 'File "{0}" not found.'.format(self.fname)
+                raise IOError(msg)
+        else:
+            self._sound = None
 
         self._channels = []
         self._temp_channels = []
