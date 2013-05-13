@@ -92,7 +92,7 @@ class Sound(object):
 
         ``fname`` indicates the name of the sound file, to be located in
         one of the directories specified in ``sound_directories``.  If
-        set to None, this object will not actually play any music
+        set to None, this object will not actually play any sound
         (useful as a placeholder, for example).  If ``fname`` is neither
         a valid sound file nor None, IOError will be raised.
 

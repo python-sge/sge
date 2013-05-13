@@ -1245,8 +1245,11 @@ is best implemented via subclassing SGE's classes.
 
     ``fname`` indicates the name of the sound file (e.g. "mysound.wav")
     to be located in one of the directories specified in
-    sge.sound_directories.  All remaining arguments set the respective
-    initial attributes of the sound.
+    sge.sound_directories.  If set to None, this object will not
+    actually play any sound (useful as a placeholder, for example).  If
+    ``fname`` is neither a valid sound file nor None, IOError will be
+    raised.  All remaining arguments set the respective initial
+    attributes of the sound.
 
 
     IV.F.2. sge.Sound.play
@@ -1335,9 +1338,11 @@ is best implemented via subclassing SGE's classes.
     sge.Music.__init__(self, fname, volume=100, balance=0)
 
     ``fname`` indicates the name of the sound file, to be located in
-    one of the directories specified in ``music_directories``.  All
-    remaining arguments set the respective initial attributes of the
-    music.
+    one of the directories specified in ``music_directories``.  If set
+    to None, this object will not actually play any music (useful as a
+    placeholder, for example).  If ``fname`` is neither a valid sound
+    file nor None, IOError will be raised.  All remaining arguments set
+    the respective initial attributes of the music.
 
 
     IV.G.2. sge.Music.play
