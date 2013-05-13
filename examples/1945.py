@@ -29,6 +29,8 @@ class glob(object):
     lives = 3
     score = 0
 
+    music = None
+
 
 class Game(sge.Game):
 
@@ -160,7 +162,7 @@ class PlayerBullet(sge.StellarClass):
 class Enemy(sge.StellarClass):
 
     def kill(self):
-        pass
+        self.destroy()
 
 
 class EnemyBullet(Enemy):
@@ -178,7 +180,7 @@ class EnemyPlane(Enemy):
     retreats = True
     follows_player = False
     directional_guns = False
-    shoot_delay = 45
+    shoot_delay = 90
 
     def __init__(self, x, y):
         super(EnemyPlane, self).__init__(x, y, 5, sprite=self.sprite_normal,
@@ -238,6 +240,55 @@ class EnemyPlane(Enemy):
             yvelocity = 12
 
         EnemyBullet.create(self.x, self.y, xvelocity, yvelocity)
+
+    def kill(self):
+        SmallExplosion.create(self.x, self.y)
+        self.destroy()
+
+
+class Kamikaze(EnemyPlane):
+
+    sprite_normal = "1945_enemyplane_orange"
+    retreats = False
+    follows_player = True
+    directional_guns = False
+    shoot_delay = None
+
+
+class Coward(EnemyPlane):
+
+    sprite_normal = "1945_enemyplane_orange"
+    retreats = True
+    follows_player = False
+    directional_guns = True
+
+
+class Follower(EnemyPlane):
+
+    sprite_normal = "1945_enemyplane_orange"
+    retreats = True
+    follows_player = True
+    directional_guns = False
+    shoot_delay = 60
+
+
+class Chaser(EnemyPlane):
+
+    sprite_normal = "1945_enemyplane_orange"
+    retreats = True
+    follows_player = True
+    directional_guns = True
+    shoot_delay = 45
+
+
+class SmallExplosion(sge.StellarClass):
+
+    def __init__(self, x, y):
+        super(SmallExplosion, self).__init__(
+            x, y, 5, sprite="1945_explosion_small", detects_collisions=False)
+
+    def event_animation_end(self):
+        self.destroy()
 
 
 def main():
@@ -321,6 +372,9 @@ def main():
 
     # Load sounds
     #TODO
+
+    # Load music
+    glob.music = sge.Music("DST-TowerDefenseTheme.ogg")
 
     # Create objects
     #TODO
