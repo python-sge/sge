@@ -139,13 +139,13 @@ IV. Classes
     IV.I.3. sge.Room.start
     IV.I.4. sge.Room.resume
     IV.I.5. sge.Room.end
-    IV.B.6. sge.Sprite.draw_dot
-    IV.B.7. sge.Sprite.draw_line
-    IV.B.8. sge.Sprite.draw_rectangle
-    IV.B.9. sge.Sprite.draw_ellipse
-    IV.B.10. sge.Sprite.draw_circle
-    IV.B.11. sge.Sprite.draw_sprite
-    IV.B.12. sge.Sprite.draw_text
+    IV.I.6. sge.Room.project_dot
+    IV.I.7. sge.Room.project_line
+    IV.I.8. sge.Room.project_rectangle
+    IV.I.9. sge.Room.project_ellipse
+    IV.I.10. sge.Room.project_circle
+    IV.I.11. sge.Room.project_sprite
+    IV.I.12. sge.Room.project_text
     IV.I.13. sge.Room.event_room_start
     IV.I.14. sge.Room.event_room_end
     IV.I.15. sge.Room.event_step
