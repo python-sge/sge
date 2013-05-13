@@ -139,29 +139,36 @@ IV. Classes
     IV.I.3. sge.Room.start
     IV.I.4. sge.Room.resume
     IV.I.5. sge.Room.end
-    IV.I.6. sge.Room.event_room_start
-    IV.I.7. sge.Room.event_room_end
-    IV.I.8. sge.Room.event_step
-    IV.I.9. sge.Room.event_key_press
-    IV.I.10. sge.Room.event_key_release
-    IV.I.11. sge.Room.event_mouse_move
-    IV.I.12. sge.Room.event_mouse_button_press
-    IV.I.13. sge.Room.event_mouse_button_release
-    IV.I.14. sge.Room.event_joystick_axis_move
-    IV.I.15. sge.Room.event_joystick_hat_move
-    IV.I.16. sge.Room.event_joystick_button_press
-    IV.I.17. sge.Room.event_joystick_button_release
-    IV.I.18. sge.Room.event_close
-    IV.I.19. sge.Room.event_paused_key_press
-    IV.I.20. sge.Room.event_paused_key_release
-    IV.I.21. sge.Room.event_paused_mouse_move
-    IV.I.22. sge.Room.event_paused_mouse_button_press
-    IV.I.23. sge.Room.event_puased_mouse_button_release
-    IV.I.24. sge.Room.event_paused_joystick_axis_move
-    IV.I.25. sge.Room.event_paused_joystick_hat_move
-    IV.I.26. sge.Room.event_paused_joystick_button_press
-    IV.I.27. sge.Room.event_paused_joystick_button_release
-    IV.I.28. sge.Room.event_paused_close
+    IV.B.6. sge.Sprite.draw_dot
+    IV.B.7. sge.Sprite.draw_line
+    IV.B.8. sge.Sprite.draw_rectangle
+    IV.B.9. sge.Sprite.draw_ellipse
+    IV.B.10. sge.Sprite.draw_circle
+    IV.B.11. sge.Sprite.draw_sprite
+    IV.B.12. sge.Sprite.draw_text
+    IV.I.13. sge.Room.event_room_start
+    IV.I.14. sge.Room.event_room_end
+    IV.I.15. sge.Room.event_step
+    IV.I.16. sge.Room.event_key_press
+    IV.I.17. sge.Room.event_key_release
+    IV.I.18. sge.Room.event_mouse_move
+    IV.I.19. sge.Room.event_mouse_button_press
+    IV.I.20. sge.Room.event_mouse_button_release
+    IV.I.21. sge.Room.event_joystick_axis_move
+    IV.I.22. sge.Room.event_joystick_hat_move
+    IV.I.23. sge.Room.event_joystick_button_press
+    IV.I.24. sge.Room.event_joystick_button_release
+    IV.I.25. sge.Room.event_close
+    IV.I.26. sge.Room.event_paused_key_press
+    IV.I.27. sge.Room.event_paused_key_release
+    IV.I.28. sge.Room.event_paused_mouse_move
+    IV.I.29. sge.Room.event_paused_mouse_button_press
+    IV.I.30. sge.Room.event_puased_mouse_button_release
+    IV.I.31. sge.Room.event_paused_joystick_axis_move
+    IV.I.32. sge.Room.event_paused_joystick_hat_move
+    IV.I.33. sge.Room.event_paused_joystick_button_press
+    IV.I.34. sge.Room.event_paused_joystick_button_release
+    IV.I.35. sge.Room.event_paused_close
   IV.J. sge.View
 V. Functions
   V.A. sge.get_key_pressed
@@ -1973,7 +1980,162 @@ is best implemented via subclassing SGE's classes.
     this room.
 
 
-    IV.I.6. sge.Room.event_room_start
+    IV.I.6. sge.Room.project_dot
+    --------------------------------------------------------------------
+
+    sge.Room.project_dot(self, x, y, z, color)
+
+    Projects a single-pixel dot onto this room.  ``x`` and ``y``
+    indicate the location in the room to draw the dot.  ``z`` indicates
+    the Z-axis position of the projection in the room.  ``color``
+    indicates the color of the dot.
+
+
+    IV.I.7. sge.Room.project_line
+    --------------------------------------------------------------------
+
+    sge.Room.project_line(self, x1, y1, x2, y2, z, color, thickness=1,
+        anti_alias=False)
+
+    Projects a line segment onto this room.  ``x1``, ``y1``, ``x2``, and
+    ``y2`` indicate the locations relative to the room of the two points
+    between which to draw the line segment.  ``z`` indicates the Z-axis
+    position of the projection in the room.  ``color`` indicates the
+    color of the line segment.  ``thickness`` indicates the thickness of
+    the line segment in pixels.  ``anti_alias`` indicates whether or not
+    anti-aliasing should be used, which uses different color shades to
+    make the line appear straighter.
+
+    Support for anti-aliasing is optional in Stellar Game Engine
+    implementations.  See the implementation's readme to see if it
+    supports anti-aliasing.  If anti-aliasing is unsupported,
+    ``anti_alias`` will be ignored.
+
+
+    IV.I.8. sge.Room.project_rectangle
+    --------------------------------------------------------------------
+
+    sge.Room.project_rectangle(self, x, y, z, width, height, fill=None,
+        outline=None, outline_thickness=1)
+
+    Projects a rectangle onto this room.  ``x`` and ``y`` indicate the
+    location in the room to project the rectangle.  ``z`` indicates the
+    Z-axis position of the projection in the room.  ``width`` and
+    ``height`` indicate the size of the rectangle.  ``fill`` indicates
+    the  color of the fill of the rectangle; set to None for no fill.
+    ``outline`` indicates the color of the outline of the rectangle; set
+    to None for no outline.  ``outline_thickness`` indicates the
+    thickness of the outline in pixels (ignored if there is no outline).
+
+
+    IV.I.9. sge.Room.project_ellipse
+    --------------------------------------------------------------------
+
+    sge.Room.project_ellipse(self, x, y, z, width, height, fill=None,
+        outline=None, outline_thickness=1, anti_alias=False)
+
+    Projects an ellipse onto this room.  ``x`` and ``y`` indicate the
+    location relative to the room to position the imaginary rectangle
+    containing the ellipse.  ``z`` indicates the Z-axis position of the
+    projection in the room.  ``width`` and ``height`` indicate the size
+    of the ellipse.  ``fill``indicates the color of the fill of the
+    ellipse; set to None for no fill.  ``outline`` indicates the color
+    of the outline of the ellipse; set to None for no outline.
+    ``outline_thickness`` indicates the thickness of the outline in
+    pixels (ignored if there is no outline).  ``anti_alias`` indicates
+    whether or not anti-aliasing should be used, which uses different
+    color shades to make the ellipse appear more rounded.
+
+    Support for anti-aliasing is optional in Stellar Game Engine
+    implementations.  See the implementation's readme to see if it
+    supports anti-aliasing.  If anti-aliasing is unsupported,
+    ``anti_alias`` will be ignored.
+
+
+    IV.I.10. sge.Room.project_circle
+    --------------------------------------------------------------------
+
+    sge.Room.project_circle(self, x, y, z, radius, fill=None,
+        outline=None, outline_thickness=1, anti_alias=False)
+
+    Projects a circle onto this room.  ``x`` and ``y`` indicate the
+    location in the room to position the center of the circle.  ``z``
+    indicates the Z-axis position of the projection in the room.
+    ``radius`` indicates the radius of the circle in pixels.  ``fill``
+    indicates the color of the fill of the circle; set to None for no
+    fill.  ``outline`` indicates the color of the outline of the circle;
+    set to None for no outline.  ``outline_thickness`` indicates the
+    thickness of the outline in pixels (ignored if there is no outline).
+    ``anti_alias`` indicates whether or not anti-aliasing should be
+    used, which uses different color shades to make the circle appear
+    more rounded.
+
+    Support for anti-aliasing is optional in Stellar Game Engine
+    implementations.  See the implementation's readme to see if it
+    supports anti-aliasing.  If anti-aliasing is unsupported,
+    ``anti_alias`` will be ignored.
+
+
+    IV.I.11. sge.Room.project_sprite
+    --------------------------------------------------------------------
+
+    sge.Room.project_sprite(self, sprite, image, x, y, z)
+
+    Projects a sprite onto this room.  ``sprite`` indicates the sprite
+    to project.  ``image`` indicates the frame of the sprite to project,
+    where 0 is the first frame. ``x`` and ``y`` indicate the location in
+    the room to position the sprite.
+
+
+    IV.I.12. sge.Room.project_text
+    --------------------------------------------------------------------
+
+    sge.Room.project_text(self, font, text, x, y, z, width=None,
+        height=None, color="black", halign=sge.ALIGN_LEFT,
+        valign=sge.ALIGN_TOP, anti_alias=True)
+
+    Projects text onto this room.  ``font`` indicates the font to use to
+    render the text.  ``text`` indicates the text to project.  ``x`` and
+    ``y`` indicate the location in the room to position the imaginary
+    box containing the text.  ``width`` and ``height`` indicate the size
+    of the imaginary box the text is projected in; set to None to assign
+    the respective size to whatever is needed to contain the text.
+    ``color`` indicates the color of the text.  ``halign`` indicates the
+    horizontal alignment of the text and can be sge.ALIGN_LEFT,
+    sge.ALIGN_CENTER, or sge.ALIGN_RIGHT.  ``valign`` indicates the
+    vertical alignment of the text and can be sge.ALIGN_TOP,
+    sge.ALIGN_MIDDLE, or sge.ALIGN_BOTTOM.  ``anti_alias`` indicates
+    whether or not anti- aliasing should be used, which uses different
+    color shades to to make round shapes appear more round and diagonal
+    lines appear more straight.
+
+    In addition to the alignment of the text, ``halign`` and ``valign``
+    are also used to determine the origin of the imaginary box
+    containing the text.  The horizontal origin will be the left edge of
+    the imaginary box if ``halign`` is sge.ALIGN_LEFT, the center of the
+    imaginary box if ``halign`` is sge.ALIGN_CENTER, or the right edge
+    of the imaginary box if ``halign`` is sge.ALIGN_RIGHT.  The vertical
+    origin will be the top edge of the imaginary box if ``valign`` is
+    sge.ALIGN_TOP, the middle of the imaginary box if ``valign`` is
+    sge.ALIGN_MIDDLE, or the bottom edge of the imaginary box if
+    ``valign`` is sge.ALIGN_BOTTOM.
+
+    Text is fitted into the imaginary box much like a word processor; if
+    the text is too long to fit in one line, the line will be
+    automatically split into multiple lines.  After applying this rule,
+    if the text does not fit vertically into the imaginary box, text
+    that doesn't fit will be cut off; from the bottom if ``valign`` is
+    sge.ALIGN_TOP, from the top if ``valign`` is sge.ALIGN_BOTTOM, or
+    equally from the top and the bottom if ``valign`` is
+    sge.ALIGN_MIDDLE.
+
+    Support for anti-aliasing is optional in Stellar Game Engine
+    implementations.  See the implementation's readme to see if it
+    supports anti-aliasing.  If anti-aliasing is unsupported,
+    ``anti_alias`` will be ignored.
+
+
+    IV.I.13. sge.Room.event_room_start
     --------------------------------------------------------------------
 
     sge.Room.event_room_start(self)
@@ -1983,7 +2145,7 @@ is best implemented via subclassing SGE's classes.
     create events occurring at the same time.
 
 
-    IV.I.7. sge.Room.event_room_end
+    IV.I.14. sge.Room.event_room_end
     --------------------------------------------------------------------
 
     sge.Room.event_room_end(self)
@@ -1992,7 +2154,7 @@ is best implemented via subclassing SGE's classes.
     always called before any game end events occurring at the same time.
 
 
-    IV.I.8. sge.Room.event_step
+    IV.I.15. sge.Room.event_step
     --------------------------------------------------------------------
 
     sge.Room.event_step(self, time_passed)
@@ -2002,7 +2164,7 @@ is best implemented via subclassing SGE's classes.
     passed during the last frame.
 
 
-    IV.I.9. sge.Room.event_key_press
+    IV.I.16. sge.Room.event_key_press
     --------------------------------------------------------------------
 
     sge.Room.event_key_press(self, key)
@@ -2012,7 +2174,7 @@ is best implemented via subclassing SGE's classes.
     was pressed (see KEYS for a list of all key identifier strings).
 
 
-    IV.I.10. sge.Room.event_key_release
+    IV.I.17. sge.Room.event_key_release
     --------------------------------------------------------------------
 
     sge.StellarClass.event_key_release(self, key)
@@ -2023,7 +2185,7 @@ is best implemented via subclassing SGE's classes.
     identifier strings).
 
 
-    IV.I.11. sge.Room.event_mouse_move
+    IV.I.18. sge.Room.event_mouse_move
     --------------------------------------------------------------------
 
     sge.Room.event_mouse_move(self, x, y)
@@ -2033,7 +2195,7 @@ is best implemented via subclassing SGE's classes.
     ``y`` indicates the vertical relative movement of the mouse.
 
 
-    IV.I.12. sge.Room.event_mouse_button_press
+    IV.I.19. sge.Room.event_mouse_button_press
     --------------------------------------------------------------------
 
     sge.Room.event_mouse_button_press(self, button)
@@ -2053,7 +2215,7 @@ is best implemented via subclassing SGE's classes.
     * sge.MOUSE_BUTTON_WHEEL_RIGHT
 
 
-    IV.I.13. sge.Room.event_mouse_button_release
+    IV.I.20. sge.Room.event_mouse_button_release
     --------------------------------------------------------------------
 
     sge.Room.event_mouse_button_release(self, button)
@@ -2073,7 +2235,7 @@ is best implemented via subclassing SGE's classes.
     * sge.MOUSE_BUTTON_WHEEL_RIGHT
 
 
-    IV.I.14. sge.Room.event_joystick_axis_move
+    IV.I.21. sge.Room.event_joystick_axis_move
     --------------------------------------------------------------------
 
     sge.Room.event_joystick_axis_move(self, joystick, axis, value)
@@ -2090,7 +2252,7 @@ is best implemented via subclassing SGE's classes.
     Support for joysticks in SGE implementations is optional.
 
 
-    IV.I.15. sge.Room.event_joystick_hat_move
+    IV.I.22. sge.Room.event_joystick_hat_move
     --------------------------------------------------------------------
 
     sge.Room.event_joystick_hat_move(self, joystick, hat, x, y)
@@ -2107,7 +2269,7 @@ is best implemented via subclassing SGE's classes.
     Support for joysticks in SGE implementations is optional.
 
 
-    IV.I.16. sge.Room.event_joystick_button_press
+    IV.I.23. sge.Room.event_joystick_button_press
     --------------------------------------------------------------------
 
     sge.Room.event_joystick_button_press(self, joystick, button)
@@ -2121,7 +2283,7 @@ is best implemented via subclassing SGE's classes.
     Support for joysticks in SGE implementations is optional.
 
 
-    IV.I.17. sge.Room.event_joystick_button_release
+    IV.I.24. sge.Room.event_joystick_button_release
     --------------------------------------------------------------------
 
     sge.Room.event_joystick_button_release(self, joystick, button)
@@ -2135,7 +2297,7 @@ is best implemented via subclassing SGE's classes.
     Support for joysticks in SGE implementations is optional.
 
 
-    IV.I.18. sge.Room.event_close
+    IV.I.25. sge.Room.event_close
     --------------------------------------------------------------------
 
     sge.Room.event_close(self)
@@ -2146,7 +2308,7 @@ is best implemented via subclassing SGE's classes.
     sge.Game.event_close occurring at the same time.
 
 
-    IV.I.19. sge.Room.event_paused_key_press
+    IV.I.26. sge.Room.event_paused_key_press
     --------------------------------------------------------------------
 
     sge.Room.event_paused_key_press(self, key)
@@ -2154,7 +2316,7 @@ is best implemented via subclassing SGE's classes.
     Key Press event when the game is paused.
 
 
-    IV.I.20. sge.Room.event_paused_key_release
+    IV.I.27. sge.Room.event_paused_key_release
     --------------------------------------------------------------------
 
     sge.Room.event_paused_key_release(self, key)
@@ -2162,7 +2324,7 @@ is best implemented via subclassing SGE's classes.
     Key Release event when the game is paused.
 
 
-    IV.I.21. sge.Room.event_paused_mouse_move
+    IV.I.28. sge.Room.event_paused_mouse_move
     --------------------------------------------------------------------
 
     sge.Room.event_paused_mouse_move(self, x, y)
@@ -2170,7 +2332,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Move event when the game is paused.
 
 
-    IV.I.22. sge.Room.event_paused_mouse_button_press
+    IV.I.29. sge.Room.event_paused_mouse_button_press
     --------------------------------------------------------------------
 
     sge.Room.event_paused_mouse_button_press(self, button)
@@ -2178,7 +2340,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Button Press event when the game is paused.
 
 
-    IV.I.23. sge.Room.event_paused_mouse_button_release
+    IV.I.30. sge.Room.event_paused_mouse_button_release
     --------------------------------------------------------------------
 
     sge.Room.event_paused_mouse_button_release(self, button)
@@ -2186,7 +2348,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Button Release event when the game is paused.
 
 
-    IV.I.24. sge.Room.event_paused_joystick_axis_move
+    IV.I.31. sge.Room.event_paused_joystick_axis_move
     --------------------------------------------------------------------
 
     sge.Room.event_paused_joystick_axis_move(self, joystick, axis,
@@ -2195,7 +2357,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Axis Move event when the game is paused.
 
 
-    IV.I.25. sge.Room.event_paused_joystick_hat_move
+    IV.I.32. sge.Room.event_paused_joystick_hat_move
     --------------------------------------------------------------------
 
     sge.Room.event_paused_joystick_hat_move(self, joystick, hat, x, y)
@@ -2203,7 +2365,7 @@ is best implemented via subclassing SGE's classes.
     Joystick HAT Move event when the game is paused.
 
 
-    IV.I.26. sge.Room.event_paused_joystick_button_press
+    IV.I.33. sge.Room.event_paused_joystick_button_press
     --------------------------------------------------------------------
 
     sge.Room.event_paused_joystick_button_press(self, joystick, button)
@@ -2211,7 +2373,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Button Press event when the game is paused.
 
 
-    IV.I.27. sge.Room.event_paused_joystick_button_release
+    IV.I.34. sge.Room.event_paused_joystick_button_release
     --------------------------------------------------------------------
 
     sge.Room.event_paused_joystick_button_release(self, joystick,
@@ -2220,7 +2382,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Button Release event when the game is paused.
 
 
-    IV.I.28. sge.Room.event_paused_close
+    IV.I.35. sge.Room.event_paused_close
     --------------------------------------------------------------------
 
     sge.Room.event_paused_close(self)
