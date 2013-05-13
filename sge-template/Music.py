@@ -62,7 +62,10 @@ class Music(object):
         """Create a new music object.
 
         ``fname`` indicates the name of the sound file, to be located in
-        one of the directories specified in ``music_directories``.
+        one of the directories specified in ``music_directories``.  If
+        set to None, this object will not actually play any music
+        (useful as a placeholder, for example).  If ``fname`` is neither
+        a valid sound file nor None, IOError will be raised.
 
         All remaining arguments set the initial properties of the music.
         See Music.__doc__ for more information.
