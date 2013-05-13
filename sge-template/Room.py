@@ -49,6 +49,13 @@ class Room(object):
         start: Start the room.
         resume: Continue the room from where it left off.
         end: Go to the next room.
+        project_dot: Project a single-pixel dot onto the room.
+        project_line: Project a line segment onto the room.
+        project_rectangle: Project a rectangle onto the room.
+        project_ellipse: Project an ellipse onto the room.
+        project_circle: Project a circle onto the room.
+        project_sprite: Project sprite onto the room.
+        project_text: Project text onto the room.
 
     Room events are handled by special methods.  The exact timing of
     their calling is implementation-dependent except where otherwise
@@ -153,7 +160,7 @@ class Room(object):
         # TODO
 
     def project_dot(self, x, y, z, color):
-        """Project a single-pizel dot onto the room.
+        """Project a single-pixel dot onto the room.
 
         ``x`` and ``y`` indicate the location in the room to project the
         dot.  ``z`` indicates the Z-axis position of the projection in

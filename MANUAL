@@ -26,7 +26,8 @@ II. SGE Concepts
     II.C.2. RGB(A) Tuples
     II.C.3. HTML Hex Strings
     II.C.4. Hexadecimal Integers
-  II.D. Z-Axis
+  II.D. Position
+  II.E. Z-Axis
 III. Global Variables and Constants
 IV. Classes
   IV.A. sge.Game
@@ -309,7 +310,28 @@ II. SGE Concepts
     0xFF8000 is the same as (255, 128, 0), or orange.
 
 
-  II.D. Z-Axis
+  II.D. Position
+  ----------------------------------------------------------------------
+
+  In all cases of positioning in SGE, it is based on a two-dimensional
+  graph with each unit being a pixel.  This graph is not quite like
+  regular graphs; the horizontal direction, normally called ``x``, is
+  the same as the x-axis on a regular graph; 0 is the origin, right is
+  the positive direction, and left is the negative direction.  However,
+  in the vertical direction, normally called ``y``, 0 is the origin,
+  down is the positive direction, and up is the negative direction.
+  While slightly jarring if you are used to normal graphs, this is in
+  fact common in game development and is also how pixels in most image
+  formats are indexed.
+  
+  Except where otherwise specified, the origin is located at the top-
+  leftmost position of an object.
+  
+  Positions are allowed to be floating-point numbers in addition to
+  integers in SGE.
+
+
+  II.E. Z-Axis
   ----------------------------------------------------------------------
 
   SGE uses a Z-axis attribute to determine where objects are placed in
@@ -825,12 +847,10 @@ is best implemented via subclassing SGE's classes.
   Attributes:
   * width: The width of the sprite in pixels.
   * height: The height of the sprite in pixels.
-  * origin_x: The horizontal location of the origin (the pixel position
-      in relation to the images to base rendering on), where the left
-      edge of the image is 0 and origin_x increases toward the right.
-  * origin_y: The vertical location of the origin (the pixel position in
-      relation to the images to base rendering on), where the top edge
-      of the image is 0 and origin_y increases toward the bottom.
+  * origin_x: The horizontal location of the origin relative to the left
+      edge of the images.
+  * origin_y: The vertical location of the origin relative to the top
+      edge of the images.
   * transparent: True if the image should support transparency, False
       otherwise.  If the image does not have an alpha channel or if the
       implementation used does not support alpha transparency, a
@@ -838,12 +858,10 @@ is best implemented via subclassing SGE's classes.
       of the top-rightmost pixel.
   * fps: The suggested rate in frames per second to animate the image
       at.
-  * bbox_x: The horizontal location of the top-left corner of the
-      suggested bounding box to use with this sprite, where origin_x is
-      0 and bbox_x increases toward the right.
-  * bbox_y: The vertical location of the top-left corner of the
-      suggested bounding box to use with this sprite, where origin_y is
-      0 and bbox_y increases toward the bottom.
+  * bbox_x: The horizontal location relative to the sprite of the
+      suggested bounding box to use with it.
+  * bbox_y: The vertical location relative to the sprite of the
+      suggested bounding box to use with it.
   * bbox_width: The width of the suggested bounding box in pixels.
   * bbox_height: The height of the suggested bounding box in pixels.
 
@@ -902,11 +920,10 @@ is best implemented via subclassing SGE's classes.
     sge.Sprite.draw_dot(self, x, y, color, frame=None)
 
     Draws a single-pixel dot on this sprite.  ``x`` and ``y`` indicate
-    the location in the sprite to draw the dot, where (0,0) is the
-    origin of the sprite and x and y increase toward the right and
-    bottom, respectively.  ``color`` indicates the color of the dot.
-    ``frame`` indicates the frame of the sprite to draw on, where 0 is
-    the first frame; set to None to draw on all frames.
+    the location in the sprite to draw the dot.  ``color`` indicates the
+    color of the dot.  ``frame`` indicates the frame of the sprite to
+    draw on, where 0 is the first frame; set to None to draw on all
+    frames.
 
 
     IV.B.3. sge.Sprite.draw_line
@@ -916,15 +933,14 @@ is best implemented via subclassing SGE's classes.
         ant_alias=False, frame=None)
 
     Draws a line segment on this sprite.  ``x1``, ``y1``, ``x2``, and
-    ``y2`` indicate the locations in the sprite of the two points
-    between which to draw the line segment, where (0,0) is the origin of
-    the sprite and x and y increase toward the right and bottom,
-    respectively.  ``color`` indicates the color of the line segment.
-    ``thickness`` indicates the thickness of the line segment in pixels.
-    ``anti_alias`` indicates whether or not anti-aliasing should be
-    used, which uses different color shades to make the line appear
-    straighter.  ``frame`` indicates the frame of the sprite to draw on,
-    where 0 is the first frame; set to None to draw on all frames.
+    ``y2`` indicate the locations relative to the sprite of the two
+    points between which to draw the line segment.  ``color`` indicates
+    the color of the line segment.  ``thickness`` indicates the
+    thickness of the line segment in pixels.  ``anti_alias`` indicates
+    whether or not anti-aliasing should be used, which uses different
+    color shades to make the line appear straighter.  ``frame``
+    indicates the frame of the sprite to draw on, where 0 is the first
+    frame; set to None to draw on all frames.
 
     Support for anti-aliasing is optional in Stellar Game Engine
     implementations.  See the implementation's readme to see if it
@@ -939,9 +955,7 @@ is best implemented via subclassing SGE's classes.
         outline=None, outline_thickness=1, frame=None)
 
     Draws a rectangle on this sprite.  ``x`` and ``y`` indicate the
-    location in the sprite to position the top-left corner of the
-    rectangle, where (0,0) is the origin of the sprite and x and y
-    increase toward the right and bottom, respectively.  ``width`` and
+    location in the sprite to draw the rectangle.  ``width`` and
     ``height`` indicate the size of the rectangle.  ``fill`` indicates
     the  color of the fill of the rectangle; set to None for no fill.
     ``outline`` indicates the color of the outline of the rectangle; set
@@ -958,11 +972,9 @@ is best implemented via subclassing SGE's classes.
         outline=None, outline_thickness=1, anti_alias=False, frame=None)
 
     Draws an ellipse on this sprite.  ``x`` and ``y`` indicate the
-    location in the sprite to position the top-left corner of the
-    imaginary rectangle containing the ellipse, where (0,0) is the
-    origin of the sprite and x and y increase toward the right and
-    bottom, respectively.  ``width`` and ``height`` indicate the size of
-    the ellipse.  ``fill``indicates the color of the fill of the
+    location relative to the sprite to position the imaginary rectangle
+    containing the ellipse.  ``width`` and ``height`` indicate the size
+    of the ellipse.  ``fill``indicates the color of the fill of the
     ellipse; set to None for no fill.  ``outline`` indicates the color
     of the outline of the ellipse; set to None for no outline.
     ``outline_thickness`` indicates the thickness of the outline in
@@ -985,18 +997,16 @@ is best implemented via subclassing SGE's classes.
         outline_thickness=1, anti_alias=False, frame=None)
 
     Draws a circle on this sprite.  ``x`` and ``y`` indicate the
-    location in the sprite to position the center of the circle, where
-    (0,0) is the origin of the sprite and x and y increase toward the
-    right and bottom, respectively.  ``radius`` indicates the radius of
-    the circle in pixels.  ``fill`` indicates the color of the fill of
-    the circle; set to None for no fill.  ``outline`` indicates the
-    color of the outline of the circle; set to None for no outline.
-    ``outline_thickness`` indicates the thickness of the outline in
-    pixels (ignored if there is no outline).  ``anti_alias`` indicates
-    whether or not anti-aliasing should be used, which uses different
-    color shades to make the circle appear more rounded.  ``frame``
-    indicates the frame of the sprite to draw on, where 0 is the first
-    frame; set to None to draw on all frames.
+    location in the sprite to position the center of the circle.
+    ``radius`` indicates the radius of the circle in pixels.  ``fill``
+    indicates the color of the fill of the circle; set to None for no
+    fill.  ``outline`` indicates the color of the outline of the circle;
+    set to None for no outline.  ``outline_thickness`` indicates the
+    thickness of the outline in pixels (ignored if there is no outline).
+    ``anti_alias`` indicates whether or not anti-aliasing should be
+    used, which uses different color shades to make the circle appear
+    more rounded.  ``frame`` indicates the frame of the sprite to draw
+    on, where 0 is the first frame; set to None to draw on all frames.
 
     Support for anti-aliasing is optional in Stellar Game Engine
     implementations.  See the implementation's readme to see if it
@@ -1012,11 +1022,9 @@ is best implemented via subclassing SGE's classes.
     Draws another sprite on this sprite.  ``sprite`` indicates the
     sprite to draw with.  ``image`` indicates the frame of ``sprite`` to
     draw ``self``, where 0 is the first frame. ``x`` and ``y`` indicate
-    the location in ``self`` to position the origin of ``sprite``, where
-    (0,0) is the origin of ``self`` and x and y increase toward the
-    right and bottom, respectively.  ``frame`` indicates the frame of
-    ``self`` to draw on, where 0 is the first frame; set to None to draw
-    on all frames.
+    the location in ``self`` to position ``sprite``.  ``frame``
+    indicates the frame of ``self`` to draw on, where 0 is the first
+    frame; set to None to draw on all frames.
 
 
     IV.B.8. sge.Sprite.draw_text
@@ -1029,23 +1037,30 @@ is best implemented via subclassing SGE's classes.
     Draws text on this sprite.  ``font`` indicates the font to use to
     draw the text.  ``text`` indicates the text to draw.  ``x`` and
     ``y`` indicate the location in the sprite to position the imaginary
-    box containing the text, where (0,0) is the origin of the sprite and
-    x and y increase toward the right and bottom, respectively.
-    ``width`` and ``height`` indicate the size of the imaginary box the
-    text is drawn in; set to None to assign the respective size to
-    whatever is needed to contain the text.  ``color`` indicates the
-    color of the text.  ``halign`` indicates the horizontal alignment of
-    the imaginary box containing the text with respect to ``x`` as well
-    as the horizontal alignment of the text itself and can be
-    sge.ALIGN_LEFT, sge.ALIGN_CENTER, or sge.ALIGN_RIGHT.  ``valign``
-    indicates the vertical alignment of the imaginary box containing the
-    text with respect to ``y`` and can be sge.ALIGN_TOP,
+    box containing the text.  ``width`` and ``height`` indicate the size
+    of the imaginary box the text is drawn in; set to None to assign the
+    respective size to whatever is needed to contain the text.
+    ``color`` indicates the color of the text.  ``halign`` indicates the
+    horizontal alignment of the text and can be sge.ALIGN_LEFT,
+    sge.ALIGN_CENTER, or sge.ALIGN_RIGHT.  ``valign`` indicates the
+    vertical alignment of the text and can be sge.ALIGN_TOP,
     sge.ALIGN_MIDDLE, or sge.ALIGN_BOTTOM.  ``anti_alias`` indicates
     whether or not anti- aliasing should be used, which uses different
     color shades to to make round shapes appear more round and diagonal
     lines appear more straight.  ``frame`` indicates the frame of the
     sprite to draw on, where 0 is the first frame; set to None to draw
     on all frames.
+
+    In addition to the alignment of the text, ``halign`` and ``valign``
+    are also used to determine the origin of the imaginary box
+    containing the text.  The horizontal origin will be the left edge of
+    the imaginary box if ``halign`` is sge.ALIGN_LEFT, the center of the
+    imaginary box if ``halign`` is sge.ALIGN_CENTER, or the right edge
+    of the imaginary box if ``halign`` is sge.ALIGN_RIGHT.  The vertical
+    origin will be the top edge of the imaginary box if ``valign`` is
+    sge.ALIGN_TOP, the middle of the imaginary box if ``valign`` is
+    sge.ALIGN_MIDDLE, or the bottom edge of the imaginary box if
+    ``valign`` is sge.ALIGN_BOTTOM.
 
     Text is fitted into the imaginary box much like a word processor; if
     the text is too long to fit in one line, the line will be
@@ -1097,14 +1112,11 @@ is best implemented via subclassing SGE's classes.
   Attributes:
   * sprite: The sge.Sprite object used for this layer.  It will be
       animated if it contains multiple frames.
-  * x: The horizontal position in a background to place the sprite's
-      origin, where 0 is the left edge of the background and x increases
-      toward the right.
-  * y: The vertical position in a background to place the sprite's
-      origin, where 0 is the top edge of the background and y increases
-      toward the bottom.
-  * z: The Z-axis position of the layer in the room, where higher
-      values are closer to the viewer.
+  * x: The horizontal position to place this layer's sprite relative to
+      the background.
+  * y: The vertical position to place this layer's sprite relative to
+      the background.
+  * z: The Z-axis position of the layer in the room.
   * xscroll_rate: The horizontal speed the layer scrolls at as a factor
       of the view's movement.
   * yscroll_rate: The vertical speed the layer scrolls at as a factor of
@@ -1426,12 +1438,9 @@ is best implemented via subclassing SGE's classes.
   subclass of sge.StellarClass.
 
   Attributes:
-  * x: The horizontal position of the object in the room, where the left
-      edge of the room is 0 and x increases toward the right.
-  * y: The vertical position of the object in the room, where the top
-      edge of the room is 0 and y increases toward the bottom.
-  * z: The Z-axis position of the object in the room, where higher
-      values are closer to the viewer.
+  * x: The horizontal position of the object's sprite in the room.
+  * y: The vertical position of the object's sprite in the room.
+  * z: The Z-axis position of the object in the room.
   * sprite: The sprite currently in use by this object.  Set to None for
       no sprite.
   * visible: Whether or not this object's sprite should be projected
@@ -1439,14 +1448,12 @@ is best implemented via subclassing SGE's classes.
   * detects_collisions: Whether or not this object should be involved in
       collisions.  Setting this to False can improve performance if the
       object doesn't need to detect collisions.
-  * bbox_x: The horizontal position of the top-left corner of the
-      bounding box in relation to x, where 0 is x and bbox_x increases
-      toward the right.  If set to None, the value recommended by the
+  * bbox_x: The horizontal position of the bounding box relative to the
+      object's position.  If set to None, the value recommended by the
       sprite is used.
-  * bbox_y: The vertical position of the top-left corner of the bounding
-      box in relation to y, where 0 is y and bbox_y increases toward the
-      bottom.  If set to None, the value recommended by the sprite is
-      used.
+  * bbox_y: The vertical position of the bounding box relative to the
+      object's position.  If set to None, the value recommended by the
+      sprite is used.
   * bbox_width: The width of the bounding box in pixels.  If set to
       None, the value recommended by the sprite is used.
   * bbox_height: The height of the bounding box in pixels.  If set to
@@ -2229,22 +2236,14 @@ is best implemented via subclassing SGE's classes.
   for a split-screen effect.
 
   Attributes:
-  * x: The horizontal position of the top-left corner of the view in the
-      room, where the left edge of the room is 0 and x increases toward
-      the right.  When set, if it brings the view outside the room it is
-      in, it will be re-adjusted so that the view is completely inside
-      the room.
-  * y: The vertical position of the top-left corner of the view in the
-      room, where the top edge of the room is 0 and y increases toward
-      the bottom.  When set, if it brings the view outside the room it
-      is in, it will be re-adjusted so that the view is completely
-      inside the room.
-  * xport: The horizontal position of the top-left corner of the view on
-      the screen, where the left edge of the screen is 0 and xport
-      increases toward the right.
-  * yport: The vertical position of the top-left corner of the view on
-      the screen, where the top edge of the screen is 0 and yport
-      increases toward the bottom.
+  * x: The horizontal position of the view in the room.  When set, if it
+      brings the view outside the room it is in, it will be re-adjusted
+      so that the view is completely inside the room.
+  * y: The vertical position of the view in the room.  When set, if it
+      brings the view outside the room it is in, it will be re-adjusted
+      so that the view is completely inside the room.
+  * xport: The horizontal position of the view on the screen.
+  * yport: The vertical position of the view on the screen.
   * width: The width of the view in pixels. When set, if it results in
       the view being outside the room it is in, ``x`` will be adjusted
       so that the view is completely inside the room.
