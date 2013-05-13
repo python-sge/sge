@@ -216,6 +216,190 @@ class Room(object):
         else:
             sge.game.end()
 
+    def project_dot(self, x, y, z, color):
+        """Project a single-pixel dot onto the room.
+
+        ``x`` and ``y`` indicate the location in the room to project the
+        dot.  ``z`` indicates the Z-axis position of the projection in
+        the room.  ``color`` indicates the color of the dot.
+
+        """
+        sprite = sge.Sprite(None, 1, 1)
+        sprite.draw_dot(0, 0, color)
+        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
+        self.add(p)
+
+    def project_line(self, x1, y1, x2, y2, z, color, thickness=1,
+                     anti_alias=False):
+        """Project a line segment onto the room.
+
+        ``x1``, ``y1``, ``x2``, and ``y2`` indicate the location in the
+        room of the points between which to project the line segment.
+        ``z`` indicates the Z-axis position of the projection in the
+        room.  ``color`` indicates the color of the line segment.
+        ``thickness`` indicates the thickness of the line segment in
+        pixels.  ``anti_alias`` indicates whether or not anti-aliasing
+        should be used.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this method will act like ``anti_alias`` is
+        False.
+
+        """
+        thickness = abs(thickness)
+        x = min(x1, x2) - thickness // 2
+        y = min(y1, y2) - thickness // 2
+        w = abs(x2 - x1) + thickness
+        h = abs(y2 - y1) + thickness
+        startpos = (x1 - x, y1 - y)
+        endpos = (x2 - x, y2 - y)
+        sprite = sge.Sprite(None, w, h)
+        sprite.draw_line(*startpos, *endpos, color, thickness, anti_alias)
+        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
+        self.add(p)
+
+    def project_rectangle(self, x, y, z, width, height, fill=None,
+                          outline=None, outline_thickness=1):
+        """Project a rectangle onto the room.
+
+        ``x`` and ``y`` indicate the location in the room to position
+        the top-left corner of the rectangle.  ``z`` indicates the
+        Z-axis position of the projection in the room.  ``width`` and
+        ``height`` indicate the size of the rectangle.  ``fill``
+        indicates the color of the fill of the rectangle; set to None
+        for no fill.  ``outline`` indicates the color of the outline of
+        the rectangle; set to None for no outline.
+        ``outline_thickness`` indicates the thickness of the outline in
+        pixels (ignored if there is no outline).
+
+        """
+        outline_thickness = abs(outline_thickness)
+        draw_x = outline_thickness // 2
+        draw_y = outline_thickness // 2
+        x -= draw_x
+        y -= draw_y
+        w = width + outline_thickness
+        h = height + outline_thickness
+        sprite = sge.Sprite(None, w, h)
+        sprite.draw_rectangle(draw_x, draw_y, w, h, fill, outline,
+                              outline_thickness)
+        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
+        self.add(p)
+
+    def project_ellipse(self, x, y, z, width, height, fill=None, outline=None,
+                        outline_thickness=1, anti_alias=False):
+        """Project an ellipse onto the room.
+
+        ``x`` and ``y`` indicate the location in the room to position
+        the top-left corner of the imaginary rectangle containing the
+        ellipse.  ``z`` indicates the Z-axis position of the projection
+        in the room.  ``width`` and ``height`` indicate the size of the
+        ellipse.  ``fill`` indicates the color of the fill of the
+        ellipse; set to None for no fill.  ``outline`` indicates the
+        color of the outline of the ellipse; set to None for no outline.
+        ``outline_thickness`` indicates the thickness of the outline in
+        pixels (ignored if there is no outline).  ``anti_alias``
+        indicates whether or not anti-aliasing should be used on the
+        outline.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this method will act like ``anti_alias`` is
+        False.
+
+        """
+        outline_thickness = abs(outline_thickness)
+        draw_x = outline_thickness // 2
+        draw_y = outline_thickness // 2
+        x -= draw_x
+        y -= draw_y
+        w = width + outline_thickness
+        h = height + outline_thickness
+        sprite = sge.Sprite(None, w, h)
+        sprite.draw_ellipse(draw_x, draw_y, w, h, fill, outline,
+                            outline_thickness)
+        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
+        self.add(p)
+
+    def project_circle(self, x, y, z, radius, fill=None, outline=None,
+                       outline_thickness=1, anti_alias=False):
+        """Project a circle onto the room.
+
+        ``x`` and ``y`` indicate the location in the room to position
+        the center of the circle.  ``z`` indicates the Z-axis position
+        of the projection in the room.  ``radius`` indicates the radius
+        of the circle in pixels.  ``fill`` indicates the color of the
+        fill of the circle; set to None for no fill.  ``outline``
+        indicates the color of the outline of the circle; set to None
+        for no outline.  ``outline_thickness`` indicates the thickness
+        of the outline in pixels (ignored if there is no outline).
+        ``anti_alias`` indicates whether or not anti-aliasing should be
+        used on the outline.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this method will act like ``anti_alias`` is
+        False.
+
+        """
+        outline_thickness = abs(outline_thickness)
+        xy = radius + outline_thickness // 2
+        wh = 2 * radius + outline_thickness
+        sprite = sge.Sprite(None, wh, wh)
+        sprite.draw_circle(xy, xy, radius, fill, outline, outline_thickness,
+                           anti_alias)
+        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
+        self.add(p)
+
+    def project_sprite(self, sprite, image, x, y, z):
+        """Project a sprite onto the room.
+
+        ``sprite`` indicates the sprite to draw.  ``image`` indicates
+        the frame of the sprite to draw, where 0 is the first frame.
+        ``x`` and ``y`` indicate the location in the room to position
+        the sprite.  ``z`` indicates the Z-axis position of the
+        projection in the room.
+
+        """
+        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False,
+                        image_index=image, image_fps=0)
+        self.add(p)
+
+    def project_text(self, font, text, x, y, z, width=None, height=None,
+                    color="black", halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP,
+                    anti_alias=True):
+        """Project text onto the room.
+
+        ``font`` indicates the font to use for the text.  ``text``
+        indicates the text to project.  ``x`` and ``y`` indicate the
+        location in the room to project the text.  ``width`` and
+        ``height`` indicate the size of the imaginary box the text is
+        projected in; set to None for no imaginary box.  ``color``
+        indicates the color of the text.  ``halign`` indicates the
+        horizontal alignment of the text and can be ALIGN_LEFT,
+        ALIGN_CENTER, or ALIGN_RIGHT.  ``valign`` indicates the vertical
+        alignment and can be ALIGN_TOP, ALIGN_MIDDLE, or ALIGN_BOTTOM.
+        ``anti_alias`` indicates whether or not anti-aliasing should be
+        used.
+
+        If the text does not fit into the imaginary box specified, the
+        text that doesn't fit will be cut off at the bottom if valign is
+        ALIGN_TOP, the top if valign is ALIGN_BOTTOM, or equally the top
+        and bottom if valign is ALIGN_MIDDLE.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this function will act like ``anti_alias`` is False.
+
+        """
+        w, h = font.get_size(text, width, height)
+        sprite = sge.Sprite(None, w, h)
+        sprite.draw_text(font, text, x, y, width, height, color, halign,
+                         valign, anti_alias)
+        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
+        self.add(p)
+
     def event_room_start(self):
         """Room start event.
 
@@ -463,3 +647,15 @@ class Room(object):
 
         for obj in self.objects:
             obj._reset()
+
+
+class _Projection(sge.StellarClass):
+
+    # Object which destroys itself after being shown for one frame.
+
+    def event_create(self):
+        self.detects_collisions = False
+        self.set_alarm('destroy', 1)
+
+    def event_alarm(self, alarm_id):
+        self.destroy()
