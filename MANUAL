@@ -19,15 +19,16 @@ Contents
 
 I. Introduction
 II. SGE Concepts
-  II.A. Events
-  II.B. The Mouse
-  II.C. Colors
-    II.C.1. HTML Color Names
-    II.C.2. RGB(A) Tuples
-    II.C.3. HTML Hex Strings
-    II.C.4. Hexadecimal Integers
-  II.D. Position
-  II.E. Z-Axis
+  II.A. Naming Conventions
+  II.B. Events
+  II.C. The Mouse
+  II.D. Colors
+    II.D.1. HTML Color Names
+    II.D.2. RGB(A) Tuples
+    II.D.3. HTML Hex Strings
+    II.D.4. Hexadecimal Integers
+  II.E. Position
+  II.F. Z-Axis
 III. Global Variables and Constants
 IV. Classes
   IV.A. sge.Game
@@ -209,7 +210,26 @@ to free software.
 II. SGE Concepts
 ------------------------------------------------------------------------
 
-  II.A. Events
+
+  II.A. Naming Conventions
+  ----------------------------------------------------------------------
+
+  There are many cases when you will want to derive a class from an SGE
+  class.  Since there can be multiple implementations of SGE, it can be
+  easy when doing so to overwrite a special variable used by some
+  implementations, which can be disastrous.  To avoid such occasions,
+  implementations are expected to never introduce any attribute names
+  which are not explicitly mentioned in this document and the template's
+  docstrings unless they are preceded by an underscore, such as "_foo".
+  This naming convention will protect you from unexpected errors
+  provided that you do not use such names yourself.
+
+  A suggested convention to use in place of the usual leading underscore
+  convention for "private" attributes is to precede "private" attributes
+  with "v_" or "p_".
+
+
+  II.B. Events
   ----------------------------------------------------------------------
 
   Much like Game Maker, SGE uses an event-based system, with events
@@ -223,7 +243,7 @@ II. SGE Concepts
   then handle Event B in another.
 
 
-  II.B. The Mouse
+  II.C. The Mouse
   ----------------------------------------------------------------------
 
   The mouse is handled somewhat unusually in SGE.  Rather than having
@@ -245,12 +265,12 @@ II. SGE Concepts
   sge.StellarClass objects.
 
 
-  II.C. Colors
+  II.D. Colors
   ----------------------------------------------------------------------
 
   Colors can be defined in SGE in a few ways.
 
-    II.C.1. HTML Color Names
+    II.D.1. HTML Color Names
     --------------------------------------------------------------------
 
     The sixteen basic HTML colors, written as strings, are accepted by
@@ -275,7 +295,7 @@ II. SGE Concepts
     * "purple"
 
 
-    II.C.2. RGB(A) Tuples
+    II.D.2. RGB(A) Tuples
     --------------------------------------------------------------------
 
     A tuple containing three or four values is accepted as a color by
@@ -297,7 +317,7 @@ II. SGE Concepts
     in SGE.  All other methods for indicating color assume full opacity.
 
 
-    II.C.3. HTML Hex Strings
+    II.D.3. HTML Hex Strings
     --------------------------------------------------------------------
 
     An HTML hex string is accepted as a color by SGE.  HTML hex strings
@@ -309,7 +329,7 @@ II. SGE Concepts
     "#FF8000" is the same as (255, 128, 0), or orange.
 
 
-    II.C.4. Hexadecimal Integers
+    II.D.4. Hexadecimal Integers
     --------------------------------------------------------------------
 
     A hexadecimal integer is accepted as a color by SGE.  This should be
@@ -317,7 +337,7 @@ II. SGE Concepts
     0xFF8000 is the same as (255, 128, 0), or orange.
 
 
-  II.D. Position
+  II.E. Position
   ----------------------------------------------------------------------
 
   In all cases of positioning in SGE, it is based on a two-dimensional
@@ -338,7 +358,7 @@ II. SGE Concepts
   integers in SGE.
 
 
-  II.E. Z-Axis
+  II.F. Z-Axis
   ----------------------------------------------------------------------
 
   SGE uses a Z-axis attribute to determine where objects are placed in
