@@ -152,6 +152,141 @@ class Room(object):
         """
         # TODO
 
+    def project_dot(self, x, y, z, color):
+        """Project a single-pizel dot onto the room.
+
+        ``x`` and ``y`` indicate the location in the room to project the
+        dot.  ``z`` indicates the Z-axis position of the projection in
+        the room.  ``color`` indicates the color of the dot.
+
+        """
+        # TODO
+
+    def project_line(self, x1, y1, x2, y2, z, color, thickness=1,
+                     anti_alias=False):
+        """Project a line segment onto the room.
+
+        ``x1``, ``y1``, ``x2``, and ``y2`` indicate the location in the
+        room of the points between which to project the line segment.
+        ``z`` indicates the Z-axis position of the projection in the
+        room.  ``color`` indicates the color of the line segment.
+        ``thickness`` indicates the thickness of the line segment in
+        pixels.  ``anti_alias`` indicates whether or not anti-aliasing
+        should be used.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this method will act like ``anti_alias`` is
+        False.
+
+        """
+        # TODO
+
+    def project_rectangle(self, x, y, z, width, height, fill=None,
+                          outline=None, outline_thickness=1):
+        """Project a rectangle onto the room.
+
+        ``x`` and ``y`` indicate the location in the room to position
+        the top-left corner of the rectangle.  ``z`` indicates the
+        Z-axis position of the projection in the room.  ``width`` and
+        ``height`` indicate the size of the rectangle.  ``fill``
+        indicates the color of the fill of the rectangle; set to None
+        for no fill.  ``outline`` indicates the color of the outline of
+        the rectangle; set to None for no outline.
+        ``outline_thickness`` indicates the thickness of the outline in
+        pixels (ignored if there is no outline).
+
+        """
+        # TODO
+
+    def project_ellipse(self, x, y, z, width, height, fill=None, outline=None,
+                        outline_thickness=1, anti_alias=False):
+        """Project an ellipse onto the room.
+
+        ``x`` and ``y`` indicate the location in the room to position
+        the top-left corner of the imaginary rectangle containing the
+        ellipse.  ``z`` indicates the Z-axis position of the projection
+        in the room.  ``width`` and ``height`` indicate the size of the
+        ellipse.  ``fill`` indicates the color of the fill of the
+        ellipse; set to None for no fill.  ``outline`` indicates the
+        color of the outline of the ellipse; set to None for no outline.
+        ``outline_thickness`` indicates the thickness of the outline in
+        pixels (ignored if there is no outline).  ``anti_alias``
+        indicates whether or not anti-aliasing should be used on the
+        outline.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this method will act like ``anti_alias`` is
+        False.
+
+        """
+        # TODO
+
+    def project_circle(self, x, y, z, radius, fill=None, outline=None,
+                       outline_thickness=1, anti_alias=False):
+        """Project a circle onto the room.
+
+        ``x`` and ``y`` indicate the location in the room to position
+        the center of the circle.  ``z`` indicates the Z-axis position
+        of the projection in the room.  ``radius`` indicates the radius
+        of the circle in pixels.  ``fill`` indicates the color of the
+        fill of the circle; set to None for no fill.  ``outline``
+        indicates the color of the outline of the circle; set to None
+        for no outline.  ``outline_thickness`` indicates the thickness
+        of the outline in pixels (ignored if there is no outline).
+        ``anti_alias`` indicates whether or not anti-aliasing should be
+        used on the outline.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this method will act like ``anti_alias`` is
+        False.
+
+        """
+        # TODO
+
+    def project_sprite(self, sprite, image, x, y, z):
+        """Project a sprite onto the room.
+
+        ``sprite`` indicates the sprite to draw.  ``image`` indicates
+        the frame of the sprite to draw, where 0 is the first frame.
+        ``x`` and ``y`` indicate the location in the room to position
+        the sprite.  ``z`` indicates the Z-axis position of the
+        projection in the room.
+
+        """
+        # TODO
+
+    def project_text(self, font, text, x, y, z, width=None, height=None,
+                    color="black", halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP,
+                    anti_alias=True):
+        """Project text onto the room.
+
+        ``font`` indicates the font to use for the text.  ``text``
+        indicates the text to project.  ``x`` and ``y`` indicate the
+        location in the room to project the text.  ``width`` and
+        ``height`` indicate the size of the imaginary box the text is
+        projected in; set to None for no imaginary box.  ``color``
+        indicates the color of the text.  ``halign`` indicates the
+        horizontal alignment of the text and can be ALIGN_LEFT,
+        ALIGN_CENTER, or ALIGN_RIGHT.  ``valign`` indicates the vertical
+        alignment and can be ALIGN_TOP, ALIGN_MIDDLE, or ALIGN_BOTTOM.
+        ``anti_alias`` indicates whether or not anti-aliasing should be
+        used.
+
+        If the text does not fit into the imaginary box specified, the
+        text that doesn't fit will be cut off at the bottom if valign is
+        ALIGN_TOP, the top if valign is ALIGN_BOTTOM, or equally the top
+        and bottom if valign is ALIGN_MIDDLE.
+
+        Support for anti-aliasing is optional in Stellar Game Engine
+        implementations.  If the implementation used does not support
+        anti-aliasing, this function will act like ``anti_alias`` is False.
+
+        """
+        # TODO
+
     def event_room_start(self):
         """Room start event.
 
