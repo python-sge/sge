@@ -96,11 +96,6 @@ set ``sge.hardware_rendering`` to True.  To get the best performance
 with hardware rendering, you should use colorkeys instead of alpha
 transparency.
 
-Since Pygame supports trackballs, they are implemented as extra analog
-sticks.  Their movement is limited to the range of an analog stick to
-ensure full compatibility.  You can disable this limitation by setting
-``sge.real_trackballs`` to True.
-
 sge.Sprite supports the following image formats:
     PNG
     JPEG
@@ -152,7 +147,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.2.1.5"
+__version__ = "0.2.1.6"
 
 import os
 
@@ -199,7 +194,6 @@ sound_directories = [os.path.join(PROGRAM_DIR, 'data', 'sounds')]
 music_directories = [os.path.join(PROGRAM_DIR, 'data', 'music')]
 
 hardware_rendering = False
-real_trackballs = False
 
 # Tell SDL to center the window
 os.environ['SDL_VIDEO_CENTERED'] = '1'

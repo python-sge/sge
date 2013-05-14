@@ -68,6 +68,7 @@ class Room(object):
         event_mouse_button_release: Mouse button release event.
         event_joystick_axis_move: Joystick axis move event.
         event_joystick_hat_move: Joystick HAT move event.
+        event_joystick_trackball_move: Joystick trackball move event.
         event_joystick_button_press: Joystick button press event.
         event_joystick_button_release: Joystick button release event.
         event_close: Close event (e.g. close button).  It is always
@@ -83,6 +84,7 @@ class Room(object):
         event_paused_mouse_button_release
         event_paused_joystick_axis_move
         event_paused_joystick_hat_move
+        event_paused_joystick_trackball_move 
         event_paused_joystick_button_press
         event_paused_joystick_button_release
         event_paused_close
@@ -502,6 +504,20 @@ class Room(object):
         """
         pass
 
+    def event_joystick_trackball_move(self, joystick, ball, x, y):
+        """Joystick trackball move event.
+
+        ``joystick`` indicates the number of the joystick, where 0 is
+        the first joystick.  ``ball`` indicates the number of the
+        trackball, where 0 is the first trackball.  ``x`` and ``y``
+        indicate the relative movement of the trackball.
+
+        Support for joysticks in Stellar Game Engine implementations is
+        optional.
+
+        """
+        pass
+
     def event_joystick_button_press(self, joystick, button):
         """Joystick button press event.
 
@@ -590,6 +606,15 @@ class Room(object):
         """Joystick HAT move event when paused.
 
         See Room.event_joystick_hat_move.__doc__ for more information.
+
+        """
+        pass
+
+    def event_paused_joystick_trackball_move(self, joystick, ball, x, y):
+        """Joystick trackball move event when paused.
+
+        See Room.event_joystick_trackball_move.__doc__ for more
+        information.
 
         """
         pass
