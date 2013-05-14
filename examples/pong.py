@@ -162,17 +162,16 @@ class Ball(sge.StellarClass):
             glob.bounce_wall_sound.play()
 
     def event_collision(self, other):
-        if other is glob.player1:
-            self.bbox_left = glob.player1.bbox_right + 1
-            self.xvelocity = min(abs(self.xvelocity) + 0.2, 15)
-        elif other is glob.player2:
-            self.bbox_right = glob.player2.bbox_left - 1
-            self.xvelocity = max(-abs(self.xvelocity) - 0.2, -15)
-        else:
-            return
+        if isinstance(other, Player):
+            if other.hit_direction == 1:
+                self.bbox_left = glob.player1.bbox_right + 1
+                self.xvelocity = min(abs(self.xvelocity) + 0.2, 15)
+            else:
+                self.bbox_right = glob.player2.bbox_left - 1
+                self.xvelocity = max(-abs(self.xvelocity) - 0.2, -15)
 
-        self.yvelocity += (self.y - other.y) / 12
-        glob.bounce_sound.play()
+            self.yvelocity += (self.y - other.y) / 12
+            glob.bounce_sound.play()
 
     def serve(self, direction=1):
         if glob.player1.score < 10 and glob.player2.score < 10:
