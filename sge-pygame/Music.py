@@ -113,14 +113,13 @@ class Music(object):
         self._fade_time = None
         self._start = 0
 
-        if self.fname is not None:
+        if self.fname is not None and pygame.mixer.get_init():
             self._full_fname = None
-            if pygame.mixer.get_init():
-                for path in sge.music_directories:
-                    path = os.path.join(path, fname)
-                    if os.path.isfile(path):
-                        self._full_fname = path
-                        break
+            for path in sge.music_directories:
+                path = os.path.join(path, fname)
+                if os.path.isfile(path):
+                    self._full_fname = path
+                    break
 
             if self._full_fname is None:
                 print("Directories searched:")

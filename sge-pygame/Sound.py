@@ -103,16 +103,15 @@ class Sound(object):
         created.
 
         """
-        if fname is not None:
+        if fname is not None and pygame.mixer.get_init():
             self._sound = None
-            if pygame.mixer.get_init():
-                for path in sge.sound_directories:
-                    path = os.path.join(path, fname)
-                    try:
-                        self._sound = pygame.mixer.Sound(path)
-                        break
-                    except pygame.error:
-                        pass
+            for path in sge.sound_directories:
+                path = os.path.join(path, fname)
+                try:
+                    self._sound = pygame.mixer.Sound(path)
+                    break
+                except pygame.error:
+                    pass
 
             if self._sound is None:
                 print("Directories searched:")
