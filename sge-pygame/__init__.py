@@ -152,7 +152,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.2.1.3"
+__version__ = "0.2.1.4"
 
 import os
 
@@ -200,3 +200,6 @@ music_directories = [os.path.join(PROGRAM_DIR, 'data', 'music')]
 
 hardware_rendering = False
 real_trackballs = False
+
+# Tell SDL to center the window
+os.environ['SDL_VIDEO_CENTERED'] = '1'
