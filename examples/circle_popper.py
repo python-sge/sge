@@ -57,7 +57,7 @@ class Circle(sge.StellarClass):
             self.image_blend = (0, 0, 255)
 
     def event_mouse_button_press(self, button):
-        if button == sge.MOUSE_BUTTON_LEFT:
+        if button == 'left':
             if self.collides(sge.game.mouse):
                 self.destroy()
 

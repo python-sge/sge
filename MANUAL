@@ -603,7 +603,7 @@ is best implemented via subclassing SGE's classes.
 
     Mouse Button Press event.  This event is executed when a mouse
     button is pressed.  ``button`` indicates the mouse button that was
-    pressed and can be one of the following case-insensitive values:
+    pressed and can be one of the following values:
 
     * "left"
     * "right"
@@ -621,7 +621,7 @@ is best implemented via subclassing SGE's classes.
 
     Mouse Button Release event.  This event is executed when a mouse
     button is released.  ``button`` indicates the mouse button that was
-    released and can be one of the following case-insensitive values:
+    released and can be one of the following values:
 
     * "left"
     * "right"
@@ -1667,7 +1667,7 @@ is best implemented via subclassing SGE's classes.
 
     Mouse Button Press event.  This event is executed when a mouse
     button is pressed.  ``button`` indicates the mouse button that was
-    pressed and can be one of the following case-insensitive values:
+    pressed and can be one of the following values:
 
     * "left"
     * "right"
@@ -2202,7 +2202,7 @@ is best implemented via subclassing SGE's classes.
 
     Mouse Button Press event.  This event is executed when a mouse
     button is pressed.  ``button`` indicates the mouse button that was
-    pressed and can be one of the following case-insensitive values:
+    pressed and can be one of the following values:
 
     * "left"
     * "right"
@@ -2220,7 +2220,7 @@ is best implemented via subclassing SGE's classes.
 
     Mouse Button Release event.  This event is executed when a mouse
     button is released.  ``button`` indicates the mouse button that was
-    released and can be one of the following case-insensitive values:
+    released and can be one of the following values:
 
     * "left"
     * "right"
