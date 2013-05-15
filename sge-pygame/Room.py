@@ -457,9 +457,7 @@ class Room(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        ``button`` is the number of the mouse button that was pressed;
-        these numbers may vary by implementation, so MOUSE_BUTTON_*
-        constants should be used.
+        ``button`` is the button that was pressed.
 
         """
         pass
@@ -467,9 +465,7 @@ class Room(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        ``button`` is the number of the mouse button that was released;
-        these numbers may vary by implementation, so MOUSE_BUTTON_*
-        constants should be used.
+        ``button`` is the button that was released.
 
         """
         pass

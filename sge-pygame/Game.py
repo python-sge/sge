@@ -340,13 +340,13 @@ class Game(object):
                 # Pygame events
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
-                        k = sge.KEYNAMES[event.key]
+                        k = sge.KEY_NAMES[event.key]
                         self.event_key_press(k)
                         self.current_room.event_key_press(k)
                         for obj in self.current_room.objects:
                             obj.event_key_press(k)
                     elif event.type == pygame.KEYUP:
-                        k = sge.KEYNAMES[event.key]
+                        k = sge.KEY_NAMES[event.key]
                         self.event_key_release(k)
                         self.current_room.event_key_release(k)
                         for obj in self.current_room.objects:
@@ -360,17 +360,17 @@ class Game(object):
                         for obj in self.current_room.objects:
                             obj.event_mouse_move(*event.rel)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
-                        self.event_mouse_button_press(event.button)
-                        self.current_room.event_mouse_button_press(
-                            event.button)
+                        b = sge.MOUSE_BUTTON_NAMES[event.button]
+                        self.event_mouse_button_press(b)
+                        self.current_room.event_mouse_button_press(b)
                         for obj in self.current_room.objects:
-                            obj.event_mouse_button_press(event.button)
+                            obj.event_mouse_button_press(b)
                     elif event.type == pygame.MOUSEBUTTONUP:
-                        self.event_mouse_button_release(event.button)
-                        self.current_room.event_mouse_button_release(
-                            event.button)
+                        b = sge.MOUSE_BUTTON_NAMES[event.button]
+                        self.event_mouse_button_release(b)
+                        self.current_room.event_mouse_button_release(b)
                         for obj in self.current_room.objects:
-                            obj.event_mouse_button_release(event.button)
+                            obj.event_mouse_button_release(b)
                     elif event.type == pygame.JOYAXISMOTION:
                         self.event_joystick_axis_move(event.joy, event.axis,
                                                       event.value)
@@ -572,35 +572,37 @@ class Game(object):
             # Events
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    k = sge.KEYNAMES[event.key]
+                    k = sge.KEY_NAMES[event.key]
                     self.event_paused_key_press(k)
                     self.current_room.event_paused_key_press(k)
                     for obj in self.current_room.objects:
                         obj.event_paused_key_press(k)
                 elif event.type == pygame.KEYUP:
-                    k = sge.KEYNAMES[event.key]
+                    k = sge.KEY_NAMES[event.key]
                     self.event_paused_key_release(k)
                     self.current_room.event_paused_key_release(k)
                     for obj in self.current_room.objects:
                         obj.event_paused_key_release(k)
                 elif event.type == pygame.MOUSEMOTION:
-                    self.mouse.mouse_x, self.mouse.mouse_y = event.pos
+                    mx, my = event.pos
+                    self.mouse.mouse_x = mx - self._x
+                    self.mouse.mouse_y = my - self._y
                     self.event_paused_mouse_move(*event.rel)
                     self.current_room.event_paused_mouse_move(*event.rel)
                     for obj in self.current_room.objects:
                         obj.event_paused_mouse_move(*event.rel)
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    self.event_paused_mouse_button_press(event.button)
-                    self.current_room.event_paused_mouse_button_press(
-                        event.button)
+                    b = sge.MOUSE_BUTTON_NAMES[event.button]
+                    self.event_paused_mouse_button_press(b)
+                    self.current_room.event_paused_mouse_button_press(b)
                     for obj in self.current_room.objects:
-                        obj.event_paused_mouse_button_press(event.button)
+                        obj.event_paused_mouse_button_press(b)
                 elif event.type == pygame.MOUSEBUTTONUP:
-                    self.event_paused_mouse_button_release(event.button)
-                    self.current_room.event_paused_mouse_button_release(
-                        event.button)
+                    b = sge.MOUSE_BUTTON_NAMES[event.button]
+                    self.event_paused_mouse_button_release(b)
+                    self.current_room.event_paused_mouse_button_release(b)
                     for obj in self.current_room.objects:
-                        obj.event_paused_mouse_button_release(event.button)
+                        obj.event_paused_mouse_button_release(b)
                 elif event.type == pygame.JOYAXISMOTION:
                     self.event_paused_joystick_axis_move(event.joy, event.axis,
                                                          event.value)
@@ -729,9 +731,7 @@ class Game(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        ``button`` is the number of the mouse button that was pressed;
-        these numbers may vary by implementation, so MOUSE_BUTTON_*
-        constants should be used.
+        ``button`` is the button that was pressed.
 
         """
         pass
@@ -739,9 +739,7 @@ class Game(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        ``button`` is the number of the mouse button that was released;
-        these numbers may vary by implementation, so MOUSE_BUTTON_*
-        constants should be used.
+        ``button`` is the button that was released.
 
         """
         pass

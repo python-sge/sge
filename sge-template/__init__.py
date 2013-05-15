@@ -34,20 +34,6 @@ Constants:
     ALIGN_TOP: Flag indicating alignment to the top.
     ALIGN_MIDDLE: Flag indicating alignment to the vertical middle.
     ALIGN_BOTTOM: Flag indicating alignment to the bottom.
-    MOUSE_BUTTON_LEFT: The mouse button number which corresponds with
-        the left mouse button.
-    MOUSE_BUTTON_RIGHT: The mouse button number which corresponds with
-        the right mouse button.
-    MOUSE_BUTTON_MIDDLE: The mouse button number which corresponds with
-        the middle mouse button.
-    MOUSE_BUTTON_WHEEL_UP: The mouse button number which corresponds
-        with rolling the mouse wheel up.
-    MOUSE_BUTTON_WHEEL_DOWN: The mouse button number which corresponds
-        with rolling the mouse wheel down.
-    MOUSE_BUTTON_WHEEL_LEFT: The mouse button number which corresponds
-        with tilting the mouse wheel to the left.
-    MOUSE_BUTTON_WHEEL_RIGHT: The mouse button number which corresponds
-        with tilting the mouse wheel to the right.
 
 Global variables:
     game: Stores the current game.  If there is no game currently, this
@@ -99,7 +85,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.2.1.4"
+__version__ = "0.2.1.5"
 
 import sys
 import os
@@ -124,8 +110,7 @@ from .functions import *
 __all__ = [
     # Constants
     'IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP',
-    'ALIGN_MIDDLE', 'ALIGN_BOTTOM', 'MOUSE_BUTTON_LEFT', 'MOUSE_BUTTON_RIGHT',
-    'MOUSE_BUTTON_MIDDLE',
+    'ALIGN_MIDDLE', 'ALIGN_BOTTOM',
 
     # Classes
     'Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',

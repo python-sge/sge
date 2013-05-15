@@ -25,12 +25,10 @@ import os
 import pygame
 
 
-__all__ = ['PROGRAM_DIR', 'COLORS', 'COLORNAMES', 'KEYS', 'KEYNAMES',
-           'IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER', 'ALIGN_RIGHT',
-           'ALIGN_TOP', 'ALIGN_MIDDLE', 'ALIGN_BOTTOM', 'MOUSE_BUTTON_LEFT',
-           'MOUSE_BUTTON_RIGHT', 'MOUSE_BUTTON_MIDDLE',
-           'MOUSE_BUTTON_WHEEL_UP', 'MOUSE_BUTTON_WHEEL_DOWN',
-           'MOUSE_BUTTON_WHEEL_LEFT', 'MOUSE_BUTTON_WHEEL_RIGHT']
+__all__ = ['IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER', 'ALIGN_RIGHT',
+           'ALIGN_TOP', 'ALIGN_MIDDLE', 'ALIGN_BOTTOM', 'PROGRAM_DIR',
+           'COLORS', 'COLOR_NAMES', 'KEYS', 'KEY_NAMES', 'MOUSE_BUTTONS',
+           'MOUSE_BUTTON_NAMES']
 
 PROGRAM_DIR = os.path.dirname(sys.argv[0])
 
@@ -40,9 +38,9 @@ COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
           'green': '#008000', 'aqua': '#00ffff', 'teal': '#008080',
           'blue': '#0000ff', 'navy': '#000080', 'fuchsia': '#ff00ff',
           'purple': '#800080'}
-COLORNAMES = {}
+COLOR_NAMES = {}
 for pair in COLORS.items():
-    COLORNAMES[pair[1]] = pair[0]
+    COLOR_NAMES[pair[1]] = pair[0]
 
 KEYS = {"0": pygame.K_0, "1": pygame.K_1, "2": pygame.K_2, "3": pygame.K_3,
         "4": pygame.K_4, "5": pygame.K_5, "6": pygame.K_6, "7": pygame.K_7,
@@ -96,9 +94,15 @@ KEYS = {"0": pygame.K_0, "1": pygame.K_1, "2": pygame.K_2, "3": pygame.K_3,
         "super_right": pygame.K_RSUPER, "sysrq": pygame.K_SYSREQ,
         "tab": pygame.K_TAB, "underscore": pygame.K_UNDERSCORE,
         "up": pygame.K_UP}
-KEYNAMES = {}
+KEY_NAMES = {}
 for pair in KEYS.items():
-    KEYNAMES[pair[1]] = pair[0]
+    KEY_NAMES[pair[1]] = pair[0]
+
+MOUSE_BUTTONS = {"left": 1, "right": 3, "middle": 2, "wheel_up": 4,
+                 "wheel_down": 5, "wheel_left": 6, "wheel_right": 7}
+MOUSE_BUTTON_NAMES = {}
+for pair in MOUSE_BUTTONS.items():
+    MOUSE_BUTTON_NAMES[pair[1]] = pair[0]
 
 IMPLEMENTATION = "Pygame 1.9"
 ALIGN_LEFT = 2
@@ -107,10 +111,3 @@ ALIGN_RIGHT = 1
 ALIGN_TOP = 8
 ALIGN_MIDDLE = 12
 ALIGN_BOTTOM = 4
-MOUSE_BUTTON_LEFT = 1
-MOUSE_BUTTON_RIGHT = 3
-MOUSE_BUTTON_MIDDLE = 2
-MOUSE_BUTTON_WHEEL_UP = 4
-MOUSE_BUTTON_WHEEL_DOWN = 5
-MOUSE_BUTTON_WHEEL_LEFT = 6
-MOUSE_BUTTON_WHEEL_RIGHT = 7

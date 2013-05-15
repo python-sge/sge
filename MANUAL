@@ -386,20 +386,6 @@ Constants:
 * ALIGN_TOP: Flag indicating alignment to the top.
 * ALIGN_MIDDLE: Flag indicating alignment to the vertical middle.
 * ALIGN_BOTTOM: Flag indicating alignment to the bottom.
-* MOUSE_BUTTON_LEFT: The mouse button number which corresponds with the
-    left mouse button.
-* MOUSE_BUTTON_RIGHT: The mouse button number which corresponds with the
-    right mouse button.
-* MOUSE_BUTTON_MIDDLE: The mouse button number which corresponds with
-    the middle mouse button.
-* MOUSE_BUTTON_WHEEL_UP: The mouse button number which corresponds with
-    rolling the mouse wheel up.
-* MOUSE_BUTTON_WHEEL_DOWN: The mouse button number which corresponds
-    with rolling the mouse wheel down.
-* MOUSE_BUTTON_WHEEL_LEFT: The mouse button number which corresponds
-    with tilting the mouse wheel to the left.
-* MOUSE_BUTTON_WHEEL_RIGHT: The mouse button number which corresponds
-    with tilting the mouse wheel to the right.
 
 Global variables:
 * game: Stores the current game.  If there is no game currently, this
@@ -616,18 +602,16 @@ is best implemented via subclassing SGE's classes.
     sge.Game.event_mouse_button_press(self, button)
 
     Mouse Button Press event.  This event is executed when a mouse
-    button is pressed.  ``button`` indicates the number of the button
-    that was pressed.  What button numbers correspond to what buttons
-    can vary among implementations, so ``button`` should be checked
-    against the following constants:
+    button is pressed.  ``button`` indicates the mouse button that was
+    pressed and can be one of the following case-insensitive values:
 
-    * sge.MOUSE_BUTTON_LEFT
-    * sge.MOUSE_BUTTON_RIGHT
-    * sge.MOUSE_BUTTON_MIDDLE
-    * sge.MOUSE_BUTTON_WHEEL_UP
-    * sge.MOUSE_BUTTON_WHEEL_DOWN
-    * sge.MOUSE_BUTTON_WHEEL_LEFT
-    * sge.MOUSE_BUTTON_WHEEL_RIGHT
+    * "left"
+    * "right"
+    * "middle"
+    * "wheel_up"
+    * "wheel_down"
+    * "wheel_left"
+    * "wheel_right"
 
 
     IV.A.13. sge.Game.event_mouse_button_release
@@ -636,18 +620,16 @@ is best implemented via subclassing SGE's classes.
     sge.Game.event.mouse_button_release(self, button)
 
     Mouse Button Release event.  This event is executed when a mouse
-    button is released.  ``button`` indicates the number of the button
-    that was released.  What button numbers correspond to what buttons
-    can vary among implementations, so ``button`` should be checked
-    against the following constants:
+    button is released.  ``button`` indicates the mouse button that was
+    released and can be one of the following case-insensitive values:
 
-    * sge.MOUSE_BUTTON_LEFT
-    * sge.MOUSE_BUTTON_RIGHT
-    * sge.MOUSE_BUTTON_MIDDLE
-    * sge.MOUSE_BUTTON_WHEEL_UP
-    * sge.MOUSE_BUTTON_WHEEL_DOWN
-    * sge.MOUSE_BUTTON_WHEEL_LEFT
-    * sge.MOUSE_BUTTON_WHEEL_RIGHT
+    * "left"
+    * "right"
+    * "middle"
+    * "wheel_up"
+    * "wheel_down"
+    * "wheel_left"
+    * "wheel_right"
 
 
     IV.A.14. sge.Game.event_joystick_axis_move
@@ -1684,18 +1666,16 @@ is best implemented via subclassing SGE's classes.
     sge.StellarClass.event_mouse_button_press(self, button)
 
     Mouse Button Press event.  This event is executed when a mouse
-    button is pressed.  ``button`` indicates the number of the button
-    that was pressed.  What button numbers correspond to what buttons
-    can vary among implementations, so ``button`` should be checked
-    against the following constants:
+    button is pressed.  ``button`` indicates the mouse button that was
+    pressed and can be one of the following case-insensitive values:
 
-    * sge.MOUSE_BUTTON_LEFT
-    * sge.MOUSE_BUTTON_RIGHT
-    * sge.MOUSE_BUTTON_MIDDLE
-    * sge.MOUSE_BUTTON_WHEEL_UP
-    * sge.MOUSE_BUTTON_WHEEL_DOWN
-    * sge.MOUSE_BUTTON_WHEEL_LEFT
-    * sge.MOUSE_BUTTON_WHEEL_RIGHT
+    * "left"
+    * "right"
+    * "middle"
+    * "wheel_up"
+    * "wheel_down"
+    * "wheel_left"
+    * "wheel_right"
 
 
     IV.H.15. sge.StellarClass.event_mouse_button_release
@@ -1704,18 +1684,16 @@ is best implemented via subclassing SGE's classes.
     sge.StellarClass.event_mouse_button_release(self, button)
 
     Mouse Button Release event.  This event is executed when a mouse
-    button is released.  ``button`` indicates the number of the button
-    that was released.  What button numbers correspond to what buttons
-    can vary among implementations, so ``button`` should be checked
-    against the following constants:
+    button is released.  ``button`` indicates the mouse button that was
+    released and can be one of the following case-insensitive values:
 
-    * sge.MOUSE_BUTTON_LEFT
-    * sge.MOUSE_BUTTON_RIGHT
-    * sge.MOUSE_BUTTON_MIDDLE
-    * sge.MOUSE_BUTTON_WHEEL_UP
-    * sge.MOUSE_BUTTON_WHEEL_DOWN
-    * sge.MOUSE_BUTTON_WHEEL_LEFT
-    * sge.MOUSE_BUTTON_WHEEL_RIGHT
+    * "left"
+    * "right"
+    * "middle"
+    * "wheel_up"
+    * "wheel_down"
+    * "wheel_left"
+    * "wheel_right"
 
 
     IV.H.16. sge.StellarClass.event_joystick_axis_move
@@ -2223,18 +2201,16 @@ is best implemented via subclassing SGE's classes.
     sge.Room.event_mouse_button_press(self, button)
 
     Mouse Button Press event.  This event is executed when a mouse
-    button is pressed.  ``button`` indicates the number of the button
-    that was pressed.  What button numbers correspond to what buttons
-    can vary among implementations, so ``button`` should be checked
-    against the following constants:
+    button is pressed.  ``button`` indicates the mouse button that was
+    pressed and can be one of the following case-insensitive values:
 
-    * sge.MOUSE_BUTTON_LEFT
-    * sge.MOUSE_BUTTON_RIGHT
-    * sge.MOUSE_BUTTON_MIDDLE
-    * sge.MOUSE_BUTTON_WHEEL_UP
-    * sge.MOUSE_BUTTON_WHEEL_DOWN
-    * sge.MOUSE_BUTTON_WHEEL_LEFT
-    * sge.MOUSE_BUTTON_WHEEL_RIGHT
+    * "left"
+    * "right"
+    * "middle"
+    * "wheel_up"
+    * "wheel_down"
+    * "wheel_left"
+    * "wheel_right"
 
 
     IV.I.20. sge.Room.event_mouse_button_release
@@ -2243,18 +2219,16 @@ is best implemented via subclassing SGE's classes.
     sge.Room.event_mouse_button_release(self, button)
 
     Mouse Button Release event.  This event is executed when a mouse
-    button is released.  ``button`` indicates the number of the button
-    that was released.  What button numbers correspond to what buttons
-    can vary among implementations, so ``button`` should be checked
-    against the following constants:
+    button is released.  ``button`` indicates the mouse button that was
+    released and can be one of the following case-insensitive values:
 
-    * sge.MOUSE_BUTTON_LEFT
-    * sge.MOUSE_BUTTON_RIGHT
-    * sge.MOUSE_BUTTON_MIDDLE
-    * sge.MOUSE_BUTTON_WHEEL_UP
-    * sge.MOUSE_BUTTON_WHEEL_DOWN
-    * sge.MOUSE_BUTTON_WHEEL_LEFT
-    * sge.MOUSE_BUTTON_WHEEL_RIGHT
+    * "left"
+    * "right"
+    * "middle"
+    * "wheel_up"
+    * "wheel_down"
+    * "wheel_left"
+    * "wheel_right"
 
 
     IV.I.21. sge.Room.event_joystick_axis_move
@@ -2467,17 +2441,16 @@ V. Functions
   sge.get_mouse_button_pressed(button)
 
   Returns whether or not a given mouse button is pressed.  ``button``
-  indicates the mouse button number to check.  What button numbers
-  correspond to what buttons can vary among implementations, so
-  ``button`` should be checked against the following constants:
+  indicates the mouse button to check and can be one of the following
+  values:
 
-  * sge.MOUSE_BUTTON_LEFT
-  * sge.MOUSE_BUTTON_RIGHT
-  * sge.MOUSE_BUTTON_MIDDLE
-  * sge.MOUSE_BUTTON_WHEEL_UP
-  * sge.MOUSE_BUTTON_WHEEL_DOWN
-  * sge.MOUSE_BUTTON_WHEEL_LEFT
-  * sge.MOUSE_BUTTON_WHEEL_RIGHT
+  * "left"
+  * "right"
+  * "middle"
+  * "wheel_up"
+  * "wheel_down"
+  * "wheel_left"
+  * "wheel_right"
 
 
   V.C. sge.get_joystick_axis

@@ -50,8 +50,9 @@ def get_mouse_button_pressed(button):
     is the first mouse button.
 
     """
-    if button < 3:
-        return pygame.mouse.get_pressed()[button]
+    b = {"left": 0, "middle": 1, "right": 2}.setdefault(button.lower())
+    if b is not None:
+        return pygame.mouse.get_pressed()[b]
     else:
         return False
 
