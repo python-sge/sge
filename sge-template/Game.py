@@ -255,7 +255,7 @@ class Game(object):
         """Mouse button press event.
 
         ``button`` is the mouse button that was pressed.  It can be any
-        of the following case-insensitive values:
+        of the following values:
             "left"
             "right"
             "middle"
@@ -271,7 +271,7 @@ class Game(object):
         """Mouse button release event.
 
         ``button`` is the mouse button that was released.  It can be any
-        of the following case-insensitive values:
+        of the following values:
             "left"
             "right"
             "middle"

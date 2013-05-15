@@ -707,7 +707,9 @@ class Game(object):
     def event_key_press(self, key):
         """Key press event.
 
-        ``key`` is the key that was pressed.
+        ``key`` indicates the identifier string of the key that was
+        pressed; see the file KEYS for a full list of key identifier
+        strings.
 
         """
         pass
@@ -715,7 +717,9 @@ class Game(object):
     def event_key_release(self, key):
         """Key release event.
 
-        ``key`` is the key that was pressed.
+        ``key`` indicates the identifier string of the key that was
+        released; see the file KEYS for a full list of key identifier
+        strings.
 
         """
         pass
@@ -731,7 +735,15 @@ class Game(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        ``button`` is the button that was pressed.
+        ``button`` is the mouse button that was pressed.  It can be any
+        of the following values:
+            "left"
+            "right"
+            "middle"
+            "wheel_up"
+            "wheel_down"
+            "wheel_left"
+            "wheel_right"
 
         """
         pass
@@ -739,7 +751,15 @@ class Game(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        ``button`` is the button that was released.
+        ``button`` is the mouse button that was released.  It can be any
+        of the following values:
+            "left"
+            "right"
+            "middle"
+            "wheel_up"
+            "wheel_down"
+            "wheel_left"
+            "wheel_right"
 
         """
         pass
