@@ -226,7 +226,9 @@ class Game(object):
     def event_key_press(self, key):
         """Key press event.
 
-        ``key`` is the key that was pressed.
+        ``key`` indicates the identifier string of the key that was
+        pressed; see the file KEYS for a full list of key identifier
+        strings.
 
         """
         pass
@@ -234,7 +236,9 @@ class Game(object):
     def event_key_release(self, key):
         """Key release event.
 
-        ``key`` is the key that was pressed.
+        ``key`` indicates the identifier string of the key that was
+        released; see the file KEYS for a full list of key identifier
+        strings.
 
         """
         pass
@@ -250,7 +254,15 @@ class Game(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        ``button`` is the mouse button that was pressed.
+        ``button`` is the mouse button that was pressed.  It can be any
+        of the following case-insensitive values:
+            "left"
+            "right"
+            "middle"
+            "wheel_up"
+            "wheel_down"
+            "wheel_left"
+            "wheel_right"
 
         """
         pass
@@ -258,7 +270,15 @@ class Game(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        ``button`` is the mouse button that was released.
+        ``button`` is the mouse button that was released.  It can be any
+        of the following case-insensitive values:
+            "left"
+            "right"
+            "middle"
+            "wheel_up"
+            "wheel_down"
+            "wheel_left"
+            "wheel_right"
 
         """
         pass
@@ -365,7 +385,8 @@ class Game(object):
     def event_paused_key_press(self, key):
         """Key press event when paused.
 
-        See Game.event_key_press.__doc__ for more information.
+        See the documentation for sge.Game.event_key_press for more
+        information.
 
         """
         pass
@@ -373,7 +394,8 @@ class Game(object):
     def event_paused_key_release(self, key):
         """Key release event when paused.
 
-        See Game.event_key_release.__doc__ for more information.
+        See the documentation for sge.Game.event_key_release for more
+        information.
 
         """
         pass
@@ -381,7 +403,8 @@ class Game(object):
     def event_paused_mouse_move(self, x, y):
         """Mouse move event when paused.
 
-        See Game.event_mouse_move.__doc__ for more information.
+        See the documentation for sge.Game.event_mouse_move for more
+        information.
 
         """
         pass
@@ -389,7 +412,8 @@ class Game(object):
     def event_paused_mouse_button_press(self, button):
         """Mouse button press event when paused.
 
-        See Game.event_mouse_button_press.__doc__ for more information.
+        See the documentation for sge.Game.event_mouse_button_press for
+        more information.
 
         """
         pass
@@ -397,8 +421,8 @@ class Game(object):
     def event_paused_mouse_button_release(self, button):
         """Mouse button release event when paused.
 
-        See Game.event_mouse_button_release.__doc__ for more
-        information.
+        See the documentation for sge.Game.event_mouse_button_release
+        for more information.
 
         """
         pass
@@ -406,7 +430,8 @@ class Game(object):
     def event_paused_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event when paused.
 
-        See Game.event_joystick_axis_move.__doc__ for more information.
+        See the documentation for sge.Game.event_joystick_axis_move for
+        more information.
 
         """
         pass
@@ -414,7 +439,8 @@ class Game(object):
     def event_paused_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event when paused.
 
-        See Game.event_joystick_hat_move.__doc__ for more information.
+        See the documentation for sge.Game.event_joystick_hat_move for
+        more information.
 
         """
         pass
@@ -422,8 +448,8 @@ class Game(object):
     def event_paused_joystick_trackball_move(self, joystick, ball, x, y):
         """Joystick trackball move event when paused.
 
-        See Game.event_joystick_trackball_move.__doc__ for more
-        information.
+        See the documentation for sge.Game.event_joystick_trackball_move
+        for more information.
 
         """
         pass
@@ -431,8 +457,8 @@ class Game(object):
     def event_paused_joystick_button_press(self, joystick, button):
         """Joystick button press event when paused.
 
-        See Game.event_joystick_button_press.__doc__ for more
-        information.
+        See the documentation for sge.Game.event_joystick_button_press
+        for more information.
 
         """
         pass
@@ -440,8 +466,8 @@ class Game(object):
     def event_paused_joystick_button_release(self, joystick, button):
         """Joystick button release event when paused.
 
-        See Game.event_joystick_button_release.__doc__ for more
-        information.
+        See the documentation for sge.Game.event_joystick_button_release
+        for more information.
 
         """
         pass
@@ -449,7 +475,8 @@ class Game(object):
     def event_paused_close(self):
         """Close event (e.g. close button) when paused.
 
-        See Game.event_close.__doc__ for more information.
+        See the documentation for sge.Game.event_close for more
+        information.
 
         """
         pass

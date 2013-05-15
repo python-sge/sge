@@ -424,8 +424,8 @@ class Room(object):
     def event_step(self, time_passed):
         """Room step event.
 
-        Called once each frame.  ``time_passed`` is the number of
-        milliseconds that have passed during the last frame. 
+        See the documentation for sge.Game.event_step for more
+        information.
 
         """
         pass
@@ -433,7 +433,8 @@ class Room(object):
     def event_key_press(self, key):
         """Key press event.
 
-        ``key`` is the key that was pressed.
+        See the documentation for sge.Game.event_key_press for more
+        information.
 
         """
         pass
@@ -441,7 +442,8 @@ class Room(object):
     def event_key_release(self, key):
         """Key release event.
 
-        ``key`` is the key that was pressed.
+        See the documentation for sge.Game.event_key_release for more
+        information.
 
         """
         pass
@@ -449,7 +451,8 @@ class Room(object):
     def event_mouse_move(self, x, y):
         """Mouse move event.
 
-        ``x`` and ``y`` indicate the relative movement of the mouse.
+        See the documentation for sge.Game.event_mouse_move for more
+        information.
 
         """
         pass
@@ -457,7 +460,8 @@ class Room(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        ``button`` is the button that was pressed.
+        See the documentation for sge.Game.event_mouse_button_press for
+        more information.
 
         """
         pass
@@ -465,7 +469,8 @@ class Room(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        ``button`` is the button that was released.
+        See the documentation for sge.Game.event_mouse_button_release
+        for more information.
 
         """
         pass
@@ -473,14 +478,8 @@ class Room(object):
     def event_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event.
 
-        ``joystick`` is the number of the joystick, where 0 is the first
-        joystick.  ``axis`` is the number of the axis, where 0 is the
-        first axis.  ``value`` is the tilt of the axis, where 0 is in
-        the center, -1 is tilted all the way to the left or up, and 1 is
-        tilted all the way to the right or down.
-
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.
+        See the documentation for sge.Game.event_joystick_axis_move for
+        more information.
 
         """
         pass
@@ -488,14 +487,8 @@ class Room(object):
     def event_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event.
 
-        ``joystick`` is the number of the joystick, where 0 is the first
-        joystick.  ``hat`` is the number of the HAT, where 0 is the
-        first HAT.  ``x`` and ``y`` indicate the position of the HAT,
-        where 0 is in the center, -1 is left or up, and 1 is right or
-        down.
-
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.
+        See the documentation for sge.Game.event_joystick_hat_move for
+        more information.
 
         """
         pass
@@ -503,13 +496,8 @@ class Room(object):
     def event_joystick_trackball_move(self, joystick, ball, x, y):
         """Joystick trackball move event.
 
-        ``joystick`` indicates the number of the joystick, where 0 is
-        the first joystick.  ``ball`` indicates the number of the
-        trackball, where 0 is the first trackball.  ``x`` and ``y``
-        indicate the relative movement of the trackball.
-
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.
+        See the documentation for sge.Game.event_joystick_trackball_move
+        for more information.
 
         """
         pass
@@ -517,12 +505,8 @@ class Room(object):
     def event_joystick_button_press(self, joystick, button):
         """Joystick button press event.
 
-        ``joystick`` is the number of the joystick, where 0 is the first
-        joystick.  ``button`` is the number of the button pressed, where
-        0 is the first button.
-
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.
+        See the documentation for sge.Game.event_joystick_button_press
+        for more information.
 
         """
         pass
@@ -530,12 +514,8 @@ class Room(object):
     def event_joystick_button_release(self, joystick, button):
         """Joystick button release event.
 
-        ``joystick`` is the number of the joystick, where 0 is the first
-        joystick.  ``button`` is the number of the button pressed, where
-        0 is the first button.
-
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.
+        See the documentation for sge.Game.event_joystick_button_release
+        for more information.
 
         """
         pass
@@ -543,8 +523,9 @@ class Room(object):
     def event_close(self):
         """Close event (e.g. close button).
 
-        It is always called before any game close events occurring at
-        the same time.
+        See the documentation for sge.Game.event_close for more
+        information.  This is always called before any game close events
+        occurring at the same time.
 
         """
         pass
@@ -552,7 +533,8 @@ class Room(object):
     def event_paused_key_press(self, key):
         """Key press event when paused.
 
-        See Room.event_key_press.__doc__ for more information.
+        See the documentation for sge.Game.event_key_press for more
+        information.
 
         """
         pass
@@ -560,7 +542,8 @@ class Room(object):
     def event_paused_key_release(self, key):
         """Key release event when paused.
 
-        See Room.event_key_release.__doc__ for more information.
+        See the documentation for sge.Game.event_key_release for more
+        information.
 
         """
         pass
@@ -568,7 +551,8 @@ class Room(object):
     def event_paused_mouse_move(self, x, y):
         """Mouse move event when paused.
 
-        See Room.event_mouse_move.__doc__ for more information.
+        See the documentation for sge.Game.event_mouse_move for more
+        information.
 
         """
         pass
@@ -576,7 +560,8 @@ class Room(object):
     def event_paused_mouse_button_press(self, button):
         """Mouse button press event when paused.
 
-        See Room.event_mouse_button_press.__doc__ for more information.
+        See the documentation for sge.Game.event_mouse_button_press for
+        more information.
 
         """
         pass
@@ -584,8 +569,8 @@ class Room(object):
     def event_paused_mouse_button_release(self, button):
         """Mouse button release event when paused.
 
-        See Room.event_mouse_button_release.__doc__ for more
-        information.
+        See the documentation for sge.Game.event_mouse_button_release
+        for more information.
 
         """
         pass
@@ -593,7 +578,8 @@ class Room(object):
     def event_paused_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event when paused.
 
-        See Room.event_joystick_axis_move.__doc__ for more information.
+        See the documentation for sge.Game.event_joystick_axis_move for
+        more information.
 
         """
         pass
@@ -601,7 +587,8 @@ class Room(object):
     def event_paused_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event when paused.
 
-        See Room.event_joystick_hat_move.__doc__ for more information.
+        See the documentation for sge.Game.event_joystick_hat_move for
+        more information.
 
         """
         pass
@@ -609,8 +596,8 @@ class Room(object):
     def event_paused_joystick_trackball_move(self, joystick, ball, x, y):
         """Joystick trackball move event when paused.
 
-        See Room.event_joystick_trackball_move.__doc__ for more
-        information.
+        See the documentation for sge.Game.event_joystick_trackball_move
+        for more information.
 
         """
         pass
@@ -618,8 +605,8 @@ class Room(object):
     def event_paused_joystick_button_press(self, joystick, button):
         """Joystick button press event when paused.
 
-        See Room.event_joystick_button_press.__doc__ for more
-        information.
+        See the documentation for sge.Game.event_joystick_button_press
+        for more information.
 
         """
         pass
@@ -627,8 +614,8 @@ class Room(object):
     def event_paused_joystick_button_release(self, joystick, button):
         """Joystick button release event when paused.
 
-        See Room.event_joystick_button_release.__doc__ for more
-        information.
+        See the documentation for sge.Game.event_joystick_button_release
+        for more information.
 
         """
         pass
@@ -636,7 +623,8 @@ class Room(object):
     def event_paused_close(self):
         """Close event (e.g. close button) when paused.
 
-        See Room.event_close.__doc__ for more information.
+        See the documentation for sge.Room.event_close for more
+        information.
 
         """
         pass

@@ -16,11 +16,6 @@ set ``sge.hardware_rendering`` to True.  To get the best performance
 with hardware rendering, you should use colorkeys instead of alpha
 transparency.
 
-Since Pygame supports trackballs, they are implemented as extra analog
-sticks.  Their movement is limited to the range of an analog stick to
-ensure full compatibility.  You can disable this limitation by setting
-``sge.real_trackballs`` to True.
-
 sge.Sprite supports the following image formats:
     PNG
     JPEG
