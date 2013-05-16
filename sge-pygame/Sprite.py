@@ -156,7 +156,8 @@ class Sprite(object):
         created.
 
         """
-        print('Creating sprite "{0}"'.format(name))
+        if sge.DEBUG:
+            print('Creating sprite "{0}"'.format(name))
         self.name = name
 
         self._transparent = None
@@ -200,7 +201,8 @@ class Sprite(object):
                     img = pygame.image.load(fname_single)
                     self._baseimages.append(img)
                 except pygame.error:
-                    print("Ignored {0}; not a valid image.".format(fname_single))
+                    if sge.DEBUG:
+                        print("Ignored {0}; not a valid image.".format(fname_single))
 
             if not self._baseimages and any(fname_frames):
                 # Load the multiple images
@@ -209,7 +211,8 @@ class Sprite(object):
                         try:
                             self._baseimages.append(pygame.image.load(fname))
                         except pygame.error:
-                            print("Ignored {0}; not a valid image.".format(fname))
+                            if sge.DEBUG:
+                                print("Ignored {0}; not a valid image.".format(fname))
 
             if not self._baseimages and fname_strip:
                 # Load the strip (sprite sheet)
@@ -234,7 +237,8 @@ class Sprite(object):
                         img = sheet.subsurface(rect)
                         self._baseimages.append(img)
                 except pygame.error:
-                    print("Ignored {0}; not a valid image.".format(fname_strip))
+                    if sge.DEBUG:
+                        print("Ignored {0}; not a valid image.".format(fname_strip))
 
             if not self._baseimages:
                 print("Directories searched:")
@@ -259,7 +263,8 @@ class Sprite(object):
             img = pygame.Surface((width, height), pygame.SRCALPHA)
             img.fill(pygame.Color(0, 0, 0, 0))
             self._baseimages.append(img)
-            print("renamed to {0}".format(self.name))
+            if sge.DEBUG:
+                print("renamed to {0}".format(self.name))
 
         if width is None:
             width = 1

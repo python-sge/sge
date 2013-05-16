@@ -397,6 +397,8 @@ class Room(object):
         anti-aliasing, this function will act like ``anti_alias`` is False.
 
         """
+        # FIXME: Generated sprite is always blank for some reason,
+        # resulting in this method having no effect.
         w, h = font.get_size(text, width, height)
         sprite = sge.Sprite(None, w, h)
         sprite.draw_text(font, text, x, y, width, height, color, halign,
