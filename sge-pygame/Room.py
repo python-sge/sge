@@ -153,9 +153,10 @@ class Room(object):
             new_objects = list(self.objects)
             new_objects.append(obj)
             self.objects = tuple(new_objects)
-            sge.game._pygame_sprites.add(obj._pygame_sprite, layer=obj.z)
-            if sge.game.current_room is self and self._started:
-                obj.event_create()
+            if self is sge.game.current_room:
+                sge.game._pygame_sprites.add(obj._pygame_sprite, layer=obj.z)
+                if self._started:
+                    obj.event_create()
 
     def start(self):
         """Start the room.
@@ -397,12 +398,14 @@ class Room(object):
         anti-aliasing, this function will act like ``anti_alias`` is False.
 
         """
-        # FIXME: Generated sprite is always blank for some reason,
-        # resulting in this method having no effect.
         w, h = font.get_size(text, width, height)
+        draw_x = {sge.ALIGN_LEFT: 0, sge.ALIGN_CENTER: w / 2,
+                  sge.ALIGN_RIGHT: w}.setdefault(halign, w / 2)
+        draw_y = {sge.ALIGN_TOP: 0, sge.ALIGN_MIDDLE: h / 2,
+                  sge.ALIGN_BOTTOM: h}.setdefault(valign, h / 2)
         sprite = sge.Sprite(None, w, h)
-        sprite.draw_text(font, text, x, y, width, height, color, halign,
-                         valign, anti_alias)
+        sprite.draw_text(font, text, draw_x, draw_y, width, height, color,
+                         halign, valign, anti_alias)
         p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
         self.add(p)
 
@@ -668,7 +671,15 @@ class _Projection(sge.StellarClass):
 
     def event_create(self):
         self.detects_collisions = False
-        self.set_alarm('destroy', 1)
+        # FIXME: The alarm is set to 2 because the object doesn't show
+        # up on the first frame it is created.  It would be better if it
+        # did because depending on delta timing, as it is now, the
+        # object can end up not showing up, resulting in at best a
+        # flicker effect and at worst important visuals being missing.
+        # Waiting longer than two frames to destroy the object is not
+        # a solution because this would result in partial transparency
+        # being ruined.
+        self.set_alarm('destroy', 2)
 
     def event_alarm(self, alarm_id):
         self.destroy()
