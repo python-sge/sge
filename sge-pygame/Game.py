@@ -344,13 +344,19 @@ class Game(object):
                         self.event_key_press(k)
                         self.current_room.event_key_press(k)
                         for obj in self.current_room.objects:
-                            obj.event_key_press(k)
+                            if obj.active:
+                                obj.event_key_press(k)
+                            else:
+                                obj.event_inactive_key_press(k)
                     elif event.type == pygame.KEYUP:
                         k = sge.KEY_NAMES[event.key]
                         self.event_key_release(k)
                         self.current_room.event_key_release(k)
                         for obj in self.current_room.objects:
-                            obj.event_key_release(k)
+                            if obj.active:
+                                obj.event_key_release(k)
+                            else:
+                                obj.event_inactive_key_release(k)
                     elif event.type == pygame.MOUSEMOTION:
                         mx, my = event.pos
                         self.mouse.mouse_x = mx - self._x
@@ -358,59 +364,88 @@ class Game(object):
                         self.event_mouse_move(*event.rel)
                         self.current_room.event_mouse_move(*event.rel)
                         for obj in self.current_room.objects:
-                            obj.event_mouse_move(*event.rel)
+                            if obj.active:
+                                obj.event_mouse_move(*event.rel)
+                            else:
+                                obj.event_inactive_mouse_move(*event.rel)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         b = sge.MOUSE_BUTTON_NAMES[event.button]
                         self.event_mouse_button_press(b)
                         self.current_room.event_mouse_button_press(b)
                         for obj in self.current_room.objects:
-                            obj.event_mouse_button_press(b)
+                            if obj.active:
+                                obj.event_mouse_button_press(b)
+                            else:
+                                obj.event_inactive_mouse_button_press(b)
                     elif event.type == pygame.MOUSEBUTTONUP:
                         b = sge.MOUSE_BUTTON_NAMES[event.button]
                         self.event_mouse_button_release(b)
                         self.current_room.event_mouse_button_release(b)
                         for obj in self.current_room.objects:
-                            obj.event_mouse_button_release(b)
+                            if obj.active:
+                                obj.event_mouse_button_release(b)
+                            else:
+                                obj.event_inactive_mouse_button_release(b)
                     elif event.type == pygame.JOYAXISMOTION:
                         self.event_joystick_axis_move(event.joy, event.axis,
                                                       event.value)
                         self.current_room.event_joystick_axis_move(
                             event.joy, event.axis, event.value)
                         for obj in self.current_room.objects:
-                            obj.event_joystick_axis_move(event.joy, event.axis,
-                                                         event.value)
+                            if obj.active:
+                                obj.event_joystick_axis_move(
+                                    event.joy, event.axis, event.value)
+                            else:
+                                obj.event_inactive_joystick_axis_move(
+                                    event.joy, event.axis, event.value)
                     elif event.type == pygame.JOYHATMOTION:
                         self.event_joystick_hat_move(event.joy, event.hat,
                                                      *event.value)
                         self.current_room.event_joystick_hat_move(
                             event.joy, event.hat, *event.value)
                         for obj in self.current_room.objects:
-                            obj.event_joystick_hat_move(event.joy, event.hat,
-                                                        *event.value)
+                            if obj.active:
+                                obj.event_joystick_hat_move(
+                                    event.joy, event.hat, *event.value)
+                            else:
+                                obj.event_inactive_joystick_hat_move(
+                                    event.joy, event.hat, *event.value)
                     elif event.type == pygame.JOYBALLMOTION:
                         self.event_joystick_trackball_move(
                             event.joy, event.ball, *event.rel)
                         self.current_room.event_joystick_trackball_move(
                             event.joy, event.ball, *event.rel)
                         for obj in self.current_room.objects:
-                            obj.event_joystick_trackball_move(
-                                event.joy, event.ball, *event.rel)
+                            if obj.active:
+                                obj.event_joystick_trackball_move(
+                                    event.joy, event.ball, *event.rel)
+                            else:
+                                obj.event_inactive_joystick_trackball_move(
+                                    event.joy, event.ball, *event.rel)
                     elif event.type == pygame.JOYBUTTONDOWN:
                         self.event_joystick_button_press(event.joy,
                                                          event.button)
                         self.current_room.event_joystick_button_press(
                             event.joy, event.button)
                         for obj in self.current_room.objects:
-                            obj.event_joystick_button_press(event.joy,
-                                                            event.button)
+                            if obj.active:
+                                obj.event_joystick_button_press(event.joy,
+                                                                event.button)
+                            else:
+                                obj.event_inactive_joystick_button_press(
+                                    event.joy, event.button)
                     elif event.type == pygame.JOYBUTTONUP:
                         self.event_joystick_button_release(event.joy,
                                                            event.button)
                         self.current_room.event_joystick_button_release(
                             event.joy, event.button)
                         for obj in self.current_room.objects:
-                            obj.event_joystick_button_release(event.joy,
-                                                              event.button)
+                            if obj.active:
+                                obj.event_joystick_button_release(event.joy,
+                                                                  event.button)
+                            else:
+                                obj.event_inactive_joystick_button_release(
+                                    event.joy, event.button)
                     elif event.type == pygame.QUIT:
                         self.current_room.event_close()
                         self.event_close()
@@ -439,8 +474,11 @@ class Game(object):
 
                 # Update objects (including mouse)
                 for obj in self.current_room.objects:
-                    obj._update(time_passed, delta_mult)
-                    obj.event_step(real_time_passed)
+                    if obj.active:
+                        obj._update(time_passed, delta_mult)
+                        obj.event_step(real_time_passed)
+                    else:
+                        obj.event_inactive_step(real_time_passed)
 
                 # Music control
                 if self._music is not None:

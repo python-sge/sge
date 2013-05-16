@@ -49,6 +49,11 @@ class StellarClass(object):
             Sprite object or None when read, it can also be set to the
             ID of a sprite.
         visible: Whether or not the object should be drawn.
+        active: Whether or not the object should be active.  If this is
+            False, all normal occurances (including events) will not
+            execute.  Only collision events, destroy events, and events
+            with names that start with "event_inactive_" will be
+            executed.
         detects_collisions: Whether or not the object should be involved
             in collisions.
         bbox_x: The horizontal location of the top-left corner of the
@@ -135,6 +140,21 @@ class StellarClass(object):
         event_collision_right: Right collision event.
         event_collision_top: Top collision event.
         event_collision_bottom: Bottom collision event.
+
+    The following alternative events are executed when the object is
+    inactive (i.e. the attribute ``active`` is set to False) in place of
+    the corresponding normal events:
+        event_inactive_step
+        event_inactive_key_press
+        event_inactive_key_release
+        event_inactive_mouse_move
+        event_inactive_mouse_button_press
+        event_inactive_mouse_button_release
+        event_inactive_joystick_axis_move
+        event_inactive_joystick_hat_move
+        event_inactive_joystick_trackball_move
+        event_inactive_joystick_button_press
+        event_inactive_joystick_button_release
 
     The following alternative events are executed when the game is
     paused in place of the corresponding normal events:
@@ -344,12 +364,12 @@ class StellarClass(object):
             self._frame_time = None
 
     def __init__(self, x, y, z, id_=None, sprite=None, visible=True,
-                 detects_collisions=True, bbox_x=None, bbox_y=None,
-                 bbox_width=None, bbox_height=None, collision_ellipse=False,
-                 collision_precise=False, xvelocity=0, yvelocity=0,
-                 image_index=0, image_fps=0, image_xscale=1, image_yscale=1,
-                 image_rotation=0, image_alpha=255, image_blend=None,
-                 **kwargs):
+                 active=True, detects_collisions=True, bbox_x=None,
+                 bbox_y=None, bbox_width=None, bbox_height=None,
+                 collision_ellipse=False, collision_precise=False,
+                 xvelocity=0, yvelocity=0, image_index=0, image_fps=0,
+                 image_xscale=1, image_yscale=1, image_rotation=0,
+                 image_alpha=255, image_blend=None, **kwargs):
         """Create a new StellarClass object.
 
         Arguments set the properties of the object.  See
@@ -703,6 +723,115 @@ class StellarClass(object):
     def event_collision_bottom(self, other):
         """Bottom collision event."""
         self.event_collision(other)
+
+    def event_inactive_step(self, time_passed):
+        """Step event when this object is inactive.
+
+        See the documentation for sge.Game.event_step for more
+        information.  The object is considered to be inactive when its
+        ``active`` attribute is False.
+
+        """
+
+    def event_inactive_key_press(self, key):
+        """Key press event when this object is inactive.
+
+        See the documentation for sge.Game.event_key_press for more
+        information.  The object is considered to be inactive when its
+        ``active`` attribute is False.
+
+        """
+        pass
+
+    def event_inactive_key_release(self, key):
+        """Key release event when this object is inactive.
+
+        See the documentation for sge.Game.event_key_release for more
+        information.  The object is considered to be inactive when its
+        ``active`` attribute is False.
+
+        """
+        pass
+
+    def event_inactive_mouse_move(self, x, y):
+        """Mouse move event when this object is inactive.
+
+        See the documentation for sge.Game.event_mouse_move for more
+        information.  The object is considered to be inactive when its
+        ``active`` attribute is False.
+
+        """
+        pass
+
+    def event_inactive_mouse_button_press(self, button):
+        """Mouse button press event when this object is inactive.
+
+        See the documentation for sge.Game.event_mouse_button_press for
+        more information.  The object is considered to be inactive when
+        its ``active`` attribute is False.
+
+        """
+        pass
+
+    def event_inactive_mouse_button_release(self, button):
+        """Mouse button release event when this object is inactive.
+
+        See the documentation for sge.Game.event_mouse_button_release
+        for more information.  The object is considered to be inactive
+        when its ``active`` attribute is False.
+
+        """
+        pass
+
+    def event_inactive_joystick_axis_move(self, joystick, axis, value):
+        """Joystick axis move event when this object is inactive.
+
+        See the documentation for sge.Game.event_joystick_axis_move for
+        more information.  The object is considered to be inactive when
+        its ``active`` attribute is False.
+
+        """
+        pass
+
+    def event_inactive_joystick_hat_move(self, joystick, hat, x, y):
+        """Joystick HAT move event when this object is inactive.
+
+        See the documentation for sge.Game.event_joystick_hat_move for
+        more information.  The object is considered to be inactive when
+        its ``active`` attribute is False.
+
+        """
+        pass
+
+    def event_inactive_joystick_trackball_move(self, joystick, ball, x, y):
+        """Joystick trackball move event when this object is inactive.
+
+        See the documentation for sge.Game.event_joystick_trackball_move
+        for more information.  The object is considered to be inactive
+        when its ``active`` attribute is False.
+
+        """
+        pass
+
+    def event_inactive_joystick_button_press(self, joystick, button):
+        """Joystick button press event when this object is inactive.
+
+        See the documentation for sge.Game.event_joystick_button_press
+        for more information.  The object is considered to be inactive
+        when its ``active`` attribute is False.
+
+        """
+        pass
+
+    def event_inactive_joystick_button_release(self, joystick, button):
+        """Joystick button release event when this object is inactive.
+
+        See the documentation for sge.Game.event_joystick_button_release
+        for more information.  The object is considered to be inactive
+        when its ``active`` attribute is False.
+
+        """
+        pass
 
     def event_paused_key_press(self, key):
         """Key press event when paused.
