@@ -94,7 +94,7 @@ class Room(sge.Room):
 
 def main():
     # Create Game object
-    game = Game()
+    game = Game(delta=True)
 
     # Load sprites
     circle_sprite = sge.Sprite('circle', 64, 64, 32, 32, True, bbox_x=-32,

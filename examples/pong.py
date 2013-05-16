@@ -211,7 +211,7 @@ def refresh_hud():
 
 def main():
     # Create Game object
-    Game(640, 480, False, 0, True, False, 120, False)
+    Game(640, 480, fps=120)
 
     # Load sprites
     glob.paddle_sprite = sge.Sprite(width=8, height=48, origin_x=4,

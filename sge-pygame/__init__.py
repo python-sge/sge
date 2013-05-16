@@ -194,5 +194,22 @@ music_directories = [os.path.join(PROGRAM_DIR, 'data', 'music')]
 
 hardware_rendering = False
 
-# Tell SDL to center the window
-os.environ['SDL_VIDEO_CENTERED'] = '1'
+if DEBUG:
+    print("Image directories set to:")
+    print(*image_directories, sep="; ")
+    print("Font directories set to:")
+    print(*font_directories, sep="; ")
+    print("Sound directories set to:")
+    print(*sound_directories, sep="; ")
+    print("Music directories set to:")
+    print(*music_directories, sep="; ")
+
+    if hardware_rendering:
+        print("Hardware rendering enabled.")
+    else:
+        print("Hardware rendering disabled.")
+
+# Uncomment this line to tell SDL to center the window.  Disabled by
+# default because it seems to cause some weird behavior with window
+# resizing on at least some systems.
+#os.environ['SDL_VIDEO_CENTERED'] = '1'

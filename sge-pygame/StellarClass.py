@@ -399,6 +399,7 @@ class StellarClass(object):
         self._image_index = image_index
         self.sprite = sprite
         self.visible = visible
+        self.active = active
         self.detects_collisions = detects_collisions
         if self.sprite is not None:
             sprite_bbox_x = self.sprite.bbox_x

@@ -323,17 +323,23 @@ class Game(object):
 
         """
         if self._running:
+            if sge.DEBUG:
+                print("Restarting the game.")
+
             for room in self.rooms:
                 room._reset()
 
             self.rooms[0].start()
         else:
+            if sge.DEBUG:
+                print("Starting the game.")
             self._running = True
             self._background_changed = True
             self.event_game_start()
             self.rooms[0].start()
             background = None
             numviews = 0
+            _fps_time = 0
             self._clock.tick()
 
             while self._running:
@@ -447,9 +453,13 @@ class Game(object):
                                 obj.event_inactive_joystick_button_release(
                                     event.joy, event.button)
                     elif event.type == pygame.QUIT:
+                        if sge.DEBUG:
+                            print('Quit requested by the system.')
                         self.current_room.event_close()
                         self.event_close()
                     elif event.type == pygame.VIDEORESIZE:
+                        if sge.DEBUG:
+                            print('Video resize detected.')
                         self._window_width = event.w
                         self._window_height = event.h
                         self._set_mode()
@@ -463,6 +473,13 @@ class Game(object):
                 else:
                     time_passed = 1000 / self.fps
                     delta_mult = 1
+
+                if sge.DEBUG:
+                    _fps_time += real_time_passed
+                    if _fps_time >= 250:
+                        _fps_time = 0
+                        self.window_text = "FPS: {0}; Delta: {1}".format(
+                            int(1000 / real_time_passed), delta_mult)
 
                 # Step events
                 self.event_step(real_time_passed)
@@ -553,6 +570,8 @@ class Game(object):
             self.event_game_end()
             pygame.quit()
             sge.game = None
+            if sge.DEBUG:
+                print("Game ended normally.")
 
     def end(self):
         """Properly end the game."""
@@ -682,9 +701,13 @@ class Game(object):
                         obj.event_paused_joystick_button_release(event.joy,
                                                                  event.button)
                 elif event.type == pygame.QUIT:
+                    if sge.DEBUG:
+                        print('Quit requested by the system.')
                     self.current_room.event_paused_close()
                     self.event_paused_close()
                 elif event.type == pygame.VIDEORESIZE:
+                    if sge.DEBUG:
+                        print('Video resize detected.')
                     self._window_width = event.w
                     self._window_height = event.h
                     self._set_mode()

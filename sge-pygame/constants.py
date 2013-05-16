@@ -32,6 +32,8 @@ __all__ = ['IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER', 'ALIGN_RIGHT',
 
 PROGRAM_DIR = os.path.dirname(sys.argv[0])
 DEBUG = True
+if DEBUG:
+    print("SGE Debug mode enabled.")
 
 COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
           'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
