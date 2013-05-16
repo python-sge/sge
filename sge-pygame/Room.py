@@ -254,10 +254,12 @@ class Room(object):
         y = min(y1, y2) - thickness // 2
         w = abs(x2 - x1) + thickness
         h = abs(y2 - y1) + thickness
-        startpos = (x1 - x, y1 - y)
-        endpos = (x2 - x, y2 - y)
+        x1 -= x
+        y1 -= y
+        x2 -= x
+        y2 -= y
         sprite = sge.Sprite(None, w, h)
-        sprite.draw_line(*startpos, *endpos, color, thickness, anti_alias)
+        sprite.draw_line(x1, y1, x2, y2, color, thickness, anti_alias)
         p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
         self.add(p)
 
@@ -668,3 +670,7 @@ class _Projection(sge.StellarClass):
 
     def event_alarm(self, alarm_id):
         self.destroy()
+
+    def event_destroy(self):
+        if self.sprite is not None:
+            del sge.game.sprites[self.sprite.name]

@@ -819,7 +819,7 @@ class StellarClass(object):
             self._anim_count %= self._frame_time
 
         # Alarms
-        for a in self._alarms:
+        for a in self._alarms.keys():
             self._alarms[a] -= delta_mult
             if self._alarms[a] <= 0:
                 del self._alarms[a]
