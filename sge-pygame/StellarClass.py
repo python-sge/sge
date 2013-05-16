@@ -491,14 +491,16 @@ class StellarClass(object):
                 if isinstance(obj(), other):
                     others.append(obj())
 
-        if x is None:
-            x = self.x
-        if y is None:
-            y = self.y
-
         # Change x and y to be offset values; these are easier to use.
-        x -= self.x
-        y -= self.y
+        if x is not None:
+            x -= self.x
+        else:
+            x = 0
+
+        if y is not None:
+            y -= self.y
+        else:
+            y = 0
 
         for other in others:
             if (self.collision_precise or self.collision_ellipse or
