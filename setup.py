@@ -20,7 +20,7 @@ else:
     sys.exit('Python version unsupported.')
 
 setup(name='Stellar Game Engine',
-      version='0.2.1',
+      version='0.3.0',
       description='A 2D game engine for use with Stellar',
       long_description=long_description,
       author='Julian Marchant',
