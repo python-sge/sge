@@ -671,18 +671,12 @@ class _Projection(sge.StellarClass):
 
     def event_create(self):
         self.detects_collisions = False
-        # FIXME: The alarm is set to 2 because the object doesn't show
-        # up on the first frame it is created.  It would be better if it
-        # did because depending on delta timing, as it is now, the
-        # object can end up not showing up, resulting in at best a
-        # flicker effect and at worst important visuals being missing.
-        # Waiting longer than two frames to destroy the object is not
-        # a solution because this would result in partial transparency
-        # being ruined.
-        self.set_alarm('destroy', 2)
+        self.death_alarm = 2
 
-    def event_alarm(self, alarm_id):
-        self.destroy()
+    def event_step(self, time_passed):
+        self.death_alarm -= 1
+        if self.death_alarm <= 0:
+            self.destroy()
 
     def event_destroy(self):
         if self.sprite is not None:
