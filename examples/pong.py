@@ -47,7 +47,9 @@ class glob(object):
 class Game(sge.Game):
 
     def event_key_press(self, key):
-        if key == 'escape':
+        if key == 'f8':
+            sge.Sprite.from_screenshot().save('screenshot.jpg')
+        elif key == 'escape':
             self.end()
         elif key == 'p':
             self.pause()

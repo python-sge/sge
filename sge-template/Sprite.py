@@ -284,3 +284,30 @@ class Sprite(object):
 
         """
         # TODO
+
+    def save(self, fname):
+        """Save the sprite to an image file.
+
+        ``fname`` indicates the file to save the sprite to.
+
+        If the sprite has multiple frames, the image file saved will be
+        a horizontal reel of each of the frames with no space in between
+        them; the leftmost image is the first frame.
+
+        If ``fname`` is not a file name that can be saved to, IOError
+        will be raised.
+
+        """
+        # TODO
+
+    @classmethod
+    def from_screenshot(cls, x=0, y=0, width=None, height=None):
+        """Return the current display on the screen as a sprite.
+
+        ``x`` and ``y`` indicate the location of the rectangular area to
+        take a screenshot of.  ``width`` and ``height`` indicate the
+        size of the area to take a screenshot of; set to None for all of
+        the screen to the right of ``x`` and below ``y``.
+
+        """
+        # TODO

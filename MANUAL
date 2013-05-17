@@ -75,6 +75,8 @@ IV. Classes
     IV.B.7. sge.Sprite.draw_sprite
     IV.B.8. sge.Sprite.draw_text
     IV.B.9. sge.Sprite.draw_clear
+    IV.B.10. sge.Sprite.save
+    IV.B.11. sge.Sprite.from_screenshot (class method)
   IV.C. sge.BackgroundLayer
     IV.C.1. Constructor Method (sge.BackgroundLayer.__init__)
   IV.D. sge.Background
@@ -1110,6 +1112,37 @@ is best implemented via subclassing SGE's classes.
     sprite that shows the player's current score; when the score
     changes, clear the sprite with this method and then draw the new
     score.
+
+
+    IV.B.10. sge.Sprite.save
+    --------------------------------------------------------------------
+
+    sge.Sprite.save(self, fname)
+
+    Saves this sprite to an image file.  ``fname`` indicates the path of
+    the file to save the sprite to.  If the sprite has multiple frames,
+    the image file saved will be a horizontal reel of each of the frames
+    with no space in between them; the leftmost image is the first
+    frame.  If ``fname`` is not a file name that can be saved to,
+    IOError will be raised.
+
+
+    IV.B.11. sge.Sprite.from_screenshot (class method)
+    --------------------------------------------------------------------
+
+    sge.Sprite.from_screenshot(cls, x=0, y=0, width=None, height=None)
+
+    Creates a sprite from the current display on the screen and returns
+    it.  ``x`` and ``y`` indicate the location of the rectangular area
+    to take a screenshot of.  ``width`` and ``height`` indicate the size
+    of the area to take a screenshot of; set to None for all of the
+    screen to the right of ``x`` and below ``y`` to be included.
+
+    If you only wish to save a screenshot (of the entire screen) to a
+    file, the easiest way to do that is (replacing "foo.png" with any
+    valid image name):
+
+        sge.Sprite.from_screenshot().save("foo.png")
 
 
   IV.C. sge.BackgroundLayer

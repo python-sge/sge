@@ -19,6 +19,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import math
+import random
 
 import sge
 
@@ -181,6 +182,7 @@ class EnemyPlane(Enemy):
     follows_player = False
     directional_guns = False
     shoot_delay = 90
+    points = 200
 
     def __init__(self, x, y):
         super(EnemyPlane, self).__init__(x, y, 5, sprite=self.sprite_normal,
@@ -227,6 +229,12 @@ class EnemyPlane(Enemy):
             self.sprite = self.sprite_flipped
             self.image_index = 0
             self.yvelocity = -8
+
+    def event_destroy(self):
+        if random.random() < 0.05:
+            powerup_choices = ()
+            i = random.randrange(0, len(powerup_choices))
+            powerup_choices[i].create(self.x, self.y)
 
     def shoot(self):
         if self.directional_guns:
@@ -285,10 +293,19 @@ class SmallExplosion(sge.StellarClass):
 
     def __init__(self, x, y):
         super(SmallExplosion, self).__init__(
-            x, y, 5, sprite="1945_explosion_small", detects_collisions=False)
+            x, y, 6, sprite="1945_explosion_small", detects_collisions=False)
 
     def event_animation_end(self):
         self.destroy()
+
+
+class Powerup(sge.StellarClass):
+
+    my_sprite = "1945_powerup_extralife"
+    points = 500
+
+    def __init__(self, x, y):
+        super(Powerup, self).__init__(x, y, 1, sprite=self.my_sprite)
 
 
 def main():

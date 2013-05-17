@@ -619,6 +619,73 @@ class Sprite(object):
 
         self._refresh()
 
+    def save(self, fname):
+        """Save the sprite to an image file.
+
+        ``fname`` indicates the file to save the sprite to.
+
+        If the sprite has multiple frames, the image file saved will be
+        a horizontal reel of each of the frames with no space in between
+        them; the leftmost image is the first frame.
+
+        If ``fname`` is not a file name that can be saved to, IOError
+        will be raised.
+
+        """
+        # Assuming self.width and self.height are the size of all
+        # surfaces in _baseimages (this should be the case).
+        w = self.width * len(self._baseimages)
+        h = self.height
+        reel = pygame.Surface((w, h), pygame.SRCALPHA)
+        reel.fill(pygame.Color(0, 0, 0, 0))
+
+        for i in xrange(len(self._baseimages)):
+            reel.blit(self._baseimages[i], (self.width * i, 0))
+
+        try:
+            pygame.image.save(reel, fname)
+        except pygame.error:
+            m = 'Couldn\'t save to "{0}"'.format(
+                os.path.normpath(os.path.realpath(fname)))
+            raise IOError(m)
+
+    @classmethod
+    def from_screenshot(cls, x=0, y=0, width=None, height=None):
+        """Return the current display on the screen as a sprite.
+
+        ``x`` and ``y`` indicate the location of the rectangular area to
+        take a screenshot of.  ``width`` and ``height`` indicate the
+        size of the area to take a screenshot of; set to None for all of
+        the screen to the right of ``x`` and below ``y``.
+
+        """
+        window = pygame.display.get_surface()
+        w = sge.game.width * sge.game._xscale
+        h = sge.game.height * sge.game._yscale
+        display_surf = pygame.Surface((w, h))
+        display_surf.blit(window, (-sge.game._x, -sge.game._y))
+
+        if sge.game.scale_smooth:
+            try:
+                display_surf = pygame.transform.smoothscale(
+                    display_surf, (sge.game.width, sge.game.height))
+            except pygame.error:
+                display_surf = pygame.transform.scale(
+                    display_surf, (sge.game.width, sge.game.height))
+        else:
+            display_surf = pygame.transform.scale(
+                display_surf, (sge.game.width, sge.game.height))
+
+        if width is None:
+            width = display_surf.get_width() - x
+        if height is None:
+            height = display_surf.get_height() - y
+
+        sprite = cls(width=width, height=height)
+        sprite._baseimages[0].blit(display_surf, (-x, -y))
+        sprite._refresh()
+        return sprite
+
     def _refresh(self):
         # Set the _images list based on the variables.
         sge.game._background_changed = True
