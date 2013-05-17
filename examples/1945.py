@@ -106,6 +106,8 @@ class Player(sge.StellarClass):
             if isinstance(other, Enemy):
                 self.hurt()
                 other.kill()
+            elif isinstance(other, Powerup):
+                other.collect(self)
 
     def event_animation_end(self):
         if self.exploding:
@@ -306,6 +308,54 @@ class Powerup(sge.StellarClass):
 
     def __init__(self, x, y):
         super(Powerup, self).__init__(x, y, 1, sprite=self.my_sprite)
+
+    def collect(self, other):
+        glob.score += self.points
+        self.destroy()
+
+
+class SideGunsUpgrade(Powerup):
+
+    my_sprite = "1945_powerup_sideguns"
+    upgrade_level = 1
+
+    def event_create(self):
+        if glob.player.upgrade_level != self.upgrade_level:
+            self.destroy()
+
+    def collect(self, other):
+        other.upgrade_level = max(other.upgrade_level, self.upgrade_level)
+        super(SideGunsUpgrade, self).collect(other)
+
+
+class BackGunsUpgrade(SideGunsUpgrade):
+
+    my_sprite = '1945_powerup_backguns'
+    upgrade_level = 2
+
+
+class SpreadGunsUpgrade(SideGunsUpgrade):
+
+    my_sprite = '1945_powerup_spreadguns'
+    upgrade_level = 3
+
+
+class ShieldBoost(Powerup):
+
+    my_sprite = '1945_powerup_shield'
+
+    def collect(self, other):
+        other.shield += 1
+        super(ShieldBoost, self).collect(other)
+
+
+class ExtraLife(Powerup):
+
+    my_sprite = '1945_powerup_extralife'
+
+    def collect(self, other):
+        glob.lives += 1
+        super(ExtraLife, self).collect(other)
 
 
 def main():
