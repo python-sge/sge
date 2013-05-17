@@ -47,24 +47,26 @@ IV. Classes
     IV.A.13. sge.Game.event_mouse_button_release
     IV.A.14. sge.Game.event_joystick_axis_move
     IV.A.15. sge.Game.event_joystick_hat_move
-    IV.A.16. sge.Game.event_joystick_button_press
-    IV.A.17. sge.Game.event_joystick_button_release
-    IV.A.18. sge.Game.event_close
-    IV.A.19. sge.Game.event_mouse_collision
-    IV.A.20. sge.Game.event_mouse_collision_left
-    IV.A.21. sge.Game.event_mouse_collision_right
-    IV.A.22. sge.Game.event_mouse_collision_top
-    IV.A.23. sge.Game.event_mouse_collision_bottom
-    IV.A.24. sge.Game.event_paused_key_press
-    IV.A.25. sge.Game.event_paused_key_release
-    IV.A.26. sge.Game.event_paused_mouse_move
-    IV.A.27. sge.Game.event_paused_mouse_button_press
-    IV.A.28. sge.Game.event_paused_mouse_button_release
-    IV.A.29. sge.Game.event_paused_joystick_axis_move
-    IV.A.30. sge.Game.event_paused_joystick_hat_move
-    IV.A.31. sge.Game.event_paused_joystick_button_press
-    IV.A.32. sge.Game.event_paused_joystick_button_release
-    IV.A.33. sge.Game.event_paused_close
+    IV.A.16. sge.Game.event_joystick_trackball_move
+    IV.A.17. sge.Game.event_joystick_button_press
+    IV.A.18. sge.Game.event_joystick_button_release
+    IV.A.19. sge.Game.event_close
+    IV.A.20. sge.Game.event_mouse_collision
+    IV.A.21. sge.Game.event_mouse_collision_left
+    IV.A.22. sge.Game.event_mouse_collision_right
+    IV.A.23. sge.Game.event_mouse_collision_top
+    IV.A.24. sge.Game.event_mouse_collision_bottom
+    IV.A.25. sge.Game.event_paused_key_press
+    IV.A.26. sge.Game.event_paused_key_release
+    IV.A.27. sge.Game.event_paused_mouse_move
+    IV.A.28. sge.Game.event_paused_mouse_button_press
+    IV.A.29. sge.Game.event_paused_mouse_button_release
+    IV.A.30. sge.Game.event_paused_joystick_axis_move
+    IV.A.31. sge.Game.event_paused_joystick_hat_move
+    IV.A.32. sge.Game.event_paused_joystick_trackball_move
+    IV.A.33. sge.Game.event_paused_joystick_button_press
+    IV.A.34. sge.Game.event_paused_joystick_button_release
+    IV.A.35. sge.Game.event_paused_close
   IV.B. sge.Sprite
     IV.B.1. Constructor Method (sge.Sprite.__init__)
     IV.B.2. sge.Sprite.draw_dot
@@ -119,33 +121,36 @@ IV. Classes
     IV.H.15. sge.StellarClass.event_mouse_button_release
     IV.H.16. sge.StellarClass.event_joystick_axis_move
     IV.H.17. sge.StellarClass.event_joystick_hat_move
-    IV.H.18. sge.StellarClass.event_joystick_button_press
-    IV.H.19. sge.StellarClass.event_joystick_button_release
-    IV.H.20. sge.StellarClass.event_collision
-    IV.H.21. sge.StellarClass.event_collision_left
-    IV.H.22. sge.StellarClass.event_collision_right
-    IV.H.23. sge.StellarClass.event_collision_top
-    IV.H.24. sge.StellarClass.event_collision_bottom
-    IV.H.25. sge.StellarClass.event_inactive_step
-    IV.H.26. sge.StellarClass.event_inactive_key_press
-    IV.H.27. sge.StellarClass.event_inactive_key_release
-    IV.H.28. sge.StellarClass.event_inactive_mouse_move
-    IV.H.29. sge.StellarClass.event_inactive_mouse_button_press
-    IV.H.30. sge.StellarClass.event_inactive_mouse_button_release
-    IV.H.31. sge.StellarClass.event_inactive_joystick_axis_move
-    IV.H.32. sge.StellarClass.event_inactive_joystick_hat_move
-    IV.H.33. sge.StellarClass.event_inactive_joystick_button_press
-    IV.H.34. sge.StellarClass.event_inactive_joystick_button_release
-    IV.H.35. sge.StellarClass.event_paused_key_press
-    IV.H.36. sge.StellarClass.event_paused_key_release
-    IV.H.37. sge.StellarClass.event_paused_mouse_move
-    IV.H.38. sge.StellarClass.event_paused_mouse_button_press
-    IV.H.39. sge.StellarClass.event_paused_mouse_button_release
-    IV.H.40. sge.StellarClass.event_paused_joystick_axis_move
-    IV.H.41. sge.StellarClass.event_paused_joystick_hat_move
-    IV.H.42. sge.StellarClass.event_paused_joystick_button_press
-    IV.H.43. sge.StellarClass.event_paused_joystick_button_release
-    IV.H.44. sge.StellarClass.create (class method)
+    IV.H.18. sge.StellarClass.event_joystick_trackball_move
+    IV.H.19. sge.StellarClass.event_joystick_button_press
+    IV.H.20. sge.StellarClass.event_joystick_button_release
+    IV.H.21. sge.StellarClass.event_collision
+    IV.H.22. sge.StellarClass.event_collision_left
+    IV.H.23. sge.StellarClass.event_collision_right
+    IV.H.24. sge.StellarClass.event_collision_top
+    IV.H.25. sge.StellarClass.event_collision_bottom
+    IV.H.26. sge.StellarClass.event_inactive_step
+    IV.H.27. sge.StellarClass.event_inactive_key_press
+    IV.H.28. sge.StellarClass.event_inactive_key_release
+    IV.H.29. sge.StellarClass.event_inactive_mouse_move
+    IV.H.30. sge.StellarClass.event_inactive_mouse_button_press
+    IV.H.31. sge.StellarClass.event_inactive_mouse_button_release
+    IV.H.32. sge.StellarClass.event_inactive_joystick_axis_move
+    IV.H.33. sge.StellarClass.event_inactive_joystick_hat_move
+    IV.H.34. sge.StellarClass.event_inactive_joystick_trackball_move
+    IV.H.35. sge.StellarClass.event_inactive_joystick_button_press
+    IV.H.36. sge.StellarClass.event_inactive_joystick_button_release
+    IV.H.37. sge.StellarClass.event_paused_key_press
+    IV.H.38. sge.StellarClass.event_paused_key_release
+    IV.H.39. sge.StellarClass.event_paused_mouse_move
+    IV.H.40. sge.StellarClass.event_paused_mouse_button_press
+    IV.H.41. sge.StellarClass.event_paused_mouse_button_release
+    IV.H.42. sge.StellarClass.event_paused_joystick_axis_move
+    IV.H.43. sge.StellarClass.event_paused_joystick_hat_move
+    IV.H.44. sge.StellarClass.event_paused_joystick_trackball_move
+    IV.H.45. sge.StellarClass.event_paused_joystick_button_press
+    IV.H.46. sge.StellarClass.event_paused_joystick_button_release
+    IV.H.47. sge.StellarClass.create (class method)
   IV.I. sge.Room
     IV.I.1. Constructor Method (sge.Room.__init__)
     IV.I.2. sge.Room.add
@@ -169,19 +174,21 @@ IV. Classes
     IV.I.20. sge.Room.event_mouse_button_release
     IV.I.21. sge.Room.event_joystick_axis_move
     IV.I.22. sge.Room.event_joystick_hat_move
-    IV.I.23. sge.Room.event_joystick_button_press
-    IV.I.24. sge.Room.event_joystick_button_release
-    IV.I.25. sge.Room.event_close
-    IV.I.26. sge.Room.event_paused_key_press
-    IV.I.27. sge.Room.event_paused_key_release
-    IV.I.28. sge.Room.event_paused_mouse_move
-    IV.I.29. sge.Room.event_paused_mouse_button_press
-    IV.I.30. sge.Room.event_puased_mouse_button_release
-    IV.I.31. sge.Room.event_paused_joystick_axis_move
-    IV.I.32. sge.Room.event_paused_joystick_hat_move
-    IV.I.33. sge.Room.event_paused_joystick_button_press
-    IV.I.34. sge.Room.event_paused_joystick_button_release
-    IV.I.35. sge.Room.event_paused_close
+    IV.I.23. sge.Room.event_joystick_trackball_move
+    IV.I.24. sge.Room.event_joystick_button_press
+    IV.I.25. sge.Room.event_joystick_button_release
+    IV.I.26. sge.Room.event_close
+    IV.I.27. sge.Room.event_paused_key_press
+    IV.I.28. sge.Room.event_paused_key_release
+    IV.I.29. sge.Room.event_paused_mouse_move
+    IV.I.30. sge.Room.event_paused_mouse_button_press
+    IV.I.31. sge.Room.event_puased_mouse_button_release
+    IV.I.32. sge.Room.event_paused_joystick_axis_move
+    IV.I.33. sge.Room.event_paused_joystick_hat_move
+    IV.I.34. sge.Room.event_paused_joystick_trackball_move
+    IV.I.35. sge.Room.event_paused_joystick_button_press
+    IV.I.36. sge.Room.event_paused_joystick_button_release
+    IV.I.37. sge.Room.event_paused_close
   IV.J. sge.View
 V. Functions
   V.A. sge.get_key_pressed
@@ -678,7 +685,23 @@ is best implemented via subclassing SGE's classes.
     Support for joysticks in SGE implementations is optional.
 
 
-    IV.A.16. sge.Game.event_joystick_button_press
+    IV.A.16. sge.Game.event_joystick_trackball_move
+    --------------------------------------------------------------------
+
+    sge.Game.event_joystick_trackball_move(self, joystick, ball, x, y)
+
+    Joystick Trackball Move event.  This event is executed when a
+    trackball on a joystick moves.  ``joystick`` indicates the number of
+    the joystick, where 0 is the first joystick.  ``ball`` indicates the
+    number of the trackball, where 0 is the first trackball.  ``x``
+    indicates the horizontal movement of the trackball, where movement
+    to the right is positive.  ``y`` indicates the vertical movement of
+    the trackball, where downward movement is positive.
+
+    Support for joysticks in SGE implementations is optional.
+
+
+    IV.A.17. sge.Game.event_joystick_button_press
     --------------------------------------------------------------------
 
     sge.Game.event_joystick_button_press(self, joystick, button)
@@ -692,7 +715,7 @@ is best implemented via subclassing SGE's classes.
     Support for joysticks in SGE implementations is optional.
 
 
-    IV.A.17. sge.Game.event_joystick_button_release
+    IV.A.18. sge.Game.event_joystick_button_release
     --------------------------------------------------------------------
 
     sge.Game.event_joystick_button_release(self, joystick, button)
@@ -706,7 +729,7 @@ is best implemented via subclassing SGE's classes.
     Support for joysticks in SGE implementations is optional.
 
 
-    IV.A.18. sge.Game.event_close
+    IV.A.19. sge.Game.event_close
     --------------------------------------------------------------------
 
     sge.Game.event_close(self)
@@ -717,7 +740,7 @@ is best implemented via subclassing SGE's classes.
     sge.Room.event_close occurring at the same time.
 
 
-    IV.A.19. sge.Game.event_mouse_collision
+    IV.A.20. sge.Game.event_mouse_collision
     --------------------------------------------------------------------
 
     sge.Game.event_mouse_collision(self, other)
@@ -732,7 +755,7 @@ is best implemented via subclassing SGE's classes.
     indicates the other object which was collided with.
 
 
-    IV.A.20. sge.Game.event_mouse_collision_left
+    IV.A.21. sge.Game.event_mouse_collision_left
     --------------------------------------------------------------------
 
     sge.Game.event_mouse_collision_left(self, other)
@@ -742,7 +765,7 @@ is best implemented via subclassing SGE's classes.
     indicates the other object which was collided with.
 
 
-    IV.A.21. sge.Game.event_mouse_collision_right
+    IV.A.22. sge.Game.event_mouse_collision_right
     --------------------------------------------------------------------
 
     sge.Game.event_mouse_collision_right(self, other)
@@ -752,7 +775,7 @@ is best implemented via subclassing SGE's classes.
     indicates the other object which was collided with.
 
 
-    IV.A.22. sge.Game.event_mouse_collision_top
+    IV.A.23. sge.Game.event_mouse_collision_top
     --------------------------------------------------------------------
 
     sge.Game.event_mouse_collision_top(self, other)
@@ -762,7 +785,7 @@ is best implemented via subclassing SGE's classes.
     indicates the other object which was collided with.
 
 
-    IV.A.23. sge.Game.event_mouse_collision_bottom
+    IV.A.24. sge.Game.event_mouse_collision_bottom
     --------------------------------------------------------------------
 
     sge.Game.event_mouse_collision_bottom(self, other)
@@ -772,7 +795,7 @@ is best implemented via subclassing SGE's classes.
     indicates the other object which was collided with.
 
 
-    IV.A.24. sge.Game.event_paused_key_press
+    IV.A.25. sge.Game.event_paused_key_press
     --------------------------------------------------------------------
 
     sge.Game.event_paused_key_press(self, key)
@@ -780,7 +803,7 @@ is best implemented via subclassing SGE's classes.
     Key Press event when the game is paused.
 
 
-    IV.A.25. sge.Game.event_paused_key_release
+    IV.A.26. sge.Game.event_paused_key_release
     --------------------------------------------------------------------
 
     sge.Game.event_paused_key_release(self, key)
@@ -788,7 +811,7 @@ is best implemented via subclassing SGE's classes.
     Key Release event when the game is paused.
 
 
-    IV.A.26. sge.Game.event_paused_mouse_move
+    IV.A.27. sge.Game.event_paused_mouse_move
     --------------------------------------------------------------------
 
     sge.Game.event_paused_mouse_move(self, x, y)
@@ -796,7 +819,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Move event when the game is paused.
 
 
-    IV.A.27. sge.Game.event_paused_mouse_button_press
+    IV.A.28. sge.Game.event_paused_mouse_button_press
     --------------------------------------------------------------------
 
     sge.Game.event_paused_mouse_button_press(self, button)
@@ -804,7 +827,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Button Press event when the game is paused.
 
 
-    IV.A.28. sge.Game.event_paused_mouse_button_release
+    IV.A.29. sge.Game.event_paused_mouse_button_release
     --------------------------------------------------------------------
 
     sge.Game.event_paused_mouse_button_release
@@ -812,7 +835,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Button Release event when the game is paused.
 
 
-    IV.A.29. sge.Game.event_paused_joystick_axis_move
+    IV.A.30. sge.Game.event_paused_joystick_axis_move
     --------------------------------------------------------------------
 
     sge.Game.event_paused_joystick_axis_move(self, joystick, axis,
@@ -821,7 +844,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Axis Move event when the game is paused.
 
 
-    IV.A.30. sge.Game.event_paused_joystick_hat_move
+    IV.A.31. sge.Game.event_paused_joystick_hat_move
     --------------------------------------------------------------------
 
     sge.Game.event_paused_joystick_hat_move(self, joystick, hat, x, y)
@@ -829,7 +852,16 @@ is best implemented via subclassing SGE's classes.
     Joystick HAT Move event when the game is paused.
 
 
-    IV.A.31. sge.Game.event_paused_joystick_button_press
+    IV.A.32. sge.Game.event_paused_joystick_trackball_move
+    --------------------------------------------------------------------
+
+    sge.Game.event_paused_joystick_trackball_move(self, joystick, ball,
+        x, y)
+
+    Joystick Trackball Move event when the game is paused.
+
+
+    IV.A.33. sge.Game.event_paused_joystick_button_press
     --------------------------------------------------------------------
 
     sge.Game.event_paused_joystick_button_press(self, joystick, button)
@@ -837,7 +869,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Button Press event when the game is paused.
 
 
-    IV.A.32. sge.Game.event_paused_joystick_button_release
+    IV.A.34. sge.Game.event_paused_joystick_button_release
     --------------------------------------------------------------------
 
     sge.Game.event_paused_joystick_button_release(self, joystick,
@@ -846,7 +878,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Button Release event when the game is paused.
 
 
-    IV.A.33. sge.Game.event_paused_close
+    IV.A.35. sge.Game.event_paused_close
     --------------------------------------------------------------------
 
     sge.Game.event_paused_close(self)
@@ -1804,7 +1836,24 @@ is best implemented via subclassing SGE's classes.
     Support for joysticks in SGE implementations is optional.
 
 
-    IV.H.18. sge.StellarClass.event_joystick_button_press
+    IV.H.18. sge.StellarClass.event_joystick_trackball_move
+    --------------------------------------------------------------------
+
+    sge.StellarClass.event_joystick_trackball_move(self, joystick, ball,
+        x, y)
+
+    Joystick Trackball Move event.  This event is executed when a
+    trackball on a joystick moves.  ``joystick`` indicates the number of
+    the joystick, where 0 is the first joystick.  ``ball`` indicates the
+    number of the trackball, where 0 is the first trackball.  ``x``
+    indicates the horizontal movement of the trackball, where movement
+    to the right is positive.  ``y`` indicates the vertical movement of
+    the trackball, where downward movement is positive.
+
+    Support for joysticks in SGE implementations is optional.
+
+
+    IV.H.19. sge.StellarClass.event_joystick_button_press
     --------------------------------------------------------------------
 
     sge.StellarClass.event_joystick_button_press(self, joystick, button)
@@ -1818,7 +1867,7 @@ is best implemented via subclassing SGE's classes.
     Support for joysticks in SGE implementations is optional.
 
 
-    IV.H.19. sge.StellarClass.event_joystick_button_release
+    IV.H.20. sge.StellarClass.event_joystick_button_release
     --------------------------------------------------------------------
 
     sge.StellarClass.event_joystick_button_release(self, joystick,
@@ -1833,7 +1882,7 @@ is best implemented via subclassing SGE's classes.
     Support for joysticks in SGE implementations is optional.
 
 
-    IV.H.20. sge.StellarClass.event_collision
+    IV.H.21. sge.StellarClass.event_collision
     --------------------------------------------------------------------
 
     sge.StellarClass.event_collision(self, other)
@@ -1848,7 +1897,7 @@ is best implemented via subclassing SGE's classes.
     other object which was collided with.
 
 
-    IV.H.21. sge.StellarClass.event_collision_left
+    IV.H.22. sge.StellarClass.event_collision_left
     --------------------------------------------------------------------
 
     sge.StellarClass.event_collision_left(self, other)
@@ -1858,7 +1907,7 @@ is best implemented via subclassing SGE's classes.
     other object which was collided with.
 
 
-    IV.H.22. sge.StellarClass.event_collision_right
+    IV.H.23. sge.StellarClass.event_collision_right
     --------------------------------------------------------------------
 
     sge.StellarClass.event_collision_right(self, other)
@@ -1868,7 +1917,7 @@ is best implemented via subclassing SGE's classes.
     other object which was collided with.
 
 
-    IV.H.23. sge.StellarClass.event_collision_top
+    IV.H.24. sge.StellarClass.event_collision_top
     --------------------------------------------------------------------
 
     sge.StellarClass.event_collision_top(self, other)
@@ -1878,7 +1927,7 @@ is best implemented via subclassing SGE's classes.
     other object which was collided with.
 
 
-    IV.H.24. sge.StellarClass.event_collision_bottom
+    IV.H.25. sge.StellarClass.event_collision_bottom
     --------------------------------------------------------------------
 
     sge.StellarClass.event_collision_bottom(self, other)
@@ -1888,7 +1937,7 @@ is best implemented via subclassing SGE's classes.
     other object which was collided with.
 
 
-    IV.H.25. sge.StellarClass.event_inactive_step
+    IV.H.26. sge.StellarClass.event_inactive_step
     --------------------------------------------------------------------
 
     sge.StellarClass.event_inactive_step(self, time_passed)
@@ -1896,7 +1945,7 @@ is best implemented via subclassing SGE's classes.
     Step event when the object is inactive.
 
 
-    IV.H.26. sge.StellarClass.event_inactive_key_press
+    IV.H.27. sge.StellarClass.event_inactive_key_press
     --------------------------------------------------------------------
 
     sge.StellarClass.event_inactive_key_press(self, key)
@@ -1904,7 +1953,7 @@ is best implemented via subclassing SGE's classes.
     Key Press event when the object is inactive.
 
 
-    IV.H.27. sge.StellarClass.event_inactive_key_release
+    IV.H.28. sge.StellarClass.event_inactive_key_release
     --------------------------------------------------------------------
 
     sge.StellarClass.event_inactive_key_release(self, key)
@@ -1912,7 +1961,7 @@ is best implemented via subclassing SGE's classes.
     Key Release event when the object is inactive.
 
 
-    IV.H.28. sge.StellarClass.event_inactive_mouse_move
+    IV.H.29. sge.StellarClass.event_inactive_mouse_move
     --------------------------------------------------------------------
 
     sge.StellarClass.event_inactive_mouse_move(self, x, y)
@@ -1920,7 +1969,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Move event when the object is inactive.
 
 
-    IV.H.29. sge.StellarClass.event_inactive_mouse_button_press
+    IV.H.30. sge.StellarClass.event_inactive_mouse_button_press
     --------------------------------------------------------------------
 
     sge.StellarClass.event_inactive_mouse_button_press(self, button)
@@ -1928,7 +1977,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Button Press event when the object is inactive.
 
 
-    IV.H.30. sge.StellarClass.event_inactive_mouse_button_release
+    IV.H.31. sge.StellarClass.event_inactive_mouse_button_release
     --------------------------------------------------------------------
 
     sge.StellarClass.event_inactive_mouse_button_release(self, button)
@@ -1936,7 +1985,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Button Release event when the object is inactive.
 
 
-    IV.H.31. sge.StellarClass.event_inactive_joystick_axis_move
+    IV.H.32. sge.StellarClass.event_inactive_joystick_axis_move
     --------------------------------------------------------------------
 
     sge.StellarClass.event_inactive_joystick_axis_move(self, joystick,
@@ -1945,7 +1994,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Axis Move event when the object is inactive.
 
 
-    IV.H.32. sge.StellarClass.event_inactive_joystick_hat_move
+    IV.H.33. sge.StellarClass.event_inactive_joystick_hat_move
     --------------------------------------------------------------------
 
     sge.StellarClass.event_inactive_joystick_hat_move(self, joystick,
@@ -1954,7 +2003,16 @@ is best implemented via subclassing SGE's classes.
     Joystick HAT Move event when the object is inactive.
 
 
-    IV.H.33. sge.StellarClass.event_inactive_joystick_button_press
+    IV.H.34. sge.StellarClass.event_inactive_joystick_trackball_move
+    --------------------------------------------------------------------
+
+    sge.StellarClass.event_inactive_joystick_trackball_move(self,
+        joystick, ball, x, y)
+
+    Joystick Trackball Move event when the object is inactive.
+
+
+    IV.H.35. sge.StellarClass.event_inactive_joystick_button_press
     --------------------------------------------------------------------
 
     sge.StellarClass.event_inactive_joystick_button_press(self,
@@ -1963,7 +2021,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Button Press event when the object is inactive.
 
 
-    IV.H.34. sge.StellarClass.event_inactive_joystick_button_release
+    IV.H.36. sge.StellarClass.event_inactive_joystick_button_release
     --------------------------------------------------------------------
 
     sge.StellarClass.event_inactive_joystick_button_release(self,
@@ -1972,7 +2030,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Button Release event when the object is inactive.
 
 
-    IV.H.35. sge.StellarClass.event_paused_key_press
+    IV.H.37. sge.StellarClass.event_paused_key_press
     --------------------------------------------------------------------
 
     sge.StellarClass.event_paused_key_press(self, key)
@@ -1980,7 +2038,7 @@ is best implemented via subclassing SGE's classes.
     Key Press event when the game is paused.
 
 
-    IV.H.36. sge.StellarClass.event_paused_key_release
+    IV.H.38. sge.StellarClass.event_paused_key_release
     --------------------------------------------------------------------
 
     sge.StellarClass.event_paused_key_release(self, key)
@@ -1988,7 +2046,7 @@ is best implemented via subclassing SGE's classes.
     Key Release event when the game is paused.
 
 
-    IV.H.37. sge.StellarClass.event_paused_mouse_move
+    IV.H.39. sge.StellarClass.event_paused_mouse_move
     --------------------------------------------------------------------
 
     sge.StellarClass.event_paused_mouse_move(self, x, y)
@@ -1996,7 +2054,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Move event when the game is paused.
 
 
-    IV.H.38. sge.StellarClass.event_paused_mouse_button_press
+    IV.H.40. sge.StellarClass.event_paused_mouse_button_press
     --------------------------------------------------------------------
 
     sge.StellarClass.event_paused_mouse_button_press(self, button)
@@ -2004,7 +2062,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Button Press event when the game is paused.
 
 
-    IV.H.39. sge.StellarClass.event_paused_mouse_button_release
+    IV.H.41. sge.StellarClass.event_paused_mouse_button_release
     --------------------------------------------------------------------
 
     sge.StellarClass.event_paused_mouse_button_release(self, button)
@@ -2012,7 +2070,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Button Release event when the game is paused.
 
 
-    IV.H.40. sge.StellarClass.event_paused_joystick_axis_move
+    IV.H.42. sge.StellarClass.event_paused_joystick_axis_move
     --------------------------------------------------------------------
 
     sge.StellarClass.event_paused_joystick_axis_move(self, joystick,
@@ -2021,7 +2079,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Axis Move event when the game is paused.
 
 
-    IV.H.41. sge.StellarClass.event_paused_joystick_hat_move
+    IV.H.43. sge.StellarClass.event_paused_joystick_hat_move
     --------------------------------------------------------------------
 
     sge.StellarClass.event_paused_joystick_hat_move(self, joystick, hat,
@@ -2030,7 +2088,16 @@ is best implemented via subclassing SGE's classes.
     Joystick HAT Move event when the game is paused.
 
 
-    IV.H.42. sge.StellarClass.event_paused_joystick_button_press
+    IV.H.44. sge.StellarClass.event_paused_joystick_trackball_move
+    --------------------------------------------------------------------
+
+    sge.StellarClass.event_paused_joystick_trackball_move(self,
+        joystick, ball, x, y)
+
+    Joystick Trackball Move event when the game is paused.
+
+
+    IV.H.45. sge.StellarClass.event_paused_joystick_button_press
     --------------------------------------------------------------------
 
     sge.StellarClass.event_paused_joystick_button_press(self, joystick,
@@ -2039,7 +2106,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Button Press event when the game is paused.
 
 
-    IV.H.43. sge.StellarClass.event_paused_joystick_button_release
+    IV.H.46. sge.StellarClass.event_paused_joystick_button_release
     --------------------------------------------------------------------
 
     sge.StellarClass.event_paused_joystick_button_release(self,
@@ -2048,7 +2115,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Button Release event when the game is paused.
 
 
-    IV.H.44. sge.StellarClass.create (class method)
+    IV.H.47. sge.StellarClass.create (class method)
     --------------------------------------------------------------------
 
     sge.StellarClass.create(cls, *args, **kwargs)
@@ -2422,7 +2489,23 @@ is best implemented via subclassing SGE's classes.
     Support for joysticks in SGE implementations is optional.
 
 
-    IV.I.23. sge.Room.event_joystick_button_press
+    IV.I.23. sge.Room.event_joystick_trackball_move
+    --------------------------------------------------------------------
+
+    sge.Room.event_joystick_trackball_move(self, joystick, ball, x, y)
+
+    Joystick Trackball Move event.  This event is executed when a
+    trackball on a joystick moves.  ``joystick`` indicates the number of
+    the joystick, where 0 is the first joystick.  ``ball`` indicates the
+    number of the trackball, where 0 is the first trackball.  ``x``
+    indicates the horizontal movement of the trackball, where movement
+    to the right is positive.  ``y`` indicates the vertical movement of
+    the trackball, where downward movement is positive.
+
+    Support for joysticks in SGE implementations is optional.
+
+
+    IV.I.24. sge.Room.event_joystick_button_press
     --------------------------------------------------------------------
 
     sge.Room.event_joystick_button_press(self, joystick, button)
@@ -2436,7 +2519,7 @@ is best implemented via subclassing SGE's classes.
     Support for joysticks in SGE implementations is optional.
 
 
-    IV.I.24. sge.Room.event_joystick_button_release
+    IV.I.25. sge.Room.event_joystick_button_release
     --------------------------------------------------------------------
 
     sge.Room.event_joystick_button_release(self, joystick, button)
@@ -2450,7 +2533,7 @@ is best implemented via subclassing SGE's classes.
     Support for joysticks in SGE implementations is optional.
 
 
-    IV.I.25. sge.Room.event_close
+    IV.I.26. sge.Room.event_close
     --------------------------------------------------------------------
 
     sge.Room.event_close(self)
@@ -2461,7 +2544,7 @@ is best implemented via subclassing SGE's classes.
     sge.Game.event_close occurring at the same time.
 
 
-    IV.I.26. sge.Room.event_paused_key_press
+    IV.I.27. sge.Room.event_paused_key_press
     --------------------------------------------------------------------
 
     sge.Room.event_paused_key_press(self, key)
@@ -2469,7 +2552,7 @@ is best implemented via subclassing SGE's classes.
     Key Press event when the game is paused.
 
 
-    IV.I.27. sge.Room.event_paused_key_release
+    IV.I.28. sge.Room.event_paused_key_release
     --------------------------------------------------------------------
 
     sge.Room.event_paused_key_release(self, key)
@@ -2477,7 +2560,7 @@ is best implemented via subclassing SGE's classes.
     Key Release event when the game is paused.
 
 
-    IV.I.28. sge.Room.event_paused_mouse_move
+    IV.I.29. sge.Room.event_paused_mouse_move
     --------------------------------------------------------------------
 
     sge.Room.event_paused_mouse_move(self, x, y)
@@ -2485,7 +2568,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Move event when the game is paused.
 
 
-    IV.I.29. sge.Room.event_paused_mouse_button_press
+    IV.I.30. sge.Room.event_paused_mouse_button_press
     --------------------------------------------------------------------
 
     sge.Room.event_paused_mouse_button_press(self, button)
@@ -2493,7 +2576,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Button Press event when the game is paused.
 
 
-    IV.I.30. sge.Room.event_paused_mouse_button_release
+    IV.I.31. sge.Room.event_paused_mouse_button_release
     --------------------------------------------------------------------
 
     sge.Room.event_paused_mouse_button_release(self, button)
@@ -2501,7 +2584,7 @@ is best implemented via subclassing SGE's classes.
     Mouse Button Release event when the game is paused.
 
 
-    IV.I.31. sge.Room.event_paused_joystick_axis_move
+    IV.I.32. sge.Room.event_paused_joystick_axis_move
     --------------------------------------------------------------------
 
     sge.Room.event_paused_joystick_axis_move(self, joystick, axis,
@@ -2510,7 +2593,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Axis Move event when the game is paused.
 
 
-    IV.I.32. sge.Room.event_paused_joystick_hat_move
+    IV.I.33. sge.Room.event_paused_joystick_hat_move
     --------------------------------------------------------------------
 
     sge.Room.event_paused_joystick_hat_move(self, joystick, hat, x, y)
@@ -2518,7 +2601,16 @@ is best implemented via subclassing SGE's classes.
     Joystick HAT Move event when the game is paused.
 
 
-    IV.I.33. sge.Room.event_paused_joystick_button_press
+    IV.I.34. sge.Room.event_paused_joystick_trackball_move
+    --------------------------------------------------------------------
+
+    sge.Room.event_paused_joystick_trackball_move(self, joystick, ball,
+        x, y)
+
+    Joystick Trackball Move event when the game is paused.
+
+
+    IV.I.35. sge.Room.event_paused_joystick_button_press
     --------------------------------------------------------------------
 
     sge.Room.event_paused_joystick_button_press(self, joystick, button)
@@ -2526,7 +2618,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Button Press event when the game is paused.
 
 
-    IV.I.34. sge.Room.event_paused_joystick_button_release
+    IV.I.36. sge.Room.event_paused_joystick_button_release
     --------------------------------------------------------------------
 
     sge.Room.event_paused_joystick_button_release(self, joystick,
@@ -2535,7 +2627,7 @@ is best implemented via subclassing SGE's classes.
     Joystick Button Release event when the game is paused.
 
 
-    IV.I.35. sge.Room.event_paused_close
+    IV.I.37. sge.Room.event_paused_close
     --------------------------------------------------------------------
 
     sge.Room.event_paused_close(self)

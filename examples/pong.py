@@ -20,11 +20,6 @@ from __future__ import unicode_literals
 
 import sge
 
-# The Pygame implementation has extra trackball support.  In Pong,
-# taking advantage of this support is useful.
-if "Pygame" in sge.IMPLEMENTATION:
-    sge.real_trackballs = True
-
 
 class glob(object):
 
@@ -123,14 +118,10 @@ class Player(sge.StellarClass):
 
         self.axis_motion = 0
 
-    def event_joystick_axis_move(self, joystick, axis, value):
-        # Note: This is designed for trackballs and doesn't work very
-        # well with actual joysticks.  It only works when there is
-        # constant axis movement, which is consistent with the
-        # behavior of trackballs.
-        if joystick == self.joystick and axis / 2 != axis // 2:
-            if abs(value) > abs(self.axis_motion):
-                self.axis_motion = value
+    def event_joystick_trackball_move(self, joystick, ball, x, y):
+        if joystick == self.joystick:
+            if abs(y) > abs(self.axis_motion):
+                self.axis_motion = y
 
 
 class Ball(sge.StellarClass):
