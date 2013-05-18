@@ -53,10 +53,14 @@ class Sprite(object):
             image at.
         bbox_x: The horizontal location of the top-left corner of the
             suggested bounding box to use with this sprite, where
-            origin_x is 0 and bbox_x increases toward the right.
+            origin_x is 0 and bbox_x increases toward the right.  If
+            set to None, it will become equal to -origin_x (which is
+            always the left edge of the image).
         bbox_y: The vertical location of the top-left corner of the
             suggested bounding box to use with this sprite, where
-            origin_y is 0 and bbox_y increases toward the bottom.
+            origin_y is 0 and bbox_y increases toward the bottom.  If
+            set to None, it will become equal to -origin_y (which is
+            always the top edge of the image).
         bbox_width: The width of the suggested bounding box in pixels.
         bbox_height: The height of the suggested bounding box in pixels.
 
@@ -105,9 +109,31 @@ class Sprite(object):
             self._transparent = value
             self._refresh()
 
+    @property
+    def bbox_x(self):
+        return self._bbox_x
+
+    @bbox_x.setter
+    def bbox_x(self, value):
+        if value is not None:
+            self._bbox_x = value
+        else:
+            self._bbox_x = -self.origin_x
+
+    @property
+    def bbox_y(self):
+        return self._bbox_y
+
+    @bbox_y.setter
+    def bbox_y(self, value):
+        if value is not None:
+            self._bbox_y = value
+        else:
+            self._bbox_y = -self.origin_y
+
     def __init__(self, name=None, width=None, height=None, origin_x=0,
-                 origin_y=0, transparent=True, fps=60, bbox_x=0, bbox_y=0,
-                 bbox_width=None, bbox_height=None):
+                 origin_y=0, transparent=True, fps=60, bbox_x=None,
+                 bbox_y=None, bbox_width=None, bbox_height=None):
         """Create a new Sprite object.
 
         ``name`` indicates the base name of the image files.  Files are

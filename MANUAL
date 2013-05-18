@@ -912,9 +912,13 @@ is best implemented via subclassing SGE's classes.
   * fps: The suggested rate in frames per second to animate the image
       at.
   * bbox_x: The horizontal location relative to the sprite of the
-      suggested bounding box to use with it.
+      suggested bounding box to use with it.  If set to None, it will
+      become equal to -origin_x (which is always the left edge of the
+      image).
   * bbox_y: The vertical location relative to the sprite of the
-      suggested bounding box to use with it.
+      suggested bounding box to use with it.  If set to None, it will
+      become equal to -origin_y (which is always the top edge of the
+      image).
   * bbox_width: The width of the suggested bounding box in pixels.
   * bbox_height: The height of the suggested bounding box in pixels.
 
@@ -926,8 +930,8 @@ is best implemented via subclassing SGE's classes.
     --------------------------------------------------------------------
 
     sge.Sprite.__init__(self, name=None, width=None, height=None,
-        origin_x=0, origin_y=0, transparent=True, fps=60, bbox_x=0,
-        bbox_y=0, bbox_width=None, bbox_height=None)
+        origin_x=0, origin_y=0, transparent=True, fps=60, bbox_x=None,
+        bbox_y=None, bbox_width=None, bbox_height=None)
 
     ``name`` indicates the base name of the image files.  All remaining
     arguments are used to set the respective initial attributes of the
