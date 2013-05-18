@@ -139,8 +139,8 @@ class Background(object):
                     y = (y % image_h) - image_h
 
                 # Apply the origin so the positions are as expected.
-                x -= layer.sprite.origin_x
-                y -= layer.sprite.origin_y
+                x -= int(round(layer.sprite.origin_x * sge.game._xscale))
+                y -= int(round(layer.sprite.origin_y * sge.game._yscale))
 
                 if layer.xrepeat and layer.yrepeat:
                     xstart = x
