@@ -166,7 +166,7 @@ class StellarClass(object):
                  active=True, detects_collisions=True, bbox_x=None,
                  bbox_y=None, bbox_width=None, bbox_height=None,
                  collision_ellipse=False, collision_precise=False,
-                 xvelocity=0, yvelocity=0, image_index=0, image_fps=0,
+                 xvelocity=0, yvelocity=0, image_index=0, image_fps=None,
                  image_xscale=1, image_yscale=1, image_rotation=0,
                  image_alpha=255, image_blend=None, **kwargs):
         """Create a new StellarClass object.

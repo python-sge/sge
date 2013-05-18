@@ -352,6 +352,9 @@ class StellarClass(object):
 
     @image_fps.setter
     def image_fps(self, value):
+        if value is None:
+            value = self.sprite.fps if self.sprite is not None else 0
+
         self._fps = abs(value)
         if self._fps != 0:
             self._frame_time = 1000 / self._fps
@@ -367,7 +370,7 @@ class StellarClass(object):
                  active=True, detects_collisions=True, bbox_x=None,
                  bbox_y=None, bbox_width=None, bbox_height=None,
                  collision_ellipse=False, collision_precise=False,
-                 xvelocity=0, yvelocity=0, image_index=0, image_fps=0,
+                 xvelocity=0, yvelocity=0, image_index=0, image_fps=None,
                  image_xscale=1, image_yscale=1, image_rotation=0,
                  image_alpha=255, image_blend=None, **kwargs):
         """Create a new StellarClass object.
@@ -440,8 +443,7 @@ class StellarClass(object):
         self.xvelocity = xvelocity
         self.yvelocity = yvelocity
         self._anim_count = 0
-        self.image_fps = (self.sprite.fps if self.sprite is not None else
-                          image_fps)
+        self.image_fps = image_fps
         self.image_xscale = image_xscale
         self.image_yscale = image_yscale
         self.image_rotation = image_rotation
