@@ -1619,11 +1619,12 @@ is best implemented via subclassing SGE's classes.
     --------------------------------------------------------------------
 
     sge.StellarClass.__init__(self, x, y, z, id=None, sprite=None,
-        visible=True, detects_collisions=True, bbox_x=None, bbox_y=None,
-        bbox_width=None, bbox_height=None, collision_ellipse=False,
-        collision_precise=False, xvelocity=0, yvelocity=0,
-        image_index=0, image_fps=None, image_xscale=1, image_yscale=1,
-        image_rotation=0, image_alpha=255, image_blend=None)
+        visible=True, active=True, detects_collisions=True, bbox_x=None,
+        bbox_y=None, bbox_width=None, bbox_height=None,
+        collision_ellipse=False, collision_precise=False, xvelocity=0,
+        yvelocity=0, image_index=0, image_fps=None, image_xscale=1,
+        image_yscale=1, image_rotation=0, image_alpha=255,
+        image_blend=None)
 
     All arguments set the respective initial attributes of the object.
     If ``id`` is None, it will be set to an integer not currently used
