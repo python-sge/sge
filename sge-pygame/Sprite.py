@@ -415,7 +415,8 @@ class Sprite(object):
         for i in xrange(len(self._baseimages)):
             if frame is None or frame % len(self._baseimages) == i:
                 if fill is not None:
-                    self._baseimages[i].fill(sge._get_pygame_color(fill), rect)
+                    pygame.draw.rect(self._baseimages[i],
+                                     sge._get_pygame_color(fill), rect, 0)
 
                 if outline is not None:
                     pygame.draw.rect(self._baseimages[i],
