@@ -27,34 +27,43 @@ class Music(object):
 
     """Music handling class.
 
-    Music is mostly the same as sound, but only one can be played at a
-    time.
+    This class stores and plays music.  Music is very similar to sound
+    effects, but only one music file can be played at a time, and it is
+    more efficient for larger files than sge.Sound.
 
-    All Music objects have the following attributes:
-        volume: The volume of the music in percent (0 for no sound, 100
-            for max sound).
-        balance: The balance of the music on stereo speakers.  A value
-            of 0 means centered (an equal amount of play on both
-            speakers), -1 means entirely in the left speaker, and 1
-            means entirely in the right speaker.  Support for this
-            feature in Stellar Game Engine implementations is optional.
-            If it is unavailable, all music will be played through both
-            speakers equally (assuming stereo sound is used).
+    What music formats are supported depends on the implementation of
+    SGE, but Ogg Vorbis is generally a good choice.  See the
+    implementation's readme for a full list of supported formats.  You
+    should avoid the temptation to use MP3 files; MP3 is a
+    patent-encumbered format, so many systems do not support it and
+    royalties to the patent holders may be required for commercial use.
+    There are many programs which can convert your MP3 files to the free
+    Ogg Vorbis format.
 
-    The following read-only attributes are also available:
-        fname: The file name of the music given when it was created.
-            See Music.__init__.__doc__ for more information.
-        length: The length of the music in milliseconds.
-        playing: Whether or not the music is playing.
-        position: The current position (time) on the music in
-            milliseconds.
+    Attributes:
+    * volume: The volume of the music in percent (0 for no sound, 100
+      for maximum volume).
+    * balance: The balance of the music on stereo speakers.  A value of
+      0 means centered (an equal amount of play on both speakers), -1
+      means entirely in the left speaker, and 1 means entirely in the
+      right speaker.
 
-    Music methods:
-        Music.play: Play the music.
-        Music.queue: Queue the music for playback.
-        Music.stop: Stop the music.
-        Music.pause: Pause playback of the music.
-        Music.unpause: Resume playback of the music if paused.
+    Read-Only Attributes:
+    * fname: The file name of the music given when it was created.
+    * length: The length of the music in milliseconds.
+    * playing: Whether or not the music is playing.
+    * position: The current position (time) on the music in milliseconds.
+
+    Methods:
+    * Music.play: Play the music.
+    * Music.queue: Queue the music for playback.
+
+    Static methods:
+    * Music.stop: Stop the currently playing music.
+    * Music.pause: Pause playback of the currently playing music.
+    * Music.unpause: Resume playback of the currently playing music if
+      paused.
+    * Music.clear_queue: Clear the music queue.
 
     """
 
@@ -67,8 +76,9 @@ class Music(object):
         (useful as a placeholder, for example).  If ``fname`` is neither
         a valid sound file nor None, IOError will be raised.
 
-        All remaining arguments set the initial properties of the music.
-        See Music.__doc__ for more information.
+        All remaining arguments set the respective initial attributes of
+        the music.  See the documentation for sge.Music for more
+        information.
 
         A game object must exist before an object of this class is
         created.
@@ -79,9 +89,6 @@ class Music(object):
     def play(self, start=0, loops=0, maxtime=None, fade_time=None):
         """Play the music.
 
-        If music was already playing when this is called, it will be
-        stopped.
-
         ``start`` indicates the number of milliseconds from the
         beginning to start at.  ``loops`` indicates the number of extra
         times to play the sound after it is played the first time; set
@@ -90,6 +97,9 @@ class Music(object):
         0 or None for no limit.  ``fade_time`` indicates the time in
         milliseconds over which to fade the sound in; set to 0 or None
         to immediately play the music at full volume.
+
+        If some music was already playing when this is called, it will
+        be stopped.
 
         """
         # TODO
@@ -100,13 +110,16 @@ class Music(object):
         This will cause the music to be added to a list of music to play
         in order, after the previous music has finished playing.
 
-        See Music.play.__doc__ for information about the arguments.
+        All arguments are the same as the respective arguments for
+        sge.Music.play; see the documentation for sge.Music.play for
+        more information.
 
         """
         # TODO
 
-    def stop(self, fade_time=None):
-        """Stop the music.
+    @staticmethod
+    def stop(fade_time=None):
+        """Stop the currently playing music.
 
         ``fade_time`` indicates the time in milliseconds over which to
         fade the sound out before stopping; set to 0 or None to
@@ -115,23 +128,17 @@ class Music(object):
         """
         # TODO
 
-    def pause(self):
-        """Pause playback of the music."""
+    @staticmethod
+    def pause():
+        """Pause playback of the currently playing music."""
         # TODO
 
-    def unpause(self):
-        """Resume playback of the music if paused."""
+    @staticmethod
+    def unpause():
+        """Resume playback of the currently playing music if paused."""
         # TODO
 
     @staticmethod
     def clear_queue():
         """Clear the music queue."""
         # TODO
-
-    @staticmethod
-    def stop_all():
-        """Stop playback of any music and clear the queue."""
-        for i in sge.game.music:
-            sge.game.music[i].stop()
-
-        Music.clear_queue()

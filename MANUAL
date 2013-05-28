@@ -1417,13 +1417,13 @@ is best implemented via subclassing SGE's classes.
   but Ogg Vorbis is generally a good choice.  See the implementation's
   readme for a full list of supported formats.  You should avoid the
   temptation to use MP3 files; MP3 is a patent-encumbered format, so
-  many systems do not support it and royalties to the patent holder may
+  many systems do not support it and royalties to the patent holders may
   be required for commercial use.  There are many programs which can
   convert your MP3 files to the free Ogg Vorbis format.
 
   Attributes:
-  * volume: The volume of the music in percent (0 for n sound, 100 for
-      max sound).
+  * volume: The volume of the music in percent (0 for no sound, 100 for
+      maximum volume).
   * balance: The balance of the music on stereo speakers.  A value of 0
       means centered (an equal amount of play on both speakers), -1
       means entirely in the left speaker, and 1 means entirely in the
@@ -1473,33 +1473,40 @@ is best implemented via subclassing SGE's classes.
 
     Queues the music for playback.  This adds the music to a list of
     music to play in order, after the previous music has finished
-    playing.  All arguments are the
+    playing.  All arguments are the same as the respective arguments for
+    sge.Music.play.
 
 
-    IV.G.4. sge.Music.stop
+    IV.G.4. sge.Music.stop (static method)
     --------------------------------------------------------------------
 
-    sge.Music.stop(self, fade_time=None)
+    sge.Music.stop(fade_time=None)
 
-    Stops the music.  ``fade_time`` indicates the time in milliseconds
-    over which to fade the sound out before stopping; set to 0 or None
-    to immediately stop the music.
+    Stops the currently playing music.  ``fade_time`` indicates the time
+    in milliseconds over which to fade the sound out before stopping;
+    set to 0 or None to immediately stop the music.
+
+    This is a static method.
 
 
-    IV.G.5. sge.Music.pause
+    IV.G.5. sge.Music.pause (static method)
     --------------------------------------------------------------------
 
-    sge.Music.pause(self)
+    sge.Music.pause()
 
-    Pauses playback of the music.
+    Pauses playback of the currently playing music.
+
+    This is a static method.
 
 
-    IV.G.6. sge.Music.unpause
+    IV.G.6. sge.Music.unpause (static method)
     --------------------------------------------------------------------
 
-    sge.Music.unpause(self)
+    sge.Music.unpause()
 
-    Resumes playback of the music if paused.
+    Resumes playback of the currently playing music if paused.
+
+    This is a static method.
 
 
     IV.G.7. sge.Music.clear_queue (static method)
@@ -1508,16 +1515,6 @@ is best implemented via subclassing SGE's classes.
     sge.Music.clear_queue()
 
     Clears the music queue.
-
-    This is a static method.
-
-
-    IV.G.8. sge.Music.stop_all (static method)
-    --------------------------------------------------------------------
-
-    sge.Music.stop_all()
-
-    Stops playback of any music and clears the queue.
 
     This is a static method.
 
