@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Stellar Game Engine - Pygame 1.9
 # Copyright (C) 2012, 2013 Julian Marchant <onpon4@lavabit.com>
 #

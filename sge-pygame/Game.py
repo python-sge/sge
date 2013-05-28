@@ -723,10 +723,7 @@ class Game(object):
             # Redraw
             self._window.blit(background, (0, 0))
 
-            if sge.hardware_rendering:
-                pygame.display.flip()
-            else:
-                pygame.display.update()
+            pygame.display.flip()
 
         # Restore the look of the screen from before it was paused
         self._window.blit(screenshot, (0, 0))

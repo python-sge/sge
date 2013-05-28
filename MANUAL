@@ -191,15 +191,17 @@ IV. Classes
     IV.I.37. sge.Room.event_paused_close
   IV.J. sge.View
 V. Functions
-  V.A. sge.get_key_pressed
-  V.B. sge.get_mouse_button_pressed
-  V.C. sge.get_joystick_axis
-  V.D. sge.get_joystick_hat
-  V.E. sge.get_joystick_button_pressed
-  V.F. sge.get_joysticks
-  V.G. sge.get_joystick_axes
-  V.H. sge.get_joystick_hats
-  V.I. sge.get_joystick_buttons
+  V.A. sge.show_message
+  V.B. sge.get_text_entry
+  V.C. sge.get_key_pressed
+  V.D. sge.get_mouse_button_pressed
+  V.E. sge.get_joystick_axis
+  V.F. sge.get_joystick_hat
+  V.G. sge.get_joystick_button_pressed
+  V.H. sge.get_joysticks
+  V.I. sge.get_joystick_axes
+  V.J. sge.get_joystick_hats
+  V.K. sge.get_joystick_buttons
 
 
 I. Introduction
@@ -2681,8 +2683,38 @@ is best implemented via subclassing SGE's classes.
 V. Functions
 ------------------------------------------------------------------------
 
+  V.A. sge.show_message
+  ----------------------------------------------------------------------
 
-  V.A. sge.get_key_pressed
+  sge.show_message(text, buttons=("OK",), default=0)
+
+  Shows a modal dialog box and returns the button pressed.  ``text``
+  indicates the message to show in the dialog box.  ``buttons``
+  indicates a list or tuple of strings to put in each of the buttons
+  from left to right.  ``default`` indicates the number of the button to
+  select by default, where 0 is the first button.
+
+  Returns the number of the button selected, where 0 is the first
+  button.  Buttons can be selected with the mouse, with the arrow keys
+  and Enter, with a joystick, or by pressing one of the letter or number
+  keys specified in ``keys``.
+
+
+  V.B. sge.get_text_entry
+  ----------------------------------------------------------------------
+
+  get_text_entry(text, default="")
+
+  Shows a modal text entry dialog box and returns the text entered.
+  ``text`` indicates the message to show in the dialog box.  ``default``
+  indicates the text to put in the text entry field initially.
+
+  Returns the text in the text entry field if the OK button is pressed
+  and None otherwise.  Buttons can be selected with the mouse, with the
+  Tab key and Enter, or with a joystick.
+
+
+  V.C. sge.get_key_pressed
   ----------------------------------------------------------------------
 
   sge.get_key_pressed(key)
@@ -2691,7 +2723,7 @@ V. Functions
   identifier string of the key to check.
 
 
-  V.B. sge.get_mouse_button_pressed
+  V.D. sge.get_mouse_button_pressed
   ----------------------------------------------------------------------
 
   sge.get_mouse_button_pressed(button)
@@ -2709,7 +2741,7 @@ V. Functions
   * "wheel_right"
 
 
-  V.C. sge.get_joystick_axis
+  V.E. sge.get_joystick_axis
   ----------------------------------------------------------------------
 
   sge.get_joystick_axis(joystick, axis)
@@ -2727,7 +2759,7 @@ V. Functions
   Support for joysticks in SGE implementations is optional.
 
 
-  V.D. sge.get_joystick_hat
+  V.F. sge.get_joystick_hat
   ----------------------------------------------------------------------
 
   sge.get_joystick_hat(joystick, hat)
@@ -2746,7 +2778,7 @@ V. Functions
   Support for joysticks in SGE implementations is optional.
 
 
-  V.E. sge.get_joystick_button_pressed
+  V.G. sge.get_joystick_button_pressed
   ----------------------------------------------------------------------
 
   sge.get_joystick_button_pressed(joystick, button)
@@ -2760,7 +2792,7 @@ V. Functions
   Support for joysticks in SGE implementations is optional.
 
 
-  V.F. sge.get_joysticks
+  V.H. sge.get_joysticks
   ----------------------------------------------------------------------
 
   sge.get_joysticks()
@@ -2770,7 +2802,7 @@ V. Functions
   Support for joysticks in SGE implementations is optional.
 
 
-  V.G. sge.get_joystick_axes
+  V.I. sge.get_joystick_axes
   ----------------------------------------------------------------------
 
   sge.get_joystick_axes(joystick)
@@ -2782,7 +2814,7 @@ V. Functions
   Support for joysticks in SGE implementations is optional.
 
 
-  V.H. sge.get_joystick_hats
+  V.J. sge.get_joystick_hats
   ----------------------------------------------------------------------
 
   sge.get_joystick_hats(joystick)
@@ -2795,7 +2827,7 @@ V. Functions
   Support for joysticks in SGE implementations is optional.
 
 
-  V.I. sge.get_joystick_buttons
+  V.K. sge.get_joystick_buttons
   ----------------------------------------------------------------------
 
   sge.get_joystick_buttons(joystick)

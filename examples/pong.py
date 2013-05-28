@@ -45,25 +45,27 @@ class Game(sge.Game):
         if key == 'f8':
             sge.Sprite.from_screenshot().save('screenshot.jpg')
         elif key == 'escape':
-            self.end()
+            self.event_close()
         elif key == 'p':
             self.pause()
 
     def event_close(self):
-        self.end()
+        m = "Are you sure you want to quit?"
+        if sge.show_message(m, ("No", "Yes")):
+            self.end()
 
     def event_paused_key_press(self, key):
         if key == 'escape':
             # This allows the player to still exit while the game is
             # paused, rather than having to unpause first.
-            self.end()
+            self.event_close()
         else:
             self.unpause()
 
     def event_paused_close(self):
         # This allows the player to still exit while the game is paused,
         # rather than having to unpause first.
-        self.end()
+        self.event_close()
 
 
 class Player(sge.StellarClass):
@@ -187,6 +189,11 @@ class Ball(sge.StellarClass):
             glob.hud_sprite.draw_text(glob.hud_font, p2text, x + 16, 16,
                                       color="white", halign=sge.ALIGN_LEFT,
                                       valign=sge.ALIGN_TOP)
+            m = "What is the name of the winner?"
+            name = sge.get_text_entry(m, 'Nobody')
+            if name is not None:
+                m = "Congratulations, {0}! You win!".format(name)
+                sge.show_message(m)
             self.destroy()
 
 

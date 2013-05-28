@@ -22,9 +22,75 @@ from __future__ import unicode_literals
 import sge
 
 
-__all__ = ['get_key_pressed', 'get_mouse_button_pressed', 'get_joystick_axis',
-           'get_joystick_hat', 'get_joystick_button_pressed', 'get_joysticks',
-           'get_joystick_axes', 'get_joystick_hats', 'get_joystick_buttons']
+__all__ = ['show_message', 'get_text_entry', 'get_key_pressed',
+           'get_mouse_button_pressed', 'get_joystick_axis', 'get_joystick_hat',
+           'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_axes',
+           'get_joystick_hats', 'get_joystick_buttons']
+
+
+def show_message(text, buttons=('OK',), default=0):
+    """Show a dialog box and return the button pressed.
+
+    ``text`` indicates the message to show in the dialog box.
+    ``buttons`` indicates a list or tuple of strings to put in each of
+    the buttons from left to right.  ``default`` indicates the number of
+    the button to select by default, where 0 is the first button.
+
+    The dialog box is placed at the center of the window.  The message
+    is horizontally aligned to the left and vertically aligned to the
+    middle.  All other visual design considerations are left up to the
+    implementation.
+
+    While the dialog box is being shown, all events are stopped.  If the
+    operating system tells the game to close, the dialog box will close
+    immediately, returning None, and leak the command to the rest of the
+    game (causing Close events).  If the Esc key is pressed, the dialog
+    box will close immediately, returning None.  If the right arrow key
+    or Tab key is pressed, a joystick axis is moved from a position less
+    than 0.75 to a position greater than or equal to 0.75, a joystick
+    HAT is moved to the right, or a joystick trackball is moved to the
+    right by at least 0.75, the selection is moved to the right by one;
+    if what is currently selected is the last button, the first button
+    will be selected.  If the left arrow key is pressed, a joystick axis
+    is moved from a position greater than -0.75 to a position less than
+    or equal to -0.75, a joystick HAT is moved to the left, or a
+    joystick trackball is moved to the left by at least 0.75, the
+    selection is moved to the left by one; if what is currently selected
+    is the first button, the last button will be selected.  If the Enter
+    key, the keypad Enter key, or any joystick button is pressed and
+    then released, the dialog box is closed and the number of the of the
+    currently selected button is returned, where 0 is the first button.
+    If the left mouse button is pressed and then released while the
+    mouse is hovering over a button, the dialog box is closed and the
+    number of the button the mouse is currently hovering over is
+    returned, where 0 is the first button.
+
+    """
+    # TODO
+
+
+def get_text_entry(text, default=''):
+    """Show a text entry dialog box and return the text entered.
+
+    ``text`` indicates the message to show in the dialog box.
+    ``default`` indicates the text to put in the text entry field
+    initially.
+
+    The text entry dialog box is mostly the same as the regular dialog
+    box -- see the documentation for sge.show_message for more
+    information -- but there are some key differences, outlined below.
+
+    There is always an OK button on the right and a Cancel button on the
+    left.  If the OK button is chosen, the text in the text entry field
+    is returned.   If the Cancel button is chosen, None is returned.
+    The OK button is selected by default.
+
+    The left arrow key and right arrow key do not perform the respective
+    functions they perform in the regular dialog box.  Instead, they are
+    used to navigate the text entry field.
+
+    """
+    # TODO
 
 
 def get_key_pressed(key):
@@ -35,6 +101,7 @@ def get_key_pressed(key):
     """
     # TODO
 
+
 def get_mouse_button_pressed(button):
     """Return whether or not a given mouse button is pressed.
 
@@ -43,6 +110,7 @@ def get_mouse_button_pressed(button):
 
     """
     # TODO
+
 
 def get_joystick_axis(joystick, axis):
     """Return the position of the given axis.
@@ -64,6 +132,7 @@ def get_joystick_axis(joystick, axis):
 
     """
     # TODO
+
 
 def get_joystick_hat(joystick, hat):
     """Return the position of the given HAT.
@@ -87,6 +156,7 @@ def get_joystick_hat(joystick, hat):
     """
     # TODO
 
+
 def get_joystick_button_pressed(joystick, button):
     """Return whether or not the given button is pressed.
 
@@ -105,6 +175,7 @@ def get_joystick_button_pressed(joystick, button):
     """
     # TODO
 
+
 def get_joysticks():
     """Return the number of joysticks available.
 
@@ -114,6 +185,7 @@ def get_joysticks():
 
     """
     # TODO
+
 
 def get_joystick_axes(joystick):
     """Return the number of axes available on the given joystick.
@@ -130,6 +202,7 @@ def get_joystick_axes(joystick):
     """
     # TODO
 
+
 def get_joystick_hats(joystick):
     """Return the number of HATs available on the given joystick.
 
@@ -144,6 +217,7 @@ def get_joystick_hats(joystick):
 
     """
     # TODO
+
 
 def get_joystick_buttons(joystick):
     """Return the number of buttons available on the given joystick.
