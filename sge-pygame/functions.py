@@ -324,96 +324,98 @@ def _show_modal(text, default, text_entry, buttons):
     mydir = os.path.dirname(__file__)
     try:
         box_fill = pygame.image.load(
-            os.path.join(mydir, 'sge_dialogbox')).convert_alpha()
+            os.path.join(mydir, 'sge_dialogbox.png')).convert_alpha()
         box_left = pygame.image.load(
-            os.path.join(mydir, 'sge_dialogbox_left')).convert_alpha()
+            os.path.join(mydir, 'sge_dialogbox_left.png')).convert_alpha()
         box_right = pygame.image.load(
-            os.path.join(mydir, 'sge_dialogbox_right')).convert_alpha()
+            os.path.join(mydir, 'sge_dialogbox_right.png')).convert_alpha()
         box_top = pygame.image.load(
-            os.path.join(mydir, 'sge_dialogbox_top')).convert_alpha()
+            os.path.join(mydir, 'sge_dialogbox_top.png')).convert_alpha()
         box_bottom = pygame.image.load(
-            os.path.join(mydir, 'sge_dialogbox_bottom')).convert_alpha()
+            os.path.join(mydir, 'sge_dialogbox_bottom.png')).convert_alpha()
         box_topleft = pygame.image.load(
-            os.path.join(mydir, 'sge_dialogbox_topleft')).convert_alpha()
+            os.path.join(mydir, 'sge_dialogbox_topleft.png')).convert_alpha()
         box_topright = pygame.image.load(
-            os.path.join(mydir, 'sge_dialogbox_topright')).convert_alpha()
-        box_bottomleft = pygame.image.load(
-            os.path.join(mydir, 'sge_dialogbox_bottomleft')).convert_alpha()
-        box_bottomright = pygame.image.load(
-            os.path.join(mydir, 'sge_dialogbox_bottomright')).convert_alpha()
+            os.path.join(mydir, 'sge_dialogbox_topright.png')).convert_alpha()
+        box_bottomleft = pygame.image.load(os.path.join(
+            mydir, 'sge_dialogbox_bottomleft.png')).convert_alpha()
+        box_bottomright = pygame.image.load(os.path.join(
+            mydir, 'sge_dialogbox_bottomright.png')).convert_alpha()
         text_entry_fill = pygame.image.load(
-            os.path.join(mydir, 'sge_text_entry')).convert_alpha()
+            os.path.join(mydir, 'sge_text_entry.png')).convert_alpha()
         text_entry_left = pygame.image.load(
-            os.path.join(mydir, 'sge_text_entry_left')).convert_alpha()
+            os.path.join(mydir, 'sge_text_entry_left.png')).convert_alpha()
         text_entry_right = pygame.image.load(
-            os.path.join(mydir, 'sge_text_entry_right')).convert_alpha()
+            os.path.join(mydir, 'sge_text_entry_right.png')).convert_alpha()
         text_entry_top = pygame.image.load(
-            os.path.join(mydir, 'sge_text_entry_top')).convert_alpha()
+            os.path.join(mydir, 'sge_text_entry_top.png')).convert_alpha()
         text_entry_bottom = pygame.image.load(
-            os.path.join(mydir, 'sge_text_entry_bottom')).convert_alpha()
+            os.path.join(mydir, 'sge_text_entry_bottom.png')).convert_alpha()
         text_entry_topleft = pygame.image.load(
-            os.path.join(mydir, 'sge_text_entry_topleft')).convert_alpha()
+            os.path.join(mydir, 'sge_text_entry_topleft.png')).convert_alpha()
         text_entry_topright = pygame.image.load(
-            os.path.join(mydir, 'sge_text_entry_topright')).convert_alpha()
-        text_entry_bottomleft = pygame.image.load(
-            os.path.join(mydir, 'sge_text_entry_bottomleft')).convert_alpha()
-        text_entry_bottomright = pygame.image.load(
-            os.path.join(mydir, 'sge_text_entry_bottomright')).convert_alpha()
+            os.path.join(mydir, 'sge_text_entry_topright.png')).convert_alpha()
+        text_entry_bottomleft = pygame.image.load(os.path.join(
+            mydir, 'sge_text_entry_bottomleft.png')).convert_alpha()
+        text_entry_bottomright = pygame.image.load(os.path.join(
+            mydir, 'sge_text_entry_bottomright.png')).convert_alpha()
         button_fill = pygame.image.load(
-            os.path.join(mydir, 'sge_button')).convert_alpha()
+            os.path.join(mydir, 'sge_button.png')).convert_alpha()
         button_left = pygame.image.load(
-            os.path.join(mydir, 'sge_button_left')).convert_alpha()
+            os.path.join(mydir, 'sge_button_left.png')).convert_alpha()
         button_right = pygame.image.load(
-            os.path.join(mydir, 'sge_button_right')).convert_alpha()
+            os.path.join(mydir, 'sge_button_right.png')).convert_alpha()
         button_top = pygame.image.load(
-            os.path.join(mydir, 'sge_button_top')).convert_alpha()
-        button_buttom = pygame.image.load(
-            os.path.join(mydir, 'sge_button_bottom')).convert_alpha()
+            os.path.join(mydir, 'sge_button_top.png')).convert_alpha()
+        button_bottom = pygame.image.load(
+            os.path.join(mydir, 'sge_button_bottom.png')).convert_alpha()
         button_topleft = pygame.image.load(
-            os.path.join(mydir, 'sge_button_topleft')).convert_alpha()
+            os.path.join(mydir, 'sge_button_topleft.png')).convert_alpha()
         button_topright = pygame.image.load(
-            os.path.join(mydir, 'sge_button_topright')).convert_alpha()
+            os.path.join(mydir, 'sge_button_topright.png')).convert_alpha()
         button_bottomleft = pygame.image.load(
-            os.path.join(mydir, 'sge_button_bottomleft')).convert_alpha()
+            os.path.join(mydir, 'sge_button_bottomleft.png')).convert_alpha()
         button_bottomright = pygame.image.load(
-            os.path.join(mydir, 'sge_button_bottomright')).convert_alpha()
+            os.path.join(mydir, 'sge_button_bottomright.png')).convert_alpha()
         button_selected_fill = pygame.image.load(
-            os.path.join(mydir, 'sge_button_selected')).convert_alpha()
-        button_selected_left = pygame.image.load(
-            os.path.join(mydir, 'sge_button_selected_left')).convert_alpha()
-        button_selected_right = pygame.image.load(
-            os.path.join(mydir, 'sge_button_selected_right')).convert_alpha()
+            os.path.join(mydir, 'sge_button_selected.png')).convert_alpha()
+        button_selected_left = pygame.image.load(os.path.join(
+            mydir, 'sge_button_selected_left.png')).convert_alpha()
+        button_selected_right = pygame.image.load(os.path.join(
+            mydir, 'sge_button_selected_right.png')).convert_alpha()
         button_selected_top = pygame.image.load(
-            os.path.join(mydir, 'sge_button_selected_top')).convert_alpha()
-        button_selected_buttom = pygame.image.load(
-            os.path.join(mydir, 'sge_button_selected_bottom')).convert_alpha()
-        button_selected_topleft = pygame.image.load(
-            os.path.join(mydir, 'sge_button_selected_topleft')).convert_alpha()
+            os.path.join(mydir, 'sge_button_selected_top.png')).convert_alpha()
+        button_selected_bottom = pygame.image.load(os.path.join(
+            mydir, 'sge_button_selected_bottom.png')).convert_alpha()
+        button_selected_topleft = pygame.image.load(os.path.join(
+            mydir, 'sge_button_selected_topleft.png')).convert_alpha()
         button_selected_topright = pygame.image.load(os.path.join(
-            mydir, 'sge_button_selected_topright')).convert_alpha()
+            mydir, 'sge_button_selected_topright.png')).convert_alpha()
         button_selected_bottomleft = pygame.image.load(os.path.join(
-            mydir, 'sge_button_selected_bottomleft')).convert_alpha()
+            mydir, 'sge_button_selected_bottomleft.png')).convert_alpha()
         button_selected_bottomright = pygame.image.load(os.path.join(
-            mydir, 'sge_button_selected_bottomright')).convert_alpha()
+            mydir, 'sge_button_selected_bottomright.png')).convert_alpha()
         button_press_fill = pygame.image.load(
-            os.path.join(mydir, 'sge_button_press')).convert_alpha()
+            os.path.join(mydir, 'sge_button_press.png')).convert_alpha()
         button_press_left = pygame.image.load(
-            os.path.join(mydir, 'sge_button_press_left')).convert_alpha()
+            os.path.join(mydir, 'sge_button_press_left.png')).convert_alpha()
         button_press_right = pygame.image.load(
-            os.path.join(mydir, 'sge_button_press_right')).convert_alpha()
+            os.path.join(mydir, 'sge_button_press_right.png')).convert_alpha()
         button_press_top = pygame.image.load(
-            os.path.join(mydir, 'sge_button_press_top')).convert_alpha()
-        button_press_buttom = pygame.image.load(
-            os.path.join(mydir, 'sge_button_press_bottom')).convert_alpha()
-        button_press_topleft = pygame.image.load(
-            os.path.join(mydir, 'sge_button_press_topleft')).convert_alpha()
-        button_press_topright = pygame.image.load(
-            os.path.join(mydir, 'sge_button_press_topright')).convert_alpha()
-        button_press_bottomleft = pygame.image.load(
-            os.path.join(mydir, 'sge_button_press_bottomleft')).convert_alpha()
+            os.path.join(mydir, 'sge_button_press_top.png')).convert_alpha()
+        button_press_bottom = pygame.image.load(
+            os.path.join(mydir, 'sge_button_press_bottom.png')).convert_alpha()
+        button_press_topleft = pygame.image.load(os.path.join(
+            mydir, 'sge_button_press_topleft.png')).convert_alpha()
+        button_press_topright = pygame.image.load(os.path.join(
+            mydir, 'sge_button_press_topright.png')).convert_alpha()
+        button_press_bottomleft = pygame.image.load(os.path.join(
+            mydir, 'sge_button_press_bottomleft.png')).convert_alpha()
         button_press_bottomright = pygame.image.load(os.path.join(
-            mydir, 'sge_button_press_bottomright')).convert_alpha()
-    except pygame.error:
+            mydir, 'sge_button_press_bottomright.png')).convert_alpha()
+    except pygame.error as e:
+        if sge.DEBUG:
+            print(e)
         box_fill = pygame.Surface((1, 1))
         box_left = pygame.Surface((1, 1))
         box_right = pygame.Surface((1, 1))
@@ -467,6 +469,8 @@ def _show_modal(text, default, text_entry, buttons):
 
     # Box image
     box = pygame.Surface((box_w, box_h), pygame.SRCALPHA)
+    # FIXME: The way this is done, it ruins transparency for the edges
+    # and corners.
     for i in xrange(0, box_w, box_fill.get_width()):
         for j in xrange(0, box_h, box_fill.get_height()):
             box.blit(box_fill, (i, j))
@@ -495,6 +499,8 @@ def _show_modal(text, default, text_entry, buttons):
     # Text Entry image
     text_entry_field = pygame.Surface((text_entry_w, text_entry_h),
                                       pygame.SRCALPHA)
+    # FIXME: The way this is done, it ruins transparency for the edges
+    # and corners.
     for i in xrange(0, text_entry_w, text_entry_fill.get_width()):
         for j in xrange(0, text_entry_h, text_entry_fill.get_height()):
             text_entry_field.blit(text_entry_fill, (i, j))
@@ -537,6 +543,8 @@ def _show_modal(text, default, text_entry, buttons):
 
     # Button image
     button = pygame.Surface((button_w, button_h), pygame.SRCALPHA)
+    # FIXME: The way this is done, it ruins transparency for the edges
+    # and corners.
     for i in xrange(0, button_w, button_fill.get_width()):
         for j in xrange(0, button_h, button_fill.get_height()):
             button.blit(button_fill, (i, j))
@@ -566,6 +574,8 @@ def _show_modal(text, default, text_entry, buttons):
 
     # Button image when selected
     button_selected = pygame.Surface((button_w, button_h), pygame.SRCALPHA)
+    # FIXME: The way this is done, it ruins transparency for the edges
+    # and corners.
     for i in xrange(0, button_w, button_selected_fill.get_width()):
         for j in xrange(0, button_h, button_selected_fill.get_height()):
             button_selected.blit(button_selected_fill, (i, j))
@@ -601,6 +611,8 @@ def _show_modal(text, default, text_entry, buttons):
 
     # Button image when pressed
     button_press = pygame.Surface((button_w, button_h), pygame.SRCALPHA)
+    # FIXME: The way this is done, it ruins transparency for the edges
+    # and corners.
     for i in xrange(0, button_w, button_press_fill.get_width()):
         for j in xrange(0, button_h, button_press_fill.get_height()):
             button_press.blit(button_press_fill, (i, j))
@@ -740,6 +752,8 @@ def _show_modal(text, default, text_entry, buttons):
                                 return None
                         else:
                             return selection
+                    else:
+                        button_entered = None
             elif event.type == pygame.JOYAXISMOTION:
                 if (event.joy < len(prev_axis_value) and
                         event.axis < len(prev_axis_value[event.joy])):
@@ -780,6 +794,8 @@ def _show_modal(text, default, text_entry, buttons):
                             return None
                     else:
                         return selection
+                else:
+                    button_entered = None
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == sge.MOUSE_BUTTONS['left']:
                     x, y = event.pos
@@ -822,12 +838,15 @@ def _show_modal(text, default, text_entry, buttons):
         window.blit(background, (0, 0))
         window.blit(selected_buttons[selection], button_rects[selection])
 
-        if button_entered is not None:
+        if button_entered is not None and button_entered == selection:
             window.blit(press_buttons[button_entered],
                         button_rects[button_entered])
         if button_clicked is not None:
-            window.blit(press_buttons[button_clicked],
-                        button_rects[button_clicked])
+            x, y = pygame.mouse.get_pos()
+            rect = button_rects[button_clicked]
+            if rect.left <= x <= rect.right:
+                window.blit(press_buttons[button_clicked],
+                            button_rects[button_clicked])
 
         if text_entry:
             # Find cursor position, adjust offset
