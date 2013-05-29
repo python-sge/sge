@@ -469,11 +469,24 @@ def _show_modal(text, default, text_entry, buttons):
 
     # Box image
     box = pygame.Surface((box_w, box_h), pygame.SRCALPHA)
-    # FIXME: The way this is done, it ruins transparency for the edges
-    # and corners.
     for i in xrange(0, box_w, box_fill.get_width()):
         for j in xrange(0, box_h, box_fill.get_height()):
             box.blit(box_fill, (i, j))
+
+    # Clear the way for the corners and edges (so transparency works
+    # properly)
+    box.fill(pygame.Color(0, 0, 0, 0),
+             pygame.Rect((0, 0), box_topleft.get_size()))
+    box.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (button_w - box_topright.get_width(), 0), box_topright.get_size()))
+    box.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (0, button_h - box_bottomleft.get_height()),
+        box_bottomleft.get_size()))
+    box.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (button_w - box_bottomright.get_width(),
+         button_h - box_bottomright.get_height()),
+        box_bottomright.get_size()))
+
     box.blit(box_topleft, (0, 0))
     box.blit(box_topright, (box_w - box_topright.get_width(), 0))
     box.blit(box_bottomleft, (0, box_h - box_bottomleft.get_height()))
@@ -499,11 +512,25 @@ def _show_modal(text, default, text_entry, buttons):
     # Text Entry image
     text_entry_field = pygame.Surface((text_entry_w, text_entry_h),
                                       pygame.SRCALPHA)
-    # FIXME: The way this is done, it ruins transparency for the edges
-    # and corners.
     for i in xrange(0, text_entry_w, text_entry_fill.get_width()):
         for j in xrange(0, text_entry_h, text_entry_fill.get_height()):
             text_entry_field.blit(text_entry_fill, (i, j))
+
+    # Clear the way for the corners and edges (so transparency works
+    # properly)
+    text_entry_field.fill(pygame.Color(0, 0, 0, 0),
+                          pygame.Rect((0, 0), text_entry_topleft.get_size()))
+    text_entry_field.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (button_w - text_entry_topright.get_width(), 0),
+        text_entry_topright.get_size()))
+    text_entry_field.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (0, button_h - text_entry_bottomleft.get_height()),
+        text_entry_bottomleft.get_size()))
+    text_entry_field.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (button_w - text_entry_bottomright.get_width(),
+         button_h - text_entry_bottomright.get_height()),
+        text_entry_bottomright.get_size()))
+
     text_entry_field.blit(text_entry_topleft, (0, 0))
     text_entry_field.blit(text_entry_topright,
                           (text_entry_w - text_entry_topright.get_width(), 0))
@@ -543,11 +570,25 @@ def _show_modal(text, default, text_entry, buttons):
 
     # Button image
     button = pygame.Surface((button_w, button_h), pygame.SRCALPHA)
-    # FIXME: The way this is done, it ruins transparency for the edges
-    # and corners.
     for i in xrange(0, button_w, button_fill.get_width()):
         for j in xrange(0, button_h, button_fill.get_height()):
             button.blit(button_fill, (i, j))
+
+    # Clear the way for the corners and edges (so transparency works
+    # properly)
+    button.fill(pygame.Color(0, 0, 0, 0),
+                pygame.Rect((0, 0), button_topleft.get_size()))
+    button.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (button_w - button_topright.get_width(), 0),
+        button_topright.get_size()))
+    button.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (0, button_h - button_bottomleft.get_height()),
+        button_bottomleft.get_size()))
+    button.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (button_w - button_bottomright.get_width(),
+         button_h - button_bottomright.get_height()),
+        button_bottomright.get_size()))
+
     button.blit(button_topleft, (0, 0))
     button.blit(button_topright, (button_w - button_topright.get_width(), 0))
     button.blit(button_bottomleft,
@@ -574,11 +615,25 @@ def _show_modal(text, default, text_entry, buttons):
 
     # Button image when selected
     button_selected = pygame.Surface((button_w, button_h), pygame.SRCALPHA)
-    # FIXME: The way this is done, it ruins transparency for the edges
-    # and corners.
     for i in xrange(0, button_w, button_selected_fill.get_width()):
         for j in xrange(0, button_h, button_selected_fill.get_height()):
             button_selected.blit(button_selected_fill, (i, j))
+
+    # Clear the way for the corners and edges (so transparency works
+    # properly)
+    button_selected.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (0, 0), button_selected_topleft.get_size()))
+    button_selected.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (button_w - button_selected_topright.get_width(), 0),
+        button_selected_topright.get_size()))
+    button_selected.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (0, button_h - button_selected_bottomleft.get_height()),
+        button_selected_bottomleft.get_size()))
+    button_selected.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (button_w - button_selected_bottomright.get_width(),
+         button_h - button_selected_bottomright.get_height()),
+        button_selected_bottomright.get_size()))
+
     button_selected.blit(button_selected_topleft, (0, 0))
     button_selected.blit(button_selected_topright,
                          (button_w - button_selected_topright.get_width(), 0))
@@ -611,11 +666,25 @@ def _show_modal(text, default, text_entry, buttons):
 
     # Button image when pressed
     button_press = pygame.Surface((button_w, button_h), pygame.SRCALPHA)
-    # FIXME: The way this is done, it ruins transparency for the edges
-    # and corners.
     for i in xrange(0, button_w, button_press_fill.get_width()):
         for j in xrange(0, button_h, button_press_fill.get_height()):
             button_press.blit(button_press_fill, (i, j))
+
+    # Clear the way for the corners and edges (so transparency works
+    # properly)
+    button_press.fill(pygame.Color(0, 0, 0, 0),
+                      pygame.Rect((0, 0), button_press_topleft.get_size()))
+    button_press.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (button_w - button_press_topright.get_width(), 0),
+        button_press_topright.get_size()))
+    button_press.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (0, button_h - button_press_bottomleft.get_height()),
+        button_press_bottomleft.get_size()))
+    button_press.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
+        (button_w - button_press_bottomright.get_width(),
+         button_h - button_press_bottomright.get_height()),
+        button_press_bottomright.get_size()))
+
     button_press.blit(button_press_topleft, (0, 0))
     button_press.blit(button_press_topright,
                       (button_w - button_press_topright.get_width(), 0))
@@ -796,6 +865,14 @@ def _show_modal(text, default, text_entry, buttons):
                         return selection
                 else:
                     button_entered = None
+            elif event.type == pygame.MOUSEMOTION:
+                x, y = event.pos
+                for i in xrange(len(button_rects)):
+                    rect = button_rects[i]
+                    if (rect.left <= x <= rect.right and
+                            rect.top <= y <= rect.bottom):
+                        selection = i
+                        break
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == sge.MOUSE_BUTTONS['left']:
                     x, y = event.pos
