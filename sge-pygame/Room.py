@@ -446,7 +446,7 @@ class Room(object):
         """
         pass
 
-    def event_key_release(self, key, char):
+    def event_key_release(self, key):
         """Key release event.
 
         See the documentation for sge.Game.event_key_release for more
@@ -546,7 +546,7 @@ class Room(object):
         """
         pass
 
-    def event_paused_key_release(self, key, char):
+    def event_paused_key_release(self, key):
         """Key release event when paused.
 
         See the documentation for sge.Game.event_key_release for more

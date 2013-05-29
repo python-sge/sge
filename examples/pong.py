@@ -41,7 +41,7 @@ class glob(object):
 
 class Game(sge.Game):
 
-    def event_key_press(self, key):
+    def event_key_press(self, key, char):
         if key == 'f8':
             sge.Sprite.from_screenshot().save('screenshot.jpg')
         elif key == 'escape':
@@ -54,7 +54,7 @@ class Game(sge.Game):
         if sge.show_message(m, ("No", "Yes")):
             self.end()
 
-    def event_paused_key_press(self, key):
+    def event_paused_key_press(self, key, char):
         if key == 'escape':
             # This allows the player to still exit while the game is
             # paused, rather than having to unpause first.

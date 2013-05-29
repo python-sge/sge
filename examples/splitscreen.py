@@ -24,7 +24,7 @@ import random
 
 
 class Game(sge.Game):
-    def event_key_press(self, key):
+    def event_key_press(self, key, char):
         if key == 'escape':
             self.end()
 

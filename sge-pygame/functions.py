@@ -800,7 +800,9 @@ def _show_modal(text, default, text_entry, buttons):
                 if event.button == sge.MOUSE_BUTTONS['left']:
                     x, y = event.pos
                     for i in xrange(len(button_rects)):
-                        if button_rects[i].left <= x <= button_rects[i].right:
+                        rect = button_rects[i]
+                        if (rect.left <= x <= rect.right and
+                                rect.top <= y <= rect.bottom):
                             button_clicked = i
                             break
             elif event.type == pygame.MOUSEBUTTONUP:
@@ -808,7 +810,8 @@ def _show_modal(text, default, text_entry, buttons):
                         button_clicked is not None):
                     x, y = event.pos
                     rect = button_rects[button_clicked]
-                    if rect.left <= x <= rect.right:
+                    if (rect.left <= x <= rect.right and
+                            rect.top <= y <= rect.bottom):
                         if text_entry:
                             if button_clicked:
                                 return text_entered
@@ -844,7 +847,8 @@ def _show_modal(text, default, text_entry, buttons):
         if button_clicked is not None:
             x, y = pygame.mouse.get_pos()
             rect = button_rects[button_clicked]
-            if rect.left <= x <= rect.right:
+            if (rect.left <= x <= rect.right and
+                    rect.top <= y <= rect.bottom):
                 window.blit(press_buttons[button_clicked],
                             button_rects[button_clicked])
 
