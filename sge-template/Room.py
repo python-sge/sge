@@ -323,7 +323,7 @@ class Room(object):
         """
         pass
 
-    def event_key_press(self, key):
+    def event_key_press(self, key, char):
         """Key press event.
 
         See the documentation for sge.Game.event_key_press for more
@@ -423,7 +423,7 @@ class Room(object):
         """
         pass
 
-    def event_paused_key_press(self, key):
+    def event_paused_key_press(self, key, char):
         """Key press event when paused.
 
         See the documentation for sge.Game.event_key_press for more

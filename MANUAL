@@ -589,11 +589,14 @@ is best implemented via subclassing SGE's classes.
     IV.A.9. sge.Game.event_key_press
     --------------------------------------------------------------------
 
-    sge.Game.event_key_press(self, key)
+    sge.Game.event_key_press(self, key, char)
 
     Key Press event.  This event is executed when a key on the keyboard
     is pressed.  ``key`` indicates the identifier string of the key that
     was pressed (see KEYS for a list of all key identifier strings).
+    ``char`` indicates the Unicode character associated with the key
+    press, or an empty Unicode string if no Unicode character is
+    associated with the key press.
 
 
     IV.A.10. sge.Game.event_key_release
@@ -800,7 +803,7 @@ is best implemented via subclassing SGE's classes.
     IV.A.25. sge.Game.event_paused_key_press
     --------------------------------------------------------------------
 
-    sge.Game.event_paused_key_press(self, key)
+    sge.Game.event_paused_key_press(self, key, char)
 
     Key Press event when the game is paused.
 
@@ -1741,11 +1744,14 @@ is best implemented via subclassing SGE's classes.
     IV.H.11. sge.StellarClass.event_key_press
     --------------------------------------------------------------------
 
-    sge.StellarClass.event_key_press(self, key)
+    sge.StellarClass.event_key_press(self, key, char)
 
     Key Press event.  This event is executed when a key on the keyboard
     is pressed.  ``key`` indicates the identifier string of the key that
     was pressed (see KEYS for a list of all key identifier strings).
+    ``char`` indicates the Unicode character associated with the key
+    press, or an empty Unicode string if no Unicode character is
+    associated with the key press.
 
 
     IV.H.12. sge.StellarClass.event_key_release
@@ -1952,7 +1958,7 @@ is best implemented via subclassing SGE's classes.
     IV.H.27. sge.StellarClass.event_inactive_key_press
     --------------------------------------------------------------------
 
-    sge.StellarClass.event_inactive_key_press(self, key)
+    sge.StellarClass.event_inactive_key_press(self, key, char)
 
     Key Press event when the object is inactive.
 
@@ -2037,7 +2043,7 @@ is best implemented via subclassing SGE's classes.
     IV.H.37. sge.StellarClass.event_paused_key_press
     --------------------------------------------------------------------
 
-    sge.StellarClass.event_paused_key_press(self, key)
+    sge.StellarClass.event_paused_key_press(self, key, char)
 
     Key Press event when the game is paused.
 
@@ -2397,11 +2403,14 @@ is best implemented via subclassing SGE's classes.
     IV.I.16. sge.Room.event_key_press
     --------------------------------------------------------------------
 
-    sge.Room.event_key_press(self, key)
+    sge.Room.event_key_press(self, key, char)
 
     Key Press event.  This event is executed when a key on the keyboard
     is pressed.  ``key`` indicates the identifier string of the key that
     was pressed (see KEYS for a list of all key identifier strings).
+    ``char`` indicates the Unicode character associated with the key
+    press, or an empty Unicode string if no Unicode character is
+    associated with the key press.
 
 
     IV.I.17. sge.Room.event_key_release
@@ -2553,7 +2562,7 @@ is best implemented via subclassing SGE's classes.
     IV.I.27. sge.Room.event_paused_key_press
     --------------------------------------------------------------------
 
-    sge.Room.event_paused_key_press(self, key)
+    sge.Room.event_paused_key_press(self, key, char)
 
     Key Press event when the game is paused.
 

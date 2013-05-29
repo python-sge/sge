@@ -223,12 +223,14 @@ class Game(object):
         """
         pass
 
-    def event_key_press(self, key):
+    def event_key_press(self, key, char):
         """Key press event.
 
         ``key`` indicates the identifier string of the key that was
         pressed; see the file KEYS for a full list of key identifier
-        strings.
+        strings.  ``char`` indicates the Unicode character associated
+        with the key press, or an empty Unicode string if no Unicode
+        character is associated with the key press.
 
         """
         pass
@@ -382,7 +384,7 @@ class Game(object):
         """Bottom mouse collision event."""
         self.event_mouse_collision(other)
 
-    def event_paused_key_press(self, key):
+    def event_paused_key_press(self, key, char):
         """Key press event when paused.
 
         See the documentation for sge.Game.event_key_press for more
