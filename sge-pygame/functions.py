@@ -95,7 +95,7 @@ def get_text_entry(text, default=''):
     used to navigate the text entry field.
 
     """
-    pygame.key.set_repeat(100, 15)
+    pygame.key.set_repeat(500, 20)
     text = _show_modal(text, default, True, ('Cancel', 'OK'))
     pygame.key.set_repeat()
     return text
