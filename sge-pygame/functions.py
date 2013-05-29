@@ -644,7 +644,7 @@ def _show_modal(text, default, text_entry, buttons):
                           (button_w - button_press_right.get_height(), i))
 
     message_sprite = sge.Sprite(width=text_w, height=text_h)
-    message_sprite.draw_text(font, text, 0, 0, text_w, text_h)
+    message_sprite.draw_text(font, text, 0, 0, text_w, text_h, color='white')
     box.blit(message_sprite._baseimages[0], (4, 4))
     del sge.game.sprites[message_sprite.name]
 
@@ -656,7 +656,7 @@ def _show_modal(text, default, text_entry, buttons):
         button_surf = button.copy()
         button_selected_surf = button_selected.copy()
         button_press_surf = button_press.copy()
-        rendered_text = font._font.render(buttons[i], True, (0, 0, 0))
+        rendered_text = font._font.render(buttons[i], True, (255, 255, 255))
         button_rect = button_surf.get_rect()
         render_rect = rendered_text.get_rect(center=button_rect.center)
         button_surf.blit(rendered_text, render_rect)
