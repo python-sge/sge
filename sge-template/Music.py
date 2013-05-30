@@ -43,10 +43,6 @@ class Music(object):
     Attributes:
     * volume: The volume of the music in percent (0 for no sound, 100
       for maximum volume).
-    * balance: The balance of the music on stereo speakers.  A value of
-      0 means centered (an equal amount of play on both speakers), -1
-      means entirely in the left speaker, and 1 means entirely in the
-      right speaker.
 
     Read-Only Attributes:
     * fname: The file name of the music given when it was created.
@@ -67,7 +63,7 @@ class Music(object):
 
     """
 
-    def __init__(self, fname, volume=100, balance=0):
+    def __init__(self, fname, volume=100):
         """Create a new music object.
 
         ``fname`` indicates the name of the sound file, to be located in
