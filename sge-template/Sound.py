@@ -27,34 +27,37 @@ class Sound(object):
 
     """Sound handling class.
 
-    All Sound objects have the following attributes:
-        volume: The volume of the sound in percent (0 for no sound, 100
-            for max sound).
-        balance: The balance of the sound effect on stereo speakers.  A
-            value of 0 means centered (an equal amount of play on both
-            speakers), -1 means entirely in the left speaker, and 1
-            means entirely in the right speaker.  Support for this
-            feature in Stellar Game Engine implementations is optional.
-            If it is unavailable, all sounds will be played through both
-            speakers equally (assuming stereo sound is used).
-        max_play: The maximum instances of this sound playing permitted.
-            Set to 0 for no limit.
+    This class stores and plays sound effects.  Note that this is
+    inefficient for large music files; for those, use sge.Music instead.
 
-    The following read-only attributes are also available:
-        fname: The file name of the sound given when it was created.
-            See Sound.__init__.__doc__ for more information.
-        length: The length of the sound in milliseconds.
-        playing: The number of instances of this sound playing.
+    What sound formats are supported depends on the implementation of
+    SGE, but sound formats that are generally a good choice are Ogg
+    Vorbis and uncompressed WAV.  See the implementation's readme for a
+    full list of supported formats.
 
-    Sound methods:
-        Sound.play: Play the sound.
-        Sound.stop: Stop the sound.
-        Sound.pause: Pause playback of the sound.
-        Sound.unpause: Resume playback of the sound if paused.
+    Attributes:
+    * volume: The volume of the sound in percent from 0 to 100 (0 for no
+      sound, 100 for max sound).
+    * max_play: The maximum instances of this sound playing permitted.
+      Set to 0 for no limit.
+
+    Read-Only Attributes:
+    * fname: The file name of the sound given when it was created.
+    * length: The length of the sound in milliseconds.
+    * playing: The number of instances of this sound playing.
+
+    Methods:
+    * Sound.play: Play the sound.
+    * Sound.stop: Stop the sound.
+    * Sound.pause: Pause playback of the sound.
+    * Sound.unpause: Resume playback of the sound if paused.
+
+    Static Methods:
+    * Sound.stop_all: Stop the playback of all sounds.
 
     """
 
-    def __init__(self, fname, volume=100, balance=0, max_play=1):
+    def __init__(self, fname, volume=100, max_play=1):
         """Create a new sound object.
 
         ``fname`` indicates the name of the sound file, to be located in
@@ -72,16 +75,23 @@ class Sound(object):
         """
         # TODO
 
-    def play(self, loops=0, maxtime=None, fade_time=None):
+    def play(self, loops=0, volume=100, balance=0, maxtime=None,
+             fade_time=None):
         """Play the sound.
 
         ``loops`` indicates the number of extra times to play the sound
         after it is played the first time; set to -1 or None to loop
-        indefinitely.  ``maxtime`` indicates the maximum amount of time
-        to play the sound in milliseconds; set to 0 or None for no
-        limit. ``fade_time`` indicates the time in milliseconds over
-        which to fade the sound in; set to 0 or None to immediately play
-        the sound at full volume.
+        indefinitely.  ``volume`` indicates the volume to play the sound
+        at as a percentage of self.volume from 0 to 100 (0 for no sound,
+        100 for self.volume).  ``balance`` indicates the balance of the
+        sound effect on stereo speakers as a float from -1 to 1, where 0
+        is centered (full volume on both speakers), 1 is entirely in the
+        right speaker, and -1 is entirely in the left speaker.
+        ``maxtime`` indicates the maximum amount of time to play the
+        sound in milliseconds; set to 0 or None for no limit.
+        ``fade_time`` indicates the time in milliseconds over which to
+        fade the sound in; set to 0 or None to immediately play the
+        sound at full volume.
 
         """
         # TODO

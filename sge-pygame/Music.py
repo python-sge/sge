@@ -47,8 +47,8 @@ class Music(object):
     Ogg Vorbis format.
 
     Attributes:
-    * volume: The volume of the music in percent (0 for no sound, 100
-      for maximum volume).
+    * volume: The volume of the music in percent from 0 to 100 (0 for no
+      sound, 100 for maximum volume).
 
     Read-Only Attributes:
     * fname: The file name of the music given when it was created.

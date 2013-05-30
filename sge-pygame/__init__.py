@@ -133,12 +133,13 @@ On some systems, the game will crash if sge.Music attempts to load an
 unsupported format.  Since MP3's support is limited, it is best to avoid
 using it; consider using Ogg instead.
 
-Balance control is not supported in either sge.Sound or sge.Music.
-Sounds and music play through both speakers equally.
+sge.Sprite.draw_line and sge.Room.project_line support anti-aliasing for
+lines with a thickness of 1 only.  sge.Sprite.draw_text and
+sge.Room.project_text support anti-aliasing in all cases.  No other
+drawing or projecting methods support anti-aliasing.
 
-sge.Sprite.draw_line supports anti-aliasing for lines with a thickness
-of 1 only.  sge.Sprite.draw_text supports anti-aliasing in all cases.
-No other drawing functions support anti-aliasing.
+Projection is highly inefficient, so it should be avoided if speed is
+important; use the sprite draw methods instead.
 
 """
 
@@ -147,7 +148,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.3.0.14"
+__version__ = "0.3.0.15"
 
 import os
 

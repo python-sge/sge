@@ -1332,10 +1332,6 @@ is best implemented via subclassing SGE's classes.
   Attributes:
   * volume: The volume of the sound in percent (0 for no sound, 100 for
       max sound).
-  * balance: The balance of the sound effect on stereo speakers.  A
-      value of 0 means centered (an equal amount of play on both
-      speakers), -1 means entirely in the left speaker, and 1 means
-      entirely in the right speaker.
   * max_play: The maximum instances of this sound playing permitted.
       Set to 0 for no limit.
 
@@ -1348,7 +1344,7 @@ is best implemented via subclassing SGE's classes.
     IV.F.1. Constructor Method (sge.Sound.__init__)
     --------------------------------------------------------------------
 
-    sge.Sound.__init__(self, fname, volume=100, balance=0, max_play=1)
+    sge.Sound.__init__(self, fname, volume=100, max_play=1)
 
     ``fname`` indicates the name of the sound file (e.g. "mysound.wav")
     to be located in one of the directories specified in
@@ -1362,15 +1358,21 @@ is best implemented via subclassing SGE's classes.
     IV.F.2. sge.Sound.play
     --------------------------------------------------------------------
 
-    sge.Sound.play(self, loops=0, maxtime=None, fade_time=None)
+    sge.Sound.play(self, loops=0, volume=100, balance=0, maxtime=None,
+        fade_time=None)
 
     Plays the sound.  ``loops`` indicates the number of extra times to
     play the sound after it is played the first time; set to None to
-    loop indefinitely.  ``maxtime`` indicates the maximum amount of time
-    to play the sound in milliseconds; set to None for no limit.
-    ``fade_time`` indicates the time in milliseconds over which to fade
-    the sound in; set to 0 or None to immediately play the sound at full
-    volume.
+    loop indefinitely.  ``volume`` indicates the volume to play the
+    sound at as a percentage of self.volume from 0 to 100 (0 for no
+    sound, 100 for self.volume).  ``balance`` indicates the balance of
+    the sound effect on stereo speakers as a float from -1 to 1, where 0
+    is centered (full volume on both speakers), 1 is entirely in the
+    right speaker, and -1 is entirely in the left speaker.  ``maxtime``
+    indicates the maximum amount of time to play the sound in
+    milliseconds; set to None for no limit.  ``fade_time`` indicates the
+    time in milliseconds over which to fade the sound in; set to 0 or
+    None to immediately play the sound at full volume.
 
 
     IV.F.3. sge.Sound.stop
