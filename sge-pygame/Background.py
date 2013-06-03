@@ -31,24 +31,27 @@ class Background(object):
 
     """Background class.
 
-    All Background objects have the following attributes:
-        x: The horizontal position of the background in the room.
-        y: The vertical position of the background in the room.
-        color: A Stellar Game Engine color used in parts of the
-            background where there is no layer.
+    This class stores the layers that make up the background (which
+    contain the information about what images to use and where) as well as
+    the color to use where no image is shown.
 
-    The following read-only attributes are also available:
-        id: The unique identifier for this background.
-        layers: A tuple containing all BackgroundLayer objects used in
-            this background.
+    Attributes:
+    * color: The color used in parts of the background where no layer is
+      shown.
+
+    Read-Only Attributes:
+    * id: The unique identifier for this background.
+    * layers: A tuple containing all sge.BackgroundLayer objects used in
+      this background.
 
     """
 
-    def __init__(self, layers, color, x=0, y=0, id_=None, **kwargs):
+    def __init__(self, layers, color, id_=None, **kwargs):
         """Create a background with the given color and layers.
 
-        Arguments set the properties of the background.  See
-        Background.__doc__ for more information.
+        Arguments set the respective initial attributes of the
+        background.  See the documentation for sge.Background for more
+        information.
 
         If ``id`` is None, it will be set to an integer not currently
         used as an ID (the exact number chosen is implementation-
@@ -67,8 +70,6 @@ class Background(object):
         id_ = kwargs.setdefault('id', id_)
 
         self.color = color
-        self.x = x
-        self.y = y
 
         if id_ is not None:
             self.id = id_
@@ -121,10 +122,12 @@ class Background(object):
             for layer in self.layers:
                 image = layer._get_image()
                 x = int(round(
-                    (self.x + layer.x - (view.x * layer.xscroll_rate)) *
+                    (sge.game.current_room.background_x + layer.x -
+                     (view.x * layer.xscroll_rate)) *
                     sge.game._xscale))
                 y = int(round(
-                    (self.y + layer.y - (view.y * layer.yscroll_rate)) *
+                    (sge.game.current_room.background_y + layer.y -
+                     (view.y * layer.yscroll_rate)) *
                     sge.game._yscale))
                 image_w = max(1, image.get_width())
                 image_h = max(1, image.get_height())

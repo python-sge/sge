@@ -1238,8 +1238,6 @@ is best implemented via subclassing SGE's classes.
   the color to use where no image is shown.
 
   Attributes:
-  * x: The horizontal position of the background in the room.
-  * y: The vertical position of the background in the room.
   * color: The color used in parts of the background where no layer is
       shown.
 
@@ -1253,7 +1251,7 @@ is best implemented via subclassing SGE's classes.
     IV.D.1. Constructor Method (sge.Background.__init__)
     --------------------------------------------------------------------
 
-    sge.Background.__init__(self, layers, color, x=0, y=0, id=None)
+    sge.Background.__init__(self, layers, color, id=None)
 
     All arguments are used to set the respective initial attributes of
     the background.  If ``id`` is None, it will be set to an integer not
@@ -2151,6 +2149,9 @@ is best implemented via subclassing SGE's classes.
       sge.game.height is used.
   * views: A list containing all views in the room.
   * background: The Background object being used.
+  * background_x: The horizontal position of the background in the
+      room.
+  * background_y: The vertical position of the background in the room.
 
   Read-Only Attributes:
   * objects: A tuple containing all StellarClass objects in the room.
@@ -2162,7 +2163,7 @@ is best implemented via subclassing SGE's classes.
     --------------------------------------------------------------------
 
     sge.Room.__init__(self, objects=(), width=None, height=None,
-        views=None, background=None)
+        views=None, background=None, background_x=0, background_y=0)
 
     All arguments set the respective initial attributes of the room.  If
     ``views`` is set to None, a new view will be created with x=0, y=0,
@@ -2553,7 +2554,7 @@ is best implemented via subclassing SGE's classes.
 
     Close event.  This event is executed when the operating system tells
     the game to close, e.g. when the user presses the close button in
-    the window frame.  It is always before after any
+    the window frame.  It is always called before any
     sge.Game.event_close occurring at the same time.
 
 

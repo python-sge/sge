@@ -99,8 +99,9 @@ class Sound(object):
         (useful as a placeholder, for example).  If ``fname`` is neither
         a valid sound file nor None, IOError will be raised.
 
-        All remaining arguments set the initial properties of the sound.
-        See Sound.__doc__ for more information.
+        All remaining arguments set the respective initial attributes of
+        the sound.  See the documentation for sge.Sound for more
+        information.
 
         A game object must exist before an object of this class is
         created.
