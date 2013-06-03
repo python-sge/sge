@@ -162,7 +162,7 @@ class StellarClass(object):
 
     """
 
-    def __init__(self, x, y, z, id_=None, sprite=None, visible=True,
+    def __init__(self, x, y, z=0, id_=None, sprite=None, visible=True,
                  active=True, detects_collisions=True, bbox_x=None,
                  bbox_y=None, bbox_width=None, bbox_height=None,
                  collision_ellipse=False, collision_precise=False,
@@ -171,12 +171,8 @@ class StellarClass(object):
                  image_alpha=255, image_blend=None, **kwargs):
         """Create a new StellarClass object.
 
-        Arguments set the properties of the object.  See
-        StellarClass.__doc__ for more information.
-
-        If bbox_x, bbox_y, bbox_width, or bbox_height is None, the
-        respective argument will be determined by the sprite's suggested
-        bounding box.
+        Arguments set the respective initial attributes of the object.
+        See the documentation for sge.StellarClass for more information.
 
         If ``id`` is None, it will be set to an integer not currently
         used as an ID (the exact number chosen is implementation-

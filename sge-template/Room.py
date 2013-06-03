@@ -161,7 +161,7 @@ class Room(object):
         """
         # TODO
 
-    def project_dot(self, x, y, z, color):
+    def project_dot(self, x, y, z=0, color):
         """Project a single-pixel dot onto the room.
 
         ``x`` and ``y`` indicate the location in the room to project the
@@ -171,7 +171,7 @@ class Room(object):
         """
         # TODO
 
-    def project_line(self, x1, y1, x2, y2, z, color, thickness=1,
+    def project_line(self, x1, y1, x2, y2, z=0, color, thickness=1,
                      anti_alias=False):
         """Project a line segment onto the room.
 
@@ -191,7 +191,7 @@ class Room(object):
         """
         # TODO
 
-    def project_rectangle(self, x, y, z, width, height, fill=None,
+    def project_rectangle(self, x, y, z=0, width, height, fill=None,
                           outline=None, outline_thickness=1):
         """Project a rectangle onto the room.
 
@@ -208,8 +208,8 @@ class Room(object):
         """
         # TODO
 
-    def project_ellipse(self, x, y, z, width, height, fill=None, outline=None,
-                        outline_thickness=1, anti_alias=False):
+    def project_ellipse(self, x, y, z=0, width, height, fill=None,
+                        outline=None, outline_thickness=1, anti_alias=False):
         """Project an ellipse onto the room.
 
         ``x`` and ``y`` indicate the location in the room to position
@@ -232,7 +232,7 @@ class Room(object):
         """
         # TODO
 
-    def project_circle(self, x, y, z, radius, fill=None, outline=None,
+    def project_circle(self, x, y, z=0, radius, fill=None, outline=None,
                        outline_thickness=1, anti_alias=False):
         """Project a circle onto the room.
 
@@ -255,7 +255,7 @@ class Room(object):
         """
         # TODO
 
-    def project_sprite(self, sprite, image, x, y, z):
+    def project_sprite(self, sprite, image, x, y, z=0):
         """Project a sprite onto the room.
 
         ``sprite`` indicates the sprite to draw.  ``image`` indicates
@@ -267,7 +267,7 @@ class Room(object):
         """
         # TODO
 
-    def project_text(self, font, text, x, y, z, width=None, height=None,
+    def project_text(self, font, text, x, y, z=0, width=None, height=None,
                     color="black", halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP,
                     anti_alias=True):
         """Project text onto the room.
