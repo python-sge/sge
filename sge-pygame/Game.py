@@ -497,6 +497,12 @@ class Game(object):
                     else:
                         obj.event_inactive_step(real_time_passed)
 
+                # Detect collisions
+                for ref in self._colliders:
+                    obj = ref()
+                    if obj is not None:
+                        obj._detect_collisions()
+
                 # Music control
                 if self._music is not None:
                     if pygame.mixer.music.get_busy():
