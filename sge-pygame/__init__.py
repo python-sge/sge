@@ -26,68 +26,52 @@ offered by all implementations.  Any implementation failing to do so is
 incomplete.
 
 Constants:
-    IMPLEMENTATION: A string identifying the how the engine is
-        implemented (e.g. the name of the graphics library used).
-    ALIGN_LEFT: Flag indicating alignment to the left.
-    ALIGN_CENTER: Flag indicating alignment to the horizontal center.
-    ALIGN_RIGHT: Flag indicating alignment to the right.
-    ALIGN_TOP: Flag indicating alignment to the top.
-    ALIGN_MIDDLE: Flag indicating alignment to the vertical middle.
-    ALIGN_BOTTOM: Flag indicating alignment to the bottom.
-    MOUSE_BUTTON_LEFT: The mouse button number which corresponds with
-        the left mouse button.
-    MOUSE_BUTTON_RIGHT: The mouse button number which corresponds with
-        the right mouse button.
-    MOUSE_BUTTON_MIDDLE: The mouse button number which corresponds with
-        the middle mouse button.
-    MOUSE_BUTTON_WHEEL_UP: The mouse button number which corresponds
-        with rolling the mouse wheel up.
-    MOUSE_BUTTON_WHEEL_DOWN: The mouse button number which corresponds
-        with rolling the mouse wheel down.
-    MOUSE_BUTTON_WHEEL_LEFT: The mouse button number which corresponds
-        with tilting the mouse wheel to the left.
-    MOUSE_BUTTON_WHEEL_RIGHT: The mouse button number which corresponds
-        with tilting the mouse wheel to the right.
+* IMPLEMENTATION: A string identifying the how the engine is implemented
+  (e.g. the name of the graphics library used).
+* ALIGN_LEFT: Flag indicating alignment to the left.
+* ALIGN_CENTER: Flag indicating alignment to the horizontal center.
+* ALIGN_RIGHT: Flag indicating alignment to the right.
+* ALIGN_TOP: Flag indicating alignment to the top.
+* ALIGN_MIDDLE: Flag indicating alignment to the vertical middle.
+* ALIGN_BOTTOM: Flag indicating alignment to the bottom.
 
 Global variables:
-    game: Stores the current game.  If there is no game currently, this
-        variable is set to None.
-    image_directories: A list of directories where images can be found.
-        Default is ./data/images, ./data/sprites, or ./data/backgrounds.
-    font_directories: A list of directories where font files can be
-        found.  Default is ./data/fonts.
-    sound_directories: A list of directories where sounds can be found.
-        Default is ./data/sounds.
-    music_directories: A list of directories where music files can be
-        found.  Default is ./data/music.
+* game: Stores the current game.  If there is no game currently, this
+  variable is set to None.
+* image_directories: A list of directories where images can be found.
+  Default is ./data/images, ./data/sprites, or ./data/backgrounds.
+* font_directories: A list of directories where font files can be found.
+  Default is ./data/fonts.
+* sound_directories: A list of directories where sounds can be found.
+  Default is ./data/sounds.
+* music_directories: A list of directories where music files can be
+  found.  Default is ./data/music.
 
 Classes:
-    Game: Class which handles the game.
-    Sprite: Class used to store images and animations.
-    BackgroundLayer: Class used to store a background layer.
-    Background: Class used to store parallax-scrolling backgrounds.
-    Font: Class used to store and handle fonts.
-    Sound: Class used to store and play sound effects.
-    Music: Class used to store and play music.
-    StellarClass: Class used for game objects.
-    Room: Class used for game rooms, e.g. levels.
-    View: Class used for views in rooms.
+* Game: Class which handles the game.
+* Sprite: Class used to store images and animations.
+* BackgroundLayer: Class used to store a background layer.
+* Background: Class used to store parallax-scrolling backgrounds.
+* Font: Class used to store and handle fonts.
+* Sound: Class used to store and play sound effects.
+* Music: Class used to store and play music.
+* StellarClass: Class used for game objects.
+* Room: Class used for game rooms, e.g. levels.
+* View: Class used for views in rooms.
 
 Functions:
-    get_key_pressed: Return whether or not a given key is pressed.
-    get_mouse_button_pressed: Return whether or not a given mouse
-        button is pressed.
-    get_joystick_axis: Return the position of the given axis.
-    get_joystick_hat: Return the position of the given HAT.
-    get_joystick_button_pressed: Return whether or not the given
-        joystick button is pressed.
-    get_joysticks: Return the number of joysticks available.
-    get_joystick_axes: Return the number of axes on the given
-        joystick.
-    get_joystick_hats: Return the number of HATs on the given
-        joystick.
-    get_joystick_buttons: Return the number of buttons on the
-        given joystick.
+* get_key_pressed: Return whether or not a given key is pressed.
+* get_mouse_button_pressed: Return whether or not a given mouse button
+  is pressed.
+* get_joystick_axis: Return the position of the given axis.
+* get_joystick_hat: Return the position of the given HAT.
+* get_joystick_button_pressed: Return whether or not the given joystick
+  button is pressed.
+* get_joysticks: Return the number of joysticks available.
+* get_joystick_axes: Return the number of axes on the given joystick.
+* get_joystick_hats: Return the number of HATs on the given joystick.
+* get_joystick_buttons: Return the number of buttons on the given
+  joystick.
 
 Implementation-specific information:
 This implementation supports hardware rendering, which can improve
@@ -97,27 +81,27 @@ with hardware rendering, you should use colorkeys instead of alpha
 transparency.
 
 sge.Sprite supports the following image formats:
-    PNG
-    JPEG
-    Non-animated GIF
-    BMP
-    PCX
-    Uncompressed Truevision TGA
-    TIFF
-    ILBM
-    Netpbm
-    X Pixmap
+* PNG
+* JPEG
+* Non-animated GIF
+* BMP
+* PCX
+* Uncompressed Truevision TGA
+* TIFF
+* ILBM
+* Netpbm
+* X Pixmap
 
 sge.Sound supports the following audio formats:
-    Uncompressed WAV
-    Ogg Vorbis
+* Uncompressed WAV
+* Ogg Vorbis
 
 sge.Music supports the following audio formats:
-    Ogg Vorbis
-    MP3 (support limited; use not recommended)
-    MOD
-    XM
-    MIDI
+* Ogg Vorbis
+* MP3 (support limited; use not recommended)
+* MOD
+* XM
+* MIDI
 
 For starting position in MOD files, the pattern order number is used
 instead of the number of milliseconds.
@@ -148,7 +132,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.3.0.20"
+__version__ = "0.3.0.21"
 
 import os
 

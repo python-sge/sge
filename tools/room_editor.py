@@ -31,7 +31,6 @@ import sys
 import os
 import ConfigParser as configparser
 import json
-import time
 
 import sge
 
@@ -94,6 +93,9 @@ sge.image_directories.append(os.path.join(DIRNAME, 'editor_data'))
 class glob(object):
 
     button_sprites = {}
+    text_entry_font = None
+    tooltip_font = None
+
     sprites = []
     sprite_icons = {}
     defaults = {}
@@ -250,16 +252,41 @@ class Object(sge.StellarClass):
 
 class Button(sge.StellarClass):
 
-    def __init__(self, x, y, icon):
-        if icon in glob.button_sprites:
-            sprite = glob.button_sprites[icon]
-        else:
-            sprite = sge.Sprite(width=BUTTON_SIZE[0], height=BUTTON_SIZE[1])
-            sprite.draw_sprite(icon, 0, *ICON_POS)
-            glob.button_sprites[icon] = sprite
+    def __init__(self, x, y, icon, tooltip):
+        self.icon = icon
+        self.tooltip = tooltip
 
-        super(Button, self).__init__(x, y, sprite=sprite,
+        super(Button, self).__init__(x, y, sprite='stellar_room_editor_button',
                                      collision_precise=True)
+
+    def do_effect(self):
+        """Do the effect of pressing this button."""
+        pass
+
+    def event_create(self):
+        self.pressed = False
+        self.icon_object = sge.StellarClass.create(
+            self.x + ICON_POS[0], self.y + ICON_POS[1], self.z + 1,
+            sprite=self.icon)
+
+    def event_step(self, time_passed):
+        if self.pressed and self.collides(sge.game.mouse):
+            self.image_index = 1
+        else:
+            self.image_index = 0
+
+        self.icon_object.sprite = self.icon
+
+    def event_mouse_move(self, x, y):
+        pass
+
+    def event_mouse_button_press(self, button):
+        if button == 'left' and self.collides(sge.game.mouse):
+            self.pressed = True
+
+    def event_mouse_button_release(self, button):
+        if button == 'left' and self.collides(sge.game.mouse):
+            self.do_effect()
 
 
 class Room(sge.Room):

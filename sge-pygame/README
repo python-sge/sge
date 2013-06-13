@@ -17,27 +17,27 @@ with hardware rendering, you should use colorkeys instead of alpha
 transparency.
 
 sge.Sprite supports the following image formats:
-    PNG
-    JPEG
-    Non-animated GIF
-    BMP
-    PCX
-    Uncompressed Truevision TGA
-    TIFF
-    ILBM
-    Netpbm
-    X Pixmap
+* PNG
+* JPEG
+* Non-animated GIF
+* BMP
+* PCX
+* Uncompressed Truevision TGA
+* TIFF
+* ILBM
+* Netpbm
+* X Pixmap
 
 sge.Sound supports the following audio formats:
-    Uncompressed WAV
-    Ogg Vorbis
+* Uncompressed WAV
+* Ogg Vorbis
 
 sge.Music supports the following audio formats:
-    Ogg Vorbis
-    MP3 (support limited; use not recommended)
-    MOD
-    XM
-    MIDI
+* Ogg Vorbis
+* MP3 (support limited; use not recommended)
+* MOD
+* XM
+* MIDI
 
 For starting position in MOD files, the pattern order number is used
 instead of the number of milliseconds.

@@ -27,138 +27,162 @@ class StellarClass(object):
 
     """Class for game objects.
 
-    All StellarClass objects have the following attributes:
-        x: The horizontal position of the object in the room, where the
-            left edge is 0 and x increases toward the right.
-        y: The vertical position of the object in the room, where the
-            top edge is 0 and y increases toward the bottom.
-        z: The Z-axis position of the object in the room, which
-            determines in what order objects are drawn; objects with a
-            higher Z value are drawn in front of objects with a lower Z
-            value.
-        sprite: The sprite currently in use by this object.  Set to None
-            for no (visible) sprite.  While it will always be an actual
-            Sprite object or None when read, it can also be set to the
-            ID of a sprite.
-        visible: Whether or not the object should be drawn.
-        active: Whether or not the object should be active.  If this is
-            False, all normal occurances (including events) will not
-            execute.  Only collision events, destroy events, and events
-            with names that start with "event_inactive_" will be
-            executed.
-        detects_collisions: Whether or not the object should be involved
-            in collisions.
-        bbox_x: The horizontal location of the top-left corner of the
-            bounding box in relation to x, where 0 is x and bbox_x
-            increases toward the right.  If set to None, the value
-            recommended by the sprite is used.
-        bbox_y: The vertical location of the top-left corner of the
-            bounding box in relation to y, where 0 is y and bbox_y
-            increases toward the bottom.  If set to None, the value
-            recommended by the sprite is used.
-        bbox_width: The width of the bounding box in pixels.  If set to
-            None, the value recommended by the sprite is used.
-        bbox_height: The height of the bounding box in pixels.  If set
-            to None, the value recommended by the sprite is used.
-        collision_ellipse: Whether or not an ellipse (rather than a
-            rectangle) should be used for collision detection.
-        collision_precise: Whether or not precise (pixel-perfect)
-            collision detection should be used.
-        bbox_left: The position of the left side of the bounding box in
-            the room (same as x + bbox_x).
-        bbox_right: The position of the right side of the bounding box
-            in the room (same as bbox_left + bbox_width).
-        bbox_top: The position of the top side of the bounding box
-            (same as y + bbox_y).
-        bbox_bottom: The position of the bottom side of the bounding
-            box (same as bbox_top + bbox_height).
-        xvelocity: The velocity of the object toward the right.
-        yvelocity: The velocity of the object toward the bottom.
-        speed: The total (directional) speed of the object.
-        move_direction: The direction of the object's movement in
-            degrees, with 0 being directly to the right and rotation in
-            a positive direction being counter-clockwise.  Default is 0.
-        image_index: The animation frame currently being displayed, with
-            0 being the first one.
-        image_fps: The animation rate in frames per second.  If set to
-            None, the value recommended by the sprite is used.
-        image_xscale: The horizontal scale factor for the sprite.
-        image_yscale: The vertical scale factor for the sprite.
-        image_rotation: The rotation of the sprite, with rotation in a
-            positive direction being counter-clockwise.
-        image_alpha: The alpha value applied to the entire image, where
-            255 is the original image, 128 is half the opacity of the
-            original image, 0 is fully transparent, etc.
-        image_blend: The color to blend with the sprite.  Set to None
-            for no color blending.
+    This class is used for game objects, such as the player, enemies,
+    bullets, and the HUD.  Generally, each type of object has its own
+    subclass of sge.StellarClass.
 
-    The following read-only attributes are also available:
-        id: The unique identifier for this object.
-        xstart: The initial value of x when the object was created.
-        ystart: The initial value of y when the object was created.
-        xprevious: The previous value of x.
-        yprevious: The previous value of y.
+    One attribute which needs some explanation is ``active``.  This
+    attribute indicates whether the object is active (True) or inactive
+    (False).  While the object is active, it will exhibit normal behavior;
+    events will be executed normally as will any other automatic
+    functionality, such as adding xvelocity and yvelocity to x and y.  If
+    ``active`` is False, automatic functionality and normal events will be
+    disabled and events which have names starting with "event_inactive_"
+    will be executed instead of the corresponding normal events.
 
-    StellarClass methods:
-        collides: Return whether or not this object collides with
-            another.
-        set_alarm: Set an alarm.
-        get_alarm: Return the count on an alarm.
-        destroy: Destroy the object.
+    It is important to recognize that making an object inactive is not
+    like deactivating an instance in Game Maker.  Unlike deactivated
+    instances in Game Maker, inactive StellarClass objects are still
+    visible by default and continue to be involved in collisions.  In
+    addition, collision events and destroy events still occur even if the
+    object is inactive.  If you wish for the object to not be visible, set
+    ``visible`` to False.  If you wish for the object to not be involved
+    in collisions, set ``detects_collisions`` to False.
 
-    StellarClass events are handled by special methods.  The exact
-    timing of their calling is implementation-dependent except where
-    otherwise noted.  The methods are:
-        event_create: Called when the object is created.  It is always
-            called after any room start events occurring at the same
-            time.
-        event_destroy: Destroy event.
-        event_step: Called once each frame.
-        event_alarm: Called when an alarm counter reaches 0.
-        event_animation_end: Called when an animation cycle ends.
-        event_key_press: Key press event.
-        event_key_release: Key release event.
-        event_mouse_move: Mouse move event.
-        event_mouse_button_press: Mouse button press event.
-        event_mouse_button_release: Mouse button release event.
-        event_joystick_axis_move: Joystick axis move event.
-        event_joystick_hat_move: Joystick HAT move event.
-        event_joystick_trackball_move: Joystick trackball move event.
-        event_joystick_button_press: Joystick button press event.
-        event_joystick_button_release: Joystick button release event.
-        event_collision: Middle/default collision event.
-        event_collision_left: Left collision event.
-        event_collision_right: Right collision event.
-        event_collision_top: Top collision event.
-        event_collision_bottom: Bottom collision event.
+    It is also important to note that making an object inactive will not
+    likely have a significant effect on performance.  For performance
+    enhancement, it is far more effective to exclude objects from
+    collision detection.  Object deactivation is meant to be used to
+    easily maintain control over objects that are currently being excluded
+    from collision detection (e.g. to prevent a gravity effect that would
+    otherwise occur, or to prevent the object from moving through walls).
+
+    Attributes:
+    * x: The horizontal position of the object in the room.
+    * y: The vertical position of the object in the room.
+    * z: The Z-axis position of the object in the room.
+    * sprite: The sprite currently in use by this object.  Set to None
+      for no (visible) sprite.  While it will always be an actual
+      sge.Sprite object or None when read, it can also be set to the ID
+      of a sprite.
+    * visible: Whether or not the object's sprite should be projected
+      onto the screen.
+    * active: Whether or not the object should be active.  If this is
+      False, all normal occurances (including events) will not execute.
+      Only collision events, destroy events, and events with names that
+      start with "event_inactive_" will be executed.
+    * detects_collisions: Whether or not the object should be involved
+      in collision detection.  Setting this to False can improve
+      performance if the object doesn't need to detect collisions.
+    * bbox_x: The horizontal location of the bounding box relative to
+      the object's position.  If set to None, the value recommended by
+      the sprite is used.
+    * bbox_y: The vertical location of the bounding box relative to the
+      object's position.  If set to None, the value recommended by the
+      sprite is used.
+    * bbox_width: The width of the bounding box in pixels.  If set to
+      None, the value recommended by the sprite is used.
+    * bbox_height: The height of the bounding box in pixels.  If set to
+      None, the value recommended by the sprite is used.
+    * collision_ellipse: Whether or not an ellipse (rather than a
+      rectangle) should be used for collision detection.
+    * collision_precise: Whether or not precise (pixel-perfect)
+      collision detection should be used.  Note that this can be
+      inefficient and in some cases can lead to collision detection
+      errors.
+    * bbox_left: The position of the left side of the bounding box in
+      the room (same as x + bbox_x).
+    * bbox_right: The position of the right side of the bounding box in
+      the room (same as bbox_left + bbox_width).
+    * bbox_top: The position of the top side of the bounding box in the
+      room (same as y + bbox_y).
+    * bbox_bottom: The position of the bottom side of the bounding box
+      in the room (same as bbox_top + bbox_height).
+    * xvelocity: The velocity of the object toward the right.
+    * yvelocity: The velocity of the object toward the bottom.
+    * speed: The total (directional) speed of the object.
+    * move_direction: The direction of the object's movement in degrees,
+      with 0 being directly to the right and rotation in a positive
+      direction being counter-clockwise.  Default is 0.
+    * image_index: The animation frame currently being displayed, with 0
+      being the first one.
+    * image_fps: The animation rate in frames per second.  If set to
+      None, the value recommended by the sprite is used.
+    * image_xscale: The horizontal scale factor for the sprite.
+    * image_yscale: The vertical scale factor for the sprite.
+    * image_rotation: The rotation of the sprite in degrees, with
+      rotation in a positive direction being counter-clockwise.
+    * image_alpha: The alpha value applied to the entire image, where
+      255 is the original image, 128 is half the opacity of the original
+      image, 0 is fully transparent, etc.
+    * image_blend: The color to blend with the sprite.  Set to None for
+      no color blending.
+
+    Read-Only Attributes:
+    * id: The unique identifier for this object.
+    * xstart: The initial value of x when the object was created.
+    * ystart: The initial value of y when the object was created.
+    * xprevious: The previous value of x.
+    * yprevious: The previous value of y.
+
+    Methods:
+    * collides: Return whether or not this object collides with another.
+    * set_alarm: Set an alarm.
+    * get_alarm: Return the count on an alarm.
+    * destroy: Destroy the object.
+
+    Events are handled by special methods that are internally called by
+    SGE.  The exact timing of their calling is implementation-dependent
+    except where otherwise noted.  The methods are:
+    * event_create: Called when the object is created.
+    * event_destroy: Destroy event.
+    * event_step: Called once each frame.
+    * event_alarm: Called when an alarm counter reaches 0.
+    * event_animation_end: Called when an animation cycle ends.
+    * event_key_press: Key press event.
+    * event_key_release: Key release event.
+    * event_mouse_move: Mouse move event.
+    * event_mouse_button_press: Mouse button press event.
+    * event_mouse_button_release: Mouse button release event.
+    * event_joystick_axis_move: Joystick axis move event.
+    * event_joystick_hat_move: Joystick HAT move event.
+    * event_joystick_trackball_move: Joystick trackball move event.
+    * event_joystick_button_press: Joystick button press event.
+    * event_joystick_button_release: Joystick button release event.
+    * event_close: Close event (e.g. close button).
+    * event_collision: Middle/default collision event.
+    * event_collision_left: Left collision event.
+    * event_collision_right: Right collision event.
+    * event_collision_top: Top collision event.
+    * event_collision_bottom: Bottom collision event.
 
     The following alternative events are executed when the object is
-    inactive (i.e. the attribute ``active`` is set to False) in place of
+    inactive (i.e. the ``active`` attribute is set to False) in place of
     the corresponding normal events:
-        event_inactive_step
-        event_inactive_key_press
-        event_inactive_key_release
-        event_inactive_mouse_move
-        event_inactive_mouse_button_press
-        event_inactive_mouse_button_release
-        event_inactive_joystick_axis_move
-        event_inactive_joystick_hat_move
-        event_inactive_joystick_trackball_move
-        event_inactive_joystick_button_press
-        event_inactive_joystick_button_release
+    * event_inactive_step
+    * event_inactive_key_press
+    * event_inactive_key_release
+    * event_inactive_mouse_move
+    * event_inactive_mouse_button_press
+    * event_inactive_mouse_button_release
+    * event_inactive_joystick_axis_move
+    * event_inactive_joystick_hat_move
+    * event_inactive_joystick_trackball_move
+    * event_inactive_joystick_button_press
+    * event_inactive_joystick_button_release
 
     The following alternative events are executed when the game is
     paused in place of the corresponding normal events:
-        event_paused_key_press
-        event_paused_key_release
-        event_paused_mouse_move
-        event_paused_mouse_button_press
-        event_paused_mouse_button_release
-        event_paused_joystick_axis_move
-        event_paused_joystick_hat_move
-        event_paused_joystick_trackball_move
-        event_paused_joystick_button_press
-        event_paused_joystick_button_release
+    * event_paused_key_press
+    * event_paused_key_release
+    * event_paused_mouse_move
+    * event_paused_mouse_button_press
+    * event_paused_mouse_button_release
+    * event_paused_joystick_axis_move
+    * event_paused_joystick_hat_move
+    * event_paused_joystick_trackball_move
+    * event_paused_joystick_button_press
+    * event_paused_joystick_button_release
 
     """
 
@@ -582,10 +606,9 @@ class StellarClass(object):
         the object created.
 
         ``args`` and ``kwargs`` are passed to ``cls`` as arguments.
-        Calling this class method is the same as:
+        Calling ``obj = cls.create(*args, **kwargs)`` is the same as:
             obj = cls(*args, **kwargs)
             sge.game.current_room.add(obj)
-            return obj
 
         """
         obj = cls(*args, **kwargs)

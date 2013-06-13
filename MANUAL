@@ -261,7 +261,7 @@ II. SGE Concepts
   implementation might handle Event A first, while another
   implementation might handle Event B first.  Still another
   implementation might in theory even handle Event A first one frame,
-  then handle Event B in another.
+  then handle Event B first in another.
 
 
   II.C. The Mouse
