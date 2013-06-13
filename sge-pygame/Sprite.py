@@ -528,6 +528,9 @@ class Sprite(object):
         draw on all frames.
 
         """
+        if not isinstance(sprite, sge.Sprite):
+            sprite = sge.game.sprites[sprite]
+
         x -= sprite.origin_x
         y -= sprite.origin_y
         image %= len(sprite._baseimages)

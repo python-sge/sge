@@ -1620,7 +1620,7 @@ is best implemented via subclassing SGE's classes.
     IV.H.1. Constructor Method (sge.StellarClass.__init__)
     --------------------------------------------------------------------
 
-    sge.StellarClass.__init__(self, x, y, z, id=None, sprite=None,
+    sge.StellarClass.__init__(self, x, y, z=0, id=None, sprite=None,
         visible=True, active=True, detects_collisions=True, bbox_x=None,
         bbox_y=None, bbox_width=None, bbox_height=None,
         collision_ellipse=False, collision_precise=False, xvelocity=0,
