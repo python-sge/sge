@@ -88,6 +88,7 @@ CHECKBOX_GRID_SNAP_POS = (464, 24)
 sge.image_directories.append(os.path.join(DIRNAME, 'Sprites'))
 sge.image_directories.append(os.path.join(DIRNAME, 'Backgrounds'))
 sge.image_directories.append(os.path.join(DIRNAME, 'editor_data'))
+sge.font_directories.append(os.path.join(DIRNAME, 'editor_data'))
 
 
 class glob(object):
@@ -95,6 +96,7 @@ class glob(object):
     button_sprites = {}
     text_entry_font = None
     tooltip_font = None
+    tooltip_sprite = None
 
     sprites = []
     sprite_icons = {}
@@ -289,6 +291,20 @@ class Button(sge.StellarClass):
             self.do_effect()
 
 
+class Tooltip(sge.StellarClass):
+
+    def __init__(self):
+        super(Tooltip, self).__init__(0, 0, sprite=glob.tooltip_sprite)
+
+    def event_step(self, time_passed):
+        view = sge.game.current_room.views[0]
+        self.bbox_right = view.x + view.width
+        self.bbox_bottom = view.y + view.height
+
+        if self.collides(sge.game.mouse):
+            self.bbox_left = view.x
+
+
 class Room(sge.Room):
 
     def __init__(self, *args, **kwargs):
@@ -406,8 +422,21 @@ class Room(sge.Room):
         return new_room
 
 
+def set_tooltip(text):
+    """Set the text of the tooltip.  Set to None for no tooltip."""
+    glob.tooltip_sprite.draw_clear()
+    if text:
+        w, h = glob.tooltip_font.get_size(text)
+        w += 4
+        h += 4
+        glob.tooltip_sprite.width = w
+        glob.tooltip_sprite.height = h
+        glob.tooltip_sprite.draw_rectangle(0, 0, w, h, "#C8AD7F", "black")
+        glob.tooltip_sprite.draw_text(glob.tooltip_font, text, 2, 2)
+
+
 def load_resources():
-    # Load or reload the sprites, backgrounds, and objects.
+    """Load or reload the sprites, backgrounds, and objects."""
     # Load sprites
     sge.Sprite('save', width=ICON_HEIGHT, height=ICON_HEIGHT)
     sge.Sprite('folder', width=ICON_HEIGHT, height=ICON_HEIGHT)
@@ -501,6 +530,7 @@ def main(*args):
     Game(*SCREEN_SIZE, scale=0.5, scale_smooth=True)
 
     # Load editor resources
+    # Sprites
     sge.Sprite('stellar_room_editor_cursor', *CURSOR_SIZE,
                origin_x=CURSOR_ORIGIN[0], origin_y=CURSOR_ORIGIN[1])
     sge.Sprite('stellar_room_editor_panel_left', *SIDE_BAR_SIZE)
@@ -534,6 +564,11 @@ def main(*args):
     sge.Sprite('stellar_room_editor_icon_zoom_in', *ICON_SIZE)
     sge.Sprite('stellar_room_editor_icon_zoom_out', *ICON_SIZE)
     sge.Sprite('stellar_room_editor_icon_zoom_reset', *ICON_SIZE)
+    glob.tooltip_sprite = sge.Sprite()
+
+    # Fonts
+    glob.text_entry_font = sge.Font('OSP-DIN.ttf', 20)
+    glob.tooltip_font = sge.Font('OSP-DIN.ttf', 16)
 
     # Set mouse cursor
     sge.game.mouse.sprite = 'stellar_room_editor_cursor'
