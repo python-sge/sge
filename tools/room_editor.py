@@ -135,10 +135,14 @@ class Object(sge.StellarClass):
 
     def __init__(self, cls, x, y, args, kwargs):
         self.cls = cls
+        self.real_x = x
+        self.real_y = y
         self.args = list(args)
         self.kwargs = kwargs
         self.defaults = glob.defaults.setdefault(cls, {})
 
+        x = self.get_x()
+        y = self.get_y()
         z = self.get_z()
         sprite = self.get_sprite()
         visible = self.get_visible()
@@ -158,6 +162,8 @@ class Object(sge.StellarClass):
             image_blend=image_blend)
 
     def refresh(self):
+        self.x = self.get_x()
+        self.z = self.get_z()
         self.sprite = self.get_sprite()
         self.image_index = self.get_image_index()
         self.image_fps = self.get_image_fps()
@@ -170,6 +176,12 @@ class Object(sge.StellarClass):
         if not self.get_visible():
             self.image_blend = 'black'
             self.image_alpha = 128
+
+    def get_x(self):
+        return self.real_x * sge.game.current_room.zoom
+
+    def get_y(self):
+        return self.real_y * sge.game.current_room.zoom
 
     def get_z(self):
         if 'z' in self.kwargs:
@@ -212,20 +224,22 @@ class Object(sge.StellarClass):
             return None
 
     def get_image_xscale(self):
+        zoom = sge.game.current_room.zoom
         if 'image_xscale' in self.kwargs:
-            return eval(self.kwargs['image_xscale'])
+            return eval(self.kwargs['image_xscale']) * zoom
         elif 'image_xscale' in self.defaults:
-            return eval(self.defaults['image_xscale'])
+            return eval(self.defaults['image_xscale']) * zoom
         else:
-            return 1
+            return zoom
 
     def get_image_yscale(self):
+        zoom = sge.game.current_room.zoom
         if 'image_yscale' in self.kwargs:
-            return eval(self.kwargs['image_yscale'])
+            return eval(self.kwargs['image_yscale']) * zoom
         elif 'image_yscale' in self.defaults:
-            return eval(self.defaults['image_yscale'])
+            return eval(self.defaults['image_yscale']) * zoom
         else:
-            return 1
+            return zoom
 
     def get_image_rotation(self):
         if 'image_rotation' in self.kwargs:
@@ -307,8 +321,8 @@ class Tooltip(sge.StellarClass):
 
 class Room(sge.Room):
 
-    def __init__(self, *args, **kwargs):
-        super(Room, self).__init__(*args, **kwargs)
+    def __init__(self, objects=(), width=None, height=None, views=None,
+                 background=None, background_x=0, background_y=0):
         self.fname = None
         self.empty = True
         self.unchanged = True
@@ -317,6 +331,32 @@ class Room(sge.Room):
         self.cls = "sge.Room"
         self.args = []
         self.kwargs = {}
+        self.real_objects = objects
+        self.real_width = width
+        self.real_height = height
+        self.real_views = views
+        self.zoom = 2
+
+        # TODO: Create buttons and other GUI elements
+
+        width = self.get_width() + SIDE_BAR_SIZE[0]
+        height = self.get_height() + TOP_BAR_SIZE[1]
+
+        main_view = sge.View(0, 0, SIDE_BAR_SIZE[0], TOP_BAR_SIZE[1])
+        sidebar_view = sge.View(self.get_width(), TOP_BAR_SIZE[1], 0,
+                                TOP_BAR_SIZE[1], SIDE_BAR_SIZE[0],
+                                SIDE_BAR_SIZE[1] - TOP_BAR_SIZE[1])
+        topbar_view = sge.View(0, self.get_height(), 0, 0, *TOP_BAR_SIZE)
+        views = [main_view, sidebar_view, topbar_view]
+
+        super(Room, self).__init__(objects, width, height, views, background,
+                                   background_x, background_y)
+
+    def get_width(self):
+        return self.real_width * self.zoom
+
+    def get_height(self):
+        return self.real_height * self.zoom
 
     def save(self, fname):
         # Save settings to a file
