@@ -408,7 +408,7 @@ class Room(sge.Room):
     def load(cls, fname):
         # Load settings from file and return the resulting room.
         config = {}
-        with open(fname 'r') as f:
+        with open(fname, 'r') as f:
             config = json.load(f)
 
         settings = config.setdefault('settings', {})
