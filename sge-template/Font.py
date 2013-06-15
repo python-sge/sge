@@ -27,56 +27,84 @@ class Font(object):
 
     """Font handling class.
 
-    All Font objects have the following attributes:
-        size: The height of the font in pixels.
-        underline: Whether or not underlined rendering is enabled.
-        bold: Whether or not bold rendering is enabled.
-        italic: Whether or not italic rendering is enabled.
+    This class stores a font for use by `sge.Sprite.draw_text` and
+    `sge.Room.render_text`.
 
-    The following read-only attributes are also available:
-        name: The name of the font given when it was created.  See
-            Sound.__init__.__doc__ for more information.
+    Note that bold and italic rendering could be ugly.  It is better to
+    choose a bold or italic font rather than enabling bold or italic
+    rendering, if possible.
 
-    Font methods:
-        get_size: Return the size of the given rendered text.
+    Attributes:
+
+    - ``size`` -- The height of the font in pixels.
+
+    - ``underline`` -- Whether or not underlined rendering is enabled.
+
+    - ``bold`` -- Whether or not bold rendering is enabled.
+
+    - ``italic`` -- Whether or not italic rendering is enabled.
+
+    Read-Only Attributes:
+
+    - ``name`` -- The name of the font as specified when it was created.
+
+    - ``id`` -- The unique identifier of the font.
 
     """
 
-    def __init__(self, name=None, size=12, underline=False, bold=False,
-                 italic=False):
+    def __init__(self, name=None, id_=None, size=12, underline=False,
+                 bold=False, italic=False, **kwargs):
         """Create a new Font object.
 
-        ``name`` indicates the name of the font.  This can be either the
-        name of a font file, to be located in one of the directories
-        specified in ``font_directories``, or the name of a system
-        font.  If the specified font does not exist in either form, a
-        default, implementation-dependent font will be used.
+        Arguments:
 
-        ``name`` can also be a list or tuple of fonts to choose from in
-        order of preference.
+        - ``name`` -- The name of the font.  Can be one of the
+          following:
 
-        Implementations are supposed, but not required, to attempt to
-        use a compatible font where possible.  For example, if the font
-        specified is "Times New Roman" and Times New Roman is not
-        available, compatible fonts such as Liberation Serif should be
-        attempted as well.
+          - A string indicating the name of a font file located in one
+            of the paths specified in ``sge.font_directories``, e.g.
+            ``"MyFont.ttf"``.
 
-        All remaining arguments set the initial properties of the font.
-        See Font.__doc__ for more information.
+          - A string indicating the case-insensitive name of a system
+            font, e.g. ``"Liberation Serif"``.
 
-        A game object must exist before an object of this class is
-        created.
+          - A list or tuple of strings indicating either a font file or
+            a system font to choose from in order of preference.
+
+          If none of the above methods return a valid font, SGE will
+          choose the font.
+
+        - ``id`` -- The unique identifier of the font.  If set to None,
+          ``name`` will be used, modified by SGE if it is already the
+          unique identifier of another font.
+
+        All other arguments set the respective initial attributes of the
+        font.  See the documentation for `Font` for more information.
+
+        Note that it is generally not a good practice to rely on system
+        fonts.  A font which you have on your system is probably not on
+        everyone's system.  For example, most Windows systems have a
+        font called Times New Roman, but this font is rarely found on
+        GNU/Linux systems.  On the other hand, most GNU/Linux systems
+        have the Liberation fonts included by default, but these fonts
+        are uncommon on Windows systems.  Rather than relying on system
+        fonts, choose a font which is under a free license (such as the
+        GNU General Public License or the SIL Open Font License) and
+        distribute it with your game; this will ensure that everyone
+        sees text rendered the same way you do.
 
         """
+        # Since the docs say that ``id`` is a valid keyword argument,
+        # you should do this to make sure that that is true.
+        id_ = kwargs.setdefault('id', id_)
+
         # TODO
 
     def get_size(self, text, width=None, height=None):
-        """Return the size of the given rendered text.
+        """Return the size of a certain string of text when rendered.
 
-        All arguments correspond with the same arguments in Font.render,
-        and the size returned reflects rendering rules therein; see
-        Font.render.__doc__ for more information.  Returned value is a
-        tuple in the form (width, height).
+        See the documentation for `sge.Sprite.draw_text` for information
+        about the arguments.
 
         """
         # TODO

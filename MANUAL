@@ -929,6 +929,7 @@ is best implemented via subclassing SGE's classes.
 
   Read-Only Attributes:
   * name: The name of the sprite given when it was created.
+  * id: The unique identifier of the sprite.
 
 
     IV.B.1. Cunstructor Method (sge.Sprite.__init__)

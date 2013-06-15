@@ -27,130 +27,107 @@ class Game(object):
 
     """Class which handles the game.
 
-    A Game object must be created before anything else is done.
+    This class handles most parts of the game which operate on a global
+    scale, such as global game events.  Before anything else is done
+    with SGE, an object either of this class or of a class derived from
+    it must be created.
 
-    All Game objects have the following attributes:
-        width: The width of the game's display in pixels.
-        height: The height of the game's display in pixels.
-        fullscreen: True if the game should be in fullscreen, False
-            otherwise.
-        scale: A number indicating a fixed scale factor (e.g. 1 for no
-            scaling, 2 for doubled size).  If set to 0, scaling is
-            automatic (causes the game to fit the window or screen).
-        scale_proportional: If set to True, scaling is always
-            proportional.  If set to False, the image may be stretched
-            to completely fill the game window or screen.  This has no
-            effect unless ``scale`` is 0.
-        scale_smooth: If set to True, a smooth scaling algorithm will be
-            used, if available.  Otherwise, simple scaling (e.g. pixel
-            doubling) will always be used.  Support for smooth scaling
-            in Stellar Game Engine implementations is optional.  If the
-            implementation used does not support smooth scaling, this
-            option will always be treated as False.
-        fps: The rate the game should run in frames per second.  Note
-            that this is only the maximum; if the computer is not fast
-            enough, the game may run more slowly.
-        delta: If set to True, delta timing will be enabled, which
-            adjusts speeds and animation rates if the game cannot run at
-            the specified frame rate.
-        delta_min: Delta timing can cause the game to be choppy.  This
-            setting limits this by pretending that the frame rate is
-            never lower than this amount, resulting in the game slowing
-            down like normal if it is.
-        grab_input: If set to True, all input will be locked into the
-            game.
-        window_text: The text for the OS to display as the window title,
-            e.g. in the frame of the window.  If set to None, the
-            implementation chooses the text.  Support for this feature
-            in Stellar Game Engine implementations is optional.
-        window_icon: The name of the image file to use as the window
-            icon, to be located in one of the directories specified in
-            ``sge.image_directories``.  If set to None, the
-            implementation chooses the icon.  Support for this feature
-            in Stellar Game Engine implementations is optional.
+    When an object of this class is created, it is automatically assigned
+    to ``sge.game``.
 
-    The following read-only attributes are also available:
-        sprites: A dictionary containing all loaded sprites, using their
-            names as the keys.
-        background_layers: A dictionary containing all loaded background
-            layers, using their sprites' names as the keys.
-        backgrounds: A dictionary containing all loaded backgrounds,
-            using their unique identifiers as the keys.
-        fonts: A dictionary containing all loaded fonts, using their
-            names as the keys.
-        sounds: A dictionary containing all loaded sounds, using their
-            file names as the keys.
-        music: A dictionary containing all loaded music, using their
-            file names as the keys.
-        objects: A dictionary containing all StellarClass objects in the
-            game, using their unique identifiers as the keys.
-        rooms: A list containing all rooms in order of their creation.
-        current_room: The Room object which is currently active.
-        mouse: A StellarClass object which represents the mouse cursor.
-            Its ID is "mouse" and its bounding box is one pixel.
-            Speed variables are determined by averaging all mouse
-            movement during the last quarter of a second.  Assigning to
-            its ``visible`` attribute controls whether or not the mouse
-            cursor is shown.  Setting its sprite sets the mouse cursor.
+    Note: Do not create multiple `Game` objects.  Doing so may cause
+    errors.
 
-    Game methods:
-        start: Start the game at the first room.
-        end: Properly end the game.
-        pause: Pause the game.
-        unpause: Unpause the game.
+    Attributes:
 
-    Game events are handled by special methods.  The exact timing of
-    their calling is implementation-dependent except where otherwise
-    noted.  The methods are:
-        event_game_start: Called when the game starts.  This is only
-            called once (it is not called again when the game restarts)
-            and it is always the first event method called.
-        event_game_end: Called when the game ends.  This is only called
-            once and it is always the last event method called.
-        event_step: Called once each frame.
-        event_key_press: Key press event.
-        event_key_release: Key release event.
-        event_mouse_move: Mouse move event.
-        event_mouse_button_press: Mouse button press event.
-        event_mouse_button_release: Mouse button release event.
-        event_joystick_axis_move: Joystick axis move event.
-        event_joystick_hat_move: Joystick HAT move event.
-        event_joystick_trackball_move: Joystick trackball move event.
-        event_joystick_button_press: Joystick button press event.
-        event_joystick_button_release: Joystick button release event.
-        event_close: Close event (e.g. close button).  It is always
-            called after any room close events occurring at the same
-            time.
-        event_mouse_collision: Middle/default mouse collision event.
-        event_mouse_collision_left: Left mouse collision event.
-        event_mouse_collision_right: Right mouse collision event.
-        event_mouse_collision_top: Top mouse collision event.
-        event_mouse_collision_bottom: Bottom mouse collision event.
+    - ``width`` -- The width of the game's display.
 
-    The following alternative events are executed when the game is
-    paused in place of the corresponding normal events:
-        event_paused_key_press
-        event_paused_key_release
-        event_paused_mouse_move
-        event_paused_mouse_button_press
-        event_paused_mouse_button_release
-        event_paused_joystick_axis_move
-        event_paused_joystick_hat_move
-        event_paused_joystick_trackball_move
-        event_paused_joystick_button_press
-        event_paused_joystick_button_release
-        event_paused_close
+    - ``height`` -- The height of the game's display.
+
+    - ``fullscreen`` -- Whether or not the game should be in fullscreen.
+
+    - ``scale`` -- A number indicating a fixed scale factor (e.g. 1 for
+      no scaling, 2 for doubled size).  If set to None or 0, scaling is
+      automatic (causes the game to fit the window or screen).
+
+    - ``scale_proportional`` -- If set to True, scaling is always
+      proportional.  If set to False, the image will be distorted to
+      completely fill the game window or screen.  This has no effect
+      unless ``scale`` is None or 0.
+
+    - ``scale_smooth`` -- Whether or not a smooth scaling algorithm (as
+      opposed to a simple scaling algorith such as pixel doubling)
+      should be used.
+
+    - ``fps`` -- The rate the game should run in frames per second.
+      Note that this is only the maximum; if the computer is not fast
+      enough, the game may run more slowly.
+
+    - ``delta`` -- Whether or not delta timing should be used.  Delta
+      timing affects object speeds, animation rates, and alarms.
+
+    - ``delta_min`` -- Delta timing can cause the game to be choppy.
+      This attribute limits this by pretending that the frame rate is
+      never lower than this amount, resulting in the game slowing down
+      like normal if it is.
+
+    - ``grab_input`` -- Whether or not all input should be forcibly
+      grabbed by the game.  If this is True and the mouse cursor is
+      invisible, the mouse will enter relative mode.
+
+    - ``window_text`` -- The text for the OS to display as the window
+      title, e.g. in the frame of the window.  If set to None, SGE
+      chooses the text.
+
+    - ``window_icon`` -- The name of the image file located in
+      one of the directories specified in ``sge.image_directories`` to
+      use as the window icon.  If set to None, SGE chooses the icon.
+
+    Read-Only Attributes:
+
+    - ``sprites`` -- A dictionary containing all loaded sprites, indexed
+      by the sprites' ``id`` attributes.
+
+    - ``background_layers`` -- A dictionary containing all loaded
+      background layers, indexed by the layers' ``id`` attributes.
+
+    - ``backgrounds`` -- A dictionary containing all loaded backgrounds,
+      indexed by the backgrounds' ``id`` attributes.
+
+    - ``fonts`` -- A dictionary containing all loaded fonts, indexed by
+      the fonts' ``id`` attributes.
+
+    - ``sounds`` -- A dictionary containing all loaded sounds, indexed
+      by the sounds' ``id`` attributes.
+
+    - ``music`` -- A dictionary containing all loaded music, indexed by
+      the music objects' ``id`` attributes.
+
+    - ``objects`` -- A dictionary containing all `sge.StellarClass`
+      objects in the game, indexed by the objects' ``id`` attributes.
+
+    - ``rooms`` -- A list containing all rooms in order of their creation.
+
+    - ``current_room: The room which is currently active.
+
+    - ``mouse`` -- A `sge.StellarClass` object which represents the
+      mouse cursor.  Its ``id`` attribute is ``"mouse"`` and its
+      bounding box is a one-pixel square.  Speed variables are
+      determined by averaging all mouse movement during the last quarter
+      of a second.  Assigning to its ``visible`` attribute controls
+      whether or not the mouse cursor is shown.  Setting its sprite sets
+      the mouse cursor to that sprite.
 
     """
 
-    def __init__(self, width=640, height=480, fullscreen=False, scale=0,
+    def __init__(self, width=640, height=480, fullscreen=False, scale=None,
                  scale_proportional=True, scale_smooth=False, fps=60,
                  delta=False, delta_min=15, grab_input=False,
                  window_text=None, window_icon=None):
-        """Create a new Game object and assign it to ``game``.
+        """Create a new Game object and assign it to ``sge.game``.
 
-        Arguments set the properties of the game.  See Game.__doc__ for
-        more information.
+        Arguments set the respective initial attributes of the game.
+        See the documentation for `Game` for more information.
 
         """
         # TODO
@@ -171,22 +148,17 @@ class Game(object):
     def pause(self, sprite=None):
         """Pause the game.
 
-        ``sprite`` is the sprite to show when the game is paused.  If
-        set to None, a default image will be shown.  The default image
-        is at the discretion of the Stellar Game Engine implementation,
-        as are any additional visual effects, with the stipulation that
-        the following conditions are met:
+        Arguments:
 
-            1. The default image must unambiguously demonstrate that the
-                game is paused (the easiest way to do this is to include
-                the word "paused" somewhere in the image).
-            2. The view must stay in place.
-            3. What was going on within the view before the game was
-                paused must remain visible while the game is paused.
+        - ``sprite`` -- The sprite to show in the center of the screen
+          while the game is paused.  If set to None, SGE chooses the
+          image.
 
-        While the game is paused, all game events will be halted.
-        Events whose names start with "event_paused_" will occur during
-        this time instead.
+        Normal events are not executed while the game is paused.
+        Instead, events with the same name, but prefixed with
+        ``event_paused_`` instead of ``event_`` are executed.  Note that
+        not all events have these alternative "paused" events associated
+        with them.
 
         """
         # TODO
@@ -200,7 +172,7 @@ class Game(object):
 
         Called when the game starts.  This is only called once (it is
         not called again when the game restarts) and it is always the
-        first event method called.
+        very first event method called.
 
         """
         pass
@@ -208,8 +180,8 @@ class Game(object):
     def event_game_end(self):
         """Game end event.
 
-        Called when the game ends.  This is only called once and it is
-        always the last event method called.
+        Called when the game ends.  It is only called once and it is
+        always the very last event method called.
 
         """
         pass
@@ -217,7 +189,14 @@ class Game(object):
     def event_step(self, time_passed):
         """Global step event.
 
-        Called once each frame.  ``time_passed`` is the number of
+        Called once each frame.
+
+        Arguments:
+
+        - ``time_passed`` -- The number of milliseconds that have passed
+          during the last frame.
+
+        ``time_passed`` is the number of
         milliseconds that have passed during the last frame.
 
         """
@@ -226,11 +205,16 @@ class Game(object):
     def event_key_press(self, key, char):
         """Key press event.
 
-        ``key`` indicates the identifier string of the key that was
-        pressed; see the file KEYS for a full list of key identifier
-        strings.  ``char`` indicates the Unicode character associated
-        with the key press, or an empty Unicode string if no Unicode
-        character is associated with the key press.
+        Called when a key on the keyboard is pressed.
+
+        Arguments:
+
+        - ``key`` -- The identifier string of the key that was pressed;
+          see the file KEYS for a full list of key identifier strings.
+
+        - ``char`` -- The Unicode character associated with the key
+          press, or an empty Unicode string if no Unicode character is
+          associated with the key press.
 
         """
         pass
@@ -238,9 +222,10 @@ class Game(object):
     def event_key_release(self, key):
         """Key release event.
 
-        ``key`` indicates the identifier string of the key that was
-        released; see the file KEYS for a full list of key identifier
-        strings.
+        Arguments:
+
+        - ``key`` -- The identifier string of the key that was pressed;
+          see the file KEYS for a full list of key identifier strings.
 
         """
         pass
@@ -248,7 +233,12 @@ class Game(object):
     def event_mouse_move(self, x, y):
         """Mouse move event.
 
-        ``x`` and ``y`` indicate the relative movement of the mouse.
+        Called when the mouse moves.
+
+        Arguments:
+
+        - ``x`` -- The horizontal relative movement of the mouse.
+        - ``y`` -- The vertical relative movement of the mouse.
 
         """
         pass
@@ -256,15 +246,20 @@ class Game(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        ``button`` is the mouse button that was pressed.  It can be any
-        of the following values:
-            "left"
-            "right"
-            "middle"
-            "wheel_up"
-            "wheel_down"
-            "wheel_left"
-            "wheel_right"
+        Called when a mouse button is pressed.
+
+        Arguments:
+
+        - ``button`` -- The mouse button that was pressed.  It can be
+          one of the following mouse button identifier strings:
+
+          - ``"left"``
+          - ``"right"``
+          - ``"middle"``
+          - ``"wheel_up"``
+          - ``"wheel_down"``
+          - ``"wheel_left"``
+          - ``"wheel_right"``
 
         """
         pass
@@ -272,15 +267,20 @@ class Game(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        ``button`` is the mouse button that was released.  It can be any
-        of the following values:
-            "left"
-            "right"
-            "middle"
-            "wheel_up"
-            "wheel_down"
-            "wheel_left"
-            "wheel_right"
+        Called when a mouse button is released.
+
+        Arguments:
+
+        - ``button`` -- The mouse button that was pressed.  It can be
+          one of the following mouse button identifier strings:
+
+          - ``"left"``
+          - ``"right"``
+          - ``"middle"``
+          - ``"wheel_up"``
+          - ``"wheel_down"``
+          - ``"wheel_left"``
+          - ``"wheel_right"``
 
         """
         pass
@@ -288,14 +288,19 @@ class Game(object):
     def event_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event.
 
-        ``joystick`` is the number of the joystick, where 0 is the first
-        joystick.  ``axis`` is the number of the axis, where 0 is the
-        first axis.  ``value`` is the tilt of the axis, where 0 is in
-        the center, -1 is tilted all the way to the left or up, and 1 is
-        tilted all the way to the right or down.
+        Called when an axis on a joystick changes position.
 
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.
+        Arguments:
+
+        - ``joystick`` -- The number of the joystick, where 0 is the
+          first joystick.
+
+        - ``axis`` -- The number of the axis, where 0 is the first axis
+          on the joystick.
+
+        - ``value`` -- The tilt of the axis as a float from -1 to 1,
+          where 0 is centered, -1 is all the way to the left or up, and
+          1 is all the way to the right or down.
 
         """
         pass
@@ -303,14 +308,22 @@ class Game(object):
     def event_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event.
 
-        ``joystick`` is the number of the joystick, where 0 is the first
-        joystick.  ``hat`` is the number of the HAT, where 0 is the
-        first HAT.  ``x`` and ``y`` indicate the position of the HAT,
-        where 0 is in the center, -1 is left or up, and 1 is right or
-        down.
+        Called when a HAT switch (also called the POV hat, POV switch,
+        or d-pad) changes position.
 
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.
+        Arguments:
+
+        - ``joystick`` -- The number of the joystick, where 0 is the
+          first joystick.
+
+        - ``hat`` -- The number of the HAT, where 0 is the first HAT on
+          the joystick.
+
+        - ``x`` -- The horizontal position of the HAT, where 0 is
+          centered, -1 is left, and 1 is right.
+
+        - ``y`` -- The vertical position of the HAT, where 0 is
+          centered, -1 is up, and 1 is down.
 
         """
         pass
@@ -318,13 +331,19 @@ class Game(object):
     def event_joystick_trackball_move(self, joystick, ball, x, y):
         """Joystick trackball move event.
 
-        ``joystick`` indicates the number of the joystick, where 0 is
-        the first joystick.  ``ball`` indicates the number of the
-        trackball, where 0 is the first trackball.  ``x`` and ``y``
-        indicate the relative movement of the trackball.
+        Called when a trackball on a joystick moves.
 
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.
+        Arguments:
+
+        - ``joystick`` -- The number of the joystick, where 0 is the
+          first joystick.
+
+        - ``ball`` -- The number of the trackball, where 0 is the first
+          trackball on the joystick.
+
+        - ``x`` -- The horizontal relative movement of the trackball.
+
+        - ``y`` -- The vertical relative movement of the trackball.
 
         """
         pass
@@ -332,12 +351,15 @@ class Game(object):
     def event_joystick_button_press(self, joystick, button):
         """Joystick button press event.
 
-        ``joystick`` is the number of the joystick, where 0 is the first
-        joystick.  ``button`` is the number of the button pressed, where
-        0 is the first button.
+        Called when a joystick button is pressed.
 
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.
+        Arguments:
+
+        - ``joystick`` -- The number of the joystick, where 0 is the
+          first joystick.
+
+        - ``button`` -- The number of the button that was pressed, where
+          0 is the first button on the joystick.
 
         """
         pass
@@ -345,49 +367,84 @@ class Game(object):
     def event_joystick_button_release(self, joystick, button):
         """Joystick button release event.
 
-        ``joystick`` is the number of the joystick, where 0 is the first
-        joystick.  ``button`` is the number of the button pressed, where
-        0 is the first button.
+        Called when a joystick button is pressed.
 
-        Support for joysticks in Stellar Game Engine implementations is
-        optional.
+        Arguments:
+
+        - ``joystick`` -- The number of the joystick, where 0 is the
+          first joystick.
+
+        - ``button`` -- The number of the button that was pressed, where
+          0 is the first button on the joystick.
 
         """
         pass
 
     def event_close(self):
-        """Close event (e.g. close button).
+        """Close event.
 
-        It is always called after any room close events occurring at the
-        same time.
+        Called when the operating system tells the game to close, e.g.
+        when the user presses the close button in the window frame.  It
+        is always called after any `sge.Room.event_close` occurring at
+        the same time.
 
         """
         pass
 
     def event_mouse_collision(self, other):
-        """Middle/default mouse collision event."""
+        """Default mouse collision event.
+
+        Proxy for ``sge.game.mouse.event_collision``.  See the
+        documentation for `sge.StellarClass.event_collision` for more
+        information.
+
+        """
         pass
 
     def event_mouse_collision_left(self, other):
-        """Left mouse collision event."""
+        """Left mouse collision event.
+
+        Proxy for ``sge.game.mouse.event_collision_left``.  See the
+        documentation for `sge.StellarClass.event_collision_left` for
+        more information.
+
+        """
         self.event_mouse_collision(other)
 
     def event_mouse_collision_right(self, other):
-        """Right mouse collision event."""
+        """Right mouse collision event.
+
+        Proxy for ``sge.game.mouse.event_collision_right``.  See the
+        documentation for `sge.StellarClass.event_collision_right` for
+        more information.
+
+        """
         self.event_mouse_collision(other)
 
     def event_mouse_collision_top(self, other):
-        """Top mouse collision event."""
+        """Top mouse collision event.
+
+        Proxy for ``sge.game.mouse.event_collision_top``.  See the
+        documentation for `sge.StellarClass.event_collision_top` for
+        more information.
+
+        """
         self.event_mouse_collision(other)
 
     def event_mouse_collision_bottom(self, other):
-        """Bottom mouse collision event."""
+        """Bottom mouse collision event.
+
+        Proxy for ``sge.game.mouse.event_collision_bottom``.  See the
+        documentation for `sge.StellarClass.event_collision_bottom` for
+        more information.
+
+        """
         self.event_mouse_collision(other)
 
     def event_paused_key_press(self, key, char):
         """Key press event when paused.
 
-        See the documentation for sge.Game.event_key_press for more
+        See the documentation for `Game.event_key_press` for more
         information.
 
         """
@@ -396,7 +453,7 @@ class Game(object):
     def event_paused_key_release(self, key):
         """Key release event when paused.
 
-        See the documentation for sge.Game.event_key_release for more
+        See the documentation for `Game.event_key_release` for more
         information.
 
         """
@@ -405,7 +462,7 @@ class Game(object):
     def event_paused_mouse_move(self, x, y):
         """Mouse move event when paused.
 
-        See the documentation for sge.Game.event_mouse_move for more
+        See the documentation for `Game.event_mouse_move` for more
         information.
 
         """
@@ -414,7 +471,7 @@ class Game(object):
     def event_paused_mouse_button_press(self, button):
         """Mouse button press event when paused.
 
-        See the documentation for sge.Game.event_mouse_button_press for
+        See the documentation for `Game.event_mouse_button_press` for
         more information.
 
         """
@@ -423,7 +480,7 @@ class Game(object):
     def event_paused_mouse_button_release(self, button):
         """Mouse button release event when paused.
 
-        See the documentation for sge.Game.event_mouse_button_release
+        See the documentation for `Game.event_mouse_button_release`
         for more information.
 
         """
@@ -432,7 +489,7 @@ class Game(object):
     def event_paused_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event when paused.
 
-        See the documentation for sge.Game.event_joystick_axis_move for
+        See the documentation for `Game.event_joystick_axis_move` for
         more information.
 
         """
@@ -441,7 +498,7 @@ class Game(object):
     def event_paused_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event when paused.
 
-        See the documentation for sge.Game.event_joystick_hat_move for
+        See the documentation for `Game.event_joystick_hat_move` for
         more information.
 
         """
@@ -450,7 +507,7 @@ class Game(object):
     def event_paused_joystick_trackball_move(self, joystick, ball, x, y):
         """Joystick trackball move event when paused.
 
-        See the documentation for sge.Game.event_joystick_trackball_move
+        See the documentation for `Game.event_joystick_trackball_move`
         for more information.
 
         """
@@ -459,7 +516,7 @@ class Game(object):
     def event_paused_joystick_button_press(self, joystick, button):
         """Joystick button press event when paused.
 
-        See the documentation for sge.Game.event_joystick_button_press
+        See the documentation for `Game.event_joystick_button_press`
         for more information.
 
         """
@@ -468,7 +525,7 @@ class Game(object):
     def event_paused_joystick_button_release(self, joystick, button):
         """Joystick button release event when paused.
 
-        See the documentation for sge.Game.event_joystick_button_release
+        See the documentation for `Game.event_joystick_button_release`
         for more information.
 
         """
@@ -477,7 +534,7 @@ class Game(object):
     def event_paused_close(self):
         """Close event (e.g. close button) when paused.
 
-        See the documentation for sge.Game.event_close for more
+        See the documentation for `Game.event_close` for more
         information.
 
         """

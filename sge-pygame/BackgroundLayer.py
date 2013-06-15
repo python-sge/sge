@@ -133,17 +133,26 @@ class BackgroundLayer(object):
             self._yrepeat = value
             sge.game._background_changed = True
 
-    def __init__(self, sprite, x, y, z, xscroll_rate=1, yscroll_rate=1,
-                 xrepeat=True, yrepeat=True):
+    def __init__(self, sprite, x, y, z, id_=None, xscroll_rate=1,
+                 yscroll_rate=1, xrepeat=True, yrepeat=True, **kwargs):
         """Create a background layer object.
 
-        Arguments set the properties of the layer.  See
-        BackgroundLayer.__doc__ for more information.
+        Arguments:
 
-        A game object must exist before an object of this class is
-        created.
+        - ``id`` -- The unique identifier of the sprite.  If set to
+          None, the ``id`` attribute of the sprite will be used,
+          modified by SGE if it is already the unique identifier of
+          another background layer.
+
+        All other arguments set the respective initial attributes of the
+        layer.  See the documentation for `BackgroundLayer` for more
+        information.
 
         """
+        # Since the docs say that ``id`` is a valid keyword argument,
+        # you should do this to make sure that that is true.
+        id_ = kwargs.setdefault('id', id_)
+
         self._sprite = sprite
         self._x = x
         self._y = y
@@ -152,6 +161,14 @@ class BackgroundLayer(object):
         self._yscroll_rate = yscroll_rate
         self._xrepeat = xrepeat
         self._yrepeat = yrepeat
+
+        if id_ is not None:
+            self.id = id_
+        else:
+            self.id = self.sprite.id
+
+            while self.id in sge.game.background_layers:
+                self.id += "_"
 
         self._image_index = 0
         self._count = 0
@@ -164,6 +181,8 @@ class BackgroundLayer(object):
                 self._frame_time = 0.01
         else:
             self._frame_time = None
+
+        sge.game.background_layers[self.id] = self
 
     def _update(self, time_passed):
         # Update the animation frame.

@@ -33,49 +33,53 @@ class Sprite(object):
 
     """Class which holds information for images and animations.
 
-    All Sprite objects have the following attributes:
-        width: The width of the sprite in pixels.
-        height: The height of the sprite in pixels.
-        origin_x: The horizontal location of the origin (the pixel
-            position in relation to the images to base rendering on),
-            where the left edge of the image is 0 and origin_x increases
-            toward the right.
-        origin_y: The vertical location of the origin (the pixel
-            position in relation to the images to base rendering on),
-            where the top edge of the image is 0 and origin_y increases
-            toward the bottom.
-        transparent: True if the image should support transparency,
-            False otherwise.  If the image does not have an alpha
-            channel or if the implementation used does not support alpha
-            transparency, a colorkey will be used, with the transparent
-            color being the color of the top-rightmost pixel.
-        fps: The suggested rate in frames per second to animate the
-            image at.
-        bbox_x: The horizontal location of the top-left corner of the
-            suggested bounding box to use with this sprite, where
-            origin_x is 0 and bbox_x increases toward the right.  If
-            set to None, it will become equal to -origin_x (which is
-            always the left edge of the image).
-        bbox_y: The vertical location of the top-left corner of the
-            suggested bounding box to use with this sprite, where
-            origin_y is 0 and bbox_y increases toward the bottom.  If
-            set to None, it will become equal to -origin_y (which is
-            always the top edge of the image).
-        bbox_width: The width of the suggested bounding box in pixels.
-        bbox_height: The height of the suggested bounding box in pixels.
+    This class stores images and information about how SGE is to use
+    those images.
 
-    The following read-only attributes are also available:
-        name: The name of the sprite given when it was created.  See
-            Sprite.__init__.__doc__ for more information.
+    What image formats are supported depends on the implementation of
+    SGE, but image formats that are generally a good choice are PNG and
+    JPEG.  See the implementation-specific information for a full list
+    of supported formats.
 
-    Sprite methods:
-        draw_dot: Draw a single-pixel dot.
-        draw_line: Draw a line segment between the given points.
-        draw_rectangle: Draw a rectangle at the given position.
-        draw_ellipse: Draw an ellipse at the given position.
-        draw_circle: Draw a circle at the given position.
-        draw_text: Draw the given text at the given position.
-        draw_clear: Erase everything from the sprite.
+    Attributes:
+
+    - ``width`` -- The width of the sprite.
+
+    - ``height`` -- The height of the sprite.
+
+    - ``origin_x`` -- The horizontal location of the origin relative to
+      the left edge of the images.
+
+    - ``origin_y`` -- The vertical location of the origin relative to
+      the top edge of the images.
+
+    - ``transparent`` -- Whether or not the image should be partially
+      transparent.  If an image does not have an alpha channel , a
+      colorkey will be used, with the transparent color being the color
+      of the top-rightmost pixel.
+
+    - ``fps`` -- The suggested rate in frames per second to animate the
+      image at.
+
+    - ``bbox_x`` -- The horizontal location relative to the sprite of
+      the suggested bounding box to use with it.  If set to None, it
+      will become equal to ``-origin_x`` (which is always the left edge
+      of the image).
+
+    - ``bbox_y`` -- The vertical location relative to the sprite of the
+      suggested bounding box to use with it.  If set to None, it will
+      become equal to ``-origin_y`` (which is always the top edge of the
+      image).
+
+    - ``bbox_width`` -- The width of the suggested bounding box.
+
+    - ``bbox_height`` -- The height of the suggested bounding box.
+
+    Read-Only Attributes:
+
+    - ``name`` -- The name of the sprite given when it was created.
+
+    - ``id`` -- The unique identifier of the sprite.
 
     """
 
@@ -131,60 +135,65 @@ class Sprite(object):
         else:
             self._bbox_y = -self.origin_y
 
-    def __init__(self, name=None, width=None, height=None, origin_x=0,
-                 origin_y=0, transparent=True, fps=60, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None):
+    def __init__(self, name=None, id_=None, width=None, height=None,
+                 origin_x=0, origin_y=0, transparent=True, fps=60,
+                 bbox_x=None, bbox_y=None, bbox_width=None,
+                 bbox_height=None, **kwargs):
         """Create a new Sprite object.
 
-        ``name`` indicates the base name of the image files.  Files are
-        to be located in one of the directories specified in
-        ``image_directories``.  If a file with the exact name plus image
-        file extensions is not available, numbered images will be
-        searched for which have names with one of the following formats,
-        where "name" is replaced with the specified base file name and
-        "0" can be replaced with any integer:
+        Arguments:
 
-            name-0
-            name_0
+        - ``name`` -- The base name of the image files, used to find all
+          individual image files that make up the sprite's animation in
+          the paths specified in ``sge.image_directories``.  One of the
+          following rules will be used to find the images:
 
-        If images are found with names like those, all such images will
-        be loaded and become frames of animation.  If not, sprite sheets
-        will be searched for which have names with one of the following
-        formats, where "name" is replaced with the specified base file
-        name and "2" can be replaced with any integer:
+          - The base name plus a valid image extension.  If this rule is
+            used, the image will be loaded as a single-frame sprite.
 
-            name-strip2
-            name_strip2
+          - The base name and an integer separated by either a hyphen
+            ("-") or an underscore ("_") and followed by a valid image
+            extension.  If this rule is used, all images with names like
+            this are loaded and treated as an animation, with the lower-
+            numbered images being earlier frames.
 
-        The number indicates the number of animation frames in the
-        sprite sheet. The sprite sheet will be read like a horizontal
-        reel, with the first frame on the far left and the last frame on
-        the far right, and no space in between frames.
+          - The base name and an integer separated by either "-strip" or
+            "_strip" and followed by a valid image extension.  If this
+            rule is used, the image will be treated as an animation read
+            as a horizontal reel from left to right, split into the
+            number of frames indicated by the integer.
 
-        ``name`` can also be None, in which case the sprite will be a
-        transparent rectangle at the specified size (with both ``width``
-        and ``height`` defaulting to 32 if they are set to None).  The
-        implementation decides what to assign to the sprite's ``name``
-        attribute, but it is always a string.
+          - If the base name is None, the sprite will be a fully
+            transparent rectangle at the specified size (with both
+            ``width`` and ``height`` defaulting to 32 if they are set to
+            None).  SGE decides what to assign to the sprite's ``name``
+            attribute in this case, but it will always be a string.
 
-        If no image is found based on any of the above methods and
-        ``name`` is not None, IOError will be raised.
+        - ``id`` -- The unique identifier of the sprite.  If set to
+          None, ``name`` will be used, modified by SGE if it is already
+          the unique identifier of another sprite.
 
-        If ``width`` or ``height`` is set to None, the respective size
-        will be taken from the largest animation frame.  If
-        ``bbox_width`` or ``bbox_height`` is set to None, the respective
-        size will be the respective size of the sprite.
-
-        All remaining arguments set the initial properties of the
-        sprite; see Sprite.__doc__ for more information.
-
-        A game object must exist before an object of this class is
-        created.
+        All other arguments set the respective initial attributes of the
+        sprite.  See the documentation for `Sprite` for more
+        information.
 
         """
+        # Since the docs say that ``id`` is a valid keyword argument,
+        # you should do this to make sure that that is true.
+        id_ = kwargs.setdefault('id', id_)
+
         if sge.DEBUG:
             print('Creating sprite "{0}"'.format(name))
+
         self.name = name
+
+        if id_ is not None:
+            self.id = id_
+        else:
+            self.id = self.name
+
+            while self.id in sge.game.sprites:
+                self.id += "_"
 
         self._transparent = None
         self._baseimages = []
@@ -280,17 +289,20 @@ class Sprite(object):
                 height = 32
 
             # Choose name
-            prefix = "sge-pygame-dynamicsprite"
-            i = 0
-            while "{0}_{1}N".format(prefix, i) in sge.game.sprites:
-                i += 1
-            self.name = "{0}_{1}N".format(prefix, i)
+            self.name = "sge-pygame-dynamicsprite"
+            if id_ is not None:
+                self.id = id_
+            else:
+                i = 0
+                while i in sge.game.sprites:
+                    i += 1
+                self.id = i
 
             img = pygame.Surface((width, height), pygame.SRCALPHA)
             img.fill(pygame.Color(0, 0, 0, 0))
             self._baseimages.append(img)
             if sge.DEBUG:
-                print("renamed to {0}".format(self.name))
+                print("renamed to {0}, ID is {1}".format(self.name, self.id))
 
         if width is None:
             width = 1
@@ -331,17 +343,23 @@ class Sprite(object):
         self.bbox_width = bbox_width
         self.bbox_height = bbox_height
         self._refresh()
-        sge.game.sprites[self.name] = self
+        sge.game.sprites[self.id] = self
 
     def draw_dot(self, x, y, color, frame=None):
-        """Draw a single-pixel dot.
+        """Draw a single-pixel dot on the sprite.
 
-        ``x`` and ``y`` indicate the location in the sprite to draw the
-        dot, where x=0, y=0 is the origin and x and y increase toward
-        the right and bottom, respectively.  ``color`` indicates the
-        color of the dot.  ``frame`` indicates the frame of the sprite
-        to draw on, where 0 is the first frame; set to None to draw on
-        all frames.
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the sprite to
+          draw the dot.
+
+        - ``y`` -- The vertical location relative to the sprite to draw
+          the dot.
+
+        - ``color`` -- The color of the dot.
+
+        - ``frame`` -- The frame of the sprite to draw on, where 0 is
+          the first frame; set to None to draw on all frames.
 
         """
         color = sge._get_pygame_color(color)
@@ -353,22 +371,30 @@ class Sprite(object):
 
     def draw_line(self, x1, y1, x2, y2, color, thickness=1, anti_alias=False,
                   frame=None):
-        """Draw a line segment between the given points.
+        """Draw a line segment on the sprite.
 
-        ``x1``, ``y1``, ``x2``, and ``y2`` indicate the location in the
-        sprite of the points between which to draw the line segment,
-        where x=0, y=0 is the origin and x and y increase toward the
-        right and bottom, respectively.  ``color`` indicates the color
-        of the line segment.  ``thickness`` indicates the thickness of
-        the line segment in pixels.  ``anti_alias`` indicates whether or
-        not anti-aliasing should be used.  ``frame`` indicates the frame
-        of the sprite to draw on, where 0 is the first frame; set to
-        None to draw on all frames.
+        Arguments:
 
-        Support for anti-aliasing is optional in Stellar Game Engine
-        implementations.  If the implementation used does not support
-        anti-aliasing, this method will act like ``anti_alias`` is
-        False.
+        - ``x1`` -- The horizontal location relative to the sprite of
+          the first end point of the line segment.
+
+        - ``y1`` -- The vertical location relative to the sprite of the
+          first end point of the line segment.
+
+        - ``x2`` -- The horizontal location relative to the sprite of
+          the second end point of the line segment.
+
+        - ``y2`` -- The vertical location relative to the sprite of the
+          second end point of the line segment.
+
+        - ``color`` -- The color of the line segment.
+
+        - ``thickness`` -- The thickness of the line segment.
+
+        - ``anti_alias`` -- Whether or not anti-aliasing should be used.
+
+        - ``frame`` -- The frame of the sprite to draw on, where 0 is
+          the first frame; set to None to draw on all frames.
 
         """
         color = sge._get_pygame_color(color)
@@ -387,19 +413,29 @@ class Sprite(object):
 
     def draw_rectangle(self, x, y, width, height, fill=None, outline=None,
                        outline_thickness=1, frame=None):
-        """Draw a rectangle at the given position.
+        """Draw a rectangle on the sprite.
 
-        ``x`` and ``y`` indicate the location in the sprite to position
-        the top-left corner of the rectangle, where x=0, y=0 is the
-        origin and x and y increase toward the right and bottom,
-        respectively.  ``width`` and ``height`` indicate the size of the
-        rectangle.  ``fill`` indicates the color of the fill of the
-        rectangle; set to None for no fill.  ``outline`` indicates the
-        color of the outline of the rectangle; set to None for no
-        outline.  ``outline_thickness`` indicates the thickness of the
-        outline in pixels (ignored if there is no outline).  ``frame``
-        indicates the frame of the sprite to draw on, where 0 is the
-        first frame; set to None to draw on all frames.
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the sprite to
+          draw the rectangle.
+
+        - ``y`` -- The vertical location relative to the sprite to draw
+          the rectangle.
+
+        - ``width`` -- The width of the rectangle.
+
+        - ``height`` -- The height of the rectangle.
+
+        - ``fill`` -- The color of the fill of the rectangle.
+
+        - ``outline`` -- The color of the outline of the rectangle.
+
+        - ``outline_thickness`` -- The thickness of the outline of the
+          rectangle.
+
+        - ``frame`` -- The frame of the sprite to draw on, where 0 is
+          the first frame; set to None to draw on all frames.
 
         """
         outline_thickness = abs(outline_thickness)
@@ -427,26 +463,31 @@ class Sprite(object):
 
     def draw_ellipse(self, x, y, width, height, fill=None, outline=None,
                      outline_thickness=1, anti_alias=False, frame=None):
-        """Draw an ellipse at the given position.
+        """Draw an ellipse on the sprite.
 
-        ``x`` and ``y`` indicate the location in the sprite to position
-        the top-left corner of the imaginary rectangle containing the
-        ellipse, where x=0, y=0 is the origin and x and y increase
-        toward the right and bottom, respectively.  ``width`` and
-        ``height`` indicate the size of the ellipse.  ``fill`` indicates
-        the color of the fill of the ellipse; set to None for no fill.
-        ``outline`` indicates the color of the outline of the ellipse;
-        set to None for no outline.  ``outline_thickness`` indicates the
-        thickness of the outline in pixels (ignored if there is no
-        outline).  ``anti_alias`` indicates whether or not anti-aliasing
-        should be used on the outline.  ``frame`` indicates the frame of
-        the sprite to draw on, where 0 is the first frame; set to None
-        to draw on all frames.
+        Arguments:
 
-        Support for anti-aliasing is optional in Stellar Game Engine
-        implementations.  If the implementation used does not support
-        anti-aliasing, this method will act like ``anti_alias`` is
-        False.
+        - ``x`` -- The horizontal location relative to the sprite to
+          position the imaginary rectangle containing the ellipse.
+
+        - ``y`` -- The vertical location relative to the sprite to
+          position the imaginary rectangle containing the ellipse.
+
+        - ``width`` -- The width of the ellipse.
+
+        - ``height`` -- The height of the ellipse.
+
+        - ``fill`` -- The color of the fill of the ellipse.
+
+        - ``outline`` -- The color of the outline of the ellipse.
+
+        - ``outline_thickness`` -- The thickness of the outline of the
+          ellipse.
+
+        - ``anti_alias`` -- Whether or not anti-aliasing should be used.
+
+        - ``frame`` -- The frame of the sprite to draw on, where 0 is
+          the first frame; set to None to draw on all frames.
 
         """
         outline_thickness = abs(outline_thickness)
@@ -474,26 +515,29 @@ class Sprite(object):
 
     def draw_circle(self, x, y, radius, fill=None, outline=None,
                     outline_thickness=1, anti_alias=False, frame=None):
-        """Draw a circle at the given position.
+        """Draw a circle on the sprite.
 
-        ``x`` and ``y`` indicate the location in the sprite to position
-        the center of the circle, where x=0, y=0 is the origin and x and
-        y increase toward the right and bottom, respectively.
-        ``radius`` indicates the radius of the circle in pixels.
-        ``fill`` indicates the color of the fill of the circle; set to
-        None for no fill.  ``outline`` indicates the color of the
-        outline of the circle; set to None for no outline.
-        ``outline_thickness`` indicates the thickness of the outline in
-        pixels (ignored if there is no outline).  ``anti_alias``
-        indicates whether or not anti-aliasing should be used on the
-        outline.  ``frame`` indicates the frame of the sprite to draw
-        on, where 0 is the first frame; set to None to draw on all
-        frames.
+        Arguments:
 
-        Support for anti-aliasing is optional in Stellar Game Engine
-        implementations.  If the implementation used does not support
-        anti-aliasing, this method will act like ``anti_alias`` is
-        False.
+        - ``x`` -- The horizontal location relative to the sprite to
+          position the center of the circle.
+
+        - ``y`` -- The vertical location relative to the sprite to
+          position the center of the circle.
+
+        - ``radius`` -- The radius of the circle.
+
+        - ``fill`` -- The color of the fill of the circle.
+
+        - ``outline`` -- The color of the outline of the circle.
+
+        - ``outline_thickness`` -- The thickness of the outline of the
+          circle.
+
+        - ``anti_alias`` -- Whether or not anti-aliasing should be used.
+
+        - ``frame`` -- The frame of the sprite to draw on, where 0 is
+          the first frame; set to None to draw on all frames.
 
         """
         outline_thickness = abs(outline_thickness)
@@ -518,14 +562,23 @@ class Sprite(object):
         self._refresh()
 
     def draw_sprite(self, sprite, image, x, y, frame=None):
-        """Draw the given sprite at the given position.
+        """Draw another sprite on the sprite.
 
-        ``sprite`` indicates the sprite to draw.  ``image`` indicates
-        the frame of ``sprite`` to draw, where 0 is the first frame.
-        ``x`` and ``y`` indicate the location in the sprite being drawn
-        on to position ``sprite``.  ``frame`` indicates the frame of the
-        sprite to draw on, where 0 is the first frame; set to None to
-        draw on all frames.
+        Arguments:
+
+        - ``sprite`` -- The sprite to draw with.
+
+        - ``image`` -- The frame of ``sprite`` to draw with, where 0 is
+          the first frame.
+
+        - ``x`` -- The horizontal location relative to ``self`` to draw
+          ``sprite``.
+
+        - ``y`` -- The vertical location relative to ``self`` to draw
+          ``sprite``.
+
+        - ``frame`` -- The frame of ``self`` to draw on, where 0 is the
+          first frame; set to None to draw on all frames.
 
         """
         if not isinstance(sprite, sge.Sprite):
@@ -544,31 +597,74 @@ class Sprite(object):
     def draw_text(self, font, text, x, y, width=None, height=None,
                   color="black", halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP,
                   anti_alias=True, frame=None):
-        """Draw the given text at the given position.
+        """Draw text on the sprite.
 
-        ``font`` indicates the font to use to draw the text.  ``text``
-        indicates the text to draw.  ``x`` and ``y`` indicate the
-        location in the sprite to position the text, where x=0, y=0 is
-        the origin and x and y increase toward the right and bottom,
-        respectively.  ``width`` and ``height`` indicate the size of the
-        imaginary box the text is drawn in; set to None for no imaginary
-        box.  ``color`` indicates the color of the text.  ``halign``
-        indicates the horizontal alignment of the text and can be
-        ALIGN_LEFT, ALIGN_CENTER, or ALIGN_RIGHT.  ``valign`` indicates
-        the vertical alignment and can be ALIGN_TOP, ALIGN_MIDDLE, or
-        ALIGN_BOTTOM.  ``anti_alias`` indicates whether or not anti-
-        aliasing should be used.  ``frame`` indicates the frame of the
-        sprite to draw on, where 0 is the first frame; set to None to
-        draw on all frames.
+        Arguments:
 
-        If the text does not fit into the imaginary box specified, the
-        text that doesn't fit will be cut off at the bottom if valign is
-        ALIGN_TOP, the top if valign is ALIGN_BOTTOM, or equally the top
-        and bottom if valign is ALIGN_MIDDLE.
+        - ``font`` -- The font to use to draw the text.
 
-        Support for anti-aliasing is optional in Stellar Game Engine
-        implementations.  If the implementation used does not support
-        anti-aliasing, this function will act like ``anti_alias`` is False.
+        - ``text`` -- The text (as a string) to draw.
+
+        - ``x`` -- The horizontal location relative to the sprite to
+          draw the text.
+
+        - ``y`` -- The vertical location relative to the sprite to draw
+          the text.
+
+        - ``width`` -- The width of the imaginary rectangle the text is
+          drawn in; set to None to make the rectangle as wide as needed
+          to contain the text without additional line breaks.  If set to
+          something other than None, a line which does not fit will be
+          automatically split into multiple lines that do fit.
+
+        - ``height`` -- The height of the imaginary rectangle the text
+          is drawn in; set to None to make the rectangle as tall as
+          needed to contain the text.
+
+        - ``color`` -- The color of the text.
+
+        - ``halign`` -- The horizontal alignment of the text and the
+          horizontal location of the origin of the imaginary rectangle
+          the text is drawn in.  Can be set to one of the following:
+
+          - ``sge.ALIGN_LEFT`` -- Align the text to the left of the
+            imaginary rectangle the text is drawn in.  Set the origin of
+            the imaginary rectangle to its left edge.
+
+          - ``sge.ALIGN_CENTER`` -- Align the text to the center of the
+            imaginary rectangle the text is drawn in.  Set the origin of
+            the imaginary rectangle to its center.
+
+          - ``sge.ALIGN_RIGHT`` -- Align the text to the right of the
+            imaginary rectangle the text is drawn in.  Set the origin of
+            the imaginary rectangle to its right edge.
+
+        - ``valign`` -- The vertical alignment of the text and the
+          vertical location of the origin of the imaginary rectangle the
+          text is drawn in.  Can be set to one of the following:
+
+          - ``sge.ALIGN_TOP`` -- Align the text to the top of the
+            imaginary rectangle the text is drawn in.  Set the origin of
+            the imaginary rectangle to its top edge.  If the imaginary
+            rectangle is not tall enough to contain all of the text, cut
+            text off from the bottom.
+
+          - ``sge.ALIGN_MIDDLE`` -- Align the the text to the middle of
+            the imaginary rectangle the text is drawn in.  Set the
+            origin of the imaginary rectangle to its middle.  If the
+            imaginary rectangle is not tall enough to contain all of the
+            text, cut text off equally from the top and bottom.
+
+          - ``sge.ALIGN_BOTTOM`` -- Align the text  to the bottom of the
+            imaginary rectangle the text is drawn in.  Set the origin of
+            the imaginary rectangle to its top edge.  If the imaginary
+            rectangle is not tall enough to contain all of the text, cut
+            text off from the top.
+
+        - ``anti_alias`` -- Whether or not anti-aliasing should be used.
+
+        - ``frame`` -- The frame of the sprite to draw on, where 0 is
+          the first frame; set to None to draw on all frames.
 
         """
         if not isinstance(font, sge.Font):
@@ -634,8 +730,10 @@ class Sprite(object):
     def draw_clear(self, frame=None):
         """Erase everything from the sprite.
 
-        ``frame`` indicates the frame of the sprite to clear, where 0 is
-        the first frame; set to None to clear all frames.
+        Arguments:
+
+        - ``frame`` -- The frame of the sprite to clear, where 0 is
+          the first frame; set to None to clear all frames.
 
         """
         for i in xrange(len(self._baseimages)):
@@ -652,14 +750,14 @@ class Sprite(object):
     def save(self, fname):
         """Save the sprite to an image file.
 
-        ``fname`` indicates the file to save the sprite to.
+        Arguments:
+
+        - ``fname`` -- The path of the file to save the sprite to.  If
+          it is not a path that can be saved to, IOError is raised.
 
         If the sprite has multiple frames, the image file saved will be
-        a horizontal reel of each of the frames with no space in between
-        them; the leftmost image is the first frame.
-
-        If ``fname`` is not a file name that can be saved to, IOError
-        will be raised.
+        a horizontal reel of each of the frames from left to right with
+        no space in between the frames.
 
         """
         # Assuming self.width and self.height are the size of all
@@ -683,10 +781,25 @@ class Sprite(object):
     def from_screenshot(cls, x=0, y=0, width=None, height=None):
         """Return the current display on the screen as a sprite.
 
-        ``x`` and ``y`` indicate the location of the rectangular area to
-        take a screenshot of.  ``width`` and ``height`` indicate the
-        size of the area to take a screenshot of; set to None for all of
-        the screen to the right of ``x`` and below ``y``.
+        Arguments:
+
+        - ``x`` -- The horizontal location of the rectangular area to
+          take a screenshot of.
+
+        - ``y`` -- The vertical location of the rectangular area to take
+          a screenshot of.
+
+        - ``width`` -- The width of the area to take a screenshot of;
+          set to None for all of the area to the right of ``x`` to be
+          included.
+
+        - ``height`` -- The height of the area to take a screenshot of;
+          set to None for all of the area below ``y`` to be included.
+
+        If you only wish to save a screenshot (of the entire screen) to
+        a file, the easiest way to do that is:::
+
+        sge.Sprite.from_screenshot().save("foo.png")
 
         """
         window = pygame.display.get_surface()
