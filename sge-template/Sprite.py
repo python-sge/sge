@@ -1,18 +1,20 @@
-# Stellar Game Engine Template
-# Copyright (C) 2012, 2013 Julian Marchant <onpon4@lavabit.com>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SGE Template
+# Written in 2012, 2013 by Julian Marchant <onpon4@lavabit.com> 
+# 
+# To the extent possible under law, the author(s) have dedicated all
+# copyright and related and neighboring rights to this software to the
+# public domain worldwide. This software is distributed without any
+# warranty. 
+# 
+# You should have received a copy of the CC0 Public Domain Dedication
+# along with this software. If not, see
+# <http://creativecommons.org/publicdomain/zero/1.0/>.
+
+# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace  the notice
+# above as well as the notices contained in other source files with your
+# own copyright notice.  Recommended free  licenses are  the GNU General
+# Public License, GNU Lesser General Public License, Expat License, or
+# Apache License 2.0.
 
 from __future__ import division
 from __future__ import absolute_import
