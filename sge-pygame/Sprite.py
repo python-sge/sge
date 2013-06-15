@@ -169,6 +169,8 @@ class Sprite(object):
             None).  SGE decides what to assign to the sprite's ``name``
             attribute in this case, but it will always be a string.
 
+          If none of the above rules can be used, IOError is raised.
+
         - ``id`` -- The unique identifier of the sprite.  If set to
           None, ``name`` will be used, modified by SGE if it is already
           the unique identifier of another sprite.

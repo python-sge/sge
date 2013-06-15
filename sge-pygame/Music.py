@@ -35,37 +35,30 @@ class Music(object):
 
     This class stores and plays music.  Music is very similar to sound
     effects, but only one music file can be played at a time, and it is
-    more efficient for larger files than sge.Sound.
+    more efficient for larger files than `sge.Sound`.
 
     What music formats are supported depends on the implementation of
     SGE, but Ogg Vorbis is generally a good choice.  See the
-    implementation's readme for a full list of supported formats.  You
-    should avoid the temptation to use MP3 files; MP3 is a
-    patent-encumbered format, so many systems do not support it and
-    royalties to the patent holders may be required for commercial use.
-    There are many programs which can convert your MP3 files to the free
-    Ogg Vorbis format.
+    implementation-specific information for a full list of supported
+    formats.
+
+    You should avoid the temptation to use MP3 files; MP3 is a patent-
+    encumbered format, so many systems do not support it and royalties
+    to the patent holders may be required for commercial use.  There are
+    many programs which can convert your MP3 files to the free Ogg
+    Vorbis format.
 
     Attributes:
-    * volume: The volume of the music in percent from 0 to 100 (0 for no
-      sound, 100 for maximum volume).
+    - ``volume`` -- The volume of the music in percent from 0 to 100 (0
+      for no sound, 100 for maximum volume).
 
     Read-Only Attributes:
-    * fname: The file name of the music given when it was created.
-    * length: The length of the music in milliseconds.
-    * playing: Whether or not the music is playing.
-    * position: The current position (time) on the music in milliseconds.
-
-    Methods:
-    * Music.play: Play the music.
-    * Music.queue: Queue the music for playback.
-
-    Static methods:
-    * Music.stop: Stop the currently playing music.
-    * Music.pause: Pause playback of the currently playing music.
-    * Music.unpause: Resume playback of the currently playing music if
-      paused.
-    * Music.clear_queue: Clear the music queue.
+    - ``fname`` -- The file name of the music given when it was created.
+    - ``id`` -- The unique identifier of the music.
+    - ``length`` -- The length of the music in milliseconds.
+    - ``playing`` -- Whether or not the music is playing.
+    - ``position`` -- The current position (time) playback of the music
+      is at in milliseconds.
 
     """
 
@@ -95,23 +88,26 @@ class Music(object):
         else:
             return 0
 
-    def __init__(self, fname, volume=100):
+    def __init__(self, fname, id_=None, volume=100, **kwargs):
         """Create a new music object.
 
-        ``fname`` indicates the name of the sound file, to be located in
-        one of the directories specified in ``music_directories``.  If
-        set to None, this object will not actually play any music
-        (useful as a placeholder, for example).  If ``fname`` is neither
-        a valid sound file nor None, IOError will be raised.
+        Arguments:
+        - ``fname`` -- The name of the sound file in one of the paths
+          specified in ``music_directories``.  If set to None, this
+          object will not actually play any music.  If this is neither a
+          valid sound file nor None, IOError is raised.
+        - ``id`` -- The unique identifier of the music.  If set to None,
+          ``fname`` minus the extension will be used, modified by SGE if
+          it is already the unique idenfifier of another music object.
 
-        All remaining arguments set the respective initial attributes of
-        the music.  See the documentation for sge.Music for more
-        information.
-
-        A game object must exist before an object of this class is
-        created.
+        All other arguments set the respective initial attributes of the
+        music.  See the documentation for `Music` for more information.
 
         """
+        # Since the docs say that ``id`` is a valid keyword argument,
+        # you should do this to make sure that that is true.
+        id_ = kwargs.setdefault('id', id_)
+
         self.fname = fname
         self.volume = volume
         self._timeout = None
@@ -132,23 +128,36 @@ class Music(object):
                     print(os.path.normpath(os.path.abspath(d)))
                 msg = 'File "{0}" not found.'.format(self.fname)
                 raise IOError(msg)
+
+            if id_ is not None:
+                self.id = id_
+            else:
+                self.id = self.fname
+                while self.id in sge.game.music:
+                    self.id += "_"
         else:
             self._full_fname = None
+
+            if id_ is not None:
+                self.id = id_
+            else:
+                i = 0
+                while i in sge.game.music:
+                    i += 1
+
+                self.id = i
+
+        sge.game.music[self.id] = self
 
     def play(self, start=0, loops=0, maxtime=None, fade_time=None):
         """Play the music.
 
-        ``start`` indicates the number of milliseconds from the
-        beginning to start at.  ``loops`` indicates the number of extra
-        times to play the sound after it is played the first time; set
-        to -1 or None to loop indefinitely.  ``maxtime`` indicates the
-        maximum amount of time to play the sound in milliseconds; set to
-        0 or None for no limit.  ``fade_time`` indicates the time in
-        milliseconds over which to fade the sound in; set to 0 or None
-        to immediately play the music at full volume.
+        Arguments:
 
-        If some music was already playing when this is called, it will
-        be stopped.
+        - ``start`` -- The number of milliseconds from the beginning to
+          start playing at.
+
+        See the documentation for `sge.Sound.play` for more information.
 
         """
         if self._full_fname is not None:
@@ -184,9 +193,7 @@ class Music(object):
         This will cause the music to be added to a list of music to play
         in order, after the previous music has finished playing.
 
-        All arguments are the same as the respective arguments for
-        sge.Music.play; see the documentation for sge.Music.play for
-        more information.
+        See the documentation for `Music.play` for more information.
 
         """
         sge.game._music_queue.append((self, start, loops, maxtime, fade_time))
@@ -195,9 +202,7 @@ class Music(object):
     def stop(fade_time=None):
         """Stop the currently playing music.
 
-        ``fade_time`` indicates the time in milliseconds over which to
-        fade the sound out before stopping; set to 0 or None to
-        immediately stop the music.
+        See the documentation for `sge.Sound.stop` for more information.
 
         """
         if fade_time:

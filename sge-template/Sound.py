@@ -32,46 +32,39 @@ class Sound(object):
 
     What sound formats are supported depends on the implementation of
     SGE, but sound formats that are generally a good choice are Ogg
-    Vorbis and uncompressed WAV.  See the implementation's readme for a
-    full list of supported formats.
+    Vorbis and uncompressed WAV.  See the implementation-specific
+    information for a full list of supported formats.
 
     Attributes:
-    * volume: The volume of the sound in percent from 0 to 100 (0 for no
-      sound, 100 for max sound).
-    * max_play: The maximum instances of this sound playing permitted.
-      Set to 0 for no limit.
+    - ``volume`` -- The volume of the sound in percent from 0 to 100 (0
+      for no sound, 100 for max sound).
+    - ``max_play`` -- The maximum number of instances of this sound
+      playing permitted.  If a sound is played while this number of the
+      instances of the same sound are already playing, one of the
+      already playing sounds will be stopped before playing the new
+      instance.  Set to None or 0 for no limit.
 
     Read-Only Attributes:
-    * fname: The file name of the sound given when it was created.
-    * length: The length of the sound in milliseconds.
-    * playing: The number of instances of this sound playing.
-
-    Methods:
-    * Sound.play: Play the sound.
-    * Sound.stop: Stop the sound.
-    * Sound.pause: Pause playback of the sound.
-    * Sound.unpause: Resume playback of the sound if paused.
-
-    Static Methods:
-    * Sound.stop_all: Stop the playback of all sounds.
+    - ``fname`` -- The file name of the sound given when it was created.
+    - ``length`` -- The length of the sound in milliseconds.
+    - ``playing`` -- The number of instances of this sound playing.
 
     """
 
     def __init__(self, fname, volume=100, max_play=1):
         """Create a new sound object.
 
-        ``fname`` indicates the name of the sound file, to be located in
-        one of the directories specified in ``sound_directories``.  If
-        set to None, this object will not actually play any sound
-        (useful as a placeholder, for example).  If ``fname`` is neither
-        a valid sound file nor None, IOError will be raised.
+        Arguments:
+        - ``fname`` -- The name of the sound file in one of the paths
+          specified in ``sound_directories``.  If set to None, this
+          object will not actually play any sound.  If this is neither a
+          valid sound file nor None, IOError is raised.
+        - ``id`` -- The unique identifier of the sound.  If set to None,
+          ``fname`` minus the extension will be used, modified by SGE if
+          it is already the unique identifier of another music object.
 
-        All remaining arguments set the respective initial attributes of
-        the sound.  See the documentation for sge.Sound for more
-        information.
-
-        A game object must exist before an object of this class is
-        created.
+        All other arguments set the respective initial attributes of the
+        sound.  See the documentation for `Sound` for more information.
 
         """
         # TODO
@@ -80,19 +73,22 @@ class Sound(object):
              fade_time=None):
         """Play the sound.
 
-        ``loops`` indicates the number of extra times to play the sound
-        after it is played the first time; set to -1 or None to loop
-        indefinitely.  ``volume`` indicates the volume to play the sound
-        at as a percentage of self.volume from 0 to 100 (0 for no sound,
-        100 for self.volume).  ``balance`` indicates the balance of the
-        sound effect on stereo speakers as a float from -1 to 1, where 0
-        is centered (full volume on both speakers), 1 is entirely in the
-        right speaker, and -1 is entirely in the left speaker.
-        ``maxtime`` indicates the maximum amount of time to play the
-        sound in milliseconds; set to 0 or None for no limit.
-        ``fade_time`` indicates the time in milliseconds over which to
-        fade the sound in; set to 0 or None to immediately play the
-        sound at full volume.
+        Arguments:
+        - ``loops`` -- The number of extra times to play the sound after
+          it is played the first time; set to None or -1 to loop
+          indefinitely.
+        - ``volume`` -- The volume to play the sound at as a percentage
+          of ``self.volume`` from 0 to 100 (0 for no sound, 100 for
+          ``self.volume``).
+        - ``balance`` -- The balance of the sound effect on stereo
+          speakers as a float from -1 to 1, where 0 is centered (full
+          volume in both speakers), 1 is entirely in the right speaker,
+          and -1 is entirely in the left speaker.
+        - ``maxtime`` -- The maximum amount of time to play the sound in
+          milliseconds; set to None or 0 for no limit.
+        - ``fade_time`` -- The time in milliseconds over which to fade
+          the sound in; set to None or 0 to immediately play the sound
+          at full volume.
 
         """
         # TODO
@@ -100,9 +96,10 @@ class Sound(object):
     def stop(self, fade_time=None):
         """Stop the sound.
 
-        ``fade_time`` indicates the time in milliseconds over which to
-        fade the sound out before stopping; set to 0 or None to
-        immediately stop the sound.
+        Arguments:
+        - ``fade_time`` -- The time in milliseconds over which to fade
+          the sound out before stopping; set to None or 0 to immediately
+          stop the sound.
 
         """
         # TODO

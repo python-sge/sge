@@ -202,40 +202,28 @@ Global Variables and Constants
 ==============================
 
 Constants:
-
-- ``sge.IMPLEMENTATION`` -- A string identifying the how the engine is
-  implemented (e.g. the name of the graphics library used).
-
+- ``sge.IMPLEMENTATION`` -- A string idicating the name of the SGE
+  implementation.
 - ``sge.ALIGN_LEFT`` -- Flag indicating alignment to the left.
-
 - ``sge.ALIGN_CENTER`` -- Flag indicating alignment to the horizontal
   center.
-
 - ``sge.ALIGN_RIGHT`` -- Flag indicating alignment to the right.
-
 - ``sge.ALIGN_TOP`` -- Flag indicating alignment to the top.
-
 - ``sge.ALIGN_MIDDLE`` -- Flag indicating alignment to the vertical
   middle.
-
 - ``sge.ALIGN_BOTTOM`` -- Flag indicating alignment to the bottom.
 
 Global variables:
-
 - ``sge.game`` -- Stores the current `Game` object.  If there is no
   `Game` object currently, this variable is set to None.
-
 - ``sge.image_directories`` -- A list of directories where images can be
   found.  Default is ./data/images, ./data/sprites, or
   ./data/backgrounds, where "." is the program directory.
-
 - ``sge.font_directories`` -- A list of directories where font files can
   be found.  Default is ./data/fonts, where "." is the program
   directory.
-
 - ``sge.sound_directories`` -- A list of directories where sounds can be
   found.  Default is ./data/sounds, where "." is the program directory.
-
 - ``sge.music_directories`` -- A list of directories where music files
   can be found.  Default is ./data/music, where "." is the program
   directory.
@@ -310,7 +298,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.3.0.23"
+__version__ = "0.3.0.24"
 
 import os
 

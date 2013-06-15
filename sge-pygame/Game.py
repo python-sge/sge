@@ -45,77 +45,55 @@ class Game(object):
     errors.
 
     Attributes:
-
     - ``width`` -- The width of the game's display.
-
     - ``height`` -- The height of the game's display.
-
     - ``fullscreen`` -- Whether or not the game should be in fullscreen.
-
     - ``scale`` -- A number indicating a fixed scale factor (e.g. 1 for
       no scaling, 2 for doubled size).  If set to None or 0, scaling is
       automatic (causes the game to fit the window or screen).
-
     - ``scale_proportional`` -- If set to True, scaling is always
       proportional.  If set to False, the image will be distorted to
       completely fill the game window or screen.  This has no effect
       unless ``scale`` is None or 0.
-
     - ``scale_smooth`` -- Whether or not a smooth scaling algorithm (as
       opposed to a simple scaling algorith such as pixel doubling)
       should be used.
-
     - ``fps`` -- The rate the game should run in frames per second.
       Note that this is only the maximum; if the computer is not fast
       enough, the game may run more slowly.
-
     - ``delta`` -- Whether or not delta timing should be used.  Delta
       timing affects object speeds, animation rates, and alarms.
-
     - ``delta_min`` -- Delta timing can cause the game to be choppy.
       This attribute limits this by pretending that the frame rate is
       never lower than this amount, resulting in the game slowing down
       like normal if it is.
-
     - ``grab_input`` -- Whether or not all input should be forcibly
       grabbed by the game.  If this is True and the mouse cursor is
       invisible, the mouse will enter relative mode.
-
     - ``window_text`` -- The text for the OS to display as the window
       title, e.g. in the frame of the window.  If set to None, SGE
       chooses the text.
-
     - ``window_icon`` -- The name of the image file located in
       one of the directories specified in ``sge.image_directories`` to
       use as the window icon.  If set to None, SGE chooses the icon.
 
     Read-Only Attributes:
-
     - ``sprites`` -- A dictionary containing all loaded sprites, indexed
       by the sprites' ``id`` attributes.
-
     - ``background_layers`` -- A dictionary containing all loaded
       background layers, indexed by the layers' ``id`` attributes.
-
     - ``backgrounds`` -- A dictionary containing all loaded backgrounds,
       indexed by the backgrounds' ``id`` attributes.
-
     - ``fonts`` -- A dictionary containing all loaded fonts, indexed by
       the fonts' ``id`` attributes.
-
     - ``sounds`` -- A dictionary containing all loaded sounds, indexed
       by the sounds' ``id`` attributes.
-
     - ``music`` -- A dictionary containing all loaded music, indexed by
       the music objects' ``id`` attributes.
-
     - ``objects`` -- A dictionary containing all `sge.StellarClass`
       objects in the game, indexed by the objects' ``id`` attributes.
-
     - ``rooms`` -- A list containing all rooms in order of their creation.
-
     - ``current_room: The room which is currently active.
-
     - ``mouse`` -- A `sge.StellarClass` object which represents the
       mouse cursor.  Its ``id`` attribute is ``"mouse"`` and its
       bounding box is a one-pixel square.  Speed variables are
@@ -564,7 +542,6 @@ class Game(object):
         """Pause the game.
 
         Arguments:
-
         - ``sprite`` -- The sprite to show in the center of the screen
           while the game is paused.  If set to None, SGE chooses the
           image.
@@ -737,7 +714,6 @@ class Game(object):
         Called once each frame.
 
         Arguments:
-
         - ``time_passed`` -- The number of milliseconds that have passed
           during the last frame.
 
@@ -753,10 +729,8 @@ class Game(object):
         Called when a key on the keyboard is pressed.
 
         Arguments:
-
         - ``key`` -- The identifier string of the key that was pressed;
           see the file KEYS for a full list of key identifier strings.
-
         - ``char`` -- The Unicode character associated with the key
           press, or an empty Unicode string if no Unicode character is
           associated with the key press.
@@ -768,7 +742,6 @@ class Game(object):
         """Key release event.
 
         Arguments:
-
         - ``key`` -- The identifier string of the key that was pressed;
           see the file KEYS for a full list of key identifier strings.
 
@@ -781,7 +754,6 @@ class Game(object):
         Called when the mouse moves.
 
         Arguments:
-
         - ``x`` -- The horizontal relative movement of the mouse.
         - ``y`` -- The vertical relative movement of the mouse.
 
@@ -794,10 +766,8 @@ class Game(object):
         Called when a mouse button is pressed.
 
         Arguments:
-
         - ``button`` -- The mouse button that was pressed.  It can be
           one of the following mouse button identifier strings:
-
           - ``"left"``
           - ``"right"``
           - ``"middle"``
@@ -815,10 +785,8 @@ class Game(object):
         Called when a mouse button is released.
 
         Arguments:
-
         - ``button`` -- The mouse button that was pressed.  It can be
           one of the following mouse button identifier strings:
-
           - ``"left"``
           - ``"right"``
           - ``"middle"``
@@ -836,13 +804,10 @@ class Game(object):
         Called when an axis on a joystick changes position.
 
         Arguments:
-
         - ``joystick`` -- The number of the joystick, where 0 is the
           first joystick.
-
         - ``axis`` -- The number of the axis, where 0 is the first axis
           on the joystick.
-
         - ``value`` -- The tilt of the axis as a float from -1 to 1,
           where 0 is centered, -1 is all the way to the left or up, and
           1 is all the way to the right or down.
@@ -857,16 +822,12 @@ class Game(object):
         or d-pad) changes position.
 
         Arguments:
-
         - ``joystick`` -- The number of the joystick, where 0 is the
           first joystick.
-
         - ``hat`` -- The number of the HAT, where 0 is the first HAT on
           the joystick.
-
         - ``x`` -- The horizontal position of the HAT, where 0 is
           centered, -1 is left, and 1 is right.
-
         - ``y`` -- The vertical position of the HAT, where 0 is
           centered, -1 is up, and 1 is down.
 
@@ -879,15 +840,11 @@ class Game(object):
         Called when a trackball on a joystick moves.
 
         Arguments:
-
         - ``joystick`` -- The number of the joystick, where 0 is the
           first joystick.
-
         - ``ball`` -- The number of the trackball, where 0 is the first
           trackball on the joystick.
-
         - ``x`` -- The horizontal relative movement of the trackball.
-
         - ``y`` -- The vertical relative movement of the trackball.
 
         """
@@ -899,10 +856,8 @@ class Game(object):
         Called when a joystick button is pressed.
 
         Arguments:
-
         - ``joystick`` -- The number of the joystick, where 0 is the
           first joystick.
-
         - ``button`` -- The number of the button that was pressed, where
           0 is the first button on the joystick.
 
@@ -915,10 +870,8 @@ class Game(object):
         Called when a joystick button is pressed.
 
         Arguments:
-
         - ``joystick`` -- The number of the joystick, where 0 is the
           first joystick.
-
         - ``button`` -- The number of the button that was pressed, where
           0 is the first button on the joystick.
 
@@ -1090,7 +1043,7 @@ class Game(object):
         # and self.fullscreen.
         info = pygame.display.Info()
 
-        if self.scale != 0:
+        if self.scale:
             self._xscale = self.scale
             self._yscale = self.scale
 
@@ -1101,7 +1054,7 @@ class Game(object):
 
             self._window = pygame.display.set_mode((0, 0), flags)
 
-            if self.scale == 0:
+            if not self.scale:
                 self._xscale = info.current_w / self.width
                 self._yscale = info.current_h / self.height
 
@@ -1119,7 +1072,7 @@ class Game(object):
             self._x = 0
             self._y = 0
             # Decide window size
-            if self.scale == 0:
+            if not self.scale:
                 self._xscale = self._window_width / self.width
                 self._yscale = self._window_height / self.height
 

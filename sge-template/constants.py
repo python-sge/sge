@@ -51,7 +51,7 @@ MOUSE_BUTTON_NAMES = {}
 for pair in MOUSE_BUTTONS.items():
     MOUSE_BUTTON_NAMES[pair[1]] = pair[0]
 
-IMPLEMENTATION = "Template"
+IMPLEMENTATION = "SGE Template"
 ALIGN_LEFT = 2
 ALIGN_CENTER = 3
 ALIGN_RIGHT = 1
