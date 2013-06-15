@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Stellar Game Engine - Pygame 1.9
 # Copyright (C) 2012, 2013 Julian Marchant <onpon4@lavabit.com>
 #
@@ -298,7 +296,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.3.0.24"
+__version__ = "0.3.0.25"
 
 import os
 
