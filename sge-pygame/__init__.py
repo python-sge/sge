@@ -1,20 +1,21 @@
-# Stellar Game Engine - Pygame 1.9
 # Copyright (C) 2012, 2013 Julian Marchant <onpon4@lavabit.com>
-#
-# This program is free software: you can redistribute it and/or modify
+# 
+# This file is part of SGE Pygame.
+# 
+# SGE Pygame is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
+# 
+# SGE Pygame is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
-#
+# 
 # You should have received a copy of the GNU Lesser General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with SGE Pygame.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Stellar Game Engine - Pygame 1.9
+"""SGE Pygame
 
 The Stellar Game Engine (abbreviated "SGE", pronounced as "Sage") is a
 Python library for use by Stellar.  It is a game engine loosely based on

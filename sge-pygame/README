@@ -8,55 +8,64 @@ without any warranty.
 ========================================================================
 
 Implementation-Specific Information
-------------------------------------------------------------------------
+===================================
 
-This implementation supports hardware rendering, which can improve
-performance in some cases.  It is not enabled by default.  To enable it,
-set ``sge.hardware_rendering`` to True.  To get the best performance
-with hardware rendering, you should use colorkeys instead of alpha
-transparency.
+Formats Support
+---------------
 
-sge.Sprite supports the following image formats:
-* PNG
-* JPEG
-* Non-animated GIF
-* BMP
-* PCX
-* Uncompressed Truevision TGA
-* TIFF
-* ILBM
-* Netpbm
-* X Pixmap
+`Sprite` supports the following image formats:
+- PNG
+- JPEG
+- Non-animated GIF
+- BMP
+- PCX
+- Uncompressed Truevision TGA
+- TIFF
+- ILBM
+- Netpbm
+- X Pixmap
 
-sge.Sound supports the following audio formats:
-* Uncompressed WAV
-* Ogg Vorbis
+`Sound` supports the following audio formats:
+- Uncompressed WAV
+- Ogg Vorbis
 
-sge.Music supports the following audio formats:
-* Ogg Vorbis
-* MP3 (support limited; use not recommended)
-* MOD
-* XM
-* MIDI
+`Music` supports the following audio formats:
+- Ogg Vorbis
+- MP3 (support limited; use not recommended)
+- MOD
+- XM
+- MIDI
 
 For starting position in MOD files, the pattern order number is used
 instead of the number of milliseconds.
 
-If Pygame is built without full image support, sge.Sprite will only
+If Pygame is built without full image support, `Sprite` will only
 support uncompressed BMP images.  In addition, the pygame.mixer module,
 which is used for audio playback, is optional and depends on SDL_mixer;
 if pygame.mixer is unavailable, sounds and music will not play.  If you
 encounter problems with loading images or playing sounds, check your
 build of Pygame.
 
-On some systems, the game will crash if sge.Music attempts to load an
+On some systems, the game will crash if `Music` attempts to load an
 unsupported format.  Since MP3's support is limited, it is best to avoid
 using it; consider using Ogg instead.
 
-sge.Sprite.draw_line and sge.Room.project_line support anti-aliasing for
-lines with a thickness of 1 only.  sge.Sprite.draw_text and
-sge.Room.project_text support anti-aliasing in all cases.  No other
-drawing or projecting methods support anti-aliasing.
+Missing Optional Features
+-------------------------
+
+``sge.Sprite.draw_line`` and ``sge.Room.project_line`` support anti-
+aliasing for lines with a thickness of 1 only.  ``sge.Sprite.draw_text``
+and ``sge.Room.project_text`` support anti-aliasing in all cases.  No
+other drawing or projecting methods support anti-aliasing.
+
+Speed Improvements
+------------------
+
+This implementation supports hardware rendering, which can improve
+performance in some cases.  It is not enabled by default.  To enable it,
+set ``sge.hardware_rendering`` to True.  The benefit of hardware
+acceleration is usually negligible, which is why it is disabled by
+default.
 
 Projection is highly inefficient, so it should be avoided if speed is
 important; use the sprite draw methods instead.
