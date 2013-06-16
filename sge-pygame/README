@@ -10,6 +10,28 @@ without any warranty.
 Implementation-Specific Information
 ===================================
 
+License
+-------
+
+SGE Pygame is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SGE Pygame is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SGE Pygame.  If not, see <http://www.gnu.org/licenses/>.
+
+Dependencies
+------------
+
+- Python 2.6 or later, but not Python 3 <http://www.python.org>
+- Pygame 1.9 or later <http://pygame.org>
+
 Formats Support
 ---------------
 
@@ -53,10 +75,10 @@ using it; consider using Ogg instead.
 Missing Optional Features
 -------------------------
 
-``sge.Sprite.draw_line`` and ``sge.Room.project_line`` support anti-
-aliasing for lines with a thickness of 1 only.  ``sge.Sprite.draw_text``
-and ``sge.Room.project_text`` support anti-aliasing in all cases.  No
-other drawing or projecting methods support anti-aliasing.
+`Sprite.draw_line` and `Room.project_line` support anti-aliasing for
+lines with a thickness of 1 only.  `Sprite.draw_text` and
+`Room.project_text` support anti-aliasing in all cases.  No other
+drawing or projecting methods support anti-aliasing.
 
 Speed Improvements
 ------------------
