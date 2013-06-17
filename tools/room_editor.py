@@ -93,13 +93,14 @@ sge.font_directories.append(os.path.join(DIRNAME, 'editor_data'))
 
 class glob(object):
 
+    game_file = None
+
     button_sprites = {}
     text_entry_font = None
     tooltip_font = None
     tooltip_sprite = None
 
     sprites = []
-    sprite_icons = {}
     defaults = {}
 
 
@@ -358,7 +359,7 @@ class Room(sge.Room):
     def get_height(self):
         return self.real_height * self.zoom
 
-    def save(self, fname):
+    def save(self, num=None):
         # Save settings to a file
         config = {'settings': {}, 'views': [], 'objects': []}
         config['settings']['class'] = self.cls
@@ -405,7 +406,7 @@ class Room(sge.Room):
                 sge.game.room_goto_next()
 
     @classmethod
-    def load(cls, fname):
+    def load(cls, num):
         # Load settings from file and return the resulting room.
         config = {}
         with open(fname, 'r') as f:
@@ -477,92 +478,76 @@ def set_tooltip(text):
 
 def load_resources():
     """Load or reload the sprites, backgrounds, and objects."""
-    # Load sprites
-    sge.Sprite('save', width=ICON_HEIGHT, height=ICON_HEIGHT)
-    sge.Sprite('folder', width=ICON_HEIGHT, height=ICON_HEIGHT)
+    if glob.game_file is not None:
+        with open(glob.game_file, 'r') as f:
+            config = json.read(f)
+            
+        glob.sprites = []
+        sprites = config.setdefault("sprites", [])
 
-    config_files = []
-    for d in sge.image_directories:
-        config_files.append(os.path.join(d, 'spriteconfig.ini'))
+        for sprite in sprites:
+            name = eval(str(sprite.setdefault("name")))
+            id_ = eval(str(sprite.setdefault("id")))
+            width = eval(str(sprite.setdefault("width")))
+            height = eval(str(sprite.setdefault("height")))
+            origin_x = eval(str(sprite.setdefault("origin_x", 0)))
+            origin_y = eval(str(sprite.setdefault("origin_y", 0)))
+            transparent = eval(str(sprite.setdefault("transparent", True)))
+            fps = eval(str(sprite.setdefault("fps", 60)))
+            bbox_x = eval(str(sprite.setdefault("bbox_x")))
+            bbox_y = eval(str(sprite.setdefault("bbox_y")))
+            bbox_width = eval(str(sprite.setdefault("bbox_width")))
+            bbox_height = eval(str(sprite.setdefault("bbox_height")))
+            s = sge.Sprite(name, id_, width, height, origin_x, origin_y,
+                           transparent, fps, bbox_x, bbox_y, bbox_width,
+                           bbox_height)
+            glob.sprites.append(s)
 
-    sprites_config = configparser.ConfigParser()
-    sprites_config.read(config_files)
-    option_arguments = {'xorig': 'origin_x', 'yorig': 'origin_y'}
+        # Load backgrounds
+        background_layers = config.setdefault("background_layers", [])
 
-    for section in sprites_config.sections():
-        kwargs = {'name': section}
+        for layer in background_layers:
+            sprite = eval(str(layer.setdefault(
+                "sprite", '"stellar_room_editor_no_sprite"')))
+            x = eval(str(layer.setdefault("x", 0)))
+            y = eval(str(layer.setdefault("y", 0)))
+            z = eval(str(layer.setdefault("z", 0)))
+            id_ = eval(str(layer.setdefault("id")))
+            xscroll_rate = eval(str(layer.setdefault("xscroll_rate", 1)))
+            yscroll_rate = eval(str(layer.setdefault("yscroll_rate", 1)))
+            xrepeat = eval(str(layer.setdefault("xrepeat", True)))
+            yrepeat = eval(str(layer.setdefault("yrepeat", True)))
+            sge.BackgroundLayer(sprite, x, y, z, id_, xscroll_rate,
+                                yscroll_rate, xrepeat, yrepeat)
 
-        for option in sprite_config.options(section):
-            value = sge.sprite_config.get(section, option)
-            key = option_arguments.setdefault(option, option)
-            kwargs['key'] = value
+        backgrounds = config.setdefault("backgrounds", [])
 
-        try:
-            sge.Sprite(**kwargs)
-            sprite_name = kwargs['name']
-            glob.sprites.append(sprite_name)
-        except IOError:
-            pass
+        for background in backgrounds:
+            layers = []
+            color = eval(str(background.setdefault("color", '"white"')))
+            id_ = eval(str(background.setdefault("id")))
 
-    # Load backgrounds
-    config_file = None
-    for d in sge.image_directories:
-        cfg = os.path.join(d, 'backgrounds.json')
-        if os.path.isfile(cfg):
-            config_file = cfg
+            for layer in background.setdefault("layers", []):
+                layers.append(eval(str(layer)))
 
-    if config_file is not None:
-        with open(config_file, 'r') as f:
-            config = json.load(f)
-    else:
-        config = {}
+            sge.Background(layers, color, id_)
 
-    config.setdefault('layers', {})
-    config.setdefault('backgrounds', {})
-    layers = {}
-    filler = sge.Sprite()
+        # Load class defaults
+        glob.defaults = {}
+        classes = config.setdefault("classes", {})
 
-    for i in config['layers']:
-        layer = config['layers'][i]
-        layers[i] = sge.BackgroundLayer(
-            layer.setdefault('sprite', filler), layer.setdefault('x', 0),
-            layer.setdefault('y', 0), layer.setdefault('z', 0),
-            layer.setdefault('xscroll_rate', 1),
-            layer.setdefault('yscroll_rate', 1),
-            layer.setdefault('xrepeat', True),
-            layer.setdefault('yrepeat', False))
+        for i in classes:
+            glob.defaults[i] = {}
+            methods = classes[i].setdefault("methods", {})
+            constructor = methods.setdefault("__init__", {})
+            args = constructor.setdefault("arguments", [])
 
-    for i in config['backgrounds']:
-        bg = config['backgrounds'][i]
-        bg_layers = []
-        for layer in bg['layers']:
-            bg_layers.append(layers[layer])
-        sge.Background(bg_layers, bg['color'], i)
-
-    # Load class defaults
-    glob.defaults = {}
-    classes_dir = os.path.join(DIRNAME, 'Objects')
-    if os.path.isdir(classes_dir):
-        files = os.listdir(classes_dir)
-        for fname in files:
-            config = configparser.ConfigParser()
-            success = config.read(os.path.join(classes_dir, fname))
-
-            if success:
-                try:
-                    sprite = config.get('data', 'sprite')
-                    if sprite == '<no sprite>':
-                        sprite = None
-                except (configparser.NoSectionError, configparser.NoOptionError):
-                    sprite = None
-
-                try:
-                    z = config.get('data', 'z')
-                except (configparser.NoSectionError, configparser.NoOptionError):
-                    z = 0
-
-                classname = os.path.splitext(fname)[0]
-                glob.defaults[classname]
+            for arg in args:
+                if "=" in arg:
+                    name, value = arg.split("=")
+                    name = name.strip()
+                    value = value.strip()
+                    glob.defaults[i][name] = str(value)
 
 
 def main(*args):
