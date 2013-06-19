@@ -407,60 +407,80 @@ class Room(sge.Room):
 
     @classmethod
     def load(cls, num):
-        # Load settings from file and return the resulting room.
-        config = {}
-        with open(fname, 'r') as f:
-            config = json.load(f)
+        """Load settings from file and return the resulting room."""
+        if glob.game_file is not None:
+            with open(glob.game_file, 'r') as f:
+                config = json.read(f)
 
-        settings = config.setdefault('settings', {})
-        cls = settings.setdefault('class', 'sge.Room')
-        name = settings.setdefault('name', '')
-        width = settings.setdefault('width')
-        height = settings.setdefault('height')
-        background = settings.setdefault('background')
-        background_x = settings.setdefault('background_x', 0)
-        background_y = settings.setdefault('background_y', 0)
-        args = settings.setdefault('args', [])
-        kwargs = settings.setdefault('kwargs', {})
+            rooms = config.setdefault("rooms", [])
 
-        view_settings = config.setdefault('views')
-        if view_settings:
-            views = []
-            for view in view_settings:
-                views.append(sge.View(
-                    view.setdefault('x', 0), view.setdefault('y', 0),
-                    view.setdefault('xport', 0), view.setdefault('yport', 0),
-                    view.setdefault('width'), view.setdefault('height')))
-        else:
-            views = None
+            if num < len(rooms):
+                room = rooms[num]
 
-        object_settings = config.setdefault('objects', [])
-        objects = []
-        for obj in object_settings:
-            objects.append(Object(
-                obj.setdefault('class', sge.StellarClass),
-                obj.setdefault('x', 0), obj.setdefault('y', 0),
-                obj.setdefault('z', 0), obj.setdefault('args', []),
-                obj.setdefault('kwargs', {})))
+                object_data = room.setdefault("objects", [])
+                objects = []
 
-        if sge.game.current_room.empty:
-            new_room = sge.game.current_room
-        else:
-            for room in sge.game.rooms:
-                if room.name == name:
-                    room.opened = True
+                for obj in object_data:
+                    if "assignto" in obj:
+                        del obj["assignto"]
+
+                    cls = obj.setdefault("class", "sge.StellarClass")
+                    x = eval(str(obj.setdefault("x", 0)))
+                    y = eval(str(obj.setdefault("y", 0)))
+                    args = []
+                    kwargs = {}
+
+                    del obj['class']
+                    del obj['x']
+                    del obj['y']
+
+                    for i in obj:
+                        kwargs[i] = eval(str(obj[i]))
+
+                    objects.append(Object(cls, x, y, args, kwargs))
+
+                view_data = room.setdefault("views", [])
+                views = []
+
+                for view in view_data:
+                    x = eval(str(view.setdefault("x", 0)))
+                    y = eval(str(view.setdefault("y", 0)))
+                    xport = eval(str(view.setdefault("xport", 0)))
+                    yport = eval(str(view.setdefault("yport", 0)))
+                    width = eval(str(view.setdefault("width")))
+                    height = eval(str(view.setdefault("height")))
+                    views.append(sge.View(x, y, xport, yport, width, height))
+
+                options = room.setdefault("options")
+                width = eval(str(options.setdefault("width")))
+                height = eval(str(options.setdefault("height")))
+                background = eval(str(options.setdefault("background")))
+                background_x = eval(str(options.setdefault("background_x", 0)))
+                background_y = eval(str(options.setdefault("background_y", 0)))
+
+                if num >= len(sge.game.rooms):
+                    return Room(objects, width, height, views, background,
+                                background_x, background_y)
+                else:
+                    room = sge.game.rooms[num]
+
+                    for obj in room.real_objects:
+                        obj.destroy()
+
+                    for obj in objects:
+                        room.add(obj)
+
+                    room.real_objects = objects
+
+                    room.real_width = width
+                    room.real_height = height
+                    room.real_views = views
+                    room.background = background
+                    room.real_background_x = background_x
+                    room.real_background_y = background_y
+
+                    room.refresh()
                     return room
-
-            new_room = cls(objects, width, height, views, background,
-                           background_x, background_y)
-
-        new_room.fname = fname
-        new_room.cls = cls
-        new_room.name = name
-        new_room.empty = False
-        new_room.opened = True
-
-        return new_room
 
 
 def set_tooltip(text):
@@ -598,12 +618,26 @@ def main(*args):
     # Set mouse cursor
     sge.game.mouse.sprite = 'stellar_room_editor_cursor'
 
+    if len(args) > 1:
+        glob.game_file = args[1]
+
     # Load game resources
-    load_resources()
+    try:
+        load_resources()
+    except IOError:
+        glob.game_file = None
 
     # Create rooms
-    for arg in args[1:]:
-        Room.load(arg)
+    try:
+        with open(glob.game_file, 'r') as f:
+            config = json.read(f)
+
+        rooms = len(config.setdefault("rooms", []))
+    except IOError:
+        rooms = 0
+
+    for i in xrange(rooms):
+        Room.load(i)
 
     if not sge.game.rooms:
         Room()
