@@ -186,11 +186,12 @@ class Game(object):
         Called when a key on the keyboard is pressed.
 
         Arguments:
-        - ``key`` -- The identifier string of the key that was pressed;
-          see the file KEYS for a full list of key identifier strings.
         - ``char`` -- The Unicode character associated with the key
           press, or an empty Unicode string if no Unicode character is
           associated with the key press.
+
+        See the documentation for `sge.get_key_pressed` for more
+        information.
 
         """
         pass
@@ -198,9 +199,8 @@ class Game(object):
     def event_key_release(self, key):
         """Key release event.
 
-        Arguments:
-        - ``key`` -- The identifier string of the key that was pressed;
-          see the file KEYS for a full list of key identifier strings.
+        See the documentation for `sge.get_key_pressed` for more
+        information.
 
         """
         pass
@@ -222,16 +222,8 @@ class Game(object):
 
         Called when a mouse button is pressed.
 
-        Arguments:
-        - ``button`` -- The mouse button that was pressed.  It can be
-          one of the following mouse button identifier strings:
-          - ``"left"``
-          - ``"right"``
-          - ``"middle"``
-          - ``"wheel_up"``
-          - ``"wheel_down"``
-          - ``"wheel_left"``
-          - ``"wheel_right"``
+        See the documentation for `sge.get_mouse_button_pressed` for
+        more information.
 
         """
         pass
@@ -241,16 +233,8 @@ class Game(object):
 
         Called when a mouse button is released.
 
-        Arguments:
-        - ``button`` -- The mouse button that was pressed.  It can be
-          one of the following mouse button identifier strings:
-          - ``"left"``
-          - ``"right"``
-          - ``"middle"``
-          - ``"wheel_up"``
-          - ``"wheel_down"``
-          - ``"wheel_left"``
-          - ``"wheel_right"``
+        See the documentation for `sge.get_mouse_button_pressed` for
+        more information.
 
         """
         pass
@@ -261,13 +245,12 @@ class Game(object):
         Called when an axis on a joystick changes position.
 
         Arguments:
-        - ``joystick`` -- The number of the joystick, where 0 is the
-          first joystick.
-        - ``axis`` -- The number of the axis, where 0 is the first axis
-          on the joystick.
         - ``value`` -- The tilt of the axis as a float from -1 to 1,
           where 0 is centered, -1 is all the way to the left or up, and
           1 is all the way to the right or down.
+
+        See the documentation for `sge.get_joystick_axis` for more
+        information.
 
         """
         pass
@@ -279,14 +262,13 @@ class Game(object):
         or d-pad) changes position.
 
         Arguments:
-        - ``joystick`` -- The number of the joystick, where 0 is the
-          first joystick.
-        - ``hat`` -- The number of the HAT, where 0 is the first HAT on
-          the joystick.
         - ``x`` -- The horizontal position of the HAT, where 0 is
           centered, -1 is left, and 1 is right.
         - ``y`` -- The vertical position of the HAT, where 0 is
           centered, -1 is up, and 1 is down.
+
+        See the documentation for `sge.get_joystick_hat` for more
+        information.
 
         """
         pass
@@ -312,11 +294,8 @@ class Game(object):
 
         Called when a joystick button is pressed.
 
-        Arguments:
-        - ``joystick`` -- The number of the joystick, where 0 is the
-          first joystick.
-        - ``button`` -- The number of the button that was pressed, where
-          0 is the first button on the joystick.
+        See the documentation for `sge.get_joystick_button_pressed` for
+        more information.
 
         """
         pass
@@ -326,11 +305,8 @@ class Game(object):
 
         Called when a joystick button is pressed.
 
-        Arguments:
-        - ``joystick`` -- The number of the joystick, where 0 is the
-          first joystick.
-        - ``button`` -- The number of the button that was pressed, where
-          0 is the first button on the joystick.
+        See the documentation for `sge.get_joystick_button_pressed` for
+        more information.
 
         """
         pass

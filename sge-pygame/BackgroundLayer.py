@@ -30,24 +30,32 @@ class BackgroundLayer(object):
 
     """Special class used for background layers.
 
-    All BackgroundLayer objects have the following attributes:
-        sprite: The Sprite object used for this layer.  While it will
-            always be an actual Sprite object when read, it can also be
-            set to the ID of a sprite.
-        x: The horizontal offset of the layer.
-        y: The vertical offset of the layer.
-        z: The Z-axis position of the layer in the room, which
-            determines in what order layers are drawn; layers with a
-            higher Z value are drawn in front of layers with a lower Z
-            value.
-        xscroll_rate: The horizontal speed the layer scrolls as a factor
-            of the view scroll speed.
-        yscroll_rate: The vertical speed the layer scrolls as a factor
-            of the view scroll speed.
-        xrepeat: Whether or not the layer should be repeated
-            horizontally.
-        yrepeat: Whether or not the layer should be repeated
-            vertically.
+    This class stores a sprite and certain information for a layer of a
+    background.  In particular, it stores the location of the layer,
+    whether the layer tiles horizontally, vertically, or both, and the
+    rate at which it scrolls.
+
+    Attributes:
+    - ``sprite`` -- The sprite used for this layer.  It will be animated
+      normally if it contains multiple frames.
+    - ``x`` -- The horizontal location of the layer relative to the
+      background.
+    - ``y`` -- The vertical location of the layer relative to the
+      background.
+    - ``z`` -- The Z-axis position of the layer in the room.
+    - ``xscroll_rate`` -- The horizontal rate that the layer scrolls as
+      a factor of the additive inverse of the horizontal movement of the
+      view.
+    - ``yscroll_rate`` -- The vertical rate that the layer scrolls as a
+      factor of the additive inverse of the vertical movement of the
+      view.
+    - ``xrepeat`` -- Whether or not the layer should be repeated (tiled)
+      horizontally.
+    - ``yrepeat`` -- Whether or not the layer should be repeated (tiled)
+      vertically.
+
+    Read-Only Attributes:
+    - ``id`` -- The unique identifier of the layer.
 
     """
 
@@ -139,7 +147,6 @@ class BackgroundLayer(object):
         """Create a background layer object.
 
         Arguments:
-
         - ``id`` -- The unique identifier of the sprite.  If set to
           None, the ``id`` attribute of the sprite will be used,
           modified by SGE if it is already the unique identifier of

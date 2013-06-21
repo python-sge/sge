@@ -360,7 +360,7 @@ class Room(sge.Room):
         return self.real_height * self.zoom
 
     def save(self, num=None):
-        # Save settings to a file
+        """Save settings to a file."""
         config = {'settings': {}, 'views': [], 'objects': []}
         config['settings']['class'] = self.cls
         config['settings']['name'] = self.name
