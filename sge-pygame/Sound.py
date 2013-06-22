@@ -88,7 +88,7 @@ class Sound(object):
         else:
             return 0
 
-    def __init__(self, fname, volume=100, max_play=1):
+    def __init__(self, fname, id_=None, volume=100, max_play=1, **kwargs):
         """Create a new sound object.
 
         Arguments:
@@ -104,6 +104,10 @@ class Sound(object):
         sound.  See the documentation for `Sound` for more information.
 
         """
+        # Since the docs say that ``id`` is a valid keyword argument,
+        # you should do this to make sure that that is true.
+        id_ = kwargs.setdefault('id', id_)
+
         if fname is not None and pygame.mixer.get_init():
             self._sound = None
             for path in sge.sound_directories:

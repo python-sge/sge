@@ -30,21 +30,26 @@ class View(object):
 
     """Class for room views.
 
-    All View objects have the following attributes:
-        x: The horizontal position of the view in the room, where the
-            left edge is 0 and x increases toward the right.  When set,
-            if it brings the view outside the room it is in, it will be
-            re-adjusted so that the view is completely inside the room.
-        y: The vertical position of the view in the room, where the top
-            edge is 0 and y increases toward the bottom.  When set,
-            if it brings the view outside the room it is in, it will be
-            re-adjusted so that the view is completely inside the room.
-        xport: The horizontal position of the view on the screen, where
-            the left edge is 0 and xport increases toward the right.
-        yport: The vertical position of the view on the screen, where
-            the top edge is 0 and yport increases toward the bottom.
-        width: The width of the view in pixels.
-        height: The height of the view in pixels.
+    This class controls what the player sees in a room at any given
+    time.  Multiple views can exist in a room, and this can be used to
+    create a split-screen effect.
+
+    Attributes:
+    - ``x`` -- The horizontal position of the view in the room.  When
+      set, if it brings the view outside of the room it is in, it will
+      be re-adjusted so that the view is completely inside the room.
+    - ``y`` -- The vertical position of the view in the room.  When set,
+      if it brings the view outside of the room it is in, it will be
+      re-adjusted so that the view is completely inside the room.
+    - ``xport`` -- The horizontal position of the view port on the
+      screen.
+    - ``yport`` -- The vertical position of the view port on the screen.
+    - ``width`` -- The width of the view.  When set, if it results in
+      the view being outside of the room it is in, ``x`` will be
+      adjusted so that the view is completely inside the room.
+    - ``height`` -- The height of the view.  When set, if it results in
+      the view being outside the room it is in, ``y`` will be adjusted
+      so that the view is completely inside the room.
 
     """
 
@@ -115,12 +120,17 @@ class View(object):
     def __init__(self, x, y, xport=0, yport=0, width=None, height=None):
         """Create a new View object.
 
-        Arguments set the properties of the view.  See View.__doc__ for
-        more information.
+        Arguments:
+        - ``width`` -- The width of the view.  If set to None, it will
+          be set such that the view port takes up all of the space that
+          it can horizontally (i.e. ``game.width - xport``).
+        - ``height`` -- The height of the view.  If set to None, it will
+          be set such that the view port takes up all of the space that
+          it can vertically (i.e. ``game.height - yport``).
 
-        If ``width`` or ``height`` is set to None, the respective size
-        will be set such that the view takes up all of the space that it
-        can (i.e. game.width - xport or game.height - yport).
+        All other arugments set the respective initial attributes of the
+        view.  See the documentation for `StellarClass` for more
+        information.
 
         """
         self._x = x

@@ -53,7 +53,7 @@ class Sound(object):
 
     """
 
-    def __init__(self, fname, volume=100, max_play=1):
+    def __init__(self, fname, id_=None, volume=100, max_play=1, **kwargs):
         """Create a new sound object.
 
         Arguments:
@@ -69,6 +69,10 @@ class Sound(object):
         sound.  See the documentation for `Sound` for more information.
 
         """
+        # Since the docs say that ``id`` is a valid keyword argument,
+        # you should do this to make sure that that is true.
+        id_ = kwargs.setdefault('id', id_)
+
         # TODO
 
     def play(self, loops=0, volume=100, balance=0, maxtime=None,

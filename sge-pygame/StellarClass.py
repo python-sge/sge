@@ -38,20 +38,21 @@ class StellarClass(object):
 
     This class is used for game objects, such as the player, enemies,
     bullets, and the HUD.  Generally, each type of object has its own
-    subclass of sge.StellarClass.
+    subclass of `StellarClass`.
 
     One attribute which needs some explanation is ``active``.  This
-    attribute indicates whether the object is active (True) or inactive
-    (False).  While the object is active, it will exhibit normal behavior;
-    events will be executed normally as will any other automatic
-    functionality, such as adding xvelocity and yvelocity to x and y.  If
-    ``active`` is False, automatic functionality and normal events will be
-    disabled and events which have names starting with "event_inactive_"
-    will be executed instead of the corresponding normal events.
+    attribute indicates whether the object is active (``True``) or
+    inactive (``False``).  While the object is active, it will exhibit
+    normal behavior; events will be executed normally as will any other
+    automatic functionality, such as adding ``xvelocity`` and
+    ``yvelocity`` to ``x`` and ``y``.  If ``active`` is False, automatic
+    functionality and normal events will be disabled and events which
+    have names starting with "event_inactive_" will be executed instead
+    of the corresponding normal events.
 
     It is important to recognize that making an object inactive is not
     like deactivating an instance in Game Maker.  Unlike deactivated
-    instances in Game Maker, inactive StellarClass objects are still
+    instances in Game Maker, inactive `StellarClass` objects are still
     visible by default and continue to be involved in collisions.  In
     addition, collision events and destroy events still occur even if the
     object is inactive.  If you wish for the object to not be visible, set
@@ -67,131 +68,70 @@ class StellarClass(object):
     otherwise occur, or to prevent the object from moving through walls).
 
     Attributes:
-    * x: The horizontal position of the object in the room.
-    * y: The vertical position of the object in the room.
-    * z: The Z-axis position of the object in the room.
-    * sprite: The sprite currently in use by this object.  Set to None
-      for no (visible) sprite.  While it will always be an actual
-      sge.Sprite object or None when read, it can also be set to the ID
-      of a sprite.
-    * visible: Whether or not the object's sprite should be projected
+    - ``x`` -- The horizontal position of the object in the room.
+    - ``y`` -- The vertical position of the object in the room.
+    - ``z`` -- The Z-axis position of the object in the room.
+    - ``sprite`` -- The sprite currently in use by this object.  Set to
+      None for no (visible) sprite.
+    - ``visible`` -- Whether or not the object's sprite should be projected
       onto the screen.
-    * active: Whether or not the object should be active.  If this is
+    - ``active`` -- Whether or not the object should be active.  If this is
       False, all normal occurances (including events) will not execute.
       Only collision events, destroy events, and events with names that
       start with "event_inactive_" will be executed.
-    * detects_collisions: Whether or not the object should be involved
+    - ``detects_collisions`` -- Whether or not the object should be involved
       in collision detection.  Setting this to False can improve
       performance if the object doesn't need to detect collisions.
-    * bbox_x: The horizontal location of the bounding box relative to
+    - ``bbox_x`` -- The horizontal location of the bounding box relative to
       the object's position.  If set to None, the value recommended by
       the sprite is used.
-    * bbox_y: The vertical location of the bounding box relative to the
+    - ``bbox_y`` -- The vertical location of the bounding box relative to the
       object's position.  If set to None, the value recommended by the
       sprite is used.
-    * bbox_width: The width of the bounding box in pixels.  If set to
+    - ``bbox_width`` -- The width of the bounding box in pixels.  If set to
       None, the value recommended by the sprite is used.
-    * bbox_height: The height of the bounding box in pixels.  If set to
+    - ``bbox_height`` -- The height of the bounding box in pixels.  If set to
       None, the value recommended by the sprite is used.
-    * collision_ellipse: Whether or not an ellipse (rather than a
+    - ``collision_ellipse`` -- Whether or not an ellipse (rather than a
       rectangle) should be used for collision detection.
-    * collision_precise: Whether or not precise (pixel-perfect)
+    - ``collision_precise`` -- Whether or not precise (pixel-perfect)
       collision detection should be used.  Note that this can be
       inefficient and in some cases can lead to collision detection
       errors.
-    * bbox_left: The position of the left side of the bounding box in
+    - ``bbox_left`` -- The position of the left side of the bounding box in
       the room (same as x + bbox_x).
-    * bbox_right: The position of the right side of the bounding box in
+    - ``bbox_right`` -- The position of the right side of the bounding box in
       the room (same as bbox_left + bbox_width).
-    * bbox_top: The position of the top side of the bounding box in the
+    - ``bbox_top`` -- The position of the top side of the bounding box in the
       room (same as y + bbox_y).
-    * bbox_bottom: The position of the bottom side of the bounding box
+    - ``bbox_bottom`` -- The position of the bottom side of the bounding box
       in the room (same as bbox_top + bbox_height).
-    * xvelocity: The velocity of the object toward the right.
-    * yvelocity: The velocity of the object toward the bottom.
-    * speed: The total (directional) speed of the object.
-    * move_direction: The direction of the object's movement in degrees,
+    - ``xvelocity`` -- The velocity of the object toward the right.
+    - ``yvelocity`` -- The velocity of the object toward the bottom.
+    - ``speed`` -- The total (directional) speed of the object.
+    - ``move_direction`` -- The direction of the object's movement in degrees,
       with 0 being directly to the right and rotation in a positive
       direction being counter-clockwise.  Default is 0.
-    * image_index: The animation frame currently being displayed, with 0
+    - ``image_index`` -- The animation frame currently being displayed, with 0
       being the first one.
-    * image_fps: The animation rate in frames per second.  If set to
+    - ``image_fps`` -- The animation rate in frames per second.  If set to
       None, the value recommended by the sprite is used.
-    * image_xscale: The horizontal scale factor for the sprite.
-    * image_yscale: The vertical scale factor for the sprite.
-    * image_rotation: The rotation of the sprite in degrees, with
+    - ``image_xscale`` -- The horizontal scale factor for the sprite.
+    - ``image_yscale`` -- The vertical scale factor for the sprite.
+    - ``image_rotation`` -- The rotation of the sprite in degrees, with
       rotation in a positive direction being counter-clockwise.
-    * image_alpha: The alpha value applied to the entire image, where
+    - ``image_alpha`` -- The alpha value applied to the entire image, where
       255 is the original image, 128 is half the opacity of the original
       image, 0 is fully transparent, etc.
-    * image_blend: The color to blend with the sprite.  Set to None for
+    - ``image_blend`` -- The color to blend with the sprite.  Set to None for
       no color blending.
 
     Read-Only Attributes:
-    * id: The unique identifier for this object.
-    * xstart: The initial value of x when the object was created.
-    * ystart: The initial value of y when the object was created.
-    * xprevious: The previous value of x.
-    * yprevious: The previous value of y.
-
-    Methods:
-    * collides: Return whether or not this object collides with another.
-    * set_alarm: Set an alarm.
-    * get_alarm: Return the count on an alarm.
-    * destroy: Destroy the object.
-
-    Events are handled by special methods that are internally called by
-    SGE.  The exact timing of their calling is implementation-dependent
-    except where otherwise noted.  The methods are:
-    * event_create: Called when the object is created.
-    * event_destroy: Destroy event.
-    * event_step: Called once each frame.
-    * event_alarm: Called when an alarm counter reaches 0.
-    * event_animation_end: Called when an animation cycle ends.
-    * event_key_press: Key press event.
-    * event_key_release: Key release event.
-    * event_mouse_move: Mouse move event.
-    * event_mouse_button_press: Mouse button press event.
-    * event_mouse_button_release: Mouse button release event.
-    * event_joystick_axis_move: Joystick axis move event.
-    * event_joystick_hat_move: Joystick HAT move event.
-    * event_joystick_trackball_move: Joystick trackball move event.
-    * event_joystick_button_press: Joystick button press event.
-    * event_joystick_button_release: Joystick button release event.
-    * event_close: Close event (e.g. close button).
-    * event_collision: Middle/default collision event.
-    * event_collision_left: Left collision event.
-    * event_collision_right: Right collision event.
-    * event_collision_top: Top collision event.
-    * event_collision_bottom: Bottom collision event.
-
-    The following alternative events are executed when the object is
-    inactive (i.e. the ``active`` attribute is set to False) in place of
-    the corresponding normal events:
-    * event_inactive_step
-    * event_inactive_key_press
-    * event_inactive_key_release
-    * event_inactive_mouse_move
-    * event_inactive_mouse_button_press
-    * event_inactive_mouse_button_release
-    * event_inactive_joystick_axis_move
-    * event_inactive_joystick_hat_move
-    * event_inactive_joystick_trackball_move
-    * event_inactive_joystick_button_press
-    * event_inactive_joystick_button_release
-
-    The following alternative events are executed when the game is
-    paused in place of the corresponding normal events:
-    * event_paused_key_press
-    * event_paused_key_release
-    * event_paused_mouse_move
-    * event_paused_mouse_button_press
-    * event_paused_mouse_button_release
-    * event_paused_joystick_axis_move
-    * event_paused_joystick_hat_move
-    * event_paused_joystick_trackball_move
-    * event_paused_joystick_button_press
-    * event_paused_joystick_button_release
+    - ``id`` -- The unique identifier for this object.
+    - ``xstart`` -- The initial value of x when the object was created.
+    - ``ystart`` -- The initial value of y when the object was created.
+    - ``xprevious`` -- The previous value of x.
+    - ``yprevious`` -- The previous value of y.
 
     """
 
@@ -399,15 +339,14 @@ class StellarClass(object):
                  image_alpha=255, image_blend=None, **kwargs):
         """Create a new StellarClass object.
 
-        Arguments set the respective initial attributes of the object.
-        See the documentation for sge.StellarClass for more information.
+        Arguments:
+        - ``id`` -- The unique identifier of the sound.  If set to None,
+          ``fname`` minus the extension will be used, modified by SGE if
+          it is already the unique identifier of another music object.
 
-        If ``id`` is None, it will be set to an integer not currently
-        used as an ID (the exact number chosen is implementation-
-        specific and may not necessarily be the same between runs).
-
-        A game object must exist before an object of this class is
-        created.
+        All other arugments set the respective initial attributes of the
+        object.  See the documentation for `StellarClass` for more
+        information.
 
         """
         # Since the docs say that ``id`` is a valid keyword argument,
@@ -498,13 +437,16 @@ class StellarClass(object):
     def collides(self, other, x=None, y=None):
         """Return whether or not this object collides with another.
 
-        ``other`` indicates the object to check for a collision with, or
-        the name of said object.  ``other`` can also be a class to check
-        for collisions with.
-
-        ``x`` and ``y`` indicate the position to check for collisions
-        at.  If unspecified or None, this object's current position will
-        be used.
+        Arguments:
+        - ``other`` -- The object to check for a collision with, or the
+          unique identifier of said object.  ``other`` can also be a
+          class to check for collisions with.
+        - ``x`` -- The horizontal position to pretend this object is at
+          for the purpose of the collision detection.  If set to None,
+          ``self.x`` will be used.
+        - ``y`` -- The vertical position to pretend this object is at
+          for the purpose of the collision detection.  If set to None,
+          ``self.y`` will be used.
 
         """
         if isinstance(other, StellarClass):
@@ -563,12 +505,16 @@ class StellarClass(object):
     def set_alarm(self, alarm_id, value):
         """Set an alarm.
 
-        Set the alarm with the given ``alarm_id`` with the given
-        ``value``.  The alarm will then reduce by 1 each frame until it
-        reaches 0 and set off the alarm event with the same ID.
-        ``alarm_id`` can be any value.  ``value`` should be a number
-        greater than 0.  You can also set ``value`` to None to disable
-        the alarm.
+        Arguments:
+        - ``alarm_id`` -- The unique identifier of the alarm to set.
+          Any value can be used as a unique identifier for an alarm.
+        - ``value`` -- The value to set the alarm to.  Set to None to
+          disable the alarm.
+
+        After this method is called, ``value`` will reduce by 1 each
+        frame (adjusted for delta timing if it is enabled) until it
+        reaches 0, at which point `StellarClass.event_alarm` will be
+        executed with ``alarm_id``.
 
         """
         if value is not None:
@@ -577,10 +523,11 @@ class StellarClass(object):
             del self._alarms[alarm_id]
 
     def get_alarm(self, alarm_id):
-        """Return the count on an alarm.
+        """Return the value of an alarm.
 
-        Get the number of frames before the alarm with ``alarm_id`` will
-        go off.  If the alarm has not been set, None will be returned.
+        - ``alarm_id`` -- The unique identifier of the alarm to check.
+
+        If the alarm has not been set, None will be returned.
 
         """
         if alarm_id in self._alarms:
@@ -626,8 +573,11 @@ class StellarClass(object):
     def event_alarm(self, alarm_id):
         """Alarm event.
 
-        Called when an alarm counter reaches 0.  ``alarm_id`` is the ID
-        of the alarm that was set off.
+        Called when the value of an alarm reaches 0.
+
+        Arguments:
+        - ``alarm_id`` -- The unique identifier of the alarm which was
+          set off.
 
         """
         pass
@@ -643,7 +593,7 @@ class StellarClass(object):
     def event_key_press(self, key, char):
         """Key press event.
 
-        See the documentation for sge.Game.event_key_press for more
+        See the documentation for `sge.Game.event_key_press` for more
         information.
 
         """
@@ -652,7 +602,7 @@ class StellarClass(object):
     def event_key_release(self, key):
         """Key release event.
 
-        See the documentation for sge.Game.event_key_release for more
+        See the documentation for `sge.Game.event_key_release` for more
         information.
 
         """
@@ -661,7 +611,7 @@ class StellarClass(object):
     def event_mouse_move(self, x, y):
         """Mouse move event.
 
-        See the documentation for sge.Game.event_mouse_move for more
+        See the documentation for `sge.Game.event_mouse_move` for more
         information.
 
         """
@@ -670,8 +620,8 @@ class StellarClass(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        See the documentation for sge.Game.event_mouse_button_press for
-        more information.
+        See the documentation for `sge.Game.event_mouse_button_press`
+        for more information.
 
         """
         pass
@@ -679,7 +629,7 @@ class StellarClass(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        See the documentation for sge.Game.event_mouse_button_release
+        See the documentation for `sge.Game.event_mouse_button_release`
         for more information.
 
         """
@@ -688,8 +638,8 @@ class StellarClass(object):
     def event_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event.
 
-        See the documentation for sge.Game.event_joystick_axis_move for
-        more information.
+        See the documentation for `sge.Game.event_joystick_axis_move`
+        for more information.
 
         """
         pass
@@ -697,7 +647,7 @@ class StellarClass(object):
     def event_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event.
 
-        See the documentation for sge.Game.event_joystick_hat_move for
+        See the documentation for `sge.Game.event_joystick_hat_move` for
         more information.
 
         """
@@ -706,8 +656,8 @@ class StellarClass(object):
     def event_joystick_trackball_move(self, joystick, ball, x, y):
         """Joystick trackball move event.
 
-        See the documentation for sge.Game.event_joystick_trackball_move
-        for more information.
+        See the documentation for
+        `sge.Game.event_joystick_trackball_move` for more information.
 
         """
         pass
@@ -715,7 +665,7 @@ class StellarClass(object):
     def event_joystick_button_press(self, joystick, button):
         """Joystick button press event.
 
-        See the documentation for sge.Game.event_joystick_button_press
+        See the documentation for `sge.Game.event_joystick_button_press`
         for more information.
 
         """
@@ -724,36 +674,90 @@ class StellarClass(object):
     def event_joystick_button_release(self, joystick, button):
         """Joystick button release event.
 
-        See the documentation for sge.Game.event_joystick_button_release
-        for more information.
+        See the documentation for
+        `sge.Game.event_joystick_button_release` for more information.
 
         """
         pass
 
     def event_collision(self, other):
-        """Middle/default collision event."""
+        """Default collision event.
+
+        Called when another object collides with this object and none of
+        the directional collision events are appropriate.  In
+        particular, this is called if the collision was already
+        happening in the previous frame.  This is also the event method
+        called by the directional collision event methodss by default.
+
+        Arguments:
+        - ``other`` -- The other object which was collided with.
+
+        """
         pass
 
     def event_collision_left(self, other):
-        """Left collision event."""
+        """Left collision event.
+
+        Called when another object collides with this object's left
+        side.
+
+        Arguments:
+        - ``other`` -- The other object which was collided with.
+
+        By default, this method simply calls
+        `StellarClass.event_collision`.
+
+        """
         self.event_collision(other)
 
     def event_collision_right(self, other):
-        """Right collision event."""
+        """Right collision event.
+
+        Called when another object collides with this object's right
+        side.
+
+        Arguments:
+        - ``other`` -- The other object which was collided with.
+
+        By default, this method simply calls
+        `StellarClass.event_collision`.
+
+        """
         self.event_collision(other)
 
     def event_collision_top(self, other):
-        """Top collision event."""
+        """Top collision event.
+
+        Called when another object collides with this object's top side.
+
+        Arguments:
+        - ``other`` -- The other object which was collided with.
+
+        By default, this method simply calls
+        `StellarClass.event_collision`.
+
+        """
         self.event_collision(other)
 
     def event_collision_bottom(self, other):
-        """Bottom collision event."""
+        """Bottom collision event.
+
+        Called when another object collides with this object's bottom
+        side.
+
+        Arguments:
+        - ``other`` -- The other object which was collided with.
+
+        By default, this method simply calls
+        `StellarClass.event_collision`.
+
+        """
         self.event_collision(other)
 
     def event_inactive_step(self, time_passed):
         """Step event when this object is inactive.
 
-        See the documentation for sge.Game.event_step for more
+        See the documentation for `sge.Game.event_step` for more
         information.  The object is considered to be inactive when its
         ``active`` attribute is False.
 
@@ -762,7 +766,7 @@ class StellarClass(object):
     def event_inactive_key_press(self, key, char):
         """Key press event when this object is inactive.
 
-        See the documentation for sge.Game.event_key_press for more
+        See the documentation for `sge.Game.event_key_press` for more
         information.  The object is considered to be inactive when its
         ``active`` attribute is False.
 
@@ -772,7 +776,7 @@ class StellarClass(object):
     def event_inactive_key_release(self, key):
         """Key release event when this object is inactive.
 
-        See the documentation for sge.Game.event_key_release for more
+        See the documentation for `sge.Game.event_key_release` for more
         information.  The object is considered to be inactive when its
         ``active`` attribute is False.
 
@@ -782,7 +786,7 @@ class StellarClass(object):
     def event_inactive_mouse_move(self, x, y):
         """Mouse move event when this object is inactive.
 
-        See the documentation for sge.Game.event_mouse_move for more
+        See the documentation for `sge.Game.event_mouse_move` for more
         information.  The object is considered to be inactive when its
         ``active`` attribute is False.
 
@@ -792,9 +796,9 @@ class StellarClass(object):
     def event_inactive_mouse_button_press(self, button):
         """Mouse button press event when this object is inactive.
 
-        See the documentation for sge.Game.event_mouse_button_press for
-        more information.  The object is considered to be inactive when
-        its ``active`` attribute is False.
+        See the documentation for `sge.Game.event_mouse_button_press`
+        for more information.  The object is considered to be inactive
+        when its ``active`` attribute is False.
 
         """
         pass
@@ -802,7 +806,7 @@ class StellarClass(object):
     def event_inactive_mouse_button_release(self, button):
         """Mouse button release event when this object is inactive.
 
-        See the documentation for sge.Game.event_mouse_button_release
+        See the documentation for `sge.Game.event_mouse_button_release`
         for more information.  The object is considered to be inactive
         when its ``active`` attribute is False.
 
@@ -812,9 +816,9 @@ class StellarClass(object):
     def event_inactive_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event when this object is inactive.
 
-        See the documentation for sge.Game.event_joystick_axis_move for
-        more information.  The object is considered to be inactive when
-        its ``active`` attribute is False.
+        See the documentation for `sge.Game.event_joystick_axis_move`
+        for more information.  The object is considered to be inactive
+        when its ``active`` attribute is False.
 
         """
         pass
@@ -822,7 +826,7 @@ class StellarClass(object):
     def event_inactive_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event when this object is inactive.
 
-        See the documentation for sge.Game.event_joystick_hat_move for
+        See the documentation for `sge.Game.event_joystick_hat_move` for
         more information.  The object is considered to be inactive when
         its ``active`` attribute is False.
 
@@ -832,9 +836,10 @@ class StellarClass(object):
     def event_inactive_joystick_trackball_move(self, joystick, ball, x, y):
         """Joystick trackball move event when this object is inactive.
 
-        See the documentation for sge.Game.event_joystick_trackball_move
-        for more information.  The object is considered to be inactive
-        when its ``active`` attribute is False.
+        See the documentation for
+        `sge.Game.event_joystick_trackball_move` for more information.
+        The object is considered to be inactive when its ``active``
+        attribute is False.
 
         """
         pass
@@ -842,7 +847,7 @@ class StellarClass(object):
     def event_inactive_joystick_button_press(self, joystick, button):
         """Joystick button press event when this object is inactive.
 
-        See the documentation for sge.Game.event_joystick_button_press
+        See the documentation for `sge.Game.event_joystick_button_press`
         for more information.  The object is considered to be inactive
         when its ``active`` attribute is False.
 
@@ -852,9 +857,10 @@ class StellarClass(object):
     def event_inactive_joystick_button_release(self, joystick, button):
         """Joystick button release event when this object is inactive.
 
-        See the documentation for sge.Game.event_joystick_button_release
-        for more information.  The object is considered to be inactive
-        when its ``active`` attribute is False.
+        See the documentation for
+        `sge.Game.event_joystick_button_release` for more information.
+        The object is considered to be inactive when its ``active``
+        attribute is False.
 
         """
         pass
@@ -862,7 +868,7 @@ class StellarClass(object):
     def event_paused_key_press(self, key, char):
         """Key press event when paused.
 
-        See the documentation for sge.Game.event_key_press for more
+        See the documentation for `sge.Game.event_key_press` for more
         information.
 
         """
@@ -871,7 +877,7 @@ class StellarClass(object):
     def event_paused_key_release(self, key):
         """Key release event when paused.
 
-        See the documentation for sge.Game.event_key_release for more
+        See the documentation for `sge.Game.event_key_release` for more
         information.
 
         """
@@ -880,7 +886,7 @@ class StellarClass(object):
     def event_paused_mouse_move(self, x, y):
         """Mouse move event when paused.
 
-        See the documentation for sge.Game.event_mouse_move for more
+        See the documentation for `sge.Game.event_mouse_move` for more
         information.
 
         """
@@ -889,8 +895,8 @@ class StellarClass(object):
     def event_paused_mouse_button_press(self, button):
         """Mouse button press event when paused.
 
-        See the documentation for sge.Game.event_mouse_button_press for
-        more information.
+        See the documentation for `sge.Game.event_mouse_button_press`
+        for more information.
 
         """
         pass
@@ -898,7 +904,7 @@ class StellarClass(object):
     def event_paused_mouse_button_release(self, button):
         """Mouse button release event when paused.
 
-        See the documentation for sge.Game.event_mouse_button_release
+        See the documentation for `sge.Game.event_mouse_button_release`
         for more information.
 
         """
@@ -907,8 +913,8 @@ class StellarClass(object):
     def event_paused_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event when paused.
 
-        See the documentation for sge.Game.event_joystick_axis_move for
-        more information.
+        See the documentation for `sge.Game.event_joystick_axis_move`
+        for more information.
 
         """
         pass
@@ -916,7 +922,7 @@ class StellarClass(object):
     def event_paused_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event when paused.
 
-        See the documentation for sge.Game.event_joystick_hat_move for
+        See the documentation for `sge.Game.event_joystick_hat_move` for
         more information.
 
         """
@@ -925,8 +931,8 @@ class StellarClass(object):
     def event_paused_joystick_trackball_move(self, joystick, ball, x, y):
         """Joystick trackball move event when paused.
 
-        See the documentation for sge.Game.event_joystick_trackball_move
-        for more information.
+        See the documentation for
+        `sge.Game.event_joystick_trackball_move` for more information.
 
         """
         pass
@@ -934,7 +940,7 @@ class StellarClass(object):
     def event_paused_joystick_button_press(self, joystick, button):
         """Joystick button press event when paused.
 
-        See the documentation for sge.Game.event_joystick_button_press
+        See the documentation for `sge.Game.event_joystick_button_press`
         for more information.
 
         """
@@ -943,19 +949,20 @@ class StellarClass(object):
     def event_paused_joystick_button_release(self, joystick, button):
         """Joystick button release event when paused.
 
-        See the documentation for sge.Game.event_joystick_button_release
-        for more information.
+        See the documentation for
+        `sge.Game.event_joystick_button_release` for more information.
 
         """
         pass
 
     @classmethod
     def create(cls, *args, **kwargs):
-        """Create an object of this class in the current room and return
-        the object created.
+        """Create an object of this class in the current room it.
 
-        ``args`` and ``kwargs`` are passed to ``cls`` as arguments.
-        Calling ``obj = cls.create(*args, **kwargs)`` is the same as:
+        ``args`` and ``kwargs`` are passed to ``cls.__init__`` as
+        arguments.  Calling ``obj = cls.create(*args, **kwargs)`` is the
+        same as:::
+
             obj = cls(*args, **kwargs)
             sge.game.current_room.add(obj)
 
