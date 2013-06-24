@@ -29,7 +29,6 @@ from __future__ import unicode_literals
 
 import sys
 import os
-import ConfigParser as configparser
 import json
 
 import sge
@@ -361,6 +360,12 @@ class Room(sge.Room):
 
     def save(self, num=None):
         """Save settings to a file."""
+        if glob.game_file is not None:
+            with open(glob.game_file, 'r') as f:
+                config = json.read(f)
+
+            rooms = config.setdefault("rooms", [])
+
         config = {'settings': {}, 'views': [], 'objects': []}
         config['settings']['class'] = self.cls
         config['settings']['name'] = self.name
@@ -406,10 +411,10 @@ class Room(sge.Room):
                 sge.game.room_goto_next()
 
     @classmethod
-    def load(cls, num):
+    def load(cls, fname):
         """Load settings from file and return the resulting room."""
         if glob.game_file is not None:
-            with open(glob.game_file, 'r') as f:
+            with open(fname, 'r') as f:
                 config = json.read(f)
 
             rooms = config.setdefault("rooms", [])
@@ -417,7 +422,7 @@ class Room(sge.Room):
             if num < len(rooms):
                 room = rooms[num]
 
-                object_data = room.setdefault("objects", [])
+                object_data = config.setdefault("objects", [])
                 objects = []
 
                 for obj in object_data:
@@ -439,7 +444,7 @@ class Room(sge.Room):
 
                     objects.append(Object(cls, x, y, args, kwargs))
 
-                view_data = room.setdefault("views", [])
+                view_data = config.setdefault("views", [])
                 views = []
 
                 for view in view_data:
@@ -451,36 +456,36 @@ class Room(sge.Room):
                     height = eval(str(view.setdefault("height")))
                     views.append(sge.View(x, y, xport, yport, width, height))
 
-                options = room.setdefault("options")
-                width = eval(str(options.setdefault("width")))
-                height = eval(str(options.setdefault("height")))
-                background = eval(str(options.setdefault("background")))
-                background_x = eval(str(options.setdefault("background_x", 0)))
-                background_y = eval(str(options.setdefault("background_y", 0)))
+                width = eval(str(config.setdefault("width")))
+                height = eval(str(config.setdefault("height")))
+                background = eval(str(config.setdefault("background")))
+                background_x = eval(str(config.setdefault("background_x", 0)))
+                background_y = eval(str(config.setdefault("background_y", 0)))
 
-                if num >= len(sge.game.rooms):
-                    return Room(objects, width, height, views, background,
-                                background_x, background_y)
+                if sge.game.current_room.empty:
+                    new_room = sge.game.current_room
+                    new_room.real_objects = objects
+                    new_room.real_width = width
+                    new_room.real_height = height
+                    new_room.real_views = views
+                    new_room.background = background
+                    new_room.background_x = background_x
+                    new_room.background_y = background_y
                 else:
-                    room = sge.game.rooms[num]
+                    for room in sge.game.rooms:
+                        if room.fname == fname:
+                            room.opened = True
+                            return room
 
-                    for obj in room.real_objects:
-                        obj.destroy()
+                    new_room = Room(objects, width, height, views, background,
+                                    background_x, background_y)
 
-                    for obj in objects:
-                        room.add(obj)
+                new_room.fname = fname
+                new_room.cls = cls
+                new_room.empty = False
+                new_room.opened = True
 
-                    room.real_objects = objects
-
-                    room.real_width = width
-                    room.real_height = height
-                    room.real_views = views
-                    room.background = background
-                    room.real_background_x = background_x
-                    room.real_background_y = background_y
-
-                    room.refresh()
-                    return room
+                return new_room
 
 
 def set_tooltip(text):
