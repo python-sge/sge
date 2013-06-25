@@ -93,6 +93,7 @@ sge.font_directories.append(os.path.join(DIRNAME, 'editor_data'))
 class glob(object):
 
     game_file = None
+    game_globals = {}
 
     button_sprites = {}
     text_entry_font = None
@@ -185,83 +186,85 @@ class Object(sge.StellarClass):
 
     def get_z(self):
         if 'z' in self.kwargs:
-            return eval(self.kwargs['z'])
+            return eval(self.kwargs['z'], glob.game_globals)
         elif 'z' in self.defaults:
-            return eval(self.defaults['z'])
+            return eval(self.defaults['z'], glob.game_globals)
         else:
             return 0
 
     def get_sprite(self):
         if 'sprite' in self.kwargs:
-            return eval(self.kwargs['sprite'])
+            return eval(self.kwargs['sprite'], glob.game_globals)
         elif 'sprite' in self.defaults:
-            return eval(self.defaults['sprite'])
+            return eval(self.defaults['sprite'], glob.game_globals)
         else:
             return 'stellar_room_editor_nosprite'
 
     def get_visible(self):
         if 'visible' in self.kwargs:
-            return eval(self.kwargs['visible'])
+            return eval(self.kwargs['visible'], glob.game_globals)
         elif 'visible' in self.defaults:
-            return eval(self.defaults['visible'])
+            return eval(self.defaults['visible'], glob.game_globals)
         else:
             return True
 
     def get_image_index(self):
         if 'image_index' in self.kwargs:
-            return eval(self.kwargs['image_index'])
+            return eval(self.kwargs['image_index'], glob.game_globals)
         elif 'image_index' in self.defaults:
-            return eval(self.defaults['image_index'])
+            return eval(self.defaults['image_index'], glob.game_globals)
         else:
             return 0
 
     def get_image_fps(self):
         if 'image_fps' in self.kwargs:
-            return eval(self.kwargs['image_fps'])
+            return eval(self.kwargs['image_fps'], glob.game_globals)
         elif 'image_fps' in self.defaults:
-            return eval(self.defaults['image_fps'])
+            return eval(self.defaults['image_fps'], glob.game_globals)
         else:
             return None
 
     def get_image_xscale(self):
         zoom = sge.game.current_room.zoom
         if 'image_xscale' in self.kwargs:
-            return eval(self.kwargs['image_xscale']) * zoom
+            return eval(self.kwargs['image_xscale'], glob.game_globals) * zoom
         elif 'image_xscale' in self.defaults:
-            return eval(self.defaults['image_xscale']) * zoom
+            return (eval(self.defaults['image_xscale'], glob.game_globals) *
+                    zoom)
         else:
             return zoom
 
     def get_image_yscale(self):
         zoom = sge.game.current_room.zoom
         if 'image_yscale' in self.kwargs:
-            return eval(self.kwargs['image_yscale']) * zoom
+            return eval(self.kwargs['image_yscale'], glob.game_globals) * zoom
         elif 'image_yscale' in self.defaults:
-            return eval(self.defaults['image_yscale']) * zoom
+            return (eval(self.defaults['image_yscale'], glob.game_globals) *
+                    zoom)
         else:
             return zoom
 
     def get_image_rotation(self):
         if 'image_rotation' in self.kwargs:
-            return eval(self.kwargs['image_rotation'])
+            return eval(self.kwargs['image_rotation'], glob.game_globals)
         elif 'image_rotation' in self.defaults:
-            return eval(self.defaults['image_rotation'])
+            return eval(self.defaults['image_rotation'], glob.game_globals)
         else:
             return 0
 
     def get_image_alpha(self):
         if 'image_alpha' in self.kwargs:
-            return eval(self.kwargs['image_alpha'])
+            return eval(self.kwargs['image_alpha'], glob.game_globals)
         elif 'image_alpha' in self.defaults:
-            return eval(self.defaults['image_alpha'])
+            return eval(self.defaults['image_alpha'], glob.game_globals)
         else:
             return 255
 
     def get_image_blend(self):
         if 'image_blend' in self.kwargs:
-            return eval(self.kwargs['image_blend'])
+            return eval(self.kwargs['image_blend'], glob.game_globals)
         elif 'image_blend' in self.defaults:
-            return eval(self.defaults['image_blend'])
+            return eval(self.defaults['image_blend'], glob.game_globals)
         else:
             return None
 
@@ -322,15 +325,16 @@ class Tooltip(sge.StellarClass):
 class Room(sge.Room):
 
     def __init__(self, objects=(), width=None, height=None, views=None,
-                 background=None, background_x=0, background_y=0):
+                 background=None, background_x=0, background_y=0, args=[],
+                 kwargs={}):
         self.fname = None
         self.empty = True
         self.unchanged = True
         self.opened = True
         self.name = ""
         self.cls = "sge.Room"
-        self.args = []
-        self.kwargs = {}
+        self.args = args
+        self.kwargs = kwargs
         self.real_objects = objects
         self.real_width = width
         self.real_height = height
@@ -358,24 +362,20 @@ class Room(sge.Room):
     def get_height(self):
         return self.real_height * self.zoom
 
-    def save(self, num=None):
+    def save(self, fname=None):
         """Save settings to a file."""
-        if glob.game_file is not None:
-            with open(glob.game_file, 'r') as f:
-                config = json.read(f)
+        if fname is None:
+            fname = self.fname
 
-            rooms = config.setdefault("rooms", [])
-
-        config = {'settings': {}, 'views': [], 'objects': []}
-        config['settings']['class'] = self.cls
-        config['settings']['name'] = self.name
-        config['settings']['width'] = self.width
-        config['settings']['height'] = self.height
-        config['settings']['background'] = self.background.id
-        config['settings']['background_x'] = self.background_x
-        config['settings']['background_y'] = self.background_y
-        config['settings']['args'] = self.args
-        config['settings']['kwargs'] = self.kwargs
+        config = {'views': [], 'objects': [], "options": {}}
+        config['options']['class'] = self.cls
+        config['options']['width'] = self.width
+        config['options']['height'] = self.height
+        config['options']['background'] = self.background.id
+        config['options']['background_x'] = self.background_x
+        config['options']['background_y'] = self.background_y
+        config['arguments'] = self.args
+        config['keyword_arguments'] = self.kwargs
 
         for view in self.views:
             config['views'].append(
@@ -417,75 +417,59 @@ class Room(sge.Room):
             with open(fname, 'r') as f:
                 config = json.read(f)
 
-            rooms = config.setdefault("rooms", [])
+            object_data = config.setdefault("objects", [])
+            objects = []
 
-            if num < len(rooms):
-                room = rooms[num]
+            for obj in object_data:
+                cls = obj.setdefault("class", "sge.StellarClass")
+                x = str(obj.setdefault("x", 0))
+                y = str(obj.setdefault("y", 0))
+                args = obj.setdefault("arguments", [])
+                kwargs = obj.setdefault("keyword_arguments", {})
+                objects.append(Object(cls, x, y, args, kwargs))
 
-                object_data = config.setdefault("objects", [])
-                objects = []
+            view_data = config.setdefault("views", [])
+            views = []
 
-                for obj in object_data:
-                    if "assignto" in obj:
-                        del obj["assignto"]
+            for view in view_data:
+                x = str(view.setdefault("x", 0))
+                y = str(view.setdefault("y", 0))
+                xport = str(view.setdefault("xport", 0))
+                yport = str(view.setdefault("yport", 0))
+                width = str(view.setdefault("width"))
+                height = str(view.setdefault("height"))
+                views.append(sge.View(x, y, xport, yport, width, height))
 
-                    cls = obj.setdefault("class", "sge.StellarClass")
-                    x = eval(str(obj.setdefault("x", 0)))
-                    y = eval(str(obj.setdefault("y", 0)))
-                    args = []
-                    kwargs = {}
+            width = str(config.setdefault("width"))
+            height = str(config.setdefault("height"))
+            background = str(config.setdefault("background"))
+            background_x = str(config.setdefault("background_x", 0))
+            background_y = str(config.setdefault("background_y", 0))
 
-                    del obj['class']
-                    del obj['x']
-                    del obj['y']
+            if sge.game.current_room.empty:
+                new_room = sge.game.current_room
+                new_room.real_objects = objects
+                new_room.real_width = width
+                new_room.real_height = height
+                new_room.real_views = views
+                new_room.background = background
+                new_room.background_x = background_x
+                new_room.background_y = background_y
+            else:
+                for room in sge.game.rooms:
+                    if room.fname == fname:
+                        room.opened = True
+                        return room
 
-                    for i in obj:
-                        kwargs[i] = eval(str(obj[i]))
+                new_room = Room(objects, width, height, views, background,
+                                background_x, background_y)
 
-                    objects.append(Object(cls, x, y, args, kwargs))
+            new_room.fname = fname
+            new_room.cls = cls
+            new_room.empty = False
+            new_room.opened = True
 
-                view_data = config.setdefault("views", [])
-                views = []
-
-                for view in view_data:
-                    x = eval(str(view.setdefault("x", 0)))
-                    y = eval(str(view.setdefault("y", 0)))
-                    xport = eval(str(view.setdefault("xport", 0)))
-                    yport = eval(str(view.setdefault("yport", 0)))
-                    width = eval(str(view.setdefault("width")))
-                    height = eval(str(view.setdefault("height")))
-                    views.append(sge.View(x, y, xport, yport, width, height))
-
-                width = eval(str(config.setdefault("width")))
-                height = eval(str(config.setdefault("height")))
-                background = eval(str(config.setdefault("background")))
-                background_x = eval(str(config.setdefault("background_x", 0)))
-                background_y = eval(str(config.setdefault("background_y", 0)))
-
-                if sge.game.current_room.empty:
-                    new_room = sge.game.current_room
-                    new_room.real_objects = objects
-                    new_room.real_width = width
-                    new_room.real_height = height
-                    new_room.real_views = views
-                    new_room.background = background
-                    new_room.background_x = background_x
-                    new_room.background_y = background_y
-                else:
-                    for room in sge.game.rooms:
-                        if room.fname == fname:
-                            room.opened = True
-                            return room
-
-                    new_room = Room(objects, width, height, views, background,
-                                    background_x, background_y)
-
-                new_room.fname = fname
-                new_room.cls = cls
-                new_room.empty = False
-                new_room.opened = True
-
-                return new_room
+            return new_room
 
 
 def set_tooltip(text):
@@ -506,23 +490,40 @@ def load_resources():
     if glob.game_file is not None:
         with open(glob.game_file, 'r') as f:
             config = json.read(f)
+
+        # Read globals (for purpose of evaluation), using the editors
+        # globals as a base.
+        glob.game_globals = globals()
+
+        constants = config.setdefault("constants", [])
+        globalvars = config.setdefault("global_variables", [])
+
+        for var in constants + globalvars:
+            name, value = var.split("=")
+            name = name.strip()
+            game_globals[name] = eval(value, game_globals)
             
         glob.sprites = []
         sprites = config.setdefault("sprites", [])
 
         for sprite in sprites:
-            name = eval(str(sprite.setdefault("name")))
-            id_ = eval(str(sprite.setdefault("id")))
-            width = eval(str(sprite.setdefault("width")))
-            height = eval(str(sprite.setdefault("height")))
-            origin_x = eval(str(sprite.setdefault("origin_x", 0)))
-            origin_y = eval(str(sprite.setdefault("origin_y", 0)))
-            transparent = eval(str(sprite.setdefault("transparent", True)))
-            fps = eval(str(sprite.setdefault("fps", 60)))
-            bbox_x = eval(str(sprite.setdefault("bbox_x")))
-            bbox_y = eval(str(sprite.setdefault("bbox_y")))
-            bbox_width = eval(str(sprite.setdefault("bbox_width")))
-            bbox_height = eval(str(sprite.setdefault("bbox_height")))
+            name = eval(str(sprite.setdefault("name")), glob.game_globals)
+            id_ = eval(str(sprite.setdefault("id")), glob.game_globals)
+            width = eval(str(sprite.setdefault("width")), glob.game_globals)
+            height = eval(str(sprite.setdefault("height")), glob.game_globals)
+            origin_x = eval(str(sprite.setdefault("origin_x", 0)),
+                            glob.game_globals)
+            origin_y = eval(str(sprite.setdefault("origin_y", 0)),
+                            glob.game_globals)
+            transparent = eval(str(sprite.setdefault("transparent", True)),
+                               glob.game_globals)
+            fps = eval(str(sprite.setdefault("fps", 60)), glob.game_globals)
+            bbox_x = eval(str(sprite.setdefault("bbox_x")), glob.game_globals)
+            bbox_y = eval(str(sprite.setdefault("bbox_y")), glob.game_globals)
+            bbox_width = eval(str(sprite.setdefault("bbox_width")),
+                              glob.game_globals)
+            bbox_height = eval(str(sprite.setdefault("bbox_height")),
+                               glob.game_globals)
             s = sge.Sprite(name, id_, width, height, origin_x, origin_y,
                            transparent, fps, bbox_x, bbox_y, bbox_width,
                            bbox_height)
@@ -533,15 +534,20 @@ def load_resources():
 
         for layer in background_layers:
             sprite = eval(str(layer.setdefault(
-                "sprite", '"stellar_room_editor_no_sprite"')))
-            x = eval(str(layer.setdefault("x", 0)))
-            y = eval(str(layer.setdefault("y", 0)))
-            z = eval(str(layer.setdefault("z", 0)))
-            id_ = eval(str(layer.setdefault("id")))
-            xscroll_rate = eval(str(layer.setdefault("xscroll_rate", 1)))
-            yscroll_rate = eval(str(layer.setdefault("yscroll_rate", 1)))
-            xrepeat = eval(str(layer.setdefault("xrepeat", True)))
-            yrepeat = eval(str(layer.setdefault("yrepeat", True)))
+                "sprite", '"stellar_room_editor_no_sprite"')),
+                          glob.game_globals)
+            x = eval(str(layer.setdefault("x", 0)), glob.game_globals)
+            y = eval(str(layer.setdefault("y", 0)), glob.game_globals)
+            z = eval(str(layer.setdefault("z", 0)), glob.game_globals)
+            id_ = eval(str(layer.setdefault("id")), glob.game_globals)
+            xscroll_rate = eval(str(layer.setdefault("xscroll_rate", 1)),
+                                glob.game_globals)
+            yscroll_rate = eval(str(layer.setdefault("yscroll_rate", 1)),
+                                glob.game_globals)
+            xrepeat = eval(str(layer.setdefault("xrepeat", True)),
+                           glob.game_globals)
+            yrepeat = eval(str(layer.setdefault("yrepeat", True)),
+                           glob.game_globals)
             sge.BackgroundLayer(sprite, x, y, z, id_, xscroll_rate,
                                 yscroll_rate, xrepeat, yrepeat)
 
@@ -549,11 +555,12 @@ def load_resources():
 
         for background in backgrounds:
             layers = []
-            color = eval(str(background.setdefault("color", '"white"')))
-            id_ = eval(str(background.setdefault("id")))
+            color = eval(str(background.setdefault("color", '"white"')),
+                         glob.game_globals)
+            id_ = eval(str(background.setdefault("id")), glob.game_globals)
 
             for layer in background.setdefault("layers", []):
-                layers.append(eval(str(layer)))
+                layers.append(eval(str(layer), glob.game_globals))
 
             sge.Background(layers, color, id_)
 
@@ -630,19 +637,16 @@ def main(*args):
     try:
         load_resources()
     except IOError:
+        print('"{0}" is not a proper game file. Ignoring.'.format(
+            glob.game_file))
         glob.game_file = None
 
     # Create rooms
-    try:
-        with open(glob.game_file, 'r') as f:
-            config = json.read(f)
-
-        rooms = len(config.setdefault("rooms", []))
-    except IOError:
-        rooms = 0
-
-    for i in xrange(rooms):
-        Room.load(i)
+    for arg in args[2:]:
+        try:
+            Room.load(arg)
+        except IOError:
+            print('"{0}" is not a proper room file. Skipping.'.format(arg))
 
     if not sge.game.rooms:
         Room()
