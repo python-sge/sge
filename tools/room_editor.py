@@ -134,10 +134,8 @@ class Game(sge.Game):
 
 class Object(sge.StellarClass):
 
-    def __init__(self, cls, x, y, args, kwargs):
+    def __init__(self, cls, args, kwargs):
         self.cls = cls
-        self.real_x = x
-        self.real_y = y
         self.args = list(args)
         self.kwargs = kwargs
         self.defaults = glob.defaults.setdefault(cls, {})
@@ -164,6 +162,7 @@ class Object(sge.StellarClass):
 
     def refresh(self):
         self.x = self.get_x()
+        self.y = self.get_y()
         self.z = self.get_z()
         self.sprite = self.get_sprite()
         self.image_index = self.get_image_index()
@@ -179,92 +178,103 @@ class Object(sge.StellarClass):
             self.image_alpha = 128
 
     def get_x(self):
-        return self.real_x * sge.game.current_room.zoom
+        if len(self.args) >= 1:
+            return (eval(str(self.args[0]), glob.game_globals) *
+                    sge.game.current_room.zoom)
+        else:
+            return 0
 
     def get_y(self):
-        return self.real_y * sge.game.current_room.zoom
+        if len(self.args) >= 2:
+            return (eval(str(self.args[1]), glob.game_globals) *
+                    sge.game.current_room.zoom)
+        else:
+            return 0
 
     def get_z(self):
         if 'z' in self.kwargs:
-            return eval(self.kwargs['z'], glob.game_globals)
+            return eval(str(self.kwargs['z']), glob.game_globals)
         elif 'z' in self.defaults:
-            return eval(self.defaults['z'], glob.game_globals)
+            return eval(str(self.defaults['z']), glob.game_globals)
         else:
             return 0
 
     def get_sprite(self):
         if 'sprite' in self.kwargs:
-            return eval(self.kwargs['sprite'], glob.game_globals)
+            return eval(str(self.kwargs['sprite']), glob.game_globals)
         elif 'sprite' in self.defaults:
-            return eval(self.defaults['sprite'], glob.game_globals)
+            return eval(str(self.defaults['sprite']), glob.game_globals)
         else:
             return 'stellar_room_editor_nosprite'
 
     def get_visible(self):
         if 'visible' in self.kwargs:
-            return eval(self.kwargs['visible'], glob.game_globals)
+            return eval(str(self.kwargs['visible']), glob.game_globals)
         elif 'visible' in self.defaults:
-            return eval(self.defaults['visible'], glob.game_globals)
+            return eval(str(self.defaults['visible']), glob.game_globals)
         else:
             return True
 
     def get_image_index(self):
         if 'image_index' in self.kwargs:
-            return eval(self.kwargs['image_index'], glob.game_globals)
+            return eval(str(self.kwargs['image_index']), glob.game_globals)
         elif 'image_index' in self.defaults:
-            return eval(self.defaults['image_index'], glob.game_globals)
+            return eval(str(self.defaults['image_index']), glob.game_globals)
         else:
             return 0
 
     def get_image_fps(self):
         if 'image_fps' in self.kwargs:
-            return eval(self.kwargs['image_fps'], glob.game_globals)
+            return eval(str(self.kwargs['image_fps']), glob.game_globals)
         elif 'image_fps' in self.defaults:
-            return eval(self.defaults['image_fps'], glob.game_globals)
+            return eval(str(self.defaults['image_fps']), glob.game_globals)
         else:
             return None
 
     def get_image_xscale(self):
         zoom = sge.game.current_room.zoom
         if 'image_xscale' in self.kwargs:
-            return eval(self.kwargs['image_xscale'], glob.game_globals) * zoom
+            return eval(str(self.kwargs['image_xscale']),
+                        glob.game_globals) * zoom
         elif 'image_xscale' in self.defaults:
-            return (eval(self.defaults['image_xscale'], glob.game_globals) *
-                    zoom)
+            return eval(str(self.defaults['image_xscale']),
+                        glob.game_globals) * zoom
         else:
             return zoom
 
     def get_image_yscale(self):
         zoom = sge.game.current_room.zoom
         if 'image_yscale' in self.kwargs:
-            return eval(self.kwargs['image_yscale'], glob.game_globals) * zoom
+            return eval(str(self.kwargs['image_yscale']),
+                        glob.game_globals) * zoom
         elif 'image_yscale' in self.defaults:
-            return (eval(self.defaults['image_yscale'], glob.game_globals) *
-                    zoom)
+            return eval(str(self.defaults['image_yscale']),
+                        glob.game_globals) * zoom
         else:
             return zoom
 
     def get_image_rotation(self):
         if 'image_rotation' in self.kwargs:
-            return eval(self.kwargs['image_rotation'], glob.game_globals)
+            return eval(str(self.kwargs['image_rotation']), glob.game_globals)
         elif 'image_rotation' in self.defaults:
-            return eval(self.defaults['image_rotation'], glob.game_globals)
+            return eval(str(self.defaults['image_rotation']),
+                        glob.game_globals)
         else:
             return 0
 
     def get_image_alpha(self):
         if 'image_alpha' in self.kwargs:
-            return eval(self.kwargs['image_alpha'], glob.game_globals)
+            return eval(str(self.kwargs['image_alpha']), glob.game_globals)
         elif 'image_alpha' in self.defaults:
-            return eval(self.defaults['image_alpha'], glob.game_globals)
+            return eval(str(self.defaults['image_alpha']), glob.game_globals)
         else:
             return 255
 
     def get_image_blend(self):
         if 'image_blend' in self.kwargs:
-            return eval(self.kwargs['image_blend'], glob.game_globals)
+            return eval(str(self.kwargs['image_blend']), glob.game_globals)
         elif 'image_blend' in self.defaults:
-            return eval(self.defaults['image_blend'], glob.game_globals)
+            return eval(str(self.defaults['image_blend']), glob.game_globals)
         else:
             return None
 
@@ -424,15 +434,7 @@ class Room(sge.Room):
                 cls = obj.setdefault("class", "sge.StellarClass")
                 args = obj.setdefault("arguments", [])
                 kwargs = obj.setdefault("keyword_arguments", {})
-
-                x = 0
-                y = 0
-                if len(args) >= 1:
-                    x = eval(str(args[0]), glob.game_globals)
-                    if len(args) >= 2:
-                        y = eval(str(args[1]), glob.game_globals)
-
-                objects.append(Object(cls, x, y, args, kwargs))
+                objects.append(Object(cls, args, kwargs))
 
             view_data = config.setdefault("views", [])
             views = []
