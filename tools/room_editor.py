@@ -422,10 +422,16 @@ class Room(sge.Room):
 
             for obj in object_data:
                 cls = obj.setdefault("class", "sge.StellarClass")
-                x = str(obj.setdefault("x", 0))
-                y = str(obj.setdefault("y", 0))
                 args = obj.setdefault("arguments", [])
                 kwargs = obj.setdefault("keyword_arguments", {})
+
+                x = 0
+                y = 0
+                if len(args) >= 1:
+                    x = eval(str(args[0]), glob.game_globals)
+                    if len(args) >= 2:
+                        y = eval(str(args[1]), glob.game_globals)
+
                 objects.append(Object(cls, x, y, args, kwargs))
 
             view_data = config.setdefault("views", [])
@@ -438,6 +444,8 @@ class Room(sge.Room):
                 yport = str(view.setdefault("yport", 0))
                 width = str(view.setdefault("width"))
                 height = str(view.setdefault("height"))
+                # FIXME: Need a custom view class so these string values
+                # are valid.
                 views.append(sge.View(x, y, xport, yport, width, height))
 
             width = str(config.setdefault("width"))
