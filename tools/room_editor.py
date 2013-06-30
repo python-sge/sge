@@ -513,6 +513,7 @@ def load_resources():
             name = name.strip()
             game_globals[name] = eval(value, game_globals)
             
+        # Load sprites
         glob.sprites = []
         sprites = config.setdefault("sprites", [])
 
@@ -580,16 +581,18 @@ def load_resources():
 
         for i in classes:
             glob.defaults[i] = {}
-            methods = classes[i].setdefault("methods", {})
-            constructor = methods.setdefault("__init__", {})
-            args = constructor.setdefault("arguments", [])
+            methods = classes[i].setdefault("methods", [])
 
-            for arg in args:
-                if "=" in arg:
-                    name, value = arg.split("=")
-                    name = name.strip()
-                    value = value.strip()
-                    glob.defaults[i][name] = str(value)
+            for method in methods:
+                if method.setdefault("name") == "__init__":
+                    args = method.setdefault("arguments", [])
+
+                    for arg in args:
+                        if "=" in arg:
+                            name, value = arg.split("=")
+                            name = name.strip()
+                            value = value.strip()
+                            glob.defaults[i][name] = str(value)
 
 
 def main(*args):
