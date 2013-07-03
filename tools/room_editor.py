@@ -335,8 +335,7 @@ class Tooltip(sge.StellarClass):
 class Room(sge.Room):
 
     def __init__(self, objects=(), width=None, height=None, views=None,
-                 background=None, background_x=0, background_y=0, args=[],
-                 kwargs={}):
+                 background=None, background_x=0, background_y=0):
         self.fname = None
         self.empty = True
         self.unchanged = True
@@ -375,17 +374,30 @@ class Room(sge.Room):
     def save(self, fname=None):
         """Save settings to a file."""
         if fname is None:
-            fname = self.fname
+            if self.fname is not None:
+                fname = self.fname
+            else:
+                # TODO: Create a file selection dialog for this.
+                m = "Please enter the name of the file to save to."
+                d = os.path.normpath(os.path.realpath(os.path.join(
+                    DIRNAME, "data", "rooms", "*.rmj")))
+                entry = sge.get_text_entry(m, d)
+                if entry is not None:
+                    fname = entry
+                else:
+                    return
+        elif os.path.exists(fname):
+            m = "{0} already exists. Overwrite?".format(fname)
+            if not sge.show_message(m, ("No", "Yes")):
+                return
 
-        config = {'views': [], 'objects': [], "options": {}}
-        config['options']['class'] = self.cls
-        config['options']['width'] = self.width
-        config['options']['height'] = self.height
-        config['options']['background'] = self.background.id
-        config['options']['background_x'] = self.background_x
-        config['options']['background_y'] = self.background_y
-        config['arguments'] = self.args
-        config['keyword_arguments'] = self.kwargs
+        config = {'views': [], 'objects': []}
+        config['class'] = self.cls
+        config['width'] = self.width
+        config['height'] = self.height
+        config['background'] = self.background.id
+        config['background_x'] = self.background_x
+        config['background_y'] = self.background_y
 
         for view in self.views:
             config['views'].append(
@@ -398,11 +410,8 @@ class Room(sge.Room):
                 {'class': obj.cls, 'x': obj.x, 'y': obj.y, 'z': obj.z,
                  'args': obj.args, 'kwargs': obj.kwargs})
 
-        if fname is None:
-            fname = self.fname
-
         with open(fname, 'w') as f:
-            json.dump(config, f, indent=2, sort_keys=True)
+            json.dump(config, f, indent=4, sort_keys=True)
 
         self.unchanged = True
 
@@ -446,9 +455,7 @@ class Room(sge.Room):
                 yport = str(view.setdefault("yport", 0))
                 width = str(view.setdefault("width"))
                 height = str(view.setdefault("height"))
-                # FIXME: Need a custom view class so these string values
-                # are valid.
-                views.append(sge.View(x, y, xport, yport, width, height))
+                views.append(View(x, y, xport, yport, width, height))
 
             width = str(config.setdefault("width"))
             height = str(config.setdefault("height"))
@@ -480,6 +487,19 @@ class Room(sge.Room):
             new_room.opened = True
 
             return new_room
+
+
+class View(object):
+
+    """Stores the sge.View options, but as strings of Python code."""
+
+    def __init__(self, x, y, xport=0, yport=0, width=None, height=None):
+        self.x = x
+        self.y = y
+        self.xport = xport
+        self.yport = yport
+        self.width = width
+        self.height = height
 
 
 def set_tooltip(text):
