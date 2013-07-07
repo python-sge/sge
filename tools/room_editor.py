@@ -281,10 +281,10 @@ class Object(sge.StellarClass):
 
 class Button(sge.StellarClass):
 
-    def __init__(self, x, y, icon, tooltip):
-        self.icon = icon
-        self.tooltip = tooltip
+    icon = 'stellar_room_editor_unknown'
+    tooltip = ''
 
+    def __init__(self, x, y):
         super(Button, self).__init__(x, y, sprite='stellar_room_editor_button',
                                      collision_precise=True)
 
@@ -316,6 +316,41 @@ class Button(sge.StellarClass):
     def event_mouse_button_release(self, button):
         if button == 'left' and self.collides(sge.game.mouse):
             self.do_effect()
+
+
+class SaveButton(Button):
+
+    icon = 'stellar_room_editor_icon_save'
+    tooltip = 'Save the current room.'
+
+    def do_effect(self):
+        sge.game.current_room.save()
+
+
+class SaveAllButton(Button):
+
+    icon = 'stellar_room_editor_icon_save_all'
+    tooltip = 'Save all rooms.'
+
+    def do_effect(self):
+        for room in sge.game.rooms:
+            room.save()
+
+
+class LoadButton(Button):
+
+    icon = 'stellar_room_editor_icon_load'
+    tooltip = 'Load a room from a file.'
+
+    def do_effect(self):
+        # TODO: File selection dialog to make this better.
+        m = "Please enter the name of the file to load."
+        d = os.path.normpath(os.path.realpath(os.path.join(
+            DIRNAME, "data", "rooms", "*.rmj")))
+        entry = sge.get_text_entry(m, d)
+        if entry is not None:
+            room = Room.load(entry)
+            room.resume()
 
 
 class Tooltip(sge.StellarClass):
@@ -501,6 +536,18 @@ class View(object):
         self.width = width
         self.height = height
 
+    def get_x(self):
+        return eval(str(self.x), glob.game_globals)
+
+    def get_y(self):
+        return eval(str(self.y), glob.game_globals)
+
+    def get_width(self):
+        return eval(str(self.width), glob.game_globals)
+
+    def get_height(self):
+        return eval(str(self.height), glob.game_globals)
+
 
 def set_tooltip(text):
     """Set the text of the tooltip.  Set to None for no tooltip."""
@@ -628,6 +675,7 @@ def main(*args):
     sge.Sprite('stellar_room_editor_button', *BUTTON_SIZE, fps=0)
     sge.Sprite('stellar_room_editor_textbox', *TEXTBOX_SIZE)
     sge.Sprite('stellar_room_editor_checkbox', *CHECKBOX_SIZE, fps=0)
+    sge.Sprite('stellar_room_editor_unknown', *ICON_SIZE)
     sge.Sprite('stellar_room_editor_icon_active', *ICON_SIZE)
     sge.Sprite('stellar_room_editor_icon_args', *ICON_SIZE)
     sge.Sprite('stellar_room_editor_icon_background', *ICON_SIZE)
