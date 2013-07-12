@@ -84,6 +84,14 @@ TEXTBOX_IMAGE_ANGLE_POS = (2, 568)
 CHECKBOX_SIZE = (32, 32)
 CHECKBOX_GRID_SNAP_POS = (464, 24)
 
+GRID_NONE = 0
+GRID_RECTANGULAR = 1
+GRID_ISOMETRIC = 2
+GRID_NUMKINDS = 3
+GRID_DEFAULT = GRID_RECTANGULAR
+ZOOM_DEFAULT = 2
+TOOL_DEFAULT = 'pointer'
+
 sge.image_directories.append(os.path.join(DIRNAME, 'Sprites'))
 sge.image_directories.append(os.path.join(DIRNAME, 'Backgrounds'))
 sge.image_directories.append(os.path.join(DIRNAME, 'editor_data'))
@@ -353,6 +361,92 @@ class LoadButton(Button):
             room.resume()
 
 
+class GridTypeButton(Button):
+
+    def __init__(self, *args, **kwargs):
+        self.set_icon()
+        super(GridTypeButton, self).__init__(*args, **kwargs)
+
+    def set_icon(self):
+        if sge.game.current_room.grid == GRID_NONE:
+            self.icon = None
+            self.tooltip = 'Grid type: None'
+        elif sge.game.current_room.grid == GRID_RECTANGULAR:
+            self.icon = 'stellar_room_editor_icon_grid'
+            self.tooltip = 'Grid type: Rectangular'
+        elif sge.game.current_room.grid == GRID_ISOMETRIC:
+            self.icon = 'stellar_room_editor_icon_grid_isometric'
+            self.tooltip = 'Grid type: Isometric'
+        else:
+            self.icon = self.__class__.icon
+            self.tooltip = self.__class__.tooltip
+
+    def do_effect(self):
+        sge.game.current_room.grid += 1
+        sge.game.current_room.grid %= GRID_NUMKINDS
+        self.set_icon()
+
+
+class ShiftButton(Button):
+
+    icon = 'stellar_room_editor_icon_shift'
+    tooltip = "Shift all objects' positions by a given amount."
+
+    def do_effect(self):
+        m = "Enter the horizontal shift amount (in pixels)."
+        hshift = sge.get_text_entry(m)
+
+        if hshift is not None:
+            m = "Enter the vertical shift amount (in pixels)."
+            vshift = sge.get_text_entry(m)
+
+            if vshift is not None:
+                try:
+                    hshift = float(hshift)
+                except ValueError:
+                    hshift = 0
+
+                try:
+                    vshift = float(vshift)
+                except ValueError:
+                    vshift = 0
+
+                for obj in sge.game.current_room.real_objects:
+                    if len(obj.args) > 0:
+                        obj.args[0] += hshift
+                        if len(obj.args) > 1:
+                            obj.args[1] += vshift
+
+
+class ReloadResourcesButton(Button):
+
+    icon = 'stellar_room_editor_icon_reload_resources'
+    tooltip = "Reload the game's resources (sprites, objects, etc)."
+
+    def do_effect(self):
+        load_resources()
+
+
+class SettingsButton(Button):
+
+    icon = 'stellar_room_editor_icon_settings'
+    tooltip = "Configure various settings for the room."
+
+    def do_effect(self):
+        # TODO: Probably via a special "settings" room
+        pass
+
+
+class BackgroundButton(Button):
+
+    icon = 'stellar_room_editor_icon_background'
+    tooltip = "Change the background used with this room."
+
+    def do_effect(self):
+        # TODO
+        pass
+
+
 class Tooltip(sge.StellarClass):
 
     def __init__(self):
@@ -383,7 +477,10 @@ class Room(sge.Room):
         self.real_width = width
         self.real_height = height
         self.real_views = views
-        self.zoom = 2
+
+        self.grid = GRID_DEFAULT
+        self.zoom = ZOOM_DEFAULT
+        self.tool = TOOL_DEFAULT
 
         # TODO: Create buttons and other GUI elements
 
