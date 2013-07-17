@@ -312,6 +312,22 @@ default.
 Projection is highly inefficient, so it should be avoided if speed is
 important; use the sprite draw methods instead.
 
+Other Notes
+-----------
+
+Changing the ``width`` and ``height`` attributes of `Sprite` objects is
+a destructive transformation in this implementation, so each time one of
+these variables changes, pixel information can be lost.  For example,
+scaling a 128x128 pixel image down to 16x16 and then back up to 128x128
+will not yield the same image, but rather either a pixelated version or
+a blurry version, depending on the value of ``sge.game.scale_smooth``.
+This is because of the way the drawing methods of `Sprite` are
+implemented.  Because of this, you should avoid changing this value as
+much as possible.  For best results, set it only when the sprite is
+created and then leave it alone; do any other routine transformations
+with the ``image_xscale`` and ``image_yscale`` attributes of
+`StellarClass` objects.
+
 """
 
 from __future__ import division
@@ -319,7 +335,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.3.0.29"
+__version__ = "0.3.0.30"
 
 import os
 

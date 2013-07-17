@@ -37,67 +37,24 @@ class Room(object):
     Every game must have at least one room.
 
     Attributes:
-    * width: The width of the room in pixels.  If set to None,
+    - ``width`` -- The width of the room in pixels.  If set to None,
       ``sge.game.width`` is used.
-    * height: The height of the room in pixels.  If set to None,
+    - ``height`` -- The height of the room in pixels.  If set to None,
       ``sge.game.height`` is used.
-    * views: A list containing all View objects in the room.
-    * background: The Background object used.  While it will always be
-      the actual object when read, it can be set to either an actual
-      background object or the ID of a background.
-    * background_x: The horizontal position of the background in the
+    - ``views`` -- A list containing all View objects in the room.
+    - ``background`` -- The `sge.Background` object used.  While it will
+      always be the actual object when read, it can be set to either an
+      actual background object or the ID of a background.
+    - ``background_x`` -- The horizontal position of the background in
+      the room.
+    - ``background_y`` -- The vertical position of the background in the
       room.
-    * background_y: The vertical position of the background in the room.
 
     Read-Only Attributes:
-    * objects: A tuple containing all StellarClass objects in the room.
-    * room_number: The index of this room in the game, where 0 is the
-      first room, or None if this room has not been added to a game.
-
-    Methods:
-    * add: Add a StellarClass object to the room.
-    * start: Start the room.
-    * resume: Continue the room from where it left off.
-    * end: Go to the next room.
-    * project_dot: Project a single-pixel dot onto the room.
-    * project_line: Project a line segment onto the room.
-    * project_rectangle: Project a rectangle onto the room.
-    * project_ellipse: Project an ellipse onto the room.
-    * project_circle: Project a circle onto the room.
-    * project_sprite: Project sprite onto the room.
-    * project_text: Project text onto the room.
-
-    Events are handled by special methods that are internally called by
-    SGE.  The exact timing of their calling is implementation-dependent
-    except where otherwise noted.  The methods are:
-    * event_room_start: Called when the room starts.
-    * event_room_end: Called when the room ends.
-    * event_step: Called once each frame.
-    * event_key_press: Key press event.
-    * event_key_release: Key release event.
-    * event_mouse_move: Mouse move event.
-    * event_mouse_button_press: Mouse button press event.
-    * event_mouse_button_release: Mouse button release event.
-    * event_joystick_axis_move: Joystick axis move event.
-    * event_joystick_hat_move: Joystick HAT move event.
-    * event_joystick_trackball_move: Joystick trackball move event.
-    * event_joystick_button_press: Joystick button press event.
-    * event_joystick_button_release: Joystick button release event.
-    * event_close: Close event (e.g. close button).
-    * event_room_end: Called when the room ends.
-
-    The following alternative events are executed when the game is
-    paused in place of the corresponding normal events:
-    * event_paused_key_press
-    * event_paused_key_release
-    * event_paused_mouse_move
-    * event_paused_mouse_button_press
-    * event_paused_mouse_button_release
-    * event_paused_joystick_axis_move
-    * event_paused_joystick_hat_move
-    * event_paused_joystick_button_press
-    * event_paused_joystick_button_release
-    * event_paused_close
+    - ``objects`` -- A tuple containing all `sge.StellarClass` objects
+      in the room.
+    - ``room_number`` -- The index of this room in the game, where 0 is
+      the first room, or None if this room has not been added to a game.
 
     """
 

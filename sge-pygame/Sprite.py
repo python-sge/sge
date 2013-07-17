@@ -80,7 +80,8 @@ class Sprite(object):
     def width(self, value):
         if self._w != value:
             self._w = value
-            self.refresh()
+            self._set_size()
+            self._refresh()
 
     @property
     def height(self):
@@ -90,6 +91,7 @@ class Sprite(object):
     def height(self, value):
         if self._h != value:
             self._h = value
+            self._set_size()
             self._refresh()
 
     @property
@@ -304,20 +306,9 @@ class Sprite(object):
         if bbox_height is None:
             bbox_height = height
 
-        for i in xrange(len(self._baseimages)):
-            if sge.game.scale_smooth:
-                try:
-                    self._baseimages[i] = pygame.transform.smoothscale(
-                        self._baseimages[i], (width, height))
-                except pygame.error:
-                    self._baseimages[i] = pygame.transform.scale(
-                        self._baseimages[i], (width, height))
-            else:
-                self._baseimages[i] = pygame.transform.scale(
-                    self._baseimages[i], (width, height))
-
         self._w = width
         self._h = height
+        self._set_size()
         self.origin_x = origin_x
         self.origin_y = origin_y
         self._transparent = transparent
@@ -747,6 +738,24 @@ class Sprite(object):
         sprite._baseimages[0].blit(display_surf, (-x, -y))
         sprite._refresh()
         return sprite
+
+    def _set_size(self):
+        # Adjust the size of the base images.  Note: this change is
+        # destructive and irreversible.  It is necessary for the drawing
+        # methods to work properly, specifically whenever ``width`` and
+        # ``height`` are set.  As a result, setting ``width`` and
+        # ``height`` is destructive in this implementation.
+        for i in xrange(len(self._baseimages)):
+            if sge.game.scale_smooth:
+                try:
+                    self._baseimages[i] = pygame.transform.smoothscale(
+                        self._baseimages[i], (self.width, self.height))
+                except pygame.error:
+                    self._baseimages[i] = pygame.transform.scale(
+                        self._baseimages[i], (self.width, self.height))
+            else:
+                self._baseimages[i] = pygame.transform.scale(
+                    self._baseimages[i], (self.width, self.height))
 
     def _refresh(self):
         # Set the _images list based on the variables.

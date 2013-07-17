@@ -139,6 +139,28 @@ class Game(sge.Game):
         if self.will_exit:
             self.end()
 
+    def room_goto_next(self):
+        i = sge.game.current_room.room_number
+        selected = False
+
+        while not selected:
+            i = (i + 1) % len(sge.game.rooms)
+            if isinstance(sge.game.rooms[i], Room):
+                selected = True
+
+        sge.game.rooms[i].resume()
+
+    def room_goto_previous(self):
+        i = sge.game.current_room.room_number
+        selected = False
+
+        while not selected:
+            i = (i - 1) % len(sge.game.rooms)
+            if isinstance(sge.game.rooms[i], Room):
+                selected = True
+
+        sge.game.rooms[i].resume()
+
 
 class Object(sge.StellarClass):
 
@@ -619,6 +641,11 @@ class Room(sge.Room):
             new_room.opened = True
 
             return new_room
+
+
+class RoomSettings(sge.Room):
+
+    """Room used for adjusting room settings."""
 
 
 class View(object):
