@@ -463,7 +463,7 @@ class Game(object):
         pass
 
     def event_paused_close(self):
-        """Close event (e.g. close button) when paused.
+        """Close event when paused.
 
         See the documentation for `Game.event_close` for more
         information.

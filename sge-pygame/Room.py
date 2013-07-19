@@ -41,10 +41,8 @@ class Room(object):
       ``sge.game.width`` is used.
     - ``height`` -- The height of the room in pixels.  If set to None,
       ``sge.game.height`` is used.
-    - ``views`` -- A list containing all View objects in the room.
-    - ``background`` -- The `sge.Background` object used.  While it will
-      always be the actual object when read, it can be set to either an
-      actual background object or the ID of a background.
+    - ``views`` -- A list containing all `sge.View` objects in the room.
+    - ``background`` -- The `sge.Background` object used.
     - ``background_x`` -- The horizontal position of the background in
       the room.
     - ``background_y`` -- The vertical position of the background in the
@@ -62,20 +60,17 @@ class Room(object):
                  background=None, background_x=0, background_y=0):
         """Create a new Room object.
 
-        Arguments set the respective initial attributes of the room.
-        See the documentation for sge.Room for more information.
+        Arguments:
+        - ``views`` -- A list containing all `sge.View` objects in the
+          room.  If set to None, a new view will be created with x=0,
+          y=0, and all other arguments unspecified, which will become
+          the first view of the room.
+        - ``background`` -- The `sge.Background` object used.  If set to
+          None, a new background will be created with no layers and the
+          color set to "black".
 
-        If ``views`` is set to None, a new view will be created with
-        x=0, y=0, and all other arguments unspecified, which will become
-        the first view of the room.  If ``background`` is set to None, a
-        new background is created with no layers and the color set to
-        "black".
-
-        In addition to containing actual StellarClass objects,
-        ``objects`` can contain valid IDs of StellarClass objects.
-
-        A game object must exist before an object of this class is
-        created.
+        All other arguments set the respective initial attributes of the
+        room.  See the documentation for `Room` for more information.
 
         """
         self.width = width if width is not None else sge.game.width
@@ -111,8 +106,8 @@ class Room(object):
     def add(self, obj):
         """Add a StellarClass object to the room.
 
-        ``obj`` is the StellarClass object to add.  It can also be an
-        object's ID.
+        Arguments:
+        - ``obj`` -- The `sge.StellarClass` object to add.
 
         """
         if not isinstance(obj, sge.StellarClass):
@@ -163,11 +158,14 @@ class Room(object):
     def end(self, next_room=None, resume=True):
         """End the current room.
 
-        ``next_room`` indicates the room number of the room to go to
-        next; if set to None, the room after this one is chosen.
-        ``resume`` indicates whether or not to resume the next room
-        instead of restarting it.  If the room chosen as the next room
-        does not exist, the game is ended.
+        Arguments:
+        - ``next_room`` -- The room number of the room to go to next.
+          If set to None, the room after this one is chosen.
+        - ``resume`` -- Whether or not to resume the next room instead
+          of restarting it.
+
+        If the room chosen as the next room does not exist, the game is
+        ended.
 
         This triggers this room's ``event_room_end`` and resets the
         state of this room.
@@ -191,9 +189,15 @@ class Room(object):
     def project_dot(self, x, y, z, color):
         """Project a single-pixel dot onto the room.
 
-        ``x`` and ``y`` indicate the location in the room to project the
-        dot.  ``z`` indicates the Z-axis position of the projection in
-        the room.  ``color`` indicates the color of the dot.
+        Arguments:
+        - ``x`` -- The horizontal location relative to the room to
+          project the dot.
+        - ``y`` -- The vertical location relative to the room to project
+          the dot.
+        - ``z`` -- The Z-axis position of the projection in the room.
+
+        See the documentation for `sge.Sprite.draw_dot` for more
+        information.
 
         """
         sprite = sge.Sprite(None, 1, 1)
@@ -205,18 +209,19 @@ class Room(object):
                      anti_alias=False):
         """Project a line segment onto the room.
 
-        ``x1``, ``y1``, ``x2``, and ``y2`` indicate the location in the
-        room of the points between which to project the line segment.
-        ``z`` indicates the Z-axis position of the projection in the
-        room.  ``color`` indicates the color of the line segment.
-        ``thickness`` indicates the thickness of the line segment in
-        pixels.  ``anti_alias`` indicates whether or not anti-aliasing
-        should be used.
+        Arguments:
+        - ``x1`` -- The horizontal location relative to the room of the
+          first endpoint of the projected line segment.
+        - ``y1`` -- The vertical location relative to the room of the
+          first endpoint of the projected line segment.
+        - ``x2`` -- The horizontal location relative to the room of the
+          second endpoint of the projected line segment.
+        - ``y2`` -- The vertical location relative to the room of the
+          second endpoint of the projected line segment.
+        - ``z`` -- The Z-axis position of the projection in the room.
 
-        Support for anti-aliasing is optional in Stellar Game Engine
-        implementations.  If the implementation used does not support
-        anti-aliasing, this method will act like ``anti_alias`` is
-        False.
+        See the documentation for `sge.Sprite.draw_line` for more
+        information.
 
         """
         thickness = abs(thickness)
@@ -237,15 +242,15 @@ class Room(object):
                           outline=None, outline_thickness=1):
         """Project a rectangle onto the room.
 
-        ``x`` and ``y`` indicate the location in the room to position
-        the top-left corner of the rectangle.  ``z`` indicates the
-        Z-axis position of the projection in the room.  ``width`` and
-        ``height`` indicate the size of the rectangle.  ``fill``
-        indicates the color of the fill of the rectangle; set to None
-        for no fill.  ``outline`` indicates the color of the outline of
-        the rectangle; set to None for no outline.
-        ``outline_thickness`` indicates the thickness of the outline in
-        pixels (ignored if there is no outline).
+        Arguments:
+        - ``x`` -- The horizontal location relative to the room to
+          project the rectangle.
+        - ``y`` -- The vertical location relative to the room to project
+          the rectangle.
+        - ``z`` -- The Z-axis position of the projection in the room.
+
+        See the documentation for `sge.Sprite.draw_rectangle` for more
+        information.
 
         """
         outline_thickness = abs(outline_thickness)
@@ -265,22 +270,22 @@ class Room(object):
                         outline=None, outline_thickness=1, anti_alias=False):
         """Project an ellipse onto the room.
 
-        ``x`` and ``y`` indicate the location in the room to position
-        the top-left corner of the imaginary rectangle containing the
-        ellipse.  ``z`` indicates the Z-axis position of the projection
-        in the room.  ``width`` and ``height`` indicate the size of the
-        ellipse.  ``fill`` indicates the color of the fill of the
-        ellipse; set to None for no fill.  ``outline`` indicates the
-        color of the outline of the ellipse; set to None for no outline.
-        ``outline_thickness`` indicates the thickness of the outline in
-        pixels (ignored if there is no outline).  ``anti_alias``
-        indicates whether or not anti-aliasing should be used on the
-        outline.
+        Arguments:
+        - ``x`` -- The horizontal location relative to the room to
+          position the imaginary rectangle containing the ellipse.
+        - ``y`` -- The vertical location relative to the room to
+          position the imaginary rectangle containing the ellipse.
+        - ``z`` -- The Z-axis position of the projection in the room.
+        - ``width`` -- The width of the ellipse.
+        - ``height`` -- The height of the ellipse.
+        - ``fill`` -- The color of the fill of the ellipse.
+        - ``outline`` -- The color of the outline of the ellipse.
+        - ``outline_thickness`` -- The thickness of the outline of the
+          ellipse.
+        - ``anti_alias`` -- Whether or not anti-aliasing should be used.
 
-        Support for anti-aliasing is optional in Stellar Game Engine
-        implementations.  If the implementation used does not support
-        anti-aliasing, this method will act like ``anti_alias`` is
-        False.
+        See the documentation for `sge.Sprite.draw_ellipse` for more
+        information.
 
         """
         outline_thickness = abs(outline_thickness)
@@ -300,21 +305,15 @@ class Room(object):
                        outline_thickness=1, anti_alias=False):
         """Project a circle onto the room.
 
-        ``x`` and ``y`` indicate the location in the room to position
-        the center of the circle.  ``z`` indicates the Z-axis position
-        of the projection in the room.  ``radius`` indicates the radius
-        of the circle in pixels.  ``fill`` indicates the color of the
-        fill of the circle; set to None for no fill.  ``outline``
-        indicates the color of the outline of the circle; set to None
-        for no outline.  ``outline_thickness`` indicates the thickness
-        of the outline in pixels (ignored if there is no outline).
-        ``anti_alias`` indicates whether or not anti-aliasing should be
-        used on the outline.
+        Arguments:
+        - ``x`` -- The horizontal location relative to the room to
+          position the center of the circle.
+        - ``y`` -- The vertical location relative to the room to
+          position the center of the circle.
+        - ``z`` -- The Z-axis position of the projection in the room.
 
-        Support for anti-aliasing is optional in Stellar Game Engine
-        implementations.  If the implementation used does not support
-        anti-aliasing, this method will act like ``anti_alias`` is
-        False.
+        See the documentation for `sge.Sprite.draw_circle` for more
+        information.
 
         """
         outline_thickness = abs(outline_thickness)
@@ -329,11 +328,15 @@ class Room(object):
     def project_sprite(self, sprite, image, x, y, z):
         """Project a sprite onto the room.
 
-        ``sprite`` indicates the sprite to draw.  ``image`` indicates
-        the frame of the sprite to draw, where 0 is the first frame.
-        ``x`` and ``y`` indicate the location in the room to position
-        the sprite.  ``z`` indicates the Z-axis position of the
-        projection in the room.
+        Arguments:
+        - ``x`` -- The horizontal location relative to the room to
+          project ``sprite``.
+        - ``y`` -- The vertical location relative to the room to project
+          ``sprite``.
+        - ``z`` -- The Z-axis position of the projection in the room.
+
+        See the documentation for `sge.Sprite.draw_sprite` for more
+        information.
 
         """
         p = _Projection(x, y, z, sprite=sprite, detects_collisions=False,
@@ -345,26 +348,15 @@ class Room(object):
                     anti_alias=True):
         """Project text onto the room.
 
-        ``font`` indicates the font to use for the text.  ``text``
-        indicates the text to project.  ``x`` and ``y`` indicate the
-        location in the room to project the text.  ``width`` and
-        ``height`` indicate the size of the imaginary box the text is
-        projected in; set to None for no imaginary box.  ``color``
-        indicates the color of the text.  ``halign`` indicates the
-        horizontal alignment of the text and can be ALIGN_LEFT,
-        ALIGN_CENTER, or ALIGN_RIGHT.  ``valign`` indicates the vertical
-        alignment and can be ALIGN_TOP, ALIGN_MIDDLE, or ALIGN_BOTTOM.
-        ``anti_alias`` indicates whether or not anti-aliasing should be
-        used.
+        Arguments:
+        - ``x`` -- The horizontal location relative to the room to
+          project the text.
+        - ``y`` -- The vertical location relative to the room to project
+          the text.
+        - ``z`` -- The Z-axis position of the projection in the room.
 
-        If the text does not fit into the imaginary box specified, the
-        text that doesn't fit will be cut off at the bottom if valign is
-        ALIGN_TOP, the top if valign is ALIGN_BOTTOM, or equally the top
-        and bottom if valign is ALIGN_MIDDLE.
-
-        Support for anti-aliasing is optional in Stellar Game Engine
-        implementations.  If the implementation used does not support
-        anti-aliasing, this function will act like ``anti_alias`` is False.
+        See the documentation for `sge.Sprite.draw_text` for more
+        information.
 
         """
         w, h = font.get_size(text, width, height)
@@ -400,7 +392,7 @@ class Room(object):
     def event_step(self, time_passed):
         """Room step event.
 
-        See the documentation for sge.Game.event_step for more
+        See the documentation for `sge.Game.event_step` for more
         information.
 
         """
@@ -409,7 +401,7 @@ class Room(object):
     def event_key_press(self, key, char):
         """Key press event.
 
-        See the documentation for sge.Game.event_key_press for more
+        See the documentation for `sge.Game.event_key_press` for more
         information.
 
         """
@@ -418,7 +410,7 @@ class Room(object):
     def event_key_release(self, key):
         """Key release event.
 
-        See the documentation for sge.Game.event_key_release for more
+        See the documentation for `sge.Game.event_key_release` for more
         information.
 
         """
@@ -427,7 +419,7 @@ class Room(object):
     def event_mouse_move(self, x, y):
         """Mouse move event.
 
-        See the documentation for sge.Game.event_mouse_move for more
+        See the documentation for `sge.Game.event_mouse_move` for more
         information.
 
         """
@@ -436,8 +428,8 @@ class Room(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        See the documentation for sge.Game.event_mouse_button_press for
-        more information.
+        See the documentation for `sge.Game.event_mouse_button_press`
+        for more information.
 
         """
         pass
@@ -445,7 +437,7 @@ class Room(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        See the documentation for sge.Game.event_mouse_button_release
+        See the documentation for `sge.Game.event_mouse_button_release`
         for more information.
 
         """
@@ -454,8 +446,8 @@ class Room(object):
     def event_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event.
 
-        See the documentation for sge.Game.event_joystick_axis_move for
-        more information.
+        See the documentation for `sge.Game.event_joystick_axis_move`
+        for more information.
 
         """
         pass
@@ -463,7 +455,7 @@ class Room(object):
     def event_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event.
 
-        See the documentation for sge.Game.event_joystick_hat_move for
+        See the documentation for `sge.Game.event_joystick_hat_move` for
         more information.
 
         """
@@ -472,8 +464,8 @@ class Room(object):
     def event_joystick_trackball_move(self, joystick, ball, x, y):
         """Joystick trackball move event.
 
-        See the documentation for sge.Game.event_joystick_trackball_move
-        for more information.
+        See the documentation for
+        `sge.Game.event_joystick_trackball_move` for more information.
 
         """
         pass
@@ -481,7 +473,7 @@ class Room(object):
     def event_joystick_button_press(self, joystick, button):
         """Joystick button press event.
 
-        See the documentation for sge.Game.event_joystick_button_press
+        See the documentation for `sge.Game.event_joystick_button_press`
         for more information.
 
         """
@@ -490,16 +482,16 @@ class Room(object):
     def event_joystick_button_release(self, joystick, button):
         """Joystick button release event.
 
-        See the documentation for sge.Game.event_joystick_button_release
-        for more information.
+        See the documentation for
+        `sge.Game.event_joystick_button_release` for more information.
 
         """
         pass
 
     def event_close(self):
-        """Close event (e.g. close button).
+        """Close event.
 
-        See the documentation for sge.Game.event_close for more
+        See the documentation for `sge.Game.event_close` for more
         information.  This is always called before any game close events
         occurring at the same time.
 
@@ -509,7 +501,7 @@ class Room(object):
     def event_paused_key_press(self, key, char):
         """Key press event when paused.
 
-        See the documentation for sge.Game.event_key_press for more
+        See the documentation for `sge.Game.event_key_press` for more
         information.
 
         """
@@ -518,7 +510,7 @@ class Room(object):
     def event_paused_key_release(self, key):
         """Key release event when paused.
 
-        See the documentation for sge.Game.event_key_release for more
+        See the documentation for `sge.Game.event_key_release` for more
         information.
 
         """
@@ -527,7 +519,7 @@ class Room(object):
     def event_paused_mouse_move(self, x, y):
         """Mouse move event when paused.
 
-        See the documentation for sge.Game.event_mouse_move for more
+        See the documentation for `sge.Game.event_mouse_move` for more
         information.
 
         """
@@ -536,8 +528,8 @@ class Room(object):
     def event_paused_mouse_button_press(self, button):
         """Mouse button press event when paused.
 
-        See the documentation for sge.Game.event_mouse_button_press for
-        more information.
+        See the documentation for `sge.Game.event_mouse_button_press`
+        for more information.
 
         """
         pass
@@ -545,7 +537,7 @@ class Room(object):
     def event_paused_mouse_button_release(self, button):
         """Mouse button release event when paused.
 
-        See the documentation for sge.Game.event_mouse_button_release
+        See the documentation for `sge.Game.event_mouse_button_release`
         for more information.
 
         """
@@ -554,8 +546,8 @@ class Room(object):
     def event_paused_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event when paused.
 
-        See the documentation for sge.Game.event_joystick_axis_move for
-        more information.
+        See the documentation for `sge.Game.event_joystick_axis_move`
+        for more information.
 
         """
         pass
@@ -563,7 +555,7 @@ class Room(object):
     def event_paused_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event when paused.
 
-        See the documentation for sge.Game.event_joystick_hat_move for
+        See the documentation for `sge.Game.event_joystick_hat_move` for
         more information.
 
         """
@@ -572,8 +564,8 @@ class Room(object):
     def event_paused_joystick_trackball_move(self, joystick, ball, x, y):
         """Joystick trackball move event when paused.
 
-        See the documentation for sge.Game.event_joystick_trackball_move
-        for more information.
+        See the documentation for
+        `sge.Game.event_joystick_trackball_move` for more information.
 
         """
         pass
@@ -581,7 +573,7 @@ class Room(object):
     def event_paused_joystick_button_press(self, joystick, button):
         """Joystick button press event when paused.
 
-        See the documentation for sge.Game.event_joystick_button_press
+        See the documentation for `sge.Game.event_joystick_button_press`
         for more information.
 
         """
@@ -590,16 +582,16 @@ class Room(object):
     def event_paused_joystick_button_release(self, joystick, button):
         """Joystick button release event when paused.
 
-        See the documentation for sge.Game.event_joystick_button_release
-        for more information.
+        See the documentation for
+        `sge.Game.event_joystick_button_release` for more information.
 
         """
         pass
 
     def event_paused_close(self):
-        """Close event (e.g. close button) when paused.
+        """Close event when paused.
 
-        See the documentation for sge.Room.event_close for more
+        See the documentation for `Room.event_close` for more
         information.
 
         """

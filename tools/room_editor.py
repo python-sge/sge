@@ -647,6 +647,9 @@ class RoomSettings(sge.Room):
 
     """Room used for adjusting room settings."""
 
+    def __init__(self):
+        pass
+
 
 class View(object):
 
@@ -809,6 +812,7 @@ def main(*args):
     sge.Sprite('stellar_room_editor_icon_image_settings', *ICON_SIZE)
     sge.Sprite('stellar_room_editor_icon_inactive', *ICON_SIZE)
     sge.Sprite('stellar_room_editor_icon_load', *ICON_SIZE)
+    sge.Sprite('stellar_room_editor_icon_return_to_room', *ICON_SIZE)
     sge.Sprite('stellar_room_editor_icon_reload_resources', *ICON_SIZE)
     sge.Sprite('stellar_room_editor_icon_room_next', *ICON_SIZE)
     sge.Sprite('stellar_room_editor_icon_room_previous', *ICON_SIZE)
