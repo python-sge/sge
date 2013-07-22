@@ -51,7 +51,7 @@ Also note that "sge-template" is not an implementation, but a template
 for programming new implementations.
 
 See the files contained in the "examples" directory for examples of
-games written for SGE.  To run them, you must first add the folder of an
+games written with SGE.  To run them, you must first add the folder of a
 SGE implementation into the "examples" directory as described above.
-See MANUAL for documentation of the SGE API.
+See [FIXME: pointer to docs] for documentation of the SGE API.
 

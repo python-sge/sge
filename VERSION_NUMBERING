@@ -65,7 +65,7 @@ All other version number components remain the same.
 Incrementing Version Numbers
 ------------------------------------------------------------------------
 
-Within the source repository, any time a change is made to an SGE
+Within the source repository, any time a change is made to a SGE
 implementation (the template is also treated as an implementation for
 this purpose), the revision number for that implementation (found in
 the implementation's __version__ variable in __init__.py) MUST be
