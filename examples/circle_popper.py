@@ -103,11 +103,11 @@ def main():
     game = Game(delta=True)
 
     # Load sprites
-    circle_sprite = sge.Sprite('circle', 64, 64, 32, 32, True, bbox_x=-32,
-                               bbox_y=-32)
-    circle_pop_sprite = sge.Sprite('circle_pop', 64, 64, 32, 32, True,
-                                   bbox_x=-16, bbox_y=-16, fps=60)
-    fence_sprite = sge.Sprite('fence', transparent=True)
+    circle_sprite = sge.Sprite('circle', width=64, height=64, origin_x=32,
+                               origin_y=32)
+    circle_pop_sprite = sge.Sprite('circle_pop', width=64, height=64,
+                                   origin_x=32, origin_y=32, fps=60)
+    fence_sprite = sge.Sprite('fence')
 
     # Load backgrounds
     layers = (sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False),)

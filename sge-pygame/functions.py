@@ -841,7 +841,7 @@ def _show_modal(text, default, text_entry, buttons):
     message_sprite = sge.Sprite(width=text_w, height=text_h)
     message_sprite.draw_text(font, text, 0, 0, text_w, text_h, color='white')
     box.blit(message_sprite._baseimages[0], (4, 4))
-    del sge.game.sprites[message_sprite.name]
+    del sge.game.sprites[message_sprite.id]
 
     selected_buttons = []
     press_buttons = []

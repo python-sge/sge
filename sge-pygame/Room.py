@@ -641,4 +641,4 @@ class _Projection(sge.StellarClass):
 
     def event_destroy(self):
         if self.sprite is not None:
-            del sge.game.sprites[self.sprite.name]
+            del sge.game.sprites[self.sprite.id]

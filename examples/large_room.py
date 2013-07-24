@@ -89,8 +89,8 @@ def main():
     Game(width=320, height=240)
 
     # Load sprites
-    sge.Sprite('circle', 32, 32, 16, 16, transparent=True, bbox_x=-16, bbox_y=-16)
-    fence = sge.Sprite('fence', transparent=True)
+    sge.Sprite('circle', width=32, height=32, origin_x=16, origin_y=16)
+    fence = sge.Sprite('fence')
 
     # Load backgrounds
     layers = (sge.BackgroundLayer(fence, 0, 0, 0),)

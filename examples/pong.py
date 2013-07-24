@@ -234,7 +234,7 @@ def main():
     background = sge.Background (layers, "black")
 
     # Load fonts
-    glob.hud_font = sge.Font('Liberation Mono', 48)
+    glob.hud_font = sge.Font('Liberation Mono', size=48)
 
     # Load sounds
     glob.bounce_sound = sge.Sound('bounce.wav')
