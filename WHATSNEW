@@ -1,0 +1,164 @@
+Copyright (C) 2013 Julian Marchant <onpon4@lavabit.com>
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This file is offered as-is,
+without any warranty.
+
+========================================================================
+
+0.4.0
+------------------------------------------------------------------------
+
+Specification additions:
++ sge.Sprite.from_screenshot
++ sge.Sprite.save
++ sge.show_message
++ sge.get_text_entry
++ sge.Room.background_x
++ sge.Room.background_y
++ sge.Sprite.id
++ sge.BackgroundLayer.id
++ sge.Font.id
++ sge.Sound.id
++ sge.Music.id
+
+Specification removals:
+- sge.Music.stop_all (replaced by sge.Music.stop, now a static method)
+- sge.Music.balance (nonsensical; should be controlled by the music file)
+- sge.Sound.balance (replaced by a balance argument when the sound is played)
+- sge.Background.x (replaced by sge.Room.background_x)
+- sge.Background.y (replaced by sge.Room.background_y)
+
+Specification misc changes:
+* bbox_x and bbox_y of sge.Sprite now default to the top-left of the image.
+* sge.Music.stop is now a static method.
+* sge.Music.pause is now a static method.
+* sge.Music.unpause is now a static method.
+* Key press events now have a third argument, char.
+* sge.Sound.play now has a balance argument.
+* Docstrings reformatted to reStructuredText.
+* sge.Sprite.__init__ now has an id attribute.
+* sge.BackgroundLayer.__init__ now has an id attribute.
+* sge.Font.__init__ now has an id attribute.
+* Sprites can be referenced by id rather than by name now.
+* Background layers can be referenced by id rather than by sprite name now.
+* Fonts can be referenced by id rather than by name now.
+
+SGE Template misc changes:
+* Released to the public domain via CC0.
+
+SGE Pygame misc changes:
+* Collision detection changed to be more efficient.
+* Now called "SGE Pygame" instead of "Stellar Game Engine - Pygame 1.9".
+
+SGE Pygame bugfixes:
+* Projected objects flickering when delta timing was enabled
+* sge.StellarClass.image_fps not being used if a sprite was available
+* Background layers being offset when scaling the window
+* Rectangles replacing the area they drew on rather than blending
+* sge.Sprite.draw_sprite not accepting sprite names
+
+
+0.3.0
+------------------------------------------------------------------------
+
+Specification additions:
++ sge.Room.project_dot
++ sge.Room.project_line
++ sge.Room.project_rectangle
++ sge.Room.project_ellipse
++ sge.Room.project_circle
++ sge.Room.project_sprite
++ sge.Room.project_text
++ sge.Background.x
++ sge.Background.y
++ Trackball support
++ sge.StellarClass.active
+
+Specification misc changes:
+* Trying to load invalid sound files now raises an exception.
+* The file name for sounds and music can now be set to None for null sounds.
+* Mouse buttons are now identified by strings instead of constants.
+
+Pygame implementation additions:
++ DEBUG constant (causes more verbose information to be printed if True)
+
+Pygame implementation bugfixes:
+* IOError being raised if Pygame's mixer module was unavailable
+
+
+0.2.1
+------------------------------------------------------------------------
+
+Specification misc changes:
+* sge.Game.window_icon is now a file name instead of a sprite.
+* The default room size is now the game window size.
+
+Pygame implementation bugfixes:
+* Views being allowed outside the room
+* Crash when changing an object's sprite
+* image_xscale and image_yscale not being factored into objects' origins
+* Image being offset if an object's xscale or yscale was negative
+
+
+0.2.0
+------------------------------------------------------------------------
+
+Specification additions:
++ sge.Sprite.draw_dot
++ sge.Sprite.draw_line
++ sge.Sprite.draw_rectangle
++ sge.Sprite.draw_ellipse
++ sge.Sprite.draw_circle
++ sge.Sprite.draw_text
++ sge.Sprite.draw_clear
++ sge.Game.grab_input
++ sge.Sprite.draw_sprite
++ sge.Music.clear_queue
++ sge.Music.stop_all
++ sge.Sound.stop_all
++ sge.StellarClass.create
++ sge.Game.window_text
++ sge.Game.window_icon
+
+Specification removals:
+- sge.Game.draw_dot (replaced by sge.Sprite.draw_dot)
+- sge.Game.draw_line (replaced by sge.Sprite.draw_line)
+- sge.Game.draw_rectangle (replaced by sge.Sprite.draw_rectangle)
+- sge.Game.draw_ellipse (replaced by sge.Sprite.draw_ellipse)
+- sge.Game.draw_circle (replaced by sge.Sprite.draw_circle)
+- sge.Game.sound_stop_all (replaced by sge.sound_stop_all)
+
+Specification misc changes:
+* A list or tuple of possible font choices can now be specified.
+* Sprites now use a transparent image by default, not a black image.
+* Added arguments to sge.Room.end.
+* Implementations no longer required to support Ogg Vorbis and WAV.
+* Removed unnecessary arguments from sge.Font.get_size.
+* Split SGE in to multiple files.
+
+Pygame implementation additions:
++ sge.hardware_rendering
++ Automatic font substitution (e.g. Liberation Sans for Arial)
++ sge.real_trackballs
+
+Pygame implementation bugfixes:
+* Problems with scaling
+* Problems with partial screen updates
+* Wrong correction of views being outside the room
+* Object disappearing bug
+* Background disappearing bug
+* Split-screen problem
+* Background change not showing up when changing rooms
+* Bug with partial view of dynamic objects
+* Background update bug
+
+
+0.1.0
+------------------------------------------------------------------------
+
+First release
+
+Note: many features were unimplemented in this version. They were all
+later implemented in version 0.2.0.
