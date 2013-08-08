@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # SGE Source Generator
-# Copyright (C) 2013 Julian Marchant <onpon4@lavabit.com>
+# Copyright (C) 2013 Julian Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

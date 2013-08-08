@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013 Julian Marchant <onpon4@lavabit.com>
+# Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
 # 
 # This file is part of SGE Pygame.
 # 

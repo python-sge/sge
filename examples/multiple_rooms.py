@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Multiple Rooms Example
-# Written in 2012, 2013 by Julian Marchant <onpon4@lavabit.com>
+# Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
