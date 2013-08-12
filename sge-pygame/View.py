@@ -35,6 +35,7 @@ class View(object):
     create a split-screen effect.
 
     Attributes:
+
     - ``x`` -- The horizontal position of the view in the room.  When
       set, if it brings the view outside of the room it is in, it will
       be re-adjusted so that the view is completely inside the room.
@@ -121,6 +122,7 @@ class View(object):
         """Create a new View object.
 
         Arguments:
+
         - ``width`` -- The width of the view.  If set to None, it will
           be set such that the view port takes up all of the space that
           it can horizontally (i.e. ``game.width - xport``).

@@ -37,6 +37,7 @@ class Room(object):
     Every game must have at least one room.
 
     Attributes:
+
     - ``width`` -- The width of the room in pixels.  If set to None,
       ``sge.game.width`` is used.
     - ``height`` -- The height of the room in pixels.  If set to None,
@@ -49,6 +50,7 @@ class Room(object):
       room.
 
     Read-Only Attributes:
+
     - ``objects`` -- A tuple containing all `sge.StellarClass` objects
       in the room.
     - ``room_number`` -- The index of this room in the game, where 0 is
@@ -61,6 +63,7 @@ class Room(object):
         """Create a new Room object.
 
         Arguments:
+
         - ``views`` -- A list containing all `sge.View` objects in the
           room.  If set to None, a new view will be created with x=0,
           y=0, and all other arguments unspecified, which will become
@@ -107,6 +110,7 @@ class Room(object):
         """Add a StellarClass object to the room.
 
         Arguments:
+
         - ``obj`` -- The `sge.StellarClass` object to add.
 
         """
@@ -159,6 +163,7 @@ class Room(object):
         """End the current room.
 
         Arguments:
+
         - ``next_room`` -- The room number of the room to go to next.
           If set to None, the room after this one is chosen.
         - ``resume`` -- Whether or not to resume the next room instead
@@ -190,6 +195,7 @@ class Room(object):
         """Project a single-pixel dot onto the room.
 
         Arguments:
+
         - ``x`` -- The horizontal location relative to the room to
           project the dot.
         - ``y`` -- The vertical location relative to the room to project
@@ -210,6 +216,7 @@ class Room(object):
         """Project a line segment onto the room.
 
         Arguments:
+
         - ``x1`` -- The horizontal location relative to the room of the
           first endpoint of the projected line segment.
         - ``y1`` -- The vertical location relative to the room of the
@@ -243,6 +250,7 @@ class Room(object):
         """Project a rectangle onto the room.
 
         Arguments:
+
         - ``x`` -- The horizontal location relative to the room to
           project the rectangle.
         - ``y`` -- The vertical location relative to the room to project
@@ -271,6 +279,7 @@ class Room(object):
         """Project an ellipse onto the room.
 
         Arguments:
+
         - ``x`` -- The horizontal location relative to the room to
           position the imaginary rectangle containing the ellipse.
         - ``y`` -- The vertical location relative to the room to
@@ -306,6 +315,7 @@ class Room(object):
         """Project a circle onto the room.
 
         Arguments:
+
         - ``x`` -- The horizontal location relative to the room to
           position the center of the circle.
         - ``y`` -- The vertical location relative to the room to
@@ -329,6 +339,7 @@ class Room(object):
         """Project a sprite onto the room.
 
         Arguments:
+
         - ``x`` -- The horizontal location relative to the room to
           project ``sprite``.
         - ``y`` -- The vertical location relative to the room to project
@@ -349,6 +360,7 @@ class Room(object):
         """Project text onto the room.
 
         Arguments:
+
         - ``x`` -- The horizontal location relative to the room to
           project the text.
         - ``y`` -- The vertical location relative to the room to project

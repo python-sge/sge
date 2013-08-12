@@ -43,6 +43,7 @@ class Sprite(object):
     of supported formats.
 
     Attributes:
+
     - ``width`` -- The width of the sprite.
     - ``height`` -- The height of the sprite.
     - ``origin_x`` -- The horizontal location of the origin relative to
@@ -67,6 +68,7 @@ class Sprite(object):
     - ``bbox_height`` -- The height of the suggested bounding box.
 
     Read-Only Attributes:
+
     - ``name`` -- The name of the sprite given when it was created.
     - ``id`` -- The unique identifier of the sprite.
 
@@ -133,10 +135,12 @@ class Sprite(object):
         """Create a new Sprite object.
 
         Arguments:
+
         - ``name`` -- The base name of the image files, used to find all
           individual image files that make up the sprite's animation in
           the paths specified in ``sge.image_directories``.  One of the
           following rules will be used to find the images:
+
           - The base name plus a valid image extension.  If this rule is
             used, the image will be loaded as a single-frame sprite.
           - The base name and an integer separated by either a hyphen
@@ -154,7 +158,9 @@ class Sprite(object):
             ``width`` and ``height`` defaulting to 32 if they are set to
             None).  SGE decides what to assign to the sprite's ``name``
             attribute in this case, but it will always be a string.
+
           If none of the above rules can be used, IOError is raised.
+
         - ``id`` -- The unique identifier of the sprite.  If set to
           None, ``name`` will be used, modified by SGE if it is already
           the unique identifier of another sprite.
@@ -324,6 +330,7 @@ class Sprite(object):
         """Draw a single-pixel dot on the sprite.
 
         Arguments:
+
         - ``x`` -- The horizontal location relative to the sprite to
           draw the dot.
         - ``y`` -- The vertical location relative to the sprite to draw
@@ -345,6 +352,7 @@ class Sprite(object):
         """Draw a line segment on the sprite.
 
         Arguments:
+
         - ``x1`` -- The horizontal location relative to the sprite of
           the first end point of the line segment.
         - ``y1`` -- The vertical location relative to the sprite of the
@@ -379,6 +387,7 @@ class Sprite(object):
         """Draw a rectangle on the sprite.
 
         Arguments:
+
         - ``x`` -- The horizontal location relative to the sprite to
           draw the rectangle.
         - ``y`` -- The vertical location relative to the sprite to draw
@@ -421,6 +430,7 @@ class Sprite(object):
         """Draw an ellipse on the sprite.
 
         Arguments:
+
         - ``x`` -- The horizontal location relative to the sprite to
           position the imaginary rectangle containing the ellipse.
         - ``y`` -- The vertical location relative to the sprite to
@@ -464,6 +474,7 @@ class Sprite(object):
         """Draw a circle on the sprite.
 
         Arguments:
+
         - ``x`` -- The horizontal location relative to the sprite to
           position the center of the circle.
         - ``y`` -- The vertical location relative to the sprite to
@@ -503,6 +514,7 @@ class Sprite(object):
         """Draw another sprite on the sprite.
 
         Arguments:
+
         - ``sprite`` -- The sprite to draw with.
         - ``image`` -- The frame of ``sprite`` to draw with, where 0 is
           the first frame.
@@ -533,6 +545,7 @@ class Sprite(object):
         """Draw text on the sprite.
 
         Arguments:
+
         - ``font`` -- The font to use to draw the text.
         - ``text`` -- The text (as a string) to draw.
         - ``x`` -- The horizontal location relative to the sprite to
@@ -551,6 +564,7 @@ class Sprite(object):
         - ``halign`` -- The horizontal alignment of the text and the
           horizontal location of the origin of the imaginary rectangle
           the text is drawn in.  Can be set to one of the following:
+
           - ``sge.ALIGN_LEFT`` -- Align the text to the left of the
             imaginary rectangle the text is drawn in.  Set the origin of
             the imaginary rectangle to its left edge.
@@ -560,9 +574,11 @@ class Sprite(object):
           - ``sge.ALIGN_RIGHT`` -- Align the text to the right of the
             imaginary rectangle the text is drawn in.  Set the origin of
             the imaginary rectangle to its right edge.
+
         - ``valign`` -- The vertical alignment of the text and the
           vertical location of the origin of the imaginary rectangle the
           text is drawn in.  Can be set to one of the following:
+
           - ``sge.ALIGN_TOP`` -- Align the text to the top of the
             imaginary rectangle the text is drawn in.  Set the origin of
             the imaginary rectangle to its top edge.  If the imaginary
@@ -578,6 +594,7 @@ class Sprite(object):
             the imaginary rectangle to its top edge.  If the imaginary
             rectangle is not tall enough to contain all of the text, cut
             text off from the top.
+
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where 0 is
           the first frame; set to None to draw on all frames.
@@ -647,6 +664,7 @@ class Sprite(object):
         """Erase everything from the sprite.
 
         Arguments:
+
         - ``frame`` -- The frame of the sprite to clear, where 0 is
           the first frame; set to None to clear all frames.
 
@@ -666,6 +684,7 @@ class Sprite(object):
         """Save the sprite to an image file.
 
         Arguments:
+
         - ``fname`` -- The path of the file to save the sprite to.  If
           it is not a path that can be saved to, IOError is raised.
 
@@ -696,6 +715,7 @@ class Sprite(object):
         """Return the current display on the screen as a sprite.
 
         Arguments:
+
         - ``x`` -- The horizontal location of the rectangular area to
           take a screenshot of.
         - ``y`` -- The vertical location of the rectangular area to take

@@ -42,12 +42,14 @@ class Font(object):
     rendering, if possible.
 
     Attributes:
+
     - ``size`` -- The height of the font in pixels.
     - ``underline`` -- Whether or not underlined rendering is enabled.
     - ``bold`` -- Whether or not bold rendering is enabled.
     - ``italic`` -- Whether or not italic rendering is enabled.
 
     Read-Only Attributes:
+
     - ``name`` -- The name of the font as specified when it was created.
     - ``id`` -- The unique identifier of the font.
 
@@ -99,8 +101,10 @@ class Font(object):
         """Create a new Font object.
 
         Arguments:
+
         - ``name`` -- The name of the font.  Can be one of the
           following:
+
           - A string indicating the name of a font file located in one
             of the paths specified in ``sge.font_directories``, e.g.
             ``"MyFont.ttf"``.
@@ -108,8 +112,10 @@ class Font(object):
             font, e.g. ``"Liberation Serif"``.
           - A list or tuple of strings indicating either a font file or
             a system font to choose from in order of preference.
+
           If none of the above methods return a valid font, SGE will
           choose the font.
+
         - ``id`` -- The unique identifier of the font.  If set to None,
           ``name`` will be used, modified by SGE if it is already the
           unique identifier of another font.

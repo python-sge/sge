@@ -50,10 +50,12 @@ class Music(object):
     Vorbis format.
 
     Attributes:
+
     - ``volume`` -- The volume of the music in percent from 0 to 100 (0
       for no sound, 100 for maximum volume).
 
     Read-Only Attributes:
+
     - ``fname`` -- The file name of the music given when it was created.
     - ``id`` -- The unique identifier of the music.
     - ``length`` -- The length of the music in milliseconds.
@@ -93,6 +95,7 @@ class Music(object):
         """Create a new music object.
 
         Arguments:
+
         - ``fname`` -- The name of the sound file in one of the paths
           specified in ``music_directories``.  If set to None, this
           object will not actually play any music.  If this is neither a

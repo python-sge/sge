@@ -15,8 +15,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with SGE Pygame.  If not, see <http://www.gnu.org/licenses/>.
 
-"""SGE Pygame
-
+"""
 The Stellar Game Engine (abbreviated "SGE", pronounced as "Sage") is a
 Python library for use by Stellar.  It is a game engine loosely based on
 the proprietary program, Game Maker.  The purpose of SGE is to make game
@@ -201,6 +200,7 @@ Global Variables and Constants
 ==============================
 
 Constants:
+
 - ``sge.IMPLEMENTATION`` -- A string idicating the name of the SGE
   implementation.
 - ``sge.ALIGN_LEFT`` -- Flag indicating alignment to the left.
@@ -213,6 +213,7 @@ Constants:
 - ``sge.ALIGN_BOTTOM`` -- Flag indicating alignment to the bottom.
 
 Global variables:
+
 - ``sge.game`` -- Stores the current `Game` object.  If there is no
   `Game` object currently, this variable is set to None.
 - ``sge.image_directories`` -- A list of directories where images can be
@@ -256,6 +257,7 @@ Formats Support
 ---------------
 
 `Sprite` supports the following image formats:
+
 - PNG
 - JPEG
 - Non-animated GIF
@@ -268,10 +270,12 @@ Formats Support
 - X Pixmap
 
 `Sound` supports the following audio formats:
+
 - Uncompressed WAV
 - Ogg Vorbis
 
 `Music` supports the following audio formats:
+
 - Ogg Vorbis
 - MP3 (support limited; use not recommended)
 - MOD
@@ -335,7 +339,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.4.0.1"
+__version__ = "0.4.0.2"
 
 import os
 

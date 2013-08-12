@@ -46,6 +46,7 @@ class Game(object):
     errors.
 
     Attributes:
+
     - ``width`` -- The width of the game's display.
     - ``height`` -- The height of the game's display.
     - ``fullscreen`` -- Whether or not the game should be in fullscreen.
@@ -79,6 +80,7 @@ class Game(object):
       use as the window icon.  If set to None, SGE chooses the icon.
 
     Read-Only Attributes:
+
     - ``sprites`` -- A dictionary containing all loaded sprites, indexed
       by the sprites' ``id`` attributes.
     - ``background_layers`` -- A dictionary containing all loaded
@@ -543,6 +545,7 @@ class Game(object):
         """Pause the game.
 
         Arguments:
+
         - ``sprite`` -- The sprite to show in the center of the screen
           while the game is paused.  If set to None, SGE chooses the
           image.
@@ -715,6 +718,7 @@ class Game(object):
         Called once each frame.
 
         Arguments:
+
         - ``time_passed`` -- The number of milliseconds that have passed
           during the last frame.
 
@@ -730,6 +734,7 @@ class Game(object):
         Called when a key on the keyboard is pressed.
 
         Arguments:
+
         - ``char`` -- The Unicode character associated with the key
           press, or an empty Unicode string if no Unicode character is
           associated with the key press.
@@ -757,6 +762,7 @@ class Game(object):
         Called when the mouse moves.
 
         Arguments:
+
         - ``x`` -- The horizontal relative movement of the mouse.
         - ``y`` -- The vertical relative movement of the mouse.
 
@@ -791,6 +797,7 @@ class Game(object):
         Called when an axis on a joystick changes position.
 
         Arguments:
+
         - ``value`` -- The tilt of the axis as a float from -1 to 1,
           where 0 is centered, -1 is all the way to the left or up, and
           1 is all the way to the right or down.
@@ -808,6 +815,7 @@ class Game(object):
         or d-pad) changes position.
 
         Arguments:
+
         - ``x`` -- The horizontal position of the HAT, where 0 is
           centered, -1 is left, and 1 is right.
         - ``y`` -- The vertical position of the HAT, where 0 is
@@ -825,6 +833,7 @@ class Game(object):
         Called when a trackball on a joystick moves.
 
         Arguments:
+
         - ``joystick`` -- The number of the joystick, where 0 is the
           first joystick.
         - ``ball`` -- The number of the trackball, where 0 is the first

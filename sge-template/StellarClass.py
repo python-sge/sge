@@ -61,6 +61,7 @@ class StellarClass(object):
     otherwise occur, or to prevent the object from moving through walls).
 
     Attributes:
+
     - ``x`` -- The horizontal position of the object in the room.
     - ``y`` -- The vertical position of the object in the room.
     - ``z`` -- The Z-axis position of the object in the room.
@@ -120,6 +121,7 @@ class StellarClass(object):
       no color blending.
 
     Read-Only Attributes:
+
     - ``id`` -- The unique identifier for this object.
     - ``xstart`` -- The initial value of x when the object was created.
     - ``ystart`` -- The initial value of y when the object was created.
@@ -138,6 +140,7 @@ class StellarClass(object):
         """Create a new StellarClass object.
 
         Arguments:
+
         - ``id`` -- The unique identifier of the sound.  If set to None,
           ``fname`` minus the extension will be used, modified by SGE if
           it is already the unique identifier of another music object.
@@ -157,6 +160,7 @@ class StellarClass(object):
         """Return whether or not this object collides with another.
 
         Arguments:
+
         - ``other`` -- The object to check for a collision with, or the
           unique identifier of said object.  ``other`` can also be a
           class to check for collisions with.
@@ -174,6 +178,7 @@ class StellarClass(object):
         """Set an alarm.
 
         Arguments:
+
         - ``alarm_id`` -- The unique identifier of the alarm to set.
           Any value can be used as a unique identifier for an alarm.
         - ``value`` -- The value to set the alarm to.  Set to None to
@@ -189,6 +194,8 @@ class StellarClass(object):
 
     def get_alarm(self, alarm_id):
         """Return the value of an alarm.
+
+        Arguments:
 
         - ``alarm_id`` -- The unique identifier of the alarm to check.
 
@@ -229,6 +236,7 @@ class StellarClass(object):
         Called when the value of an alarm reaches 0.
 
         Arguments:
+
         - ``alarm_id`` -- The unique identifier of the alarm which was
           set off.
 
@@ -340,9 +348,10 @@ class StellarClass(object):
         the directional collision events are appropriate.  In
         particular, this is called if the collision was already
         happening in the previous frame.  This is also the event method
-        called by the directional collision event methodss by default.
+        called by the directional collision event methods by default.
 
         Arguments:
+
         - ``other`` -- The other object which was collided with.
 
         """
@@ -355,6 +364,7 @@ class StellarClass(object):
         side.
 
         Arguments:
+
         - ``other`` -- The other object which was collided with.
 
         By default, this method simply calls
@@ -370,6 +380,7 @@ class StellarClass(object):
         side.
 
         Arguments:
+
         - ``other`` -- The other object which was collided with.
 
         By default, this method simply calls
@@ -384,6 +395,7 @@ class StellarClass(object):
         Called when another object collides with this object's top side.
 
         Arguments:
+
         - ``other`` -- The other object which was collided with.
 
         By default, this method simply calls
@@ -399,6 +411,7 @@ class StellarClass(object):
         side.
 
         Arguments:
+
         - ``other`` -- The other object which was collided with.
 
         By default, this method simply calls

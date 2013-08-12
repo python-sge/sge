@@ -37,10 +37,12 @@ class Background(object):
     the color to use where no image is shown.
 
     Attributes:
+
     - ``color`` -- The color used in parts of the background where no
       layer is shown.
 
     Read-Only Attributes:
+
     - ``id`` -- The unique identifier for this background.
     - ``layers`` -- A tuple containing all `sge.BackgroundLayer` objects
       used in this background.
@@ -51,6 +53,7 @@ class Background(object):
         """Create a background with the given color and layers.
 
         Arguments:
+
         - ``id`` -- The unique identifier of the sprite.  If set to
           None, SGE chooses the value.
 

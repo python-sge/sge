@@ -43,6 +43,7 @@ class Sound(object):
     information for a full list of supported formats.
 
     Attributes:
+
     - ``volume`` -- The volume of the sound in percent from 0 to 100 (0
       for no sound, 100 for max sound).
     - ``max_play`` -- The maximum number of instances of this sound
@@ -52,6 +53,7 @@ class Sound(object):
       instance.  Set to None or 0 for no limit.
 
     Read-Only Attributes:
+
     - ``fname`` -- The file name of the sound given when it was created.
     - ``length`` -- The length of the sound in milliseconds.
     - ``playing`` -- The number of instances of this sound playing.
@@ -92,6 +94,7 @@ class Sound(object):
         """Create a new sound object.
 
         Arguments:
+
         - ``fname`` -- The name of the sound file in one of the paths
           specified in ``sound_directories``.  If set to None, this
           object will not actually play any sound.  If this is neither a
@@ -138,6 +141,7 @@ class Sound(object):
         """Play the sound.
 
         Arguments:
+
         - ``loops`` -- The number of extra times to play the sound after
           it is played the first time; set to None or -1 to loop
           indefinitely.
@@ -196,6 +200,7 @@ class Sound(object):
         """Stop the sound.
 
         Arguments:
+
         - ``fade_time`` -- The time in milliseconds over which to fade
           the sound out before stopping; set to None or 0 to immediately
           stop the sound.
