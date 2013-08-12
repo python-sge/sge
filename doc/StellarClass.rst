@@ -1,5 +1,5 @@
 sge.StellarClass
-----------------
+================
 
 .. autoclass:: sge.StellarClass
 

@@ -1,5 +1,5 @@
 sge.Sound
----------
+=========
 
 .. autoclass:: sge.Sound
 

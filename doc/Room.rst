@@ -1,5 +1,5 @@
 sge.Room
---------
+========
 
 .. autoclass:: sge.Room
 

@@ -1,5 +1,5 @@
 sge.Background
---------------
+==============
 
 .. autoclass:: sge.Background
 

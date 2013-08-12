@@ -1,5 +1,5 @@
 sge.Music
----------
+=========
 
 .. autoclass:: sge.Music
 

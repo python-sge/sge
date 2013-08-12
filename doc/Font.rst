@@ -1,5 +1,5 @@
 sge.Font
---------
+========
 
 .. autoclass:: sge.Font
 

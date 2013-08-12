@@ -1,5 +1,5 @@
 sge.View
---------
+========
 
 .. autoclass:: sge.View
 
