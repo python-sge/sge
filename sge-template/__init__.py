@@ -10,9 +10,9 @@
 # along with this software. If not, see
 # <http://creativecommons.org/publicdomain/zero/1.0/>.
 
-# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace  the notice
+# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace the notice
 # above as well as the notices contained in other source files with your
-# own copyright notice.  Recommended free  licenses are  the GNU General
+# own copyright notice.  Recommended free  licenses are the GNU General
 # Public License, GNU Lesser General Public License, Expat License, or
 # Apache License 2.0.
 
@@ -31,12 +31,12 @@ information).  It is released under the GNU Lesser General Public
 License, which means you can modify and redistribute it without
 restrictions, and you can use it however you wish.
 
-Although the GNU Lesser General Public License does not require it, we
-encourage you to release your games' code under a free software license,
-such as the GNU General Public License, the Expat License (often
-ambiguously called the "MIT License"), or the Apache 2.0 License.  Doing
-so is easy, does not negatively affect you, and is highly appreciated as
-a contribution to free software.
+Even if it isn't required of you, we encourage you to release your
+games' code under a free software license, such as the GNU General
+Public License, the Expat License (often ambiguously called the "MIT
+License"), or the Apache License 2.0.  Doing so is easy, does not
+negatively affect you, and is highly appreciated as a contribution to
+free software.
 
 SGE Concepts
 ============
@@ -254,7 +254,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.4.0.2"
+__version__ = "0.4.0.3"
 
 import sys
 import os
