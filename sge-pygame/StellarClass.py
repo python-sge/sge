@@ -974,7 +974,7 @@ class StellarClass(object):
 
         ``args`` and ``kwargs`` are passed to ``cls.__init__`` as
         arguments.  Calling ``obj = cls.create(*args, **kwargs)`` is the
-        same as:::
+        same as::
 
             obj = cls(*args, **kwargs)
             sge.game.current_room.add(obj)

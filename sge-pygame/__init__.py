@@ -296,8 +296,8 @@ On some systems, the game will crash if `Music` attempts to load an
 unsupported format.  Since MP3's support is limited, it is best to avoid
 using it; consider using Ogg instead.
 
-Missing Optional Features
--------------------------
+Missing Features
+----------------
 
 `Sprite.draw_line` and `Room.project_line` support anti-aliasing for
 lines with a thickness of 1 only.  `Sprite.draw_text` and
@@ -339,7 +339,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.4.0.3"
+__version__ = "0.4.0.4"
 
 import os
 
