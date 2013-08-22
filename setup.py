@@ -39,7 +39,7 @@ py3_input = input if sys.version_info.major >= 3 else raw_input
 name = "SGE"
 author = "Julian Marchant"
 author_email = "onpon4@riseup.net"
-url = "http://stellarengine.nongnu.org
+url = "http://stellarengine.nongnu.org"
 license = "CC0"
 idir = "sge"
 requires = []
