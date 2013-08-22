@@ -469,6 +469,159 @@ class BackgroundButton(Button):
         pass
 
 
+class ViewsButton(Button):
+
+    icon = 'stellar_room_editor_icon_views'
+    tooltip = "Change the views in this room."
+
+    def do_effect(self):
+        # TODO
+        pass
+
+
+class ZoomResetButton(Button):
+
+    icon = 'stellar_room_editor_icon_zoom_reset'
+    tooltip = "Reset the zoom level to 100%."
+
+    def do_effect(self):
+        sge.game.current_room.zoom_reset()
+
+
+class ZoomOutButton(Button):
+
+    icon = 'stellar_room_editor_icon_zoom_out'
+    tooltip = "Zoom out."
+
+    def do_effect(self):
+        sge.game.current_room.zoom_out()
+
+
+class ZoomInButton(Button):
+
+    icon = 'stellar_room_editor_icon_zoom_in'
+    tooltip = "Zoom in."
+
+    def do_effect(self):
+        sge.game.current_room.zoom_in()
+
+
+class PreviousRoomButton(Button):
+
+    icon = 'stellar_room_editor_icon_room_previous'
+    tooltip = "Go to the previous room."
+
+    def do_effect(self):
+        sge.game.room_goto_previous()
+
+
+class NextRoomButton(Button):
+
+    icon = 'stellar_room_editor_icon_room_next'
+    tooltip = "Go to the next room."
+
+    def do_effect(self):
+        sge.game.room_goto_next()
+
+
+class CloseButton(Button):
+
+    icon = 'stellar_room_editor_icon_close'
+    tooltip = "Close the current room."
+
+    def do_effect(self):
+        sge.game.current_room.close()
+
+
+class ToolButton(Button):
+
+    tooltip_base = "Tool selected: {0}"
+
+    def do_effect(self):
+        # TODO
+        pass
+
+
+class ObjectClassButton(Button):
+
+    tooltip_base = "Object class: {0}"
+
+    def do_effect(self):
+        # TODO
+        pass
+
+
+class ObjectImageIndexButton(Button):
+
+    tooltip_base = "Object image index: {0}"
+
+    def do_effect(self):
+        # TODO
+        pass
+
+
+class ObjectImageAlphaButton(Button):
+
+    icon_base = 'stellar_room_editor_icon_image_settings'
+    tooltip_base = "Object image alpha: {0}%"
+
+    def do_effect(self):
+        # TODO
+        pass
+
+
+class ObjectImageBlendButton(Button):
+
+    icon_base = 'stellar_room_editor_icon_image_settings'
+    tooltip_base = "Object image blend: Red {0}, Green {1}, Blue {2}"
+
+    def do_effect(self):
+        # TODO
+        pass
+
+
+class ObjectVisibleButton(Button):
+
+    icon_true = 'stellar_room_editor_icon_image_settings'
+    icon_false = None
+    tooltip_true = "Object is visible."
+    tooltip_false = "Object is invisible."
+
+    def do_effect(self):
+        # TODO
+        pass
+
+
+class ObjectActiveButton(Button):
+
+    icon_true = 'stellar_room_editor_icon_active'
+    icon_false = 'stellar_room_editor_icon_inactive'
+    tooltip_true = "Object is active."
+    tooltip_false = "Object is inactive."
+
+    def do_effect(self):
+        # TODO
+        pass
+
+
+class ObjectDetectsCollisionsButton(Button):
+
+    icon_true = 'stellar_room_editor_icon_solid'
+    icon_false = 'stellar_room_editor_icon_unsolid'
+    tooltip_true = "Object detects collisions."
+    tooltip_false = "Object does not detect collisions."
+
+    def do_effect(self):
+        # TODO
+        pass
+
+
+class ObjectArgsButton(Button):
+
+    icon = 'stellar_room_editor_icon_args'
+    tooltip = "Specify the arguments for the object manually."
+
+
 class Tooltip(sge.StellarClass):
 
     def __init__(self):
@@ -582,6 +735,18 @@ class Room(sge.Room):
 
                 self.opened = False
                 sge.game.room_goto_next()
+
+    def zoom_reset(self):
+        # TODO
+        pass
+
+    def zoom_out(self):
+        # TODO
+        pass
+
+    def zoom_in(self):
+        # TODO
+        pass
 
     @classmethod
     def load(cls, fname):
