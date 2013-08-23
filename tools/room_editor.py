@@ -449,16 +449,6 @@ class ReloadResourcesButton(Button):
         load_resources()
 
 
-class SettingsButton(Button):
-
-    icon = 'stellar_room_editor_icon_settings'
-    tooltip = "Configure various settings for the room."
-
-    def do_effect(self):
-        # TODO: Probably via a special "settings" room
-        pass
-
-
 class BackgroundButton(Button):
 
     icon = 'stellar_room_editor_icon_background'
@@ -476,6 +466,16 @@ class ViewsButton(Button):
 
     def do_effect(self):
         # TODO
+        pass
+
+
+class SettingsButton(Button):
+
+    icon = 'stellar_room_editor_icon_settings'
+    tooltip = "Configure various settings for the room."
+
+    def do_effect(self):
+        # TODO: Probably via a special "settings" room
         pass
 
 
@@ -524,7 +524,7 @@ class NextRoomButton(Button):
         sge.game.room_goto_next()
 
 
-class CloseButton(Button):
+class CloseRoomButton(Button):
 
     icon = 'stellar_room_editor_icon_close'
     tooltip = "Close the current room."
@@ -659,8 +659,54 @@ class Room(sge.Room):
 
         # TODO: Create buttons and other GUI elements
 
-        width = self.get_width() + SIDE_BAR_SIZE[0]
-        height = self.get_height() + TOP_BAR_SIZE[1]
+        w = self.get_width()
+        h = self.get_height()
+
+        width = w + SIDE_BAR_SIZE[0]
+        height = h + TOP_BAR_SIZE[1]
+
+        SaveButton.create(w + BUTTON_SAVE_POS[0], h + BUTTON_SAVE_POS[1])
+        SaveAllButton.create(w + BUTTON_SAVE_ALL_POS[0],
+                             h + BUTTON_SAVE_ALL_POS[1])
+        LoadButton.create(w + BUTTON_LOAD_POS[0], h + BUTTON_LOAD_POS[1])
+        GridTypeButton.create(w + BUTTON_GRID_POS[0], h + BUTTON_GRID_POS[1])
+        ShiftButton.create(w + BUTTON_SHIFT_POS[0], h + BUTTON_SHIFT_POS[1])
+        ReloadResourcesButton.create(w + BUTTON_RELOAD_RESOURCES_POS[0],
+                                     h + BUTTON_RELOAD_RESOURCES_POS[1])
+        BackgroundButton.create(w + BUTTON_BACKGROUND_POS[0],
+                                h + BUTTON_BACKGROUND_POS[1])
+        ViewsButton.create(w + BUTTON_VIEWS_POS[0], h + BUTTON_VIEWS_POS[1])
+        SettingsButton.create(w + BUTTON_SETTINGS_POS[0],
+                              h + BUTTON_SETTINGS_POS[1])
+        ZoomResetButton.create(w + BUTTON_ZOOM_RESET_POS[0],
+                               h + BUTTON_ZOOM_RESET_POS[1])
+        ZoomOutButton.create(w + BUTTON_ZOOM_OUT_POS[0],
+                             h + BUTTON_ZOOM_OUT_POS[1])
+        ZoomInButton.create(w + BUTTON_ZOOM_IN_POS[0],
+                            h + BUTTON_ZOOM_IN_POS[1])
+        PreviousRoomButton.create(w + BUTTON_PREVIOUS_ROOM_POS[0],
+                                  h + BUTTON_PREVIOUS_ROOM_POS[1])
+        NextRoomButton.create(w + BUTTON_NEXT_ROOM_POS[0],
+                              h + BUTTON_NEXT_ROOM_POS[1])
+        CloseRoomButton.create(w + BUTTON_CLOSE_ROOM_POS[0],
+                               h + BUTTON_CLOSE_ROOM_POS[1])
+        ToolButton.create(w + BUTTON_TOOL_POS[0], h + BUTTON_TOOL_POS[1])
+        ObjectClassButton.create(w + BUTTON_CLASS_POS[0],
+                                 h + BUTTON_CLASS_POS[1])
+        ObjectImageIndexButton.create(w + BUTTON_IMAGE_INDEX_POS[0],
+                                      h + BUTTON_IMAGE_INDEX_POS[1])
+        ObjectImageAlphaButton.create(w + BUTTON_IMAGE_ALPHA_POS[0],
+                                      h + BUTTON_IMAGE_ALPHA_POS[1])
+        ObjectImageBlendButton.create(w + BUTTON_IMAGE_BLEND_POS[0],
+                                      h + BUTTON_IMAGE_BLEND_POS[1])
+        ObjectVisibleButton.create(w + BUTTON_VISIBLE_POS[0],
+                                   h + BUTTON_VISIBLE_POS[1])
+        ObjectActiveButton.create(w + BUTTON_ACTIVE_POS[0],
+                                  h + BUTTON_ACTIVE_POS[1])
+        ObjectDetectsCollisionsButton.create(
+            w + BUTTON_DETECTS_COLLISIONS_POS[0],
+            h + BUTTON_DETECTS_COLLISIONS_POS[1])
+        ObjectArgsButton.create(w + BUTTON_ARGS_POS[0], h + BUTTON_ARGS_POS[1])
 
         main_view = sge.View(0, 0, SIDE_BAR_SIZE[0], TOP_BAR_SIZE[1])
         sidebar_view = sge.View(self.get_width(), TOP_BAR_SIZE[1], 0,
