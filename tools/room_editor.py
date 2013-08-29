@@ -42,11 +42,15 @@ CURSOR_ORIGIN = (1, 0)
 
 SIDE_BAR_SIZE = (74, 960)
 TOP_BAR_SIZE = (1280, 74)
+BAR_Z = 0
 
 ICON_SIZE = (36, 36)
 ICON_POS = (6, 6)
+TEXT_SIZE = (22, 16)
+TEXT_POS = (5, 5)
 
 BUTTON_SIZE = (48, 48)
+BUTTON_Z = 5
 BUTTON_SAVE_POS = (8, 8)
 BUTTON_SAVE_ALL_POS = (64, 8)
 BUTTON_LOAD_POS = (120, 8)
@@ -315,7 +319,8 @@ class Button(sge.StellarClass):
     tooltip = ''
 
     def __init__(self, x, y):
-        super(Button, self).__init__(x, y, sprite='stellar_room_editor_button',
+        super(Button, self).__init__(x, y, BUTTON_Z,
+                                     sprite='stellar_room_editor_button',
                                      collision_precise=True)
 
     def do_effect(self):
@@ -620,6 +625,69 @@ class ObjectArgsButton(Button):
 
     icon = 'stellar_room_editor_icon_args'
     tooltip = "Specify the arguments for the object manually."
+
+    def do_effect(self):
+        # TODO
+        pass
+
+
+class Textbox(sge.StellarClass):
+
+    def __init__(self, x, y, text=""):
+        self.text = text
+        self.cursor_position = 0
+        super(Textbox, self).__init__(x, y, BUTTON_Z,
+                                      sprite='stellar_room_editor_textbox',
+                                      collision_precise=True)
+
+    def redraw_text(self):
+        self.text_sprite.draw_clear()
+        self.text_sprite.draw_text(glob.text_entry_font, self.text,
+                                   self.text_sprite.width / 2,
+                                   self.text_sprite.height / 2,
+                                   halign=sge.ALIGN_CENTER,
+                                   valign=sge.ALIGN_MIDDLE)
+
+    def event_create(self):
+        self.selected = False
+        self.text_sprite = sge.Sprite(width=TEXT_SIZE[0], height=TEXT_SIZE[1])
+        self.text_object = sge.StellarClass.create(
+            self.x + TEXT_POS[0], self.y + TEXT_POS[1], self.z + 1,
+            sprite=self.text_sprite)
+
+    def event_mouse_button_press(self, button):
+        if button == "left" and self.collides(sge.game.mouse):
+            self.selected = True
+            # TODO: Set cursor position based on location of click
+        else:
+            self.selected = False
+
+    def event_key_press(self, key, char):
+        if self.selected:
+            if key == "left":
+                if self.cursor_position > 0:
+                    self.cursor_position -= 1
+            elif key == "right":
+                if self.cursor_position < len(self.text):
+                    self.cursor_position += 1
+            elif key == "backspace":
+                if self.cursor_position > 0:
+                    text_list = list(self.text)
+                    del text_list[self.cursor_position - 1]
+                    self.text = ''.join(text_list)
+            elif key == "delete":
+                if self.cursor_position < len(text_entered):
+                    text_list = list(self.text)
+                    del text_list[self.cursor_position]
+                    self.text = ''.join(text_list)
+            elif key in ("enter", "kp_enter"):
+                self.selected = False
+            elif char:
+                text_list = list(self.text)
+                text_list.insert(self.cursor_position, char)
+                self.text = ''.join(text_list)
+                self.cursor_position += 1
+                self.redraw_text()
 
 
 class Tooltip(sge.StellarClass):

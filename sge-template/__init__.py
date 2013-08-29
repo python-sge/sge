@@ -24,12 +24,11 @@ development easier, which allows more rapid development by experienced
 game developers and also helps less experienced game developers learn
 how to develop games.
 
-Unlike Game Maker, you have freedom with SGE.  SGE is free software
-(where "free" refers to freedom, not price; see the `Free Software
-Definition <http://gnu.org/philosophy/free-sw.html>`_ for more
-information).  It is released under the GNU Lesser General Public
-License, which means you can modify and redistribute it without
-restrictions, and you can use it however you wish.
+Unlike Game Maker, you have freedom with SGE.  Official implementations
+of SGE are free software (where "free" refers to freedom, not price; see
+the `Free Software Definition <http://gnu.org/philosophy/free-sw.html>`_
+for more information), and the documentation has been (to the extent
+legally possible) released to the public domain via the CC0 license.
 
 Even if it isn't required of you, we encourage you to release your
 games' code under a free software license, such as the GNU General
@@ -254,7 +253,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.4.0.4"
+__version__ = "0.4.0.5"
 
 import sys
 import os
