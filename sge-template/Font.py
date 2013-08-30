@@ -1,4 +1,4 @@
-# SGE Template
+# The SGE Template
 # Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net> 
 # 
 # To the extent possible under law, the author(s) have dedicated all
@@ -67,11 +67,11 @@ class Font(object):
           - A list or tuple of strings indicating either a font file or
             a system font to choose from in order of preference.
 
-          If none of the above methods return a valid font, SGE will
+          If none of the above methods return a valid font, the SGE will
           choose the font.
 
         - ``id`` -- The unique identifier of the font.  If set to None,
-          ``name`` will be used, modified by SGE if it is already the
+          ``name`` will be used, modified by the SGE if it is already the
           unique identifier of another font.
 
         All other arguments set the respective initial attributes of the

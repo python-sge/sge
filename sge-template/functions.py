@@ -1,4 +1,4 @@
-# SGE Template
+# The SGE Template
 # Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net> 
 # 
 # To the extent possible under law, the author(s) have dedicated all
@@ -43,7 +43,8 @@ def show_message(text, buttons=('OK',), default=0):
 
     The dialog box is placed at the center of the window.  The message
     is horizontally aligned to the left and vertically aligned to the
-    middle.  All other visual design considerations are decided by SGE.
+    middle.  All other visual design considerations are decided by the
+    SGE.
 
     While the dialog box is being shown, all events are stopped.  If the
     operating system tells the game to close, the dialog box will close

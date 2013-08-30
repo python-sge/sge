@@ -1,19 +1,19 @@
 # Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
 # 
-# This file is part of SGE Pygame.
+# This file is part of the Pygame SGE.
 # 
-# SGE Pygame is free software: you can redistribute it and/or modify
+# The Pygame SGE is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 # 
-# SGE Pygame is distributed in the hope that it will be useful,
+# The Pygame SGE is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
 # 
 # You should have received a copy of the GNU Lesser General Public License
-# along with SGE Pygame.  If not, see <http://www.gnu.org/licenses/>.
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division
 from __future__ import absolute_import
@@ -34,7 +34,7 @@ __all__ = ['IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER', 'ALIGN_RIGHT',
 PROGRAM_DIR = os.path.dirname(sys.argv[0])
 DEBUG = True
 if DEBUG:
-    print("SGE Debug mode enabled.")
+    print("SGE Art of Debugging enabled.")
 
 COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
           'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
@@ -108,7 +108,7 @@ MOUSE_BUTTON_NAMES = {}
 for pair in MOUSE_BUTTONS.items():
     MOUSE_BUTTON_NAMES[pair[1]] = pair[0]
 
-IMPLEMENTATION = "SGE Pygame"
+IMPLEMENTATION = "Pygame SGE"
 ALIGN_LEFT = 2
 ALIGN_CENTER = 3
 ALIGN_RIGHT = 1

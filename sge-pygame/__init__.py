@@ -1,33 +1,34 @@
 # Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
 # 
-# This file is part of SGE Pygame.
+# This file is part of the Pygame SGE.
 # 
-# SGE Pygame is free software: you can redistribute it and/or modify
+# The Pygame SGE is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 # 
-# SGE Pygame is distributed in the hope that it will be useful,
+# The Pygame SGE is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
 # 
 # You should have received a copy of the GNU Lesser General Public License
-# along with SGE Pygame.  If not, see <http://www.gnu.org/licenses/>.
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 The Stellar Game Engine (abbreviated "SGE", pronounced as "Sage") is a
 Python library for use by Stellar.  It is a game engine loosely based on
-the proprietary program, Game Maker.  The purpose of SGE is to make game
-development easier, which allows more rapid development by experienced
-game developers and also helps less experienced game developers learn
-how to develop games.
+the proprietary program, Game Maker.  The purpose of the SGE is to make
+game development easier, which allows more rapid development by
+experienced game developers and also helps less experienced game
+developers learn how to develop games.
 
-Unlike Game Maker, you have freedom with SGE.  Official implementations
-of SGE are free software (where "free" refers to freedom, not price; see
-the `Free Software Definition <http://gnu.org/philosophy/free-sw.html>`_
-for more information), and the documentation has been (to the extent
-legally possible) released to the public domain via the CC0 license.
+Unlike Game Maker, you have freedom with the SGE.  Official
+implementations of the SGE are free software (where "free" refers to
+freedom, not price; see the `Free Software Definition
+<http://gnu.org/philosophy/free-sw.html>`_ for more information), and
+the documentation has been (to the extent legally possible) released to
+the public domain via the CC0 license.
 
 Even if it isn't required of you, we encourage you to release your
 games' code under a free software license, such as the GNU General
@@ -43,24 +44,24 @@ Naming Conventions
 ------------------
 
 There are many cases where you will want to derive a class from a SGE
-class.  Since there can be multiple implementations of SGE, it can be
-easy when doing so to overwrite a special variable used by some
+class.  Since there can be multiple implementations of the SGE, it can
+be easy when doing so to overwrite a special variable used by some
 implementations internally, which can be disastrous.  To avoid such
 occasions, implementations are expected to never introduce any attribute
 names which are not explicitly mentioned in the documentation for a
 class unless the new attribute names are preceded by an underscore, as
 in the hypothetical attribute name ``_foo``.  This naming convention
-will protect users of SGE from unexpected errors provided that they do
-not use such names themselves.
+will protect users of the SGE from unexpected errors provided that they
+do not use such names themselves.
 
-A suggested convention for users of SGE to use for "private" attributes
-in place of the usual leading underscore  is to precede these attributes
-with ``v_`` or ``p_``.
+A suggested convention for users of the SGE to use for "private"
+attributes in place of the usual leading underscore  is to precede these
+attributes with ``v_`` or ``p_``.
 
 Events
 ------
 
-Much like Game Maker, SGE uses an event-based system, with events
+Much like Game Maker, the SGE uses an event-based system, with events
 defined by special class methods with names starting with ``event_``.
 
 Except in certain special cases, the order that events are handled in is
@@ -75,11 +76,11 @@ given frame, so code should not be written with that expectation.
 The Mouse
 ---------
 
-The mouse is handled somewhat unusually in SGE.  Rather than having
+The mouse is handled somewhat unusually by the SGE.  Rather than having
 functions or variables report the mouse position relative to the screen,
 the mouse position within the room, calculated based on its position on
-the screen by SGE, is recorded in a special `StellarClass` object which
-represents the mouse.  This mouse object can be found as
+the screen by the SGE, is recorded in a special `StellarClass` object
+which represents the mouse.  This mouse object can be found as
 ``sge.game.mouse``, and it has the special object ID, ``"mouse"``.
 
 The mouse object differs from most `StellarClass` objects in a few ways.
@@ -95,15 +96,15 @@ In all other ways, the mouse object is exactly the same as all other
 Colors
 ------
 
-Colors can be defined in SGE in a few different ways.
+Colors can be defined for the SGE in a few different ways.
 
 HTML Color Names
 ~~~~~~~~~~~~~~~~
 
-The sixteen basic HTML colors, provided as strings, are accepted by SGE.
-These are case-insensitive, so ``"red"`` is interpreted the same as
-``"Red"`` or ``"rEd"``.  If SGE returns a color and chooses this form,
-it will use all lowercase letters.  The colors are:
+The sixteen basic HTML colors, provided as strings, are accepted by the
+SGE.  These are case-insensitive, so ``"red"`` is interpreted the same
+as ``"Red"`` or ``"rEd"``.  If the SGE returns a color and chooses this
+form, it will use all lowercase letters.  The colors are:
 
 - ``"white"``
 - ``"silver"``
@@ -125,12 +126,12 @@ it will use all lowercase letters.  The colors are:
 RGB(A) Tuples
 ~~~~~~~~~~~~~
 
-A tuple containing three or four values is accepted as a color by SGE.
-Each index represents a component of a color: first red, then green,
-then blue, with the values being integers from 0 to 255.  For example,
-``(255, 128, 0)`` indicates a color with full red intensity, 50% green
-intensity, and no blue intensity, which is a shade of orange.  Note that
-the components are colors of light, not colors of pigment.
+A tuple containing three or four values is accepted as a color by the
+SGE.  Each index represents a component of a color: first red, then
+green, then blue, with the values being integers from 0 to 255.  For
+example, ``(255, 128, 0)`` indicates a color with full red intensity,
+50% green intensity, and no blue intensity, which is a shade of orange.
+Note that the components are colors of light, not colors of pigment.
 
 The fourth value of the tuple, if specified, indicates the alpha
 transparency of the color, with the possible values again being integers
@@ -145,9 +146,9 @@ SGE.  All other methods for indicating color assume full opacity.
 HTML Hex Strings and Integers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-HTML hex strings and integers are accepted as colors by SGE.  HTML hex
-strings are in the format ``"#RRGGBB"``, where "RR", "GG", and "BB" are
-replaced with the red, green, and blue components of the color,
+HTML hex strings and integers are accepted as colors by the SGE.  HTML
+hex strings are in the format ``"#RRGGBB"``, where "RR", "GG", and "BB"
+are replaced with the red, green, and blue components of the color,
 respectively, in hexadecimal form.  "FF" (equivalent to 255 in decimal
 form) is full intensity of the respective color, and "00" (equivalent to
 0 in decimal form) is no intensity of the respective color.  For
@@ -160,37 +161,37 @@ is the same as ``"#FF8000"``.
 Position
 --------
 
-In all cases of positioning in SGE, it is based on a two-dimensional
-graph with each unit being a pixel.  This graph is not quite like
-regular graphs; the horizontal direction, normally called ``x``, is the
-same as the x-axis on a regular graph; 0 is the origin, positive numbers
-are to the right of the origin, and negative numbers are to the left of
-the origin.  However, in the vertical direction, normally called ``y``,
-0 is the origin, positive numbers are below the origin, and negative
-numbers are above the origin.  While slightly jarring if you are used to
-normal graphs, this is in fact common in 2-D game development and is
-also how pixels in most image formats are indexed.
+In all cases of positioning for the SGE, it is based on a
+two-dimensional graph with each unit being a pixel.  This graph is not
+quite like regular graphs; the horizontal direction, normally called
+``x``, is the same as the x-axis on a regular graph; 0 is the origin,
+positive numbers are to the right of the origin, and negative numbers
+are to the left of the origin.  However, in the vertical direction,
+normally called ``y``, 0 is the origin, positive numbers are below the
+origin, and negative numbers are above the origin.  While slightly
+jarring if you are used to normal graphs, this is in fact common in 2-D
+game development and is so how pixels in most image formats are indexed.
 
 Except where otherwise specified, the origin is always located at the
 top-leftmost position of an object.
 
-In addition to integers, position variables are allowed to be floating-
-point numbers in SGE.
+In addition to integers, position variables are allowed by the SGE to be
+floating-point numbers.
 
 Z-Axis
 ------
 
-SGE uses a Z-axis to determine where objects are placed in the third
+The SGE uses a Z-axis to determine where objects are placed in the third
 dimension.  Objects with a higher Z value are considered to be closer to
 the viewer and thus will be placed over objects which have a lower Z
 value.  Note that the Z-axis does not allow 3-D gameplay or effects; it
-is only used to tell SGE what to do with objects that overlap.  For
+is only used to tell the SGE what to do with objects that overlap.  For
 example, if an object called ``spam`` has a Z value of 5 while an object
 called ``eggs`` has a Z value of 2, ``spam`` will obscure part or all of
 ``eggs`` when the two objects overlap.
 
-If two objects with the same Z-axis value overlap, SGE arbitrarily
-chooses which one is considered to be closer to the viewer.  SGE is
+If two objects with the same Z-axis value overlap, the SGE arbitrarily
+chooses which one is considered to be closer to the viewer.  The SGE is
 allowed to change this decision, but only while the objects in question
 are not overlapping, since changing the decision while the two objects
 are overlapping would cause an undesirable flicker effect.
@@ -200,7 +201,7 @@ Global Variables and Constants
 
 Constants:
 
-- ``sge.IMPLEMENTATION`` -- A string idicating the name of the SGE
+- ``sge.IMPLEMENTATION`` -- A string indicating the name of the SGE
   implementation.
 - ``sge.ALIGN_LEFT`` -- Flag indicating alignment to the left.
 - ``sge.ALIGN_CENTER`` -- Flag indicating alignment to the horizontal
@@ -227,24 +228,24 @@ Global variables:
   can be found.  Default is ./data/music, where "." is the program
   directory.
 
-Implementation-Specific Information
-===================================
+Information specific to the Pygame SGE
+======================================
 
 License
 -------
 
-SGE Pygame is free software: you can redistribute it and/or modify
+The Pygame SGE is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-SGE Pygame is distributed in the hope that it will be useful,
+The Pygame SGE is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
-along with SGE Pygame.  If not, see <http://www.gnu.org/licenses/>.
+along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 Dependencies
 ------------
@@ -338,7 +339,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.4.0.5"
+__version__ = "0.4.0.6"
 
 import os
 

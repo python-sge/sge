@@ -1,4 +1,4 @@
-# SGE Template
+# The SGE Template
 # Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net> 
 # 
 # To the extent possible under law, the author(s) have dedicated all

@@ -1,4 +1,4 @@
-# SGE Template
+# The SGE Template
 # Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net> 
 # 
 # To the extent possible under law, the author(s) have dedicated all
@@ -33,7 +33,7 @@ class Sound(object):
     inefficient for large music files; for those, use sge.Music instead.
 
     What sound formats are supported depends on the implementation of
-    SGE, but sound formats that are generally a good choice are Ogg
+    the SGE, but sound formats that are generally a good choice are Ogg
     Vorbis and uncompressed WAV.  See the implementation-specific
     information for a full list of supported formats.
 
@@ -65,8 +65,9 @@ class Sound(object):
           object will not actually play any sound.  If this is neither a
           valid sound file nor None, IOError is raised.
         - ``id`` -- The unique identifier of the sound.  If set to None,
-          ``fname`` minus the extension will be used, modified by SGE if
-          it is already the unique identifier of another music object.
+          ``fname`` minus the extension will be used, modified by the
+          SGE if it is already the unique identifier of another music
+          object.
 
         All other arguments set the respective initial attributes of the
         sound.  See the documentation for `Sound` for more information.

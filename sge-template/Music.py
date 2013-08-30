@@ -1,4 +1,4 @@
-# SGE Template
+# The SGE Template
 # Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net> 
 # 
 # To the extent possible under law, the author(s) have dedicated all
@@ -34,15 +34,15 @@ class Music(object):
     more efficient for larger files than `sge.Sound`.
 
     What music formats are supported depends on the implementation of
-    SGE, but Ogg Vorbis is generally a good choice.  See the
+    the SGE, but Ogg Vorbis is generally a good choice.  See the
     implementation-specific information for a full list of supported
     formats.
 
-    You should avoid the temptation to use MP3 files; MP3 is a patent-
-    encumbered format, so many systems do not support it and royalties
-    to the patent holders may be required for commercial use.  There are
-    many programs which can convert your MP3 files to the free Ogg
-    Vorbis format.
+    You should avoid the temptation to use MP3 files; MP3 is a
+    patent-encumbered format, so many systems do not support it and
+    royalties to the patent holders may be required for commercial use.
+    There are many programs which can convert your MP3 files to the free
+    Ogg Vorbis format.
 
     Attributes:
 
@@ -70,8 +70,9 @@ class Music(object):
           object will not actually play any music.  If this is neither a
           valid sound file nor None, IOError is raised.
         - ``id`` -- The unique identifier of the music.  If set to None,
-          ``fname`` minus the extension will be used, modified by SGE if
-          it is already the unique idenfifier of another music object.
+          ``fname`` minus the extension will be used, modified by the
+          SGE if it is already the unique idenfifier of another music
+          object.
 
         All other arguments set the respective initial attributes of the
         music.  See the documentation for `Music` for more information.

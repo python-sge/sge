@@ -1,19 +1,19 @@
 # Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
 # 
-# This file is part of SGE Pygame.
+# This file is part of the Pygame SGE.
 # 
-# SGE Pygame is free software: you can redistribute it and/or modify
+# The Pygame SGE is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 # 
-# SGE Pygame is distributed in the hope that it will be useful,
+# The Pygame SGE is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
 # 
 # You should have received a copy of the GNU Lesser General Public License
-# along with SGE Pygame.  If not, see <http://www.gnu.org/licenses/>.
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division
 from __future__ import absolute_import
@@ -36,8 +36,8 @@ class Game(object):
 
     This class handles most parts of the game which operate on a global
     scale, such as global game events.  Before anything else is done
-    with SGE, an object either of this class or of a class derived from
-    it must be created.
+    with the SGE, an object either of this class or of a class derived
+    from it must be created.
 
     When an object of this class is created, it is automatically assigned
     to ``sge.game``.
@@ -73,11 +73,11 @@ class Game(object):
       grabbed by the game.  If this is True and the mouse cursor is
       invisible, the mouse will enter relative mode.
     - ``window_text`` -- The text for the OS to display as the window
-      title, e.g. in the frame of the window.  If set to None, SGE
+      title, e.g. in the frame of the window.  If set to None, the SGE
       chooses the text.
     - ``window_icon`` -- The name of the image file located in
       one of the directories specified in ``sge.image_directories`` to
-      use as the window icon.  If set to None, SGE chooses the icon.
+      use as the window icon.  If set to None, the SGE chooses the icon.
 
     Read-Only Attributes:
 
@@ -547,7 +547,7 @@ class Game(object):
         Arguments:
 
         - ``sprite`` -- The sprite to show in the center of the screen
-          while the game is paused.  If set to None, SGE chooses the
+          while the game is paused.  If set to None, the SGE chooses the
           image.
 
         Normal events are not executed while the game is paused.

@@ -1,19 +1,19 @@
 # Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
 # 
-# This file is part of SGE Pygame.
+# This file is part of the Pygame SGE.
 # 
-# SGE Pygame is free software: you can redistribute it and/or modify
+# The Pygame SGE is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 # 
-# SGE Pygame is distributed in the hope that it will be useful,
+# The Pygame SGE is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
 # 
 # You should have received a copy of the GNU Lesser General Public License
-# along with SGE Pygame.  If not, see <http://www.gnu.org/licenses/>.
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division
 from __future__ import absolute_import
@@ -39,15 +39,15 @@ class Music(object):
     more efficient for larger files than `sge.Sound`.
 
     What music formats are supported depends on the implementation of
-    SGE, but Ogg Vorbis is generally a good choice.  See the
+    the SGE, but Ogg Vorbis is generally a good choice.  See the
     implementation-specific information for a full list of supported
     formats.
 
-    You should avoid the temptation to use MP3 files; MP3 is a patent-
-    encumbered format, so many systems do not support it and royalties
-    to the patent holders may be required for commercial use.  There are
-    many programs which can convert your MP3 files to the free Ogg
-    Vorbis format.
+    You should avoid the temptation to use MP3 files; MP3 is a
+    patent-encumbered format, so many systems do not support it and
+    royalties to the patent holders may be required for commercial use.
+    There are many programs which can convert your MP3 files to the free
+    Ogg Vorbis format.
 
     Attributes:
 
@@ -101,8 +101,9 @@ class Music(object):
           object will not actually play any music.  If this is neither a
           valid sound file nor None, IOError is raised.
         - ``id`` -- The unique identifier of the music.  If set to None,
-          ``fname`` minus the extension will be used, modified by SGE if
-          it is already the unique idenfifier of another music object.
+          ``fname`` minus the extension will be used, modified by the
+          SGE if it is already the unique idenfifier of another music
+          object.
 
         All other arguments set the respective initial attributes of the
         music.  See the documentation for `Music` for more information.

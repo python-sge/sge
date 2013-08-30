@@ -1,4 +1,4 @@
-# SGE Template
+# The SGE Template
 # Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net> 
 # 
 # To the extent possible under law, the author(s) have dedicated all
@@ -31,8 +31,8 @@ class Game(object):
 
     This class handles most parts of the game which operate on a global
     scale, such as global game events.  Before anything else is done
-    with SGE, an object either of this class or of a class derived from
-    it must be created.
+    with the SGE, an object either of this class or of a class derived
+    from it must be created.
 
     When an object of this class is created, it is automatically assigned
     to ``sge.game``.
@@ -68,11 +68,11 @@ class Game(object):
       grabbed by the game.  If this is True and the mouse cursor is
       invisible, the mouse will enter relative mode.
     - ``window_text`` -- The text for the OS to display as the window
-      title, e.g. in the frame of the window.  If set to None, SGE
+      title, e.g. in the frame of the window.  If set to None, the SGE
       chooses the text.
     - ``window_icon`` -- The name of the image file located in
       one of the directories specified in ``sge.image_directories`` to
-      use as the window icon.  If set to None, SGE chooses the icon.
+      use as the window icon.  If set to None, the SGE chooses the icon.
 
     Read-Only Attributes:
 
@@ -133,7 +133,7 @@ class Game(object):
         Arguments:
 
         - ``sprite`` -- The sprite to show in the center of the screen
-          while the game is paused.  If set to None, SGE chooses the
+          while the game is paused.  If set to None, the SGE chooses the
           image.
 
         Normal events are not executed while the game is paused.

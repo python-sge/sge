@@ -1,19 +1,19 @@
 # Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
 # 
-# This file is part of SGE Pygame.
+# This file is part of the Pygame SGE.
 # 
-# SGE Pygame is free software: you can redistribute it and/or modify
+# The Pygame SGE is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 # 
-# SGE Pygame is distributed in the hope that it will be useful,
+# The Pygame SGE is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
 # 
 # You should have received a copy of the GNU Lesser General Public License
-# along with SGE Pygame.  If not, see <http://www.gnu.org/licenses/>.
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division
 from __future__ import absolute_import
@@ -152,7 +152,7 @@ class BackgroundLayer(object):
 
         - ``id`` -- The unique identifier of the sprite.  If set to
           None, the ``id`` attribute of the sprite will be used,
-          modified by SGE if it is already the unique identifier of
+          modified by the SGE if it is already the unique identifier of
           another background layer.
 
         All other arguments set the respective initial attributes of the

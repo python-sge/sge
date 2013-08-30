@@ -1,4 +1,4 @@
-# SGE Template
+# The SGE Template
 # Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net> 
 # 
 # To the extent possible under law, the author(s) have dedicated all
@@ -142,8 +142,9 @@ class StellarClass(object):
         Arguments:
 
         - ``id`` -- The unique identifier of the sound.  If set to None,
-          ``fname`` minus the extension will be used, modified by SGE if
-          it is already the unique identifier of another music object.
+          ``fname`` minus the extension will be used, modified by the
+          SGE if it is already the unique identifier of another music
+          object.
 
         All other arugments set the respective initial attributes of the
         object.  See the documentation for `StellarClass` for more

@@ -1,4 +1,4 @@
-# SGE Template
+# The SGE Template
 # Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net> 
 # 
 # To the extent possible under law, the author(s) have dedicated all
@@ -67,7 +67,7 @@ class BackgroundLayer(object):
 
         - ``id`` -- The unique identifier of the sprite.  If set to
           None, the ``id`` attribute of the sprite will be used,
-          modified by SGE if it is already the unique identifier of
+          modified by the SGE if it is already the unique identifier of
           another background layer.
 
         All other arguments set the respective initial attributes of the

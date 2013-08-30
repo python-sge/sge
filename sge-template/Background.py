@@ -1,4 +1,4 @@
-# SGE Template
+# The SGE Template
 # Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net> 
 # 
 # To the extent possible under law, the author(s) have dedicated all
@@ -49,7 +49,7 @@ class Background(object):
         Arguments:
 
         - ``id`` -- The unique identifier of the sprite.  If set to
-          None, SGE chooses the value.
+          None, the SGE chooses the value.
 
         All other arguments set the respective initial attributes of the
         background.  See the documentation for `Background` for more
