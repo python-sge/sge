@@ -35,25 +35,42 @@ class Room(object):
 
     Every game must have at least one room.
 
-    Attributes:
+    .. attribute:: width
 
-    - ``width`` -- The width of the room in pixels.  If set to None,
-      ``sge.game.width`` is used.
-    - ``height`` -- The height of the room in pixels.  If set to None,
-      ``sge.game.height`` is used.
-    - ``views`` -- A list containing all `sge.View` objects in the room.
-    - ``background`` -- The `sge.Background` object used.
-    - ``background_x`` -- The horizontal position of the background in
-      the room.
-    - ``background_y`` -- The vertical position of the background in the
-      room.
+       The width of the room in pixels.  If set to ``None``,
+       :attr:`sge.game.width` is used.
 
-    Read-Only Attributes:
+    .. attribute:: height
 
-    - ``objects`` -- A tuple containing all `sge.StellarClass` objects
-      in the room.
-    - ``room_number`` -- The index of this room in the game, where 0 is
-      the first room, or None if this room has not been added to a game.
+       The height of the room in pixels.  If set to ``None``,
+       :attr:`sge.game.height` is used.
+
+    .. attribute:: views
+
+       A list containing all :class:`sge.View` objects in the room.
+
+    .. attribute:: background
+
+       The :class:`sge.Background` object used.
+
+    .. attribute:: background_x
+
+       The horizontal position of the background in the room.
+
+    .. attribute:: background_y
+
+       The vertical position of the background in the room.
+
+    .. attribute:: objects
+
+       A tuple containing all :class:`sge.StellarClass` objects in the
+       room.  (Read-only)
+
+    .. attribute:: room_number
+
+       The index of this room in the game, where ``0`` is the first
+       room, or ``None`` if this room has not been added to a game.
+       (Read-only)
 
     """
 
@@ -63,16 +80,17 @@ class Room(object):
 
         Arguments:
 
-        - ``views`` -- A list containing all `sge.View` objects in the
-          room.  If set to None, a new view will be created with x=0,
-          y=0, and all other arguments unspecified, which will become
-          the first view of the room.
-        - ``background`` -- The `sge.Background` object used.  If set to
-          None, a new background will be created with no layers and the
-          color set to "black".
+        - ``views`` -- A list containing all :class:`sge.View` objects
+          in the room.  If set to ``None``, a new view will be created
+          with ``x=0``, ``y=0``, and all other arguments unspecified,
+          which will become the first view of the room.
+        - ``background`` -- The :class:`sge.Background` object used.  If
+          set to ``None``, a new background will be created with no
+          layers and the color set to ``"black"``.
 
         All other arguments set the respective initial attributes of the
-        room.  See the documentation for `Room` for more information.
+        room.  See the documentation for :class:`Room` for more
+        information.
 
         """
         # TODO
@@ -82,7 +100,7 @@ class Room(object):
 
         Arguments:
 
-        - ``obj`` -- The `sge.StellarClass` object to add.
+        - ``obj`` -- The :class:`sge.StellarClass` object to add.
 
         """
         # TODO
@@ -99,7 +117,7 @@ class Room(object):
         """Continue the room from where it left off.
 
         If the room is unchanged (e.g. has not been started yet), this
-        method behaves in the same way that Room.start does.
+        method behaves in the same way that :meth:`Room.start` does.
 
         """
         # TODO
@@ -110,15 +128,15 @@ class Room(object):
         Arguments:
 
         - ``next_room`` -- The room number of the room to go to next.
-          If set to None, the room after this one is chosen.
+          If set to ``None``, the room after this one is chosen.
         - ``resume`` -- Whether or not to resume the next room instead
           of restarting it.
 
         If the room chosen as the next room does not exist, the game is
         ended.
 
-        This triggers this room's ``event_room_end`` and resets the
-        state of this room.
+        This triggers this room's :meth:`Room.event_room_end` and resets
+        the state of this room.
 
         """
         # TODO
@@ -134,7 +152,7 @@ class Room(object):
           the dot.
         - ``z`` -- The Z-axis position of the projection in the room.
 
-        See the documentation for `sge.Sprite.draw_dot` for more
+        See the documentation for :meth:`sge.Sprite.draw_dot` for more
         information.
 
         """
@@ -156,7 +174,7 @@ class Room(object):
           second endpoint of the projected line segment.
         - ``z`` -- The Z-axis position of the projection in the room.
 
-        See the documentation for `sge.Sprite.draw_line` for more
+        See the documentation for :meth:`sge.Sprite.draw_line` for more
         information.
 
         """
@@ -174,8 +192,8 @@ class Room(object):
           the rectangle.
         - ``z`` -- The Z-axis position of the projection in the room.
 
-        See the documentation for `sge.Sprite.draw_rectangle` for more
-        information.
+        See the documentation for :meth:`sge.Sprite.draw_rectangle` for
+        more information.
 
         """
         # TODO
@@ -199,8 +217,8 @@ class Room(object):
           ellipse.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
 
-        See the documentation for `sge.Sprite.draw_ellipse` for more
-        information.
+        See the documentation for :meth:`sge.Sprite.draw_ellipse` for
+        more information.
 
         """
         # TODO
@@ -217,8 +235,8 @@ class Room(object):
           position the center of the circle.
         - ``z`` -- The Z-axis position of the projection in the room.
 
-        See the documentation for `sge.Sprite.draw_circle` for more
-        information.
+        See the documentation for :meth:`sge.Sprite.draw_circle` for
+        more information.
 
         """
         # TODO
@@ -234,8 +252,8 @@ class Room(object):
           ``sprite``.
         - ``z`` -- The Z-axis position of the projection in the room.
 
-        See the documentation for `sge.Sprite.draw_sprite` for more
-        information.
+        See the documentation for :meth:`sge.Sprite.draw_sprite` for
+        more information.
 
         """
         # TODO
@@ -253,7 +271,7 @@ class Room(object):
           the text.
         - ``z`` -- The Z-axis position of the projection in the room.
 
-        See the documentation for `sge.Sprite.draw_text` for more
+        See the documentation for :meth:`sge.Sprite.draw_text` for more
         information.
 
         """
@@ -281,7 +299,7 @@ class Room(object):
     def event_step(self, time_passed):
         """Room step event.
 
-        See the documentation for `sge.Game.event_step` for more
+        See the documentation for :meth:`sge.Game.event_step` for more
         information.
 
         """
@@ -290,8 +308,8 @@ class Room(object):
     def event_key_press(self, key, char):
         """Key press event.
 
-        See the documentation for `sge.Game.event_key_press` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_key_press` for
+        more information.
 
         """
         pass
@@ -299,8 +317,8 @@ class Room(object):
     def event_key_release(self, key):
         """Key release event.
 
-        See the documentation for `sge.Game.event_key_release` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_key_release` for
+        more information.
 
         """
         pass
@@ -308,8 +326,8 @@ class Room(object):
     def event_mouse_move(self, x, y):
         """Mouse move event.
 
-        See the documentation for `sge.Game.event_mouse_move` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_mouse_move` for
+        more information.
 
         """
         pass
@@ -317,8 +335,8 @@ class Room(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        See the documentation for `sge.Game.event_mouse_button_press`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_mouse_button_press` for more information.
 
         """
         pass
@@ -326,8 +344,9 @@ class Room(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        See the documentation for `sge.Game.event_mouse_button_release`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_mouse_button_release` for more
+        information.
 
         """
         pass
@@ -335,8 +354,8 @@ class Room(object):
     def event_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event.
 
-        See the documentation for `sge.Game.event_joystick_axis_move`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_axis_move` for more information.
 
         """
         pass
@@ -344,8 +363,8 @@ class Room(object):
     def event_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event.
 
-        See the documentation for `sge.Game.event_joystick_hat_move` for
-        more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_hat_move` for more information.
 
         """
         pass
@@ -354,7 +373,8 @@ class Room(object):
         """Joystick trackball move event.
 
         See the documentation for
-        `sge.Game.event_joystick_trackball_move` for more information.
+        :meth:`sge.Game.event_joystick_trackball_move` for more
+        information.
 
         """
         pass
@@ -362,8 +382,9 @@ class Room(object):
     def event_joystick_button_press(self, joystick, button):
         """Joystick button press event.
 
-        See the documentation for `sge.Game.event_joystick_button_press`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_button_press` for more
+        information.
 
         """
         pass
@@ -372,7 +393,8 @@ class Room(object):
         """Joystick button release event.
 
         See the documentation for
-        `sge.Game.event_joystick_button_release` for more information.
+        :meth:`sge.Game.event_joystick_button_release` for more
+        information.
 
         """
         pass
@@ -380,7 +402,7 @@ class Room(object):
     def event_close(self):
         """Close event.
 
-        See the documentation for `sge.Game.event_close` for more
+        See the documentation for :meth:`sge.Game.event_close` for more
         information.  This is always called before any game close events
         occurring at the same time.
 
@@ -390,8 +412,8 @@ class Room(object):
     def event_paused_key_press(self, key, char):
         """Key press event when paused.
 
-        See the documentation for `sge.Game.event_key_press` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_key_press` for
+        more information.
 
         """
         pass
@@ -399,8 +421,8 @@ class Room(object):
     def event_paused_key_release(self, key):
         """Key release event when paused.
 
-        See the documentation for `sge.Game.event_key_release` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_key_release` for
+        more information.
 
         """
         pass
@@ -408,8 +430,8 @@ class Room(object):
     def event_paused_mouse_move(self, x, y):
         """Mouse move event when paused.
 
-        See the documentation for `sge.Game.event_mouse_move` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_mouse_move` for
+        more information.
 
         """
         pass
@@ -417,8 +439,8 @@ class Room(object):
     def event_paused_mouse_button_press(self, button):
         """Mouse button press event when paused.
 
-        See the documentation for `sge.Game.event_mouse_button_press`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_mouse_button_press` for more information.
 
         """
         pass
@@ -426,8 +448,9 @@ class Room(object):
     def event_paused_mouse_button_release(self, button):
         """Mouse button release event when paused.
 
-        See the documentation for `sge.Game.event_mouse_button_release`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_mouse_button_release` for more
+        information.
 
         """
         pass
@@ -435,8 +458,8 @@ class Room(object):
     def event_paused_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event when paused.
 
-        See the documentation for `sge.Game.event_joystick_axis_move`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_axis_move` for more information.
 
         """
         pass
@@ -444,8 +467,8 @@ class Room(object):
     def event_paused_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event when paused.
 
-        See the documentation for `sge.Game.event_joystick_hat_move` for
-        more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_hat_move` for more information.
 
         """
         pass
@@ -454,7 +477,8 @@ class Room(object):
         """Joystick trackball move event when paused.
 
         See the documentation for
-        `sge.Game.event_joystick_trackball_move` for more information.
+        :meth:`sge.Game.event_joystick_trackball_move` for more
+        information.
 
         """
         pass
@@ -462,8 +486,9 @@ class Room(object):
     def event_paused_joystick_button_press(self, joystick, button):
         """Joystick button press event when paused.
 
-        See the documentation for `sge.Game.event_joystick_button_press`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_button_press` for more
+        information.
 
         """
         pass
@@ -472,7 +497,8 @@ class Room(object):
         """Joystick button release event when paused.
 
         See the documentation for
-        `sge.Game.event_joystick_button_release` for more information.
+        :meth:`sge.Game.event_joystick_button_release` for more
+        information.
 
         """
         pass
@@ -480,7 +506,7 @@ class Room(object):
     def event_paused_close(self):
         """Close event when paused.
 
-        See the documentation for `Room.event_close` for more
+        See the documentation for :meth:`Room.event_close` for more
         information.
 
         """

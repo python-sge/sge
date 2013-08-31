@@ -38,102 +38,203 @@ class StellarClass(object):
 
     This class is used for game objects, such as the player, enemies,
     bullets, and the HUD.  Generally, each type of object has its own
-    subclass of `StellarClass`.
+    subclass of :class:`StellarClass`.
 
-    One attribute which needs some explanation is ``active``.  This
-    attribute indicates whether the object is active (``True``) or
-    inactive (``False``).  While the object is active, it will exhibit
-    normal behavior; events will be executed normally as will any other
-    automatic functionality, such as adding ``xvelocity`` and
-    ``yvelocity`` to ``x`` and ``y``.  If ``active`` is False, automatic
-    functionality and normal events will be disabled and events which
-    have names starting with "event_inactive_" will be executed instead
-    of the corresponding normal events.
+    .. attribute:: x
 
-    It is important to recognize that making an object inactive is not
-    like deactivating an instance in Game Maker.  Unlike deactivated
-    instances in Game Maker, inactive `StellarClass` objects are still
-    visible by default and continue to be involved in collisions.  In
-    addition, collision events and destroy events still occur even if the
-    object is inactive.  If you wish for the object to not be visible, set
-    ``visible`` to False.  If you wish for the object to not be involved
-    in collisions, set ``detects_collisions`` to False.
+       The horizontal position of the object in the room.
 
-    It is also important to note that making an object inactive will not
-    likely have a significant effect on performance.  For performance
-    enhancement, it is far more effective to exclude objects from
-    collision detection.  Object deactivation is meant to be used to
-    easily maintain control over objects that are currently being excluded
-    from collision detection (e.g. to prevent a gravity effect that would
-    otherwise occur, or to prevent the object from moving through walls).
+    .. attribute:: y
 
-    Attributes:
+       The vertical position of the object in the room.
 
-    - ``x`` -- The horizontal position of the object in the room.
-    - ``y`` -- The vertical position of the object in the room.
-    - ``z`` -- The Z-axis position of the object in the room.
-    - ``sprite`` -- The sprite currently in use by this object.  Set to
-      None for no (visible) sprite.
-    - ``visible`` -- Whether or not the object's sprite should be projected
-      onto the screen.
-    - ``active`` -- Whether or not the object should be active.  If this is
-      False, all normal occurances (including events) will not execute.
-      Only collision events, destroy events, and events with names that
-      start with "event_inactive_" will be executed.
-    - ``detects_collisions`` -- Whether or not the object should be involved
-      in collision detection.  Setting this to False can improve
-      performance if the object doesn't need to detect collisions.
-    - ``bbox_x`` -- The horizontal location of the bounding box relative to
-      the object's position.  If set to None, the value recommended by
-      the sprite is used.
-    - ``bbox_y`` -- The vertical location of the bounding box relative to the
-      object's position.  If set to None, the value recommended by the
-      sprite is used.
-    - ``bbox_width`` -- The width of the bounding box in pixels.  If set to
-      None, the value recommended by the sprite is used.
-    - ``bbox_height`` -- The height of the bounding box in pixels.  If set to
-      None, the value recommended by the sprite is used.
-    - ``collision_ellipse`` -- Whether or not an ellipse (rather than a
-      rectangle) should be used for collision detection.
-    - ``collision_precise`` -- Whether or not precise (pixel-perfect)
-      collision detection should be used.  Note that this can be
-      inefficient and in some cases can lead to collision detection
-      errors.
-    - ``bbox_left`` -- The position of the left side of the bounding box in
-      the room (same as x + bbox_x).
-    - ``bbox_right`` -- The position of the right side of the bounding box in
-      the room (same as bbox_left + bbox_width).
-    - ``bbox_top`` -- The position of the top side of the bounding box in the
-      room (same as y + bbox_y).
-    - ``bbox_bottom`` -- The position of the bottom side of the bounding box
-      in the room (same as bbox_top + bbox_height).
-    - ``xvelocity`` -- The velocity of the object toward the right.
-    - ``yvelocity`` -- The velocity of the object toward the bottom.
-    - ``speed`` -- The total (directional) speed of the object.
-    - ``move_direction`` -- The direction of the object's movement in degrees,
-      with 0 being directly to the right and rotation in a positive
-      direction being counter-clockwise.  Default is 0.
-    - ``image_index`` -- The animation frame currently being displayed, with 0
-      being the first one.
-    - ``image_fps`` -- The animation rate in frames per second.  If set to
-      None, the value recommended by the sprite is used.
-    - ``image_xscale`` -- The horizontal scale factor for the sprite.
-    - ``image_yscale`` -- The vertical scale factor for the sprite.
-    - ``image_rotation`` -- The rotation of the sprite in degrees, with
-      rotation in a positive direction being counter-clockwise.
-    - ``image_alpha`` -- The alpha value applied to the entire image, where
-      255 is the original image, 128 is half the opacity of the original
-      image, 0 is fully transparent, etc.
-    - ``image_blend`` -- The color to blend with the sprite.  Set to None for
-      no color blending.
+    .. attribute:: z
 
-    Read-Only Attributes:
+       The Z-axis position of the object in the room.
 
-    - ``id`` -- The unique identifier for this object.
-    - ``xstart`` -- The initial value of x when the object was created.
-    - ``ystart`` -- The initial value of y when the object was created.
-    - ``xprevious`` -- The previous value of x.
-    - ``yprevious`` -- The previous value of y.
+    .. attribute:: sprite
+
+       The sprite currently in use by this object.  Set to ``None`` for
+       no sprite.
+
+    .. attribute:: visible
+
+       Whether or not the object's sprite should be projected onto the
+       screen.
+
+    .. attribute:: active
+
+       Indicates whether the object is active (``True``) or  inactive
+       (``False``).  While the object is active, it will exhibit normal
+       behavior; events will be executed normally as will any other
+       automatic functionality, such as adding
+       :attr:`StellarClass.xvelocity` and :attr:`StellarClass.yvelocity`
+       to :attr:`StellarClass.x` and :attr:`StellarClass.y`.  If
+       :attr:`StellarClass.active` is ``False``, automatic functionality
+       and normal events will be disabled and events which have names
+       starting with ``event_inactive_`` will be executed instead of the
+       corresponding normal events.
+
+       It is important to recognize that making an object inactive is
+       not like deactivating an instance in Game Maker.  Unlike
+       deactivated instances in Game Maker, inactive
+       :class:`StellarClass` objects are still visible by default and
+       continue to be involved in collisions.  In addition, collision
+       events and destroy events still occur even if the object is
+       inactive.  If you wish for the object to not be visible, set
+       :attr:`StellarClass.visible` to ``False``.  If you wish for the
+       object to not be involved in collisions, set
+       :attr:`StellarClass.detects_collisions` to ``False``.
+
+       It is also important to note that making an object inactive will
+       not likely have a significant effect on performance.  For
+       performance enhancement, it is far more effective to exclude
+       objects from collision detection.  Object deactivation is meant
+       to be used to easily maintain control over objects that are
+       currently being excluded from collision detection (e.g. to
+       prevent a gravity effect that would otherwise occur, or to
+       prevent the object from moving through walls).
+
+    .. attribute:: detects_collisions
+
+       Whether or not the object should be involved in collision
+       detection.  Setting this to ``False`` can improve performance if
+       the object doesn't need to detect collisions.
+
+       Depending on the game, a useful strategy to boost performance can
+       be to exclude an object from collision detection while it is
+       outside the view.  If you do this, you likely also to set
+       :attr:`StellarClass.active` to ``False`` as well so that the
+       object doesn't move in undesireable ways (e.g. through walls).
+
+    .. attribute:: bbox_x
+
+       The horizontal location of the bounding box relative to the
+       object's position.  If set to ``None``, the value recommended by
+       the sprite is used.
+
+    .. attribute:: bbox_y
+
+       The vertical location of the bounding box relative to the
+       object's position.  If set to ``None``, the value recommended by
+       the sprite is used.
+
+    .. attribute:: bbox_width
+
+       The width of the bounding box in pixels.  If set to ``None``, the
+       value recommended by the sprite is used.
+
+    .. attribute:: bbox_height
+
+       The height of the bounding box in pixels.  If set to ``None``,
+       the value recommended by the sprite is used.
+
+    .. attribute:: collision_ellipse
+
+       Whether or not an ellipse (rather than a rectangle) should be
+       used for collision detection.
+
+    .. attribute:: collision_precise
+
+       Whether or not precise (pixel-perfect) collision detection should
+       be used.  Note that this can be inefficient and does not work
+       well with animated sprites.
+
+    .. attribute:: bbox_left
+
+       The position of the left side of the bounding box in the room
+       (same as :attr:`StellarClass.x` + :attr:`StellarClass.bbox_x`).
+
+    .. attribute:: bbox_right
+
+       The position of the right side of the bounding box in the room
+       (same as :attr:`StellarClass.bbox_left` +
+       :attr:`StellarClass.bbox_width`).
+
+    .. attribute:: bbox_top
+
+       The position of the top side of the bounding box in the room
+       (same as :attr:`StellarClass.y` + :attr:`StellarClass.bbox_y`).
+
+    .. attribute:: bbox_bottom
+
+       The position of the bottom side of the bounding box in the room
+       (same as :attr:`StellarClass.bbox_top` +
+       :attr:`StellarClass.bbox_height`).
+
+    .. attribute:: xvelocity
+
+       The velocity of the object toward the right.
+
+    .. attribute:: yvelocity
+
+       The velocity of the object toward the bottom.
+
+    .. attribute:: speed
+
+       The total (directional) speed of the object.
+
+    .. attribute:: move_direction
+
+       The direction of the object's movement in degrees, with ``0``
+       being directly to the right and rotation in a positive direction
+       being counter-clockwise.
+
+    .. attribute:: image_index
+
+       The animation frame currently being displayed, with ``0`` being
+       the first one.
+
+    .. attribute:: image_fps
+
+       The animation rate in frames per second.  If set to ``None``, the
+       value recommended by the sprite is used.
+
+    .. attribute:: image_xscale
+
+       The horizontal scale factor for the sprite.
+
+    .. attribute:: image_yscale
+
+       The vertical scale factor for the sprite.
+
+    .. attribute:: image_rotation
+
+       The rotation of the sprite in degrees, with rotation in a
+       positive direction being counter-clockwise.
+
+    .. attribute:: image_alpha
+
+       The alpha value applied to the entire image, where ``255`` is the
+       original image, ``128`` is half the opacity of the original
+       image, ``0`` is fully transparent, etc.
+
+    .. attribute:: image_blend
+
+       The color to blend with the sprite.  Set to ``None`` for no color
+       blending.
+
+    .. attribute:: id
+
+       The unique identifier for this object.  (Read-only)
+
+    .. attribute:: xstart
+
+       The initial value of :attr:`StellarClass.x` when the object was
+       created.  (Read-only)
+
+    .. attribute:: ystart
+
+       The initial value of :attr:`StellarClass.y` when the object was
+       created.  (Read-only)
+
+    .. attribute:: xprevious
+
+       The previous value of :attr:`StellarClass.x`.  (Read-only)
+
+    .. attribute:: yprevious
+
+       The previous value of :attr:`StellarClass.y`.  (Read-only)
 
     """
 

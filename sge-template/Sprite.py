@@ -39,35 +39,64 @@ class Sprite(object):
     and JPEG.  See the implementation-specific information for a full
     list of supported formats.
 
-    Attributes:
+    .. attribute:: width
 
-    - ``width`` -- The width of the sprite.
-    - ``height`` -- The height of the sprite.
-    - ``origin_x`` -- The horizontal location of the origin relative to
-      the left edge of the images.
-    - ``origin_y`` -- The vertical location of the origin relative to
-      the top edge of the images.
-    - ``transparent`` -- Whether or not the image should be partially
-      transparent.  If an image does not have an alpha channel , a
-      colorkey will be used, with the transparent color being the color
-      of the top-rightmost pixel.
-    - ``fps`` -- The suggested rate in frames per second to animate the
-      image at.
-    - ``bbox_x`` -- The horizontal location relative to the sprite of
-      the suggested bounding box to use with it.  If set to None, it
-      will become equal to ``-origin_x`` (which is always the left edge
-      of the image).
-    - ``bbox_y`` -- The vertical location relative to the sprite of the
-      suggested bounding box to use with it.  If set to None, it will
-      become equal to ``-origin_y`` (which is always the top edge of the
-      image).
-    - ``bbox_width`` -- The width of the suggested bounding box.
-    - ``bbox_height`` -- The height of the suggested bounding box.
+       The width of the sprite.
 
-    Read-Only Attributes:
+    .. attribute:: height
 
-    - ``name`` -- The name of the sprite given when it was created.
-    - ``id`` -- The unique identifier of the sprite.
+       The height of the sprite.
+
+    .. attribute:: origin_x
+
+       The horizontal location of the origin relative to the left edge
+       of the images.
+
+    .. attribute:: origin_y
+
+       The vertical location of the origin relative to the top edge of
+       the images.
+
+    .. attribute:: transparent
+
+       Whether or not the image should be partially transparent.  If an
+       image does not have an alpha channel, a colorkey will be used,
+       with the transparent color being the color of the top-rightmost
+       pixel.
+
+    .. attribute:: fps
+
+       The suggested rate in frames per second to animate the image at.
+
+    .. attribute:: bbox_x
+
+       The horizontal location relative to the sprite of the suggested
+       bounding box to use with it.  If set to ``None``, it will become
+       equal to ``-origin_x`` (which is always the left edge of the
+       image).
+
+    .. attribute:: bbox_y
+
+       The vertical location relative to the sprite of the suggested
+       bounding box to use with it.  If set to ``None``, it will become
+       equal to ``-origin_y`` (which is always the top edge of the
+       image).
+
+    .. attribute:: bbox_width
+
+       The width of the suggested bounding box.
+
+    .. attribute:: bbox_height
+
+       The height of the suggested bounding box.
+
+    .. attribute:: name
+
+       The name of the sprite given when it was created.  (Read-only)
+
+    .. attribute:: id
+
+       The unique identifier of the sprite.  (Read-only)
 
     """
 
@@ -81,36 +110,37 @@ class Sprite(object):
 
         - ``name`` -- The base name of the image files, used to find all
           individual image files that make up the sprite's animation in
-          the paths specified in ``sge.image_directories``.  One of the
-          following rules will be used to find the images:
+          the paths specified in :data:`sge.image_directories`.  One of
+          the following rules will be used to find the images:
 
           - The base name plus a valid image extension.  If this rule is
             used, the image will be loaded as a single-frame sprite.
           - The base name and an integer separated by either a hyphen
-            ("-") or an underscore ("_") and followed by a valid image
-            extension.  If this rule is used, all images with names like
-            this are loaded and treated as an animation, with the lower-
-            numbered images being earlier frames.
-          - The base name and an integer separated by either "-strip" or
-            "_strip" and followed by a valid image extension.  If this
-            rule is used, the image will be treated as an animation read
-            as a horizontal reel from left to right, split into the
+            (``-``) or an underscore (``_``) and followed by a valid
+            image extension.  If this rule is used, all images with
+            names like this are loaded and treated as an animation, with
+            the lower-numbered images being earlier frames.
+          - The base name and an integer separated by either ``-strip``
+            or ``_strip`` and followed by a valid image extension.  If
+            this rule is used, the image will be treated as an animation
+            read as a horizontal reel from left to right, split into the
             number of frames indicated by the integer.
-          - If the base name is None, the sprite will be a fully
+          - If the base name is ``None``, the sprite will be a fully
             transparent rectangle at the specified size (with both
             ``width`` and ``height`` defaulting to 32 if they are set to
-            None).  The SGE decides what to assign to the sprite's
+            ``None``).  The SGE decides what to assign to the sprite's
             ``name`` attribute in this case, but it will always be a
             string.
 
-          If none of the above rules can be used, IOError is raised.
+          If none of the above rules can be used, :exc:`IOError` is
+          raised.
 
         - ``id`` -- The unique identifier of the sprite.  If set to
-          None, ``name`` will be used, modified by the SGE if it is
+          ``None``, ``name`` will be used, modified by the SGE if it is
           already the unique identifier of another sprite.
 
         All other arguments set the respective initial attributes of the
-        sprite.  See the documentation for `Sprite` for more
+        sprite.  See the documentation for :class:`Sprite` for more
         information.
 
         """
@@ -130,8 +160,8 @@ class Sprite(object):
         - ``y`` -- The vertical location relative to the sprite to draw
           the dot.
         - ``color`` -- The color of the dot.
-        - ``frame`` -- The frame of the sprite to draw on, where 0 is
-          the first frame; set to None to draw on all frames.
+        - ``frame`` -- The frame of the sprite to draw on, where ``0``
+          is the first frame; set to ``None`` to draw on all frames.
 
         """
         # TODO
@@ -153,8 +183,8 @@ class Sprite(object):
         - ``color`` -- The color of the line segment.
         - ``thickness`` -- The thickness of the line segment.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
-        - ``frame`` -- The frame of the sprite to draw on, where 0 is
-          the first frame; set to None to draw on all frames.
+        - ``frame`` -- The frame of the sprite to draw on, where ``0``
+          is the first frame; set to ``None`` to draw on all frames.
 
         """
         # TODO
@@ -175,8 +205,8 @@ class Sprite(object):
         - ``outline`` -- The color of the outline of the rectangle.
         - ``outline_thickness`` -- The thickness of the outline of the
           rectangle.
-        - ``frame`` -- The frame of the sprite to draw on, where 0 is
-          the first frame; set to None to draw on all frames.
+        - ``frame`` -- The frame of the sprite to draw on, where ``0``
+          is the first frame; set to ``None`` to draw on all frames.
 
         """
         # TODO
@@ -198,8 +228,8 @@ class Sprite(object):
         - ``outline_thickness`` -- The thickness of the outline of the
           ellipse.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
-        - ``frame`` -- The frame of the sprite to draw on, where 0 is
-          the first frame; set to None to draw on all frames.
+        - ``frame`` -- The frame of the sprite to draw on, where ``0``
+          is the first frame; set to ``None`` to draw on all frames.
 
         """
         # TODO
@@ -220,8 +250,8 @@ class Sprite(object):
         - ``outline_thickness`` -- The thickness of the outline of the
           circle.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
-        - ``frame`` -- The frame of the sprite to draw on, where 0 is
-          the first frame; set to None to draw on all frames.
+        - ``frame`` -- The frame of the sprite to draw on, where ``0``
+          is the first frame; set to ``None`` to draw on all frames.
 
         """
         # TODO
@@ -232,14 +262,14 @@ class Sprite(object):
         Arguments:
 
         - ``sprite`` -- The sprite to draw with.
-        - ``image`` -- The frame of ``sprite`` to draw with, where 0 is
-          the first frame.
+        - ``image`` -- The frame of ``sprite`` to draw with, where ``0``
+          is the first frame.
         - ``x`` -- The horizontal location relative to ``self`` to draw
           ``sprite``.
         - ``y`` -- The vertical location relative to ``self`` to draw
           ``sprite``.
-        - ``frame`` -- The frame of ``self`` to draw on, where 0 is the
-          first frame; set to None to draw on all frames.
+        - ``frame`` -- The frame of the sprite to draw on, where ``0``
+          is the first frame; set to ``None`` to draw on all frames.
 
         """
         # TODO
@@ -258,51 +288,52 @@ class Sprite(object):
         - ``y`` -- The vertical location relative to the sprite to draw
           the text.
         - ``width`` -- The width of the imaginary rectangle the text is
-          drawn in; set to None to make the rectangle as wide as needed
-          to contain the text without additional line breaks.  If set to
-          something other than None, a line which does not fit will be
-          automatically split into multiple lines that do fit.
+          drawn in; set to ``None`` to make the rectangle as wide as
+          needed to contain the text without additional line breaks.  If
+          set to something other than ``None``, a line which does not
+          fit will be automatically split into multiple lines that do
+          fit.
         - ``height`` -- The height of the imaginary rectangle the text
-          is drawn in; set to None to make the rectangle as tall as
+          is drawn in; set to ``None`` to make the rectangle as tall as
           needed to contain the text.
         - ``color`` -- The color of the text.
         - ``halign`` -- The horizontal alignment of the text and the
           horizontal location of the origin of the imaginary rectangle
           the text is drawn in.  Can be set to one of the following:
 
-          - ``sge.ALIGN_LEFT`` -- Align the text to the left of the
+          - :data:`sge.ALIGN_LEFT` -- Align the text to the left of the
             imaginary rectangle the text is drawn in.  Set the origin of
             the imaginary rectangle to its left edge.
-          - ``sge.ALIGN_CENTER`` -- Align the text to the center of the
-            imaginary rectangle the text is drawn in.  Set the origin of
-            the imaginary rectangle to its center.
-          - ``sge.ALIGN_RIGHT`` -- Align the text to the right of the
-            imaginary rectangle the text is drawn in.  Set the origin of
-            the imaginary rectangle to its right edge.
+          - :data:`sge.ALIGN_CENTER` -- Align the text to the center of
+            the imaginary rectangle the text is drawn in.  Set the
+            origin of the imaginary rectangle to its center.
+          - :data:`sge.ALIGN_RIGHT` -- Align the text to the right of
+            the imaginary rectangle the text is drawn in.  Set the
+            origin of the imaginary rectangle to its right edge.
 
         - ``valign`` -- The vertical alignment of the text and the
           vertical location of the origin of the imaginary rectangle the
           text is drawn in.  Can be set to one of the following:
 
-          - ``sge.ALIGN_TOP`` -- Align the text to the top of the
+          - :data:`sge.ALIGN_TOP` -- Align the text to the top of the
             imaginary rectangle the text is drawn in.  Set the origin of
             the imaginary rectangle to its top edge.  If the imaginary
             rectangle is not tall enough to contain all of the text, cut
             text off from the bottom.
-          - ``sge.ALIGN_MIDDLE`` -- Align the the text to the middle of
-            the imaginary rectangle the text is drawn in.  Set the
+          - :data:`sge.ALIGN_MIDDLE` -- Align the the text to the middle
+            of the imaginary rectangle the text is drawn in.  Set the
             origin of the imaginary rectangle to its middle.  If the
             imaginary rectangle is not tall enough to contain all of the
             text, cut text off equally from the top and bottom.
-          - ``sge.ALIGN_BOTTOM`` -- Align the text  to the bottom of the
-            imaginary rectangle the text is drawn in.  Set the origin of
-            the imaginary rectangle to its top edge.  If the imaginary
-            rectangle is not tall enough to contain all of the text, cut
-            text off from the top.
+          - :data:`sge.ALIGN_BOTTOM` -- Align the text  to the bottom of
+            the imaginary rectangle the text is drawn in.  Set the
+            origin of the imaginary rectangle to its top edge.  If the
+            imaginary rectangle is not tall enough to contain all of the
+            text, cut text off from the top.
 
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
-        - ``frame`` -- The frame of the sprite to draw on, where 0 is
-          the first frame; set to None to draw on all frames.
+        - ``frame`` -- The frame of the sprite to draw on, where ``0``
+          is the first frame; set to ``None`` to draw on all frames.
 
         """
         # TODO
@@ -312,8 +343,8 @@ class Sprite(object):
 
         Arguments:
 
-        - ``frame`` -- The frame of the sprite to clear, where 0 is
-          the first frame; set to None to clear all frames.
+        - ``frame`` -- The frame of the sprite to clear, where ``0`` is
+          the first frame; set to ``None`` to clear all frames.
 
         """
         # TODO
@@ -324,7 +355,8 @@ class Sprite(object):
         Arguments:
 
         - ``fname`` -- The path of the file to save the sprite to.  If
-          it is not a path that can be saved to, IOError is raised.
+          it is not a path that can be saved to, :exc:`IOError` is
+          raised.
 
         If the sprite has multiple frames, the image file saved will be
         a horizontal reel of each of the frames from left to right with
@@ -350,7 +382,7 @@ class Sprite(object):
           set to None for all of the area below ``y`` to be included.
 
         If you only wish to save a screenshot (of the entire screen) to
-        a file, the easiest way to do that is:::
+        a file, the easiest way to do that is::
 
         sge.Sprite.from_screenshot().save("foo.png")
 

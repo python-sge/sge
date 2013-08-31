@@ -27,19 +27,22 @@ class Background(object):
     """Background class.
 
     This class stores the layers that make up the background (which
-    contain the information about what images to use and where) as well as
-    the color to use where no image is shown.
+    contain the information about what images to use and where) as well
+    as the color to use where no image is shown.
 
-    Attributes:
+    .. attribute:: color
 
-    - ``color`` -- The color used in parts of the background where no
-      layer is shown.
+       The color used in parts of the background where no layer is
+       shown.
 
-    Read-Only Attributes:
+    .. attribute:: id
 
-    - ``id`` -- The unique identifier for this background.
-    - ``layers`` -- A tuple containing all `sge.BackgroundLayer` objects
-      used in this background.
+       The unique identifier for this background.  (Read-only)
+
+    .. attribute:: layers
+
+       A tuple containing all :class:`sge.BackgroundLayer` objects used
+       in this background.  (Read-only)
 
     """
 
@@ -52,8 +55,8 @@ class Background(object):
           None, the SGE chooses the value.
 
         All other arguments set the respective initial attributes of the
-        background.  See the documentation for `Background` for more
-        information.
+        background.  See the documentation for :class:`Background` for
+        more information.
 
         """
         # Since the docs say that ``id`` is a valid keyword argument,

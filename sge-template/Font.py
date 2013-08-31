@@ -29,24 +29,37 @@ class Font(object):
 
     """Font handling class.
 
-    This class stores a font for use by `sge.Sprite.draw_text` and
-    `sge.Room.render_text`.
+    This class stores a font for use by :meth:`sge.Sprite.draw_text` and
+    :meth:`sge.Room.render_text`.
 
     Note that bold and italic rendering could be ugly.  It is better to
     choose a bold or italic font rather than enabling bold or italic
     rendering, if possible.
 
-    Attributes:
+    .. attribute:: size
 
-    - ``size`` -- The height of the font in pixels.
-    - ``underline`` -- Whether or not underlined rendering is enabled.
-    - ``bold`` -- Whether or not bold rendering is enabled.
-    - ``italic`` -- Whether or not italic rendering is enabled.
+       The height of the font in pixels.
 
-    Read-Only Attributes:
+    .. attribute:: underline
 
-    - ``name`` -- The name of the font as specified when it was created.
-    - ``id`` -- The unique identifier of the font.
+       Whether or not underlined rendering is enabled.
+
+    .. attribute:: bold
+
+       Whether or not bold rendering is enabled.
+
+    .. attribute:: italic
+
+       Whether or not italic rendering is enabled.
+
+    .. attribute:: name
+
+       The name of the font as specified when it was created.
+       (Read-only)
+
+    .. attribute:: id
+
+       The unique identifier of the font.  (Read-only)
 
     """
 
@@ -60,7 +73,7 @@ class Font(object):
           following:
 
           - A string indicating the name of a font file located in one
-            of the paths specified in ``sge.font_directories``, e.g.
+            of the paths specified in :data:`sge.font_directories`, e.g.
             ``"MyFont.ttf"``.
           - A string indicating the case-insensitive name of a system
             font, e.g. ``"Liberation Serif"``.
@@ -70,12 +83,13 @@ class Font(object):
           If none of the above methods return a valid font, the SGE will
           choose the font.
 
-        - ``id`` -- The unique identifier of the font.  If set to None,
-          ``name`` will be used, modified by the SGE if it is already the
-          unique identifier of another font.
+        - ``id`` -- The unique identifier of the font.  If set to
+          ``None``, ``name`` will be used, modified by the SGE if it is
+          already the unique identifier of another font.
 
         All other arguments set the respective initial attributes of the
-        font.  See the documentation for `Font` for more information.
+        font.  See the documentation for :class:`Font` for more
+        information.
 
         Note that it is generally not a good practice to rely on system
         fonts.  A font which you have on your system is probably not on
@@ -99,8 +113,8 @@ class Font(object):
     def get_size(self, text, width=None, height=None):
         """Return the size of a certain string of text when rendered.
 
-        See the documentation for `sge.Sprite.draw_text` for information
-        about the arguments.
+        See the documentation for :meth:`sge.Sprite.draw_text` for
+        information about the arguments.
 
         """
         # TODO

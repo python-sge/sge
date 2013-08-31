@@ -34,28 +34,44 @@ class BackgroundLayer(object):
     whether the layer tiles horizontally, vertically, or both, and the
     rate at which it scrolls.
 
-    Attributes:
+    .. attribute:: sprite
 
-    - ``sprite`` -- The sprite used for this layer.  It will be animated
-      normally if it contains multiple frames.
-    - ``x`` -- The horizontal location of the layer relative to the
-      background.
-    - ``y`` -- The vertical location of the layer relative to the
-      background.
-    - ``z`` -- The Z-axis position of the layer in the room.
-    - ``xscroll_rate`` -- The horizontal rate that the layer scrolls as
-      a factor of the additive inverse of the horizontal movement of the
-      view.
-    - ``yscroll_rate`` -- The vertical rate that the layer scrolls as a
-      factor of the additive inverse of the vertical movement of the
-      view.
-    - ``xrepeat`` -- Whether or not the layer should be repeated (tiled)
-      horizontally.
-    - ``yrepeat`` -- Whether or not the layer should be repeated (tiled)
-      vertically.
+       The sprite used for this layer.  It will be animated normally if
+       it contains multiple frames.
 
-    Read-Only Attributes:
-    - ``id`` -- The unique identifier of the layer.
+    .. attribute:: x
+
+       The horizontal location of the layer relative to the background.
+
+    .. attribute:: y
+
+       The vertical location of the layer relative to the background.
+
+    .. attribute:: z
+
+       The Z-axis position of the layer in the room.
+
+    .. attribute:: xscroll_rate
+
+       The horizontal rate that the layer scrolls as a factor of the
+       additive inverse of the horizontal movement of the view.
+
+    .. attribute:: yscroll_rate
+
+       The vertical rate that the layer scrolls as a factor of the
+       additive inverse of the vertical movement of the view.
+
+    .. attribute:: xrepeat
+
+       Whether or not the layer should be repeated (tiled) horizontally.
+
+    .. attribute:: yrepeat
+
+       Whether or not the layer should be repeated (tiled) vertically.
+
+    .. attribute:: id
+
+       The unique identifier of the layer.  (Read-only)
 
     """
 
@@ -71,8 +87,8 @@ class BackgroundLayer(object):
           another background layer.
 
         All other arguments set the respective initial attributes of the
-        layer.  See the documentation for `BackgroundLayer` for more
-        information.
+        layer.  See the documentation for :class:`BackgroundLayer` for
+        more information.
 
         """
         # Since the docs say that ``id`` is a valid keyword argument,

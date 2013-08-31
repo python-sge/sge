@@ -33,23 +33,37 @@ class View(object):
     time.  Multiple views can exist in a room, and this can be used to
     create a split-screen effect.
 
-    Attributes:
+    .. attribute:: x
 
-    - ``x`` -- The horizontal position of the view in the room.  When
-      set, if it brings the view outside of the room it is in, it will
-      be re-adjusted so that the view is completely inside the room.
-    - ``y`` -- The vertical position of the view in the room.  When set,
-      if it brings the view outside of the room it is in, it will be
-      re-adjusted so that the view is completely inside the room.
-    - ``xport`` -- The horizontal position of the view port on the
-      screen.
-    - ``yport`` -- The vertical position of the view port on the screen.
-    - ``width`` -- The width of the view.  When set, if it results in
-      the view being outside of the room it is in, ``x`` will be
-      adjusted so that the view is completely inside the room.
-    - ``height`` -- The height of the view.  When set, if it results in
-      the view being outside the room it is in, ``y`` will be adjusted
-      so that the view is completely inside the room.
+       The horizontal position of the view in the room.  When set, if it
+       brings the view outside of the room it is in, it will be
+       re-adjusted so that the view is completely inside the room.
+
+    .. attribute:: y
+
+       The vertical position of the view in the room.  When set, if it
+       brings the view outside of the room it is in, it will be
+       re-adjusted so that the view is completely inside the room.
+
+    .. attribute:: xport
+
+       The horizontal position of the view port on the screen.
+
+    .. attribute:: yport
+
+       The vertical position of the view port on the screen.
+
+    .. attribute:: width
+
+       The width of the view.  When set, if it results in the view being
+       outside of the room it is in, ``x`` will be adjusted so that the
+       view is completely inside the room.
+
+    .. attribute:: height
+
+       The height of the view.  When set, if it results in the view
+       being outside the room it is in, ``y`` will be adjusted so that
+       the view is completely inside the room.
 
     """
 
@@ -58,15 +72,15 @@ class View(object):
 
         Arguments:
 
-        - ``width`` -- The width of the view.  If set to None, it will
-          be set such that the view port takes up all of the space that
-          it can horizontally (i.e. ``game.width - xport``).
-        - ``height`` -- The height of the view.  If set to None, it will
-          be set such that the view port takes up all of the space that
-          it can vertically (i.e. ``game.height - yport``).
+        - ``width`` -- The width of the view.  If set to ``None``, it
+          will be set such that the view port takes up all of the space
+          that it can horizontally (i.e. ``game.width - xport``).
+        - ``height`` -- The height of the view.  If set to ``None``, it
+          will be set such that the view port takes up all of the space
+          that it can vertically (i.e. ``game.height - yport``).
 
         All other arugments set the respective initial attributes of the
-        view.  See the documentation for `StellarClass` for more
+        view.  See the documentation for :class:`View` for more
         information.
 
         """

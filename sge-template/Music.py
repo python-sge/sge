@@ -31,7 +31,7 @@ class Music(object):
 
     This class stores and plays music.  Music is very similar to sound
     effects, but only one music file can be played at a time, and it is
-    more efficient for larger files than `sge.Sound`.
+    more efficient for larger files than :class:`sge.Sound`.
 
     What music formats are supported depends on the implementation of
     the SGE, but Ogg Vorbis is generally a good choice.  See the
@@ -44,19 +44,32 @@ class Music(object):
     There are many programs which can convert your MP3 files to the free
     Ogg Vorbis format.
 
-    Attributes:
+    .. attribute:: volume
 
-    - ``volume`` -- The volume of the music in percent from 0 to 100 (0
-      for no sound, 100 for maximum volume).
+       The volume of the music in percent from ``0`` to ``100`` (``0``
+       for no sound, ``100`` for maximum volume).
 
-    Read-Only Attributes:
+    .. attribute:: fname
 
-    - ``fname`` -- The file name of the music given when it was created.
-    - ``id`` -- The unique identifier of the music.
-    - ``length`` -- The length of the music in milliseconds.
-    - ``playing`` -- Whether or not the music is playing.
-    - ``position`` -- The current position (time) playback of the music
-      is at in milliseconds.
+       The file name of the music given when it was created.
+       (Read-only)
+
+    .. attribute:: id
+
+       The unique identifier of the music.  (Read-only)
+
+    .. attribute:: length
+
+       The length of the music in milliseconds.  (Read-only)
+
+    .. attribute:: playing
+
+       Whether or not the music is playing.  (Read-only)
+
+    .. attribute:: position
+
+       The current position (time) playback of the music is at in
+       milliseconds.  (Read-only)
 
     """
 
@@ -66,16 +79,18 @@ class Music(object):
         Arguments:
 
         - ``fname`` -- The name of the sound file in one of the paths
-          specified in ``music_directories``.  If set to None, this
-          object will not actually play any music.  If this is neither a
-          valid sound file nor None, IOError is raised.
-        - ``id`` -- The unique identifier of the music.  If set to None,
-          ``fname`` minus the extension will be used, modified by the
-          SGE if it is already the unique idenfifier of another music
-          object.
+          specified in :data:`sge.music_directories`.  If set to
+          ``None``, this object will not actually play any music.  If
+          this is neither a valid sound file nor ``None``,
+          :exc:`IOError` is raised.
+        - ``id`` -- The unique identifier of the music.  If set to
+          ``None``, ``fname`` minus the extension will be used, modified
+          by the SGE if it is already the unique idenfifier of another
+          music object.
 
         All other arguments set the respective initial attributes of the
-        music.  See the documentation for `Music` for more information.
+        music.  See the documentation for :class:`Music` for more
+        information.
 
         """
         # Since the docs say that ``id`` is a valid keyword argument,
@@ -92,7 +107,8 @@ class Music(object):
         - ``start`` -- The number of milliseconds from the beginning to
           start playing at.
 
-        See the documentation for `sge.Sound.play` for more information.
+        See the documentation for :meth:`sge.Sound.play` for more
+        information.
 
         """
         # TODO
@@ -103,7 +119,8 @@ class Music(object):
         This will cause the music to be added to a list of music to play
         in order, after the previous music has finished playing.
 
-        See the documentation for `Music.play` for more information.
+        See the documentation for :meth:`Music.play` for more
+        information.
 
         """
         # TODO
@@ -112,7 +129,8 @@ class Music(object):
     def stop(fade_time=None):
         """Stop the currently playing music.
 
-        See the documentation for `sge.Sound.stop` for more information.
+        See the documentation for :meth:`sge.Sound.stop` for more
+        information.
 
         """
         # TODO

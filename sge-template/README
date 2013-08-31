@@ -1,20 +1,28 @@
-[insert copyright notice here]
+Copyright (C) 2013 Julian Marchant <onpon4@riseup.net>
 
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This file is offered as-is,
+without any warranty.
 
-Implementation-Specific Information
-===================================
+========================================================================
 
-License
--------
+This is not an implementation of the SGE, but rather a template for
+developing your own implementation.
 
-[insert license info here]
+To develop an implementation of SGE:
 
-Dependencies
-------------
-
-- Python [insert Python version here] <http://www.python.org>
-- [insert additional dependency here] <[insert dependency link here]>
-- [insert additional dependency here] <[insert dependency link here]>
-- [...]
-
-[insert other info here]
+* Copy the contents of this folder into another directory.
+* Define the values of the constants in constants.py.
+* Replace the license text on top with appropriate license text for the
+  license you intend to use for your implementation.  Suggested license
+  choices are the GNU GPL, the GNU LGPL, the Apache License 2.0, or the
+  Expat License.
+* Replace the "TODO" comments found throughout the Python files with
+  actual functionality.
+* Insert the name of your implementation into the
+  implementation-specific information section of __init__.py and insert
+  all important information that is specific to your implementation in
+  this section.
+* Other than the implementation-specific information section, please do
+  NOT modify the docstrings.

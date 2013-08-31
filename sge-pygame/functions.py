@@ -43,7 +43,7 @@ def show_message(text, buttons=('OK',), default=0):
     - ``buttons`` -- A list or tuple of strings to put in each of the
       buttons from left to right.
     - ``default`` -- The number of the button to select by default,
-      where 0 is the first button.
+      where ``0`` is the first button.
 
     The dialog box is placed at the center of the window.  The message
     is horizontally aligned to the left and vertically aligned to the
@@ -52,27 +52,28 @@ def show_message(text, buttons=('OK',), default=0):
 
     While the dialog box is being shown, all events are stopped.  If the
     operating system tells the game to close, the dialog box will close
-    immediately, returning None, and leak the command to the rest of the
-    game (causing Close events).  If the Esc key is pressed, the dialog
-    box will close immediately, returning None.  If the right arrow key
-    or Tab key is pressed, a joystick axis is moved from a position less
-    than 0.75 to a position greater than or equal to 0.75, a joystick
-    HAT is moved to the right, or a joystick trackball is moved to the
-    right by at least 0.75, the selection is moved to the right by one;
-    if what is currently selected is the last button, the first button
-    will be selected.  If the left arrow key is pressed, a joystick axis
-    is moved from a position greater than -0.75 to a position less than
-    or equal to -0.75, a joystick HAT is moved to the left, or a
-    joystick trackball is moved to the left by at least 0.75, the
-    selection is moved to the left by one; if what is currently selected
-    is the first button, the last button will be selected.  If the Enter
-    key, the keypad Enter key, or any joystick button is pressed and
-    then released, the dialog box is closed and the number of the of the
-    currently selected button is returned, where 0 is the first button.
-    If the left mouse button is pressed and then released while the
-    mouse is hovering over a button, the dialog box is closed and the
-    number of the button the mouse is currently hovering over is
-    returned, where 0 is the first button.
+    immediately, returning ``None``, and leak the command to the rest of
+    the game (causing Close events).  If the Esc key is pressed, the
+    dialog box will close immediately, returning ``None``.  If the right
+    arrow key or Tab key is pressed, a joystick axis is moved from a
+    position less than ``0.75`` to a position greater than or equal to
+    ``0.75``, a joystick HAT is moved to the right, or a joystick
+    trackball is moved to the right by at least ``0.75``, the selection
+    is moved to the right by one; if what is currently selected is the
+    last button, the first button will be selected.  If the left arrow
+    key is pressed, a joystick axis is moved from a position greater
+    than ``-0.75`` to a position less than or equal to ``-0.75``, a
+    joystick HAT is moved to the left, or a joystick trackball is moved
+    to the left by at least ``0.75``, the selection is moved to the left
+    by one; if what is currently selected is the first button, the last
+    button will be selected.  If the Enter key, the keypad Enter key, or
+    any joystick button is pressed and then released, the dialog box is
+    closed and the number of the of the currently selected button is
+    returned, where ``0`` is the first button.  If the left mouse button
+    is pressed and then released while the mouse is hovering over a
+    button, the dialog box is closed and thenumber of the button the
+    mouse is currently hovering over is returned, where ``0`` is the
+    first button.
 
     """
     return _show_modal(text, default, False, buttons)
@@ -87,7 +88,7 @@ def get_text_entry(text, default=''):
     - ``default`` -- The text to put in the text entry field initially.
 
     The text entry dialog box is mostly the same as the regular dialog
-    box -- see the documentation for `show_message` for more
+    box -- see the documentation for :func:`show_message` for more
     information -- but there are some key differences, outlined here.
 
     There is always an OK button on the right and a Cancel button on the
@@ -285,14 +286,15 @@ def get_joystick_axis(joystick, axis):
 
     Arguments:
 
-    - ``joystick`` -- The number of the joystick to check, where 0 is
-      the first joystick.
-    - ``axis`` -- The number of the axis to check, where 0 is the first
-      axis of the joystick.
+    - ``joystick`` -- The number of the joystick to check, where ``0``
+      is the first joystick.
+    - ``axis`` -- The number of the axis to check, where ``0`` is the
+      first axis of the joystick.
 
-    Return a float from -1 to 1, where 0 is centered, -1 is all the way
-    to the left or up, and 1 is all the way to the right or down.
-    Return 0 if the requested joystick or axis does not exist.
+    Return a float from ``-1`` to ``1``, where ``0`` is centered, ``-1``
+    is all the way to the left or up, and ``1`` is all the way to the
+    right or down.  Return ``0`` if the requested joystick or axis does
+    not exist.
 
     """
     if joystick < len(sge.game._joysticks):
@@ -318,10 +320,10 @@ def get_joystick_hat(joystick, hat):
 
     Arguments:
 
-    - ``joystick`` -- The number of the joystick to check, where 0 is
-      the first joystick.
-    - ``hat`` -- The number of the HAT to check, where 0 is the first
-      HAT of the joystick.
+    - ``joystick`` -- The number of the joystick to check, where ``0``
+      is the first joystick.
+    - ``hat`` -- The number of the HAT to check, where ``0`` is the
+      first HAT of the joystick.
 
     Return a two-part tuple in the form ``(x, y)``.  ``x`` can be ``-1``
     (left), ``0`` (horizontally centered), or ``1`` (right).  ``y`` can
@@ -341,14 +343,14 @@ def get_joystick_button_pressed(joystick, button):
 
     Arguments:
 
-    - ``joystick`` -- The number of the joystick to check, where 0 is
-      the first joystick.
-    - ``button`` -- The number of the button to check, where 0 is the
-      first button of the joystick.
+    - ``joystick`` -- The number of the joystick to check, where ``0``
+      is the first joystick.
+    - ``button`` -- The number of the button to check, where ``0`` is
+      the first button of the joystick.
 
-    ``joystick`` is the number of the joystick to check, where 0 is
+    ``joystick`` is the number of the joystick to check, where ``0`` is
     the first joystick.  ``button`` is the number of the button to
-    check, where 0 is the first button of the joystick.
+    check, where ``0`` is the first button of the joystick.
 
     Return ``False`` if the requested joystick or button does not exist.
 
@@ -370,10 +372,10 @@ def get_joystick_axes(joystick):
 
     Arguments:
 
-    - ``joystick`` -- The number of the joystick to check, where 0 is
-      the first joystick.
+    - ``joystick`` -- The number of the joystick to check, where ``0``
+      is the first joystick.
 
-    Return 0 if the requested joystick does not exist.
+    Return ``0`` if the requested joystick does not exist.
 
     """
     if joystick < len(sge.game._joysticks):
@@ -388,10 +390,10 @@ def get_joystick_hats(joystick):
 
     Arguments:
 
-    - ``joystick`` -- The number of the joystick to check, where 0 is
-      the first joystick.
+    - ``joystick`` -- The number of the joystick to check, where ``0``
+      is the first joystick.
 
-    Return 0 if the requested joystick does not exist.
+    Return ``0`` if the requested joystick does not exist.
 
     """
     if joystick < len(sge.game._joysticks):
@@ -405,10 +407,10 @@ def get_joystick_buttons(joystick):
 
     Arguments:
 
-    - ``joystick`` -- The number of the joystick to check, where 0 is
-      the first joystick.
+    - ``joystick`` -- The number of the joystick to check, where ``0``
+      is the first joystick.
 
-    Return 0 if the requested joystick does not exist.
+    Return ``0`` if the requested joystick does not exist.
 
     """
     if joystick < len(sge.game._joysticks):
