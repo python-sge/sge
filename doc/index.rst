@@ -6,7 +6,6 @@
 Welcome to Stellar Game Engine's documentation!
 ===============================================
 
-<<<<<<< HEAD
 Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net>
 
 This document has been dedicated to the public domain by the author(s),
@@ -14,8 +13,7 @@ to the extent possible under applicable law. See
 <http://creativecommons.org/publicdomain/zero/1.0/> for more
 information.
 
-=======
->>>>>>> 34bd7c7e23a966643019776b9e7e4bea802b8dc3
+
 Contents:
 
 .. toctree::

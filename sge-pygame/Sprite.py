@@ -762,7 +762,7 @@ class Sprite(object):
         If you only wish to save a screenshot (of the entire screen) to
         a file, the easiest way to do that is::
 
-        sge.Sprite.from_screenshot().save("foo.png")
+            sge.Sprite.from_screenshot().save("foo.png")
 
         """
         window = pygame.display.get_surface()

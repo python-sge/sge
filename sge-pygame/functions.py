@@ -113,7 +113,7 @@ def get_key_pressed(key):
     Arguments:
 
     - ``key`` -- The identifier string of the key to check; see below
-    for a table of the identifier strings.
+      for a table of the identifier strings.
 
     ==================== ======================= =================
     Key Name             Identifier String       Unicode Character

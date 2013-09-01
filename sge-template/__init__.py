@@ -17,8 +17,6 @@
 # Apache License 2.0.
 
 """
-.. module:: sge
-
 The Stellar Game Engine (abbreviated "SGE", pronounced as "Sage") is a
 Python library for use by Stellar.  It is a game engine loosely based on
 the proprietary program, Game Maker.  The purpose of the SGE is to make
@@ -283,7 +281,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.4.0.7"
+__version__ = "0.4.0.8"
 
 import sys
 import os
