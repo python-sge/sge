@@ -1,0 +1,1 @@
+../common/StellarClass.rst

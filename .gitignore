@@ -12,7 +12,7 @@ var
 sdist
 develop-eggs
 .installed.cfg
-doc/_build
+doc/sge-pygame/_build
 
 # Installer logs
 pip-log.txt
