@@ -104,7 +104,7 @@ class Music(object):
         else:
             return 0
 
-    def __init__(self, fname, id_=None, volume=100, **kwargs):
+    def __init__(self, fname, ID=None, volume=100):
         """Constructor method.
 
         Arguments:
@@ -114,7 +114,7 @@ class Music(object):
           :const:`None`, this object will not actually play any music.
           If this is neither a valid sound file nor :const:`None`,
           :exc:`IOError` is raised.
-        - ``id`` -- The unique identifier of the music.  If set to
+        - ``ID`` -- The value to set :attr:`id` to.  If set to
           :const:`None`, ``fname`` minus the extension will be used,
           modified by the SGE if it is already the unique idenfifier of
           another music object.
@@ -124,10 +124,6 @@ class Music(object):
         information.
 
         """
-        # Since the docs say that ``id`` is a valid keyword argument,
-        # you should do this to make sure that that is true.
-        id_ = kwargs.setdefault('id', id_)
-
         self.fname = fname
         self.volume = volume
         self._timeout = None
@@ -149,17 +145,17 @@ class Music(object):
                 msg = 'File "{0}" not found.'.format(self.fname)
                 raise IOError(msg)
 
-            if id_ is not None:
-                self.id = id_
+            if ID is not None:
+                self.id = ID
             else:
-                self.id = self.fname
+                self.id = os.path.splitext(os.path.basename(self.fname))[0]
                 while self.id in sge.game.music:
                     self.id += "_"
         else:
             self._full_fname = None
 
-            if id_ is not None:
-                self.id = id_
+            if ID is not None:
+                self.id = ID
             else:
                 i = 0
                 while i in sge.game.music:

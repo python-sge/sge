@@ -75,24 +75,20 @@ class BackgroundLayer(object):
 
     """
 
-    def __init__(self, sprite, x, y, z, id_=None, xscroll_rate=1,
-                 yscroll_rate=1, xrepeat=True, yrepeat=True, **kwargs):
+    def __init__(self, sprite, x, y, z, ID=None, xscroll_rate=1,
+                 yscroll_rate=1, xrepeat=True, yrepeat=True):
         """Constructor method.
 
         Arguments:
 
-        - ``id`` -- The unique identifier of the sprite.  If set to
-          None, the ``id`` attribute of the sprite will be used,
-          modified by the SGE if it is already the unique identifier of
-          another background layer.
+        - ``ID`` -- The value to set :attr:`id` to.  If set to
+          :const:`None`, :attr:`sprite.id` will be used, modified by the
+          SGE if it is already the unique identifier of another
+          background layer.
 
         All other arguments set the respective initial attributes of the
         layer.  See the documentation for :class:`BackgroundLayer` for
         more information.
 
         """
-        # Since the docs say that ``id`` is a valid keyword argument,
-        # you should do this to make sure that that is true.
-        id_ = kwargs.setdefault('id', id_)
-
         # TODO

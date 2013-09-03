@@ -225,31 +225,27 @@ class StellarClass(object):
 
     """
 
-    def __init__(self, x, y, z=0, id_=None, sprite=None, visible=True,
+    def __init__(self, x, y, z=0, ID=None, sprite=None, visible=True,
                  active=True, detects_collisions=True, bbox_x=None,
                  bbox_y=None, bbox_width=None, bbox_height=None,
                  collision_ellipse=False, collision_precise=False,
                  xvelocity=0, yvelocity=0, image_index=0, image_fps=None,
                  image_xscale=1, image_yscale=1, image_rotation=0,
-                 image_alpha=255, image_blend=None, **kwargs):
+                 image_alpha=255, image_blend=None):
         """Constructor method.
 
         Arguments:
 
-        - ``id`` -- The unique identifier of the sound.  If set to None,
-          ``fname`` minus the extension will be used, modified by the
-          SGE if it is already the unique identifier of another music
-          object.
+        - ``ID`` -- The value to set :attr:`id` to.  If set to
+          :const:`None`, ``fname`` minus the extension will be used,
+          modified by the SGE if it is already the unique identifier of
+          another music object.
 
         All other arugments set the respective initial attributes of the
         object.  See the documentation for :class:`StellarClass` for
         more information.
 
         """
-        # Since the docs say that ``id`` is a valid keyword argument,
-        # you should do this to make sure that that is true.
-        id_ = kwargs.setdefault('id', id_)
-
         # TODO
 
     def collides(self, other, x=None, y=None):

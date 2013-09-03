@@ -109,8 +109,8 @@ class Font(object):
     def italic(self, value):
         self._font.set_italic(bool(value))
 
-    def __init__(self, name=None, id_=None, size=12, underline=False,
-                 bold=False, italic=False, **kwargs):
+    def __init__(self, name=None, ID=None, size=12, underline=False,
+                 bold=False, italic=False):
         """Constructor method.
 
         Arguments:
@@ -129,7 +129,7 @@ class Font(object):
           If none of the above methods return a valid font, the SGE will
           choose the font.
 
-        - ``id`` -- The unique identifier of the font.  If set to
+        - ``ID`` -- The value to set :attr:`id` to.  If set to
           :const:`None`, ``name`` will be used, modified by the SGE if
           it is already the unique identifier of another font.
 
@@ -150,10 +150,6 @@ class Font(object):
         sees text rendered the same way you do.
 
         """
-        # Since the docs say that ``id`` is a valid keyword argument,
-        # you should do this to make sure that that is true.
-        id_ = kwargs.setdefault('id', id_)
-
         assert pygame.font.get_init()
 
         if isinstance(name, basestring):
@@ -190,8 +186,8 @@ class Font(object):
         self.bold = bold
         self.italic = italic
 
-        if id_ is not None:
-            self.id = id_
+        if ID is not None:
+            self.id = ID
         else:
             self.id = self.name
 

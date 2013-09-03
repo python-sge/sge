@@ -100,7 +100,7 @@ class Sound(object):
         else:
             return 0
 
-    def __init__(self, fname, id_=None, volume=100, max_play=1, **kwargs):
+    def __init__(self, fname, ID=None, volume=100, max_play=1):
         """Constructor method.
 
         Arguments:
@@ -110,7 +110,7 @@ class Sound(object):
           :const:`None`, this object will not actually play any sound.
           If this is neither a valid sound file nor :const:`None`,
           :exc:`IOError` is raised.
-        - ``id`` -- The unique identifier of the sound.  If set to
+        - ``ID`` -- The value to set :attr:`id` to.  If set to
           :const:`None`, ``fname`` minus the extension will be used,
           modified by the SGE if it is already the unique identifier of
           another sound object.
@@ -120,10 +120,6 @@ class Sound(object):
         information.
 
         """
-        # Since the docs say that ``id`` is a valid keyword argument,
-        # you should do this to make sure that that is true.
-        id_ = kwargs.setdefault('id', id_)
-
         if fname is not None and pygame.mixer.get_init():
             self._sound = None
             for path in sge.sound_directories:
@@ -140,14 +136,32 @@ class Sound(object):
                     print(os.path.normpath(os.path.abspath(d)))
                 msg = 'File "{0}" not found.'.format(self.fname)
                 raise IOError(msg)
+
+            if ID is not None:
+                self.id = ID
+            else:
+                self.id = os.path.splitext(os.path.basename(fname))[0]
+                while self.id in sge.game.sounds:
+                    self.id += "_"
         else:
             self._sound = None
+
+            if ID is not None:
+                self.id = ID
+            else:
+                i = 0
+                while i in sge.game.sounds:
+                    i += 1
+
+                self.id = i
 
         self._channels = []
         self._temp_channels = []
         self.fname = fname
         self.volume = volume
         self.max_play = max_play
+
+        sge.game.sounds[self.id] = self
 
     def play(self, loops=0, volume=100, balance=0, maxtime=None,
              fade_time=None):

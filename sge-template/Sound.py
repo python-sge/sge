@@ -65,7 +65,7 @@ class Sound(object):
 
     """
 
-    def __init__(self, fname, id_=None, volume=100, max_play=1, **kwargs):
+    def __init__(self, fname, ID=None, volume=100, max_play=1):
         """Constructor method.
 
         Arguments:
@@ -75,7 +75,7 @@ class Sound(object):
           :const:`None`, this object will not actually play any sound.
           If this is neither a valid sound file nor :const:`None`,
           :exc:`IOError` is raised.
-        - ``id`` -- The unique identifier of the sound.  If set to
+        - ``ID`` -- The value to set :attr:`id` to.  If set to
           :const:`None`, ``fname`` minus the extension will be used,
           modified by the SGE if it is already the unique identifier of
           another sound object.
@@ -85,10 +85,6 @@ class Sound(object):
         information.
 
         """
-        # Since the docs say that ``id`` is a valid keyword argument,
-        # you should do this to make sure that that is true.
-        id_ = kwargs.setdefault('id', id_)
-
         # TODO
 
     def play(self, loops=0, volume=100, balance=0, maxtime=None,

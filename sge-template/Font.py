@@ -83,7 +83,7 @@ class Font(object):
           If none of the above methods return a valid font, the SGE will
           choose the font.
 
-        - ``id`` -- The unique identifier of the font.  If set to
+        - ``ID`` -- The value to set :attr:`id` to.  If set to
           :const:`None`, ``name`` will be used, modified by the SGE if
           it is already the unique identifier of another font.
 
@@ -104,10 +104,6 @@ class Font(object):
         sees text rendered the same way you do.
 
         """
-        # Since the docs say that ``id`` is a valid keyword argument,
-        # you should do this to make sure that that is true.
-        id_ = kwargs.setdefault('id', id_)
-
         # TODO
 
     def get_size(self, text, width=None, height=None):

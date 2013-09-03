@@ -46,12 +46,12 @@ class Background(object):
 
     """
 
-    def __init__(self, layers, color, id_=None, **kwargs):
+    def __init__(self, layers, color, ID=None):
         """Constructor method.
 
         Arguments:
 
-        - ``id`` -- The unique identifier of the sprite.  If set to
+        - ``ID`` -- The value to set :attr:`id` to.  If set to
           :const:`None`, the SGE chooses the value.
 
         All other arguments set the respective initial attributes of the
@@ -59,8 +59,4 @@ class Background(object):
         more information.
 
         """
-        # Since the docs say that ``id`` is a valid keyword argument,
-        # you should do this to make sure that that is true.
-        id_ = kwargs.setdefault('id', id_)
-
         # TODO

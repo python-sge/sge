@@ -100,10 +100,10 @@ class Sprite(object):
 
     """
 
-    def __init__(self, name=None, id_=None, width=None, height=None,
+    def __init__(self, name=None, ID=None, width=None, height=None,
                  origin_x=0, origin_y=0, transparent=True, fps=60,
                  bbox_x=None, bbox_y=None, bbox_width=None,
-                 bbox_height=None, **kwargs):
+                 bbox_height=None):
         """Constructor method.
 
         Arguments:
@@ -135,7 +135,7 @@ class Sprite(object):
           If none of the above rules can be used, :exc:`IOError` is
           raised.
 
-        - ``id`` -- The unique identifier of the sprite.  If set to
+        - ``ID`` -- The value to assign :attr:`id` to.  If set to
           :const:`None`, ``name`` will be used, modified by the SGE if
           it is already the unique identifier of another sprite.
 
@@ -144,10 +144,6 @@ class Sprite(object):
         information.
 
         """
-        # Since the docs say that ``id`` is a valid keyword argument,
-        # you should do this to make sure that that is true.
-        id_ = kwargs.setdefault('id', id_)
-
         # TODO
 
     def draw_dot(self, x, y, color, frame=None):

@@ -12,6 +12,7 @@ x.x.x
 
 Specification misc changes:
 * Documentation reformatted
+* "id"/"id_" argument in many constructor methods changed to "ID"
 
 
 0.4.0

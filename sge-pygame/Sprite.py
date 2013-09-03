@@ -157,10 +157,10 @@ class Sprite(object):
         else:
             self._bbox_y = -self.origin_y
 
-    def __init__(self, name=None, id_=None, width=None, height=None,
+    def __init__(self, name=None, ID=None, width=None, height=None,
                  origin_x=0, origin_y=0, transparent=True, fps=60,
                  bbox_x=None, bbox_y=None, bbox_width=None,
-                 bbox_height=None, **kwargs):
+                 bbox_height=None):
         """Constructor method.
 
         Arguments:
@@ -192,7 +192,7 @@ class Sprite(object):
           If none of the above rules can be used, :exc:`IOError` is
           raised.
 
-        - ``id`` -- The unique identifier of the sprite.  If set to
+        - ``ID`` -- The value to assign :attr:`id` to.  If set to
           :const:`None`, ``name`` will be used, modified by the SGE if
           it is already the unique identifier of another sprite.
 
@@ -201,23 +201,10 @@ class Sprite(object):
         information.
 
         """
-        # Since the docs say that ``id`` is a valid keyword argument,
-        # you should do this to make sure that that is true.
-        id_ = kwargs.setdefault('id', id_)
-
         if sge.DEBUG:
             print('Creating sprite "{0}"'.format(name))
 
         self.name = name
-
-        if id_ is not None:
-            self.id = id_
-        else:
-            self.id = self.name
-
-            while self.id in sge.game.sprites:
-                self.id += "_"
-
         self._transparent = None
         self._baseimages = []
         self._images = []
@@ -228,6 +215,14 @@ class Sprite(object):
         fname_strip = None
 
         if name is not None:
+            if ID is not None:
+                self.id = ID
+            else:
+                self.id = self.name
+
+                while self.id in sge.game.sprites:
+                    self.id += "_"
+
             for path in sge.image_directories:
                 if os.path.isdir(path):
                     fnames = os.listdir(path)
@@ -313,8 +308,8 @@ class Sprite(object):
 
             # Choose name
             self.name = "sge-pygame-dynamicsprite"
-            if id_ is not None:
-                self.id = id_
+            if ID is not None:
+                self.id = ID
             else:
                 i = 0
                 while i in sge.game.sprites:
