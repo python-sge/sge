@@ -47,8 +47,8 @@ class StellarClass(object):
 
     .. attribute:: sprite
 
-       The sprite currently in use by this object.  Set to ``None`` for
-       no sprite.
+       The sprite currently in use by this object.  Set to :const:`None`
+       for no sprite.
 
     .. attribute:: visible
 
@@ -57,27 +57,23 @@ class StellarClass(object):
 
     .. attribute:: active
 
-       Indicates whether the object is active (``True``) or  inactive
-       (``False``).  While the object is active, it will exhibit normal
-       behavior; events will be executed normally as will any other
-       automatic functionality, such as adding
-       :attr:`StellarClass.xvelocity` and :attr:`StellarClass.yvelocity`
-       to :attr:`StellarClass.x` and :attr:`StellarClass.y`.  If
-       :attr:`StellarClass.active` is ``False``, automatic functionality
-       and normal events will be disabled and events which have names
-       starting with ``event_inactive_`` will be executed instead of the
-       corresponding normal events.
+       Indicates whether the object is active (:const:`True`) or
+       inactive (:const:`False`).  While the object is active, it will
+       exhibit normal behavior; events will be executed normally as will
+       any other automatic functionality, such as adding
+       :attr:`xvelocity` and :attr:`yvelocity`
+       to :attr:`x` and :attr:`y`.  If :attr:`active` is :const:`False`,
+       automatic functionality and normal events will be disabled and
+       events which have names starting with ``event_inactive_`` will be
+       executed instead of the corresponding normal events.
 
-       It is important to recognize that making an object inactive is
-       not like deactivating an instance in Game Maker.  Unlike
-       deactivated instances in Game Maker, inactive
-       :class:`StellarClass` objects are still visible by default and
-       continue to be involved in collisions.  In addition, collision
-       events and destroy events still occur even if the object is
-       inactive.  If you wish for the object to not be visible, set
-       :attr:`StellarClass.visible` to ``False``.  If you wish for the
-       object to not be involved in collisions, set
-       :attr:`StellarClass.detects_collisions` to ``False``.
+       It is important to note that inactive :class:`StellarClass`
+       objects are still visible by default and continue to be involved
+       in collisions.  In addition, collision events and destroy events
+       still occur even if the object is inactive.  If you wish for the
+       object to not be visible, set :attr:`visible` to :const:`False`.
+       If you wish for the object to not be involved in collisions, set
+       :attr:`detects_collisions` to :const:`False`.
 
        It is also important to note that making an object inactive will
        not likely have a significant effect on performance.  For
@@ -91,36 +87,36 @@ class StellarClass(object):
     .. attribute:: detects_collisions
 
        Whether or not the object should be involved in collision
-       detection.  Setting this to ``False`` can improve performance if
-       the object doesn't need to detect collisions.
+       detection.  Setting this to :const:`False` can improve
+       performance if the object doesn't need to detect collisions.
 
        Depending on the game, a useful strategy to boost performance can
        be to exclude an object from collision detection while it is
        outside the view.  If you do this, you likely also to set
-       :attr:`StellarClass.active` to ``False`` as well so that the
-       object doesn't move in undesireable ways (e.g. through walls).
+       :attr:`active` to :const:`False` as well so that the object
+       doesn't move in undesireable ways (e.g. through walls).
 
     .. attribute:: bbox_x
 
        The horizontal location of the bounding box relative to the
-       object's position.  If set to ``None``, the value recommended by
-       the sprite is used.
+       object's position.  If set to :const:`None`, the value
+       recommended by the sprite is used.
 
     .. attribute:: bbox_y
 
        The vertical location of the bounding box relative to the
-       object's position.  If set to ``None``, the value recommended by
-       the sprite is used.
+       object's position.  If set to :const:`None`, the value
+       recommended by the sprite is used.
 
     .. attribute:: bbox_width
 
-       The width of the bounding box in pixels.  If set to ``None``, the
-       value recommended by the sprite is used.
+       The width of the bounding box in pixels.  If set to
+       :const:`None`, the value recommended by the sprite is used.
 
     .. attribute:: bbox_height
 
-       The height of the bounding box in pixels.  If set to ``None``,
-       the value recommended by the sprite is used.
+       The height of the bounding box in pixels.  If set to
+       :const:`None`, the value recommended by the sprite is used.
 
     .. attribute:: collision_ellipse
 
@@ -136,24 +132,22 @@ class StellarClass(object):
     .. attribute:: bbox_left
 
        The position of the left side of the bounding box in the room
-       (same as :attr:`StellarClass.x` + :attr:`StellarClass.bbox_x`).
+       (same as :attr:`x` + :attr:`bbox_x`).
 
     .. attribute:: bbox_right
 
        The position of the right side of the bounding box in the room
-       (same as :attr:`StellarClass.bbox_left` +
-       :attr:`StellarClass.bbox_width`).
+       (same as :attr:`bbox_left` + :attr:`bbox_width`).
 
     .. attribute:: bbox_top
 
        The position of the top side of the bounding box in the room
-       (same as :attr:`StellarClass.y` + :attr:`StellarClass.bbox_y`).
+       (same as :attr:`y` + :attr:`bbox_y`).
 
     .. attribute:: bbox_bottom
 
        The position of the bottom side of the bounding box in the room
-       (same as :attr:`StellarClass.bbox_top` +
-       :attr:`StellarClass.bbox_height`).
+       (same as :attr:`bbox_top` + :attr:`bbox_height`).
 
     .. attribute:: xvelocity
 
@@ -180,8 +174,8 @@ class StellarClass(object):
 
     .. attribute:: image_fps
 
-       The animation rate in frames per second.  If set to ``None``, the
-       value recommended by the sprite is used.
+       The animation rate in frames per second.  If set to
+       :const:`None`, the value recommended by the sprite is used.
 
     .. attribute:: image_xscale
 
@@ -204,8 +198,8 @@ class StellarClass(object):
 
     .. attribute:: image_blend
 
-       The color to blend with the sprite.  Set to ``None`` for no color
-       blending.
+       The color to blend with the sprite.  Set to :const:`None` for no
+       color blending.
 
     .. attribute:: id
 
@@ -213,21 +207,21 @@ class StellarClass(object):
 
     .. attribute:: xstart
 
-       The initial value of :attr:`StellarClass.x` when the object was
-       created.  (Read-only)
+       The initial value of :attr:`x` when the object was created.
+       (Read-only)
 
     .. attribute:: ystart
 
-       The initial value of :attr:`StellarClass.y` when the object was
-       created.  (Read-only)
+       The initial value of :attr:`y` when the object was created.
+       (Read-only)
 
     .. attribute:: xprevious
 
-       The previous value of :attr:`StellarClass.x`.  (Read-only)
+       The previous value of :attr:`x`.  (Read-only)
 
     .. attribute:: yprevious
 
-       The previous value of :attr:`StellarClass.y`.  (Read-only)
+       The previous value of :attr:`y`.  (Read-only)
 
     """
 
@@ -238,7 +232,7 @@ class StellarClass(object):
                  xvelocity=0, yvelocity=0, image_index=0, image_fps=None,
                  image_xscale=1, image_yscale=1, image_rotation=0,
                  image_alpha=255, image_blend=None, **kwargs):
-        """Create a new StellarClass object.
+        """Constructor method.
 
         Arguments:
 
@@ -248,8 +242,8 @@ class StellarClass(object):
           object.
 
         All other arugments set the respective initial attributes of the
-        object.  See the documentation for `StellarClass` for more
-        information.
+        object.  See the documentation for :class:`StellarClass` for
+        more information.
 
         """
         # Since the docs say that ``id`` is a valid keyword argument,
@@ -267,11 +261,11 @@ class StellarClass(object):
           unique identifier of said object.  ``other`` can also be a
           class to check for collisions with.
         - ``x`` -- The horizontal position to pretend this object is at
-          for the purpose of the collision detection.  If set to None,
-          ``self.x`` will be used.
+          for the purpose of the collision detection.  If set to
+          :const:`None`, :attr:`x` will be used.
         - ``y`` -- The vertical position to pretend this object is at
-          for the purpose of the collision detection.  If set to None,
-          ``self.y`` will be used.
+          for the purpose of the collision detection.  If set to
+          :const:`None`, :attr:`y` will be used.
 
         """
         # TODO
@@ -283,13 +277,13 @@ class StellarClass(object):
 
         - ``alarm_id`` -- The unique identifier of the alarm to set.
           Any value can be used as a unique identifier for an alarm.
-        - ``value`` -- The value to set the alarm to.  Set to None to
-          disable the alarm.
+        - ``value`` -- The value to set the alarm to.  Set to
+          :const:`None` to disable the alarm.
 
         After this method is called, ``value`` will reduce by 1 each
         frame (adjusted for delta timing if it is enabled) until it
-        reaches 0, at which point `StellarClass.event_alarm` will be
-        executed with ``alarm_id``.
+        reaches 0, at which point :meth:`event_alarm` will be executed
+        with ``alarm_id``.
 
         """
         # TODO
@@ -301,7 +295,7 @@ class StellarClass(object):
 
         - ``alarm_id`` -- The unique identifier of the alarm to check.
 
-        If the alarm has not been set, None will be returned.
+        If the alarm has not been set, :const:`None` will be returned.
 
         """
         # TODO
@@ -326,7 +320,7 @@ class StellarClass(object):
     def event_step(self, time_passed):
         """Step event.
 
-        See the documentation for `sge.Game.event_step` for more
+        See the documentation for :meth:`sge.Game.event_step` for more
         information.
 
         """
@@ -356,8 +350,8 @@ class StellarClass(object):
     def event_key_press(self, key, char):
         """Key press event.
 
-        See the documentation for `sge.Game.event_key_press` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_key_press` for
+        more information.
 
         """
         pass
@@ -365,8 +359,8 @@ class StellarClass(object):
     def event_key_release(self, key):
         """Key release event.
 
-        See the documentation for `sge.Game.event_key_release` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_key_release` for
+        more information.
 
         """
         pass
@@ -374,8 +368,8 @@ class StellarClass(object):
     def event_mouse_move(self, x, y):
         """Mouse move event.
 
-        See the documentation for `sge.Game.event_mouse_move` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_mouse_move` for
+        more information.
 
         """
         pass
@@ -383,8 +377,8 @@ class StellarClass(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        See the documentation for `sge.Game.event_mouse_button_press`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_mouse_button_press` for more information.
 
         """
         pass
@@ -392,8 +386,9 @@ class StellarClass(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        See the documentation for `sge.Game.event_mouse_button_release`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_mouse_button_release` for more
+        information.
 
         """
         pass
@@ -401,8 +396,8 @@ class StellarClass(object):
     def event_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event.
 
-        See the documentation for `sge.Game.event_joystick_axis_move`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_axis_move` for more information.
 
         """
         pass
@@ -410,8 +405,8 @@ class StellarClass(object):
     def event_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event.
 
-        See the documentation for `sge.Game.event_joystick_hat_move` for
-        more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_hat_move` for more information.
 
         """
         pass
@@ -420,7 +415,8 @@ class StellarClass(object):
         """Joystick trackball move event.
 
         See the documentation for
-        `sge.Game.event_joystick_trackball_move` for more information.
+        :meth:`sge.Game.event_joystick_trackball_move` for more
+        information.
 
         """
         pass
@@ -428,8 +424,9 @@ class StellarClass(object):
     def event_joystick_button_press(self, joystick, button):
         """Joystick button press event.
 
-        See the documentation for `sge.Game.event_joystick_button_press`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_button_press` for more
+        information.
 
         """
         pass
@@ -438,7 +435,8 @@ class StellarClass(object):
         """Joystick button release event.
 
         See the documentation for
-        `sge.Game.event_joystick_button_release` for more information.
+        :meth:`sge.Game.event_joystick_button_release` for more
+        information.
 
         """
         pass
@@ -469,8 +467,7 @@ class StellarClass(object):
 
         - ``other`` -- The other object which was collided with.
 
-        By default, this method simply calls
-        `StellarClass.event_collision`.
+        By default, this method simply calls :meth:`event_collision`.
 
         """
         self.event_collision(other)
@@ -482,11 +479,10 @@ class StellarClass(object):
         side.
 
         Arguments:
-
+        
         - ``other`` -- The other object which was collided with.
 
-        By default, this method simply calls
-        `StellarClass.event_collision`.
+        By default, this method simply calls :meth:`event_collision`.
 
         """
         self.event_collision(other)
@@ -500,8 +496,7 @@ class StellarClass(object):
 
         - ``other`` -- The other object which was collided with.
 
-        By default, this method simply calls
-        `StellarClass.event_collision`.
+        By default, this method simply calls :meth:`event_collision`.
 
         """
         self.event_collision(other)
@@ -516,8 +511,7 @@ class StellarClass(object):
 
         - ``other`` -- The other object which was collided with.
 
-        By default, this method simply calls
-        `StellarClass.event_collision`.
+        By default, this method simply calls :meth:`event_collision`.
 
         """
         self.event_collision(other)
@@ -525,7 +519,7 @@ class StellarClass(object):
     def event_inactive_step(self, time_passed):
         """Step event when this object is inactive.
 
-        See the documentation for `sge.Game.event_step` for more
+        See the documentation for :meth:`sge.Game.event_step` for more
         information.  The object is considered to be inactive when its
         ``active`` attribute is False.
 
@@ -534,9 +528,9 @@ class StellarClass(object):
     def event_inactive_key_press(self, key, char):
         """Key press event when this object is inactive.
 
-        See the documentation for `sge.Game.event_key_press` for more
-        information.  The object is considered to be inactive when its
-        ``active`` attribute is False.
+        See the documentation for :meth:`sge.Game.event_key_press` for
+        more information.  The object is considered to be inactive when
+        :attr:`active` is :const:`False`.
 
         """
         pass
@@ -544,9 +538,9 @@ class StellarClass(object):
     def event_inactive_key_release(self, key):
         """Key release event when this object is inactive.
 
-        See the documentation for `sge.Game.event_key_release` for more
-        information.  The object is considered to be inactive when its
-        ``active`` attribute is False.
+        See the documentation for :meth:`sge.Game.event_key_release` for
+        more information.  The object is considered to be inactive when
+        :attr:`active` is :attr:`False`.
 
         """
         pass
@@ -554,9 +548,9 @@ class StellarClass(object):
     def event_inactive_mouse_move(self, x, y):
         """Mouse move event when this object is inactive.
 
-        See the documentation for `sge.Game.event_mouse_move` for more
-        information.  The object is considered to be inactive when its
-        ``active`` attribute is False.
+        See the documentation for :meth:`sge.Game.event_mouse_move` for
+        more information.  The object is considered to be inactive when
+        :attr:`active` is :attr:`False`.
 
         """
         pass
@@ -564,9 +558,10 @@ class StellarClass(object):
     def event_inactive_mouse_button_press(self, button):
         """Mouse button press event when this object is inactive.
 
-        See the documentation for `sge.Game.event_mouse_button_press`
-        for more information.  The object is considered to be inactive
-        when its ``active`` attribute is False.
+        See the documentation for
+        :meth:`sge.Game.event_mouse_button_press` for more information.
+        The object is considered to be inactive when :attr:`active` is
+        :attr:`False`.
 
         """
         pass
@@ -574,9 +569,10 @@ class StellarClass(object):
     def event_inactive_mouse_button_release(self, button):
         """Mouse button release event when this object is inactive.
 
-        See the documentation for `sge.Game.event_mouse_button_release`
-        for more information.  The object is considered to be inactive
-        when its ``active`` attribute is False.
+        See the documentation for
+        :meth:`sge.Game.event_mouse_button_release` for more
+        information.  The object is considered to be inactive when
+        :attr:`active` is :attr:`False`.
 
         """
         pass
@@ -584,9 +580,10 @@ class StellarClass(object):
     def event_inactive_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event when this object is inactive.
 
-        See the documentation for `sge.Game.event_joystick_axis_move`
-        for more information.  The object is considered to be inactive
-        when its ``active`` attribute is False.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_axis_move` for more information.
+        The object is considered to be inactive when :attr:`active` is
+        :attr:`False`.
 
         """
         pass
@@ -594,9 +591,10 @@ class StellarClass(object):
     def event_inactive_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event when this object is inactive.
 
-        See the documentation for `sge.Game.event_joystick_hat_move` for
-        more information.  The object is considered to be inactive when
-        its ``active`` attribute is False.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_hat_move` for more information.
+        The object is considered to be inactive when :attr:`active` is
+        :attr:`False`.
 
         """
         pass
@@ -605,9 +603,9 @@ class StellarClass(object):
         """Joystick trackball move event when this object is inactive.
 
         See the documentation for
-        `sge.Game.event_joystick_trackball_move` for more information.
-        The object is considered to be inactive when its ``active``
-        attribute is False.
+        :meth:`sge.Game.event_joystick_trackball_move` for more
+        information.  The object is considered to be inactive when
+        :attr:`active` is :attr:`False`.
 
         """
         pass
@@ -615,9 +613,10 @@ class StellarClass(object):
     def event_inactive_joystick_button_press(self, joystick, button):
         """Joystick button press event when this object is inactive.
 
-        See the documentation for `sge.Game.event_joystick_button_press`
-        for more information.  The object is considered to be inactive
-        when its ``active`` attribute is False.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_button_press` for more
+        information.  The object is considered to be inactive when
+        :attr:`active` is :attr:`False`.
 
         """
         pass
@@ -626,9 +625,9 @@ class StellarClass(object):
         """Joystick button release event when this object is inactive.
 
         See the documentation for
-        `sge.Game.event_joystick_button_release` for more information.
-        The object is considered to be inactive when its ``active``
-        attribute is False.
+        :meth:`sge.Game.event_joystick_button_release` for more
+        information.  The object is considered to be inactive when
+        :attr:`active` is :attr:`False`.
 
         """
         pass
@@ -636,8 +635,8 @@ class StellarClass(object):
     def event_paused_key_press(self, key, char):
         """Key press event when paused.
 
-        See the documentation for `sge.Game.event_key_press` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_key_press` for
+        more information.
 
         """
         pass
@@ -645,8 +644,8 @@ class StellarClass(object):
     def event_paused_key_release(self, key):
         """Key release event when paused.
 
-        See the documentation for `sge.Game.event_key_release` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_key_release` for
+        more information.
 
         """
         pass
@@ -654,8 +653,8 @@ class StellarClass(object):
     def event_paused_mouse_move(self, x, y):
         """Mouse move event when paused.
 
-        See the documentation for `sge.Game.event_mouse_move` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_mouse_move` for
+        more information.
 
         """
         pass
@@ -663,8 +662,8 @@ class StellarClass(object):
     def event_paused_mouse_button_press(self, button):
         """Mouse button press event when paused.
 
-        See the documentation for `sge.Game.event_mouse_button_press`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_mouse_button_press` for more information.
 
         """
         pass
@@ -672,8 +671,9 @@ class StellarClass(object):
     def event_paused_mouse_button_release(self, button):
         """Mouse button release event when paused.
 
-        See the documentation for `sge.Game.event_mouse_button_release`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_mouse_button_release` for more
+        information.
 
         """
         pass
@@ -681,8 +681,8 @@ class StellarClass(object):
     def event_paused_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event when paused.
 
-        See the documentation for `sge.Game.event_joystick_axis_move`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_axis_move` for more information.
 
         """
         pass
@@ -690,8 +690,8 @@ class StellarClass(object):
     def event_paused_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event when paused.
 
-        See the documentation for `sge.Game.event_joystick_hat_move` for
-        more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_hat_move` for more information.
 
         """
         pass
@@ -700,7 +700,8 @@ class StellarClass(object):
         """Joystick trackball move event when paused.
 
         See the documentation for
-        `sge.Game.event_joystick_trackball_move` for more information.
+        :meth:`sge.Game.event_joystick_trackball_move` for more
+        information.
 
         """
         pass
@@ -708,8 +709,9 @@ class StellarClass(object):
     def event_paused_joystick_button_press(self, joystick, button):
         """Joystick button press event when paused.
 
-        See the documentation for `sge.Game.event_joystick_button_press`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_button_press` for more
+        information.
 
         """
         pass
@@ -718,7 +720,8 @@ class StellarClass(object):
         """Joystick button release event when paused.
 
         See the documentation for
-        `sge.Game.event_joystick_button_release` for more information.
+        :meth:`sge.Game.event_joystick_button_release` for more
+        information.
 
         """
         pass
@@ -727,9 +730,9 @@ class StellarClass(object):
     def create(cls, *args, **kwargs):
         """Create an object of this class in the current room it.
 
-        ``args`` and ``kwargs`` are passed to ``cls.__init__`` as
-        arguments.  Calling ``obj = cls.create(*args, **kwargs)`` is the
-        same as::
+        ``args`` and ``kwargs`` are passed to the constructor method of
+        ``cls`` as arguments.  Calling
+        ``obj = cls.create(*args, **kwargs)`` is the same as::
 
             obj = cls(*args, **kwargs)
             sge.game.current_room.add(obj)

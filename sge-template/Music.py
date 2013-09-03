@@ -74,19 +74,19 @@ class Music(object):
     """
 
     def __init__(self, fname, id_=None, volume=100, **kwargs):
-        """Create a new music object.
+        """Constructor method.
 
         Arguments:
 
         - ``fname`` -- The name of the sound file in one of the paths
           specified in :data:`sge.music_directories`.  If set to
-          ``None``, this object will not actually play any music.  If
-          this is neither a valid sound file nor ``None``,
+          :const:`None`, this object will not actually play any music.
+          If this is neither a valid sound file nor :const:`None`,
           :exc:`IOError` is raised.
         - ``id`` -- The unique identifier of the music.  If set to
-          ``None``, ``fname`` minus the extension will be used, modified
-          by the SGE if it is already the unique idenfifier of another
-          music object.
+          :const:`None`, ``fname`` minus the extension will be used,
+          modified by the SGE if it is already the unique idenfifier of
+          another music object.
 
         All other arguments set the respective initial attributes of the
         music.  See the documentation for :class:`Music` for more

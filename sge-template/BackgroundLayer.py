@@ -77,7 +77,7 @@ class BackgroundLayer(object):
 
     def __init__(self, sprite, x, y, z, id_=None, xscroll_rate=1,
                  yscroll_rate=1, xrepeat=True, yrepeat=True, **kwargs):
-        """Create a background layer object.
+        """Constructor method.
 
         Arguments:
 

@@ -60,16 +60,16 @@ class Game(object):
     .. attribute:: scale
 
        A number indicating a fixed scale factor (e.g. ``1`` for no
-       scaling, ``2`` for doubled size).  If set to ``None`` or ``0``,
-       scaling is automatic (causes the game to fit the window or
+       scaling, ``2`` for doubled size).  If set to :const:`None` or
+       ``0``, scaling is automatic (causes the game to fit the window or
        screen).
 
     .. attribute:: scale_proportional
 
-       If set to ``True``, scaling is always proportional.  If set to
-       ``False``, the image will be distorted to completely fill the
-       game window or screen.  This has no effect unless ``scale`` is
-       ``None`` or ``0``.
+       If set to :const:`True`, scaling is always proportional.  If set
+       to :const:`False`, the image will be distorted to completely fill
+       the game window or screen.  This has no effect unless
+       :attr:`scale` is :const:`None` or ``0``.
 
     .. attribute:: scale_smooth
 
@@ -97,19 +97,20 @@ class Game(object):
     .. attribute:: grab_input
 
        Whether or not all input should be forcibly grabbed by the game.
-       If this is ``True`` and the mouse cursor is invisible, the mouse
-       will enter relative mode.
+       If this is :const:`True` and the mouse cursor is invisible, the
+       mouse will enter relative mode.
 
     .. attribute:: window_text
 
        The text for the OS to display as the window title, e.g. in the
-       frame of the window.  If set to None, the SGE chooses the text.
+       frame of the window.  If set to :const:`None`, the SGE chooses
+       the text.
 
     .. attribute:: window_icon
 
        The name of the image file located in one of the directories
        specified in :data:`sge.image_directories` to use as the window
-       icon.  If set to ``None``, the SGE chooses the icon.
+       icon.  If set to :const:`None`, the SGE chooses the icon.
 
     .. attribute:: sprites
 
@@ -269,10 +270,13 @@ class Game(object):
                  scale_proportional=True, scale_smooth=False, fps=60,
                  delta=False, delta_min=15, grab_input=False,
                  window_text=None, window_icon=None):
-        """Create a new Game object and assign it to :data:`sge.game`.
+        """Constructor method.
 
         Arguments set the respective initial attributes of the game.
         See the documentation for :class:`Game` for more information.
+
+        The created :class:`Game` object is automatically assigned to
+        :data:`sge.game`.
 
         """
         # Settings use CD quality and a smaller buffer size for less lag.
@@ -610,8 +614,8 @@ class Game(object):
         Arguments:
 
         - ``sprite`` -- The sprite to show in the center of the screen
-          while the game is paused.  If set to ``None``, the SGE chooses
-          the image.
+          while the game is paused.  If set to :const:`None`, the SGE
+          chooses the image.
 
         Normal events are not executed while the game is paused.
         Instead, events with the same name, but prefixed with

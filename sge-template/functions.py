@@ -48,28 +48,28 @@ def show_message(text, buttons=('OK',), default=0):
 
     While the dialog box is being shown, all events are stopped.  If the
     operating system tells the game to close, the dialog box will close
-    immediately, returning ``None``, and leak the command to the rest of
-    the game (causing Close events).  If the Esc key is pressed, the
-    dialog box will close immediately, returning ``None``.  If the right
-    arrow key or Tab key is pressed, a joystick axis is moved from a
-    position less than ``0.75`` to a position greater than or equal to
-    ``0.75``, a joystick HAT is moved to the right, or a joystick
-    trackball is moved to the right by at least ``0.75``, the selection
-    is moved to the right by one; if what is currently selected is the
-    last button, the first button will be selected.  If the left arrow
-    key is pressed, a joystick axis is moved from a position greater
-    than ``-0.75`` to a position less than or equal to ``-0.75``, a
-    joystick HAT is moved to the left, or a joystick trackball is moved
-    to the left by at least ``0.75``, the selection is moved to the left
-    by one; if what is currently selected is the first button, the last
-    button will be selected.  If the Enter key, the keypad Enter key, or
-    any joystick button is pressed and then released, the dialog box is
-    closed and the number of the of the currently selected button is
-    returned, where ``0`` is the first button.  If the left mouse button
-    is pressed and then released while the mouse is hovering over a
-    button, the dialog box is closed and thenumber of the button the
-    mouse is currently hovering over is returned, where ``0`` is the
-    first button.
+    immediately, returning :const:`None`, and leak the command to the
+    rest of the game (causing Close events).  If the Esc key is pressed,
+    the dialog box will close immediately, returning :const:`None`.  If
+    the right arrow key or Tab key is pressed, a joystick axis is moved
+    from a position less than ``0.75`` to a position greater than or
+    equal to ``0.75``, a joystick HAT is moved to the right, or a
+    joystick trackball is moved to the right by at least ``0.75``, the
+    selection is moved to the right by one; if what is currently
+    selected is the last button, the first button will be selected.  If
+    the left arrow key is pressed, a joystick axis is moved from a
+    position greater than ``-0.75`` to a position less than or equal to
+    ``-0.75``, a joystick HAT is moved to the left, or a joystick
+    trackball is moved to the left by at least ``0.75``, the selection
+    is moved to the left by one; if what is currently selected is the
+    first button, the last button will be selected.  If the Enter key,
+    the keypad Enter key, or any joystick button is pressed and then
+    released, the dialog box is closed and the number of the of the
+    currently selected button is returned, where ``0`` is the first
+    button.  If the left mouse button is pressed and then released while
+    the mouse is hovering over a button, the dialog box is closed and
+    the number of the button the mouse is currently hovering over is
+    returned, where ``0`` is the first button.
 
     """
     # TODO
@@ -318,7 +318,8 @@ def get_joystick_button_pressed(joystick, button):
     the first joystick.  ``button`` is the number of the button to
     check, where ``0`` is the first button of the joystick.
 
-    Return ``False`` if the requested joystick or button does not exist.
+    Return :const:`False` if the requested joystick or button does not
+    exist.
 
     """
     # TODO

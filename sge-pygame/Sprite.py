@@ -74,16 +74,16 @@ class Sprite(object):
     .. attribute:: bbox_x
 
        The horizontal location relative to the sprite of the suggested
-       bounding box to use with it.  If set to ``None``, it will become
-       equal to ``-origin_x`` (which is always the left edge of the
-       image).
+       bounding box to use with it.  If set to :const:`None`, it will
+       become equal to ``-origin_x`` (which is always the left edge of
+       the image).
 
     .. attribute:: bbox_y
 
        The vertical location relative to the sprite of the suggested
-       bounding box to use with it.  If set to ``None``, it will become
-       equal to ``-origin_y`` (which is always the top edge of the
-       image).
+       bounding box to use with it.  If set to :const:`None`, it will
+       become equal to ``-origin_y`` (which is always the top edge of
+       the image).
 
     .. attribute:: bbox_width
 
@@ -161,7 +161,7 @@ class Sprite(object):
                  origin_x=0, origin_y=0, transparent=True, fps=60,
                  bbox_x=None, bbox_y=None, bbox_width=None,
                  bbox_height=None, **kwargs):
-        """Create a new Sprite object.
+        """Constructor method.
 
         Arguments:
 
@@ -182,19 +182,19 @@ class Sprite(object):
             this rule is used, the image will be treated as an animation
             read as a horizontal reel from left to right, split into the
             number of frames indicated by the integer.
-          - If the base name is ``None``, the sprite will be a fully
-            transparent rectangle at the specified size (with both
+          - If the base name is :const:`None`, the sprite will be a
+            fully transparent rectangle at the specified size (with both
             ``width`` and ``height`` defaulting to 32 if they are set to
-            ``None``).  The SGE decides what to assign to the sprite's
-            ``name`` attribute in this case, but it will always be a
-            string.
+            :const:`None`).  The SGE decides what to assign to the
+            sprite's :attr:`name` attribute in this case, but it will
+            always be a string.
 
           If none of the above rules can be used, :exc:`IOError` is
           raised.
 
         - ``id`` -- The unique identifier of the sprite.  If set to
-          ``None``, ``name`` will be used, modified by the SGE if it is
-          already the unique identifier of another sprite.
+          :const:`None`, ``name`` will be used, modified by the SGE if
+          it is already the unique identifier of another sprite.
 
         All other arguments set the respective initial attributes of the
         sprite.  See the documentation for :class:`Sprite` for more
@@ -368,7 +368,8 @@ class Sprite(object):
           the dot.
         - ``color`` -- The color of the dot.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to ``None`` to draw on all frames.
+          is the first frame; set to :const:`None` to draw on all
+          frames.
 
         """
         color = sge._get_pygame_color(color)
@@ -396,7 +397,8 @@ class Sprite(object):
         - ``thickness`` -- The thickness of the line segment.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to ``None`` to draw on all frames.
+          is the first frame; set to :const:`None` to draw on all
+          frames.
 
         """
         color = sge._get_pygame_color(color)
@@ -430,7 +432,8 @@ class Sprite(object):
         - ``outline_thickness`` -- The thickness of the outline of the
           rectangle.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to ``None`` to draw on all frames.
+          is the first frame; set to :const:`None` to draw on all
+          frames.
 
         """
         outline_thickness = abs(outline_thickness)
@@ -474,7 +477,8 @@ class Sprite(object):
           ellipse.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to ``None`` to draw on all frames.
+          is the first frame; set to :const:`None` to draw on all
+          frames.
 
         """
         outline_thickness = abs(outline_thickness)
@@ -517,7 +521,8 @@ class Sprite(object):
           circle.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to ``None`` to draw on all frames.
+          is the first frame; set to :const:`None` to draw on all
+          frames.
 
         """
         outline_thickness = abs(outline_thickness)
@@ -554,7 +559,8 @@ class Sprite(object):
         - ``y`` -- The vertical location relative to ``self`` to draw
           ``sprite``.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to ``None`` to draw on all frames.
+          is the first frame; set to :const:`None` to draw on all
+          frames.
 
         """
         if not isinstance(sprite, sge.Sprite):
@@ -584,14 +590,14 @@ class Sprite(object):
         - ``y`` -- The vertical location relative to the sprite to draw
           the text.
         - ``width`` -- The width of the imaginary rectangle the text is
-          drawn in; set to ``None`` to make the rectangle as wide as
-          needed to contain the text without additional line breaks.  If
-          set to something other than ``None``, a line which does not
-          fit will be automatically split into multiple lines that do
-          fit.
+          drawn in; set to :const:`None` to make the rectangle as wide
+          as needed to contain the text without additional line breaks.
+          If set to something other than :const:`None`, a line which
+          does not fit will be automatically split into multiple lines
+          that do fit.
         - ``height`` -- The height of the imaginary rectangle the text
-          is drawn in; set to ``None`` to make the rectangle as tall as
-          needed to contain the text.
+          is drawn in; set to :const:`None` to make the rectangle as
+          tall as needed to contain the text.
         - ``color`` -- The color of the text.
         - ``halign`` -- The horizontal alignment of the text and the
           horizontal location of the origin of the imaginary rectangle
@@ -629,7 +635,8 @@ class Sprite(object):
 
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to ``None`` to draw on all frames.
+          is the first frame; set to :const:`None` to draw on all
+          frames.
 
         """
         if not isinstance(font, sge.Font):
@@ -698,7 +705,7 @@ class Sprite(object):
         Arguments:
 
         - ``frame`` -- The frame of the sprite to clear, where ``0`` is
-          the first frame; set to ``None`` to clear all frames.
+          the first frame; set to :const:`None` to clear all frames.
 
         """
         for i in xrange(len(self._baseimages)):
@@ -757,7 +764,8 @@ class Sprite(object):
           set to None for all of the area to the right of ``x`` to be
           included.
         - ``height`` -- The height of the area to take a screenshot of;
-          set to None for all of the area below ``y`` to be included.
+          set to :const:`None` for all of the area below ``y`` to be
+          included.
 
         If you only wish to save a screenshot (of the entire screen) to
         a file, the easiest way to do that is::

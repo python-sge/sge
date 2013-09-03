@@ -65,7 +65,7 @@ class Font(object):
 
     def __init__(self, name=None, id_=None, size=12, underline=False,
                  bold=False, italic=False, **kwargs):
-        """Create a new Font object.
+        """Constructor method.
 
         Arguments:
 
@@ -84,8 +84,8 @@ class Font(object):
           choose the font.
 
         - ``id`` -- The unique identifier of the font.  If set to
-          ``None``, ``name`` will be used, modified by the SGE if it is
-          already the unique identifier of another font.
+          :const:`None`, ``name`` will be used, modified by the SGE if
+          it is already the unique identifier of another font.
 
         All other arguments set the respective initial attributes of the
         font.  See the documentation for :class:`Font` for more

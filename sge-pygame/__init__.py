@@ -17,15 +17,13 @@
 
 """
 The Stellar Game Engine (abbreviated "SGE", pronounced as "Sage") is a
-Python library for use by Stellar.  It is a game engine loosely based on
-the proprietary program, Game Maker.  The purpose of the SGE is to make
-game development easier, which allows more rapid development by
-experienced game developers and also helps less experienced game
-developers learn how to develop games.
+free 2-D game.  The purpose of the SGE is to make game development
+easier, which allows more rapid development by experienced game
+developers and also helps less experienced game developers learn how to
+develop games.
 
-Unlike Game Maker, you have freedom with the SGE.  Official
-implementations of the SGE are free software (where "free" refers to
-freedom, not price; see the `Free Software Definition
+Official implementations of the SGE are free software (where "free"
+refers to freedom, not price; see the `Free Software Definition
 <http://gnu.org/philosophy/free-sw.html>`_ for more information), and
 the documentation has been (to the extent legally possible) released to
 the public domain via the CC0 license.
@@ -61,8 +59,8 @@ attributes with ``v_`` or ``p_``.
 Events
 ------
 
-Much like Game Maker, the SGE uses an event-based system, with events
-defined by special class methods with names starting with ``event_``.
+The SGE uses an event-based system, with events defined by special class
+methods with names starting with ``event_``.
 
 Except in certain special cases, the order that events are handled in is
 arbitrary; if Event A and Event B happen at the same time, one
@@ -86,9 +84,10 @@ object which represents the mouse.  This mouse object can be found as
 The mouse object differs from most :class:`StellarClass` objects in a
 few ways.  Its speed variables cannot be manually set, and they always
 report numbers which correspond to the average motion of the mouse
-during the last quarter of a second.  Setting ``sge.game.mouse.visible``
-toggles whether or not the mouse cursor itself is visible, and setting
-``sge.game.mouse.sprite`` sets the mouse cursor to the sprite assigned.
+during the last quarter of a second.  Setting
+:attr:`sge.game.mouse.visible` toggles whether or not the mouse cursor
+itself is visible, and setting :attr:`sge.game.mouse.sprite` sets the
+mouse cursor to the sprite assigned.
 
 In all other ways, the mouse object is exactly the same as all other
 :class:`StellarClass` objects.
@@ -232,7 +231,8 @@ Global Variables and Constants
 .. data:: game
 
    Stores the current :class:`Game` object.  If there is no
-   :class:`Game` object currently, this variable is set to ``None``.
+   :class:`Game` object currently, this variable is set to
+   :const:`None`.
 
 .. data:: image_directories
 
@@ -337,9 +337,9 @@ Speed Improvements
 
 This implementation supports hardware rendering, which can improve
 performance in some cases.  It is not enabled by default.  To enable it,
-set :data:`sge.hardware_rendering` to ``True``.  The benefit of hardware
-acceleration is usually negligible, which is why it is disabled by
-default.
+set :data:`sge.hardware_rendering` to :const:`True`.  The benefit of
+hardware acceleration is usually negligible, which is why it is disabled
+by default.
 
 Projection is highly inefficient, so it should be avoided if speed is
 important; use the sprite draw methods instead.
@@ -359,7 +359,7 @@ this, you should avoid changing this value as much as possible.  For
 best results, set it only when the sprite is created and then leave it
 alone; do any other routine transformations with the
 :attr:`StellarClass.image_xscale` and :attr:`StellarClass.image_yscale`
-attributes of :class:`StellarClass` objects.
+attributes.
 
 """
 
@@ -368,7 +368,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.4.0.8"
+__version__ = "0.4.0.9"
 
 import os
 

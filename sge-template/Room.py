@@ -37,12 +37,12 @@ class Room(object):
 
     .. attribute:: width
 
-       The width of the room in pixels.  If set to ``None``,
+       The width of the room in pixels.  If set to :const:`None`,
        :attr:`sge.game.width` is used.
 
     .. attribute:: height
 
-       The height of the room in pixels.  If set to ``None``,
+       The height of the room in pixels.  If set to :const:`None`,
        :attr:`sge.game.height` is used.
 
     .. attribute:: views
@@ -69,23 +69,23 @@ class Room(object):
     .. attribute:: room_number
 
        The index of this room in the game, where ``0`` is the first
-       room, or ``None`` if this room has not been added to a game.
+       room, or :const:`None` if this room has not been added to a game.
        (Read-only)
 
     """
 
     def __init__(self, objects=(), width=None, height=None, views=None,
                  background=None, background_x=0, background_y=0):
-        """Create a new Room object.
+        """Constructor method.
 
         Arguments:
 
         - ``views`` -- A list containing all :class:`sge.View` objects
-          in the room.  If set to ``None``, a new view will be created
-          with ``x=0``, ``y=0``, and all other arguments unspecified,
-          which will become the first view of the room.
+          in the room.  If set to :const:`None`, a new view will be
+          created with ``x=0``, ``y=0``, and all other arguments
+          unspecified, which will become the first view of the room.
         - ``background`` -- The :class:`sge.Background` object used.  If
-          set to ``None``, a new background will be created with no
+          set to :const:`None`, a new background will be created with no
           layers and the color set to ``"black"``.
 
         All other arguments set the respective initial attributes of the
@@ -128,7 +128,7 @@ class Room(object):
         Arguments:
 
         - ``next_room`` -- The room number of the room to go to next.
-          If set to ``None``, the room after this one is chosen.
+          If set to :const:`None`, the room after this one is chosen.
         - ``resume`` -- Whether or not to resume the next room instead
           of restarting it.
 

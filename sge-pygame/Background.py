@@ -53,12 +53,12 @@ class Background(object):
     """
 
     def __init__(self, layers, color, id_=None, **kwargs):
-        """Create a background with the given color and layers.
+        """Constructor method.
 
         Arguments:
 
         - ``id`` -- The unique identifier of the sprite.  If set to
-          None, the SGE chooses the value.
+          :const:`None`, the SGE chooses the value.
 
         All other arguments set the respective initial attributes of the
         background.  See the documentation for :class:`Background` for

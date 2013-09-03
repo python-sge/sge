@@ -56,28 +56,30 @@ class View(object):
     .. attribute:: width
 
        The width of the view.  When set, if it results in the view being
-       outside of the room it is in, ``x`` will be adjusted so that the
-       view is completely inside the room.
+       outside of the room it is in, :attr:`x` will be adjusted so that
+       the view is completely inside the room.
 
     .. attribute:: height
 
        The height of the view.  When set, if it results in the view
-       being outside the room it is in, ``y`` will be adjusted so that
-       the view is completely inside the room.
+       being outside the room it is in, :attr:`y` will be adjusted so
+       that the view is completely inside the room.
 
     """
 
     def __init__(self, x, y, xport=0, yport=0, width=None, height=None):
-        """Create a new View object.
+        """Constructor method.
 
         Arguments:
 
-        - ``width`` -- The width of the view.  If set to ``None``, it
-          will be set such that the view port takes up all of the space
-          that it can horizontally (i.e. ``game.width - xport``).
-        - ``height`` -- The height of the view.  If set to ``None``, it
-          will be set such that the view port takes up all of the space
-          that it can vertically (i.e. ``game.height - yport``).
+        - ``width`` -- The width of the view.  If set to :const:`None`,
+          it will be set such that the view port takes up all of the
+          space that it can horizontally (i.e.
+          ``sge.game.width - xport``).
+        - ``height`` -- The height of the view.  If set to
+          :const:`None`, it will be set such that the view port takes up
+          all of the space that it can vertically (i.e.
+          ``sge.game.height - yport``).
 
         All other arugments set the respective initial attributes of the
         view.  See the documentation for :class:`View` for more
