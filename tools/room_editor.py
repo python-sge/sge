@@ -128,6 +128,10 @@ class Game(sge.Game):
             if key == 'escape':
                 self.close()
 
+    def event_mouse_move(self, x, y):
+        if not self.mouse.collides(TooltipShower):
+            set_tooltip("")
+
     def event_close(self):
         if self.events_active:
             self.close()
@@ -164,6 +168,15 @@ class Game(sge.Game):
                 selected = True
 
         sge.game.rooms[i].resume()
+
+
+class TooltipShower(sge.StellarClass):
+
+    tooltip = ""
+
+    def event_mouse_move(self, x, y):
+        if self.collides(sge.game.mouse):
+            set_tooltip(self.tooltip)
 
 
 class Object(sge.StellarClass):
@@ -313,10 +326,10 @@ class Object(sge.StellarClass):
             return None
 
 
-class Button(sge.StellarClass):
+class Button(TooltipShower):
 
     icon = 'stellar_room_editor_unknown'
-    tooltip = ''
+    tooltip = "Button"
 
     def __init__(self, x, y):
         super(Button, self).__init__(x, y, BUTTON_Z,
@@ -340,9 +353,6 @@ class Button(sge.StellarClass):
             self.image_index = 0
 
         self.icon_object.sprite = self.icon
-
-    def event_mouse_move(self, x, y):
-        pass
 
     def event_mouse_button_press(self, button):
         if button == 'left' and self.collides(sge.game.mouse):
@@ -631,7 +641,9 @@ class ObjectArgsButton(Button):
         pass
 
 
-class Textbox(sge.StellarClass):
+class Textbox(TooltipShower):
+
+    tooltip = "Textbox
 
     def __init__(self, x, y, text=""):
         self.text = text
@@ -688,6 +700,41 @@ class Textbox(sge.StellarClass):
                 self.text = ''.join(text_list)
                 self.cursor_position += 1
                 self.redraw_text()
+
+
+class GridWidthTextbox(Textbox):
+
+    tooltip = "Grid Width"
+
+
+class GridHeightTextbox(Textbox):
+
+    tooltip = "Grid Height"
+
+
+class ObjectZTextbox(Textbox):
+
+    tooltip = "Z-Axis"
+
+
+class ObjectImageFPSTextbox(Textbox):
+
+    tooltip = "Image FPS"
+
+
+class ObjectImageXScaleTextbox(Textbox):
+
+    tooltip = "Image X Scale"
+
+
+class ObjectImageYScaleTextbox(Textbox):
+
+    tooltip = "Image Y Scale"
+
+
+class ObjectImageAngleTextbox(Textbox):
+
+    tooltip = "Image Angle"
 
 
 class Tooltip(sge.StellarClass):
