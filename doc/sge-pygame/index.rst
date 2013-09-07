@@ -19,6 +19,11 @@ Contents:
    :maxdepth: 2
 
    intro
+   getting_started
+   sge_concepts
+   hello_world
+   pong
+   globalvars
    classes
    functions
 

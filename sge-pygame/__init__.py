@@ -17,10 +17,10 @@
 
 """
 The Stellar Game Engine (abbreviated "SGE", pronounced as "Sage") is a
-free 2-D game.  The purpose of the SGE is to make game development
-easier, which allows more rapid development by experienced game
-developers and also helps less experienced game developers learn how to
-develop games.
+free 2-D game engine.  The purpose of the SGE is to make game
+development easier, which allows more rapid development by experienced
+game developers and also helps less experienced game developers learn
+how to develop games.
 
 Official implementations of the SGE are free software (where "free"
 refers to freedom, not price; see the `Free Software Definition

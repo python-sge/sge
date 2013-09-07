@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
-# Stellar Room Editor
+# Stellar Encompassing Level Editor
 # Copyright (C) 2013 Julian Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Stellar Room Editor
-
-A room editor for Stellar, written in SGE!
-
+"""
+SELE: Stellar Encompassing Level Editor
 """
 
 from __future__ import division
@@ -643,9 +641,9 @@ class ObjectArgsButton(Button):
 
 class Textbox(TooltipShower):
 
-    tooltip = "Textbox
+    tooltip = "Textbox"
 
-    def __init__(self, x, y, text=""):
+    def __init__(self, text=""):
         self.text = text
         self.cursor_position = 0
         super(Textbox, self).__init__(x, y, BUTTON_Z,
@@ -735,6 +733,24 @@ class ObjectImageYScaleTextbox(Textbox):
 class ObjectImageAngleTextbox(Textbox):
 
     tooltip = "Image Angle"
+
+
+class Checkbox(TooltipShower):
+
+    tooltip = "Checkbox"
+
+    def __init__(self, x, y, checked=False):
+        self.checked = checked
+        super(Button, self).__init__(x, y, BUTTON_Z,
+                                     sprite='stellar_room_editor_checkbox',
+                                     collision_precise=True)
+
+    # TODO: Mouse events
+
+
+class GridSnapCheckbox(Checkbox):
+
+    tooltip = "Snap to Grid"
 
 
 class Tooltip(sge.StellarClass):
