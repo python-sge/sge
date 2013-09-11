@@ -279,8 +279,8 @@ class Game(object):
         :data:`sge.game`.
 
         """
-        # Settings use CD quality and a smaller buffer size for less lag.
-        pygame.mixer.pre_init(44100, -16, 2, 1024)
+        # Settings use a smaller buffer size for less lag.
+        pygame.mixer.pre_init(channels=2, buffer=1024)
         pygame.init()
 
         sge.game = self
