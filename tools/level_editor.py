@@ -777,11 +777,9 @@ class Room(sge.Room):
         self.opened = True
         self.name = ""
         self.cls = "sge.Room"
-        self.args = args
-        self.kwargs = kwargs
         self.real_objects = objects
-        self.real_width = width
-        self.real_height = height
+        self.real_width = width if width is not None else 640
+        self.real_height = height if height is not None else 480
         self.real_views = views
 
         self.grid = GRID_DEFAULT
@@ -796,49 +794,6 @@ class Room(sge.Room):
         width = w + SIDE_BAR_SIZE[0]
         height = h + TOP_BAR_SIZE[1]
 
-        SaveButton.create(w + BUTTON_SAVE_POS[0], h + BUTTON_SAVE_POS[1])
-        SaveAllButton.create(w + BUTTON_SAVE_ALL_POS[0],
-                             h + BUTTON_SAVE_ALL_POS[1])
-        LoadButton.create(w + BUTTON_LOAD_POS[0], h + BUTTON_LOAD_POS[1])
-        GridTypeButton.create(w + BUTTON_GRID_POS[0], h + BUTTON_GRID_POS[1])
-        ShiftButton.create(w + BUTTON_SHIFT_POS[0], h + BUTTON_SHIFT_POS[1])
-        ReloadResourcesButton.create(w + BUTTON_RELOAD_RESOURCES_POS[0],
-                                     h + BUTTON_RELOAD_RESOURCES_POS[1])
-        BackgroundButton.create(w + BUTTON_BACKGROUND_POS[0],
-                                h + BUTTON_BACKGROUND_POS[1])
-        ViewsButton.create(w + BUTTON_VIEWS_POS[0], h + BUTTON_VIEWS_POS[1])
-        SettingsButton.create(w + BUTTON_SETTINGS_POS[0],
-                              h + BUTTON_SETTINGS_POS[1])
-        ZoomResetButton.create(w + BUTTON_ZOOM_RESET_POS[0],
-                               h + BUTTON_ZOOM_RESET_POS[1])
-        ZoomOutButton.create(w + BUTTON_ZOOM_OUT_POS[0],
-                             h + BUTTON_ZOOM_OUT_POS[1])
-        ZoomInButton.create(w + BUTTON_ZOOM_IN_POS[0],
-                            h + BUTTON_ZOOM_IN_POS[1])
-        PreviousRoomButton.create(w + BUTTON_PREVIOUS_ROOM_POS[0],
-                                  h + BUTTON_PREVIOUS_ROOM_POS[1])
-        NextRoomButton.create(w + BUTTON_NEXT_ROOM_POS[0],
-                              h + BUTTON_NEXT_ROOM_POS[1])
-        CloseRoomButton.create(w + BUTTON_CLOSE_ROOM_POS[0],
-                               h + BUTTON_CLOSE_ROOM_POS[1])
-        ToolButton.create(w + BUTTON_TOOL_POS[0], h + BUTTON_TOOL_POS[1])
-        ObjectClassButton.create(w + BUTTON_CLASS_POS[0],
-                                 h + BUTTON_CLASS_POS[1])
-        ObjectImageIndexButton.create(w + BUTTON_IMAGE_INDEX_POS[0],
-                                      h + BUTTON_IMAGE_INDEX_POS[1])
-        ObjectImageAlphaButton.create(w + BUTTON_IMAGE_ALPHA_POS[0],
-                                      h + BUTTON_IMAGE_ALPHA_POS[1])
-        ObjectImageBlendButton.create(w + BUTTON_IMAGE_BLEND_POS[0],
-                                      h + BUTTON_IMAGE_BLEND_POS[1])
-        ObjectVisibleButton.create(w + BUTTON_VISIBLE_POS[0],
-                                   h + BUTTON_VISIBLE_POS[1])
-        ObjectActiveButton.create(w + BUTTON_ACTIVE_POS[0],
-                                  h + BUTTON_ACTIVE_POS[1])
-        ObjectDetectsCollisionsButton.create(
-            w + BUTTON_DETECTS_COLLISIONS_POS[0],
-            h + BUTTON_DETECTS_COLLISIONS_POS[1])
-        ObjectArgsButton.create(w + BUTTON_ARGS_POS[0], h + BUTTON_ARGS_POS[1])
-
         main_view = sge.View(0, 0, SIDE_BAR_SIZE[0], TOP_BAR_SIZE[1])
         sidebar_view = sge.View(self.get_width(), TOP_BAR_SIZE[1], 0,
                                 TOP_BAR_SIZE[1], SIDE_BAR_SIZE[0],
@@ -848,6 +803,73 @@ class Room(sge.Room):
 
         super(Room, self).__init__(objects, width, height, views, background,
                                    background_x, background_y)
+
+        obj = SaveButton(w + BUTTON_SAVE_POS[0], h + BUTTON_SAVE_POS[1])
+        self.add(obj)
+        obj = SaveAllButton(w + BUTTON_SAVE_ALL_POS[0],
+                            h + BUTTON_SAVE_ALL_POS[1])
+        self.add(obj)
+        obj = LoadButton(w + BUTTON_LOAD_POS[0], h + BUTTON_LOAD_POS[1])
+        self.add(obj)
+        obj = GridTypeButton(w + BUTTON_GRID_POS[0], h + BUTTON_GRID_POS[1])
+        self.add(obj)
+        obj = ShiftButton(w + BUTTON_SHIFT_POS[0], h + BUTTON_SHIFT_POS[1])
+        self.add(obj)
+        obj = ReloadResourcesButton(w + BUTTON_RELOAD_RESOURCES_POS[0],
+                                    h + BUTTON_RELOAD_RESOURCES_POS[1])
+        self.add(obj)
+        obj = BackgroundButton(w + BUTTON_BACKGROUND_POS[0],
+                               h + BUTTON_BACKGROUND_POS[1])
+        self.add(obj)
+        obj = ViewsButton(w + BUTTON_VIEWS_POS[0], h + BUTTON_VIEWS_POS[1])
+        self.add(obj)
+        obj = SettingsButton(w + BUTTON_SETTINGS_POS[0],
+                             h + BUTTON_SETTINGS_POS[1])
+        self.add(obj)
+        obj = ZoomResetButton(w + BUTTON_ZOOM_RESET_POS[0],
+                              h + BUTTON_ZOOM_RESET_POS[1])
+        self.add(obj)
+        obj = ZoomOutButton(w + BUTTON_ZOOM_OUT_POS[0],
+                            h + BUTTON_ZOOM_OUT_POS[1])
+        self.add(obj)
+        obj = ZoomInButton(w + BUTTON_ZOOM_IN_POS[0],
+                           h + BUTTON_ZOOM_IN_POS[1])
+        self.add(obj)
+        obj = PreviousRoomButton(w + BUTTON_PREVIOUS_ROOM_POS[0],
+                                 h + BUTTON_PREVIOUS_ROOM_POS[1])
+        self.add(obj)
+        obj = NextRoomButton(w + BUTTON_NEXT_ROOM_POS[0],
+                             h + BUTTON_NEXT_ROOM_POS[1])
+        self.add(obj)
+        obj = CloseRoomButton(w + BUTTON_CLOSE_ROOM_POS[0],
+                              h + BUTTON_CLOSE_ROOM_POS[1])
+        self.add(obj)
+        obj = ToolButton(w + BUTTON_TOOL_POS[0], h + BUTTON_TOOL_POS[1])
+        self.add(obj)
+        obj = ObjectClassButton(w + BUTTON_CLASS_POS[0],
+                                h + BUTTON_CLASS_POS[1])
+        self.add(obj)
+        obj = ObjectImageIndexButton(w + BUTTON_IMAGE_INDEX_POS[0],
+                                     h + BUTTON_IMAGE_INDEX_POS[1])
+        self.add(obj)
+        obj = ObjectImageAlphaButton(w + BUTTON_IMAGE_ALPHA_POS[0],
+                                     h + BUTTON_IMAGE_ALPHA_POS[1])
+        self.add(obj)
+        obj = ObjectImageBlendButton(w + BUTTON_IMAGE_BLEND_POS[0],
+                                     h + BUTTON_IMAGE_BLEND_POS[1])
+        self.add(obj)
+        obj = ObjectVisibleButton(w + BUTTON_VISIBLE_POS[0],
+                                  h + BUTTON_VISIBLE_POS[1])
+        self.add(obj)
+        obj = ObjectActiveButton(w + BUTTON_ACTIVE_POS[0],
+                                 h + BUTTON_ACTIVE_POS[1])
+        self.add(obj)
+        obj = ObjectDetectsCollisionsButton(
+            w + BUTTON_DETECTS_COLLISIONS_POS[0],
+            h + BUTTON_DETECTS_COLLISIONS_POS[1])
+        self.add(obj)
+        obj = ObjectArgsButton(w + BUTTON_ARGS_POS[0], h + BUTTON_ARGS_POS[1])
+        self.add(obj)
 
     def get_width(self):
         return self.real_width * self.zoom
@@ -1137,41 +1159,75 @@ def main(*args):
 
     # Load editor resources
     # Sprites
-    sge.Sprite('stellar_room_editor_cursor', *CURSOR_SIZE,
-               origin_x=CURSOR_ORIGIN[0], origin_y=CURSOR_ORIGIN[1])
-    sge.Sprite('stellar_room_editor_panel_left', *SIDE_BAR_SIZE)
-    sge.Sprite('stellar_room_editor_panel_top', *TOP_BAR_SIZE)
-    sge.Sprite('stellar_room_editor_button', *BUTTON_SIZE, fps=0)
-    sge.Sprite('stellar_room_editor_textbox', *TEXTBOX_SIZE)
-    sge.Sprite('stellar_room_editor_checkbox', *CHECKBOX_SIZE, fps=0)
-    sge.Sprite('stellar_room_editor_unknown', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_active', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_args', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_background', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_close', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_grid', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_grid_isometric', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_image_settings', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_inactive', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_load', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_return_to_room', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_reload_resources', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_room_next', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_room_previous', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_save', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_save_all', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_settings', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_shift', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_solid', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_tool_fill', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_tool_line', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_tool_paintbrush', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_tool_pointer', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_unsolid', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_views', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_zoom_in', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_zoom_out', *ICON_SIZE)
-    sge.Sprite('stellar_room_editor_icon_zoom_reset', *ICON_SIZE)
+    sge.Sprite('stellar_room_editor_cursor', width=CURSOR_SIZE[0],
+               height=CURSOR_SIZE[1], origin_x=CURSOR_ORIGIN[0],
+               origin_y=CURSOR_ORIGIN[1])
+    sge.Sprite('stellar_room_editor_panel_left', width=SIDE_BAR_SIZE[0],
+               height=SIDE_BAR_SIZE[1])
+    sge.Sprite('stellar_room_editor_panel_top', width=TOP_BAR_SIZE[0],
+               height=TOP_BAR_SIZE[1])
+    sge.Sprite('stellar_room_editor_button', width=BUTTON_SIZE[0],
+               height=BUTTON_SIZE[1], fps=0)
+    sge.Sprite('stellar_room_editor_textbox', width=TEXTBOX_SIZE[0],
+               height=TEXTBOX_SIZE[1])
+    sge.Sprite('stellar_room_editor_checkbox', width=CHECKBOX_SIZE[0],
+               height=CHECKBOX_SIZE[1], fps=0)
+    sge.Sprite('stellar_room_editor_unknown', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_active', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_args', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_background', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_close', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_grid', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_grid_isometric', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_image_settings', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_inactive', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_load', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_return_to_room', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_reload_resources', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_room_next', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_room_previous', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_save', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_save_all', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_settings', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_shift', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_solid', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_tool_fill', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_tool_line', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_tool_paintbrush', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_tool_pointer', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_unsolid', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_views', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_zoom_in', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_zoom_out', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
+    sge.Sprite('stellar_room_editor_icon_zoom_reset', width=ICON_SIZE[0],
+               height=ICON_SIZE[1])
     glob.tooltip_sprite = sge.Sprite()
 
     # Fonts
