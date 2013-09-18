@@ -36,6 +36,7 @@ class glob(object):
     score = 0
 
     music = None
+    hud_sprite = None
 
 
 class Game(sge.Game):
@@ -67,7 +68,7 @@ class Player(sge.StellarClass):
         self.left_key = 'left'
         self.right_key = 'right'
         x = sge.game.width / 2
-        y = sge.game.height - 64
+        y = sge.game.height - 128
         glob.player = self
         super(Player, self).__init__(x, y, 10, 'player', '1945_playerplane',
                                      collision_precise=True)
@@ -325,7 +326,7 @@ class SideGunsUpgrade(Powerup):
     upgrade_level = 1
 
     def event_create(self):
-        if glob.player.upgrade_level != self.upgrade_level:
+        if self.upgrade_level != glob.player.upgrade_level + 1:
             self.destroy()
 
     def collect(self, other):
@@ -361,6 +362,23 @@ class ExtraLife(Powerup):
     def collect(self, other):
         glob.lives += 1
         super(ExtraLife, self).collect(other)
+
+
+class MainMenu(sge.Room):
+
+    pass
+
+
+class GameRoom(sge.Room):
+
+    def __init__(self):
+        player = Player()
+        hud = sge.StellarClass(0, sge.game.height, 9000,
+                               sprite=glob.hud_sprite,
+                               detects_collisions=False)
+        objects = [player, hud]
+        background = sge.Background((), "#083681")
+        super(GameRoom, self).__init__(objects, background=background)
 
 
 def main():
@@ -406,7 +424,7 @@ def main():
                fps=4)
     sge.Sprite('1945_getready', origin_x=98, origin_y=6, transparent=True,
                fps=4)
-    sge.Sprite('1945_hud', transparent=True)
+    sge.Sprite('1945_hud', origin_y=64, transparent=True)
     sge.Sprite('1945_hud_life', origin_x=13, origin_y=10, transparent=True,
                bbox_x=-13, bbox_y=-10)
     sge.Sprite('1945_hud_shieldbar')
