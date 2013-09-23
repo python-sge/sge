@@ -42,6 +42,7 @@ class glob(object):
     bounce_sound = None
     bounce_wall_sound = None
     score_sound = None
+    game_in_progress = True
 
 
 class Game(sge.Game):
@@ -53,6 +54,15 @@ class Game(sge.Game):
             self.event_close()
         elif key == 'p':
             self.pause()
+        elif key == 'enter':
+            if glob.game_in_progress:
+                self.pause()
+            else:
+                glob.game_in_progress = True
+                glob.player1.v_score = 0
+                glob.player2.v_score = 0
+                refresh_hud()
+                glob.ball.serve()
 
     def event_close(self):
         m = "Are you sure you want to quit?"
@@ -106,16 +116,25 @@ class Player(sge.StellarClass):
 
         y = sge.game.height / 2
         self.v_score = 0
-        self.axis_motion = 0
+        self.trackball_motion = 0
         super(Player, self).__init__(x, y, 0, objname, glob.paddle_sprite)
 
     def event_step(self, time_passed):
         # Movement
-        if self.axis_motion:
-            self.yvelocity = self.axis_motion * 4
+        key_motion = (sge.get_key_pressed(self.down_key) -
+                      sge.get_key_pressed(self.up_key))
+        axis_motion = sge.get_joystick_axis(self.joystick, 1)
+
+        if (abs(axis_motion) > abs(key_motion) and
+                abs(axis_motion) > abs(self.trackball_motion)):
+            self.yvelocity = axis_motion * 4
+        elif (abs(self.trackball_motion) > abs(key_motion) and
+              abs(self.trackball_motion) > abs(axis_motion)):
+            self.yvelocity = self.trackball_motion * 4
         else:
-            self.yvelocity = (sge.get_key_pressed(self.down_key) -
-                              sge.get_key_pressed(self.up_key)) * 4
+            self.yvelocity = key_motion * 4
+
+        self.trackball_motion = 0
 
         # Keep the paddle inside the window
         if self.bbox_top < 0:
@@ -123,12 +142,10 @@ class Player(sge.StellarClass):
         elif self.bbox_bottom > sge.game.height:
             self.bbox_bottom = sge.game.height
 
-        self.axis_motion = 0
-
     def event_joystick_trackball_move(self, joystick, ball, x, y):
         if joystick == self.joystick:
-            if abs(y) > abs(self.axis_motion):
-                self.axis_motion = y
+            if abs(y) > abs(self.trackball_motion):
+                self.trackball_motion = y
 
 
 class Ball(sge.StellarClass):
@@ -174,14 +191,17 @@ class Ball(sge.StellarClass):
             glob.bounce_sound.play()
 
     def serve(self, direction=1):
+        self.x = self.xstart
+        self.y = self.ystart
+
         if glob.player1.score < 10 and glob.player2.score < 10:
             # Next round
-            self.x = self.xstart
-            self.y = self.ystart
             self.xvelocity = 2 * direction
             self.yvelocity = 0
         else:
             # Game Over!
+            self.xvelocity = 0
+            self.yvelocity = 0
             glob.hud_sprite.draw_clear()
             x = glob.hud_sprite.width / 2
             p1score = glob.player1.score
@@ -194,12 +214,7 @@ class Ball(sge.StellarClass):
             glob.hud_sprite.draw_text(glob.hud_font, p2text, x + 16, 16,
                                       color="white", halign=sge.ALIGN_LEFT,
                                       valign=sge.ALIGN_TOP)
-            m = "What is the name of the winner?"
-            name = sge.get_text_entry(m, 'Nobody')
-            if name is not None:
-                m = "Congratulations, {0}! You win!".format(name)
-                sge.show_message(m)
-            self.destroy()
+            glob.game_in_progress = False
 
 
 def refresh_hud():

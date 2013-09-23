@@ -17,7 +17,7 @@ prevent confusion, in particular making it obvious what version of any
 given implementation is compatible with a given SGE game.
 
 Note: The specification of the SGE is defined in the SGE Template, so
-the version number of specifications is indicated there.
+the version number of the specification is indicated there.
 
 
 Components
