@@ -364,6 +364,11 @@ class ExtraLife(Powerup):
         super(ExtraLife, self).collect(other)
 
 
+class Island(sge.StellarClass):
+
+    pass
+
+
 class MainMenu(sge.Room):
 
     pass
@@ -453,7 +458,7 @@ def main():
     sge.Sprite('1945_selection_arrow', origin_x=6, origin_y=6,
                transparent=True)
     sge.Sprite('1945_title')
-    sge.Sprite('1945_water')
+    sge.Sprite('1945_water', fps=2)
 
     # Load backgrounds
     water_layer = sge.BackgroundLayer('1945_water', 0, 0, -10000)

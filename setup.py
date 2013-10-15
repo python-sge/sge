@@ -116,7 +116,7 @@ else:
     sys.exit('Python version unsupported.')
 
 setup(name=name,
-      version='0.4.0',
+      version='0.4.0-dev',
       description='A 2-D game engine for Python',
       long_description=long_description,
       author=author,
