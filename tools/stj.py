@@ -31,6 +31,9 @@ import json
 import weakref
 import warnings
 
+CODE_TAB_WIDTH = 4
+DOCSTRING_LINE_SIZE = 72
+
 
 class StellarJSON(object):
 
@@ -311,6 +314,16 @@ class DataElement(object):
         """
         return self.data
 
+    def get_code(self):
+        """Return the Python code of this object.
+
+        This Python code is the code that would be placed within a
+        game's Python code file, minus any indentation needed.
+        Depending on the object, it might be one line or multiple lines.
+
+        """
+        return "pass"
+
 
 class Module(DataElement):
 
@@ -356,6 +369,17 @@ class Module(DataElement):
         return {"module": self.module, "source": self.source,
                 "name": self.name}
 
+    def get_code(self):
+        base_form = "import {0}"
+
+        if self.source:
+            base_form = ' '.join(("from {1}", base_form))
+
+        if self.name:
+            base_form = ' '.join((base_form, "as {2}"))
+
+        return base_form.format(self.module, self.source, self.name)
+
 
 class Variable(DataElement):
 
@@ -373,7 +397,9 @@ class Variable(DataElement):
 
     .. attribute:: name
 
-       The name of the variable as a string.
+       The name of the variable as a string.  May be preceded with the
+       ``global`` keyword in the usual way, e.g. ``"global spam"``
+       instead of just ``"spam"``, to force the variable to be global.
 
     .. attribute:: value
 
@@ -400,8 +426,11 @@ class Class(DataElement):
 
     - ``"name"`` -- The value of :attr:`name`.
     - ``"parents"`` -- The value of :attr:`parents`.
+    - ``"docstring"`` -- The value of :attr:`docstring`.
     - ``"class_attributes"`` -- A list of the data forms of the
       respective objects in :attr:`class_attributes`.
+    - ``"properties"`` -- A list of the data forms of the respective
+      objects in :attr:`properties`.
     - ``"methods"`` -- A list of the data forms of the respective
       objects in :attr:`methods`.
     - ``"class_methods"`` -- A list of the data forms of the respective
@@ -421,10 +450,22 @@ class Class(DataElement):
 
        A list of parent classes of the class.
 
+    .. attribute:: docstring
+
+       The text which describes and documents the class.  Newlines and
+       indentation for the sake of good appearance within the code file
+       may be omitted; these features will be added automatically during
+       code generation.
+
     .. attribute:: class_attributes
 
        A list of :class:`Variable` objects indicating the class
        attributes of the class.
+
+    .. attribute:: properties
+
+       A list of :class:`Property` objects indicating the properties of
+       the class.
 
     .. attribute:: methods
 
@@ -475,7 +516,9 @@ class Class(DataElement):
         self.fname = fname
         self.name = data.setdefault("name", "Spam")
         self.parents = data.setdefault("parents", ["object"])
+        self.docstring = data.setdefault("docstring", "")
         self.class_attributes = []
+        self.properties = []
         self.methods = []
         self.class_methods = []
         self.static_methods = []
@@ -484,6 +527,9 @@ class Class(DataElement):
 
         for attr in data.setdefault("class_attributes", []):
             self.class_attributes.append(Variable(fname, attr))
+
+        for prop in data.setdefault("properties", []):
+            self.properties.append(Property(fname, prop))
 
         for meth in data.setdefault("methods", []):
             self.methods.append(Function(fname, meth))
@@ -496,11 +542,15 @@ class Class(DataElement):
 
     def get_data(self):
         data = {"name": self.name, "parents": self.parents,
-                "class_attributes": [], "methods": [], "class_methods": [],
+                "docstring": self.docstring, "class_attributes": [],
+                "properties": [], "methods": [], "class_methods": [],
                 "static_methods": []}
 
         for attr in self.class_attributes:
             data["class_attributes"].append(attr.get_data())
+
+        for prop in self.properties:
+            data["properties"].append(prop.get_data())
 
         for meth in self.methods:
             data["methods"].append(meth.get_data())
@@ -519,6 +569,103 @@ class Class(DataElement):
             data = self.external
 
         return data
+
+    def get_code(self):
+        # Header
+        parents = ', '.join(self.parents)
+        header = "class {0}({1}):".format(self.name, parents)
+
+        # Body
+        lines = [""]
+
+        docstring_lines = []
+        for line in self.docstring.splitlines():
+            line = line.rstrip()
+            if line:
+                line = ''.join((" " * CODE_TAB_WIDTH, line))
+
+                indent_level = CODE_TAB_WIDTH
+                while line[indent_level] == " ":
+                    indent_level += 1
+
+                while len(line) > DOCSTRING_LINE_SIZE:
+                    i = DOCSTRING_LINE_SIZE
+                    while line[i] != " " and i > indent_level:
+                        i -= 1
+
+                    if i <= indent_level:
+                        # This means that there were no spaces at all in
+                        # the line (other than indentation).
+                        docstring_lines.append(line[:DOCSTRING_LINE_SIZE])
+                        line = line[DOCSTRING_LINE_SIZE + 1:]
+                    else:
+                        docstring_lines.append(line[:i])
+                        line = line[i + 1:]
+
+                    line = ''.join((" " * indent_level, line))
+
+                if line.rstrip():
+                    docstring_lines.append(line)
+            else:
+                # This is a blank line, but we still want to include
+                # blank lines.
+                docstring_lines.append("")
+
+        if len(docstring_lines) == 1:
+            lines.append('"""{0}"""'.format(docstring_lines[0]))
+        elif docstring_lines:
+            firstline = docstring_lines.pop(0).strip()
+            lines.append('"""{0}'.format(firstline))
+            lines.extend(docstring_lines)
+            lines.append('\n"""')
+        else:
+            lines.append('""""""')
+
+        if self.class_attributes:
+            lines.append("")
+            for attr in self.class_attributes:
+                attribute_lines = attr.get_code().splitlines()
+                for line in attribute_lines:
+                    line = ''.join((" " * CODE_TAB_WIDTH, line)).rstrip()
+                    lines.append(line)
+
+        if self.properties:
+            for prop in self.properties:
+                lines.append("")
+                property_lines = prop.get_code().splitlines()
+                for line in property_lines:
+                    line = ''.join((" " * CODE_TAB_WIDTH, line)).rstrip()
+                    lines.append(line)
+
+        if self.methods:
+            for meth in self.methods:
+                lines.append("")
+                method_lines = meth.get_code().splitlines()
+                for line in method_lines:
+                    line = ''.join((" " * CODE_TAB_WIDTH, line)).rstrip()
+                    lines.append(line)
+
+        if self.class_methods:
+            for meth in self.class_methods:
+                lines.append("")
+                dec = ''.join((" " * CODE_TAB_WIDTH, "@classmethod"))
+                lines.append(dec)
+                method_lines = meth.get_code().splitlines()
+                for line in method_lines:
+                    line = ''.join((" " * CODE_TAB_WIDTH, line)).rstrip()
+                    lines.append(line)
+
+        if self.static_methods:
+            for meth in self.static_methods:
+                lines.append("")
+                dec = ''.join((" " * CODE_TAB_WIDTH, "@staticmethod"))
+                lines.append(dec)
+                method_lines = meth.get_code().splitlines()
+                for line in method_lines:
+                    line = ''.join((" " * CODE_TAB_WIDTH, line)).rstrip()
+                    lines.append(line)
+
+        return '\n'.join([header] + lines)
 
 
 class Function(DataElement):
@@ -789,10 +936,9 @@ class Object(DataElement):
     .. attribute:: name
 
        The name of the variable to assign the object to.  Set to
-       :const:`None` for no assignment.  The variable name may be
-       preceded with the ``global`` keyword in the usual way, e.g.
-       ``"global spam"``, to force the variable assigned to to be
-       global.
+       :const:`None` for no assignment.  May be preceded with the
+       ``global`` keyword in the usual way, e.g. ``"global spam"``
+       instead of ``"spam"``, to force the variable to be global.
 
     .. attribute:: cls
 
