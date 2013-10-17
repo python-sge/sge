@@ -416,6 +416,14 @@ class Variable(DataElement):
     def get_data(self):
         return {"name": self.name, "value": self.value}
 
+    def get_code(self):
+        name_parts = self.name.split(maxsplit=1)
+
+        if len(name_parts) >= 2 and name_parts[0] == "global":
+            return "global {0}\n{0} = {1}".format(name_parts[1], self.value)
+        else:
+            return "{0} = {1}".format(self.name, self.value)
+
 
 class Class(DataElement):
 
@@ -576,7 +584,7 @@ class Class(DataElement):
         header = "class {0}({1}):".format(self.name, parents)
 
         # Body
-        lines = [""]
+        lines = [header, ""]
 
         docstring_lines = []
         for line in self.docstring.splitlines():
@@ -665,7 +673,7 @@ class Class(DataElement):
                     line = ''.join((" " * CODE_TAB_WIDTH, line)).rstrip()
                     lines.append(line)
 
-        return '\n'.join([header] + lines)
+        return '\n'.join(lines)
 
 
 class Function(DataElement):
@@ -752,6 +760,22 @@ class Function(DataElement):
                 f.write(self.code)
 
         return data
+
+    def get_code(self):
+        args_list = []
+        for arg in self.arguments:
+            args_list.append(arg.get_code)
+
+        args = ', '.join(args_list)
+        header = "def {0}({1}):".format(self.name, args)
+
+        lines = [header]
+
+        for line in self.code.splitlines():
+            line = ''.join((" " * CODE_TAB_WIDTH, line))
+            lines.append(line)
+
+        return '\n'.join(lines)
 
 
 class Property(DataElement):
@@ -914,6 +938,12 @@ class FunctionArgument(Variable):
 
     def get_data(self):
         return {"name": self.name, "default": self.default}
+
+    def get_code(self):
+        if self.default is None:
+            return self.name
+        else:
+            return "{0}={1}".format(self.name, self.default)
 
 
 class Object(DataElement):
