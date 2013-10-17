@@ -49,9 +49,7 @@ class Game(sge.Game):
             sge.Sprite.from_screenshot().save('screenshot.jpg')
         elif key == 'escape':
             self.event_close()
-        elif key == 'p':
-            self.pause()
-        elif key == 'enter':
+        elif key in ('p', 'enter'):
             if glob.game_in_progress:
                 self.pause()
             else:
