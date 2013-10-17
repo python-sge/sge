@@ -14,6 +14,9 @@ Specification misc changes:
 * Documentation reformatted
 * "id"/"id_" argument in many constructor methods changed to "ID"
 
+SGE Pygame bugfixes:
+* sge.BackgroundLayer not being able to accept sprite IDs
+
 
 0.4.0
 ------------------------------------------------------------------------

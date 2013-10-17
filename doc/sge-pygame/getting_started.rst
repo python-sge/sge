@@ -1,1 +1,0 @@
-../common/getting_started.rst

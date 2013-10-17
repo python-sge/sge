@@ -11,7 +11,9 @@ Setting Up the Project
 
 First, we must create our project directory.  I will use "~/hello".
 Copy an implementation to "~/hello"; I'm choosing sge-pygame, and rename
-it to just "sge" (so in my example, I now have "~/hello/sge").
+it to just "sge" (so in my example, I now have "~/hello/sge").  If you
+are using Python 3 instead of Python 2, you should choose a Python 3
+implementation instead, such as sge-pygame-py3k.
 
 Next, create the game source file inside "~/hello".  I am calling it
 "hello.py".
@@ -372,3 +374,6 @@ Or, if you're using Python 3, this is the final result::
 
     if __name__ == '__main__':
         main()
+
+Now that you have built your first basic program, you are ready to make
+a real game: Pong.

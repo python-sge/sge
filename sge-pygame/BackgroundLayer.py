@@ -175,7 +175,8 @@ class BackgroundLayer(object):
         more information.
 
         """
-        self._sprite = sprite
+        self._sprite = None
+        self.sprite = sprite
         self._x = x
         self._y = y
         self._z = z

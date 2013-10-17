@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 # Pong Example
 # Written in 2013 by Julian Marchant <onpon4@riseup.net>
@@ -35,10 +35,7 @@ class glob(object):
     player1 = None
     player2 = None
     ball = None
-    paddle_sprite = None
-    ball_sprite = None
     hud_sprite = None
-    hud_font = None
     bounce_sound = None
     bounce_wall_sound = None
     score_sound = None
@@ -117,7 +114,7 @@ class Player(sge.StellarClass):
         y = sge.game.height / 2
         self.v_score = 0
         self.trackball_motion = 0
-        super(Player, self).__init__(x, y, 0, objname, glob.paddle_sprite)
+        super(Player, self).__init__(x, y, 0, objname, "paddle")
 
     def event_step(self, time_passed):
         # Movement
@@ -153,7 +150,7 @@ class Ball(sge.StellarClass):
     def __init__(self):
         x = sge.game.width / 2
         y = sge.game.height / 2
-        super(Ball, self).__init__(x, y, 1, "ball", glob.ball_sprite)
+        super(Ball, self).__init__(x, y, 1, ID="ball", sprite="ball")
 
     def event_create(self):
         refresh_hud()
@@ -208,11 +205,11 @@ class Ball(sge.StellarClass):
             p2score = glob.player2.score
             p1text = "WIN" if p1score > p2score else "LOSE"
             p2text = "WIN" if p2score > p1score else "LOSE"
-            glob.hud_sprite.draw_text(glob.hud_font, p1text, x - 16, 16,
-                                      color="white", halign=sge.ALIGN_RIGHT,
+            glob.hud_sprite.draw_text("hud", p1text, x - 16, 16, color="white",
+                                      halign=sge.ALIGN_RIGHT,
                                       valign=sge.ALIGN_TOP)
-            glob.hud_sprite.draw_text(glob.hud_font, p2text, x + 16, 16,
-                                      color="white", halign=sge.ALIGN_LEFT,
+            glob.hud_sprite.draw_text("hud", p2text, x + 16, 16, color="white",
+                                      halign=sge.ALIGN_LEFT,
                                       valign=sge.ALIGN_TOP)
             glob.game_in_progress = False
 
@@ -221,11 +218,11 @@ def refresh_hud():
     # This fixes the HUD sprite so that it displays the correct score.
     glob.hud_sprite.draw_clear()
     x = glob.hud_sprite.width / 2
-    glob.hud_sprite.draw_text(glob.hud_font, str(glob.player1.score), x - 16,
-                              16, color="white", halign=sge.ALIGN_RIGHT,
+    glob.hud_sprite.draw_text("hud", str(glob.player1.score), x - 16, 16,
+                              color="white", halign=sge.ALIGN_RIGHT,
                               valign=sge.ALIGN_TOP)
-    glob.hud_sprite.draw_text(glob.hud_font, str(glob.player2.score), x + 16,
-                              16, color="white", halign=sge.ALIGN_LEFT,
+    glob.hud_sprite.draw_text("hud", str(glob.player2.score), x + 16, 16,
+                              color="white", halign=sge.ALIGN_LEFT,
                               valign=sge.ALIGN_TOP)
 
 
@@ -234,22 +231,23 @@ def main():
     Game(640, 480, fps=120)
 
     # Load sprites
-    glob.paddle_sprite = sge.Sprite(width=8, height=48, origin_x=4,
-                                    origin_y=24, bbox_x=-4, bbox_y=-24)
-    glob.paddle_sprite.draw_rectangle(0, 0, 8, 48, "white")
-    glob.ball_sprite = sge.Sprite(width=8, height=8, origin_x=4, origin_y=4,
-                                  bbox_x=-4, bbox_y=-4)
-    glob.ball_sprite.draw_rectangle(0, 0, 8, 8, "white")
+    paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,
+                               origin_y=24)
+    paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
+                                 paddle_sprite.height, fill="white")
+    ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
+                             origin_y=4)
+    ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
+                               fill="white")
     glob.hud_sprite = sge.Sprite(width=320, height=160, origin_x=160,
                                  origin_y=0)
 
     # Load backgrounds
-    layers = (sge.BackgroundLayer(glob.ball_sprite, 320, 0, -10000,
-                                  xrepeat=False),)
+    layers = (sge.BackgroundLayer("ball", 320, 0, -10000, xrepeat=False),)
     background = sge.Background (layers, "black")
 
     # Load fonts
-    glob.hud_font = sge.Font('Liberation Mono', size=48)
+    sge.Font('Liberation Mono', ID="hud", size=48)
 
     # Load sounds
     glob.bounce_sound = sge.Sound('bounce.wav')
