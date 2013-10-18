@@ -1481,6 +1481,57 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                         self.x_offset = 0
                         self.y_offset = 0
 
+                    if parent.image_rotation % 360 != 0:
+                        # Modify offset values to rotate around the
+                        # origin, not necessarily the center.
+                        origin_x = parent.sprite.origin_x
+                        origin_y = parent.sprite.origin_y
+                        isize = self.image.get_size()
+                        center_x = isize[0] / 2
+                        center_y = isize[1] / 2
+                        x = origin_x - center_x
+                        # We have to make y negative to work with the
+                        # unit circle properly.
+                        y = -(origin_y - center_y)
+
+                        if x or y:
+                            if not x:
+                                rot = radians(90 if y > 0 else 270)
+                                h = abs(y)
+                            elif not y:
+                                rot = radians(0 if x > 0 else 180)
+                                h = abs(x)
+                            else:
+                                rot = math.atan(y / x) % (math.pi / 2)
+                                h = abs(y / sin(rot))
+
+                                # Find quadrant
+                                if y > 0:
+                                    if x > 0:
+                                        # Quadrant I; nothing to do
+                                        pass
+                                    else:
+                                        # Quadrant II
+                                        rot = math.pi - rot
+                                else:
+                                    if x < 0:
+                                        # Quadrant III
+                                        rot += math.pi
+                                    else:
+                                        # Quadrant IV
+                                        rot = (2 * math.pi) - rot
+
+                            rot += radians(parent.image_rotation)
+                            rot %= 2 * math.pi
+                            new_origin_x = h * math.cos(rot)
+                            # Now that we're done with the unit circle,
+                            # we need to change back to the SGE's
+                            # version of y.
+                            new_origin_y = -(h * math.sin(rot))
+
+                            self.x_offset -= new_origin_x - origin_x
+                            self.y_offset -= new_origin_y - origin_y
+
                 if self.visible != self.parent().visible:
                     self.visible = int(self.parent().visible)
                     self.dirty = 1
