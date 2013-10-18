@@ -574,8 +574,25 @@ class StellarClass(object):
                 other_rect = pygame.Rect(round(other.bbox_left),
                                          round(other.bbox_top),
                                          other.bbox_width, other.bbox_height)
-                collide_rect = self_rect.clip(other_rect)
 
+                if self.sprite is not None:
+                    # Offset for rotation
+                    w, h = self.sprite._get_image(
+                        self.image_index, self.image_xscale,
+                        self.image_yscale, self.image_rotation).get_size()
+
+                    nw, nh = self.sprite._get_image(
+                        self.image_index, self.image_xscale,
+                        self.image_yscale).get_size()
+
+                    offset = _get_rotation_offset(
+                        self.sprite.origin_x, self.sprite.origin_y,
+                        self.image_rotation, w, h, nw, nh)
+
+                    self_rect.left -= offset[0]
+                    self_rect.top -= offset[1]
+
+                collide_rect = self_rect.clip(other_rect)
                 self_xoffset = collide_rect.left - self_rect.left
                 self_yoffset = collide_rect.top - self_rect.top
                 other_xoffset = collide_rect.left - other_rect.left
@@ -1469,68 +1486,15 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                     self.image = new_image
                     self.dirty = 1
 
-                    if parent.image_rotation % 90 != 0:
-                        # Be prepared for size adjustment
-                        rot_size = self.image.get_size()
-                        reg_size = parent.sprite._get_image(
-                            parent.image_index, parent.image_xscale,
-                            parent.image_yscale).get_size()
-                        self.x_offset = (rot_size[0] - reg_size[0]) // 2
-                        self.y_offset = (rot_size[1] - reg_size[1]) // 2
-                    else:
-                        self.x_offset = 0
-                        self.y_offset = 0
+                    w, h = self.image.get_size()
 
-                    if parent.image_rotation % 360 != 0:
-                        # Modify offset values to rotate around the
-                        # origin, not necessarily the center.
-                        origin_x = parent.sprite.origin_x
-                        origin_y = parent.sprite.origin_y
-                        isize = self.image.get_size()
-                        center_x = isize[0] / 2
-                        center_y = isize[1] / 2
-                        x = origin_x - center_x
-                        # We have to make y negative to work with the
-                        # unit circle properly.
-                        y = -(origin_y - center_y)
+                    nw, nh = parent.sprite._get_image(
+                        parent.image_index, parent.image_xscale,
+                        parent.image_yscale).get_size()
 
-                        if x or y:
-                            if not x:
-                                rot = radians(90 if y > 0 else 270)
-                                h = abs(y)
-                            elif not y:
-                                rot = radians(0 if x > 0 else 180)
-                                h = abs(x)
-                            else:
-                                rot = math.atan(y / x) % (math.pi / 2)
-                                h = abs(y / sin(rot))
-
-                                # Find quadrant
-                                if y > 0:
-                                    if x > 0:
-                                        # Quadrant I; nothing to do
-                                        pass
-                                    else:
-                                        # Quadrant II
-                                        rot = math.pi - rot
-                                else:
-                                    if x < 0:
-                                        # Quadrant III
-                                        rot += math.pi
-                                    else:
-                                        # Quadrant IV
-                                        rot = (2 * math.pi) - rot
-
-                            rot += radians(parent.image_rotation)
-                            rot %= 2 * math.pi
-                            new_origin_x = h * math.cos(rot)
-                            # Now that we're done with the unit circle,
-                            # we need to change back to the SGE's
-                            # version of y.
-                            new_origin_y = -(h * math.sin(rot))
-
-                            self.x_offset -= new_origin_x - origin_x
-                            self.y_offset -= new_origin_y - origin_y
+                    self.x_offset, self.y_offset = _get_rotation_offset(
+                        parent.sprite.origin_x, parent.sprite.origin_y,
+                        parent.image_rotation, w, h, nw, nh)
 
                 if self.visible != self.parent().visible:
                     self.visible = int(self.parent().visible)
@@ -1669,3 +1633,67 @@ class _PygameOneTimeSprite(pygame.sprite.DirtySprite):
     def update(self):
         if not self.dirty:
             self.kill()
+
+
+def _get_rotation_offset(origin_x, origin_y, rotation, image_width,
+                         image_height, image_width_normal,
+                         image_height_normal):
+    # Return what to offset an origin when the object is rotated as a
+    # two-part tuple: (x_offset, y_offset)
+    x_offset = 0
+    y_offset = 0
+
+    if rotation % 180:
+        # Adjust offset for the borders getting bigger.
+        x_offset += (image_width - image_width_normal) / 2
+        y_offset += (image_height - image_height_normal) / 2
+
+    if rotation % 360:
+        # Rotate about the origin
+        center_x = image_width / 2
+        center_y = image_height / 2
+        x = origin_x - image_width
+        # We have to make y negative to work with the unit circle.
+        y = -(origin_y - image_height)
+
+        if x or y:
+            if not x:
+                rot = math.radians(90 if y > 0 else 270)
+                h = abs(y)
+            elif not y:
+                rot = math.radians(0 if x > 0 else 180)
+                h = abs(x)
+            else:
+                rot = abs(math.atan(y / x))
+                h = abs(y / math.sin(rot))
+
+                # Find quadrant
+                if y > 0:
+                    if x > 0:
+                        # Quadrant I; nothing to do
+                        pass
+                    else:
+                        # Quadrant II
+                        rot = math.pi - rot
+                else:
+                    if x < 0:
+                        # Quadrant III
+                        rot += math.pi
+                    else:
+                        # Quadrant IV
+                        rot = (2 * math.pi) - rot
+
+            rot += math.radians(rotation)
+            rot %= 2 * math.pi
+            new_x = h * math.cos(rot)
+            new_y = h * math.sin(rot)
+            new_origin_x = new_x + image_width
+            # Now that we're done with the unit circle,
+            # we need to change back to the SGE's
+            # version of y.
+            new_origin_y = -new_y + image_height
+
+            x_offset += new_origin_x - origin_x
+            y_offset += new_origin_y - origin_y
+
+    return (x_offset, y_offset)
