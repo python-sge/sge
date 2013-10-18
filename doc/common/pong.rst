@@ -141,3 +141,104 @@ the same thing as the regular "close" event, to allow the game to be
 exited without unpausing the game first.  The "paused" key event, on the
 other hand, unpauses the game if any key other than the Esc key (which
 ends the game) is pressed.
+
+The Player Class
+----------------
+
+The Player class is going to be a subclass of :class:`sge.StellarClass`,
+which is the class that represents individual objects in the SGE.  This
+class is used for players, bullets, floors, walls, and pretty much
+anything else you can think of.
+
+For the Player class, we are actually going to do something a bit
+unusual: we are going to extend :meth:`sge.StellarClass.__init__` (the
+constructor method)::
+
+    class Player(sge.StellarClass):
+
+        def __init__(self, player=1):
+            if player == 1:
+                self.up_key = "w"
+                self.down_key = "s"
+                x = 32
+                glob.player1 = self
+                self.hit_direction = 1
+            else:
+                self.up_key = "up"
+                self.down_key = "down"
+                x = sge.game.width - 32
+                glob.player2 = self
+                self.hit_direction = -1
+
+            y = sge.game.height / 2
+            super(Player, self).__init__(x, y, 0, sprite="paddle")
+
+As you can see, our extended :meth:`__init__` now only takes one
+argument indicating the player: ``1`` for the left player, and any other
+value (such as ``2``) for the right player.  Everything else is then
+inferred from that: the controls (you will see why we are storing the
+controls like this in a minute), the horizontal location, and the
+direction the paddle hits (``1`` for right, ``-1`` for left).  As a
+bonus, we also use this information to decide what "global" variable to
+assign the player to: glob.player1 if it is the left player, or
+glob.player2 if it is the right player.
+
+Keep in mind that you must never *override*
+:meth:`sge.StellarClass.__init__`; you should only extend it.  This is
+why we have the last line.  The :func:`super` function allows us to call
+the corresponding method in the parent class, making our new
+:meth:`__init__` an extension rather than an override.  If you are using
+Python 3, the arguments I specified do not need to be passed to
+:func:`super`; in that case, replace ``super(Player, self)`` with just
+``super()``.
+
+Next up, we need to add code to allow the paddles to move.  The easiest
+place to do this is in the step event::
+
+    def event_step(self, time_passed):
+        # Movement
+        key_motion = (sge.get_key_pressed(self.down_key) -
+                      sge.get_key_pressed(self.up_key))
+
+        self.yvelocity = key_motion * PADDLE_SPEED
+
+        # Keep the paddle inside the window
+        if self.bbox_top < 0:
+            self.bbox_top = 0
+        elif self.bbox_bottom > sge.game.height:
+            self.bbox_bottom = sge.game.height
+
+The first thing we do is check whether the paddle's assigned down key is
+pressed and whether the assigned up key is pressed.  The simplest way to
+do this is to use an if statement, but instead, I subtracted the result
+for the up key from the result for the down key.  Since the returned
+values are equivalent to ``1`` and ``0`` in subtraction, key_motion will
+become ``-1`` if only the up key is pressed, ``1`` if only the down key
+is pressed, and ``0`` if neither or both of the keys are pressed.  This
+method of figuring out the desired direction not only is a lot simpler
+than an if statement, but also handles the condition of opposite
+directions being pressed at the same time properly.
+
+Since -1 is up, 1 is down, and 0 is no movement, I now just need to
+multiply ``key_motion`` by some constant value (the paddle speed I wish
+to use) to get the desired vertical velocity.  The name I have chosen
+for this constant is ``PADDLE_SPEED``.  Attempting to use an undefined
+constant will cause an error, so let's define it now::
+
+    PADDLE_SPEED = 4
+
+This should be placed in the global namespace, probably right after your
+imports.  I chose ``4`` to be the value of this constant because I found
+it to be the best balance between precision and speed.
+
+As you may have figured out, :attr:`sge.StellarClass.yvelocity` is a
+special attribute.  In simple terms, the SGE automatically adds this
+number to the vertical position of the object every frame, creating an
+illusion of continuous movement.
+
+With just this, the players will be able to move the paddles off of the
+screen, and we don't want this.  To prevent it, we check the paddle's
+:attr:`sge.StellarClass.bbox_top` and
+:attr:`sge.StellarClass.bbox_bottom` attributes to see if they are above
+or below the screen, respectively, and then set them to the respective
+edge of the screen if they are.

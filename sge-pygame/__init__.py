@@ -312,54 +312,54 @@ Formats Support
 For starting position in MOD files, the pattern order number is used
 instead of the number of milliseconds.
 
-If Pygame is built without full image support, :class:`Sprite` will only
-support uncompressed BMP images.  In addition, the pygame.mixer module,
-which is used for audio playback, is optional and depends on SDL_mixer;
-if pygame.mixer is unavailable, sounds and music will not play.  If you
-encounter problems with loading images or playing sounds, check your
-build of Pygame.
+If Pygame is built without full image support, :class:`sge.Sprite` will
+only support uncompressed BMP images.  In addition, the pygame.mixer
+module, which is used for audio playback, is optional and depends on
+SDL_mixer; if pygame.mixer is unavailable, sounds and music will not
+play.  If you encounter problems with loading images or playing sounds,
+check your build of Pygame.
 
-On some systems, the game will crash if :class:`Music` attempts to load
-an unsupported format.  Since MP3's support is limited, it is best to
-avoid using it; consider using Ogg instead.
+On some systems, the game will crash if :class:`sge.Music` attempts to
+load an unsupported format.  Since MP3's support is limited, it is best
+to avoid using it; consider using Ogg instead.
 
 Missing Features
 ----------------
 
-:meth:`Sprite.draw_line` and :meth:`Room.project_line` support
+:meth:`sge.Sprite.draw_line` and :meth:`sge.Room.project_line` support
 anti-aliasing for lines with a thickness of 1 only.
-:meth:`Sprite.draw_text` and :meth:`Room.project_text` support
+:meth:`sge.Sprite.draw_text` and :meth:`sge.Room.project_text` support
 anti-aliasing in all cases.  No other drawing or projecting methods
 support anti-aliasing.
 
 Speed Improvements
 ------------------
 
-This implementation supports hardware rendering, which can improve
+The Pygame SGE supports hardware rendering, which can improve
 performance in some cases.  It is not enabled by default.  To enable it,
 set :data:`sge.hardware_rendering` to :const:`True`.  The benefit of
 hardware acceleration is usually negligible, which is why it is disabled
 by default.
 
-Projection is highly inefficient, so it should be avoided if speed is
-important; use the sprite draw methods instead.
+Projection methods are highly inefficient, so they should be avoided if
+speed is important; use the :class:`sge.Sprite` draw methods instead.
 
 Other Notes
 -----------
 
-Changing the :attr:`Sprite.width` and :attr:`Sprite.height` attributes
-of :class:`Sprite` objects is a destructive transformation in this
-implementation, so each time one of these variables changes, pixel
-information can be lost.  For example, scaling a 128x128 pixel image
-down to 16x16 and then back up to 128x128 will not yield the same image,
-but rather either a pixelated version or a blurry version, depending on
-the value of :attr:`sge.game.scale_smooth`.  This is because of the way
-the drawing methods of :class:`Sprite` are implemented.  Because of
-this, you should avoid changing this value as much as possible.  For
-best results, set it only when the sprite is created and then leave it
-alone; do any other routine transformations with the
-:attr:`StellarClass.image_xscale` and :attr:`StellarClass.image_yscale`
-attributes.
+Changing the :attr:`sge.Sprite.width` and :attr:`sge.Sprite.height`
+attributes of :class:`sge.Sprite` objects is a destructive
+transformation in the Pygame SGE, so each time one of these variables
+changes, pixel information can be lost.  For example, scaling a 128x128
+pixel image down to 16x16 and then back up to 128x128 will not yield the
+same image, but rather either a pixelated version or a blurry version,
+depending on the value of :attr:`sge.game.scale_smooth`.  This is
+because of the way the drawing methods of :class:`sge.Sprite` are
+implemented.  Because of this, you should avoid changing this value as
+much as possible.  For best results, set it only when the sprite is
+created and then leave it alone; do any other routine transformations
+with the :attr:`sge.StellarClass.image_xscale` and
+:attr:`sge.StellarClass.image_yscale` attributes.
 
 """
 
@@ -368,7 +368,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.4.0.13"
+__version__ = "0.4.0.14"
 
 import os
 

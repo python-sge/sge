@@ -25,6 +25,11 @@ from __future__ import unicode_literals
 
 import sge
 
+PADDLE_SPEED = 4
+BALL_START_SPEED = 2
+BALL_ACCELERATION = 0.2
+BALL_MAX_SPEED = 15
+
 
 class glob(object):
 
@@ -97,7 +102,6 @@ class Player(sge.StellarClass):
             self.up_key = "w"
             self.down_key = "s"
             x = 32
-            objname = "player1"
             glob.player1 = self
             self.hit_direction = 1
         else:
@@ -105,14 +109,15 @@ class Player(sge.StellarClass):
             self.up_key = "up"
             self.down_key = "down"
             x = sge.game.width - 32
-            objname = "player2"
             glob.player2 = self
             self.hit_direction = -1
 
         y = sge.game.height / 2
+        super(Player, self).__init__(x, y, 0, sprite="paddle")
+
+    def event_create(self):
         self.v_score = 0
         self.trackball_motion = 0
-        super(Player, self).__init__(x, y, 0, objname, "paddle")
 
     def event_step(self, time_passed):
         # Movement
@@ -122,12 +127,12 @@ class Player(sge.StellarClass):
 
         if (abs(axis_motion) > abs(key_motion) and
                 abs(axis_motion) > abs(self.trackball_motion)):
-            self.yvelocity = axis_motion * 4
+            self.yvelocity = axis_motion * PADDLE_SPEED
         elif (abs(self.trackball_motion) > abs(key_motion) and
               abs(self.trackball_motion) > abs(axis_motion)):
-            self.yvelocity = self.trackball_motion * 4
+            self.yvelocity = self.trackball_motion * PADDLE_SPEED
         else:
-            self.yvelocity = key_motion * 4
+            self.yvelocity = key_motion * PADDLE_SPEED
 
         self.trackball_motion = 0
 
@@ -177,10 +182,12 @@ class Ball(sge.StellarClass):
         if isinstance(other, Player):
             if other.hit_direction == 1:
                 self.bbox_left = glob.player1.bbox_right + 1
-                self.xvelocity = min(abs(self.xvelocity) + 0.2, 15)
+                self.xvelocity = min(abs(self.xvelocity) + BALL_ACCELERATION,
+                                     BALL_MAX_SPEED)
             else:
                 self.bbox_right = glob.player2.bbox_left - 1
-                self.xvelocity = max(-abs(self.xvelocity) - 0.2, -15)
+                self.xvelocity = max(-abs(self.xvelocity) - BALL_ACCELERATION,
+                                     -BALL_MAX_SPEED)
 
             self.yvelocity += (self.y - other.y) / 12
             glob.bounce_sound.play()
@@ -191,7 +198,7 @@ class Ball(sge.StellarClass):
 
         if glob.player1.score < 10 and glob.player2.score < 10:
             # Next round
-            self.xvelocity = 2 * direction
+            self.xvelocity = BALL_START_SPEED * direction
             self.yvelocity = 0
         else:
             # Game Over!

@@ -20,6 +20,7 @@ Contents:
 
    intro
    sge_concepts
+   pygame
    hello_world
    pong
    globalvars
