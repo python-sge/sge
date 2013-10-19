@@ -242,3 +242,114 @@ screen, and we don't want this.  To prevent it, we check the paddle's
 :attr:`sge.StellarClass.bbox_bottom` attributes to see if they are above
 or below the screen, respectively, and then set them to the respective
 edge of the screen if they are.
+
+The Ball Class
+--------------
+
+Once again, the Ball class is going to be a subclass of
+:class:`sge.StellarClass`.  Once again, we are going to start by
+extending the constructor method::
+
+    def __init__(self):
+        x = sge.game.width / 2
+        y = sge.game.height / 2
+        super(Ball, self).__init__(x, y, 1, sprite="ball")
+
+This extension is more simple than :class:`Player`'s: our etension
+simply removes all arguments from the constructor method and hard-codes
+values to pass on to :meth:`sge.StellarClass.__init__`.
+
+When the ball is created, we want to immediately serve it to a player.
+To achieve that, we are going to define the create event, which occurs
+whenever an object of the class is created::
+
+    def event_create(self):
+        self.serve()
+
+We are defining :func:`Ball.serve` to achieve serving the ball because
+there are other situations when the ball needs to be served, namely
+whenever a player scores.  This will be our serve method::
+
+    def serve(self, direction=1):
+        self.x = self.xstart
+        self.y = self.ystart
+
+        # Next round
+        self.xvelocity = BALL_START_SPEED * direction
+        self.yvelocity = 0
+
+In a nutshell, we set the ball back to the its starting position (which
+is the center of the screen) and reset its movement based on an argument
+called ``direction``, which will be 1 (for right) or -1 (for left).  We
+multiply this by a constant called BALL_START_SPEED; let's define this
+constant now, right below our definition of the PADDLE_SPEED constant::
+
+    BALL_START_SPEED = 2
+
+As it is, the ball will pass through the paddles, which is not what we
+want; we want the ball to bounce off of the paddles.  We will achieve
+that with a collision event::
+
+    def event_collision(self, other):
+        if isinstance(other, Player):
+            if other.hit_direction == 1:
+                self.bbox_left = other.bbox_right + 1
+                self.xvelocity = abs(self.xvelocity) + BALL_ACCELERATION
+            else:
+                self.bbox_right = other.bbox_left - 1
+                self.xvelocity = -abs(self.xvelocity) - BALL_ACCELERATION
+
+            self.yvelocity += (self.y - other.y) * PADDLE_VERTICAL_FORCE
+
+We also need to define two more constants::
+
+    BALL_ACCELERATION = 0.2
+    PADDLE_VERTICAL_FORCE = 1 / 12
+
+The collision event occurs whenever another object touches this object.
+when this happens, we check if the other object is an instance of the
+:class:`Player` class; if it is, we check the other object's
+:attr:`hit_direction`; if it's ``1``, we place the left side of the
+ball's bounding box just to the right of the right side of the paddle's
+bounding box, then we make the ball's horizontal velocity positive and
+add a constant, ``BALL_ACCELERATION``, to it; this will cause the ball
+to slowly speed up as the game progresses.  If :attr:`hit_direction` is
+something other than ``1``, we assume that the paddle hits to the left;
+the behavior is identical to the behavior of hitting to the right, but
+opposite.
+
+Since the game would be rather dull if the players couldn't control the
+direction of the ball, so we allow the players to control the ball by
+adding the difference between the ball and paddle's vertical positions
+(which are going to be their centers) multiplied by a constant to the
+ball's vertical velocity.
+
+There are two remaining problems with our ball class: first, if the ball
+passes a player, it doesn't return.  Second, if the ball reaches the
+edge of the screen, it will just float off and be impossible to retrieve
+by the receiving player.  This actually would be realistic behavior, but
+it wouldn't be very fun.  We will fix both of these problems in the step
+event::
+
+    def event_step(self, time_passed):
+        # Scoring
+        if self.bbox_right < 0:
+            self.serve(-1)
+        elif self.bbox_left > sge.game.width:
+            self.serve(1)
+
+        # Bouncing off of the edges
+        if self.bbox_bottom > sge.game.height:
+            self.bbox_bottom = sge.game.height
+            self.yvelocity = -abs(self.yvelocity)
+        elif self.bbox_top < 0:
+            self.bbox_top = 0
+            self.yvelocity = abs(self.yvelocity)
+
+Since we have our :meth:`serve` method, we simply need to call it when
+the ball passes one of the players and goes horizontally outside the
+screen.  For bouncing off the edges, we use a similar method to the
+method we used to keep the paddles inside the view; the main difference
+is we also set the ball's vertical velocity to move away from the edge;
+if it collided with the bottom, the vertical velocity is made negative,
+and if it collided with the top, the vertical velocity is made positive.
