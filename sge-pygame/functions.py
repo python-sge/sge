@@ -431,7 +431,9 @@ def _show_modal(text, default, text_entry, buttons):
     window = pygame.display.get_surface()
     screenshot = window.copy()
     background = screenshot.copy()
-    font = sge.Font("Liberation Sans", size=12)
+    sge.font_directories.append(os.path.dirname(__file__))
+    font = sge.Font("DroidSans-Bold.ttf", size=12)
+    del sge.font_directories[-1]
     window_rect = window.get_rect()
     screen_w, screen_h = background.get_size()
     button_w = 80
@@ -440,22 +442,22 @@ def _show_modal(text, default, text_entry, buttons):
     for button in buttons:
         button_w = max(button_w, font.get_size(button)[0])
     
-    box_w = max(320, min(screen_w, (button_w + 4) * len(buttons) + 4))
-    box_h = button_h + 8
+    box_w = min(screen_w, max(320, (button_w + 4) * len(buttons) + 4))
+    box_h = button_h + 12
     text_entry_w = box_w - 8
     text_entry_h = font._font.get_linesize() + 4
     if text_entry:
         box_h += text_entry_h + 8
-    text_w = box_w - 8
+    text_w = box_w - 16
     text_h = font.get_size(text, text_w)[1]
 
     while box_h + text_h > screen_h and box_w < screen_w:
         box_w = min(box_w + 4, screen_w)
-        text_w = box_w - 8
+        text_w = box_w - 16
         text_h = font.get_size(text, text_w)
 
     box_h = max(120, box_h + text_h)
-    button_w = min(80, box_w / len(buttons))
+    button_w = min(80, int(box_w / len(buttons)))
 
     cursor = pygame.Surface((1, font._font.get_linesize()))
     mydir = os.path.dirname(__file__)
@@ -615,13 +617,13 @@ def _show_modal(text, default, text_entry, buttons):
     box.fill(pygame.Color(0, 0, 0, 0),
              pygame.Rect((0, 0), box_topleft.get_size()))
     box.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
-        (button_w - box_topright.get_width(), 0), box_topright.get_size()))
+        (box_w - box_topright.get_width(), 0), box_topright.get_size()))
     box.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
-        (0, button_h - box_bottomleft.get_height()),
+        (0, box_h - box_bottomleft.get_height()),
         box_bottomleft.get_size()))
     box.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
-        (button_w - box_bottomright.get_width(),
-         button_h - box_bottomright.get_height()),
+        (box_w - box_bottomright.get_width(),
+         box_h - box_bottomright.get_height()),
         box_bottomright.get_size()))
 
     box.blit(box_topleft, (0, 0))
@@ -643,7 +645,7 @@ def _show_modal(text, default, text_entry, buttons):
     for i in xrange(box_topright.get_height(),
                     box_h - box_bottomright.get_height(),
                     box_right.get_height()):
-        box.blit(box_right, (box_w - box_right.get_height(), i))
+        box.blit(box_right, (box_w - box_right.get_width(), i))
     box_rect = box.get_rect(center=window_rect.center)
 
     # Text Entry image
@@ -658,14 +660,14 @@ def _show_modal(text, default, text_entry, buttons):
     text_entry_field.fill(pygame.Color(0, 0, 0, 0),
                           pygame.Rect((0, 0), text_entry_topleft.get_size()))
     text_entry_field.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
-        (button_w - text_entry_topright.get_width(), 0),
+        (text_entry_w - text_entry_topright.get_width(), 0),
         text_entry_topright.get_size()))
     text_entry_field.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
-        (0, button_h - text_entry_bottomleft.get_height()),
+        (0, text_entry_h - text_entry_bottomleft.get_height()),
         text_entry_bottomleft.get_size()))
     text_entry_field.fill(pygame.Color(0, 0, 0, 0), pygame.Rect(
-        (button_w - text_entry_bottomright.get_width(),
-         button_h - text_entry_bottomright.get_height()),
+        (text_entry_w - text_entry_bottomright.get_width(),
+         text_entry_h - text_entry_bottomright.get_height()),
         text_entry_bottomright.get_size()))
 
     text_entry_field.blit(text_entry_topleft, (0, 0))
@@ -693,11 +695,11 @@ def _show_modal(text, default, text_entry, buttons):
                     text_entry_h - text_entry_bottomright.get_height(),
                     text_entry_right.get_height()):
         text_entry_field.blit(text_entry_right, (
-            text_entry_w - text_entry_right.get_height(), i))
+            text_entry_w - text_entry_right.get_width(), i))
 
     text_entry_rect = text_entry_field.get_rect()
     text_entry_rect.left = 4
-    text_entry_rect.bottom = box_h - button_h - 8
+    text_entry_rect.bottom = box_h - text_entry_h - 8
     if text_entry:
         box.blit(text_entry_field, text_entry_rect)
     text_entry_rect.w -= 4
@@ -748,7 +750,7 @@ def _show_modal(text, default, text_entry, buttons):
     for i in xrange(button_topright.get_height(),
                     button_h - button_bottomright.get_height(),
                     button_right.get_height()):
-        button.blit(button_right, (button_w - button_right.get_height(), i))
+        button.blit(button_right, (button_w - button_right.get_width(), i))
 
     # Button image when selected
     button_selected = pygame.Surface((button_w, button_h), pygame.SRCALPHA)
@@ -799,7 +801,7 @@ def _show_modal(text, default, text_entry, buttons):
                     button_selected_right.get_height()):
         button_selected.blit(
             button_selected_right,
-            (button_w - button_selected_right.get_height(), i))
+            (button_w - button_selected_right.get_width(), i))
 
     # Button image when pressed
     button_press = pygame.Surface((button_w, button_h), pygame.SRCALPHA)
@@ -847,22 +849,22 @@ def _show_modal(text, default, text_entry, buttons):
                     button_h - button_press_bottomright.get_height(),
                     button_press_right.get_height()):
         button_press.blit(button_press_right,
-                          (button_w - button_press_right.get_height(), i))
+                          (button_w - button_press_right.get_width(), i))
 
     message_sprite = sge.Sprite(width=text_w, height=text_h)
-    message_sprite.draw_text(font, text, 0, 0, text_w, text_h, color='white')
+    message_sprite.draw_text(font, text, 0, 0, text_w, text_h, color='black')
     box.blit(message_sprite._baseimages[0], (4, 4))
     del sge.game.sprites[message_sprite.id]
 
     selected_buttons = []
     press_buttons = []
     button_rects = []
-    button_y = box_h - 4
+    button_y = box_h - 8
     for i in xrange(len(buttons)):
         button_surf = button.copy()
         button_selected_surf = button_selected.copy()
         button_press_surf = button_press.copy()
-        rendered_text = font._font.render(buttons[i], True, (255, 255, 255))
+        rendered_text = font._font.render(buttons[i], True, (0, 0, 0))
         button_rect = button_surf.get_rect()
         render_rect = rendered_text.get_rect(center=button_rect.center)
         button_surf.blit(rendered_text, render_rect)
@@ -871,7 +873,7 @@ def _show_modal(text, default, text_entry, buttons):
         selected_buttons.append(button_selected_surf)
         press_buttons.append(button_press_surf)
 
-        button_x = box_w * (i + 1) / (len(buttons) + 1)
+        button_x = box_w * (1 + 2 * i) / (len(buttons) * 2)
         button_rect.centerx = button_x
         button_rect.bottom = button_y
         box.blit(button_surf, button_rect)

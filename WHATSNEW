@@ -14,10 +14,14 @@ Specification misc changes:
 * Documentation reformatted.
 * "id"/"id_" argument in many constructor methods changed to "ID".
 
+SGE Pygame misc changes:
+* Appearance of modal dialog boxes changed.
+
 SGE Pygame bugfixes:
 * sge.BackgroundLayer not being able to accept sprite IDs
 * Sprites being rotated about the center instead of the origin
 * Projections being broken (arguments in a method call were messed up)
+* Text wrapping wrongly
 
 
 0.4.0

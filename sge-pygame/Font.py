@@ -222,7 +222,7 @@ class Font(object):
         # Split the text into lines of the proper size for ``width`` and
         # return a list of the lines.  If ``width`` is None, only
         # newlines split the text.
-        lines = text.split('\n')
+        lines = text.splitlines()
 
         if width is None:
             return lines
@@ -235,8 +235,8 @@ class Font(object):
                     words = line.split(' ')
                     while words:
                         current_line = words.pop(0)
-                        while (words and self._font.size(
-                                ' '.join((current_line, words[0]))) < width):
+                        while (words and self._font.size(' '.join(
+                                (current_line, words[0])))[0] <= width):
                             current_line = ' '.join((current_line,
                                                      words.pop(0)))
                         split_text.append(current_line)
