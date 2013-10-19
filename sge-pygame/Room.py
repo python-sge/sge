@@ -350,7 +350,8 @@ class Room(object):
         sprite = sge.Sprite(None, width=wh, height=wh)
         sprite.draw_circle(xy, xy, radius, fill, outline, outline_thickness,
                            anti_alias)
-        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
+        p = _Projection(x - radius, y - radius, z, sprite=sprite,
+                        detects_collisions=False)
         self.add(p)
 
     def project_sprite(self, sprite, image, x, y, z):
