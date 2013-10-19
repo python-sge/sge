@@ -7,7 +7,7 @@ without any warranty.
 
 ========================================================================
 
-x.x.x
+0.5.0
 ------------------------------------------------------------------------
 
 Specification misc changes:
@@ -17,6 +17,7 @@ Specification misc changes:
 SGE Pygame bugfixes:
 * sge.BackgroundLayer not being able to accept sprite IDs
 * Sprites being rotated about the center instead of the origin
+* Projections being broken (arguments in a method call were messed up)
 
 
 0.4.0

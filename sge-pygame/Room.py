@@ -224,7 +224,7 @@ class Room(object):
         information.
 
         """
-        sprite = sge.Sprite(None, 1, 1)
+        sprite = sge.Sprite(None, width=1, height=1)
         sprite.draw_dot(0, 0, color)
         p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
         self.add(p)
@@ -258,7 +258,7 @@ class Room(object):
         y1 -= y
         x2 -= x
         y2 -= y
-        sprite = sge.Sprite(None, w, h)
+        sprite = sge.Sprite(None, width=w, height=h)
         sprite.draw_line(x1, y1, x2, y2, color, thickness, anti_alias)
         p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
         self.add(p)
@@ -286,7 +286,7 @@ class Room(object):
         y -= draw_y
         w = width + outline_thickness
         h = height + outline_thickness
-        sprite = sge.Sprite(None, w, h)
+        sprite = sge.Sprite(None, width=w, height=h)
         sprite.draw_rectangle(draw_x, draw_y, w, h, fill, outline,
                               outline_thickness)
         p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
@@ -322,7 +322,7 @@ class Room(object):
         y -= draw_y
         w = width + outline_thickness
         h = height + outline_thickness
-        sprite = sge.Sprite(None, w, h)
+        sprite = sge.Sprite(None, width=w, height=h)
         sprite.draw_ellipse(draw_x, draw_y, w, h, fill, outline,
                             outline_thickness)
         p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
@@ -347,7 +347,7 @@ class Room(object):
         outline_thickness = abs(outline_thickness)
         xy = radius + outline_thickness // 2
         wh = 2 * radius + outline_thickness
-        sprite = sge.Sprite(None, wh, wh)
+        sprite = sge.Sprite(None, width=wh, height=wh)
         sprite.draw_circle(xy, xy, radius, fill, outline, outline_thickness,
                            anti_alias)
         p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
@@ -394,7 +394,7 @@ class Room(object):
                   sge.ALIGN_RIGHT: w}.setdefault(halign, w / 2)
         draw_y = {sge.ALIGN_TOP: 0, sge.ALIGN_MIDDLE: h / 2,
                   sge.ALIGN_BOTTOM: h}.setdefault(valign, h / 2)
-        sprite = sge.Sprite(None, w, h)
+        sprite = sge.Sprite(None, width=w, height=h)
         sprite.draw_text(font, text, draw_x, draw_y, width, height, color,
                          halign, valign, anti_alias)
         p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)

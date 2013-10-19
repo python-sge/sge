@@ -220,8 +220,10 @@ class Sprite(object):
             else:
                 self.id = self.name
 
+                i = 0
                 while self.id in sge.game.sprites:
-                    self.id += "_"
+                    i += 1
+                    self.id = "{0}{1}".format(self.name, i)
 
             for path in sge.image_directories:
                 if os.path.isdir(path):
@@ -311,10 +313,9 @@ class Sprite(object):
             if ID is not None:
                 self.id = ID
             else:
-                i = 0
-                while i in sge.game.sprites:
-                    i += 1
-                self.id = i
+                self.id = 0
+                while self.id in sge.game.sprites:
+                    self.id += 1
 
             img = pygame.Surface((width, height), pygame.SRCALPHA)
             img.fill(pygame.Color(0, 0, 0, 0))

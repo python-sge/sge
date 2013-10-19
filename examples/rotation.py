@@ -52,6 +52,8 @@ class Circle(sge.StellarClass):
 
     def event_step(self, time_passed):
         self.image_rotation += 2
+        sge.game.current_room.project_circle(self.x, self.y, self.z + 1, 8,
+                                             outline="green")
 
     def event_mouse_move(self, x, y):
         if self.collides(sge.game.mouse):
