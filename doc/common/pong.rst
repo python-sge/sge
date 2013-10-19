@@ -250,10 +250,12 @@ Once again, the Ball class is going to be a subclass of
 :class:`sge.StellarClass`.  Once again, we are going to start by
 extending the constructor method::
 
-    def __init__(self):
-        x = sge.game.width / 2
-        y = sge.game.height / 2
-        super(Ball, self).__init__(x, y, 1, sprite="ball")
+    class Ball(sge.StellarClass):
+
+        def __init__(self):
+            x = sge.game.width / 2
+            y = sge.game.height / 2
+            super(Ball, self).__init__(x, y, 1, sprite="ball")
 
 This extension is more simple than :class:`Player`'s: our etension
 simply removes all arguments from the constructor method and hard-codes
@@ -294,16 +296,19 @@ that with a collision event::
         if isinstance(other, Player):
             if other.hit_direction == 1:
                 self.bbox_left = other.bbox_right + 1
-                self.xvelocity = abs(self.xvelocity) + BALL_ACCELERATION
+                self.xvelocity = min(abs(self.xvelocity) + BALL_ACCELERATION,
+                                     BALL_MAX_SPEED)
             else:
                 self.bbox_right = other.bbox_left - 1
-                self.xvelocity = -abs(self.xvelocity) - BALL_ACCELERATION
+                self.xvelocity = max(-abs(self.xvelocity) - BALL_ACCELERATION,
+                                     -BALL_MAX_SPEED)
 
             self.yvelocity += (self.y - other.y) * PADDLE_VERTICAL_FORCE
 
-We also need to define two more constants::
+We also need to define three more constants::
 
     BALL_ACCELERATION = 0.2
+    BALL_MAX_SPEED = 15
     PADDLE_VERTICAL_FORCE = 1 / 12
 
 The collision event occurs whenever another object touches this object.
@@ -317,6 +322,23 @@ to slowly speed up as the game progresses.  If :attr:`hit_direction` is
 something other than ``1``, we assume that the paddle hits to the left;
 the behavior is identical to the behavior of hitting to the right, but
 opposite.
+
+Although accelerating the ball makes the gameplay more fun, we must not
+let the ball go too fast.  Remember that movement is much like an
+animation; the ball changes its position from one position to another;
+the greater the speed, the bigger the difference.  Movement perceived is
+only an illusion.  As a result, if the ball goes too fast, it can
+pass right through a paddle without a collision ever being detected.  To
+prevent this, we limit the speed the ball can go at by a constant; in
+general, a good value to choose is one that is slightly less than the
+width (in the case of horizontal movement) or height (in the case of
+vertical movement) of the two objects that need to detect collisions
+with each other added together.  This method only works reliably if one
+of the objects is not moving; if both of the objects are moving, what
+maximum speed they should be moving at is more complicated, but in this
+case, the paddle is horizontally stationary.  We are later going to set
+the width of both the paddle and the ball to ``8``, so we will set the
+maximum ball speed to ``15`` (i.e. ``8 + 8 - 1``).
 
 Since the game would be rather dull if the players couldn't control the
 direction of the ball, so we allow the players to control the ball by
@@ -353,3 +375,255 @@ method we used to keep the paddles inside the view; the main difference
 is we also set the ball's vertical velocity to move away from the edge;
 if it collided with the bottom, the vertical velocity is made negative,
 and if it collided with the top, the vertical velocity is made positive.
+
+The main Function
+-----------------
+
+Let's make our Pong game playable now by defining the :func:`main`
+function::
+
+    def main():
+        # Create Game object
+        Game(640, 480, fps=120)
+
+        # Load sprites
+        paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,
+                                   origin_y=24)
+        paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
+                                     paddle_sprite.height, fill="white")
+        ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
+                                 origin_y=4)
+        ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
+                                   fill="white")
+
+        # Load backgrounds
+        layers = (sge.BackgroundLayer("ball", sge.game.width / 2, 0, -10000,
+                                      xrepeat=False),)
+        background = sge.Background (layers, "black")
+
+        # Create objects
+        Player(1)
+        Player(2)
+        glob.ball = Ball()
+        objects = (glob.player1, glob.player2, glob.ball)
+
+        # Create rooms
+        room1 = sge.Room(objects, background=background)
+
+        sge.game.start()
+
+
+    if __name__ == '__main__':
+        main()
+
+Since the graphics of Pong are so simple, we are dynamically generating
+them rather than loading existing images.  We are also generating a
+background with a line in the middle by using a
+:class:`sge.BackgroundLayer` object. Background layers basically tell a
+background how to tile a particular sprite in order to decorate the
+background.  In our case, we take the ball sprite (since it is just a
+white square; no need to create an entirely new one) and tile it only
+vertically in the horizontal center of the screen (vertically at y=0,
+but this doesn't matter because the sprite is being tiled infinitely in
+the vertical direction).
+
+We set the game to run at 120 frames per second because it's hard to
+play Pong with digital controls, and a higher frame rate helps minimize
+this difficulty.
+
+Pong Without Scoring or Sound
+-----------------------------
+
+This is what we have so far::
+
+    #!/usr/bin/env python2
+
+    # Pong
+    # Written in 2013 by Julian Marchant <onpon4@riseup.net>
+    #
+    # To the extent possible under law, the author(s) have dedicated all
+    # copyright and related and neighboring rights to this software to the
+    # public domain worldwide. This software is distributed without any
+    # warranty.
+    #
+    # You should have received a copy of the CC0 Public Domain Dedication
+    # along with this software. If not, see
+    # <http://creativecommons.org/publicdomain/zero/1.0/>.
+
+    from __future__ import division
+    from __future__ import absolute_import
+    from __future__ import print_function
+    from __future__ import unicode_literals
+
+    import sge
+    
+    PADDLE_SPEED = 4
+    PADDLE_VERTICAL_FORCE = 1 / 12
+    BALL_START_SPEED = 2
+    BALL_ACCELERATION = 0.2
+
+
+    class glob(object):
+
+        # This class is for global variables.  While not necessary, using a
+        # container class like this is less potentially confusing than using
+        # actual global variables.
+
+        player1 = None
+        player2 = None
+        ball = None
+        hud_sprite = None
+        bounce_sound = None
+        bounce_wall_sound = None
+        score_sound = None
+        game_in_progress = True
+
+
+    class Game(sge.Game):
+
+        def event_key_press(self, key, char):
+            if key == 'f8':
+                sge.Sprite.from_screenshot().save('screenshot.jpg')
+            elif key == 'escape':
+                self.event_close()
+            elif key in ('p', 'enter'):
+                self.pause()
+
+        def event_close(self):
+            m = "Are you sure you want to quit?"
+            if sge.show_message(m, ("No", "Yes")):
+                self.end()
+
+        def event_paused_key_press(self, key, char):
+            if key == 'escape':
+                # This allows the player to still exit while the game is
+                # paused, rather than having to unpause first.
+                self.event_close()
+            else:
+                self.unpause()
+
+        def event_paused_close(self):
+            # This allows the player to still exit while the game is paused,
+            # rather than having to unpause first.
+            self.event_close()
+
+
+    class Player(sge.StellarClass):
+
+        def __init__(self, player=1):
+            if player == 1:
+                self.up_key = "w"
+                self.down_key = "s"
+                x = 32
+                glob.player1 = self
+                self.hit_direction = 1
+            else:
+                self.up_key = "up"
+                self.down_key = "down"
+                x = sge.game.width - 32
+                glob.player2 = self
+                self.hit_direction = -1
+
+            y = sge.game.height / 2
+            super(Player, self).__init__(x, y, 0, sprite="paddle")
+
+        def event_step(self, time_passed):
+            # Movement
+            key_motion = (sge.get_key_pressed(self.down_key) -
+                          sge.get_key_pressed(self.up_key))
+
+            self.yvelocity = key_motion * PADDLE_SPEED
+
+            # Keep the paddle inside the window
+            if self.bbox_top < 0:
+                self.bbox_top = 0
+            elif self.bbox_bottom > sge.game.height:
+                self.bbox_bottom = sge.game.height
+
+
+    class Ball(sge.StellarClass):
+
+        def __init__(self):
+            x = sge.game.width / 2
+            y = sge.game.height / 2
+            super(Ball, self).__init__(x, y, 1, sprite="ball")
+
+        def event_create(self):
+            self.serve()
+
+        def event_step(self, time_passed):
+            # Scoring
+            if self.bbox_right < 0:
+                self.serve(-1)
+            elif self.bbox_left > sge.game.width:
+                self.serve(1)
+
+            # Bouncing off of the edges
+            if self.bbox_bottom > sge.game.height:
+                self.bbox_bottom = sge.game.height
+                self.yvelocity = -abs(self.yvelocity)
+            elif self.bbox_top < 0:
+                self.bbox_top = 0
+                self.yvelocity = abs(self.yvelocity)
+
+        def event_collision(self, other):
+            if isinstance(other, Player):
+                if other.hit_direction == 1:
+                    self.bbox_left = other.bbox_right + 1
+                    self.xvelocity = min(abs(self.xvelocity) + BALL_ACCELERATION,
+                                         BALL_MAX_SPEED)
+                else:
+                    self.bbox_right = other.bbox_left - 1
+                    self.xvelocity = max(-abs(self.xvelocity) - BALL_ACCELERATION,
+                                         -BALL_MAX_SPEED)
+
+                self.yvelocity += (self.y - other.y) * PADDLE_VERTICAL_FORCE
+
+        def serve(self, direction=1):
+            self.x = self.xstart
+            self.y = self.ystart
+
+            # Next round
+            self.xvelocity = BALL_START_SPEED * direction
+            self.yvelocity = 0
+
+
+    def main():
+        # Create Game object
+        Game(640, 480, fps=120)
+
+        # Load sprites
+        paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,
+                                   origin_y=24)
+        paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
+                                     paddle_sprite.height, fill="white")
+        ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
+                                 origin_y=4)
+        ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
+                                   fill="white")
+
+        # Load backgrounds
+        layers = (sge.BackgroundLayer("ball", sge.game.width / 2, 0, -10000,
+                                      xrepeat=False),)
+        background = sge.Background (layers, "black")
+
+        # Create objects
+        Player(1)
+        Player(2)
+        glob.ball = Ball()
+        objects = (glob.player1, glob.player2, glob.ball)
+
+        # Create rooms
+        room1 = sge.Room(objects, background=background)
+
+        sge.game.start()
+
+
+    if __name__ == '__main__':
+        main()
+
+This is a playable Pong game; there are two paddles and a ball, and the
+ball returns any time it leaves the left or right side of the screen.
+Unfortunately, though, it is at this point less like Pong and more like
+the Magnavox Odyssey; there is no scoring, so you have to keep track of
+this manually, and there is no sound.  Let's fix those problems.

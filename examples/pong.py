@@ -249,7 +249,8 @@ def main():
                                  origin_y=0)
 
     # Load backgrounds
-    layers = (sge.BackgroundLayer("ball", 320, 0, -10000, xrepeat=False),)
+    layers = (sge.BackgroundLayer("ball", sge.game.width / 2, 0, -10000,
+                                  xrepeat=False),)
     background = sge.Background (layers, "black")
 
     # Load fonts
@@ -264,15 +265,12 @@ def main():
     Player(1)
     Player(2)
     glob.ball = Ball()
-    hud = sge.StellarClass(320, 0, -10, sprite=glob.hud_sprite,
+    hud = sge.StellarClass(sge.game.width / 2, 0, -10, sprite=glob.hud_sprite,
                            detects_collisions=False)
     objects = (glob.player1, glob.player2, glob.ball, hud)
 
-    # Create view
-    views = (sge.View(0, 0),)
-
     # Create rooms
-    room1 = sge.Room(objects, views=views, background=background)
+    room1 = sge.Room(objects, background=background)
 
     sge.game.start()
 
