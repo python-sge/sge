@@ -1650,50 +1650,16 @@ def _get_rotation_offset(origin_x, origin_y, rotation, image_width,
 
     if rotation % 360:
         # Rotate about the origin
-        center_x = image_width / 2
-        center_y = image_height / 2
-        x = origin_x - image_width
-        # We have to make y negative to work with the unit circle.
-        y = -(origin_y - image_height)
-
-        if x or y:
-            if not x:
-                rot = math.radians(90 if y > 0 else 270)
-                h = abs(y)
-            elif not y:
-                rot = math.radians(0 if x > 0 else 180)
-                h = abs(x)
-            else:
-                rot = abs(math.atan(y / x))
-                h = abs(y / math.sin(rot))
-
-                # Find quadrant
-                if y > 0:
-                    if x > 0:
-                        # Quadrant I; nothing to do
-                        pass
-                    else:
-                        # Quadrant II
-                        rot = math.pi - rot
-                else:
-                    if x < 0:
-                        # Quadrant III
-                        rot += math.pi
-                    else:
-                        # Quadrant IV
-                        rot = (2 * math.pi) - rot
-
-            rot += math.radians(rotation)
-            rot %= 2 * math.pi
-            new_x = h * math.cos(rot)
-            new_y = h * math.sin(rot)
-            new_origin_x = new_x + image_width
-            # Now that we're done with the unit circle,
-            # we need to change back to the SGE's
-            # version of y.
-            new_origin_y = -new_y + image_height
-
-            x_offset += new_origin_x - origin_x
-            y_offset += new_origin_y - origin_y
+        center_x = image_width_normal / 2
+        center_y = image_height_normal / 2
+        xorig = origin_x - center_x
+        yorig = origin_y - center_y
+        start_angle = math.atan2(-yorig, xorig)
+        new_angle = start_angle + math.radians(rotation)
+        radius = math.hypot(xorig, yorig)
+        new_center_x = origin_x + radius * math.cos(new_angle)
+        new_center_y = origin_y - radius * math.sin(new_angle)
+        x_offset += new_center_x + center_x
+        y_offset += new_center_y + center_y
 
     return (x_offset, y_offset)
