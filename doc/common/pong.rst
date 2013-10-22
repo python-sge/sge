@@ -461,6 +461,7 @@ This is what we have so far::
     PADDLE_VERTICAL_FORCE = 1 / 12
     BALL_START_SPEED = 2
     BALL_ACCELERATION = 0.2
+    BALL_MAX_SPEED = 15
 
 
     class glob(object):
@@ -627,3 +628,169 @@ ball returns any time it leaves the left or right side of the screen.
 Unfortunately, though, it is at this point less like Pong and more like
 the Magnavox Odyssey; there is no scoring, so you have to keep track of
 this manually, and there is no sound.  Let's fix those problems.
+
+Adding Scoring
+--------------
+
+It's a little weird to have a video game that doesn't keep score, so we
+will now add a proper scoring system to our Pong game.  Each player will
+get one point whenever the ball passes by the other player, and whoever
+gets 10 points first will win.
+
+Let's start by defining some constants::
+
+    POINTS_TO_WIN = 10
+    TEXT_OFFSET = 16
+
+There are a couple of ways to display the score.  The most obvious way
+is to project the score each frame, but we are instead going to create a
+custom sprite, an object to display that sprite, and re-draw to it as
+needed.  The reason for this is actually because of the implementation
+I'm using; the information specific to the Pygame SGE warns that
+projection methods are inefficient.  (In fact, the Pygame SGE implements
+these methods by creating a whole new sprite and object every single
+frame, which is an incredibly wasteful method.)  Other than that, using
+this method for more complicated HUDs can prove to be much easier and
+more organized than projecting directly onto the room, so it's good to
+know how to do it.
+
+First, we need to create the HUD sprite and the HUD object.  We will do
+this in the :func:`main` function.
+
+This is our list of sprites as we have it now::
+
+    # Load sprites
+    paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,
+                               origin_y=24)
+    paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
+                                 paddle_sprite.height, fill="white")
+    ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
+                             origin_y=4)
+    ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
+                               fill="white")
+
+We will add one more sprite at the end, resulting in this::
+
+    # Load sprites
+    paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,
+                               origin_y=24)
+    paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
+                                 paddle_sprite.height, fill="white")
+    ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
+                             origin_y=4)
+    ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
+                               fill="white")
+    glob.hud_sprite = sge.Sprite(width=320, height=160, origin_x=160,
+                                 origin_y=0)
+
+This is our list of objects as we have it now::
+
+    # Create objects
+    Player(1)
+    Player(2)
+    glob.ball = Ball()
+    objects = (glob.player1, glob.player2, glob.ball)
+
+We will create the HUD object and add it to :obj:`objects`, resulting in
+the following::
+
+    # Create objects
+    Player(1)
+    Player(2)
+    glob.ball = Ball()
+    hud = sge.StellarClass(sge.game.width / 2, 0, -10, sprite=glob.hud_sprite,
+                           detects_collisions=False)
+    objects = (glob.player1, glob.player2, glob.ball, hud)
+
+We want to put the HUD sprite in a globally-accessible variable because
+we are going to change the score table by changing the sprite directly.
+The HUD object, on the other hand, never needs to be changed; it just
+needs to be in the room.
+
+Next, we need to load a font.  To do so, we will add this (I am putting
+it between the background and object creations, but you can put them
+anywhere in :func:`main` as long as it's before the game is started)::
+
+    # Load fonts
+    sge.Font('Liberation Mono', ID="hud", size=48)
+
+For the first argument of :meth:`sge.Font.__init__`, we specify one of
+two things: either the name of a system font, or the name of a font file
+that we are distributing with our game in our data folder.  For
+simplicity, we will use a system font for now.  I chose Liberation Mono,
+but you can choose any font you like.
+
+Now let's add score attributes to the players.  Because we want to
+refresh the HUD every time the score changes, we are going to make these
+score attributes a property of the :class:`Player` class::
+
+    @property
+    def score(self):
+        return self.v_score
+
+    @score.setter
+    def score(self, value):
+        if value != self.v_score:
+            self.v_score = value
+            refresh_hud()
+
+:func:`refresh_hud` will be the function we define later on to refresh
+the HUD.
+
+Next, we need to initialize :attr:`v_score`.  We will do this in the
+create event::
+
+    def event_create(self):
+        self.v_score = 0
+
+The reason we initialize :attr:`v_score` directly is because
+:func:`refresh_hud` is going to need both player's scores; if we call it
+before both players' scores are initialized, we will get an error.
+
+Now that the score property is defined, let's add that function::
+
+    def refresh_hud():
+        # This fixes the HUD sprite so that it displays the correct score.
+        glob.hud_sprite.draw_clear()
+        x = glob.hud_sprite.width / 2
+        glob.hud_sprite.draw_text("hud", str(glob.player1.score), x - TEXT_OFFSET,
+                                  TEXT_OFFSET, color="white",
+                                  halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
+        glob.hud_sprite.draw_text("hud", str(glob.player2.score), x + TEXT_OFFSET,
+                                  TEXT_OFFSET, color="white",
+                                  halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
+
+First we clear the sprite with :meth:`sge.Sprite.draw_clear`, then we
+draw both player's scores on it; player 1's score goes on the left, and
+player 2's score goes on the right.
+
+The way it is now, the score won't start being displayed until someone
+scores, which is not what we want.  To prevent this, we want to call
+:func:`refresh_hud` somewhere when the game starts.  I am choosing the
+create event of :class:`Ball`::
+
+    def event_create(self):
+        refresh_hud()
+        self.serve()
+
+Finally, we need to make the players actually get points.  This is what
+we currently have in the step event of :class:`Ball`::
+
+    # Scoring
+    if self.bbox_right < 0:
+        self.serve(-1)
+    elif self.bbox_left > sge.game.width:
+        self.serve(1)
+
+Let's add some lines to increase the players' score::
+
+    # Scoring
+    if self.bbox_right < 0:
+        glob.player2.score += 1
+        self.serve(-1)
+    elif self.bbox_left > sge.game.width:
+        glob.player1.score += 1
+        self.serve(1)
+
+Adding Sound
+------------

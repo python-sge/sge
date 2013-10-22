@@ -30,6 +30,8 @@ PADDLE_VERTICAL_FORCE = 1 / 12
 BALL_START_SPEED = 2
 BALL_ACCELERATION = 0.2
 BALL_MAX_SPEED = 15
+POINTS_TO_WIN = 10
+TEXT_OFFSET = 16
 
 
 class glob(object):
@@ -60,9 +62,8 @@ class Game(sge.Game):
                 self.pause()
             else:
                 glob.game_in_progress = True
-                glob.player1.v_score = 0
-                glob.player2.v_score = 0
-                refresh_hud()
+                glob.player1.score = 0
+                glob.player2.score = 0
                 glob.ball.serve()
 
     def event_close(self):
@@ -95,7 +96,6 @@ class Player(sge.StellarClass):
         if value != self.v_score:
             self.v_score = value
             refresh_hud()
-            glob.score_sound.play()
 
     def __init__(self, player=1):
         if player == 1:
@@ -164,9 +164,11 @@ class Ball(sge.StellarClass):
         # Scoring
         if self.bbox_right < 0:
             glob.player2.score += 1
+            glob.score_sound.play()
             self.serve(-1)
         elif self.bbox_left > sge.game.width:
             glob.player1.score += 1
+            glob.score_sound.play()
             self.serve(1)
 
         # Bouncing off of the edges
@@ -197,7 +199,8 @@ class Ball(sge.StellarClass):
         self.x = self.xstart
         self.y = self.ystart
 
-        if glob.player1.score < 10 and glob.player2.score < 10:
+        if (glob.player1.score < POINTS_TO_WIN and
+                glob.player2.score < POINTS_TO_WIN):
             # Next round
             self.xvelocity = BALL_START_SPEED * direction
             self.yvelocity = 0
@@ -224,12 +227,12 @@ def refresh_hud():
     # This fixes the HUD sprite so that it displays the correct score.
     glob.hud_sprite.draw_clear()
     x = glob.hud_sprite.width / 2
-    glob.hud_sprite.draw_text("hud", str(glob.player1.score), x - 16, 16,
-                              color="white", halign=sge.ALIGN_RIGHT,
-                              valign=sge.ALIGN_TOP)
-    glob.hud_sprite.draw_text("hud", str(glob.player2.score), x + 16, 16,
-                              color="white", halign=sge.ALIGN_LEFT,
-                              valign=sge.ALIGN_TOP)
+    glob.hud_sprite.draw_text("hud", str(glob.player1.score), x - TEXT_OFFSET,
+                              TEXT_OFFSET, color="white",
+                              halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
+    glob.hud_sprite.draw_text("hud", str(glob.player2.score), x + TEXT_OFFSET,
+                              TEXT_OFFSET, color="white",
+                              halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
 
 
 def main():

@@ -1655,8 +1655,8 @@ def _get_rotation_offset(origin_x, origin_y, rotation, image_width,
         xorig = origin_x - center_x
         yorig = origin_y - center_y
         start_angle = math.atan2(-yorig, xorig)
-        new_angle = start_angle + math.radians(rotation)
         radius = math.hypot(xorig, yorig)
+        new_angle = start_angle + math.radians(rotation)
         new_center_x = origin_x + radius * math.cos(new_angle)
         new_center_y = origin_y - radius * math.sin(new_angle)
         x_offset += new_center_x + center_x
