@@ -62,9 +62,7 @@ class Game(sge.Game):
                 self.pause()
             else:
                 glob.game_in_progress = True
-                glob.player1.score = 0
-                glob.player2.score = 0
-                glob.ball.serve()
+                self.current_room.start()
 
     def event_close(self):
         m = "Are you sure you want to quit?"
@@ -214,10 +212,12 @@ class Ball(sge.StellarClass):
             p2score = glob.player2.score
             p1text = "WIN" if p1score > p2score else "LOSE"
             p2text = "WIN" if p2score > p1score else "LOSE"
-            glob.hud_sprite.draw_text("hud", p1text, x - 16, 16, color="white",
+            glob.hud_sprite.draw_text("hud", p1text, x - TEXT_OFFSET,
+                                      TEXT_OFFSET, color="white",
                                       halign=sge.ALIGN_RIGHT,
                                       valign=sge.ALIGN_TOP)
-            glob.hud_sprite.draw_text("hud", p2text, x + 16, 16, color="white",
+            glob.hud_sprite.draw_text("hud", p2text, x + TEXT_OFFSET,
+                                      TEXT_OFFSET, color="white",
                                       halign=sge.ALIGN_LEFT,
                                       valign=sge.ALIGN_TOP)
             glob.game_in_progress = False

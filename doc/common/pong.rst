@@ -654,58 +654,37 @@ this method for more complicated HUDs can prove to be much easier and
 more organized than projecting directly onto the room, so it's good to
 know how to do it.
 
+HUD sprite and object
+~~~~~~~~~~~~~~~~~~~~~
+
 First, we need to create the HUD sprite and the HUD object.  We will do
 this in the :func:`main` function.
 
-This is our list of sprites as we have it now::
+Add one more sprite to the list of sprites::
 
-    # Load sprites
-    paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,
-                               origin_y=24)
-    paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
-                                 paddle_sprite.height, fill="white")
-    ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
-                             origin_y=4)
-    ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
-                               fill="white")
-
-We will add one more sprite at the end, resulting in this::
-
-    # Load sprites
-    paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,
-                               origin_y=24)
-    paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
-                                 paddle_sprite.height, fill="white")
-    ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
-                             origin_y=4)
-    ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
-                               fill="white")
     glob.hud_sprite = sge.Sprite(width=320, height=160, origin_x=160,
                                  origin_y=0)
 
-This is our list of objects as we have it now::
+Create a HUD object::
 
-    # Create objects
-    Player(1)
-    Player(2)
-    glob.ball = Ball()
-    objects = (glob.player1, glob.player2, glob.ball)
-
-We will create the HUD object and add it to :obj:`objects`, resulting in
-the following::
-
-    # Create objects
-    Player(1)
-    Player(2)
-    glob.ball = Ball()
     hud = sge.StellarClass(sge.game.width / 2, 0, -10, sprite=glob.hud_sprite,
                            detects_collisions=False)
+
+And finally, add the HUD object to the list of initial objects::
+
     objects = (glob.player1, glob.player2, glob.ball, hud)
 
 We want to put the HUD sprite in a globally-accessible variable because
 we are going to change the score table by changing the sprite directly.
 The HUD object, on the other hand, never needs to be changed; it just
 needs to be in the room.
+
+The size of the HUD sprite is arbitrary. Most of it is going to be
+invisible, so our only requirement for it is that it needs to be large
+enough to fit the rendered text.
+
+Font
+~~~~
 
 Next, we need to load a font.  To do so, we will add this (I am putting
 it between the background and object creations, but you can put them
@@ -719,6 +698,17 @@ two things: either the name of a system font, or the name of a font file
 that we are distributing with our game in our data folder.  For
 simplicity, we will use a system font for now.  I chose Liberation Mono,
 but you can choose any font you like.
+
+.. note::
+
+   What system fonts are available on a given system is not standardized
+   in any way.  If you specify a system font and that system font is not
+   available, the SGE will choose what font to use arbitrarily.  For
+   this reason, you should never use system fonts in your games except
+   as a temporary placeholder.
+
+Score property
+~~~~~~~~~~~~~~
 
 Now let's add score attributes to the players.  Because we want to
 refresh the HUD every time the score changes, we are going to make these
@@ -747,6 +737,9 @@ The reason we initialize :attr:`v_score` directly is because
 :func:`refresh_hud` is going to need both player's scores; if we call it
 before both players' scores are initialized, we will get an error.
 
+Refresh HUD Function
+~~~~~~~~~~~~~~~~~~~~
+
 Now that the score property is defined, let's add that function::
 
     def refresh_hud():
@@ -762,19 +755,24 @@ Now that the score property is defined, let's add that function::
 
 First we clear the sprite with :meth:`sge.Sprite.draw_clear`, then we
 draw both player's scores on it; player 1's score goes on the left, and
-player 2's score goes on the right.
+player 2's score goes on the right.  We use :const:`TEXT_OFFSET` to make
+it look nicer; if you set TEXT_OFFSET to ``0``, you will notice that it
+looks a little ugly because the text is right next to the line and right
+below the top of the screen.
 
 The way it is now, the score won't start being displayed until someone
 scores, which is not what we want.  To prevent this, we want to call
 :func:`refresh_hud` somewhere when the game starts.  I am choosing the
-create event of :class:`Ball`::
+create event of :class:`Ball`, because the ball is created after both of
+the players (and so its create event will always execute after both of
+the player objects').
 
-    def event_create(self):
-        refresh_hud()
-        self.serve()
+Adding Points
+~~~~~~~~~~~~~
 
-Finally, we need to make the players actually get points.  This is what
-we currently have in the step event of :class:`Ball`::
+We need to make the players actually get points for the scoring system
+to be of any use.  This is what we currently have in the step event
+of :class:`Ball`::
 
     # Scoring
     if self.bbox_right < 0:
@@ -792,5 +790,693 @@ Let's add some lines to increase the players' score::
         glob.player1.score += 1
         self.serve(1)
 
+Now, every time the ball passes a player, the opposite player will get a
+point.
+
+Win Condition
+~~~~~~~~~~~~~
+
+At this point, the game will go on forever until the players decide to
+stop.  That's not what we want; we want the first player to get 10
+points to be declared the winner.  We will handle this in
+:meth:`Ball.serve`.  This is what we have so far::
+
+    def serve(self, direction=1):
+        self.x = self.xstart
+        self.y = self.ystart
+
+        # Next round
+        self.xvelocity = BALL_START_SPEED * direction
+        self.yvelocity = 0
+
+Replace that with this::
+
+    def serve(self, direction=1):
+        self.x = self.xstart
+        self.y = self.ystart
+
+        if (glob.player1.score < POINTS_TO_WIN and
+                glob.player2.score < POINTS_TO_WIN):
+            # Next round
+            self.xvelocity = BALL_START_SPEED * direction
+            self.yvelocity = 0
+        else:
+            # Game Over!
+            self.xvelocity = 0
+            self.yvelocity = 0
+            glob.hud_sprite.draw_clear()
+            x = glob.hud_sprite.width / 2
+            p1score = glob.player1.score
+            p2score = glob.player2.score
+            p1text = "WIN" if p1score > p2score else "LOSE"
+            p2text = "WIN" if p2score > p1score else "LOSE"
+            glob.hud_sprite.draw_text("hud", p1text, x - TEXT_OFFSET,
+                                      TEXT_OFFSET, color="white",
+                                      halign=sge.ALIGN_RIGHT,
+                                      valign=sge.ALIGN_TOP)
+            glob.hud_sprite.draw_text("hud", p2text, x + TEXT_OFFSET,
+                                      TEXT_OFFSET, color="white",
+                                      halign=sge.ALIGN_LEFT,
+                                      valign=sge.ALIGN_TOP)
+            glob.game_in_progress = False
+
+That's a lot of extra code.  First, we check if both players' scores are
+less than :const:`POINTS_TO_WIN`.  If it is, that means the game is
+still in progress, so we start the next round as the function did
+previously.  Otherwise, we stop the ball, and then we draw "WIN" on the
+winner's side, and "LOSE" on the loser's side.  I used two conditional
+expressions to achieve this because it's quick, and if by some freak
+accident (perhaps the result of a "2-balls mod" or something) both
+players get 10 points at the same time, it will be considered a loss for
+both players.
+
+We will also set :attr:`glob.game_in_progress` to False, so that it can
+be understood by other functions and methods that a game is not
+currently in progress.  We will use this later to give the pause keys a
+secondary function of starting a new game.
+
 Adding Sound
 ------------
+
+There are three sounds we want to add: one for when the ball hits a
+paddle, one for when the ball hits a wall, and one for when a player
+scores.
+
+There are many ways you can get these sounds.  The easiest way is to
+find them on a website that has free culture sound effects available.
+A good place to search for such assets is `OpenGameArt.org
+<http://opengameart.org>`_.  Another easy way if you only need simple
+sound effects, and the method I used, is to generate them with a free
+software program called `sfxr
+<http://www.drpetter.se/project_sfxr.html>`_.  Whatever method you use,
+once you have your three sound effects, set their file names to
+"bounce", "bounce_wall", and "score", plus whatever extension is
+appropriate.  Make sure to use a format supported by the SGE
+implementation used; in my case, I can use WAV and Ogg Vorbis sound
+effects, and my sound files are all WAV format.
+
+Create a folder in the same location as pong.py called "data".  Within
+the "data" folder, create another folder called "sounds".
+
+.. note::
+
+   Directories are not case-sensitive on all systems (most notably, they
+   are not case-sensitive on Windows), but on POSIX systems in
+   particular (such as Debian and Apple OS X), "data" is different from
+   "Data".  Because of this, don't get into the habit of capitalizing
+   the names of these folders; it's "data", not "Data", and it's
+   "sounds", not "Sounds".
+
+Put your three sound effects, which in my case are now named
+"bounce.wav", "bounce_wall.wav", and "score.wav", into data/sounds.
+
+Loading The Sounds
+~~~~~~~~~~~~~~~~~~
+
+To use sound effects, we first need to load them.  We will do so in the
+:func:`main` function.  I am putting this code after the code that loads
+the font and before the code that creates the objects::
+
+    # Load sounds
+    glob.bounce_sound = sge.Sound('bounce.wav')
+    glob.bounce_wall_sound = sge.Sound('bounce_wall.wav')
+    glob.score_sound = sge.Sound('score.wav')
+
+Playing The Sounds
+~~~~~~~~~~~~~~~~~~
+
+This part is extremely simple.  Just call :meth:`sge.Sound.play` in the
+proper places.
+
+Here::
+
+    # Scoring
+    if self.bbox_right < 0:
+        glob.player2.score += 1
+        glob.score_sound.play()
+        self.serve(-1)
+    elif self.bbox_left > sge.game.width:
+        glob.player1.score += 1
+        glob.score_sound.play()
+        self.serve(1)
+
+Here::
+
+    # Bouncing off of the edges
+    if self.bbox_bottom > sge.game.height:
+        self.bbox_bottom = sge.game.height
+        self.yvelocity = -abs(self.yvelocity)
+        glob.bounce_wall_sound.play()
+    elif self.bbox_top < 0:
+        self.bbox_top = 0
+        self.yvelocity = abs(self.yvelocity)
+        glob.bounce_wall_sound.play()
+
+And here::
+
+    def event_collision(self, other):
+        if isinstance(other, Player):
+            if other.hit_direction == 1:
+                self.bbox_left = other.bbox_right + 1
+                self.xvelocity = min(abs(self.xvelocity) + BALL_ACCELERATION,
+                                     BALL_MAX_SPEED)
+            else:
+                self.bbox_right = other.bbox_left - 1
+                self.xvelocity = max(-abs(self.xvelocity) - BALL_ACCELERATION,
+                                     -BALL_MAX_SPEED)
+
+            self.yvelocity += (self.y - other.y) * PADDLE_VERTICAL_FORCE
+            glob.bounce_sound.play()
+
+Restarting The Game
+-------------------
+
+One last touch: we're going to allow the game to be restarted.  We do
+this by modifying the key press event for :class:`Game`, specifically
+the keys that normally pause the game::
+
+    elif key in ('p', 'enter'):
+        if glob.game_in_progress:
+            self.pause()
+        else:
+            glob.game_in_progress = True
+            self.current_room.start()
+
+If the game is in progress, we pause the game, as before.  Otherwise, we
+set :attr:`glob.game_in_progres` to :const:`True` and call the current
+room's :meth:`start` method, which resets and starts the room.
+
+The Final Result
+----------------
+
+Congratulations! You have completed your first real game.  This is the
+final result if you are using Python 2::
+
+    #!/usr/bin/env python2
+
+    # Pong
+    # Written in 2013 by Julian Marchant <onpon4@riseup.net>
+    #
+    # To the extent possible under law, the author(s) have dedicated all
+    # copyright and related and neighboring rights to this software to the
+    # public domain worldwide. This software is distributed without any
+    # warranty.
+    #
+    # You should have received a copy of the CC0 Public Domain Dedication
+    # along with this software. If not, see
+    # <http://creativecommons.org/publicdomain/zero/1.0/>.
+
+    from __future__ import division
+    from __future__ import absolute_import
+    from __future__ import print_function
+    from __future__ import unicode_literals
+
+    import sge
+    
+    PADDLE_SPEED = 4
+    PADDLE_VERTICAL_FORCE = 1 / 12
+    BALL_START_SPEED = 2
+    BALL_ACCELERATION = 0.2
+    BALL_MAX_SPEED = 15
+    POINTS_TO_WIN = 10
+    TEXT_OFFSET = 16
+
+
+    class glob(object):
+
+        # This class is for global variables.  While not necessary, using a
+        # container class like this is less potentially confusing than using
+        # actual global variables.
+
+        player1 = None
+        player2 = None
+        ball = None
+        hud_sprite = None
+        bounce_sound = None
+        bounce_wall_sound = None
+        score_sound = None
+        game_in_progress = True
+
+
+    class Game(sge.Game):
+
+        def event_key_press(self, key, char):
+            if key == 'f8':
+                sge.Sprite.from_screenshot().save('screenshot.jpg')
+            elif key == 'escape':
+                self.event_close()
+            elif key in ('p', 'enter'):
+                if glob.game_in_progress:
+                self.pause()
+            else:
+                glob.game_in_progress = True
+                self.current_room.start()
+
+        def event_close(self):
+            m = "Are you sure you want to quit?"
+            if sge.show_message(m, ("No", "Yes")):
+                self.end()
+
+        def event_paused_key_press(self, key, char):
+            if key == 'escape':
+                # This allows the player to still exit while the game is
+                # paused, rather than having to unpause first.
+                self.event_close()
+            else:
+                self.unpause()
+
+        def event_paused_close(self):
+            # This allows the player to still exit while the game is paused,
+            # rather than having to unpause first.
+            self.event_close()
+
+
+    class Player(sge.StellarClass):
+
+        @property
+        def score(self):
+            return self.v_score
+
+        @score.setter
+        def score(self, value):
+            if value != self.v_score:
+                self.v_score = value
+                refresh_hud()
+
+        def __init__(self, player=1):
+            if player == 1:
+                self.up_key = "w"
+                self.down_key = "s"
+                x = 32
+                glob.player1 = self
+                self.hit_direction = 1
+            else:
+                self.up_key = "up"
+                self.down_key = "down"
+                x = sge.game.width - 32
+                glob.player2 = self
+                self.hit_direction = -1
+
+            y = sge.game.height / 2
+            super(Player, self).__init__(x, y, 0, sprite="paddle")
+
+        def event_step(self, time_passed):
+            # Movement
+            key_motion = (sge.get_key_pressed(self.down_key) -
+                          sge.get_key_pressed(self.up_key))
+
+            self.yvelocity = key_motion * PADDLE_SPEED
+
+            # Keep the paddle inside the window
+            if self.bbox_top < 0:
+                self.bbox_top = 0
+            elif self.bbox_bottom > sge.game.height:
+                self.bbox_bottom = sge.game.height
+
+
+    class Ball(sge.StellarClass):
+
+        def __init__(self):
+            x = sge.game.width / 2
+            y = sge.game.height / 2
+            super(Ball, self).__init__(x, y, 1, sprite="ball")
+
+        def event_create(self):
+            refresh_hud()
+            self.serve()
+
+        def event_step(self, time_passed):
+            # Scoring
+            if self.bbox_right < 0:
+                glob.player2.score += 1
+                glob.score_sound.play()
+                self.serve(-1)
+            elif self.bbox_left > sge.game.width:
+                glob.player1.score += 1
+                glob.score_sound.play()
+                self.serve(1)
+
+            # Bouncing off of the edges
+            if self.bbox_bottom > sge.game.height:
+                self.bbox_bottom = sge.game.height
+                self.yvelocity = -abs(self.yvelocity)
+                glob.bounce_wall_sound.play()
+            elif self.bbox_top < 0:
+                self.bbox_top = 0
+                self.yvelocity = abs(self.yvelocity)
+                glob.bounce_wall_sound.play()
+
+        def event_collision(self, other):
+            if isinstance(other, Player):
+                if other.hit_direction == 1:
+                    self.bbox_left = other.bbox_right + 1
+                    self.xvelocity = min(abs(self.xvelocity) + BALL_ACCELERATION,
+                                         BALL_MAX_SPEED)
+                else:
+                    self.bbox_right = other.bbox_left - 1
+                    self.xvelocity = max(-abs(self.xvelocity) - BALL_ACCELERATION,
+                                         -BALL_MAX_SPEED)
+
+                self.yvelocity += (self.y - other.y) * PADDLE_VERTICAL_FORCE
+                glob.bounce_sound.play()
+
+        def serve(self, direction=1):
+            self.x = self.xstart
+            self.y = self.ystart
+
+            if (glob.player1.score < POINTS_TO_WIN and
+                    glob.player2.score < POINTS_TO_WIN):
+                # Next round
+                self.xvelocity = BALL_START_SPEED * direction
+                self.yvelocity = 0
+            else:
+                # Game Over!
+                self.xvelocity = 0
+                self.yvelocity = 0
+                glob.hud_sprite.draw_clear()
+                x = glob.hud_sprite.width / 2
+                p1score = glob.player1.score
+                p2score = glob.player2.score
+                p1text = "WIN" if p1score > p2score else "LOSE"
+                p2text = "WIN" if p2score > p1score else "LOSE"
+                glob.hud_sprite.draw_text("hud", p1text, x - TEXT_OFFSET,
+                                          TEXT_OFFSET, color="white",
+                                          halign=sge.ALIGN_RIGHT,
+                                          valign=sge.ALIGN_TOP)
+                glob.hud_sprite.draw_text("hud", p2text, x + TEXT_OFFSET,
+                                          TEXT_OFFSET, color="white",
+                                          halign=sge.ALIGN_LEFT,
+                                          valign=sge.ALIGN_TOP)
+                glob.game_in_progress = False
+
+
+    def refresh_hud():
+        # This fixes the HUD sprite so that it displays the correct score.
+        glob.hud_sprite.draw_clear()
+        x = glob.hud_sprite.width / 2
+        glob.hud_sprite.draw_text("hud", str(glob.player1.score), x - TEXT_OFFSET,
+                                  TEXT_OFFSET, color="white",
+                                  halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
+        glob.hud_sprite.draw_text("hud", str(glob.player2.score), x + TEXT_OFFSET,
+                                  TEXT_OFFSET, color="white",
+                                  halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
+
+
+    def main():
+        # Create Game object
+        Game(640, 480, fps=120)
+
+        # Load sprites
+        paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,
+                                   origin_y=24)
+        paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
+                                     paddle_sprite.height, fill="white")
+        ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
+                                 origin_y=4)
+        ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
+                                   fill="white")
+        glob.hud_sprite = sge.Sprite(width=320, height=160, origin_x=160,
+                                     origin_y=0)
+
+        # Load backgrounds
+        layers = (sge.BackgroundLayer("ball", sge.game.width / 2, 0, -10000,
+                                      xrepeat=False),)
+        background = sge.Background (layers, "black")
+
+        # Load fonts
+        sge.Font('Liberation Mono', ID="hud", size=48)
+
+        # Load sounds
+        glob.bounce_sound = sge.Sound('bounce.wav')
+        glob.bounce_wall_sound = sge.Sound('bounce_wall.wav')
+        glob.score_sound = sge.Sound('score.wav')
+
+        # Create objects
+        Player(1)
+        Player(2)
+        glob.ball = Ball()
+        hud = sge.StellarClass(sge.game.width / 2, 0, -10, sprite=glob.hud_sprite,
+                               detects_collisions=False)
+        objects = (glob.player1, glob.player2, glob.ball, hud)
+
+        # Create rooms
+        room1 = sge.Room(objects, background=background)
+
+        sge.game.start()
+
+
+    if __name__ == '__main__':
+        main()
+
+And this is the final result if you are using Python 3::
+
+    #!/usr/bin/env python3
+
+    # Pong
+    # Written in 2013 by Julian Marchant <onpon4@riseup.net>
+    #
+    # To the extent possible under law, the author(s) have dedicated all
+    # copyright and related and neighboring rights to this software to the
+    # public domain worldwide. This software is distributed without any
+    # warranty.
+    #
+    # You should have received a copy of the CC0 Public Domain Dedication
+    # along with this software. If not, see
+    # <http://creativecommons.org/publicdomain/zero/1.0/>.
+
+    import sge
+    
+    PADDLE_SPEED = 4
+    PADDLE_VERTICAL_FORCE = 1 / 12
+    BALL_START_SPEED = 2
+    BALL_ACCELERATION = 0.2
+    BALL_MAX_SPEED = 15
+    POINTS_TO_WIN = 10
+    TEXT_OFFSET = 16
+
+
+    class glob(object):
+
+        # This class is for global variables.  While not necessary, using a
+        # container class like this is less potentially confusing than using
+        # actual global variables.
+
+        player1 = None
+        player2 = None
+        ball = None
+        hud_sprite = None
+        bounce_sound = None
+        bounce_wall_sound = None
+        score_sound = None
+        game_in_progress = True
+
+
+    class Game(sge.Game):
+
+        def event_key_press(self, key, char):
+            if key == 'f8':
+                sge.Sprite.from_screenshot().save('screenshot.jpg')
+            elif key == 'escape':
+                self.event_close()
+            elif key in ('p', 'enter'):
+                if glob.game_in_progress:
+                self.pause()
+            else:
+                glob.game_in_progress = True
+                self.current_room.start()
+
+        def event_close(self):
+            m = "Are you sure you want to quit?"
+            if sge.show_message(m, ("No", "Yes")):
+                self.end()
+
+        def event_paused_key_press(self, key, char):
+            if key == 'escape':
+                # This allows the player to still exit while the game is
+                # paused, rather than having to unpause first.
+                self.event_close()
+            else:
+                self.unpause()
+
+        def event_paused_close(self):
+            # This allows the player to still exit while the game is paused,
+            # rather than having to unpause first.
+            self.event_close()
+
+
+    class Player(sge.StellarClass):
+
+        @property
+        def score(self):
+            return self.v_score
+
+        @score.setter
+        def score(self, value):
+            if value != self.v_score:
+                self.v_score = value
+                refresh_hud()
+
+        def __init__(self, player=1):
+            if player == 1:
+                self.up_key = "w"
+                self.down_key = "s"
+                x = 32
+                glob.player1 = self
+                self.hit_direction = 1
+            else:
+                self.up_key = "up"
+                self.down_key = "down"
+                x = sge.game.width - 32
+                glob.player2 = self
+                self.hit_direction = -1
+
+            y = sge.game.height / 2
+            super(Player, self).__init__(x, y, 0, sprite="paddle")
+
+        def event_step(self, time_passed):
+            # Movement
+            key_motion = (sge.get_key_pressed(self.down_key) -
+                          sge.get_key_pressed(self.up_key))
+
+            self.yvelocity = key_motion * PADDLE_SPEED
+
+            # Keep the paddle inside the window
+            if self.bbox_top < 0:
+                self.bbox_top = 0
+            elif self.bbox_bottom > sge.game.height:
+                self.bbox_bottom = sge.game.height
+
+
+    class Ball(sge.StellarClass):
+
+        def __init__(self):
+            x = sge.game.width / 2
+            y = sge.game.height / 2
+            super(Ball, self).__init__(x, y, 1, sprite="ball")
+
+        def event_create(self):
+            refresh_hud()
+            self.serve()
+
+        def event_step(self, time_passed):
+            # Scoring
+            if self.bbox_right < 0:
+                glob.player2.score += 1
+                glob.score_sound.play()
+                self.serve(-1)
+            elif self.bbox_left > sge.game.width:
+                glob.player1.score += 1
+                glob.score_sound.play()
+                self.serve(1)
+
+            # Bouncing off of the edges
+            if self.bbox_bottom > sge.game.height:
+                self.bbox_bottom = sge.game.height
+                self.yvelocity = -abs(self.yvelocity)
+                glob.bounce_wall_sound.play()
+            elif self.bbox_top < 0:
+                self.bbox_top = 0
+                self.yvelocity = abs(self.yvelocity)
+                glob.bounce_wall_sound.play()
+
+        def event_collision(self, other):
+            if isinstance(other, Player):
+                if other.hit_direction == 1:
+                    self.bbox_left = other.bbox_right + 1
+                    self.xvelocity = min(abs(self.xvelocity) + BALL_ACCELERATION,
+                                         BALL_MAX_SPEED)
+                else:
+                    self.bbox_right = other.bbox_left - 1
+                    self.xvelocity = max(-abs(self.xvelocity) - BALL_ACCELERATION,
+                                         -BALL_MAX_SPEED)
+
+                self.yvelocity += (self.y - other.y) * PADDLE_VERTICAL_FORCE
+                glob.bounce_sound.play()
+
+        def serve(self, direction=1):
+            self.x = self.xstart
+            self.y = self.ystart
+
+            if (glob.player1.score < POINTS_TO_WIN and
+                    glob.player2.score < POINTS_TO_WIN):
+                # Next round
+                self.xvelocity = BALL_START_SPEED * direction
+                self.yvelocity = 0
+            else:
+                # Game Over!
+                self.xvelocity = 0
+                self.yvelocity = 0
+                glob.hud_sprite.draw_clear()
+                x = glob.hud_sprite.width / 2
+                p1score = glob.player1.score
+                p2score = glob.player2.score
+                p1text = "WIN" if p1score > p2score else "LOSE"
+                p2text = "WIN" if p2score > p1score else "LOSE"
+                glob.hud_sprite.draw_text("hud", p1text, x - TEXT_OFFSET,
+                                          TEXT_OFFSET, color="white",
+                                          halign=sge.ALIGN_RIGHT,
+                                          valign=sge.ALIGN_TOP)
+                glob.hud_sprite.draw_text("hud", p2text, x + TEXT_OFFSET,
+                                          TEXT_OFFSET, color="white",
+                                          halign=sge.ALIGN_LEFT,
+                                          valign=sge.ALIGN_TOP)
+                glob.game_in_progress = False
+
+
+    def refresh_hud():
+        # This fixes the HUD sprite so that it displays the correct score.
+        glob.hud_sprite.draw_clear()
+        x = glob.hud_sprite.width / 2
+        glob.hud_sprite.draw_text("hud", str(glob.player1.score), x - TEXT_OFFSET,
+                                  TEXT_OFFSET, color="white",
+                                  halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
+        glob.hud_sprite.draw_text("hud", str(glob.player2.score), x + TEXT_OFFSET,
+                                  TEXT_OFFSET, color="white",
+                                  halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
+
+
+    def main():
+        # Create Game object
+        Game(640, 480, fps=120)
+
+        # Load sprites
+        paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,
+                                   origin_y=24)
+        paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
+                                     paddle_sprite.height, fill="white")
+        ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
+                                 origin_y=4)
+        ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
+                                   fill="white")
+        glob.hud_sprite = sge.Sprite(width=320, height=160, origin_x=160,
+                                     origin_y=0)
+
+        # Load backgrounds
+        layers = (sge.BackgroundLayer("ball", sge.game.width / 2, 0, -10000,
+                                      xrepeat=False),)
+        background = sge.Background (layers, "black")
+
+        # Load fonts
+        sge.Font('Liberation Mono', ID="hud", size=48)
+
+        # Load sounds
+        glob.bounce_sound = sge.Sound('bounce.wav')
+        glob.bounce_wall_sound = sge.Sound('bounce_wall.wav')
+        glob.score_sound = sge.Sound('score.wav')
+
+        # Create objects
+        Player(1)
+        Player(2)
+        glob.ball = Ball()
+        hud = sge.StellarClass(sge.game.width / 2, 0, -10, sprite=glob.hud_sprite,
+                               detects_collisions=False)
+        objects = (glob.player1, glob.player2, glob.ball, hud)
+
+        # Create rooms
+        room1 = sge.Room(objects, background=background)
+
+        sge.game.start()
+
+
+    if __name__ == '__main__':
+        main()
