@@ -523,6 +523,48 @@ class Room(object):
         """
         pass
 
+    def event_gain_keyboard_focus(self):
+        """Gain keyboard focus event.
+
+        See the documentation for
+        :meth:`sge.Game.event_gain_keyboard_focus` for more information.
+
+        """
+        pass
+
+    def event_lose_keyboard_focus(self):
+        """Lose keyboard focus event.
+
+        See the documentation for
+        :meth:`sge.Game.event_lose_keyboard_focus` for more information.
+
+        """
+        if sge.DEBUG:
+            bad_name = "event_loose_keyboard_focus"
+            if hasattr(self, bad_name):
+                sge._scold_user_on_lose_vs_loose(bad_name)
+
+    def event_gain_mouse_focus(self):
+        """Gain mouse focus event.
+
+        See the documentation for
+        :meth:`sge.Game.event_gain_mouse_focus` for more information.
+
+        """
+        pass
+
+    def event_lose_mouse_focus(self):
+        """Lose mouse focus event.
+
+        See the documentation for
+        :meth:`sge.Game.event_lose_mouse_focus` for more information.
+
+        """
+        if sge.DEBUG:
+            bad_name = "event_loose_mouse_focus"
+            if hasattr(self, bad_name):
+                sge._scold_user_on_lose_vs_loose(bad_name)
+
     def event_close(self):
         """Close event.
 
@@ -627,10 +669,52 @@ class Room(object):
         """
         pass
 
+    def event_paused_gain_keyboard_focus(self):
+        """Gain keyboard focus event when paused.
+
+        See the documentation for
+        :meth:`sge.Game.event_gain_keyboard_focus` for more information.
+
+        """
+        pass
+
+    def event_paused_lose_keyboard_focus(self):
+        """Lose keyboard focus event when paused.
+
+        See the documentation for
+        :meth:`sge.Game.event_lose_keyboard_focus` for more information.
+
+        """
+        if sge.DEBUG:
+            bad_name = "event_paused_loose_keyboard_focus"
+            if hasattr(self, bad_name):
+                sge._scold_user_on_lose_vs_loose(bad_name)
+
+    def event_paused_gain_mouse_focus(self):
+        """Gain mouse focus event when paused.
+
+        See the documentation for
+        :meth:`sge.Game.event_gain_mouse_focus` for more information.
+
+        """
+        pass
+
+    def event_paused_lose_mouse_focus(self):
+        """Lose mouse focus event when paused.
+
+        See the documentation for
+        :meth:`sge.Game.event_lose_mouse_focus` for more information.
+
+        """
+        if sge.DEBUG:
+            bad_name = "event_paused_loose_mouse_focus"
+            if hasattr(self, bad_name):
+                sge._scold_user_on_lose_vs_loose(bad_name)
+
     def event_paused_close(self):
         """Close event when paused.
 
-        See the documentation for :meth:`Room.event_close` for more
+        See the documentation for :meth:`sge.Game.event_close` for more
         information.
 
         """

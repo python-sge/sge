@@ -28,7 +28,7 @@ import wx
 import stj
 
 MAIN_WINDOW_TITLE = "Stellarly-Encompassing Level Editor"
-MAIN_WINDOW_SIZE = (640, 480)
+MAIN_WINDOW_SIZE = (800, 600)
 
 
 class Frame(wx.Frame):
@@ -41,6 +41,7 @@ class Frame(wx.Frame):
         file_menu = wx.Menu()
         edit_menu = wx.Menu()
         view_menu = wx.Menu()
+        zoom_menu = wx.Menu()
         help_menu = wx.Menu()
 
         m = file_menu.Append(wx.ID_NEW, text='&New Room',
@@ -57,7 +58,15 @@ class Frame(wx.Frame):
                              help="Save the rooms of the current game file")
         self.Bind(wx.EVT_MENU, self.OnSave, m)
 
-        m = file_menu.Append(wx.ID_REVERT)
+        m = file_menu.Append(wx.ID_REVERT_TO_SAVED)
+        self.Bind(wx.EVT_MENU, self.OnRevert, m)
+
+        file_menu.AppendSeparator()
+
+        m = file_menu.Append(
+            wx.ID_REFRESH, text="Reload Resources",
+            help="Reload the non-room resources of the current game file")
+        self.Bind(wx.EVT_MENU, self.OnReload, m)
 
         file_menu.AppendSeparator()
 
@@ -97,14 +106,30 @@ class Frame(wx.Frame):
         m = edit_menu.Append(wx.ID_PROPERTIES)
         self.Bind(wx.EVT_MENU, self.OnProperties, m)
 
-        m = view_menu.Append(wx.ID_ANY, text="Zoom &Out")
+        m = view_menu.Append(wx.ID_ZOOM_OUT)
         self.Bind(wx.EVT_MENU, self.OnZoomOut, m)
 
-        m = view_menu.Append(wx.ID_ANY, text="Zoom &In")
+        m = view_menu.Append(wx.ID_ZOOM_IN)
         self.Bind(wx.EVT_MENU, self.OnZoomIn, m)
 
-        m = view_menu.Append(wx.ID_ANY, text="Zoom &Reset")
+        m = view_menu.Append(wx.ID_ZOOM_100)
         self.Bind(wx.EVT_MENU, self.OnZoomReset, m)
+
+        edit_menu.AppendSeparator()
+
+        m = zoom_menu.AppendRadioItem(wx.ID_ANY, text="&No Grid",
+                                      help="Show no grid")
+        self.Bind(wx.EVT_MENU, self.OnNoGrid, m)
+
+        m = zoom_menu.AppendRadioItem(wx.ID_ANY, text="&Rectangular Grid",
+                                      help="Show a rectangular grid")
+        self.Bind(wx.EVT_MENU, self.OnRectangularGrid, m)
+
+        m = zoom_menu.AppendRadioItem(wx.ID_ANY, text="&Isometric Grid",
+                                      help="Show an isometric (diagonal) grid")
+        self.Bind(wx.EVT_MENU, self.OnIsometricGrid, m)
+
+        view_menu.AppendSubMenu(zoom_menu, text="&Grid")
 
         m = help_menu.Append(wx.ID_ABOUT)
         self.Bind(wx.EVT_MENU, self.OnAbout, m)
@@ -127,6 +152,9 @@ class Frame(wx.Frame):
         pass
 
     def OnRevert(self, event):
+        pass
+
+    def OnReload(self, event):
         pass
 
     def OnClose(self, event):
@@ -167,6 +195,15 @@ class Frame(wx.Frame):
 
     def OnZoomReset(self, event):
         pass
+
+    def OnNoGrid(self, event):
+        print("No grid")
+
+    def OnRectangularGrid(self, event):
+        print("Rectangular grid")
+
+    def OnIsometricGrid(self, event):
+        print("Isometric grid")
 
     def OnAbout(self, event):
         pass

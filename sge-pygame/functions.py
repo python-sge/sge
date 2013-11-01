@@ -1133,3 +1133,16 @@ def _get_pygame_color(color):
             return pygame.Color(*color[:4])
         except TypeError:
             return pygame.Color(color)
+
+
+def _scold_user_on_lose_vs_loose(attempted_name):
+    # Tell the user that they misspelled "lose" as "loose".
+    m = '\n'.join((
+        'Huh? I don\'t have a method called "{0}".'.format(attempted_name),
+        'You do know that "lose" (a verb meaning "to fail to keep or hold")',
+        'is not spelled the same as "loose" (an adjective meaning "not',
+        'tightly fastened, attached, or held"), right?'))
+
+    print(m)
+    m = m.replace('\n', ' ')
+    show_message(m)

@@ -10,6 +10,24 @@ without any warranty.
 0.5.0
 ------------------------------------------------------------------------
 
+Specification additions:
++ sge.Game.event_gain_keyboard_focus
++ sge.Game.event_lose_keyboard_focus
++ sge.Game.event_gain_mouse_focus
++ sge.Game.event_lose_mouse_focus
++ sge.Game.event_paused_gain_keyboard_focus
++ sge.Game.event_paused_lose_keyboard_focus
++ sge.Game.event_paused_gain_mouse_focus
++ sge.Game.event_paused_lose_mouse_focus
++ sge.Room.event_gain_keyboard_focus
++ sge.Room.event_lose_keyboard_focus
++ sge.Room.event_gain_mouse_focus
++ sge.Room.event_lose_mouse_focus
++ sge.Room.event_paused_gain_keyboard_focus
++ sge.Room.event_paused_lose_keyboard_focus
++ sge.Room.event_paused_gain_mouse_focus
++ sge.Room.event_paused_lose_mouse_focus
+
 Specification misc changes:
 * Documentation reformatted.
 * "id"/"id_" argument in many constructor methods changed to "ID".
@@ -18,10 +36,10 @@ SGE Pygame misc changes:
 * Appearance of modal dialog boxes changed.
 
 SGE Pygame bugfixes:
-* sge.BackgroundLayer not being able to accept sprite IDs
-* Sprites being rotated about the center instead of the origin
-* Projections being broken (arguments in a method call were messed up)
-* Text wrapping wrongly
+- sge.BackgroundLayer not being able to accept sprite IDs
+- Sprites being rotated about the center instead of the origin
+- Projections being broken (arguments in a method call were messed up)
+- Text wrapping wrongly
 
 
 0.4.0
@@ -70,11 +88,11 @@ SGE Pygame misc changes:
 * Now called "SGE Pygame" instead of "Stellar Game Engine - Pygame 1.9".
 
 SGE Pygame bugfixes:
-* Projected objects flickering when delta timing was enabled
-* sge.StellarClass.image_fps not being used if a sprite was available
-* Background layers being offset when scaling the window
-* Rectangles replacing the area they drew on rather than blending
-* sge.Sprite.draw_sprite not accepting sprite names
+- Projected objects flickering when delta timing was enabled
+- sge.StellarClass.image_fps not being used if a sprite was available
+- Background layers being offset when scaling the window
+- Rectangles replacing the area they drew on rather than blending
+- sge.Sprite.draw_sprite not accepting sprite names
 
 
 0.3.0
@@ -102,7 +120,7 @@ Pygame implementation additions:
 + DEBUG constant (causes more verbose information to be printed if True)
 
 Pygame implementation bugfixes:
-* IOError being raised if Pygame's mixer module was unavailable
+- IOError being raised if Pygame's mixer module was unavailable
 
 
 0.2.1
@@ -113,10 +131,10 @@ Specification misc changes:
 * The default room size is now the game window size.
 
 Pygame implementation bugfixes:
-* Views being allowed outside the room
-* Crash when changing an object's sprite
-* image_xscale and image_yscale not being factored into objects' origins
-* Image being offset if an object's xscale or yscale was negative
+- Views being allowed outside the room
+- Crash when changing an object's sprite
+- image_xscale and image_yscale not being factored into objects' origins
+- Image being offset if an object's xscale or yscale was negative
 
 
 0.2.0
@@ -161,15 +179,15 @@ Pygame implementation additions:
 + sge.real_trackballs
 
 Pygame implementation bugfixes:
-* Problems with scaling
-* Problems with partial screen updates
-* Wrong correction of views being outside the room
-* Object disappearing bug
-* Background disappearing bug
-* Split-screen problem
-* Background change not showing up when changing rooms
-* Bug with partial view of dynamic objects
-* Background update bug
+- Problems with scaling
+- Problems with partial screen updates
+- Wrong correction of views being outside the room
+- Object disappearing bug
+- Background disappearing bug
+- Split-screen problem
+- Background change not showing up when changing rooms
+- Bug with partial view of dynamic objects
+- Background update bug
 
 
 0.1.0

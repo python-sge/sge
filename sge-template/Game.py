@@ -384,6 +384,70 @@ class Game(object):
         """
         pass
 
+    def event_gain_keyboard_focus(self):
+        """Gain keyboard focus event.
+
+        Called when the game gains keyboard focus.  Keyboard focus is
+        normally needed for key press and release events to be received.
+
+        .. note::
+
+           On some window systems, such as the one used by Windows, no
+           distinction is made between keyboard and mouse focus, but on
+           some other window systems, such as the X Window System, a
+           distinction is made: one window can have keyboard focus while
+           another has mouse focus.  Be careful to observe the
+           difference; failing to do so may result in annoying bugs,
+           and you won't notice these bugs if you are testing on a
+           window manager that doesn't recognize the difference.
+
+        """
+        pass
+
+    def event_lose_keyboard_focus(self):
+        """Lose keyboard focus event.
+
+        Called when the game loses keyboard focus.  Keyboard focus is
+        normally needed for key press and release events to be received.
+
+        .. note::
+
+           See the note in the documentation for
+           :meth:`event_gain_keyboard_focus`.
+
+        """
+        pass
+
+    def event_gain_mouse_focus(self):
+        """Gain mouse focus event.
+
+        Called when the game gains mouse focus.  Mouse focus may be
+        needed for mouse motion, button press, and button release events
+        to be received.
+
+        .. note::
+
+           See the note in the documentation for
+           :meth:`event_gain_keyboard_focus`.
+
+        """
+        pass
+
+    def event_lose_mouse_focus(self):
+        """Lose mouse focus event.
+
+        Called when the game loses mouse focus.  Mouse focus may be
+        needed for mouse motion, button press, and button release events
+        to be received.
+
+        .. note::
+
+           See the note in the documentation for
+           :meth:`event_gain_keyboard_focus`.
+
+        """
+        pass
+
     def event_close(self):
         """Close event.
 
@@ -449,7 +513,7 @@ class Game(object):
     def event_paused_key_press(self, key, char):
         """Key press event when paused.
 
-        See the documentation for :meth:`Game.event_key_press` for more
+        See the documentation for :meth:`event_key_press` for more
         information.
 
         """
@@ -458,8 +522,8 @@ class Game(object):
     def event_paused_key_release(self, key):
         """Key release event when paused.
 
-        See the documentation for :meth:`Game.event_key_release` for
-        more information.
+        See the documentation for :meth:`event_key_release` for more
+        information.
 
         """
         pass
@@ -467,7 +531,7 @@ class Game(object):
     def event_paused_mouse_move(self, x, y):
         """Mouse move event when paused.
 
-        See the documentation for :meth:`Game.event_mouse_move` for more
+        See the documentation for :meth:`event_mouse_move` for more
         information.
 
         """
@@ -476,8 +540,8 @@ class Game(object):
     def event_paused_mouse_button_press(self, button):
         """Mouse button press event when paused.
 
-        See the documentation for :meth:`Game.event_mouse_button_press`
-        for more information.
+        See the documentation for :meth:`event_mouse_button_press` for
+        more information.
 
         """
         pass
@@ -485,8 +549,8 @@ class Game(object):
     def event_paused_mouse_button_release(self, button):
         """Mouse button release event when paused.
 
-        See the documentation for
-        :meth:`Game.event_mouse_button_release` for more information.
+        See the documentation for :meth:`event_mouse_button_release` for
+        more information.
 
         """
         pass
@@ -494,8 +558,8 @@ class Game(object):
     def event_paused_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event when paused.
 
-        See the documentation for :meth:`Game.event_joystick_axis_move`
-        for more information.
+        See the documentation for :meth:`event_joystick_axis_move` for
+        more information.
 
         """
         pass
@@ -503,8 +567,8 @@ class Game(object):
     def event_paused_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event when paused.
 
-        See the documentation for :meth:`Game.event_joystick_hat_move`
-        for more information.
+        See the documentation for :meth:`event_joystick_hat_move` for
+        more information.
 
         """
         pass
@@ -513,7 +577,7 @@ class Game(object):
         """Joystick trackball move event when paused.
 
         See the documentation for
-        :meth:`Game.event_joystick_trackball_move` for more information.
+        :meth:`event_joystick_trackball_move` for more information.
 
         """
         pass
@@ -522,7 +586,7 @@ class Game(object):
         """Joystick button press event when paused.
 
         See the documentation for
-        :meth:`Game.event_joystick_button_press` for more information.
+        :meth:`event_joystick_button_press` for more information.
 
         """
         pass
@@ -531,7 +595,43 @@ class Game(object):
         """Joystick button release event when paused.
 
         See the documentation for
-        :meth:`Game.event_joystick_button_release` for more information.
+        :meth:`event_joystick_button_release` for more information.
+
+        """
+        pass
+
+    def event_paused_gain_keyboard_focus(self):
+        """Gain keyboard focus event when paused.
+
+        See the documentation for :meth:`event_gain_keyboard_focus` for
+        more information.
+
+        """
+        pass
+
+    def event_paused_lose_keyboard_focus(self):
+        """Lose keyboard focus event when paused.
+
+        See the documentation for :meth:`event_lose_keyboard_focus` for
+        more information.
+
+        """
+        pass
+
+    def event_paused_gain_mouse_focus(self):
+        """Gain mouse focus event when paused.
+
+        See the documentation for :meth:`event_gain_mouse_focus` for
+        more information.
+
+        """
+        pass
+
+    def event_paused_lose_mouse_focus(self):
+        """Lose mouse focus event when paused.
+
+        See the documentation for :meth:`event_lose_mouse_focus` for
+        more information.
 
         """
         pass
@@ -539,7 +639,7 @@ class Game(object):
     def event_paused_close(self):
         """Close event when paused.
 
-        See the documentation for :meth:`Game.event_close` for more
+        See the documentation for :meth:`event_close` for more
         information.
 
         """

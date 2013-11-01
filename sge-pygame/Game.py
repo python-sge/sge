@@ -477,6 +477,33 @@ class Game(object):
                             else:
                                 obj.event_inactive_joystick_button_release(
                                     event.joy, event.button)
+                    elif event.type == pygame.ACTIVEEVENT:
+                        if event.gain:
+                            if 2 & event.state:
+                                # Gain keyboard focus
+                                if sge.DEBUG:
+                                    print('Gained keyboard focus.')
+                                self.event_gain_keyboard_focus()
+                                self.current_room.event_gain_keyboard_focus()
+                            if 1 & event.state:
+                                # Gain mouse focus
+                                if sge.DEBUG:
+                                    print('Gained mouse focus.')
+                                self.event_gain_mouse_focus()
+                                self.current_room.event_gain_mouse_focus()
+                        else:
+                            if 2 & event.state:
+                                # Lose keyboard focus
+                                if sge.DEBUG:
+                                    print('Lost keyboard focus.')
+                                self.event_lose_keyboard_focus()
+                                self.current_room.event_lose_keyboard_focus()
+                            if 1 & event.state:
+                                # Lose mouse focus
+                                if sge.DEBUG:
+                                    print('Lost mouse focus.')
+                                self.event_lose_mouse_focus()
+                                self.current_room.event_lose_mouse_focus()
                     elif event.type == pygame.QUIT:
                         if sge.DEBUG:
                             print('Quit requested by the system.')
@@ -930,6 +957,76 @@ class Game(object):
         """
         pass
 
+    def event_gain_keyboard_focus(self):
+        """Gain keyboard focus event.
+
+        Called when the game gains keyboard focus.  Keyboard focus is
+        normally needed for key press and release events to be received.
+
+        .. note::
+
+           On some window systems, such as the one used by Windows, no
+           distinction is made between keyboard and mouse focus, but on
+           some other window systems, such as the X Window System, a
+           distinction is made: one window can have keyboard focus while
+           another has mouse focus.  Be careful to observe the
+           difference; failing to do so may result in annoying bugs,
+           and you won't notice these bugs if you are testing on a
+           window manager that doesn't recognize the difference.
+
+        """
+        pass
+
+    def event_lose_keyboard_focus(self):
+        """Lose keyboard focus event.
+
+        Called when the game loses keyboard focus.  Keyboard focus is
+        normally needed for key press and release events to be received.
+
+        .. note::
+
+           See the note in the documentation for
+           :meth:`event_gain_keyboard_focus`.
+
+        """
+        if sge.DEBUG:
+            bad_name = "event_loose_keyboard_focus"
+            if hasattr(self, bad_name):
+                sge._scold_user_on_lose_vs_loose(bad_name)
+
+    def event_gain_mouse_focus(self):
+        """Gain mouse focus event.
+
+        Called when the game gains mouse focus.  Mouse focus may be
+        needed for mouse motion, button press, and button release events
+        to be received.
+
+        .. note::
+
+           See the note in the documentation for
+           :meth:`event_gain_keyboard_focus`.
+
+        """
+        pass
+
+    def event_lose_mouse_focus(self):
+        """Lose mouse focus event.
+
+        Called when the game loses mouse focus.  Mouse focus may be
+        needed for mouse motion, button press, and button release events
+        to be received.
+
+        .. note::
+
+           See the note in the documentation for
+           :meth:`event_gain_keyboard_focus`.
+
+        """
+        if sge.DEBUG:
+            bad_name = "event_loose_mouse_focus"
+            if hasattr(self, bad_name):
+                sge._scold_user_on_lose_vs_loose(bad_name)
+
     def event_close(self):
         """Close event.
 
@@ -1081,6 +1178,48 @@ class Game(object):
 
         """
         pass
+
+    def event_paused_gain_keyboard_focus(self):
+        """Gain keyboard focus event when paused.
+
+        See the documentation for :meth:`event_gain_keyboard_focus` for
+        more information.
+
+        """
+        pass
+
+    def event_paused_lose_keyboard_focus(self):
+        """Lose keyboard focus event when paused.
+
+        See the documentation for :meth:`event_lose_keyboard_focus` for
+        more information.
+
+        """
+        if sge.DEBUG:
+            bad_name = "event_paused_loose_keyboard_focus"
+            if hasattr(self, bad_name):
+                sge._scold_user_on_lose_vs_loose(bad_name)
+
+    def event_paused_gain_mouse_focus(self):
+        """Gain mouse focus event when paused.
+
+        See the documentation for :meth:`event_gain_mouse_focus` for
+        more information.
+
+        """
+        pass
+
+    def event_paused_lose_mouse_focus(self):
+        """Lose mouse focus event when paused.
+
+        See the documentation for :meth:`event_lose_mouse_focus` for
+        more information.
+
+        """
+        if sge.DEBUG:
+            bad_name = "event_paused_loose_mouse_focus"
+            if hasattr(self, bad_name):
+                sge._scold_user_on_lose_vs_loose(bad_name)
 
     def event_paused_close(self):
         """Close event when paused.
