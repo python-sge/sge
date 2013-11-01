@@ -753,6 +753,33 @@ class Game(object):
                     for obj in self.current_room.objects:
                         obj.event_paused_joystick_button_release(event.joy,
                                                                  event.button)
+                elif event.type == pygame.ACTIVEEVENT:
+                    if event.gain:
+                        if 2 & event.state:
+                            # Gain keyboard focus
+                            if sge.DEBUG:
+                                print('Gained keyboard focus.')
+                            self.event_paused_gain_keyboard_focus()
+                            self.current_room.event_paused_gain_keyboard_focus()
+                        if 1 & event.state:
+                            # Gain mouse focus
+                            if sge.DEBUG:
+                                print('Gained mouse focus.')
+                            self.event_paused_gain_mouse_focus()
+                            self.current_room.event_paused_gain_mouse_focus()
+                    else:
+                        if 2 & event.state:
+                            # Lose keyboard focus
+                            if sge.DEBUG:
+                                print('Lost keyboard focus.')
+                            self.event_paused_lose_keyboard_focus()
+                            self.current_room.event_paused_lose_keyboard_focus()
+                        if 1 & event.state:
+                            # Lose mouse focus
+                            if sge.DEBUG:
+                                print('Lost mouse focus.')
+                            self.event_paused_lose_mouse_focus()
+                            self.current_room.event_paused_lose_mouse_focus()
                 elif event.type == pygame.QUIT:
                     if sge.DEBUG:
                         print('Quit requested by the system.')
