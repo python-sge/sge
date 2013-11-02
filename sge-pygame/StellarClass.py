@@ -512,8 +512,6 @@ class StellarClass(object):
         self._pygame_sprite = _PygameSprite(self)
         self._set_mask()
 
-        self.x = x
-        self.y = y
         self.z = z
 
         self._start_x = self.x
@@ -1311,21 +1309,18 @@ class Mouse(StellarClass):
 
     @x.setter
     def x(self, value):
-        if not self.dont_set_x:
-            rel_x = (value - self.x) * sge.game._xscale
-            self.mouse_x += rel_x
+        rel_x = (value - self.x) * sge.game._xscale
+        self.mouse_x += rel_x
 
-            self.xprevious = self._x
-            self._x = value
-            self._bbox_left = value + self.bbox_x
-            self._bbox_right = self.bbox_left + self.bbox_width
+        self.xprevious = self._x
+        self._x = value
+        self._bbox_left = value + self.bbox_x
+        self._bbox_right = self.bbox_left + self.bbox_width
 
-            # Cause the Pygame sprite to make itself dirty
-            self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
+        # Cause the Pygame sprite to make itself dirty
+        self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
 
-            pygame.mouse.set_pos(self.mouse_x, self.mouse_y)
-        else:
-            self.dont_set_x = False
+        pygame.mouse.set_pos(self.mouse_x, self.mouse_y)
 
     @property
     def y(self):
@@ -1346,21 +1341,18 @@ class Mouse(StellarClass):
 
     @y.setter
     def y(self, value):
-        if not self.dont_set_y:
-            rel_y = (value - self.y) * sge.game._yscale
-            self.mouse_y += rel_y
+        rel_y = (value - self.y) * sge.game._yscale
+        self.mouse_y += rel_y
 
-            self.yprevious = self._y
-            self._y = value
-            self._bbox_top = value + self.bbox_y
-            self._bbox_bottom = self.bbox_top + self.bbox_height
+        self.yprevious = self._y
+        self._y = value
+        self._bbox_top = value + self.bbox_y
+        self._bbox_bottom = self.bbox_top + self.bbox_height
 
-            # Cause the Pygame sprite to make itself dirty
-            self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
+        # Cause the Pygame sprite to make itself dirty
+        self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
 
-            pygame.mouse.set_pos(self.mouse_x, self.mouse_y)
-        else:
-            self.dont_set_y = False
+        pygame.mouse.set_pos(self.mouse_x, self.mouse_y)
 
     @property
     def sprite(self):
@@ -1390,8 +1382,7 @@ class Mouse(StellarClass):
         self.mouse_xprevious = self.mouse_x
         self.mouse_yprevious = self.mouse_y
         self.previous_speeds = []
-        self.dont_set_x = True
-        self.dont_set_y = True
+
         super(Mouse, self).__init__(0, 0, 0, ID='mouse')
 
     def event_collision(self, other):
@@ -1451,6 +1442,19 @@ class Mouse(StellarClass):
             pygame.mouse.set_visible(self.visible and self.sprite is None)
         else:
             pygame.mouse.set_visible(False)
+
+    def _reset(self):
+        # Reset the mouse back to its original state, but NOT position.
+        self.z = self._start_z
+        self.sprite = self._start_sprite
+        self.visible = self._start_visible
+        self.detects_collisions = self._start_detects_collisions
+        self.bbox_x = self._start_bbox_x
+        self.bbox_y = self._start_bbox_y
+        self.bbox_width = self._start_bbox_width
+        self.bbox_height = self._start_bbox_height
+        self.collision_ellipse = self._start_collision_ellipse
+        self.collision_precise = self._start_collision_precise
 
 
 class _PygameSprite(pygame.sprite.DirtySprite):
