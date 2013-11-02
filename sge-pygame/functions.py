@@ -32,7 +32,7 @@ __all__ = ['show_message', 'get_text_entry', 'get_key_pressed',
            'get_mouse_button_pressed', 'get_joystick_axis', 'get_joystick_hat',
            'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_axes',
            'get_joystick_hats', 'get_joystick_buttons', '_scale',
-           '_get_pygame_color']
+           '_get_pygame_color', '_scold_user_on_lose_vs_loose']
 
 
 def show_message(text, buttons=('OK',), default=0):
