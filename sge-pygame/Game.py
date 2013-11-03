@@ -657,8 +657,7 @@ class Game(object):
             try:
                 image = pygame.image.load(
                     os.path.join(os.path.dirname(__file__),
-                                 'sge_pause.png')).convert()
-                image.set_colorkey((255, 0, 255))
+                                 'sge_pause.png')).convert_alpha()
             except pygame.error:
                 image = pygame.Surface((16, 16))
                 image.fill((255, 255, 255), pygame.Rect(0, 0, 4, 16))

@@ -5,9 +5,16 @@ non-functional data files found in this directory.
 
 sge_pause.png
 
-Author: onpon4 <http://onpon4.comule.com>
-License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-Source: N/A
+Authors:
+  Gareth Noyce
+  onpon4 <http://onpon4.comule.com>
+License: Public domain
+Source: http://www.pygame.org/docs/logos.html
+Details:
+  Pygame logo by Gareth Noyce is in the public domain.  onpon4's
+  contribution was adding the "PAUSED" text, and this contribution is
+  released to the public domain via the CC0 license
+  <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 ------------------------------------------------------------------------
 
