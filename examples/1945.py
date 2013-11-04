@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 # 1945 Example - 1943 clone
 # Written in 2013 by Julian Marchant <onpon4@riseup.net>

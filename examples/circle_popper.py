@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 # Circle Popper
 # Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net>

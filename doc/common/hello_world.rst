@@ -97,7 +97,7 @@ In SGE games, everything is controlled by a "game" object.  The game
 object controls everything at the global level, including global events.
 To define global events, we need to subclass :class:`sge.Game` and
 create our own game class.  Because only one :class:`sge.Game` object is
-allowed to exist in any one game, we can just call this class "Game"::
+allowed to exist in any one game, we can just call this class ``Game``::
 
     class Game(sge.Game):
 
@@ -186,20 +186,20 @@ respectively.
 
 You might be wondering: why do we keep doing this every frame? Can't we
 just do it once, since we're not changing the image? In fact, we can't.
-:meth:`project_text` shows our text, but it only does so for one frame.
-You can think of it as working like a movie projector: if you keep the
-projector on, you will continue to see the image, but as soon as the
-projector stops projecting the image, you can no longer see the image
-from the projector.  :meth:`project_text` and other similar projection
-methods work the same way.
+:meth:`sge.Room.project_text` shows our text, but it only does so for
+one frame.  You can think of it as working like a movie projector: if
+you keep the projector on, you will continue to see the image, but as
+soon as the projector stops projecting the image, you can no longer see
+the image from the projector.  :meth:`sge.Game.project_text` and other
+similar projection methods work the same way.
 
 The main Function
 -----------------
 
-The main function is where everything starts.  Technically, Python
-doesn't require this to be a function, much less a function called
-"main", but using a main function makes the code cleaner and more
-well-defined.  This is what our main function will be::
+The :func:`main` function is where everything starts.  Technically,
+Python doesn't require this to be a function, much less a function
+called :func:`main`, but using a main function makes the code cleaner
+and more well-defined.  This is what our main function will be::
 
     def main():
         # Create Game object
