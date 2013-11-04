@@ -42,6 +42,7 @@ SGE Pygame bugfixes:
 - Text wrapping wrongly
 - Mouse being moved to the top-left corner of the window on room start
   if it started outside the window
+- sge.Room.project_text not working with font IDs
 
 
 0.4.0
