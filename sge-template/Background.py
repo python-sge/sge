@@ -55,8 +55,8 @@ class Background(object):
           :const:`None`, the SGE chooses the value.
 
         All other arguments set the respective initial attributes of the
-        background.  See the documentation for :class:`Background` for
-        more information.
+        background.  See the documentation for :class:`sge.Background`
+        for more information.
 
         """
         # TODO

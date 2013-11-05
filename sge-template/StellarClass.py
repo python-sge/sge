@@ -31,7 +31,7 @@ class StellarClass(object):
 
     This class is used for game objects, such as the player, enemies,
     bullets, and the HUD.  Generally, each type of object has its own
-    subclass of :class:`StellarClass`.
+    subclass of :class:`sge.StellarClass`.
 
     .. attribute:: x
 
@@ -67,22 +67,26 @@ class StellarClass(object):
        events which have names starting with ``event_inactive_`` will be
        executed instead of the corresponding normal events.
 
-       It is important to note that inactive :class:`StellarClass`
-       objects are still visible by default and continue to be involved
-       in collisions.  In addition, collision events and destroy events
-       still occur even if the object is inactive.  If you wish for the
-       object to not be visible, set :attr:`visible` to :const:`False`.
-       If you wish for the object to not be involved in collisions, set
-       :attr:`detects_collisions` to :const:`False`.
+       .. note::
 
-       It is also important to note that making an object inactive will
-       not likely have a significant effect on performance.  For
-       performance enhancement, it is far more effective to exclude
-       objects from collision detection.  Object deactivation is meant
-       to be used to easily maintain control over objects that are
-       currently being excluded from collision detection (e.g. to
-       prevent a gravity effect that would otherwise occur, or to
-       prevent the object from moving through walls).
+          Inactive :class:`sge.StellarClass` objects are still visible
+          by default and continue to be involved in collisions.  In
+          addition, collision events and destroy events still occur even
+          if the object is inactive.  If you wish for the object to not
+          be visible, set :attr:`visible` to :const:`False`.  If you
+          wish for the object to not be involved in collisions, set
+          :attr:`detects_collisions` to :const:`False`.
+
+       .. note::
+
+          Making an object inactive will not likely have a significant
+          effect on performance.  For performance enhancement, it is far
+          more effective to exclude objects from collision detection.
+          Object deactivation is meant to be used to easily maintain
+          control over objects that are currently being excluded from
+          collision detection (e.g. to prevent a gravity effect that
+          would otherwise occur, or to prevent the object from moving
+          through walls).
 
     .. attribute:: detects_collisions
 
@@ -242,7 +246,7 @@ class StellarClass(object):
           another music object.
 
         All other arugments set the respective initial attributes of the
-        object.  See the documentation for :class:`StellarClass` for
+        object.  See the documentation for :class:`sge.StellarClass` for
         more information.
 
         """
@@ -278,8 +282,8 @@ class StellarClass(object):
 
         After this method is called, ``value`` will reduce by 1 each
         frame (adjusted for delta timing if it is enabled) until it
-        reaches 0, at which point :meth:`event_alarm` will be executed
-        with ``alarm_id``.
+        reaches 0, at which point :meth:`sge.StellarClass.event_alarm`
+        will be executed with ``alarm_id``.
 
         """
         # TODO
@@ -463,7 +467,8 @@ class StellarClass(object):
 
         - ``other`` -- The other object which was collided with.
 
-        By default, this method simply calls :meth:`event_collision`.
+        By default, this method simply calls
+        :meth:`sge.StellarClass.event_collision`.
 
         """
         self.event_collision(other)
@@ -478,7 +483,8 @@ class StellarClass(object):
         
         - ``other`` -- The other object which was collided with.
 
-        By default, this method simply calls :meth:`event_collision`.
+        By default, this method simply calls
+        :meth:`sge.StellarClass.event_collision`.
 
         """
         self.event_collision(other)
@@ -492,7 +498,8 @@ class StellarClass(object):
 
         - ``other`` -- The other object which was collided with.
 
-        By default, this method simply calls :meth:`event_collision`.
+        By default, this method simply calls
+        :meth:`sge.StellarClass.event_collision`.
 
         """
         self.event_collision(other)
@@ -507,7 +514,8 @@ class StellarClass(object):
 
         - ``other`` -- The other object which was collided with.
 
-        By default, this method simply calls :meth:`event_collision`.
+        By default, this method simply calls
+        :meth:`sge.StellarClass.event_collision`.
 
         """
         self.event_collision(other)
@@ -516,8 +524,8 @@ class StellarClass(object):
         """Step event when this object is inactive.
 
         See the documentation for :meth:`sge.Game.event_step` for more
-        information.  The object is considered to be inactive when its
-        ``active`` attribute is False.
+        information.  The object is considered to be inactive when
+        :attr:`active` is :attr:`False`.
 
         """
 

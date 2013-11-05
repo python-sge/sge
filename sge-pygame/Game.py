@@ -39,11 +39,11 @@ class Game(object):
     with the SGE, an object either of this class or of a class derived
     from it must be created.
 
-    When an object of this class is created, it is automatically assigned
-    to :data:`sge.game`.
+    When an object of this class is created, it is automatically
+    assigned to :data:`sge.game`.
 
-    Note: Do not create multiple :class:`Game` objects.  Doing so may
-    cause errors.
+    Note: Do not create multiple :class:`sge.Game` objects.  Doing so
+    may cause errors.
 
     .. attribute:: width
 
@@ -78,9 +78,12 @@ class Game(object):
 
     .. attribute:: fps
 
-       The rate the game should run in frames per second.  Note that
-       this is only the maximum; if the computer is not fast enough, the
-       game may run more slowly.
+       The rate the game should run in frames per second.
+
+       .. note::
+
+          This is only the maximum; if the computer is not fast enough,
+          the game may run more slowly.
 
     .. attribute:: delta
 
@@ -273,10 +276,11 @@ class Game(object):
         """Constructor method.
 
         Arguments set the respective initial attributes of the game.
-        See the documentation for :class:`Game` for more information.
+        See the documentation for :class:`sge.Game` for more
+        information.
 
-        The created :class:`Game` object is automatically assigned to
-        :data:`sge.game`.
+        The created :class:`sge.Game` object is automatically assigned
+        to :data:`sge.game`.
 
         """
         # Settings use a smaller buffer size for less lag.
@@ -915,9 +919,9 @@ class Game(object):
 
         Arguments:
 
-        - ``value`` -- The tilt of the axis as a float from -1 to 1,
-          where 0 is centered, -1 is all the way to the left or up, and
-          1 is all the way to the right or down.
+        - ``value`` -- The tilt of the axis as a float from ``-1`` to
+          ``1``, where ``0`` is centered, ``-1`` is all the way to the
+          left or up, and ``1`` is all the way to the right or down.
 
         See the documentation for :func:`sge.get_joystick_axis` for more
         information.
@@ -1118,8 +1122,8 @@ class Game(object):
     def event_paused_key_press(self, key, char):
         """Key press event when paused.
 
-        See the documentation for :meth:`Game.event_key_press` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_key_press` for
+        more information.
 
         """
         pass
@@ -1127,7 +1131,7 @@ class Game(object):
     def event_paused_key_release(self, key):
         """Key release event when paused.
 
-        See the documentation for :meth:`Game.event_key_release` for
+        See the documentation for :meth:`sge.Game.event_key_release` for
         more information.
 
         """
@@ -1136,8 +1140,8 @@ class Game(object):
     def event_paused_mouse_move(self, x, y):
         """Mouse move event when paused.
 
-        See the documentation for :meth:`Game.event_mouse_move` for more
-        information.
+        See the documentation for :meth:`sge.Game.event_mouse_move` for
+        more information.
 
         """
         pass
@@ -1145,8 +1149,8 @@ class Game(object):
     def event_paused_mouse_button_press(self, button):
         """Mouse button press event when paused.
 
-        See the documentation for :meth:`Game.event_mouse_button_press`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_mouse_button_press` for more information.
 
         """
         pass
@@ -1155,7 +1159,8 @@ class Game(object):
         """Mouse button release event when paused.
 
         See the documentation for
-        :meth:`Game.event_mouse_button_release` for more information.
+        :meth:`sge.Game.event_mouse_button_release` for more
+        information.
 
         """
         pass
@@ -1163,8 +1168,8 @@ class Game(object):
     def event_paused_joystick_axis_move(self, joystick, axis, value):
         """Joystick axis move event when paused.
 
-        See the documentation for :meth:`Game.event_joystick_axis_move`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_axis_move` for more information.
 
         """
         pass
@@ -1172,8 +1177,8 @@ class Game(object):
     def event_paused_joystick_hat_move(self, joystick, hat, x, y):
         """Joystick HAT move event when paused.
 
-        See the documentation for :meth:`Game.event_joystick_hat_move`
-        for more information.
+        See the documentation for
+        :meth:`sge.Game.event_joystick_hat_move` for more information.
 
         """
         pass
@@ -1182,7 +1187,8 @@ class Game(object):
         """Joystick trackball move event when paused.
 
         See the documentation for
-        :meth:`Game.event_joystick_trackball_move` for more information.
+        :meth:`sge.Game.event_joystick_trackball_move` for more
+        information.
 
         """
         pass
@@ -1191,7 +1197,8 @@ class Game(object):
         """Joystick button press event when paused.
 
         See the documentation for
-        :meth:`Game.event_joystick_button_press` for more information.
+        :meth:`sge.Game.event_joystick_button_press` for more
+        information.
 
         """
         pass
@@ -1200,7 +1207,8 @@ class Game(object):
         """Joystick button release event when paused.
 
         See the documentation for
-        :meth:`Game.event_joystick_button_release` for more information.
+        :meth:`sge.Game.event_joystick_button_release` for more
+        information.
 
         """
         pass
@@ -1208,8 +1216,8 @@ class Game(object):
     def event_paused_gain_keyboard_focus(self):
         """Gain keyboard focus event when paused.
 
-        See the documentation for :meth:`event_gain_keyboard_focus` for
-        more information.
+        See the documentation for
+        :meth:`sge.Game.event_gain_keyboard_focus` for more information.
 
         """
         pass
@@ -1217,8 +1225,8 @@ class Game(object):
     def event_paused_lose_keyboard_focus(self):
         """Lose keyboard focus event when paused.
 
-        See the documentation for :meth:`event_lose_keyboard_focus` for
-        more information.
+        See the documentation for
+        :meth:`sge.Game.event_lose_keyboard_focus` for more information.
 
         """
         if sge.DEBUG:
@@ -1229,8 +1237,8 @@ class Game(object):
     def event_paused_gain_mouse_focus(self):
         """Gain mouse focus event when paused.
 
-        See the documentation for :meth:`event_gain_mouse_focus` for
-        more information.
+        See the documentation for
+        :meth:`sge.Game.event_gain_mouse_focus` for more information.
 
         """
         pass
@@ -1238,8 +1246,8 @@ class Game(object):
     def event_paused_lose_mouse_focus(self):
         """Lose mouse focus event when paused.
 
-        See the documentation for :meth:`event_lose_mouse_focus` for
-        more information.
+        See the documentation for
+        :meth:`sge.Game.event_lose_mouse_focus` for more information.
 
         """
         if sge.DEBUG:
@@ -1250,7 +1258,7 @@ class Game(object):
     def event_paused_close(self):
         """Close event when paused.
 
-        See the documentation for :meth:`Game.event_close` for more
+        See the documentation for :meth:`sge.Game.event_close` for more
         information.
 
         """

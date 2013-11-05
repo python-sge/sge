@@ -43,11 +43,13 @@ class Music(object):
     implementation-specific information for a full list of supported
     formats.
 
-    You should avoid the temptation to use MP3 files; MP3 is a
-    patent-encumbered format, so many systems do not support it and
-    royalties to the patent holders may be required for commercial use.
-    There are many programs which can convert your MP3 files to the free
-    Ogg Vorbis format.
+    .. note::
+
+       You should avoid the temptation to use MP3 files; MP3 is a
+       patent-encumbered format, so many systems do not support it and
+       royalties to the patent holders may be required for commercial
+       use.  There are many programs which can convert your MP3 files to
+       the free Ogg Vorbis format.
 
     .. attribute:: volume
 
@@ -120,7 +122,7 @@ class Music(object):
           another music object.
 
         All other arguments set the respective initial attributes of the
-        music.  See the documentation for :class:`Music` for more
+        music.  See the documentation for :class:`sge.Music` for more
         information.
 
         """
@@ -210,7 +212,7 @@ class Music(object):
         This will cause the music to be added to a list of music to play
         in order, after the previous music has finished playing.
 
-        See the documentation for :meth:`Music.play` for more
+        See the documentation for :meth:`sge.Music.play` for more
         information.
 
         """

@@ -35,7 +35,7 @@ class Font(object):
     """Font handling class.
 
     This class stores a font for use by :meth:`sge.Sprite.draw_text` and
-    :meth:`sge.Room.render_text`.
+    :meth:`sge.Room.project_text`.
 
     Note that bold and italic rendering could be ugly.  It is better to
     choose a bold or italic font rather than enabling bold or italic
@@ -53,9 +53,20 @@ class Font(object):
 
        Whether or not bold rendering is enabled.
 
+       .. note::
+
+          Using this option can be ugly.  It is better to choose a bold
+          font rather than enabling bold rendering, if possible.
+
     .. attribute:: italic
 
        Whether or not italic rendering is enabled.
+
+       .. note::
+
+          Using this option can be ugly.  It is better to choose an
+          italic font rather than enabling italic rendering, if
+          possible.
 
     .. attribute:: name
 
@@ -134,20 +145,22 @@ class Font(object):
           it is already the unique identifier of another font.
 
         All other arguments set the respective initial attributes of the
-        font.  See the documentation for :class:`Font` for more
+        font.  See the documentation for :class:`sge.Font` for more
         information.
 
-        Note that it is generally not a good practice to rely on system
-        fonts.  A font which you have on your system is probably not on
-        everyone's system.  For example, most Windows systems have a
-        font called Times New Roman, but this font is rarely found on
-        GNU/Linux systems.  On the other hand, most GNU/Linux systems
-        have the Liberation fonts included by default, but these fonts
-        are uncommon on Windows systems.  Rather than relying on system
-        fonts, choose a font which is under a free license (such as the
-        GNU General Public License or the SIL Open Font License) and
-        distribute it with your game; this will ensure that everyone
-        sees text rendered the same way you do.
+        .. note::
+
+           It is generally not a good practice to rely on system fonts.
+           A font which you have on your system is probably not on
+           everyone's system.  For example, most Windows systems have a
+           font called Times New Roman, but this font is not normally
+           found on Debian systems.  On the other hand, Debian has the
+           Liberation fonts installed by default, but these fonts are
+           uncommon on Windows systems.  Rather than relying on system
+           fonts, choose a font which is under a free license (such as
+           the GNU General Public License or the SIL Open Font License)
+           and distribute it with your game; this will ensure that
+           everyone sees text rendered the same way you do.
 
         """
         assert pygame.font.get_init()

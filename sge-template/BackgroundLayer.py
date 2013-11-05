@@ -87,8 +87,8 @@ class BackgroundLayer(object):
           background layer.
 
         All other arguments set the respective initial attributes of the
-        layer.  See the documentation for :class:`BackgroundLayer` for
-        more information.
+        layer.  See the documentation for :class:`sge.BackgroundLayer`
+        for more information.
 
         """
         # TODO

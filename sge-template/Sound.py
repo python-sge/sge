@@ -30,7 +30,8 @@ class Sound(object):
     """Sound handling class.
 
     This class stores and plays sound effects.  Note that this is
-    inefficient for large music files; for those, use sge.Music instead.
+    inefficient for large music files; for those, use :class:`sge.Music`
+    instead.
 
     What sound formats are supported depends on the implementation of
     the SGE, but sound formats that are generally a good choice are Ogg
@@ -81,7 +82,7 @@ class Sound(object):
           another sound object.
 
         All other arguments set the respective initial attributes of the
-        sound.  See the documentation for :class:`Sound` for more
+        sound.  See the documentation for :class:`sge.Sound` for more
         information.
 
         """

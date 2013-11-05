@@ -147,7 +147,7 @@ class View(object):
           ``sge.game.height - yport``).
 
         All other arugments set the respective initial attributes of the
-        view.  See the documentation for :class:`View` for more
+        view.  See the documentation for :class:`sge.View` for more
         information.
 
         """

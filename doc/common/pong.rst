@@ -70,7 +70,7 @@ use as variables.  Our container class looks like this::
         game_in_progress = True
 
 I call the class "glob" as a shorthand for "global" (the shorthand is
-necessary since "global" is a keyword in Python).  It is derived from
+necessary since ``global`` is a keyword in Python).  It is derived from
 :class:`object`, which ensures that :class:`glob` is a new-style class
 in Python 2; if you are using Python 3, all classes are new-style
 classes, so this can be omitted.
@@ -81,11 +81,11 @@ when we actually use them.
 The Game Class
 --------------
 
-For our Game class, we want to of course provide a way to exit the game,
-and in this case, we are also going to provide a way to pause the game.
-Just for the heck of it, let's also allow the player to take a
-screenshot by pressing F8.  With those goals in mind, our Game class is
-defined as follows::
+For our :class:`Game` class, we want to of course provide a way to exit
+the game, and in this case, we are also going to provide a way to pause
+the game.  Just for the heck of it, let's also allow the player to take
+a screenshot by pressing F8.  With those goals in mind, our Game class
+is defined as follows::
 
     class Game(sge.Game):
 
@@ -128,11 +128,12 @@ less verbose.
 The next event we define is the close event.  Unlike our last example,
 here, we first ask the player to confirm whether or not they want to
 close before actually closing.  :func:`sge.show_message` returns a
-number representing what button was pressed, with 0 as the first number,
-so we are able to simplify the check of what button was pressed with a
-simple hack: the first button (button 0) is the "No" button, and the
-second button (button 1) is the "Yes" button.  The numbers these buttons
-return correspond to :const:`False` and :const:`True`, respectively.
+number representing what button was pressed, with ``0`` as the first
+number, so we are able to simplify the check of what button was pressed
+with a simple hack: the first button (button 0) is the "No" button, and
+the second button (button 1) is the "Yes" button.  The numbers these
+buttons return correspond to :const:`False` and :const:`True`,
+respectively.
 
 Next, we need to define "paused" events, because normal events are
 suspended while the game is paused. The "paused" close event just does
@@ -179,8 +180,8 @@ inferred from that: the controls (you will see why we are storing the
 controls like this in a minute), the horizontal location, and the
 direction the paddle hits (``1`` for right, ``-1`` for left).  As a
 bonus, we also use this information to decide what "global" variable to
-assign the player to: glob.player1 if it is the left player, or
-glob.player2 if it is the right player.
+assign the player to: :attr:`glob.player1` if it is the left player, or
+:attr:`glob.player2` if it is the right player.
 
 Keep in mind that you must never *override*
 :meth:`sge.StellarClass.__init__`; you should only extend it.  This is
@@ -218,11 +219,11 @@ method of figuring out the desired direction not only is a lot simpler
 than an if statement, but also handles the condition of opposite
 directions being pressed at the same time properly.
 
-Since -1 is up, 1 is down, and 0 is no movement, I now just need to
-multiply ``key_motion`` by some constant value (the paddle speed I wish
-to use) to get the desired vertical velocity.  The name I have chosen
-for this constant is ``PADDLE_SPEED``.  Attempting to use an undefined
-constant will cause an error, so let's define it now::
+Since ``-1`` is up, ``1`` is down, and ``0`` is no movement, I now just
+need to multiply ``key_motion`` by some constant value (the paddle speed
+I wish to use) to get the desired vertical velocity.  The name I have
+chosen for this constant is :const:`PADDLE_SPEED`.  Attempting to use an
+undefined constant will cause an error, so let's define it now::
 
     PADDLE_SPEED = 4
 
@@ -256,7 +257,7 @@ extending the constructor method::
             y = sge.game.height / 2
             super(Ball, self).__init__(x, y, 1, sprite="ball")
 
-This extension is more simple than :class:`Player`'s: our etension
+This extension is more simple than :class:`Player`'s: our extension
 simply removes all arguments from the constructor method and hard-codes
 values to pass on to :meth:`sge.StellarClass.__init__`.
 
@@ -1254,7 +1255,7 @@ And this is the final result if you are using Python 3::
     TEXT_OFFSET = 16
 
 
-    class glob(object):
+    class glob:
 
         # This class is for global variables.  While not necessary, using a
         # container class like this is less potentially confusing than using
@@ -1330,7 +1331,7 @@ And this is the final result if you are using Python 3::
                 self.hit_direction = -1
 
             y = sge.game.height / 2
-            super(Player, self).__init__(x, y, 0, sprite="paddle")
+            super().__init__(x, y, 0, sprite="paddle")
 
         def event_step(self, time_passed):
             # Movement
@@ -1351,7 +1352,7 @@ And this is the final result if you are using Python 3::
         def __init__(self):
             x = sge.game.width / 2
             y = sge.game.height / 2
-            super(Ball, self).__init__(x, y, 1, sprite="ball")
+            super().__init__(x, y, 1, sprite="ball")
 
         def event_create(self):
             refresh_hud()

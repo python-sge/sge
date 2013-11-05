@@ -38,7 +38,7 @@ class Sprite(object):
     those images.
 
     What image formats are supported depends on the implementation of
-    theSGE, but image formats that are generally a good choice are PNG
+    the SGE, but image formats that are generally a good choice are PNG
     and JPEG.  See the implementation-specific information for a full
     list of supported formats.
 

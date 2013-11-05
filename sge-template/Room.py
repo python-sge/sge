@@ -89,7 +89,7 @@ class Room(object):
           layers and the color set to ``"black"``.
 
         All other arguments set the respective initial attributes of the
-        room.  See the documentation for :class:`Room` for more
+        room.  See the documentation for :class:`sge.Room` for more
         information.
 
         """
@@ -117,7 +117,7 @@ class Room(object):
         """Continue the room from where it left off.
 
         If the room is unchanged (e.g. has not been started yet), this
-        method behaves in the same way that :meth:`Room.start` does.
+        method behaves in the same way that :meth:`sge.Room.start` does.
 
         """
         # TODO
@@ -135,8 +135,8 @@ class Room(object):
         If the room chosen as the next room does not exist, the game is
         ended.
 
-        This triggers this room's :meth:`Room.event_room_end` and resets
-        the state of this room.
+        This triggers this room's :meth:`sge.Room.event_room_end` and
+        resets the state of this room.
 
         """
         # TODO
