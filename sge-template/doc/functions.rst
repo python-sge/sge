@@ -1,1 +1,0 @@
-../../doc/functions.rst

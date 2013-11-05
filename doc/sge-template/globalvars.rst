@@ -1,0 +1,1 @@
+../common/globalvars.rst

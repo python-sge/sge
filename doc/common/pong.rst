@@ -9,8 +9,7 @@ Setting Up the Project
 ----------------------
 
 I am going to set up my project in "~/pong", and the game script is
-going to be called "pong.py".  I am using Python 2, and the sge-pygame
-SGE implementation.
+going to be called "pong.py".  I am using Python 2.
 
 I am going to open pong.py and add the appropriate shebang, my copyright
 notice (I am choosing the CC0 license), and my imports.  This is what I

@@ -1,1 +1,0 @@
-../../doc/Game.rst

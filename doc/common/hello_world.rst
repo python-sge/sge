@@ -10,10 +10,20 @@ Setting Up the Project
 ----------------------
 
 First, we must create our project directory.  I will use "~/hello".
-Copy an implementation to "~/hello"; I'm choosing sge-pygame, and rename
-it to just "sge" (so in my example, I now have "~/hello/sge").  If you
-are using Python 3 instead of Python 2, you should choose a Python 3
-implementation instead, such as sge-pygame-py3k.
+
+Next, we need to get the SGE to work with our project.  There are two
+ways to do this: the most obvious way is to run the included steup.py
+script from the terminal::
+
+    ./setup.py install
+
+This will install the SGE system-wide.
+
+The second way, which I will use, is to simply copy the "sge" folder to
+"~/hello".  This will enable the SGE to work only with this project.
+
+Be sure to use an implementation that is compatible with the version of
+Python you are using.
 
 Next, create the game source file inside "~/hello".  I am calling it
 "hello.py".

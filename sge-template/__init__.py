@@ -201,57 +201,57 @@ are overlapping would cause an undesirable flicker effect.
 Global Variables and Constants
 ==============================
 
-.. data:: IMPLEMENTATION
+.. data:: sge.IMPLEMENTATION
 
    A string indicating the name of the SGE implementation.
 
-.. data:: ALIGN_LEFT
+.. data:: sge.ALIGN_LEFT
 
    Flag indicating horizontal alignment to the left.
 
-.. data:: ALIGN_CENTER
+.. data:: sge.ALIGN_CENTER
 
    Flag indicating horizontal alignment to the center.
 
-.. data:: ALIGN_RIGHT
+.. data:: sge.ALIGN_RIGHT
 
    Flag indicating horizontal alignment to the right.
 
-.. data:: ALIGN_TOP
+.. data:: sge.ALIGN_TOP
 
    Flag indicating vertical alignment to the top
 
-.. data:: ALIGN_MIDDLE
+.. data:: sge.ALIGN_MIDDLE
 
    Flag indicating vertical alignment to the middle.
 
-.. data:: ALIGN_BOTTOM
+.. data:: sge.ALIGN_BOTTOM
 
    Flag indicating vertical alignment to the bottom.
 
-.. data:: game
+.. data:: sge.game
 
-   Stores the current :class:`Game` object.  If there is no
-   :class:`Game` object currently, this variable is set to
+   Stores the current :class:`sge.Game` object.  If there is no
+   :class:`sge.Game` object currently, this variable is set to
    :const:`None`.
 
-.. data:: image_directories
+.. data:: sge.image_directories
 
    A list of directories where images can be found.  Default is
    ``./data/images``, ``./data/sprites``, or ``./data/backgrounds``,
    where ``.`` is the program directory.
 
-.. data:: font_directories
+.. data:: sge.font_directories
 
    A list of directories where font files can be found.  Default is
    ``./data/fonts``, where ``.`` is the program directory.
 
-.. data:: sound_directories
+.. data:: sge.sound_directories
 
    A list of directories where sounds can be found.  Default is
    ``./data/sounds``, where ``.`` is the program directory.
 
-.. data:: music_directories
+.. data:: sge.music_directories
 
    A list of directories where music files can be found.  Default is
    ``./data/music``, where ``.`` is the program directory.
@@ -281,7 +281,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.4.0.11"
+__version__ = "0.4.0.12"
 
 import sys
 import os
