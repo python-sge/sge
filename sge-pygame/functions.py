@@ -89,7 +89,7 @@ def get_text_entry(text, default=''):
     - ``default`` -- The text to put in the text entry field initially.
 
     The text entry dialog box is mostly the same as the regular dialog
-    box -- see the documentation for :func:`show_message` for more
+    box -- see the documentation for :func:`sge.show_message` for more
     information -- but there are some key differences, outlined here.
 
     There is always an OK button on the right and a Cancel button on the
