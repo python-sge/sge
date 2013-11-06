@@ -282,9 +282,10 @@ whenever a player scores.  This will be our serve method::
 
 In a nutshell, we set the ball back to the its starting position (which
 is the center of the screen) and reset its movement based on an argument
-called ``direction``, which will be 1 (for right) or -1 (for left).  We
-multiply this by a constant called BALL_START_SPEED; let's define this
-constant now, right below our definition of the PADDLE_SPEED constant::
+called ``direction``, which will be ``1`` (for right) or ``-1`` (for
+left).  We multiply this by a constant called :const:`BALL_START_SPEED`;
+let's define this constant now, right below our definition of
+:const:`PADDLE_SPEED`::
 
     BALL_START_SPEED = 2
 
@@ -317,15 +318,15 @@ when this happens, we check if the other object is an instance of the
 :attr:`hit_direction`; if it's ``1``, we place the left side of the
 ball's bounding box just to the right of the right side of the paddle's
 bounding box, then we make the ball's horizontal velocity positive and
-add a constant, ``BALL_ACCELERATION``, to it; this will cause the ball
-to slowly speed up as the game progresses.  If :attr:`hit_direction` is
-something other than ``1``, we assume that the paddle hits to the left;
-the behavior is identical to the behavior of hitting to the right, but
-opposite.
+add a constant, :const:`BALL_ACCELERATION`, to it; this will cause the
+ball to slowly speed up as the game progresses.  If
+:attr:`hit_direction` is something other than ``1``, we assume that the
+paddle hits to the left; the behavior is identical to the behavior of
+hitting to the right, but opposite.
 
 Although accelerating the ball makes the gameplay more fun, we must not
 let the ball go too fast.  Remember that movement is much like an
-animation; the ball changes its position from one position to another;
+animation.  The ball changes its position from one position to another;
 the greater the speed, the bigger the difference.  Movement perceived is
 only an illusion.  As a result, if the ball goes too fast, it can
 pass right through a paddle without a collision ever being detected.  To
@@ -340,7 +341,7 @@ case, the paddle is horizontally stationary.  We are later going to set
 the width of both the paddle and the ball to ``8``, so we will set the
 maximum ball speed to ``15`` (i.e. ``8 + 8 - 1``).
 
-Since the game would be rather dull if the players couldn't control the
+The game would be rather dull if the players couldn't control the
 direction of the ball, so we allow the players to control the ball by
 adding the difference between the ball and paddle's vertical positions
 (which are going to be their centers) multiplied by a constant to the
@@ -756,9 +757,9 @@ Now that the score property is defined, let's add that function::
 First we clear the sprite with :meth:`sge.Sprite.draw_clear`, then we
 draw both player's scores on it; player 1's score goes on the left, and
 player 2's score goes on the right.  We use :const:`TEXT_OFFSET` to make
-it look nicer; if you set TEXT_OFFSET to ``0``, you will notice that it
-looks a little ugly because the text is right next to the line and right
-below the top of the screen.
+it look nicer; if you set :const:`TEXT_OFFSET` to ``0``, you will notice
+that it looks a little ugly because the text is right next to the line
+and right below the top of the screen.
 
 The way it is now, the score won't start being displayed until someone
 scores, which is not what we want.  To prevent this, we want to call
@@ -880,12 +881,14 @@ the "data" folder, create another folder called "sounds".
 
 .. note::
 
-   Directories are not case-sensitive on all systems (most notably, they
-   are not case-sensitive on Windows), but on POSIX systems in
-   particular (such as Debian and Apple OS X), "data" is different from
-   "Data".  Because of this, don't get into the habit of capitalizing
-   the names of these folders; it's "data", not "Data", and it's
-   "sounds", not "Sounds".
+   Directories are not case-sensitive on all file systems; most notably,
+   NTFS (the file system used by Windows) would treat the directory
+   name "data" as being identical to "Data".  However, many other file
+   systems, such as those commonly used on Unix and Unix-like operating
+   systems, are case-sensitive.  On those file systems, "data" is
+   distinct from "Data".  Because of this, don't get into the habit of
+   capitalizing the names of these folders; it's "data", not "Data", and
+   it's "sounds", not "Sounds".
 
 Put your three sound effects, which in my case are now named
 "bounce.wav", "bounce_wall.wav", and "score.wav", into data/sounds.
@@ -1027,10 +1030,10 @@ final result if you are using Python 2::
                 self.event_close()
             elif key in ('p', 'enter'):
                 if glob.game_in_progress:
-                self.pause()
-            else:
-                glob.game_in_progress = True
-                self.current_room.start()
+                    self.pause()
+                else:
+                    glob.game_in_progress = True
+                    self.current_room.start()
 
         def event_close(self):
             m = "Are you sure you want to quit?"
@@ -1079,6 +1082,9 @@ final result if you are using Python 2::
 
             y = sge.game.height / 2
             super(Player, self).__init__(x, y, 0, sprite="paddle")
+
+        def event_create(self):
+            self.v_score = 0
 
         def event_step(self, time_passed):
             # Movement
@@ -1280,10 +1286,10 @@ And this is the final result if you are using Python 3::
                 self.event_close()
             elif key in ('p', 'enter'):
                 if glob.game_in_progress:
-                self.pause()
-            else:
-                glob.game_in_progress = True
-                self.current_room.start()
+                    self.pause()
+                else:
+                    glob.game_in_progress = True
+                    self.current_room.start()
 
         def event_close(self):
             m = "Are you sure you want to quit?"
@@ -1332,6 +1338,9 @@ And this is the final result if you are using Python 3::
 
             y = sge.game.height / 2
             super().__init__(x, y, 0, sprite="paddle")
+
+        def event_create(self):
+            self.v_score = 0
 
         def event_step(self, time_passed):
             # Movement
