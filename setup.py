@@ -1,5 +1,4 @@
 #!/usr/bin/env python2
-# -*- coding: utf8 -*-
 
 # SGE setup.py
 # Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
@@ -29,7 +28,7 @@ import sys
 from distutils.core import setup
 
 long_description = """
-The Stellar Game Engine (abbreviated “SGE”, pronounced as “Sage”) is a
+The Stellar Game Engine (abbreviated "SGE", pronounced as "Sage") is a
 free 2-D game engine. The purpose of the SGE is to make game development
 easier, which allows more rapid development by experienced game
 developers and also helps less experienced game developers learn how to
@@ -45,7 +44,7 @@ idir = "sge"
 requires = []
 
 setup(name=name,
-      version='0.4.0-dev',
+      version='0.5.0',
       description='A 2-D game engine for Python',
       long_description=long_description,
       author=author,

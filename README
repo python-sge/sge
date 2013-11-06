@@ -1,4 +1,4 @@
-Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
+Copyright (C) 2013 Julian Marchant <onpon4@riseup.net>
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -7,48 +7,19 @@ without any warranty.
 
 ========================================================================
 
-Introduction to the SGE
-------------------------------------------------------------------------
+INSTALLATION
 
-The Stellar Game Engine (abbreviated "SGE", pronounced as "Sage") is a
-Python library for use by Stellar.  It is a game engine loosely based on
-the proprietary program, Game Maker.  The purpose of the SGE is to make
-game development easier, which allows more rapid development by
-experienced game developers and also helps less experienced game
-developers learn how to develop games.
+First, make sure you have an appropriate Python version and all
+dependencies.  You can learn what Python version is appropriate and what
+other dependencies are needed from "sge/README".
 
-Unlike Game Maker, you have freedom with the SGE.  Official
-implementations of the SGE are free software (where "free" refers to
-freedom, not price; see the `Free Software Definition
-<http://gnu.org/philosophy/free-sw.html>`_ for more information), and
-the documentation has been (to the extent legally possible) released to
-the public domain via the CC0 license.
+You can install the SGE with the included setup.py script, e.g.:
 
-Even if it isn't required of you, we encourage you to release your
-games' code under a free software license, such as the GNU General
-Public License, the Expat License (often ambiguously called the "MIT
-License"), or the Apache License 2.0.  Doing so is easy, does not
-negatively affect you, and is highly appreciated as a contribution to
-free software.
+    python setup.py install
 
+Alternatively, you can just copy the "sge" directory to the directory of
+your project.
 
-Using the SGE
-------------------------------------------------------------------------
+USAGE
 
-Available implementations are in folders named as "sge-name", where
-"name" is replaced with the name of the implementation.  To use the SGE
-to develop a game, copy the folder of the implementation you want to use
-to the same directory as your main game script and rename it to "sge"
-(note: all lowercase).  You can then import the module "sge".
-
-Note that a given implementation may have additional dependencies; see
-the implementation's documentation to learn about them.  Also note that
-"sge-template" is not an implementation, but a template for programming
-new implementations (see the README file included with it for more
-information).
-
-See the files contained in the "examples" directory for examples of
-games written for the SGE.  To run them, you must first add the folder
-of a SGE implementation into the "examples" directory as described
-above.  See [FIXME: pointer to docs] for documentation of the SGE API.
-
+See the "doc" folder for detailed documentation on how to use the SGE.
