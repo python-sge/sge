@@ -35,7 +35,7 @@ developers and also helps less experienced game developers learn how to
 develop games.
 """.strip()
 
-name = "SGE"
+name = "sge"
 author = "Julian Marchant"
 author_email = "onpon4@riseup.net"
 url = "http://stellarengine.nongnu.org"

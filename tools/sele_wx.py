@@ -21,12 +21,18 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+__version__ = "0.0.1"
+
 import sys
 
 import wx
 
 import stj
 
+PROGRAM_NAME = "Stellarly-Encompassing Level Editor"
+PROGRAM_VERSION = __version__
+PROGRAM_DESCRIPTION = "Universal level editor for SGE games."
+PROGRAM_COPYRIGHT = "(C) 2013 Julian Marchant <onpon4@riseup.net>"
 MAIN_WINDOW_TITLE = "Stellarly-Encompassing Level Editor"
 MAIN_WINDOW_SIZE = (800, 600)
 
@@ -206,7 +212,13 @@ class Frame(wx.Frame):
         print("Isometric grid")
 
     def OnAbout(self, event):
-        pass
+        info = wx.AboutDialogInfo()
+        info.SetName(PROGRAM_NAME)
+        info.SetVersion(PROGRAM_VERSION)
+        info.SetDescription(PROGRAM_DESCRIPTION)
+        info.SetCopyright(PROGRAM_COPYRIGHT)
+
+        wx.AboutBox(info)
 
 
 def main(*args):
