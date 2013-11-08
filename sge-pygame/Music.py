@@ -190,7 +190,7 @@ class Music(object):
             self._timeout = maxtime
             self._fade_time = fade_time
 
-            if self._fade_time > 0:
+            if self._fade_time is not None and self._fade_time > 0:
                 pygame.mixer.music.set_volume(0)
 
             if self.fname.lower().endswith(".mod"):
