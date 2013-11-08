@@ -7,13 +7,6 @@ without any warranty.
 
 ========================================================================
 
-0.5.0-dev
-------------------------------------------------------------------------
-
-Pygame SGE bugfixes:
-- Certain valid image names not being accepted for the loading of sprites
-
-
 0.5.0
 ------------------------------------------------------------------------
 
@@ -38,19 +31,6 @@ Specification additions:
 Specification misc changes:
 * Documentation reformatted.
 * "id"/"id_" argument in many constructor methods changed to "ID".
-
-Pygame SGE misc changes:
-* Now called "the Pygame SGE" rather than "SGE Pygame".
-* Appearance of modal dialog boxes changed.
-
-Pygame SGE bugfixes:
-- sge.BackgroundLayer not being able to accept sprite IDs
-- Sprites being rotated about the center instead of the origin
-- Projections being broken (arguments in a method call were messed up)
-- Text wrapping wrongly
-- Mouse being moved to the top-left corner of the window on room start
-  if it started outside the window
-- sge.Room.project_text not working with font IDs
 
 
 0.4.0
@@ -94,17 +74,6 @@ Specification misc changes:
 SGE Template misc changes:
 * Released to the public domain via CC0.
 
-SGE Pygame misc changes:
-* Collision detection changed to be more efficient.
-* Now called "SGE Pygame" instead of "Stellar Game Engine - Pygame 1.9".
-
-SGE Pygame bugfixes:
-- Projected objects flickering when delta timing was enabled
-- sge.StellarClass.image_fps not being used if a sprite was available
-- Background layers being offset when scaling the window
-- Rectangles replacing the area they drew on rather than blending
-- sge.Sprite.draw_sprite not accepting sprite names
-
 
 0.3.0
 ------------------------------------------------------------------------
@@ -127,12 +96,6 @@ Specification misc changes:
 * The file name for sounds and music can now be set to None for null sounds.
 * Mouse buttons are now identified by strings instead of constants.
 
-Pygame implementation additions:
-+ DEBUG constant (causes more verbose information to be printed if True)
-
-Pygame implementation bugfixes:
-- IOError being raised if Pygame's mixer module was unavailable
-
 
 0.2.1
 ------------------------------------------------------------------------
@@ -140,12 +103,6 @@ Pygame implementation bugfixes:
 Specification misc changes:
 * sge.Game.window_icon is now a file name instead of a sprite.
 * The default room size is now the game window size.
-
-Pygame implementation bugfixes:
-- Views being allowed outside the room
-- Crash when changing an object's sprite
-- image_xscale and image_yscale not being factored into objects' origins
-- Image being offset if an object's xscale or yscale was negative
 
 
 0.2.0
@@ -184,27 +141,8 @@ Specification misc changes:
 * Removed unnecessary arguments from sge.Font.get_size.
 * Split SGE in to multiple files.
 
-Pygame implementation additions:
-+ sge.hardware_rendering
-+ Automatic font substitution (e.g. Liberation Sans for Arial)
-+ sge.real_trackballs
-
-Pygame implementation bugfixes:
-- Problems with scaling
-- Problems with partial screen updates
-- Wrong correction of views being outside the room
-- Object disappearing bug
-- Background disappearing bug
-- Split-screen problem
-- Background change not showing up when changing rooms
-- Bug with partial view of dynamic objects
-- Background update bug
-
 
 0.1.0
 ------------------------------------------------------------------------
 
 First release
-
-Note: many features were unimplemented in this version. They were all
-later implemented in version 0.2.0.
