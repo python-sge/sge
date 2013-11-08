@@ -391,7 +391,7 @@ def main():
     Game(480, 800)
 
     # Load sprites
-    sge.Sprite('1945_enemybullet.png', origin_x=3, origin_y=3,
+    sge.Sprite('1945_enemybullet', origin_x=3, origin_y=3,
                transparent=True, bbox_x=-3, bbox_y=-3)
     sge.Sprite('1945_enemyplane_blue', origin_x=16, origin_y=16,
                transparent=True, fps=4, bbox_x=-16, bbox_y=-16)

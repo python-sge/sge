@@ -232,12 +232,14 @@ class Sprite(object):
                         full_fname = os.path.join(path, fname)
                         if fname.startswith(name) and os.path.isfile(full_fname):
                             root, ext = os.path.splitext(fname)
-                            if root.rsplit('-', 1)[0] == name:
+                            if root == name:
+                                split = [name, '']
+                            elif root.rsplit('-', 1)[0] == name:
                                 split = root.rsplit('-', 1)
-                            elif root.split('_', 1)[0] == name:
+                            elif root.rsplit('_', 1)[0] == name:
                                 split = root.rsplit('_', 1)
                             else:
-                                split = (name, '')
+                                continue
 
                             if root == name:
                                 fname_single = full_fname
