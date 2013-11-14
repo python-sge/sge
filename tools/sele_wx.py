@@ -24,6 +24,7 @@ from __future__ import unicode_literals
 __version__ = "0.0.1"
 
 import sys
+import os
 
 import wx
 
@@ -146,6 +147,14 @@ class Frame(wx.Frame):
         menu_bar.Append(help_menu, '&Help')
         self.SetMenuBar(menu_bar)
 
+        toolbar = self.CreateToolBar(style=wx.TB_HORIZONTAL)
+
+        #toolbar.AddLabelTool(wx.ID_NEW, label="New Room")
+
+        toolbar.Realize()
+
+        self.panel = Panel(self)
+
         self.Show()
 
     def OnNew(self, event):
@@ -221,9 +230,128 @@ class Frame(wx.Frame):
         wx.AboutBox(info)
 
 
+class Panel(wx.Panel):
+
+    def __init__(self, *args, **kwargs):
+        super(Panel, self).__init__(*args, **kwargs)
+
+        self.games = []
+
+        sizer = wx.BoxSizer(wx.VERTICAL)
+
+        self.notebook = wx.Notebook(self, style=wx.NB_TOP)
+        sizer.Add(self.notebook, proportion=1, flag=wx.EXPAND)
+
+        self.SetSizer(sizer)
+        self.Refresh()
+
+        self.load_game('test.json')
+        self.load_game('test2.json')
+        self.load_game('test.json')
+
+    def load_game(self, fname):
+        # fname: The name of the JSON file to pass to stj.StellarJSON.
+        """Load a game, storing it in self.games, and create a tab."""
+        for i in xrange(len(self.games)):
+            i_fname = os.path.realpath(self.games[i].fname)
+            if i_fname == os.path.realpath(fname):
+                # This is the same file.  Open its tab.
+                self.notebook.SetSelection(i)
+                return
+
+        game = stj.StellarJSON(fname)
+        self.games.append(game)
+        panel = GamePanel(game, self.notebook)
+        self.notebook.AddPage(panel, os.path.realpath(game.fname))
+
+        #self.Refresh()
+
+    def Refresh(self, *args, **kwargs):
+        assert len(self.games) == self.notebook.GetPageCount()
+
+        for i in xrange(len(self.games)):
+            self.notebook.SetPageText(i, os.path.realpath(self.games[i].fname))
+
+        super(Panel, self).Refresh(*args, **kwargs)
+
+
+class GamePanel(wx.Panel):
+
+    def __init__(self, game, *args, **kwargs):
+        # game: The stj.StellarJSON file representing this game.
+        super(GamePanel, self).__init__(*args, **kwargs)
+
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.rooms_listbox = wx.ListBox(self, style=wx.LB_SINGLE |
+                                        wx.LB_HSCROLL | wx.LB_NEEDED_SB)
+        self.Bind(wx.EVT_LISTBOX, self.OnRoomsListBox, self.rooms_listbox)
+        sizer.Add(self.rooms_listbox, proportion=25, flag=wx.EXPAND)
+
+        self.room_panel = RoomPanel(self)
+        sizer.Add(self.room_panel, proportion=75, flag=wx.EXPAND)
+
+        self.SetSizer(sizer)
+        self.Refresh()
+
+    def Refresh(self, *args, **kwargs):
+        # List Box
+        selection = self.rooms_listbox.GetSelection()
+
+        room_names = []
+        for room in self.game.rooms:
+            room_names.append(room.name)
+
+        self.rooms_listbox.Set(room_names)
+
+        if selection != wx.NOT_FOUND and selection < len(self.game.rooms):
+            self.rooms_listbox.SetSelection(selection)
+            room = self.game.rooms[selection]
+
+            # Room size
+            warg = room.keyword_arguments.setdefault("width")
+
+            if warg is None or warg.value == "None":
+                if "width" in self.game.game_kwargs:
+                    warg = self.game.game_kwargs["width"]
+
+            # TODO: Convert warg to width, ask about width in case of
+            # a problem, then do all the same stuff with height
+
+            # Room background color
+            self.room_panel.SetBackgroundColour(wx.Colour(0, 0, 0))
+
+            bgarg = room.keyword_arguments.setdefault("background")
+
+            if bgarg is not None:
+                for background in self.game.backgrounds:
+                    if "ID" in background.kwargs:
+                        ID = background.kwargs["ID"].value
+                        if ID == bgarg.value and len(background.args) > 1:
+                            c = background.args[1]
+                            # TODO: Convert that to wxColour
+        else:
+            self.room_panel.SetBackgroundColour(wx.NullColour)
+
+        super(GamePanel, self).Refresh(*args, **kwargs)
+
+    def OnRoomsListBox(self, event):
+        pass
+
+
+class RoomPanel(wx.Panel):
+
+    def __init__(self, *args, **kwargs):
+        super(RoomPanel, self).__init__(*args, **kwargs)
+
+
+def create_room():
+    pass
+
+
 def main(*args):
     app = wx.PySimpleApp()
-    Frame(None, id=wx.ID_ANY, title=MAIN_WINDOW_TITLE, size=MAIN_WINDOW_SIZE)
+    Frame(None, title=MAIN_WINDOW_TITLE, size=MAIN_WINDOW_SIZE)
     app.MainLoop()
 
 
