@@ -295,8 +295,8 @@ class DataElement(object):
 
         Arguments:
 
-        - ``parent`` -- The :class:`StellarJSON` object this object is a
-          part of.
+        - ``fname`` -- The name of the JSON file this object is
+          associated with.
         - ``data`` -- The data form of the object.  What type of data
           this should be depends on the class; see the documentation for
           the respective class for more information.
@@ -1163,6 +1163,25 @@ def get_path(s, wd=os.getcwd()):
             parts[i] = os.pardir
 
     return os.path.join(*parts)
+
+
+def get_eval(self, sj, value):
+    """Return the expected value of a string when evaluated.
+
+    Arguments:
+
+    - ``sj`` -- The :class:`StellarJSON` object to use for context.
+    - ``value`` -- The string that needs to be evaluated.
+
+    This function makes a simple attempt to get an answer in the case
+    that names are used.  It is otherwise identical to the built-in
+    :func:`eval` function.
+
+    """
+    for var in sj.constants.extend(sj.global_variables):
+        value = value.replace(var.name, var.value)
+
+    return eval(value)
 
 
 if __name__ == '__main__':
