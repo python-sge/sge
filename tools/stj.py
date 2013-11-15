@@ -1178,8 +1178,24 @@ def get_eval(self, sj, value):
     :func:`eval` function.
 
     """
-    for var in sj.constants.extend(sj.global_variables):
-        value = value.replace(var.name, var.value)
+    variables = sj.constants
+    variables.extend(sj.global_variables)
+
+    for cls in sj.classes:
+        variables.extend(cls.class_attributes)
+
+    # Some explanation for why we go through variables backwards:
+    # Suppose you have three constants: FOO, BAR, and BAZ.  FOO is set
+    # to ``5``, BAR is set to ``3``, and BAZ is set to ``FOO + BAR``.
+    # Suppose value is "BAZ - 4".  If we go through forwards, first
+    # "FOO" is replaced, but there is no "FOO".  Then "BAR" is replaced,
+    # but there is not "BAR".  Then "BAZ" is replaced, and the result is
+    # "(FOO + BAR) - 4".  On the other hand, if we go backwards, first
+    # "BAZ" is replaced, and we get "(FOO + BAR) - 4.  Then "BAR" is
+    # replaced and we get "(FOO + (3)) - 4".  Then "FOO" is replaced and
+    # the result is "((5) + (3)) - 4", the result that makes sense.
+    for var in variables[::-1]:
+        value = value.replace(var.name, ''.join(("(", var.value, ")")))
 
     return eval(value)
 
