@@ -85,6 +85,16 @@ class Font(object):
 
     @size.setter
     def size(self, value):
+        if self._font is not None:
+            # Preserve underline, bold, and italic settings.
+            underline = self.underline
+            bold = self.bold
+            italic = self.italic
+        else:
+            underline = False
+            bold = False
+            italic = False
+
         self._size = value
         self._font = None
 
@@ -95,6 +105,11 @@ class Font(object):
 
         if self._font is None:
             self._font = pygame.font.SysFont(self.name, self._size)
+
+        # Restore underline, bold, and italic settings.
+        self.underline = underline
+        self.bold = bold
+        self.italic = italic
 
     @property
     def underline(self):
@@ -193,6 +208,7 @@ class Font(object):
             # assume the default font is to be used.
             self.name = ''
 
+        self._font = None
         self.name = self.name[1:]
         self.size = size
         self.underline = underline
@@ -231,6 +247,41 @@ class Font(object):
 
         return (text_width, text_height)
 
+    @classmethod
+    def from_sprite(cls, sprite, chars, ID=None, size=12, underline=False,
+                    bold=False, italic=False):
+        """Return a font derived from a sprite.
+
+        Arguments:
+
+        - ``sprite`` -- The :class:`sge.Sprite` object to derive the
+          font from.
+        - ``chars`` -- A list of characters to set the sprite's frames
+          to.  For example, ``['A', 'B', 'C']`` would assign the first
+          frame to the letter "A", the second frame to the letter "B",
+          and the third frame to the letter "C".  Any character not
+          listed here will be rendered as its differently-cased
+          counterpart if possible (e.g. "A" as "a") or as a blank space
+          otherwise.
+        - ``ID`` -- The value to set :attr:`id` to.  If set to
+          :const:`None`, the name of the sprite will be used, modified
+          by the SGE if it is already the unique identifier of another
+          font.
+
+        All other arguments set the respective initial attributes of the
+        font.  See the documentation for :class:`sge.Font` for more
+        information.
+
+        The font's :attr:`name` attribute will be set to the name of the
+        sprite the font is derived from.
+
+        The font's :attr:`size` attribute will indicate the height of
+        the characters in pixels.  The width of the characters will be
+        adjusted proportionally.
+
+        """
+        # TODO
+
     def _split_text(self, text, width=None):
         # Split the text into lines of the proper size for ``width`` and
         # return a list of the lines.  If ``width`` is None, only
@@ -254,3 +305,104 @@ class Font(object):
                                                      words.pop(0)))
                         split_text.append(current_line)
             return split_text
+
+
+class _PygameSpriteFont(pygame.font.Font):
+
+    # Special font class that returns good values for a sprite font.
+
+    @property
+    def vsize(self):
+        return self._vsize
+
+    @vsize.setter
+    def vsize(self, value):
+        if self.sprite.height != 0:
+            scale_factor = vsize / self.sprite.height
+            if scale_factor != 1:
+                self.sprite.width *= scale_factor
+                self.sprite.height *= scale_factor
+        else:
+            # Protection against division by zero.
+            sprite.width = vsize
+            sprite.height = vsize
+
+    def __init__(self, sprite, chars, size):
+        self.sprite = sprite
+        self.chars = {}
+
+        for i in xrange(len(chars)):
+            self.chars[chars[i]] = i
+
+        self.vsize = size
+        self.underline = False
+        self.bold = False
+        self.italic = False
+
+    def size(self, text):
+        return (self.sprite.width * len(text), self.sprite.height)
+
+    def set_underline(self, bool_):
+        self.underline = bool_
+
+    def get_underline(self):
+        return self.underline
+
+    def set_bold(self, bool_):
+        self.bold = bool_
+
+    def get_bold(self):
+        return self.bold
+
+    def set_italic(self, bool_):
+        self.italic = bool_
+
+    def get_italic(self):
+        return self.italic
+
+    def metrics(self, text):
+        m = (0, self.sprite.width, 0, self.sprite.height, self.sprite.width)
+        return [m for char in text]
+
+    def get_linesize(self):
+        return self.sprite.height
+
+    def get_height(self):
+        return self.sprite.height
+
+    def get_ascent(self):
+        return self.sprite.height
+
+    def get_descent(self):
+        return 0
+
+
+class _SpriteFont(Font):
+
+    # Special sprite font class for Font.from_sprite.
+
+    @property
+    def size(self):
+        return self._font.vsize
+
+    @size.setter
+    def size(self, value):
+        self._font.vsize = value
+
+    def __init__(self, sprite, chars, ID=None, size=12, underline=False, bold=False,
+                 italic=False):
+        self.name = sprite.name
+        self._font = _PygameSpriteFont(sprite, chars, size)
+        self.underline = underline
+        self.bold = bold
+        self.italic = italic
+
+        if ID is not None:
+            self.id = ID
+        else:
+            self.id = self.name
+
+            while self.id in sge.game.fonts:
+                self.id += "_"
+
+        sge.game.fonts[self.id] = self

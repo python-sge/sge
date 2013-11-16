@@ -7,6 +7,16 @@ without any warranty.
 
 ========================================================================
 
+0.5.0-dev
+------------------------------------------------------------------------
+
+Specification additions:
++ sge.Font.from_sprite
+
+SGE Template bugfixes:
+- Argument for Font.__init__ being the old "id_" rather than "ID"
+
+
 0.5.0
 ------------------------------------------------------------------------
 

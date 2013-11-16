@@ -70,8 +70,8 @@ class Font(object):
 
     """
 
-    def __init__(self, name=None, id_=None, size=12, underline=False,
-                 bold=False, italic=False, **kwargs):
+    def __init__(self, name=None, ID=None, size=12, underline=False,
+                 bold=False, italic=False):
         """Constructor method.
 
         Arguments:
@@ -120,6 +120,40 @@ class Font(object):
 
         See the documentation for :meth:`sge.Sprite.draw_text` for
         information about the arguments.
+
+        """
+        # TODO
+
+    @classmethod
+    def from_sprite(cls, sprite, chars, ID=None):
+        """Return a font derived from a sprite.
+
+        Arguments:
+
+        - ``sprite`` -- The :class:`sge.Sprite` object to derive the
+          font from.
+        - ``chars`` -- A list of characters to set the sprite's frames
+          to.  For example, ``['A', 'B', 'C']`` would assign the first
+          frame to the letter "A", the second frame to the letter "B",
+          and the third frame to the letter "C".  Any character not
+          listed here will be rendered as its differently-cased
+          counterpart if possible (e.g. "A" as "a") or as a blank space
+          otherwise.
+        - ``ID`` -- The value to set :attr:`id` to.  If set to
+          :const:`None`, the name of the sprite will be used, modified
+          by the SGE if it is already the unique identifier of another
+          font.
+
+        All other arguments set the respective initial attributes of the
+        font.  See the documentation for :class:`sge.Font` for more
+        information.
+
+        The font's :attr:`name` attribute will be set to the name of the
+        sprite the font is derived from.
+
+        The font's :attr:`size` attribute will indicate the height of
+        the characters in pixels.  The width of the characters will be
+        adjusted proportionally.
 
         """
         # TODO
