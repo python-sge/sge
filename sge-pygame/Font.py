@@ -317,15 +317,15 @@ class _PygameSpriteFont(pygame.font.Font):
 
     @vsize.setter
     def vsize(self, value):
-        if self.sprite.height != 0:
-            scale_factor = vsize / self.sprite.height
+        if self.height != 0:
+            scale_factor = vsize / self.height
             if scale_factor != 1:
-                self.sprite.width *= scale_factor
-                self.sprite.height *= scale_factor
+                self.width *= scale_factor
+                self.height *= scale_factor
         else:
             # Protection against division by zero.
-            sprite.width = vsize
-            sprite.height = vsize
+            self.width = vsize
+            self.height = vsize
 
     def __init__(self, sprite, chars, size):
         self.sprite = sprite
@@ -334,10 +334,39 @@ class _PygameSpriteFont(pygame.font.Font):
         for i in xrange(len(chars)):
             self.chars[chars[i]] = i
 
+        self.width = self.sprite.width
+        self.height = self.sprite.height
         self.vsize = size
         self.underline = False
         self.bold = False
         self.italic = False
+
+    def render(self, text, antialias, color, background=None):
+        w = self.width * len(text)
+        h = self.height
+        xscale = (self.width / self.sprite.width if self.sprite.width > 0
+                  else 1)
+        yscale = (self.height / self.sprite.height if self.sprite.height > 0
+                  else 1)
+        surf = pygame.Surface((w, h), pygame.SRCALPHA)
+        surf.fill(pygame.Color(0, 0, 0, 0))
+        pg_color = pygame.Color(color)
+        sge_color = (pg_color.r, pg_color.g, pg_color.b, pg_color.a)
+
+        for i in xrange(len(text)):
+            if text[i] in self.chars:
+                cimg = self.sprite._get_image(self.chars[text[i]],
+                                              xscale=xscale,
+                                              yscale=yscale, blend=sge_color)
+                surf.blit(cimg, (i * self.width, 0))
+
+        if background is None:
+            return surf
+        else:
+            rsurf = pygame.Surface((w, h), pygame.SRCALPHA)
+            rsurf.fill(background)
+            rsurf.blit(surf, (0, 0))
+            return rsurf
 
     def size(self, text):
         return (self.sprite.width * len(text), self.sprite.height)
@@ -361,17 +390,17 @@ class _PygameSpriteFont(pygame.font.Font):
         return self.italic
 
     def metrics(self, text):
-        m = (0, self.sprite.width, 0, self.sprite.height, self.sprite.width)
+        m = (0, self.width, 0, self.height, self.width)
         return [m for char in text]
 
     def get_linesize(self):
-        return self.sprite.height
+        return self.height
 
     def get_height(self):
-        return self.sprite.height
+        return self.height
 
     def get_ascent(self):
-        return self.sprite.height
+        return self.height
 
     def get_descent(self):
         return 0
