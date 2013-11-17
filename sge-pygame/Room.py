@@ -174,6 +174,8 @@ class Room(object):
             self.event_room_start()
             for obj in self.objects:
                 obj.event_create()
+        else:
+            self.event_room_resume()
 
         self._started = True
 
@@ -410,6 +412,15 @@ class Room(object):
         Called when the room starts.  It is always called after any game
         start events and before any object create events occurring at
         the same time.
+
+        """
+        pass
+
+    def event_room_resume(self):
+        """Room resume event.
+
+        Called when the room resumes without being reset to its original
+        state (i.e. via :meth:`sge.Room.resume`).
 
         """
         pass

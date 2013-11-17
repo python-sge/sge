@@ -287,6 +287,15 @@ class Room(object):
         """
         pass
 
+    def event_room_resume(self):
+        """Room resume event.
+
+        Called when the room resumes without being reset to its original
+        state (i.e. via :meth:`sge.Room.resume`).
+
+        """
+        pass
+
     def event_room_end(self):
         """Room end event.
 

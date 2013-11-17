@@ -12,6 +12,7 @@ without any warranty.
 
 Specification additions:
 + sge.Font.from_sprite
++ sge.Room.event_room_resume
 
 SGE Template bugfixes:
 - Argument for Font.__init__ being the old "id_" rather than "ID"

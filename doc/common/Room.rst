@@ -34,6 +34,8 @@ sge.Room Event Methods
 
 .. automethod:: sge.Room.event_room_start
 
+.. automethod:: sge.Room.event_room_resume
+
 .. automethod:: sge.Room.event_room_end
 
 .. automethod:: sge.Room.event_step
