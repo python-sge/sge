@@ -32,6 +32,7 @@ import weakref
 import warnings
 
 CODE_TAB_WIDTH = 4
+CODE_INDENT = " " * CODE_TAB_WIDTH
 DOCSTRING_LINE_SIZE = 72
 
 
@@ -271,6 +272,10 @@ class StellarJSON(object):
 
         with open(self.fname, 'w') as f:
             json.dump(data, f, indent=4, sort_keys=True)
+
+    def get_code(self):
+        # TODO
+        return ''
 
 
 class DataElement(object):
@@ -634,7 +639,7 @@ class Class(DataElement):
             for attr in self.class_attributes:
                 attribute_lines = attr.get_code().splitlines()
                 for line in attribute_lines:
-                    line = ''.join((" " * CODE_TAB_WIDTH, line)).rstrip()
+                    line = ''.join((CODE_INDENT, line)).rstrip()
                     lines.append(line)
 
         if self.properties:
@@ -642,7 +647,7 @@ class Class(DataElement):
                 lines.append("")
                 property_lines = prop.get_code().splitlines()
                 for line in property_lines:
-                    line = ''.join((" " * CODE_TAB_WIDTH, line)).rstrip()
+                    line = ''.join((CODE_INDENT, line)).rstrip()
                     lines.append(line)
 
         if self.methods:
@@ -650,27 +655,27 @@ class Class(DataElement):
                 lines.append("")
                 method_lines = meth.get_code().splitlines()
                 for line in method_lines:
-                    line = ''.join((" " * CODE_TAB_WIDTH, line)).rstrip()
+                    line = ''.join((CODE_INDENT, line)).rstrip()
                     lines.append(line)
 
         if self.class_methods:
             for meth in self.class_methods:
                 lines.append("")
-                dec = ''.join((" " * CODE_TAB_WIDTH, "@classmethod"))
+                dec = ''.join((CODE_INDENT, "@classmethod"))
                 lines.append(dec)
                 method_lines = meth.get_code().splitlines()
                 for line in method_lines:
-                    line = ''.join((" " * CODE_TAB_WIDTH, line)).rstrip()
+                    line = ''.join((CODE_INDENT, line)).rstrip()
                     lines.append(line)
 
         if self.static_methods:
             for meth in self.static_methods:
                 lines.append("")
-                dec = ''.join((" " * CODE_TAB_WIDTH, "@staticmethod"))
+                dec = ''.join((CODE_INDENT, "@staticmethod"))
                 lines.append(dec)
                 method_lines = meth.get_code().splitlines()
                 for line in method_lines:
-                    line = ''.join((" " * CODE_TAB_WIDTH, line)).rstrip()
+                    line = ''.join((CODE_INDENT, line)).rstrip()
                     lines.append(line)
 
         return '\n'.join(lines)
@@ -772,7 +777,7 @@ class Function(DataElement):
         lines = [header]
 
         for line in self.code.splitlines():
-            line = ''.join((" " * CODE_TAB_WIDTH, line))
+            line = ''.join((CODE_INDENT, line)).rstrip()
             lines.append(line)
 
         return '\n'.join(lines)
@@ -900,6 +905,24 @@ class Property(DataElement):
 
         return data
 
+    def get_code(self):
+        header = "def {0}(self):".format(self.name)
+        lines = ["@property", header]
+
+        for line in self.getter.splitlines():
+            line = ''.join((CODE_INDENT, line)).rstrip()
+            lines.append(line)
+
+        if self.setter.strip():
+            decorator = "@{0}.setter".format(self.name)
+            header = "def {0}(self, value):".format(self.name)
+            lines.extend("", decorator, header)
+            for line in self.setter.splitlines():
+                line = ''.join((CODE_INDENT, line)).rstrip()
+                lines.append(line)
+
+        return '\n'.join(lines)
+
 
 class FunctionArgument(Variable):
 
@@ -1006,6 +1029,25 @@ class Object(DataElement):
 
         return data
 
+    def get_code(self):
+        argslist = self.arguments[:]
+
+        for arg in self.keyword_arguments:
+            argslist.append("{0}={1}".format(arg.name, arg.value))
+
+        args = ', '.join(argslist)
+
+        if self.name is None:
+            return "{0}({1})".format(self.cls, args)
+        else:
+            name_parts = self.name.split(maxsplit=1)
+
+            if len(name_parts) >= 2 and name_parts[0] == "global":
+                return "global {0}\n{0} = {1}({2})".format(name_parts[1],
+                                                           self.cls, args)
+            else:
+                return "{0} = {1}({2})".format(self.name, self.cls, args)
+
 
 class Room(DataElement):
 
@@ -1067,8 +1109,21 @@ class Room(DataElement):
 
     .. attribute:: objects
 
-       A list of :class:`Object` objects indicating the objects to start
+       A list of :class:`Object` objects and/or Python-interpretable
+       strings that represent :class:`sge.StellarClass` objects in the
+       context of generated Python code indicating the objects to start
        the room with.
+
+       .. note::
+
+          These objects' classes *must* be derived from
+          :class:`sge.StellarClass`, and  should also ideally accept all
+          of the same keyword arguments as :class:`sge.StellarClass`,
+          particularly ``z``, ``ID``, ``sprite``, ``visible``,
+          ``active``,  ``detects_collisions``, ``xvelocity``,
+          ``yvelocity``, ``image_index``, ``image_fps``,
+          ``image_xscale``, ``image_yscale``, ``image_rotation``,
+          ``image_alpha``, and ``image_blend``.
 
     .. attribute:: external
 
@@ -1114,7 +1169,10 @@ class Room(DataElement):
             self.keyword_arguments.append(Variable(fname, kwarg))
 
         for obj in data.setdefault("objects", []):
-            self.objects.append(Object(fname, obj))
+            if isinstance(obj, basestring):
+                self.objects.append(obj)
+            else:
+                self.objects.append(Object(fname, obj))
 
     def get_data(self):
         data = {"name": self.name, "class": self.cls,
@@ -1125,7 +1183,10 @@ class Room(DataElement):
             data["keyword_arguments"].append(kwarg.get_data())
 
         for obj in self.objects:
-            data["objects"].append(obj.get_data())
+            if isinstance(obj, Object):
+                data["objects"].append(obj.get_data())
+            else:
+                data["objects"].append(obj)
 
         if self.external:
             path = get_path(self.external, os.path.dirname(self.fname))
@@ -1135,6 +1196,47 @@ class Room(DataElement):
             data = self.external
 
         return data
+
+    def get_code(self):
+        lines = []
+        objects = []
+
+        for obj in self.objects:
+            if isinstance(obj, Object):
+                if obj.name is None:
+                    objects.append(obj.get_code())
+                else:
+                    lines.append(obj.get_code()
+                    name_parts = obj.name.split(maxsplit=1)
+
+                    if len(name_parts) >= 2 and name_parts[0] == "global":
+                        objects.append(name_parts[1])
+                    else:
+                        objects.append(obj.name)
+            else:
+                objects.append(obj)
+
+        argslist = self.arguments[:]
+        argslist.append("objects=({0})".format(', '.join(objects))
+
+        for arg in self.keyword_arguments:
+            argslist.append("{0}={1}".format(arg.name, arg.value))
+
+        args = ', '.join(argslist)
+
+        if self.name is None:
+            lines.append("{0}({1})".format(self.cls, args))
+        else:
+            name_parts = self.name.split(maxsplit=1)
+
+            if len(name_parts) >= 2 and name_parts[0] == "global":
+                lines.append("global {0}\n{0} = {1}({2})".format(
+                    name_parts[1], self.cls, args))
+            else:
+                lines.append("{0} = {1}({2})".format(self.name, self.cls,
+                                                     args))
+
+        return '\n'.join(lines)
 
 
 def get_path(s, wd=os.getcwd()):
@@ -1210,3 +1312,4 @@ if __name__ == '__main__':
     stj.rooms.append(Room(stj.fname, {}))
     stj.rooms[0].objects.append(Object(stj.fname, {}))
     stj.save()
+    print(stj.get_code())
