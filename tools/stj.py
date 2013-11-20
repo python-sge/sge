@@ -119,6 +119,10 @@ class StellarJSON(object):
 
        A list of :class:`Object` objects indicating global objects.
 
+    .. attribute:: views
+
+       A list of :class:`Object` objects indicating global views.
+
     .. attribute:: rooms
 
        A list of :class:`Room` objects indicating rooms.
@@ -146,6 +150,7 @@ class StellarJSON(object):
             self.music = []
             self.fonts = []
             self.objects = []
+            self.views = []
             self.rooms = []
 
     def load(self):
@@ -168,6 +173,7 @@ class StellarJSON(object):
         self.music = []
         self.fonts = []
         self.objects = []
+        self.views = []
         self.rooms = []
 
         for kwarg in data.setdefault("game_kwargs", []):
@@ -216,6 +222,9 @@ class StellarJSON(object):
         for obj in data.setdefault("objects", []):
             self.objects.append(Object(self.fname, obj))
 
+        for view in data.setdefault("views", []):
+            self.views.append(Object(self.fname, view))
+
         for room in data.setdefault("rooms", []):
             self.rooms.append(Room(self.fname, room))
 
@@ -226,7 +235,8 @@ class StellarJSON(object):
                 "modules": [], "constants": [], "global_variables": [],
                 "classes": [], "functions": [], "sprites": [],
                 "background_layers": [], "backgrounds": [], "sounds": [],
-                "music": [], "fonts": [], "objects": [], "rooms": []}
+                "music": [], "fonts": [], "objects": [], "views": [],
+                "rooms": []}
 
         for kwarg in self.game_kwargs:
             data["game_kwargs"].append(kwarg.get_data())
@@ -266,6 +276,9 @@ class StellarJSON(object):
 
         for obj in self.objects:
             data["objects"].append(obj.get_data())
+
+        for view in self.views:
+            data["views"].append(view.get_data())
 
         for room in self.rooms:
             data["rooms"].append(room.get_data())
@@ -350,8 +363,10 @@ class StellarJSON(object):
             for obj in self.objects:
                 main_lines.append(obj.get_code())
 
-        # FIXME: There's no views! Whoops!
-        #if self.views:
+        if self.views:
+            main_lines.extend(("", "# Create views"))
+            for view in self.views:
+                main_lines.append(view.get_code())
 
         if self.rooms:
             main_lines.extend(("", "# Create rooms"))
@@ -1154,6 +1169,8 @@ class Room(DataElement):
       respective objects in :attr:`keyword_arguments`.
     - ``"objects"`` -- A list of data forms of the respective objects in
       :attr:`objects`.
+    - ``"views"`` -- A list of the data forms of the respective objects
+      in :attr:`views`.
 
     .. attrubute:: fname
 
@@ -1216,6 +1233,12 @@ class Room(DataElement):
           ``image_xscale``, ``image_yscale``, ``image_rotation``,
           ``image_alpha``, and ``image_blend``.
 
+    .. attribute:: Views
+
+       A list of :class:`Object` objects and/or Python-interpretable
+       strings that represent :class:`sge.View` objects in the context
+       of generated Python code indicating the views of the room.
+
     .. attribute:: external
 
        The name of a separate file to store the room in.  Set to
@@ -1253,6 +1276,7 @@ class Room(DataElement):
         self.arguments = data.setdefault("arguments", [])
         self.keyword_arguments = []
         self.objects = []
+        self.views = []
 
         fname = self.external if self.external else self.fname
 
@@ -1264,6 +1288,12 @@ class Room(DataElement):
                 self.objects.append(obj)
             else:
                 self.objects.append(Object(fname, obj))
+
+        for view in data.setdefault("views", []):
+            if isinstance(view, basestring):
+                self.views.append(view)
+            else:
+                self.views.append(Object(fname, view))
 
     def get_data(self):
         data = {"name": self.name, "class": self.cls,
@@ -1279,6 +1309,12 @@ class Room(DataElement):
             else:
                 data["objects"].append(obj)
 
+        for view in self.views:
+            if isinstance(view, Object):
+                data["views"].append(view.get_data())
+            else:
+                data["views"].append(view)
+
         if self.external:
             path = get_path(self.external, os.path.dirname(self.fname))
             with open(path, 'w') as f:
@@ -1291,6 +1327,7 @@ class Room(DataElement):
     def get_code(self):
         lines = []
         objects = []
+        views = []
 
         for obj in self.objects:
             if isinstance(obj, Object):
@@ -1307,8 +1344,26 @@ class Room(DataElement):
             else:
                 objects.append(obj)
 
+        for view in self.views:
+            if isinstance(view, Object):
+                if view.name is None:
+                    views.append(view.get_code())
+                else:
+                    lines.append(view.get_code())
+                    name_parts = view.name.split(maxsplit=1)
+
+                    if len(name_parts) >= 2 and name_parts[0] == "global":
+                        views.append(name_parts[1])
+                    else:
+                        views.append(view.name)
+            else:
+                views.append(view)
+
         argslist = self.arguments[:]
-        argslist.append("objects=({0})".format(', '.join(objects))
+        argslist.append("objects=({0})".format(', '.join(objects)))
+
+        if views:
+            argslist.append("views=({0})".format(', '.join(views)))
 
         for arg in self.keyword_arguments:
             argslist.append("{0}={1}".format(arg.name, arg.value))
