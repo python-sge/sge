@@ -274,8 +274,99 @@ class StellarJSON(object):
             json.dump(data, f, indent=4, sort_keys=True)
 
     def get_code(self):
-        # TODO
-        return ''
+        file_lines = ["#!/usr/bin/env python"]
+
+        if self.copyright_notice:
+            file_lines.append("")
+            for line in self.copyright_notice.splitlines():
+                line = ' '.join(("#", line)).rstrip()
+                file_lines.append(line)
+
+        if self.modules:
+            file_lines.append("")
+            for module in self.modules:
+                file_lines.append(module.get_code())
+
+        if self.constants:
+            file_lines.append("")
+            for constant in self.constants:
+                file_lines.append(constant.get_code())
+
+        if self.global_variables:
+            file_lines.append("")
+            for var in self.global_variables:
+                file_lines.append(var.get_code())
+
+        for cls in self.classes:
+            file_lines.extend(("", ""))
+            file_lines.append(cls.get_code())
+
+        for function in self.functions:
+            file_lines.extend(("", ""))
+            file_lines.append(function.get_code())
+
+        # main function
+        file_lines.extend(("", "", "def main(*args):"))
+        main_lines = ["# Create Game object"]
+
+        args = []
+        for arg in self.game_kwargs:
+            args.append("{0}={1}".format(arg.name, arg.value))
+
+        game_call = "{0}({1})".format(self.game_class, args)
+
+        if self.sprites:
+            main_lines.extend(("", "# Load sprites"))
+            for sprite in self.sprites:
+                main_lines.append(sprite.get_code())
+
+        if self.background_layers:
+            main_lines.extend(("", "# Load background layers"))
+            for layer in self.background_layers:
+                main_lines.append(layer.get_code())
+
+        if self.backgrounds:
+            main_lines.extend(("", "# Create backgrounds"))
+            for bg in self.backgrounds:
+                main_lines.append(bg.get_code())
+
+        if self.fonts:
+            main_lines.extend(("", "# Load fonts"))
+            for font in self.fonts:
+                main_lines.append(font.get_code())
+
+        if self.sounds:
+            main_lines.extend(("", "# Load sounds"))
+            for sound in self.sounds:
+                main_lines.append(sound.get_code())
+
+        if self.music:
+            main_lines.extend(("", "# Load music"))
+            for music in self.music:
+                main_lines.append(music.get_code())
+
+        if self.objects:
+            main_lines.extend(("", "# Create objects"))
+            for obj in self.objects:
+                main_lines.append(obj.get_code())
+
+        # FIXME: There's no views! Whoops!
+        #if self.views:
+
+        if self.rooms:
+            main_lines.extend(("", "# Create rooms"))
+            for room in self.rooms:
+                main_lines.append(room.get_code())
+
+        main_lines.extend(("", "sge.game.start()"))
+
+        for line in main_lines:
+            line = ''.join((CODE_INDENT, line)).rstrip()
+            file_lines.append(line)
+
+        file_lines.extend(("", "", "if __name__ == '__main__':",
+                           ''.join((CODE_INDENT, "main()"))))
+        return '\n'.join(file_lines)
 
 
 class DataElement(object):
