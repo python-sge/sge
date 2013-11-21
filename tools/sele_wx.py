@@ -281,6 +281,8 @@ class GamePanel(wx.Panel):
         # game: The stj.StellarJSON file representing this game.
         super(GamePanel, self).__init__(*args, **kwargs)
 
+        self.room_selection = wx.NOT_FOUND
+
         sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         self.rooms_listbox = wx.ListBox(self, style=wx.LB_SINGLE |
@@ -288,6 +290,7 @@ class GamePanel(wx.Panel):
         self.Bind(wx.EVT_LISTBOX, self.OnRoomsListBox, self.rooms_listbox)
         sizer.Add(self.rooms_listbox, proportion=25, flag=wx.EXPAND)
 
+        # FIXME: Room panel should be in a scrolled window
         self.room_panel = RoomPanel(self)
         sizer.Add(self.room_panel, proportion=75, flag=wx.EXPAND)
 
@@ -297,46 +300,107 @@ class GamePanel(wx.Panel):
     def Refresh(self, *args, **kwargs):
         # List Box
         selection = self.rooms_listbox.GetSelection()
-
-        room_names = []
-        for room in self.game.rooms:
-            room_names.append(room.name)
-
+        room_names = [room.name for room in self.game.rooms]
         self.rooms_listbox.Set(room_names)
 
-        if selection != wx.NOT_FOUND and selection < len(self.game.rooms):
+        if (selection < self.rooms_listbox.GetCount() or
+                selection == wx.NOT_FOUND):
             self.rooms_listbox.SetSelection(selection)
-            room = self.game.rooms[selection]
-
-            # Room size
-            warg = room.keyword_arguments.setdefault("width")
-
-            if warg is None or warg.value == "None":
-                if "width" in self.game.game_kwargs:
-                    warg = self.game.game_kwargs["width"]
-
-            # TODO: Convert warg to width, ask about width in case of
-            # a problem, then do all the same stuff with height
-
-            # Room background color
-            self.room_panel.SetBackgroundColour(wx.Colour(0, 0, 0))
-
-            bgarg = room.keyword_arguments.setdefault("background")
-
-            if bgarg is not None:
-                for background in self.game.backgrounds:
-                    if "ID" in background.kwargs:
-                        ID = background.kwargs["ID"].value
-                        if ID == bgarg.value and len(background.args) > 1:
-                            c = background.args[1]
-                            # TODO: Convert that to wxColour
-        else:
-            self.room_panel.SetBackgroundColour(wx.NullColour)
 
         super(GamePanel, self).Refresh(*args, **kwargs)
 
     def OnRoomsListBox(self, event):
-        pass
+        assert len(self.game.rooms) == self.rooms_listbox.GetCount()
+
+        selection = event.GetSelection()
+        if selection != self.room_selection or selection == wx.NOT_FOUND:
+            self.room_selection = selection
+
+            # TODO: Clear the panel
+            self.room_panel.SetBackgroundColour(wx.NullColour)
+
+            if selection != wx.NOT_FOUND:
+                room = self.game.rooms[selection]
+
+                # Room width
+                warg = room.keyword_arguments.setdefault("width")
+
+                if warg is None or warg.value == "None":
+                    if "width" in self.game.game_kwargs:
+                        warg = self.game.game_kwargs["width"]
+
+                invalid = True
+                willfix = True
+                while invalid and willfix:
+                    try:
+                        width = stj.get_eval(self.game, warg)
+                        invalid = False
+                    except NameError:
+                        message = ' '.join((
+                            'The value of the keyword argument "width" of',
+                            'room {0} could not be interpreted. Please enter',
+                            'a new value for "width".')).format(selection)
+                        dialog = wx.TextEntryDialog(
+                            self, message, caption="Could not determine width",
+                            defaultValue=warg)
+                        button = dialog.ShowModal()
+
+                        if button == wx.ID_OK:
+                            warg = dialog.GetValue()
+                        elif button == wx.ID_CANCEL:
+                            willfix = False
+                            width = 1
+
+                if invalid:
+                    self.rooms_listbox.SetSelection(wx.NOT_FOUND)
+                    return
+
+                # Room height
+                harg = room.keyword_arguments.setdefault("height")
+
+                if harg is None or harg.value == "None":
+                    if "height" in self.game.game_kwargs:
+                        harg = self.game.game_kwargs["height"]
+
+                invalid = True
+                willfix = True
+                while invalid and willfix:
+                    try:
+                        height = stj.get_eval(self.game, harg)
+                        invalid = False
+                    except NameError:
+                        message = ' '.join((
+                            'The value of the keyword argument "height" of',
+                            'room {0} could not be interpreted. Please enter',
+                            'a new value for "height".')).format(selection)
+                        dialog = wx.TextEntryDialog(
+                            self, message,
+                            caption="Could not determine height",
+                            defaultValue=warg)
+                        button = dialog.ShowModal()
+
+                        if button == wx.ID_OK:
+                            warg = dialog.GetValue()
+                        elif button == wx.ID_CANCEL:
+                            willfix = False
+                            height = 1
+
+                if invalid:
+                    self.rooms_listbox.SetSelection(wx.NOT_FOUND)
+                    return
+
+                # Room background color
+                self.room_panel.SetBackgroundColour(wx.Colour(0, 0, 0))
+
+                bgarg = room.keyword_arguments.setdefault("background")
+
+                if bgarg is not None:
+                    for background in self.game.backgrounds:
+                        if "ID" in background.kwargs:
+                            ID = background.kwargs["ID"].value
+                            if ID == bgarg.value and len(background.args) > 1:
+                                c = background.args[1]
+                                # TODO: Convert that to wxColour
 
 
 class RoomPanel(wx.Panel):
