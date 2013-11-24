@@ -226,6 +226,8 @@ class Frame(wx.Frame):
         info.SetVersion(PROGRAM_VERSION)
         info.SetDescription(PROGRAM_DESCRIPTION)
         info.SetCopyright(PROGRAM_COPYRIGHT)
+        icon = wx.Icon("sge_logo_alpha_black.png", wx.BITMAP_TYPE_PNG)
+        info.SetIcon(icon)
 
         wx.AboutBox(info)
 

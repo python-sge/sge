@@ -1334,7 +1334,7 @@ class Room(DataElement):
                 if obj.name is None:
                     objects.append(obj.get_code())
                 else:
-                    lines.append(obj.get_code()
+                    lines.append(obj.get_code())
                     name_parts = obj.name.split(maxsplit=1)
 
                     if len(name_parts) >= 2 and name_parts[0] == "global":

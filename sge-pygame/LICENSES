@@ -6,15 +6,20 @@ non-functional data files found in this directory.
 sge_pause.png
 
 Authors:
+  Francisco Cifuentes
   Gareth Noyce
   onpon4 <http://onpon4.comule.com>
-License: Public domain
+License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
 Source: http://www.pygame.org/docs/logos.html
 Details:
-  Pygame logo by Gareth Noyce is in the public domain.  onpon4's
-  contribution was adding the "PAUSED" text, and this contribution is
-  released to the public domain via the CC0 license
-  <http://creativecommons.org/publicdomain/zero/1.0/>.
+  The SGE logo is by Francisco Cifuentes, and its shadow has been
+  changed slightly by onpon4.  It is under CC BY.
+
+  The Pygame logo is by Gareth Noyce and in the public domain.
+
+  The works were combined with the "PAUSED" text in between them by
+  onpon4.  This contribution is released to the public domain via the
+  CC0 license <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 ------------------------------------------------------------------------
 
