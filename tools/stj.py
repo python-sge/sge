@@ -528,7 +528,7 @@ class Variable(DataElement):
         return {"name": self.name, "value": self.value}
 
     def get_code(self):
-        name_parts = self.name.split(maxsplit=1)
+        name_parts = self.name.split(None, 1)
 
         if len(name_parts) >= 2 and name_parts[0] == "global":
             return "global {0}\n{0} = {1}".format(name_parts[1], self.value)

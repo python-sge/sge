@@ -266,7 +266,7 @@ class Panel(wx.Panel):
         panel = GamePanel(game, self.notebook)
         self.notebook.AddPage(panel, os.path.realpath(game.fname))
 
-        #self.Refresh()
+        self.Refresh()
 
     def Refresh(self, *args, **kwargs):
         assert len(self.games) == self.notebook.GetPageCount()
@@ -283,18 +283,31 @@ class GamePanel(wx.Panel):
         # game: The stj.StellarJSON file representing this game.
         super(GamePanel, self).__init__(*args, **kwargs)
 
+        self.game = game
         self.room_selection = wx.NOT_FOUND
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.rooms_listbox = wx.ListBox(self, style=wx.LB_SINGLE |
-                                        wx.LB_HSCROLL | wx.LB_NEEDED_SB)
+        self.rooms_listbox = wx.ListBox(self, size=(128, -1),
+                                        style=wx.LB_SINGLE | wx.LB_HSCROLL |
+                                        wx.LB_NEEDED_SB)
         self.Bind(wx.EVT_LISTBOX, self.OnRoomsListBox, self.rooms_listbox)
         sizer.Add(self.rooms_listbox, proportion=25, flag=wx.EXPAND)
 
-        # FIXME: Room panel should be in a scrolled window
+        # Room area
+        room_area = wx.ScrolledWindow(self)
+        room_area.SetScrollbars(32, 32, 1, 1)
+
+        room_area_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
         self.room_panel = RoomPanel(self)
-        sizer.Add(self.room_panel, proportion=75, flag=wx.EXPAND)
+        room_area_sizer.Add(self.room_panel, proportion=1, flag=wx.EXPAND)
+
+        room_area.SetSizer(room_area_sizer)
+
+        sizer.Add(room_area, proportion=75, flag=wx.EXPAND)
+
+        # TODO: Add room properties thing (like Visual Studio) to the right
 
         self.SetSizer(sizer)
         self.Refresh()
@@ -302,7 +315,7 @@ class GamePanel(wx.Panel):
     def Refresh(self, *args, **kwargs):
         # List Box
         selection = self.rooms_listbox.GetSelection()
-        room_names = [room.name for room in self.game.rooms]
+        room_names = [str(room.name) for room in self.game.rooms]
         self.rooms_listbox.Set(room_names)
 
         if (selection < self.rooms_listbox.GetCount() or
