@@ -69,7 +69,7 @@ class Game(object):
     .. attribute:: scale_smooth
 
        Whether or not a smooth scaling algorithm (as opposed to a simple
-       scaling algorith such as pixel doubling) should be used.
+       scaling algorithm such as nearest-neighbor) should be used.
 
     .. attribute:: fps
 
