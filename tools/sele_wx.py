@@ -287,12 +287,8 @@ class GamePanel(wx.Panel):
         sizer.Add(self.rooms_listbox, proportion=25, flag=wx.EXPAND)
 
         # Room area
-        room_area_panel = wx.Panel(self)
-        room_area_panel_sizer = wx.BoxSizer(wx.HORIZONTAL)
-
-        room_area = wx.ScrolledWindow(room_area_panel)
+        room_area = wx.ScrolledWindow(self)
         room_area.SetScrollbars(32, 32, 1, 1)
-        room_area_panel_sizer.Add(room_area, proportion=1, flag=wx.EXPAND)
 
         room_area_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -300,9 +296,8 @@ class GamePanel(wx.Panel):
         room_area_sizer.Add(self.room_panel, proportion=1, flag=wx.EXPAND)
 
         room_area.SetSizer(room_area_sizer)
-        room_area_panel.SetSizer(room_area_panel_sizer)
 
-        sizer.Add(room_area_panel, proportion=75, flag=wx.EXPAND)
+        sizer.Add(room_area, proportion=75, flag=wx.EXPAND)
 
         # TODO: Add room properties thing (like Visual Studio) to the right
 
