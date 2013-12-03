@@ -43,6 +43,8 @@ class Frame(wx.Frame):
     def __init__(self, *args, **kwargs):
         super(Frame, self).__init__(*args, **kwargs)
 
+        self.games = []
+
         status_bar = self.CreateStatusBar()
         menu_bar = wx.MenuBar()
         file_menu = wx.Menu()
@@ -147,15 +149,50 @@ class Frame(wx.Frame):
         menu_bar.Append(help_menu, '&Help')
         self.SetMenuBar(menu_bar)
 
-        toolbar = self.CreateToolBar(style=wx.TB_HORIZONTAL)
+        # TODO: Get a toolbar working
+        #toolbar = self.CreateToolBar(style=wx.TB_HORIZONTAL)
 
         #toolbar.AddLabelTool(wx.ID_NEW, label="New Room")
 
-        toolbar.Realize()
+        #toolbar.Realize()
 
-        self.panel = Panel(self)
+        sizer = wx.BoxSizer(wx.VERTICAL)
 
+        self.games_notebook = wx.Notebook(self, style=wx.NB_TOP)
+        sizer.Add(self.games_notebook, proportion=1, flag=wx.EXPAND)
+
+        self.SetSizer(sizer)
+        self.Refresh()
+        self.load_game('test.json')
+        self.load_game('test2.json')
+        self.load_game('test.json')
         self.Show()
+
+    def load_game(self, fname):
+        # fname: The name of the JSON file to pass to stj.StellarJSON.
+        """Load a game, storing it in self.games, and create a tab."""
+        for i in xrange(len(self.games)):
+            i_fname = os.path.realpath(self.games[i].fname)
+            if i_fname == os.path.realpath(fname):
+                # This is the same file.  Open its tab.
+                self.games_notebook.SetSelection(i)
+                return
+
+        game = stj.StellarJSON(fname)
+        self.games.append(game)
+        panel = GamePanel(game, self.games_notebook)
+        self.games_notebook.AddPage(panel, os.path.realpath(game.fname))
+
+        self.Refresh()
+
+    def Refresh(self, *args, **kwargs):
+        assert len(self.games) == self.games_notebook.GetPageCount()
+
+        for i in xrange(len(self.games)):
+            self.games_notebook.SetPageText(i, os.path.realpath(
+                self.games[i].fname))
+
+        super(Frame, self).Refresh(*args, **kwargs)
 
     def OnNew(self, event):
         pass
@@ -232,51 +269,6 @@ class Frame(wx.Frame):
         wx.AboutBox(info)
 
 
-class Panel(wx.Panel):
-
-    def __init__(self, *args, **kwargs):
-        super(Panel, self).__init__(*args, **kwargs)
-
-        self.games = []
-
-        sizer = wx.BoxSizer(wx.VERTICAL)
-
-        self.notebook = wx.Notebook(self, style=wx.NB_TOP)
-        sizer.Add(self.notebook, proportion=1, flag=wx.EXPAND)
-
-        self.SetSizer(sizer)
-        self.Refresh()
-
-        self.load_game('test.json')
-        self.load_game('test2.json')
-        self.load_game('test.json')
-
-    def load_game(self, fname):
-        # fname: The name of the JSON file to pass to stj.StellarJSON.
-        """Load a game, storing it in self.games, and create a tab."""
-        for i in xrange(len(self.games)):
-            i_fname = os.path.realpath(self.games[i].fname)
-            if i_fname == os.path.realpath(fname):
-                # This is the same file.  Open its tab.
-                self.notebook.SetSelection(i)
-                return
-
-        game = stj.StellarJSON(fname)
-        self.games.append(game)
-        panel = GamePanel(game, self.notebook)
-        self.notebook.AddPage(panel, os.path.realpath(game.fname))
-
-        self.Refresh()
-
-    def Refresh(self, *args, **kwargs):
-        assert len(self.games) == self.notebook.GetPageCount()
-
-        for i in xrange(len(self.games)):
-            self.notebook.SetPageText(i, os.path.realpath(self.games[i].fname))
-
-        super(Panel, self).Refresh(*args, **kwargs)
-
-
 class GamePanel(wx.Panel):
 
     def __init__(self, game, *args, **kwargs):
@@ -295,17 +287,22 @@ class GamePanel(wx.Panel):
         sizer.Add(self.rooms_listbox, proportion=25, flag=wx.EXPAND)
 
         # Room area
-        room_area = wx.ScrolledWindow(self)
+        room_area_panel = wx.Panel(self)
+        room_area_panel_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        room_area = wx.ScrolledWindow(room_area_panel)
         room_area.SetScrollbars(32, 32, 1, 1)
+        room_area_panel_sizer.Add(room_area, proportion=1, flag=wx.EXPAND)
 
         room_area_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.room_panel = RoomPanel(self)
+        self.room_panel = RoomPanel(room_area)
         room_area_sizer.Add(self.room_panel, proportion=1, flag=wx.EXPAND)
 
         room_area.SetSizer(room_area_sizer)
+        room_area_panel.SetSizer(room_area_panel_sizer)
 
-        sizer.Add(room_area, proportion=75, flag=wx.EXPAND)
+        sizer.Add(room_area_panel, proportion=75, flag=wx.EXPAND)
 
         # TODO: Add room properties thing (like Visual Studio) to the right
 
