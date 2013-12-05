@@ -46,35 +46,12 @@ def show_message(text, buttons=('OK',), default=0):
     - ``default`` -- The number of the button to select by default,
       where ``0`` is the first button.
 
-    The dialog box is placed at the center of the window.  The message
-    is horizontally aligned to the left and vertically aligned to the
-    middle.  All other visual design considerations are decided by the
-    SGE.
+    While the dialog box is being shown, all events are stopped.
 
-    While the dialog box is being shown, all events are stopped.  If the
-    operating system tells the game to close, the dialog box will close
-    immediately, returning :const:`None`, and leak the command to the
-    rest of the game (causing Close events).  If the Esc key is pressed,
-    the dialog box will close immediately, returning :const:`None`.  If
-    the right arrow key or Tab key is pressed, a joystick axis is moved
-    from a position less than ``0.75`` to a position greater than or
-    equal to ``0.75``, a joystick HAT is moved to the right, or a
-    joystick trackball is moved to the right by at least ``0.75``, the
-    selection is moved to the right by one; if what is currently
-    selected is the last button, the first button will be selected.  If
-    the left arrow key is pressed, a joystick axis is moved from a
-    position greater than ``-0.75`` to a position less than or equal to
-    ``-0.75``, a joystick HAT is moved to the left, or a joystick
-    trackball is moved to the left by at least ``0.75``, the selection
-    is moved to the left by one; if what is currently selected is the
-    first button, the last button will be selected.  If the Enter key,
-    the keypad Enter key, or any joystick button is pressed and then
-    released, the dialog box is closed and the number of the of the
-    currently selected button is returned, where ``0`` is the first
-    button.  If the left mouse button is pressed and then released while
-    the mouse is hovering over a button, the dialog box is closed and
-    the number of the button the mouse is currently hovering over is
-    returned, where ``0`` is the first button.
+    The return value is the number of the button which was pressed,
+    where ``0`` is the first button.  If the dialog box was closed in
+    any way other than clicking on one of the buttons (including by
+    clicking an "X" button or similar), :const:`None` is returned.
 
     """
     return _show_modal(text, default, False, buttons)
@@ -90,16 +67,11 @@ def get_text_entry(text, default=''):
 
     The text entry dialog box is mostly the same as the regular dialog
     box -- see the documentation for :func:`sge.show_message` for more
-    information -- but there are some key differences, outlined here.
+    information -- but there are some key differences:
 
-    There is always an OK button on the right and a Cancel button on the
-    left.  If the OK button is chosen, the text in the text entry field
-    is returned.   If the Cancel button is chosen, None is returned.
-    The OK button is selected by default.
-
-    The left arrow key and right arrow key do not perform the respective
-    functions they perform in the regular dialog box.  Instead, they are
-    used to navigate the text entry field.
+    There is always an OK button and a Cancel button.  If the OK button
+    is clicked, the text in the text entry field is returned.  If the
+    Cancel button is clicked, :const:`None` is returned.
 
     """
     pygame.key.set_repeat(500, 20)

@@ -27,9 +27,9 @@ from __future__ import unicode_literals
 
 import sys
 import os
-import json
 
 import sge
+import stj
 
 DIRNAME = os.path.dirname(__file__)
 
