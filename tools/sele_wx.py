@@ -27,6 +27,8 @@ import sys
 import os
 
 import wx
+from wx import aui
+#from wx.lib.agw import aui
 
 import stj
 
@@ -158,7 +160,12 @@ class Frame(wx.Frame):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.games_notebook = wx.Notebook(self, style=wx.NB_TOP)
+        self.games_notebook = aui.AuiNotebook(
+            self, style=aui.AUI_NB_TOP | aui.AUI_NB_TAB_MOVE |
+            aui.AUI_NB_SCROLL_BUTTONS | aui.AUI_NB_CLOSE_ON_ALL_TABS)
+        #self.games_notebook = flatnotebook.FlatNotebook(self, style=wx.NB_TOP)
+        self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnPageClose,
+                  self.games_notebook)
         sizer.Add(self.games_notebook, proportion=1, flag=wx.EXPAND)
 
         self.SetSizer(sizer)
@@ -211,6 +218,13 @@ class Frame(wx.Frame):
 
     def OnClose(self, event):
         pass
+
+    def OnPageClose(self, event):
+        # TODO: Use event.selection and event.Veto; have to check for
+        # changes, and if there are changes, ask if the user wants to
+        # save first. If they say "No", veto the closing action.
+        print(event.selection, event.old_selection)
+        event.Veto()
 
     def OnQuit(self, event):
         self.Close()
@@ -278,28 +292,36 @@ class GamePanel(wx.Panel):
         self.game = game
         self.room_selection = wx.NOT_FOUND
 
-        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        sizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.rooms_listbox = wx.ListBox(self, size=(128, -1),
+        left_splitter = wx.SplitterWindow(self)
+
+        # Rooms listbox
+        self.rooms_listbox = wx.ListBox(left_splitter,
                                         style=wx.LB_SINGLE | wx.LB_HSCROLL |
                                         wx.LB_NEEDED_SB)
         self.Bind(wx.EVT_LISTBOX, self.OnRoomsListBox, self.rooms_listbox)
-        sizer.Add(self.rooms_listbox, proportion=25, flag=wx.EXPAND)
 
         # Room area
-        room_area = wx.ScrolledWindow(self)
+        room_area = wx.ScrolledWindow(left_splitter)
         room_area.SetScrollbars(32, 32, 1, 1)
 
         room_area_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         self.room_panel = RoomPanel(room_area)
-        room_area_sizer.Add(self.room_panel, proportion=1, flag=wx.EXPAND)
+        room_area_sizer.Add(self.room_panel, proportion=0, flag=wx.EXPAND)
 
         room_area.SetSizer(room_area_sizer)
 
-        sizer.Add(room_area, proportion=75, flag=wx.EXPAND)
+        left_splitter.SetMinimumPaneSize(5)
+        left_splitter.SplitVertically(self.rooms_listbox, room_area,
+                                      sashPosition=128)
+        sizer.Add(left_splitter, proportion=1, flag=wx.EXPAND)
 
         # TODO: Add room properties thing (like Visual Studio) to the right
+        # It should be split from the left splitter by another splitter
+        # called right_splitter that will then be the splitter that is
+        # actually added to the sizer
 
         self.SetSizer(sizer)
         self.Refresh()
