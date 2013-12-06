@@ -36,6 +36,7 @@ PROGRAM_NAME = "Stellarly-Encompassing Level Editor"
 PROGRAM_VERSION = __version__
 PROGRAM_DESCRIPTION = "Universal level editor for SGE games."
 PROGRAM_COPYRIGHT = "(C) 2013 Julian Marchant <onpon4@riseup.net>"
+DATA_DIRECTORY = os.path.join(os.path.dirname(__file__), "data")
 MAIN_WINDOW_TITLE = "Stellarly-Encompassing Level Editor"
 MAIN_WINDOW_SIZE = (800, 600)
 
@@ -277,7 +278,8 @@ class Frame(wx.Frame):
         info.SetVersion(PROGRAM_VERSION)
         info.SetDescription(PROGRAM_DESCRIPTION)
         info.SetCopyright(PROGRAM_COPYRIGHT)
-        icon = wx.Icon("sge_logo_alpha_black.png", wx.BITMAP_TYPE_PNG)
+        fname = os.path.join(DATA_DIRECTORY, "sge_logo_alpha_black.png")
+        icon = wx.Icon(fname, wx.BITMAP_TYPE_PNG)
         info.SetIcon(icon)
 
         wx.AboutBox(info)
