@@ -36,9 +36,16 @@ PROGRAM_NAME = "Stellarly-Encompassing Level Editor"
 PROGRAM_VERSION = __version__
 PROGRAM_DESCRIPTION = "Universal level editor for SGE games."
 PROGRAM_COPYRIGHT = "(C) 2013 Julian Marchant <onpon4@riseup.net>"
-DATA_DIRECTORY = os.path.join(os.path.dirname(__file__), "data")
 MAIN_WINDOW_TITLE = "Stellarly-Encompassing Level Editor"
 MAIN_WINDOW_SIZE = (800, 600)
+
+DATA_DIRECTORY = os.path.join(os.path.dirname(__file__), "data")
+
+TOOL_POINTER = 0
+TOOL_PAINTBRUSH = 1
+TOOL_STAMP = 2
+TOOL_LINE = 3
+TOOL_FILL = 4
 
 
 class Frame(wx.Frame):
@@ -293,6 +300,7 @@ class GamePanel(wx.Panel):
 
         self.game = game
         self.room_selection = wx.NOT_FOUND
+        self.tool_selection = TOOL_POINTER
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 

@@ -286,7 +286,19 @@ class StellarJSON(object):
         with open(self.fname, 'w') as f:
             json.dump(data, f, indent=4, sort_keys=True)
 
-    def get_code(self):
+    def get_code(self, hardcode_rooms=False):
+        """Return Python code for this game.
+
+        Arguments:
+
+        - ``hardcode_rooms`` -- If :const:`True`, hardcode the rooms
+          directly into the generated Python file.  If :const:`False`,
+          instead generate code for loading the rooms from the JSON file
+          using this library.  If this is :const:`False`, stj.py and
+          the JSON file for the game must be included in the same
+          directory as the generated Python script for it to run.
+
+        """
         file_lines = ["#!/usr/bin/env python"]
 
         if self.copyright_notice:
@@ -295,10 +307,14 @@ class StellarJSON(object):
                 line = ' '.join(("#", line)).rstrip()
                 file_lines.append(line)
 
-        if self.modules:
+        if self.modules or not hardcode_rooms:
             file_lines.append("")
             for module in self.modules:
                 file_lines.append(module.get_code())
+
+            if not hardcode_rooms:
+                file_lines.extend(("", "# Extra imports for loading rooms",
+                                   "import os", "import stj"))
 
         if self.constants:
             file_lines.append("")
@@ -370,8 +386,16 @@ class StellarJSON(object):
 
         if self.rooms:
             main_lines.extend(("", "# Create rooms"))
-            for room in self.rooms:
-                main_lines.append(room.get_code())
+            if hardcode_rooms:
+                for room in self.rooms:
+                    main_lines.append(room.get_code())
+            else:
+                s = '_fname = os.path.join(os.path.dirname(__file__), "{0}"'
+                main_lines.extend((
+                    s.format(os.path.basename(self.fname)),
+                    "_jsonfile = stj.StellarJSON(_fname)",
+                    "for _room in _jsonfile.rooms:",
+                    "    exec(_room.get_code())"))
 
         main_lines.extend(("", "sge.game.start()"))
 
