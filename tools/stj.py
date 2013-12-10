@@ -31,6 +31,9 @@ import json
 import weakref
 import warnings
 
+__all__ = ["StellarJSON", "Module", "Variable", "Class", "Function",
+           "Property", "FunctionArgument", "Object", "Room", "get_eval"]
+
 CODE_TAB_WIDTH = 4
 CODE_INDENT = " " * CODE_TAB_WIDTH
 DOCSTRING_LINE_SIZE = 72
