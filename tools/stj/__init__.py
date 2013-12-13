@@ -38,6 +38,13 @@ CODE_TAB_WIDTH = 4
 CODE_INDENT = " " * CODE_TAB_WIDTH
 DOCSTRING_LINE_SIZE = 72
 
+NOT_SOURCE_CODE_WARNING = (
+    "",
+    "# WARNING: This file is not source code!",
+    '# "Source code" means the preferred form for modification.  While it is',
+    "# certainly possible to edit this file, it is much easier to edit the",
+    "# file it was generated from, which is indicated above.")
+
 
 class StellarJSON(object):
 
@@ -303,6 +310,10 @@ class StellarJSON(object):
 
         """
         file_lines = ["#!/usr/bin/env python"]
+
+        file_lines.append("# Generated automatically from {0}.".format(
+            os.path.basename(self.fname)))
+        file_lines.extend(NOT_SOURCE_CODE_WARNING)
 
         if self.copyright_notice:
             file_lines.append("")
