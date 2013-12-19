@@ -356,7 +356,7 @@ class Room(object):
                         detects_collisions=False)
         self.add(p)
 
-    def project_sprite(self, sprite, image, x, y, z):
+    def project_sprite(self, sprite, image, x, y, z, blend_mode=None):
         """Project a sprite onto the room.
 
         Arguments:
@@ -371,8 +371,26 @@ class Room(object):
         more information.
 
         """
+        if blend_mode & sge.BLEND_SCREEN:
+            w = "Screen blend mode not supported. Normal blending used instead."
+            warnings.warn(w)
+
+        pygame_flags = {
+            sge.BLEND_RGBA_ADD: pygame.BLEND_RGBA_ADD,
+            sge.BLEND_RGBA_SUBTRACT: pygame.BLEND_RGBA_SUB,
+            sge.BLEND_RGBA_MULTIPLY: pygame.BLEND_RGBA_MULT,
+            sge.BLEND_RGBA_MINIMUM: pygame.BLEND_RGBA_MIN,
+            sge.BLEND_RGBA_MAXIMUM: pygame.BLEND_RGBA_MAX,
+            sge.BLEND_RGB_ADD: pygame.BLEND_RGB_ADD,
+            sge.BLEND_RGB_SUBTRACT: pygame.BLEND_RGB_SUB,
+            sge.BLEND_RGB_MULTIPLY: pygame.BLEND_RGB_MULT,
+            sge.BLEND_RGB_MINIMUM: pygame.BLEND_RGB_MIN,
+            sge.BLEND_RGB_MAXIMUM: pygame.BLEND_RGB_MAX
+            }.setdefault(blend_mode, 0)
+
         p = _Projection(x, y, z, sprite=sprite, detects_collisions=False,
                         image_index=image, image_fps=0)
+        p._pygame_sprite.blendmode = pygame_flags
         self.add(p)
 
     def project_text(self, font, text, x, y, z, width=None, height=None,

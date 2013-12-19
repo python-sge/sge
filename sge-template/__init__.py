@@ -229,6 +229,89 @@ Global Variables and Constants
 
    Flag indicating vertical alignment to the bottom.
 
+.. data:: sge.BLEND_NORMAL
+
+   Flag indicating normal blending.
+
+.. data:: sge.BLEND_RGBA_ADD
+
+   Flag indicating RGBA Addition blending: the red, green, blue, and
+   alpha color values of the source are added to the respective color
+   values of the destination, to a maximum of 255.
+
+.. data:: sge.BLEND_RGBA_SUBTRACT
+
+   Flag indicating RGBA Subtract blending: the red, green, blue, and
+   alpha color values of the source are subtracted from the respective
+   color values of the destination, to a minimum of 0.
+
+.. data:: sge.BLEND_RGBA_MULTIPLY
+
+   Flag indicating RGBA Multiply blending: the red, green, blue,
+   and alpha color values of the source and destination are converted to
+   values between 0 and 1 (divided by 255), the resulting destination
+   color values are multiplied by the respective resulting source color
+   values, and these results are converted back into values between 0
+   and 255 (multiplied by 255).
+
+.. data:: sge.BLEND_RGBA_SCREEN
+
+   Flag indicating RGBA Screen blending: the red, green, blue, and alpha
+   color values of the source and destination are inverted (subtracted
+   from 255) and converted to values between 0 and 1 (divided by 255),
+   the resulting destination color values are multiplied by the
+   respective resulting source color values, and these results are
+   converted back into values between 0 and 255 (multiplied by 255) and
+   inverted again (subtracted from 255).
+
+.. data:: sge.BLEND_RGBA_MINIMUM
+
+   Flag indicating RGBA Minimum (Darken Only) blending: the smallest
+   respective red, green, blue, and alpha color values out of the source
+   and destination are used.
+
+.. data:: sge.BLEND_RGBA_MAXIMUM
+
+   Flag indicating RGBA Maximum (Lighten Only) blending: the largest
+   respective red, green, blue, and alpha color values out of the source
+   and destination are used.
+
+.. data:: sge.BLEND_RGB_ADD
+
+   Flag indicating RGB Addition blending: the same thing as RGBA
+   Addition blending (see :data:`sge.BLEND_RGBA_ADD`) except the
+   destination's alpha values are not changed.
+
+.. data:: sge.BLEND_RGB_SUBTRACT
+
+   Flag indicating RGB Subtract blending: the same thing as RGBA
+   Subtract blending (see :data:`sge.BLEND_RGBA_SUBTRACT`) except the
+   destination's alpha values are not changed.
+
+.. data:: sge.BLEND_RGB_MULTIPLY
+
+   Flag indicating RGB Multiply blending: the same thing as RGBA
+   Multiply blending (see :data:`sge.BLEND_RGBA_MULTIPLY`) except the
+   destination's alpha values are not changed.
+
+.. data:: sge.BLEND_RGB_SCREEN
+
+   Flag indicating RGB Screen blending: the same thing as RGBA Screen
+   blending (see :data:`sge.BLEND_RGBA_SCREEN`) except the destination's
+   alpha values are not changed.
+
+.. data:: sge.BLEND_RGB_MINIMUM
+
+   Flag indicating RGBA Minimum (Darken Only) blending: the same thing
+   as RGBA Minimum blending (see :data:`sge.BLEND_RGBA_MINIMUM`) except
+   the destination's alpha values are not changed.
+
+.. data:: sge.BLEND_RGB_MAXIMUM
+
+   Flag indicating RGBA Maximum (Lighten Only) blending: the same thing
+   as RGBA Maximum blending (see :data:`sge.BLEND_RGBA_MAXIMUM`) except
+   the destination's alpha values are not changed.
+
 .. data:: sge.game
 
    Stores the current :class:`sge.Game` object.  If there is no
@@ -281,7 +364,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.5.0.4"
+__version__ = "0.5.0.5"
 
 import sys
 import os

@@ -257,7 +257,7 @@ class Sprite(object):
         """
         # TODO
 
-    def draw_sprite(self, sprite, image, x, y, frame=None):
+    def draw_sprite(self, sprite, image, x, y, frame=None, blend_mode=None):
         """Draw another sprite on the sprite.
 
         Arguments:
@@ -272,6 +272,24 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
+        - ``blend_mode`` -- The blend mode to use.  Possible blend modes
+          are:
+
+          - :data:`sge.BLEND_NORMAL`
+          - :data:`sge.BLEND_RGBA_ADD`
+          - :data:`sge.BLEND_RGBA_SUBTRACT`
+          - :data:`sge.BLEND_RGBA_MULTIPLY`
+          - :data:`sge.BLEND_RGBA_SCREEN`
+          - :data:`sge.BLEND_RGBA_MINIMUM`
+          - :data:`sge.BLEND_RGBA_MAXIMUM`
+          - :data:`sge.BLEND_RGB_ADD`
+          - :data:`sge.BLEND_RGB_SUBTRACT`
+          - :data:`sge.BLEND_RGB_MULTIPLY`
+          - :data:`sge.BLEND_RGB_SCREEN`
+          - :data:`sge.BLEND_RGB_MINIMUM`
+          - :data:`sge.BLEND_RGB_MAXIMUM`
+
+          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
 
         """
         # TODO

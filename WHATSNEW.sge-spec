@@ -14,6 +14,9 @@ Specification additions:
 + sge.Font.from_sprite
 + sge.Room.event_room_resume
 
+Specification misk changes:
+* sge.Sprite.draw_sprite and sge.Room.project_sprite now support blend modes.
+
 SGE Template bugfixes:
 - Argument for Font.__init__ being the old "id_" rather than "ID"
 - Small problems with the documentation

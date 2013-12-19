@@ -21,6 +21,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import os
+import warnings
 
 import pygame
 
@@ -544,7 +545,7 @@ class Sprite(object):
 
         self._refresh()
 
-    def draw_sprite(self, sprite, image, x, y, frame=None):
+    def draw_sprite(self, sprite, image, x, y, frame=None, blend_mode=None):
         """Draw another sprite on the sprite.
 
         Arguments:
@@ -559,6 +560,24 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
+        - ``blend_mode`` -- The blend mode to use.  Possible blend modes
+          are:
+
+          - :data:`sge.BLEND_NORMAL`
+          - :data:`sge.BLEND_RGBA_ADD`
+          - :data:`sge.BLEND_RGBA_SUBTRACT`
+          - :data:`sge.BLEND_RGBA_MULTIPLY`
+          - :data:`sge.BLEND_RGBA_SCREEN`
+          - :data:`sge.BLEND_RGBA_MINIMUM`
+          - :data:`sge.BLEND_RGBA_MAXIMUM`
+          - :data:`sge.BLEND_RGB_ADD`
+          - :data:`sge.BLEND_RGB_SUBTRACT`
+          - :data:`sge.BLEND_RGB_MULTIPLY`
+          - :data:`sge.BLEND_RGB_SCREEN`
+          - :data:`sge.BLEND_RGB_MINIMUM`
+          - :data:`sge.BLEND_RGB_MAXIMUM`
+
+          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
 
         """
         if not isinstance(sprite, sge.Sprite):
@@ -568,9 +587,27 @@ class Sprite(object):
         y -= sprite.origin_y
         image %= len(sprite._baseimages)
 
+        if blend_mode & sge.BLEND_SCREEN:
+            w = "Screen blend mode not supported. Normal blending used instead."
+            warnings.warn(w)
+
+        pygame_flags = {
+            sge.BLEND_RGBA_ADD: pygame.BLEND_RGBA_ADD,
+            sge.BLEND_RGBA_SUBTRACT: pygame.BLEND_RGBA_SUB,
+            sge.BLEND_RGBA_MULTIPLY: pygame.BLEND_RGBA_MULT,
+            sge.BLEND_RGBA_MINIMUM: pygame.BLEND_RGBA_MIN,
+            sge.BLEND_RGBA_MAXIMUM: pygame.BLEND_RGBA_MAX,
+            sge.BLEND_RGB_ADD: pygame.BLEND_RGB_ADD,
+            sge.BLEND_RGB_SUBTRACT: pygame.BLEND_RGB_SUB,
+            sge.BLEND_RGB_MULTIPLY: pygame.BLEND_RGB_MULT,
+            sge.BLEND_RGB_MINIMUM: pygame.BLEND_RGB_MIN,
+            sge.BLEND_RGB_MAXIMUM: pygame.BLEND_RGB_MAX
+            }.setdefault(blend_mode, 0)
+
         for i in xrange(len(self._baseimages)):
             if frame is None or frame % len(self._baseimages) == i:
-                self._baseimages[i].blit(sprite._baseimages[i], (x, y))
+                self._baseimages[i].blit(sprite._baseimages[i], (x, y),
+                                         None, pygame_flags)
 
         self._refresh()
 

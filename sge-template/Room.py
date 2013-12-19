@@ -241,7 +241,7 @@ class Room(object):
         """
         # TODO
 
-    def project_sprite(self, sprite, image, x, y, z):
+    def project_sprite(self, sprite, image, x, y, z, blend_mode=None):
         """Project a sprite onto the room.
 
         Arguments:
