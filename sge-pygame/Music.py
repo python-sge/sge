@@ -167,7 +167,7 @@ class Music(object):
 
         sge.game.music[self.id] = self
 
-    def play(self, start=0, loops=0, maxtime=None, fade_time=None):
+    def play(self, start=0, loops=1, maxtime=None, fade_time=None):
         """Play the music.
 
         Arguments:
@@ -183,7 +183,7 @@ class Music(object):
             if not self.playing:
                 pygame.mixer.music.load(self._full_fname)
 
-            if loops is None:
+            if not loops:
                 loops = -1
 
             sge.game._music = self
@@ -206,7 +206,7 @@ class Music(object):
                 except NotImplementedError:
                     pygame.mixer.music.play(loops)
 
-    def queue(self, start=0, loops=0, maxtime=None, fade_time=None):
+    def queue(self, start=0, loops=1, maxtime=None, fade_time=None):
         """Queue the music for playback.
 
         This will cause the music to be added to a list of music to play

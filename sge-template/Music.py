@@ -97,7 +97,7 @@ class Music(object):
         """
         # TODO
 
-    def play(self, start=0, loops=0, maxtime=None, fade_time=None):
+    def play(self, start=0, loops=1, maxtime=None, fade_time=None):
         """Play the music.
 
         Arguments:
@@ -111,7 +111,7 @@ class Music(object):
         """
         # TODO
 
-    def queue(self, start=0, loops=0, maxtime=None, fade_time=None):
+    def queue(self, start=0, loops=1, maxtime=None, fade_time=None):
         """Queue the music for playback.
 
         This will cause the music to be added to a list of music to play

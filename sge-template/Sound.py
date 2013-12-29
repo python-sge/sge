@@ -88,15 +88,14 @@ class Sound(object):
         """
         # TODO
 
-    def play(self, loops=0, volume=100, balance=0, maxtime=None,
+    def play(self, loops=1, volume=100, balance=0, maxtime=None,
              fade_time=None):
         """Play the sound.
 
         Arguments:
 
-        - ``loops`` -- The number of extra times to play the sound after
-          it is played the first time; set to :const:`None` or ``-1`` to
-          loop indefinitely.
+        - ``loops`` -- The number of times to play the sound; set to
+          :const:`None` or ``0`` to loop indefinitely.
         - ``volume`` -- The volume to play the sound at as a percentage
           of :attr:`self.volume` from ``0`` to ``100`` (``0`` for no
           sound, ``100`` for :attr:`self.volume`).

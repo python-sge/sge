@@ -12,6 +12,7 @@ without any warranty.
 
 Pygame SGE bugfixes:
 - Changing a font's size causing bold, underline, and italic to be reset
+- sge.Music.play "loops" argument not conforming to the spec.
 
 
 0.5.1
