@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -107,6 +107,13 @@ class Room(object):
             self.views = [sge.View(0, 0)]
         self._start_views = self.views[:]
 
+        self._view_start_x = {}
+        self._view_start_y = {}
+        self._view_start_xport = {}
+        self._view_start_yport = {}
+        self._view_start_width = {}
+        self._view_start_height = {}
+
         if background is not None:
             self.background = background
         else:
@@ -117,12 +124,26 @@ class Room(object):
         sge.game.rooms.append(self)
 
         self._started = False
+        self._has_started = False
 
         self.objects = ()
         self.add(sge.game.mouse)
         for obj in objects:
             self.add(obj)
         self._start_objects = self.objects
+
+        self._object_start_x = {}
+        self._object_start_y = {}
+        self._object_start_z = {}
+        self._object_start_sprite = {}
+        self._object_start_visible = {}
+        self._object_start_detects_collisions = {}
+        self._object_start_bbox_x = {}
+        self._object_start_bbox_y = {}
+        self._object_start_bbox_width = {}
+        self._object_start_bbox_height = {}
+        self._object_start_collision_ellipse = {}
+        self._object_start_collision_precise = {}
 
     def add(self, obj):
         """Add a StellarClass object to the room.
@@ -150,7 +171,9 @@ class Room(object):
         If the room has been changed, reset it to its original state.
 
         """
-        self._reset()
+        if self._has_started:
+            self._reset()
+
         self.resume()
 
     def resume(self):
@@ -170,6 +193,29 @@ class Room(object):
         for obj in self.objects:
             sge.game._pygame_sprites.add(obj._pygame_sprite, layer=obj.z)
 
+        if not self._has_started:
+            for obj in self.objects:
+                self._object_start_x[obj.id] = obj.x
+                self._object_start_y[obj.id] = obj.y
+                self._object_start_z[obj.id] = obj.z
+                self._object_start_sprite[obj.id] = obj.sprite
+                self._object_start_visible[obj.id] = obj.visible
+                self._object_start_detects_collisions[obj.id] = obj.detects_collisions
+                self._object_start_bbox_x[obj.id] = obj.bbox_x
+                self._object_start_bbox_y[obj.id] = obj.bbox_y
+                self._object_start_bbox_width[obj.id] = obj.bbox_width
+                self._object_start_bbox_height[obj.id] = obj.bbox_height
+                self._object_start_collision_ellipse[obj.id] = obj.collision_ellipse
+                self._object_start_collision_precise[obj.id] = obj.collision_precise
+
+            for view in self.views:
+                self._view_start_x[id(view)] = view.x
+                self._view_start_y[id(view)] = view.y
+                self._view_start_xport[id(view)] = view.xport
+                self._view_start_yport[id(view)] = view.yport
+                self._view_start_width[id(view)] = view.width
+                self._view_start_height[id(view)] = view.height
+
         if not self._started:
             self.event_room_start()
             for obj in self.objects:
@@ -178,6 +224,7 @@ class Room(object):
             self.event_room_resume()
 
         self._started = True
+        self._has_started = True
 
     def end(self, next_room=None, resume=True):
         """End the current room.
@@ -776,9 +823,28 @@ class Room(object):
 
         for view in self.views:
             view._reset()
+            view.x = self._view_start_x[id(view)]
+            view.y = self._view_start_y[id(view)]
+            view.xport = self._view_start_xport[id(view)]
+            view.yport = self._view_start_yport[id(view)]
+            view.width = self._view_start_width[id(view)]
+            view.height = self._view_start_height[id(view)]
 
         for obj in self.objects:
-            obj._reset()
+            if obj is not sge.game.mouse:
+                obj.x = self._object_start_x[obj.id]
+                obj.y = self._object_start_y[obj.id]
+
+            obj.z = self._object_start_z[obj.id]
+            obj.sprite = self._object_start_sprite[obj.id]
+            obj.visible = self._object_start_visible[obj.id]
+            obj.detects_collisions = self._object_start_detects_collisions[obj.id]
+            obj.bbox_x = self._object_start_bbox_x[obj.id]
+            obj.bbox_y = self._object_start_bbox_y[obj.id]
+            obj.bbox_width = self._object_start_bbox_width[obj.id]
+            obj.bbox_height = self._object_start_bbox_height[obj.id]
+            obj.collision_ellipse = self._object_start_collision_ellipse[obj.id]
+            obj.collision_precise = self._object_start_collision_precise[obj.id]
 
 
 class _Projection(sge.StellarClass):

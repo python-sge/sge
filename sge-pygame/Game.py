@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -344,6 +344,19 @@ class Game(object):
 
         self.window_icon = None
 
+        self._object_start_x = {}
+        self._object_start_y = {}
+        self._object_start_z = {}
+        self._object_start_sprite = {}
+        self._object_start_visible = {}
+        self._object_start_detects_collisions = {}
+        self._object_start_bbox_x = {}
+        self._object_start_bbox_y = {}
+        self._object_start_bbox_width = {}
+        self._object_start_bbox_height = {}
+        self._object_start_collision_ellipse = {}
+        self._object_start_collision_precise = {}
+
     def start(self):
         """Start the game at the first room.
 
@@ -358,6 +371,23 @@ class Game(object):
             for room in self.rooms:
                 room._reset()
 
+            for i in self.objects:
+                obj = self.objects[i]
+                if obj is not sge.game.mouse:
+                    obj.x = self._object_start_x[obj.id]
+                    obj.y = self._object_start_y[obj.id]
+
+                obj.z = self._object_start_z[obj.id]
+                obj.sprite = self._object_start_sprite[obj.id]
+                obj.visible = self._object_start_visible[obj.id]
+                obj.detects_collisions = self._object_start_detects_collisions[obj.id]
+                obj.bbox_x = self._object_start_bbox_x[obj.id]
+                obj.bbox_y = self._object_start_bbox_y[obj.id]
+                obj.bbox_width = self._object_start_bbox_width[obj.id]
+                obj.bbox_height = self._object_start_bbox_height[obj.id]
+                obj.collision_ellipse = self._object_start_collision_ellipse[obj.id]
+                obj.collision_precise = self._object_start_collision_precise[obj.id]
+
             self.rooms[0].start()
         else:
             if sge.DEBUG:
@@ -365,6 +395,23 @@ class Game(object):
             self._running = True
             self._background_changed = True
             self.event_game_start()
+
+            # Store the initial state of objects
+            for i in self.objects:
+                obj = self.objects[i]
+                self._object_start_x[obj.id] = obj.x
+                self._object_start_y[obj.id] = obj.y
+                self._object_start_z[obj.id] = obj.z
+                self._object_start_sprite[obj.id] = obj.sprite
+                self._object_start_visible[obj.id] = obj.visible
+                self._object_start_detects_collisions[obj.id] = obj.detects_collisions
+                self._object_start_bbox_x[obj.id] = obj.bbox_x
+                self._object_start_bbox_y[obj.id] = obj.bbox_y
+                self._object_start_bbox_width[obj.id] = obj.bbox_width
+                self._object_start_bbox_height[obj.id] = obj.bbox_height
+                self._object_start_collision_ellipse[obj.id] = obj.collision_ellipse
+                self._object_start_collision_precise[obj.id] = obj.collision_precise
+
             self.rooms[0].start()
             background = None
             numviews = 0

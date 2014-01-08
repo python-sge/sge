@@ -1,4 +1,4 @@
-Copyright (C) 2013 Julian Marchant <onpon4@riseup.net>
+Copyright (C) 2013, 2014 Julian Marchant <onpon4@riseup.net>
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -13,6 +13,7 @@ without any warranty.
 Pygame SGE bugfixes:
 - Changing a font's size causing bold, underline, and italic to be reset
 - sge.Music.play "loops" argument not conforming to the spec.
+- Objects and views getting reset wrongly when the room was (re)started.
 
 
 0.5.1

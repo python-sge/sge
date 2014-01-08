@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 # Pong Example
-# Written in 2013 by Julian Marchant <onpon4@riseup.net>
+# Written in 2013, 2014 by Julian Marchant <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -52,9 +52,14 @@ class glob(object):
 
 class Game(sge.Game):
 
+    def event_game_start(self):
+        self.mouse.visible = False
+
     def event_key_press(self, key, char):
         if key == 'f8':
             sge.Sprite.from_screenshot().save('screenshot.jpg')
+        elif key == 'f11':
+            self.fullscreen = not self.fullscreen
         elif key == 'escape':
             self.event_close()
         elif key in ('p', 'enter'):

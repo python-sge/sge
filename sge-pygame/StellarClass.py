@@ -21,6 +21,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import os
+import sys
+import traceback
 import math
 import weakref
 
@@ -1381,6 +1383,11 @@ class Mouse(StellarClass):
 
     @visible.setter
     def visible(self, value):
+        if sge.DEBUG:
+            print("mouse.visible has been set to:", value)
+            if value and hasattr(self, "_visible") and not self._visible:
+                raise ValueError
+
         self._visible = value
         self.set_cursor()
 
