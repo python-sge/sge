@@ -26,6 +26,10 @@ __version__ = "0.0.1"
 import sge
 import stj
 
+MODE_MOVE = 1
+MODE_STAMP = 2
+MODE_PAINT = 3
+
 
 class Game(sge.Game):
 
@@ -38,6 +42,84 @@ class Game(sge.Game):
     def event_close(self):
         # TODO: Make a check for saving changes first.
         self.end()
+
+
+class Room(sge.Room):
+
+    def event_room_start(self):
+        self.mode = MODE_MOVE
+        self.selected_object = None
+        self.held_object = None
+        self.grid_width = None
+        self.grid_height = None
+        self.mouse_click_x = 0
+        self.mouse_click_y = 0
+
+    def event_step(self, time_passed):
+        if self.held_object is not None:
+            self.held_object.x = sge.game.mouse.x
+            self.held_object.y = sge.game.mouse.y
+
+            if self.grid_width:
+                self.held_object.x = self.grid_width * (
+                    self.held_object.x // self.grid_width)
+            if self.grid_height:
+                self.held_object.y = self.grid_height * (
+                    self.held_object.y // self.grid_height)
+
+        if self.selected_object is not None:
+            self.project_rectangle(
+                self.selected_object.bbox_left, self.selected_object.bbox_top,
+                self.selected_object.z, self.selected_object.bbox_width,
+                self.selected_object.bbox_height, outline="blue")
+
+    def event_key_press(self, key, char):
+        # TODO: Destroy/create preview image for Stamp and Paint modes.
+        if key in ('1', 'kp_1'):
+            print("Switched to Move mode.")
+            self.mode = MODE_MOVE
+        elif key in ('2', 'kp_2'):
+            print("Switched to Stamp mode.")
+            self.mode = MODE_STAMP
+        elif key in ('3', 'kp_3'):
+            print("Switched to Paint mode.")
+            self.mode = MODE_PAINT
+        elif key == 'g':
+            m = "Please enter the new grid width:"
+            self.grid_width = eval(get_text_entry(m, repr(self.grid_width)))
+            m = "Please enter the new grid height:"
+            self.grid_height = eval(get_text_entry(m, repr(self.grid_height)))
+
+    def event_mouse_move(self, x, y):
+        if (self.mode == MODE_MOVE and sge.get_mouse_button_pressed("left") and
+                self.selected_object is not None and
+                (abs(self.mouse.x - self.mouse_click_x) > 2 or
+                 abs(self.mouse.y - self.mouse_click_y) > 2)):
+            self.held_object = self.selected_object
+
+    def event_mouse_button_press(self, button):
+        if button == "left":
+            if self.mode == MODE_MOVE:
+                self.mouse_click_x = self.mouse.x
+                self.mouse_click_y = self.mouse.y
+                self.selected_object = None
+                for obj in self.objects:
+                    if obj.collides(sge.game.mouse):
+                        self.selected_object = obj
+                        break
+            elif self.mode == MODE_STAMP:
+                pass
+            elif self.mode == MODE_PAINT:
+                pass
+
+    def event_mouse_button_release(self, button):
+        if button == "left":
+            self.selected_object = None
+            self.held_object = None
+
+            if self.mode == MODE_STAMP:
+                # TODO: Create next object
+                pass
 
 
 class Object(sge.StellarClass):
