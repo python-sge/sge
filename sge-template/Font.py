@@ -125,7 +125,8 @@ class Font(object):
         # TODO
 
     @classmethod
-    def from_sprite(cls, sprite, chars, ID=None):
+    def from_sprite(cls, sprite, chars, ID=None, hsep=0, vsep=0, size=12,
+                    underline=False, bold=False, italic=False):
         """Return a font derived from a sprite.
 
         Arguments:
@@ -143,6 +144,10 @@ class Font(object):
           :const:`None`, the name of the sprite will be used, modified
           by the SGE if it is already the unique identifier of another
           font.
+        - ``hsep`` -- The amount of horizontal space to place between
+          characters when text is rendered.
+        - ``vsep`` -- The amount of vertical space to place between
+          lines when text is rendered.
 
         All other arguments set the respective initial attributes of the
         font.  See the documentation for :class:`sge.Font` for more

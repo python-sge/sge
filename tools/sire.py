@@ -73,8 +73,21 @@ class Room(sge.Room):
                 self.selected_object.z, self.selected_object.bbox_width,
                 self.selected_object.bbox_height, outline="blue")
 
+        if self.mode == MODE_PAINT and sge.get_mouse_button_pressed("left"):
+            # TODO: Paint objects; only one per position
+            pass
+
     def event_key_press(self, key, char):
-        # TODO: Destroy/create preview image for Stamp and Paint modes.
+        # Destroy preview image
+        if (self.mode in (MODE_STAMP, MODE_PAINT) and
+                self.held_object is not None):
+            self.held_object.destroy()
+
+        # Un-hold and un-select
+        self.selected_object = None
+        self.held_object = None
+
+        # TODO: create preview image for Stamp and Paint modes.
         if key in ('1', 'kp_1'):
             print("Switched to Move mode.")
             self.mode = MODE_MOVE
@@ -114,12 +127,13 @@ class Room(sge.Room):
 
     def event_mouse_button_release(self, button):
         if button == "left":
-            self.selected_object = None
-            self.held_object = None
-
-            if self.mode == MODE_STAMP:
+            if self.mode == MODE_MOVE:
+                self.selected_object = None
+                self.held_object = None
+            elif self.mode == MODE_STAMP:
+                self.selected_object = None
+                self.held_object = None
                 # TODO: Create next object
-                pass
 
 
 class Object(sge.StellarClass):

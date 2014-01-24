@@ -248,8 +248,8 @@ class Font(object):
         return (text_width, text_height)
 
     @classmethod
-    def from_sprite(cls, sprite, chars, ID=None, size=12, underline=False,
-                    bold=False, italic=False):
+    def from_sprite(cls, sprite, chars, ID=None, hsep=0, vsep=0, size=12,
+                    underline=False, bold=False, italic=False):
         """Return a font derived from a sprite.
 
         Arguments:
@@ -267,6 +267,10 @@ class Font(object):
           :const:`None`, the name of the sprite will be used, modified
           by the SGE if it is already the unique identifier of another
           font.
+        - ``hsep`` -- The amount of horizontal space to place between
+          characters when text is rendered.
+        - ``vsep`` -- The amount of vertical space to place between
+          lines when text is rendered.
 
         All other arguments set the respective initial attributes of the
         font.  See the documentation for :class:`sge.Font` for more
@@ -280,7 +284,8 @@ class Font(object):
         adjusted proportionally.
 
         """
-        # TODO
+        return _SpriteFont(sprite, chars, ID, hsep, vsep, size, underline,
+                           bold, italic)
 
     def _split_text(self, text, width=None):
         # Split the text into lines of the proper size for ``width`` and
@@ -327,9 +332,11 @@ class _PygameSpriteFont(pygame.font.Font):
             self.width = vsize
             self.height = vsize
 
-    def __init__(self, sprite, chars, size):
+    def __init__(self, sprite, chars, hsep, vsep, size):
         self.sprite = sprite
         self.chars = {}
+        self.hsep = hsep
+        self.vsep = vsep
 
         for i in xrange(len(chars)):
             self.chars[chars[i]] = i
@@ -342,8 +349,8 @@ class _PygameSpriteFont(pygame.font.Font):
         self.italic = False
 
     def render(self, text, antialias, color, background=None):
-        w = self.width * len(text)
-        h = self.height
+        w = (self.width + self.hsep) * len(text)
+        h = self.height + self.vsep
         xscale = (self.width / self.sprite.width if self.sprite.width > 0
                   else 1)
         yscale = (self.height / self.sprite.height if self.sprite.height > 0
@@ -358,7 +365,7 @@ class _PygameSpriteFont(pygame.font.Font):
                 cimg = self.sprite._get_image(self.chars[text[i]],
                                               xscale=xscale,
                                               yscale=yscale, blend=sge_color)
-                surf.blit(cimg, (i * self.width, 0))
+                surf.blit(cimg, (i * (self.width + self.hsep), 0))
 
         if background is None:
             return surf
@@ -369,7 +376,7 @@ class _PygameSpriteFont(pygame.font.Font):
             return rsurf
 
     def size(self, text):
-        return (self.sprite.width * len(text), self.sprite.height)
+        return ((self.width + self.hsep) * len(text), self.height + self.vsep)
 
     def set_underline(self, bool_):
         self.underline = bool_
@@ -394,7 +401,7 @@ class _PygameSpriteFont(pygame.font.Font):
         return [m for char in text]
 
     def get_linesize(self):
-        return self.height
+        return self.height + self.vsep
 
     def get_height(self):
         return self.height
@@ -418,10 +425,10 @@ class _SpriteFont(Font):
     def size(self, value):
         self._font.vsize = value
 
-    def __init__(self, sprite, chars, ID=None, size=12, underline=False, bold=False,
-                 italic=False):
+    def __init__(self, sprite, chars, ID=None, hsep=0, vsep=0, size=12,
+                 underline=False, bold=False, italic=False):
         self.name = sprite.name
-        self._font = _PygameSpriteFont(sprite, chars, size)
+        self._font = _PygameSpriteFont(sprite, chars, hsep, vsep, size)
         self.underline = underline
         self.bold = bold
         self.italic = italic
