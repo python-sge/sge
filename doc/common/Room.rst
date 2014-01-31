@@ -60,6 +60,14 @@ sge.Room Event Methods
 
 .. automethod:: sge.Room.event_joystick_button_release
 
+.. automethod:: sge.Room.event_gain_keyboard_focus
+
+.. automethod:: sge.Room.event_lose_keyboard_focus
+
+.. automethod:: sge.Room.event_gain_mouse_focus
+
+.. automethod:: sge.Room.event_lose_mouse_focus
+
 .. automethod:: sge.Room.event_close
 
 .. automethod:: sge.Room.event_paused_key_press
@@ -81,5 +89,13 @@ sge.Room Event Methods
 .. automethod:: sge.Room.event_paused_joystick_button_press
 
 .. automethod:: sge.Room.event_paused_joystick_button_release
+
+.. automethod:: sge.Room.event_paused_gain_keyboard_focus
+
+.. automethod:: sge.Room.event_paused_lose_keyboard_focus
+
+.. automethod:: sge.Room.event_paused_gain_mouse_focus
+
+.. automethod:: sge.Room.event_paused_lose_mouse_focus
 
 .. automethod:: sge.Room.event_paused_close

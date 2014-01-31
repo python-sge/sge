@@ -45,6 +45,14 @@ sge.Game Event Methods
 
 .. automethod:: sge.Game.event_joystick_button_release
 
+.. automethod:: sge.Game.event_gain_keyboard_focus
+
+.. automethod:: sge.Game.event_lose_keyboard_focus
+
+.. automethod:: sge.Game.event_gain_mouse_focus
+
+.. automethod:: sge.Game.event_lose_mouse_focus
+
 .. automethod:: sge.Game.event_close
 
 .. automethod:: sge.Game.event_mouse_collision
@@ -76,5 +84,13 @@ sge.Game Event Methods
 .. automethod:: sge.Game.event_paused_joystick_button_press
 
 .. automethod:: sge.Game.event_paused_joystick_button_release
+
+.. automethod:: sge.Game.event_paused_gain_keyboard_focus
+
+.. automethod:: sge.Game.event_paused_lose_keyboard_focus
+
+.. automethod:: sge.Game.event_paused_gain_mouse_focus
+
+.. automethod:: sge.Game.event_paused_lose_mouse_focus
 
 .. automethod:: sge.Game.event_paused_close

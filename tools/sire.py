@@ -54,6 +54,9 @@ class Room(sge.Room):
         self.grid_height = None
         self.mouse_click_x = 0
         self.mouse_click_y = 0
+        self.class_index = 0
+        self.args = []
+        self.kwargs = {}
 
     def event_step(self, time_passed):
         if self.held_object is not None:
@@ -103,6 +106,9 @@ class Room(sge.Room):
             m = "Please enter the new grid height:"
             self.grid_height = eval(get_text_entry(m, repr(self.grid_height)))
 
+        if self.mode in (MODE_STAMP, MODE_PAINT):
+            
+
     def event_mouse_move(self, x, y):
         if (self.mode == MODE_MOVE and sge.get_mouse_button_pressed("left") and
                 self.selected_object is not None and
@@ -134,6 +140,12 @@ class Room(sge.Room):
                 self.selected_object = None
                 self.held_object = None
                 # TODO: Create next object
+
+
+class Class(object):
+
+    def __init__(self, name):
+        pass
 
 
 class Object(sge.StellarClass):
