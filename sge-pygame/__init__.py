@@ -301,13 +301,13 @@ Global Variables and Constants
 
 .. data:: sge.BLEND_RGB_MINIMUM
 
-   Flag indicating RGBA Minimum (Darken Only) blending: the same thing
+   Flag indicating RGB Minimum (Darken Only) blending: the same thing
    as RGBA Minimum blending (see :data:`sge.BLEND_RGBA_MINIMUM`) except
    the destination's alpha values are not changed.
 
 .. data:: sge.BLEND_RGB_MAXIMUM
 
-   Flag indicating RGBA Maximum (Lighten Only) blending: the same thing
+   Flag indicating RGB Maximum (Lighten Only) blending: the same thing
    as RGBA Maximum blending (see :data:`sge.BLEND_RGBA_MAXIMUM`) except
    the destination's alpha values are not changed.
 
@@ -455,7 +455,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.6.0"
+__version__ = "0.6.0.1"
 
 import os
 

@@ -6,7 +6,7 @@
 Welcome to The SGE Template's documentation!
 ============================================
 
-Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net>
+Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>
 
 This document has been dedicated to the public domain by the author(s),
 to the extent possible under applicable law. See
