@@ -1,4 +1,4 @@
-Copyright (C) 2013 Julian Marchant <onpon4@riseup.net>
+Copyright (C) 2013, 2014 Julian Marchant <onpon4@riseup.net>
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -7,8 +7,8 @@ without any warranty.
 
 ========================================================================
 
-This is not an implementation of the SGE, but rather a template for
-developing your own implementation.
+This is the specification for the SGE, written as a template.  For a
+reference implementation, see the Pygame SGE.
 
 To develop an implementation of SGE:
 
@@ -41,8 +41,10 @@ Finally, go to the "doc" directory and:
   identifying your implementation.  Modify its contents appropriately.
 * Replace "template" in the toctree directive of index.rst with the
   string you used in the previous step.
-* Set the "project" and "copyright" variables in conf.py appropriately.
-* Use make (e.g. "make html") to generate documentation.
+* Add your name to the copyright notice in "index.rst", or modify the
+  copyright notice to specify a different license.
+* Use the resulting files in this directory to generate Sphinx
+  documentation (e.g. with sphinx-quickstart).
 
 To test the implementation, use the examples found in the examples
 directory.

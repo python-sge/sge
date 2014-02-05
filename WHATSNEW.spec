@@ -18,7 +18,7 @@ Specification misc changes:
 * sge.Sprite.draw_sprite and sge.Room.project_sprite now support blend modes.
 * sge.Sound.play and sge.Music.play "loops" argument tweaked.
 
-SGE Template bugfixes:
+Specification bugfixes:
 - Argument for Font.__init__ being the old "id_" rather than "ID"
 - Small problems with the documentation
 
