@@ -415,6 +415,10 @@ anti-aliasing for lines with a thickness of 1 only.
 anti-aliasing in all cases.  No other drawing or projecting methods
 support anti-aliasing.
 
+:data:`sge.BLEND_RGBA_SCREEN` and :data:`sge.BLEND_RGB_SCREEN` are
+unsupported. If one of these blend modes is attempted, normal blending
+will be used instead.
+
 Speed Improvements
 ------------------
 
@@ -451,7 +455,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.5.1.10"
+__version__ = "0.5.1.11"
 
 import os
 
