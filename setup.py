@@ -44,7 +44,7 @@ idir = "sge"
 requires = []
 
 setup(name=name,
-      version='0.5.0',
+      version='0.6.0',
       description='A 2-D game engine for Python',
       long_description=long_description,
       author=author,
