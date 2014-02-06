@@ -87,7 +87,7 @@ Specification misc changes:
 * Background layers can be referenced by id rather than by sprite name now.
 * Fonts can be referenced by id rather than by name now.
 
-SGE Template misc changes:
+Specification misc changes:
 * Released to the public domain via CC0.
 
 
