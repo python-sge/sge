@@ -1087,7 +1087,13 @@ def _get_joystick(joystick):
         if js.get_name() == joystick:
             return js.get_id()
 
-    return joystick
+    if isinstance(joystick, int):
+        return joystick
+    else:
+        # Return a large number (large enough for that number of
+        # joysticks existing to be extremely unlikely) so that it is
+        # concluded that the joystick does not exist.
+        return 999999
 
 
 def _scale(surface, width, height):
