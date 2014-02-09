@@ -313,13 +313,16 @@ class Game(object):
         """
         pass
 
-    def event_joystick_axis_move(self, joystick, axis, value):
+    def event_joystick_axis_move(self, name, ID, axis, value):
         """Joystick axis move event.
 
         Called when an axis on a joystick changes position.
 
         Arguments:
 
+        - ``name`` -- The name of the joystick.
+        - ``ID`` -- The number of the joystick, where ``0`` is the first
+          joystick.
         - ``value`` -- The tilt of the axis as a float from ``-1`` to
           ``1``, where ``0`` is centered, ``-1`` is all the way to the
           left or up, and ``1`` is all the way to the right or down.
@@ -330,7 +333,7 @@ class Game(object):
         """
         pass
 
-    def event_joystick_hat_move(self, joystick, hat, x, y):
+    def event_joystick_hat_move(self, name, ID, hat, x, y):
         """Joystick HAT move event.
 
         Called when a HAT switch (also called the POV hat, POV switch,
@@ -338,6 +341,9 @@ class Game(object):
 
         Arguments:
 
+        - ``name`` -- The name of the joystick.
+        - ``ID`` -- The number of the joystick, where ``0`` is the first
+          joystick.
         - ``x`` -- The horizontal position of the HAT, where ``0`` is
           centered, ``-1`` is left, and ``1`` is right.
         - ``y`` -- The vertical position of the HAT, where ``0`` is
@@ -349,15 +355,16 @@ class Game(object):
         """
         pass
 
-    def event_joystick_trackball_move(self, joystick, ball, x, y):
+    def event_joystick_trackball_move(self, name, ID, ball, x, y):
         """Joystick trackball move event.
 
         Called when a trackball on a joystick moves.
 
         Arguments:
 
-        - ``joystick`` -- The number of the joystick, where ``0`` is the
-          first joystick.
+        - ``name`` -- The name of the joystick.
+        - ``ID`` -- The number of the joystick, where ``0`` is the first
+          joystick.
         - ``ball`` -- The number of the trackball, where ``0`` is the
           first trackball on the joystick.
         - ``x`` -- The horizontal relative movement of the trackball.
@@ -366,10 +373,16 @@ class Game(object):
         """
         pass
 
-    def event_joystick_button_press(self, joystick, button):
+    def event_joystick_button_press(self, name, ID, button):
         """Joystick button press event.
 
         Called when a joystick button is pressed.
+
+        Arguments:
+
+        - ``name`` -- The name of the joystick.
+        - ``ID`` -- The number of the joystick, where ``0`` is the first
+          joystick.
 
         See the documentation for
         :func:`sge.get_joystick_button_pressed` for more information.
@@ -377,10 +390,16 @@ class Game(object):
         """
         pass
 
-    def event_joystick_button_release(self, joystick, button):
+    def event_joystick_button_release(self, name, ID, button):
         """Joystick button release event.
 
         Called when a joystick button is pressed.
+
+        Arguments:
+
+        - ``name`` -- The name of the joystick.
+        - ``ID`` -- The number of the joystick, where ``0`` is the first
+          joystick.
 
         See the documentation for
         :func:`sge.get_joystick_button_pressed` for more information.
@@ -560,7 +579,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_axis_move(self, joystick, axis, value):
+    def event_paused_joystick_axis_move(self, name, ID, axis, value):
         """Joystick axis move event when paused.
 
         See the documentation for
@@ -569,7 +588,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_hat_move(self, joystick, hat, x, y):
+    def event_paused_joystick_hat_move(self, name, ID, hat, x, y):
         """Joystick HAT move event when paused.
 
         See the documentation for
@@ -578,7 +597,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_trackball_move(self, joystick, ball, x, y):
+    def event_paused_joystick_trackball_move(self, name, ID, ball, x, y):
         """Joystick trackball move event when paused.
 
         See the documentation for
@@ -588,7 +607,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_button_press(self, joystick, button):
+    def event_paused_joystick_button_press(self, name, ID, button):
         """Joystick button press event when paused.
 
         See the documentation for
@@ -598,7 +617,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_button_release(self, joystick, button):
+    def event_paused_joystick_button_release(self, name, ID, button):
         """Joystick button release event when paused.
 
         See the documentation for

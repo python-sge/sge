@@ -260,7 +260,7 @@ def get_joystick_axis(joystick, axis):
     Arguments:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
-      is the first joystick.
+      is the first joystick, or the name of the joystick to check.
     - ``axis`` -- The number of the axis to check, where ``0`` is the
       first axis of the joystick.
 
@@ -270,6 +270,8 @@ def get_joystick_axis(joystick, axis):
     not exist.
 
     """
+    joystick = _get_joystick(joystick)
+
     if joystick < len(sge.game._joysticks):
         numaxes = sge.game._joysticks[joystick].get_numaxes()
         if axis < numaxes:
@@ -294,7 +296,7 @@ def get_joystick_hat(joystick, hat):
     Arguments:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
-      is the first joystick.
+      is the first joystick, or the name of the joystick to check.
     - ``hat`` -- The number of the HAT to check, where ``0`` is the
       first HAT of the joystick.
 
@@ -304,6 +306,8 @@ def get_joystick_hat(joystick, hat):
     Return ``(0, 0)`` if the requested joystick or axis does not exist.
 
     """
+    joystick = _get_joystick(joystick)
+
     if joystick < len(sge.game._joysticks):
         if hat < sge.game._joysticks[joystick].get_numhats():
             return sge.game._joysticks[joystick].get_hat(hat)
@@ -317,7 +321,7 @@ def get_joystick_button_pressed(joystick, button):
     Arguments:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
-      is the first joystick.
+      is the first joystick, or the name of the joystick to check.
     - ``button`` -- The number of the button to check, where ``0`` is
       the first button of the joystick.
 
@@ -329,6 +333,8 @@ def get_joystick_button_pressed(joystick, button):
     exist.
 
     """
+    joystick = _get_joystick(joystick)
+
     if joystick < len(sge.game._joysticks):
         if button < sge.game._joysticks[joystick].get_numbuttons():
             return sge.game._joysticks[joystick].get_button(button)
@@ -347,11 +353,13 @@ def get_joystick_axes(joystick):
     Arguments:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
-      is the first joystick.
+      is the first joystick, or the name of the joystick to check.
 
     Return ``0`` if the requested joystick does not exist.
 
     """
+    joystick = _get_joystick(joystick)
+
     if joystick < len(sge.game._joysticks):
         return (sge.game._joysticks[joystick].get_numaxes() +
                 sge.game._joysticks[joystick].get_numballs() * 2)
@@ -365,11 +373,13 @@ def get_joystick_hats(joystick):
     Arguments:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
-      is the first joystick.
+      is the first joystick, or the name of the joystick to check.
 
     Return ``0`` if the requested joystick does not exist.
 
     """
+    joystick = _get_joystick(joystick)
+
     if joystick < len(sge.game._joysticks):
         return sge.game._joysticks[joystick].get_numhats()
     else:
@@ -382,11 +392,13 @@ def get_joystick_buttons(joystick):
     Arguments:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
-      is the first joystick.
+      is the first joystick, or the name of the joystick to check.
 
     Return ``0`` if the requested joystick does not exist.
 
     """
+    joystick = _get_joystick(joystick)
+
     if joystick < len(sge.game._joysticks):
         return sge.game._joysticks[joystick].get_numbuttons()
     else:
@@ -1066,6 +1078,16 @@ def _show_modal(text, default, text_entry, buttons):
     window.blit(screenshot, (0, 0))
     pygame.display.update()
     sge.game._background_changed = True
+
+
+def _get_joystick(joystick):
+    # Use ``joystick``, either a name or an ID, to find out the ID of
+    # the joystick.
+    for js in sge.game._joysticks:
+        if js.get_name() == joystick:
+            return js.get_id()
+
+    return joystick
 
 
 def _scale(surface, width, height):

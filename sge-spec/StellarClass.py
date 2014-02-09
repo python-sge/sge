@@ -393,7 +393,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_joystick_axis_move(self, joystick, axis, value):
+    def event_joystick_axis_move(self, name, ID, axis, value):
         """Joystick axis move event.
 
         See the documentation for
@@ -402,7 +402,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_joystick_hat_move(self, joystick, hat, x, y):
+    def event_joystick_hat_move(self, name, ID, hat, x, y):
         """Joystick HAT move event.
 
         See the documentation for
@@ -411,7 +411,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_joystick_trackball_move(self, joystick, ball, x, y):
+    def event_joystick_trackball_move(self, name, ID, ball, x, y):
         """Joystick trackball move event.
 
         See the documentation for
@@ -421,7 +421,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_joystick_button_press(self, joystick, button):
+    def event_joystick_button_press(self, name, ID, button):
         """Joystick button press event.
 
         See the documentation for
@@ -431,7 +431,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_joystick_button_release(self, joystick, button):
+    def event_joystick_button_release(self, name, ID, button):
         """Joystick button release event.
 
         See the documentation for
@@ -581,7 +581,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_inactive_joystick_axis_move(self, joystick, axis, value):
+    def event_inactive_joystick_axis_move(self, name, ID, axis, value):
         """Joystick axis move event when this object is inactive.
 
         See the documentation for
@@ -592,7 +592,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_inactive_joystick_hat_move(self, joystick, hat, x, y):
+    def event_inactive_joystick_hat_move(self, name, ID, hat, x, y):
         """Joystick HAT move event when this object is inactive.
 
         See the documentation for
@@ -603,7 +603,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_inactive_joystick_trackball_move(self, joystick, ball, x, y):
+    def event_inactive_joystick_trackball_move(self, name, ID, ball, x, y):
         """Joystick trackball move event when this object is inactive.
 
         See the documentation for
@@ -614,7 +614,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_inactive_joystick_button_press(self, joystick, button):
+    def event_inactive_joystick_button_press(self, name, ID, button):
         """Joystick button press event when this object is inactive.
 
         See the documentation for
@@ -625,7 +625,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_inactive_joystick_button_release(self, joystick, button):
+    def event_inactive_joystick_button_release(self, name, ID, button):
         """Joystick button release event when this object is inactive.
 
         See the documentation for
@@ -682,7 +682,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_paused_joystick_axis_move(self, joystick, axis, value):
+    def event_paused_joystick_axis_move(self, name, ID, axis, value):
         """Joystick axis move event when paused.
 
         See the documentation for
@@ -691,7 +691,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_paused_joystick_hat_move(self, joystick, hat, x, y):
+    def event_paused_joystick_hat_move(self, name, ID, hat, x, y):
         """Joystick HAT move event when paused.
 
         See the documentation for
@@ -700,7 +700,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_paused_joystick_trackball_move(self, joystick, ball, x, y):
+    def event_paused_joystick_trackball_move(self, name, ID, ball, x, y):
         """Joystick trackball move event when paused.
 
         See the documentation for
@@ -710,7 +710,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_paused_joystick_button_press(self, joystick, button):
+    def event_paused_joystick_button_press(self, name, ID, button):
         """Joystick button press event when paused.
 
         See the documentation for
@@ -720,7 +720,7 @@ class StellarClass(object):
         """
         pass
 
-    def event_paused_joystick_button_release(self, joystick, button):
+    def event_paused_joystick_button_release(self, name, ID, button):
         """Joystick button release event when paused.
 
         See the documentation for

@@ -469,65 +469,70 @@ class Game(object):
                             else:
                                 obj.event_inactive_mouse_button_release(b)
                     elif event.type == pygame.JOYAXISMOTION:
-                        self.event_joystick_axis_move(event.joy, event.axis,
-                                                      event.value)
+                        jsname = self._joysticks[event.joy].get_name()
+                        self.event_joystick_axis_move(jsname, event.joy,
+                                                      event.axis, event.value)
                         self.current_room.event_joystick_axis_move(
-                            event.joy, event.axis, event.value)
+                            jsname, event.joy, event.axis, event.value)
                         for obj in self.current_room.objects:
                             if obj.active:
                                 obj.event_joystick_axis_move(
-                                    event.joy, event.axis, event.value)
+                                    jsname, event.joy, event.axis, event.value)
                             else:
                                 obj.event_inactive_joystick_axis_move(
-                                    event.joy, event.axis, event.value)
+                                    jsname, event.joy, event.axis, event.value)
                     elif event.type == pygame.JOYHATMOTION:
-                        self.event_joystick_hat_move(event.joy, event.hat,
-                                                     *event.value)
+                        jsname = self._joysticks[event.joy].get_name()
+                        self.event_joystick_hat_move(jsname, event.joy,
+                                                     event.hat, *event.value)
                         self.current_room.event_joystick_hat_move(
-                            event.joy, event.hat, *event.value)
+                            jsname, event.joy, event.hat, *event.value)
                         for obj in self.current_room.objects:
                             if obj.active:
                                 obj.event_joystick_hat_move(
-                                    event.joy, event.hat, *event.value)
+                                    jsname, event.joy, event.hat, *event.value)
                             else:
                                 obj.event_inactive_joystick_hat_move(
-                                    event.joy, event.hat, *event.value)
+                                    jsname, event.joy, event.hat, *event.value)
                     elif event.type == pygame.JOYBALLMOTION:
+                        jsname = self._joysticks[event.joy].get_name()
                         self.event_joystick_trackball_move(
-                            event.joy, event.ball, *event.rel)
+                            jsname, event.joy, event.ball, *event.rel)
                         self.current_room.event_joystick_trackball_move(
-                            event.joy, event.ball, *event.rel)
+                            jsname, event.joy, event.ball, *event.rel)
                         for obj in self.current_room.objects:
                             if obj.active:
                                 obj.event_joystick_trackball_move(
-                                    event.joy, event.ball, *event.rel)
+                                    jsname, event.joy, event.ball, *event.rel)
                             else:
                                 obj.event_inactive_joystick_trackball_move(
-                                    event.joy, event.ball, *event.rel)
+                                    jsname, event.joy, event.ball, *event.rel)
                     elif event.type == pygame.JOYBUTTONDOWN:
-                        self.event_joystick_button_press(event.joy,
+                        jsname = self._joysticks[event.joy].get_name()
+                        self.event_joystick_button_press(jsname, event.joy,
                                                          event.button)
                         self.current_room.event_joystick_button_press(
-                            event.joy, event.button)
+                            jsname, event.joy, event.button)
                         for obj in self.current_room.objects:
                             if obj.active:
-                                obj.event_joystick_button_press(event.joy,
-                                                                event.button)
+                                obj.event_joystick_button_press(
+                                    jsname, event.joy, event.button)
                             else:
                                 obj.event_inactive_joystick_button_press(
-                                    event.joy, event.button)
+                                    jsname, event.joy, event.button)
                     elif event.type == pygame.JOYBUTTONUP:
-                        self.event_joystick_button_release(event.joy,
+                        jsname = self._joysticks[event.joy].get_name()
+                        self.event_joystick_button_release(jsname, event.joy,
                                                            event.button)
                         self.current_room.event_joystick_button_release(
-                            event.joy, event.button)
+                            jsname, event.joy, event.button)
                         for obj in self.current_room.objects:
                             if obj.active:
-                                obj.event_joystick_button_release(event.joy,
-                                                                  event.button)
+                                obj.event_joystick_button_release(
+                                    jsname, event.joy, event.button)
                             else:
                                 obj.event_inactive_joystick_button_release(
-                                    event.joy, event.button)
+                                    jsname, event.joy, event.button)
                     elif event.type == pygame.ACTIVEEVENT:
                         if event.gain:
                             if 2 & event.state:
@@ -764,45 +769,49 @@ class Game(object):
                     for obj in self.current_room.objects:
                         obj.event_paused_mouse_button_release(b)
                 elif event.type == pygame.JOYAXISMOTION:
-                    self.event_paused_joystick_axis_move(event.joy, event.axis,
-                                                         event.value)
+                    jsname = self._joysticks[event.joy].get_name()
+                    self.event_paused_joystick_axis_move(
+                        jsname, event.joy, event.axis, event.value)
                     self.current_room.event_paused_joystick_axis_move(
-                        event.joy, event.axis, event.value)
+                        jsname, event.joy, event.axis, event.value)
                     for obj in self.current_room.objects:
                         obj.event_paused_joystick_axis_move(
-                            event.joy, event.axis, event.value)
+                            jsname, event.joy, event.axis, event.value)
                 elif event.type == pygame.JOYHATMOTION:
-                    self.event_paused_joystick_hat_move(event.joy, event.hat,
-                                                        *event.value)
+                    jsname = self._joysticks[event.joy].get_name()
+                    self.event_paused_joystick_hat_move(
+                        jsname, event.joy, event.hat, *event.value)
                     self.current_room.event_paused_joystick_hat_move(
-                        event.joy, event.hat, *event.value)
+                        jsname, event.joy, event.hat, *event.value)
                     for obj in self.current_room.objects:
                         obj.event_paused_joystick_hat_move(
-                            event.joy, event.hat, *event.value)
+                            jsname, event.joy, event.hat, *event.value)
                 elif event.type == pygame.JOYBALLMOTION:
+                    jsname = self._joysticks[event.joy].get_name()
                     self.event_paused_joystick_trackball_move(
-                        event.joy, event.ball, *event.rel)
+                        jsname, event.joy, event.ball, *event.rel)
                     self.current_room.event_paused_joystick_trackball_move(
-                        event.joy, event.ball, *event.rel)
+                        jsname, event.joy, event.ball, *event.rel)
                     for obj in self.current_room.objects:
                         obj.event_paused_joystick_trackball_move(
-                            event.joy, event.ball, *event.rel)
+                            jsname, event.joy, event.ball, *event.rel)
                 elif event.type == pygame.JOYBUTTONDOWN:
-                    self.event_paused_joystick_button_press(event.joy,
-                                                            event.button)
+                    jsname = self._joysticks[event.joy].get_name()
+                    self.event_paused_joystick_button_press(
+                        jsname, event.joy, event.button)
                     self.current_room.event_paused_joystick_button_press(
-                        event.joy, event.button)
+                        jsname, event.joy, event.button)
                     for obj in self.current_room.objects:
-                        obj.event_paused_joystick_button_press(event.joy,
-                                                               event.button)
+                        obj.event_paused_joystick_button_press(
+                            jsname, event.joy, event.button)
                 elif event.type == pygame.JOYBUTTONUP:
-                    self.event_paused_joystick_button_release(event.joy,
-                                                              event.button)
+                    self.event_paused_joystick_button_release(
+                        jsname, event.joy, event.button)
                     self.current_room.event_paused_joystick_button_release(
-                        event.joy, event.button)
+                        jsname, event.joy, event.button)
                     for obj in self.current_room.objects:
-                        obj.event_paused_joystick_button_release(event.joy,
-                                                                 event.button)
+                        obj.event_paused_joystick_button_release(
+                            jsname, event.joy, event.button)
                 elif event.type == pygame.ACTIVEEVENT:
                     if event.gain:
                         if 2 & event.state:
@@ -959,13 +968,16 @@ class Game(object):
         """
         pass
 
-    def event_joystick_axis_move(self, joystick, axis, value):
+    def event_joystick_axis_move(self, name, ID, axis, value):
         """Joystick axis move event.
 
         Called when an axis on a joystick changes position.
 
         Arguments:
 
+        - ``name`` -- The name of the joystick.
+        - ``ID`` -- The number of the joystick, where ``0`` is the first
+          joystick.
         - ``value`` -- The tilt of the axis as a float from ``-1`` to
           ``1``, where ``0`` is centered, ``-1`` is all the way to the
           left or up, and ``1`` is all the way to the right or down.
@@ -976,7 +988,7 @@ class Game(object):
         """
         pass
 
-    def event_joystick_hat_move(self, joystick, hat, x, y):
+    def event_joystick_hat_move(self, name, ID, hat, x, y):
         """Joystick HAT move event.
 
         Called when a HAT switch (also called the POV hat, POV switch,
@@ -984,6 +996,9 @@ class Game(object):
 
         Arguments:
 
+        - ``name`` -- The name of the joystick.
+        - ``ID`` -- The number of the joystick, where ``0`` is the first
+          joystick.
         - ``x`` -- The horizontal position of the HAT, where ``0`` is
           centered, ``-1`` is left, and ``1`` is right.
         - ``y`` -- The vertical position of the HAT, where ``0`` is
@@ -995,15 +1010,16 @@ class Game(object):
         """
         pass
 
-    def event_joystick_trackball_move(self, joystick, ball, x, y):
+    def event_joystick_trackball_move(self, name, ID, ball, x, y):
         """Joystick trackball move event.
 
         Called when a trackball on a joystick moves.
 
         Arguments:
 
-        - ``joystick`` -- The number of the joystick, where ``0`` is the
-          first joystick.
+        - ``name`` -- The name of the joystick.
+        - ``ID`` -- The number of the joystick, where ``0`` is the first
+          joystick.
         - ``ball`` -- The number of the trackball, where ``0`` is the
           first trackball on the joystick.
         - ``x`` -- The horizontal relative movement of the trackball.
@@ -1012,10 +1028,16 @@ class Game(object):
         """
         pass
 
-    def event_joystick_button_press(self, joystick, button):
+    def event_joystick_button_press(self, name, ID, button):
         """Joystick button press event.
 
         Called when a joystick button is pressed.
+
+        Arguments:
+
+        - ``name`` -- The name of the joystick.
+        - ``ID`` -- The number of the joystick, where ``0`` is the first
+          joystick.
 
         See the documentation for
         :func:`sge.get_joystick_button_pressed` for more information.
@@ -1023,10 +1045,16 @@ class Game(object):
         """
         pass
 
-    def event_joystick_button_release(self, joystick, button):
+    def event_joystick_button_release(self, name, ID, button):
         """Joystick button release event.
 
         Called when a joystick button is released.
+
+        Arguments:
+
+        - ``name`` -- The name of the joystick.
+        - ``ID`` -- The number of the joystick, where ``0`` is the first
+          joystick.
 
         See the documentation for
         :func:`sge.get_joystick_button_pressed` for more information.
@@ -1212,7 +1240,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_axis_move(self, joystick, axis, value):
+    def event_paused_joystick_axis_move(self, name, ID, axis, value):
         """Joystick axis move event when paused.
 
         See the documentation for
@@ -1221,7 +1249,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_hat_move(self, joystick, hat, x, y):
+    def event_paused_joystick_hat_move(self, name, ID, hat, x, y):
         """Joystick HAT move event when paused.
 
         See the documentation for
@@ -1230,7 +1258,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_trackball_move(self, joystick, ball, x, y):
+    def event_paused_joystick_trackball_move(self, name, ID, ball, x, y):
         """Joystick trackball move event when paused.
 
         See the documentation for
@@ -1240,7 +1268,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_button_press(self, joystick, button):
+    def event_paused_joystick_button_press(self, name, ID, button):
         """Joystick button press event when paused.
 
         See the documentation for
@@ -1250,7 +1278,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_button_release(self, joystick, button):
+    def event_paused_joystick_button_release(self, name, ID, button):
         """Joystick button release event when paused.
 
         See the documentation for

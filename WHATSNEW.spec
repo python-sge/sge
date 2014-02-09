@@ -7,6 +7,14 @@ without any warranty.
 
 ========================================================================
 
+0.6.0-dev
+------------------------------------------------------------------------
+
+Specification misc changes:
+* Joystick handling functions now accept joystick names for "joystick" argument.
+* Joystick events' "joystick" argument renamed to "ID".
+* Joystick events now have a "name" argument indicating the joystick name.
+
 0.6.0
 ------------------------------------------------------------------------
 
