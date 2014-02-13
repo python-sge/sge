@@ -30,12 +30,14 @@ import random
 
 
 class glob(object):
+
     font = None
     pop_sound = None
     music = None
 
 
 class Game(sge.Game):
+
     def event_key_press(self, key, char):
         if key == 'escape':
             self.end()
@@ -45,6 +47,7 @@ class Game(sge.Game):
 
 
 class Circle(sge.StellarClass):
+
     def __init__(self, x, y):
         super(Circle, self).__init__(x, y, 5, sprite='circle',
                                      collision_precise=True)
@@ -76,6 +79,7 @@ class Circle(sge.StellarClass):
 
 
 class CirclePop(sge.StellarClass):
+
     def __init__(self, x, y):
         super(CirclePop, self).__init__(x, y, 5, sprite='circle_pop')
 
@@ -89,6 +93,7 @@ class CirclePop(sge.StellarClass):
 
 
 class Room(sge.Room):
+
     def event_room_start(self):
         glob.music.play(loops=None)
 
