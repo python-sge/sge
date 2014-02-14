@@ -31,6 +31,7 @@ sge.Room Methods
 .. automethod:: sge.Room.project_text
 
 sge.Room Event Methods
+----------------------
 
 .. automethod:: sge.Room.event_room_start
 

@@ -10,6 +10,11 @@ without any warranty.
 0.6.0-dev
 ------------------------------------------------------------------------
 
+Specification additions:
++ sge.get_joystick_name
++ sge.get_joystick_id
++ sge.get_joystick_trackballs
+
 Specification misc changes:
 * Joystick handling functions now accept joystick names for "joystick" argument.
 * Joystick events' "joystick" argument renamed to "ID".

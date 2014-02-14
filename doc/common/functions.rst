@@ -17,9 +17,15 @@ Functions
 
 .. autofunction:: sge.get_joysticks
 
+.. autofunction:: sge.get_joystick_name
+
+.. autofunction:: sge.get_joystick_id
+
 .. autofunction:: sge.get_joystick_axes
 
 .. autofunction:: sge.get_joystick_hats
+
+.. autofunction:: sge.get_joystick_trackballs
 
 .. autofunction:: sge.get_joystick_buttons
 

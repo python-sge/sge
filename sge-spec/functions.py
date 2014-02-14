@@ -302,6 +302,34 @@ def get_joysticks():
     # TODO
 
 
+def get_joystick_name(joystick):
+    """Return the name of a joystick.
+
+    Arguments:
+
+    - ``joystick`` -- The number of the joystick to check, where ``0``
+      is the first joystick, or the name of the joystick to check.
+
+    Return :const:`None` if the requested joystick does not exist.
+
+    """
+    # TODO
+
+
+def get_joystick_id(joystick):
+    """Return the number of a joystick, where ``0`` is the first joystick.
+
+    Arguments:
+
+    - ``joystick`` -- The number of the joystick to check, where ``0``
+      is the first joystick, or the name of the joystick to check.
+
+    Return :const:`None` if the requested joystick does not exist.
+
+    """
+    # TODO
+
+
 def get_joystick_axes(joystick):
     """Return the number of axes available on a joystick.
 
@@ -318,6 +346,20 @@ def get_joystick_axes(joystick):
 
 def get_joystick_hats(joystick):
     """Return the number of HATs available on a joystick.
+
+    Arguments:
+
+    - ``joystick`` -- The number of the joystick to check, where ``0``
+      is the first joystick, or the name of the joystick to check.
+
+    Return ``0`` if the requested joystick does not exist.
+
+    """
+    # TODO
+
+
+def get_joystick_trackballs(joystick):
+    """Return the number of trackballs available on a joystick.
 
     Arguments:
 
