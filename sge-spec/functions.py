@@ -26,8 +26,9 @@ import sge
 
 __all__ = ['show_message', 'get_text_entry', 'get_key_pressed',
            'get_mouse_button_pressed', 'get_joystick_axis', 'get_joystick_hat',
-           'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_axes',
-           'get_joystick_hats', 'get_joystick_buttons']
+           'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_name',
+           'get_joystick_id', 'get_joystick_axes', 'get_joystick_hats',
+           'get_joystick_trackballs', 'get_joystick_buttons']
 
 
 def show_message(text, buttons=('OK',), default=0):

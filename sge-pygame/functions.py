@@ -30,8 +30,9 @@ import sge
 
 __all__ = ['show_message', 'get_text_entry', 'get_key_pressed',
            'get_mouse_button_pressed', 'get_joystick_axis', 'get_joystick_hat',
-           'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_axes',
-           'get_joystick_hats', 'get_joystick_buttons', '_scale',
+           'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_name',
+           'get_joystick_id', 'get_joystick_axes', 'get_joystick_hats',
+           'get_joystick_trackballs', 'get_joystick_buttons', '_scale',
            '_get_pygame_color', '_scold_user_on_lose_vs_loose']
 
 
@@ -324,7 +325,7 @@ def get_joystick_button_pressed(joystick, button):
     """
     joystick = get_joystick_id(joystick)
 
-    if (joystick is not None and joystick < len(sge.game._joysticks) and:
+    if (joystick is not None and joystick < len(sge.game._joysticks) and
             button < sge.game._joysticks[joystick].get_numbuttons()):
         return sge.game._joysticks[joystick].get_button(button)
     else:

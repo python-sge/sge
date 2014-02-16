@@ -19,6 +19,15 @@ from __future__ import unicode_literals
 
 import sge
 
+TITLE_HEIGHT = 48
+UPDATE_DELAY = 10
+
+
+class glob(object):
+
+    js_selection_sprite = None
+    js_state_sprite = None
+
 
 class Game(sge.Game):
 
@@ -51,7 +60,141 @@ class Room(sge.Room):
         for i in xrange(sge.get_joystick_buttons(self.current_joystick)):
             self.joystick_buttons.append(sge.get_joystick_button_pressed(
                 self.current_joystick, i))
-    
+
+        glob.js_selection_sprite.draw_clear()
+
+        title_text = 'Joystick {0} ("{1}")'.format(
+            sge.get_joystick_id(self.current_joystick),
+            sge.get_joystick_name(self.current_joystick))
+
+        x = glob.js_selection_sprite.width / 2
+        y = glob.js_selection_sprite.height / 2
+        glob.js_selection_sprite.draw_text(
+            "name", title_text, x, y, color="white", halign=sge.ALIGN_CENTER,
+            valign=sge.ALIGN_MIDDLE)
+
+        self.print_state()
+
+    def print_state(self):
+        lines = []
+
+        for i in xrange(len(self.joystick_axes)):
+            lines.append("Axis {0}: {1}".format(i, self.joystick_axes[i]))
+
+        for i in xrange(len(self.joystick_hats)):
+            lines.append("HAT {0}: {1}".format(
+                i, "{0} x {1}".format(*self.joystick_hats[i])))
+
+        for i in xrange(len(self.joystick_balls)):
+            lines.append("Trackball {0}: {1}".format(
+                i, "{0} x {1}".format(*self.joystick_balls[i])))
+
+        for i in xrange(len(self.joystick_buttons)):
+            lines.append("Button {0}: {1}".format(
+                i, "Pressed" if self.joystick_buttons[i] else "Released"))
+
+        left_text = '\n'.join([lines[i] for i in xrange(0, len(lines), 2)])
+        right_text = '\n'.join([lines[i] for i in xrange(1, len(lines), 2)])
+
+        glob.js_state_sprite.draw_clear()
+        glob.js_state_sprite.draw_text("state", left_text, 0, 0, color="white")
+        x = glob.js_state_sprite.width / 2
+        glob.js_state_sprite.draw_text("state", right_text, x, 0,
+                                       color="white")
+
     def event_room_start(self):
         self.current_joystick = 0
+        self.changed = False
+        self.ball_nonzero = False
         self.set_joystick()
+
+    def event_step(self, time_passed):
+        if self.changed:
+            self.changed = False
+            self.print_state()
+
+        if self.ball_nonzero:
+            # Reset ball motion to 0
+            for i in xrange(len(self.joystick_balls)):
+                self.joystick_balls[i] = (0, 0)
+
+            self.changed = True
+            self.ball_nonzero = False
+
+    def event_key_press(self, key, char):
+        if key == "left":
+            self.current_joystick -= 1
+            self.current_joystick %= sge.get_joysticks()
+            self.set_joystick()
+        elif key == "right":
+            self.current_joystick += 1
+            self.current_joystick %= sge.get_joysticks()
+            self.set_joystick()
+
+    def event_joystick_axis_move(self, name, ID, axis, value):
+        if (self.current_joystick in (name, ID) and
+                axis < len(self.joystick_axes)):
+            self.joystick_axes[axis] = value
+
+        self.changed = True
+
+    def event_joystick_hat_move(self, name, ID, hat, x, y):
+        if (self.current_joystick in (name, ID) and
+                hat < len(self.joystick_hats)):
+            self.joystick_hats[hat] = (x, y)
+
+        self.changed = True
+
+    def event_joystick_trackball_move(self, name, ID, ball, x, y):
+        if (self.current_joystick in (name, ID) and
+                ball < len(self.joystick_balls)):
+            self.joystick_balls[ball] = (x, y)
+
+        self.changed = True
+        self.ball_nonzero = True
+
+    def event_joystick_button_press(self, name, ID, button):
+        if (self.current_joystick in (name, ID) and
+                button < len(self.joystick_buttons)):
+            self.joystick_buttons[button] = True
+
+        self.changed = True
+
+    def event_joystick_button_release(self, name, ID, button):
+        if (self.current_joystick in (name, ID) and
+                button < len(self.joystick_buttons)):
+            self.joystick_buttons[button] = False
+
+        self.changed = True
+
+
+def main():
+    # Create Game object
+    Game(640, 480)
+
+    # Load sprites
+    glob.js_selection_sprite = sge.Sprite(ID="selection", width=sge.game.width,
+                                          height=TITLE_HEIGHT)
+    glob.js_state_sprite = sge.Sprite(ID="state", width=sge.game.width,
+                                      height=(sge.game.height - TITLE_HEIGHT))
+
+    # Load fonts
+    sge.Font('Liberation Sans', ID="name", size=18)
+    sge.Font('Liberation Sans', ID="state", size=14)
+
+    # Create objects
+    selection_object = sge.StellarClass(0, 0, sprite=glob.js_selection_sprite,
+                                        detects_collisions=False)
+    state_object = sge.StellarClass(0, TITLE_HEIGHT,
+                                    sprite=glob.js_state_sprite,
+                                    detects_collisions=False)
+    objects = (selection_object, state_object)
+
+    # Create rooms
+    Room(objects)
+
+    sge.game.start()
+
+
+if __name__ == '__main__':
+    main()
