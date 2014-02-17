@@ -349,9 +349,11 @@ def get_joystick_name(joystick):
 
     """
     if isinstance(joystick, int):
-        return sge.game._joysticks[joystick].get_name()
-    else:
+        return sge.game._js_names.setdefault(joystick)
+    elif joystick in sge.game._js_names.values():
         return joystick
+    else:
+        return None
 
 
 def get_joystick_id(joystick):
@@ -365,11 +367,9 @@ def get_joystick_id(joystick):
     Return :const:`None` if the requested joystick does not exist.
 
     """
-    for js in sge.game._joysticks:
-        if js.get_name() == joystick:
-            return js.get_id()
-
-    if isinstance(joystick, int):
+    if not isinstance(joystick, int):
+        return sge.game._js_ids.setdefault(joystick)
+    elif joystick in sge.game._js_ids.values():
         return joystick
     else:
         return None

@@ -322,6 +322,8 @@ class Game(object):
         self._running = False
         self._clock = pygame.time.Clock()
         self._joysticks = []
+        self._js_names = {}
+        self._js_ids = {}
         self._pygame_sprites = pygame.sprite.LayeredDirty()
         self.mouse = sge.Mouse()
 
@@ -336,6 +338,9 @@ class Game(object):
             for i in xrange(pygame.joystick.get_count()):
                 joy = pygame.joystick.Joystick(i)
                 joy.init()
+                n = joy.get_name()
+                self._js_names[i] = n
+                self._js_ids[n] = i
                 self._joysticks.append(joy)
 
         if not pygame.font.get_init():
@@ -469,7 +474,7 @@ class Game(object):
                             else:
                                 obj.event_inactive_mouse_button_release(b)
                     elif event.type == pygame.JOYAXISMOTION:
-                        jsname = self._joysticks[event.joy].get_name()
+                        jsname = self._js_names[event.joy]
                         self.event_joystick_axis_move(jsname, event.joy,
                                                       event.axis, event.value)
                         self.current_room.event_joystick_axis_move(
@@ -482,7 +487,7 @@ class Game(object):
                                 obj.event_inactive_joystick_axis_move(
                                     jsname, event.joy, event.axis, event.value)
                     elif event.type == pygame.JOYHATMOTION:
-                        jsname = self._joysticks[event.joy].get_name()
+                        jsname = self._js_names[event.joy]
                         self.event_joystick_hat_move(jsname, event.joy,
                                                      event.hat, *event.value)
                         self.current_room.event_joystick_hat_move(
@@ -495,7 +500,7 @@ class Game(object):
                                 obj.event_inactive_joystick_hat_move(
                                     jsname, event.joy, event.hat, *event.value)
                     elif event.type == pygame.JOYBALLMOTION:
-                        jsname = self._joysticks[event.joy].get_name()
+                        jsname = self._js_names[event.joy]
                         self.event_joystick_trackball_move(
                             jsname, event.joy, event.ball, *event.rel)
                         self.current_room.event_joystick_trackball_move(
@@ -508,7 +513,7 @@ class Game(object):
                                 obj.event_inactive_joystick_trackball_move(
                                     jsname, event.joy, event.ball, *event.rel)
                     elif event.type == pygame.JOYBUTTONDOWN:
-                        jsname = self._joysticks[event.joy].get_name()
+                        jsname = self._js_names[event.joy]
                         self.event_joystick_button_press(jsname, event.joy,
                                                          event.button)
                         self.current_room.event_joystick_button_press(
@@ -521,7 +526,7 @@ class Game(object):
                                 obj.event_inactive_joystick_button_press(
                                     jsname, event.joy, event.button)
                     elif event.type == pygame.JOYBUTTONUP:
-                        jsname = self._joysticks[event.joy].get_name()
+                        jsname = self._js_names[event.joy]
                         self.event_joystick_button_release(jsname, event.joy,
                                                            event.button)
                         self.current_room.event_joystick_button_release(
@@ -769,7 +774,7 @@ class Game(object):
                     for obj in self.current_room.objects:
                         obj.event_paused_mouse_button_release(b)
                 elif event.type == pygame.JOYAXISMOTION:
-                    jsname = self._joysticks[event.joy].get_name()
+                    jsname = self._js_names[event.joy]
                     self.event_paused_joystick_axis_move(
                         jsname, event.joy, event.axis, event.value)
                     self.current_room.event_paused_joystick_axis_move(
@@ -778,7 +783,7 @@ class Game(object):
                         obj.event_paused_joystick_axis_move(
                             jsname, event.joy, event.axis, event.value)
                 elif event.type == pygame.JOYHATMOTION:
-                    jsname = self._joysticks[event.joy].get_name()
+                    jsname = self._js_names[event.joy]
                     self.event_paused_joystick_hat_move(
                         jsname, event.joy, event.hat, *event.value)
                     self.current_room.event_paused_joystick_hat_move(
@@ -787,7 +792,7 @@ class Game(object):
                         obj.event_paused_joystick_hat_move(
                             jsname, event.joy, event.hat, *event.value)
                 elif event.type == pygame.JOYBALLMOTION:
-                    jsname = self._joysticks[event.joy].get_name()
+                    jsname = self._js_names[event.joy]
                     self.event_paused_joystick_trackball_move(
                         jsname, event.joy, event.ball, *event.rel)
                     self.current_room.event_paused_joystick_trackball_move(
@@ -796,7 +801,7 @@ class Game(object):
                         obj.event_paused_joystick_trackball_move(
                             jsname, event.joy, event.ball, *event.rel)
                 elif event.type == pygame.JOYBUTTONDOWN:
-                    jsname = self._joysticks[event.joy].get_name()
+                    jsname = self._js_names[event.joy]
                     self.event_paused_joystick_button_press(
                         jsname, event.joy, event.button)
                     self.current_room.event_paused_joystick_button_press(
@@ -805,6 +810,7 @@ class Game(object):
                         obj.event_paused_joystick_button_press(
                             jsname, event.joy, event.button)
                 elif event.type == pygame.JOYBUTTONUP:
+                    jsname = self._js_names[event.joy]
                     self.event_paused_joystick_button_release(
                         jsname, event.joy, event.button)
                     self.current_room.event_paused_joystick_button_release(
