@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 # Splitscreen Example
-# Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net>
+# Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -46,9 +46,8 @@ class Circle(sge.StellarClass):
 
     def set_color(self):
         self.image_blend = self.normal_image_blend
-        for obj in sge.game.current_room.objects:
-            if (obj is not self and isinstance(obj, Circle) and
-                    self.collides(obj)):
+        for obj in sge.game.current_room.objects_by_class[Circle]:
+            if obj is not self and self.collides(obj):
                 self.image_blend = 'olive'
                 break
 
@@ -86,6 +85,8 @@ class Circle(sge.StellarClass):
 def main():
     # Create Game object
     Game(width=640, height=480)
+
+    sge.game.register_class(Circle)
 
     # Load sprites
     sge.Sprite('circle', width=32, height=32, origin_x=16, origin_y=16)
