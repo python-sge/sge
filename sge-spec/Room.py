@@ -63,8 +63,17 @@ class Room(object):
 
     .. attribute:: objects
 
-       A tuple containing all :class:`sge.StellarClass` objects in the
+       A list containing all :class:`sge.StellarClass` objects in the
        room.  (Read-only)
+
+    .. attribute:: objects_by_class
+
+       A dictionary of lists containing all :class:`sge.StellarClass`
+       objects in the room, separated by class.  The dictionary keys are
+       classes that have been registered with
+       :meth:`sge.Game.register_class`, and the lists contain only
+       those objects which are instances of the class indicated by the
+       respective key.  (Read-only)
 
     .. attribute:: room_number
 

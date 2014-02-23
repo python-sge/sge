@@ -64,8 +64,17 @@ class Room(object):
 
     .. attribute:: objects
 
-       A tuple containing all :class:`sge.StellarClass` objects in the
+       A list containing all :class:`sge.StellarClass` objects in the
        room.  (Read-only)
+
+    .. attribute:: objects_by_class
+
+       A dictionary of lists containing all :class:`sge.StellarClass`
+       objects in the room, separated by class.  The dictionary keys are
+       classes that have been registered with
+       :meth:`sge.Game.register_class`, and the lists contain only
+       those objects which are instances of the class indicated by the
+       respective key.  (Read-only)
 
     .. attribute:: room_number
 
@@ -126,7 +135,11 @@ class Room(object):
         self._started = False
         self._has_started = False
 
-        self.objects = ()
+        self.objects = []
+        self.objects_by_class = {}
+        for cls in sge.game.registered_classes:
+            self.objects_by_class[cls] = []
+
         self.add(sge.game.mouse)
         for obj in objects:
             self.add(obj)
@@ -157,9 +170,12 @@ class Room(object):
             obj = sge.game.objects[obj]
 
         if obj not in self.objects:
-            new_objects = list(self.objects)
-            new_objects.append(obj)
-            self.objects = tuple(new_objects)
+            self.objects.append(obj)
+
+            for cls in self.objects_by_class:
+                if isinstance(obj, cls):
+                    self.objects_by_class[cls].append(obj)
+
             if self is sge.game.current_room:
                 sge.game._pygame_sprites.add(obj._pygame_sprite, layer=obj.z)
                 if self._started:

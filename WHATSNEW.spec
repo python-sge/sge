@@ -14,11 +14,15 @@ Specification additions:
 + sge.get_joystick_name
 + sge.get_joystick_id
 + sge.get_joystick_trackballs
++ sge.Game.register_class
++ sge.Game.registered_classes
++ sge.Room.objects_by_class
 
 Specification misc changes:
 * Joystick handling functions now accept joystick names for "joystick" argument.
 * Joystick events' "joystick" argument renamed to "ID".
 * Joystick events now have a "name" argument indicating the joystick name.
+* sge.Room.objects changed from a tuple to a list.
 
 0.6.0
 ------------------------------------------------------------------------

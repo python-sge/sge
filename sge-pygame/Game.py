@@ -115,6 +115,11 @@ class Game(object):
        specified in :data:`sge.image_directories` to use as the window
        icon.  If set to :const:`None`, the SGE chooses the icon.
 
+    .. attribute:: registered_classes
+
+       A list containing all classes which have been registered with
+       :meth:`sge.Game.register_class`.  (Read-only)
+
     .. attribute:: sprites
 
        A dictionary containing all loaded sprites, indexed by the
@@ -303,6 +308,7 @@ class Game(object):
         self.window_text = window_text
         self.window_icon = window_icon
 
+        self.registered_classes = []
         self.sprites = {}
         self.background_layers = {}
         self.backgrounds = {}
@@ -878,6 +884,23 @@ class Game(object):
     def unpause(self):
         """Unpause the game."""
         self._paused = False
+
+    def register_class(self, cls):
+        """Register a class with the SGE.
+
+        Registered classes can be used to index objects by, e.g. for
+        :attr:`sge.Room.objects_by_class`.  A list of all currently
+        registered classes can be found in :attr:`registered_classes`.
+
+        """
+        if cls not in self.registered_classes:
+            self.registered_classes.append(cls)
+
+            for room in self.rooms:
+                room.objects_by_class[cls] = []
+                for obj in room.objects:
+                    if isinstance(obj, cls):
+                        room.objects_by_class[cls].append(obj)
 
     def event_game_start(self):
         """Game start event.

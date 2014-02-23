@@ -666,7 +666,15 @@ class StellarClass(object):
             for obj in room.objects:
                 if obj is not self:
                     new_objects.append(obj)
-            room.objects = tuple(new_objects)
+            room.objects = new_objects
+
+            for cls in room.objects_by_class:
+                if isinstance(self, cls):
+                    new_objects = []
+                    for obj in room.objects_by_class[cls]:
+                        if obj is not self:
+                            new_objects.append(obj)
+                    room.objects_by_class[cls] = new_objects
 
     def event_create(self):
         """Create event.
