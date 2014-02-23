@@ -551,6 +551,11 @@ class StellarClass(object):
         """
         if isinstance(other, StellarClass):
             others = [other]
+        elif other in sge.game.current_room.objects_by_class:
+            others = []
+            for obj in sge.game.current_room.objects_by_class[other]:
+                if obj.detects_collisions:
+                    others.append(obj)
         else:
             others = []
             for ref in sge.game._colliders:
