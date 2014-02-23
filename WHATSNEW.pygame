@@ -13,6 +13,7 @@ without any warranty.
 Pygame SGE bugfixes:
 - Axis checking taking trackballs into account (outdated behavior)
 - Joystick checks returning None if non-existant components were checked
+- Objects list not being reset when it is supposed to be
 
 0.6.0
 ------------------------------------------------------------------------

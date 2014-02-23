@@ -143,7 +143,7 @@ class Room(object):
         self.add(sge.game.mouse)
         for obj in objects:
             self.add(obj)
-        self._start_objects = self.objects
+        self._start_objects = self.objects[:]
 
         self._object_start_x = {}
         self._object_start_y = {}
@@ -837,7 +837,7 @@ class Room(object):
         self.height = self._start_height
         self.views = self._start_views
         self.background = self._start_background
-        self.objects = self._start_objects
+        self.objects = self._start_objects[:]
 
         for view in self.views:
             view._reset()
