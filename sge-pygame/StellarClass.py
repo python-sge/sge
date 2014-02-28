@@ -1161,84 +1161,44 @@ class StellarClass(object):
                     break
 
             if self.collides(other):
-                other.x = other.xprevious
-                other.y = other.yprevious
-                collision_new = not self.collides(other, self.xprevious,
-                                                  self.yprevious)
-                if collision_new:
-                    xcollision = not self.collides(other, x=self.xprevious)
-                    ycollision = not self.collides(other, y=self.yprevious)
+                self_prev_bbox_left = self.xprevious + self.bbox_x
+                self_prev_bbox_right = self_prev_bbox_left + self.bbox_width
+                self_prev_bbox_top = self.yprevious + self.bbox_y
+                self_prev_bbox_bottom = self_prev_bbox_top + self.bbox_height
+                other_prev_bbox_left = other.xprevious + other.bbox_x
+                other_prev_bbox_right = other_prev_bbox_left + other.bbox_width
+                other_prev_bbox_top = other.yprevious + other.bbox_y
+                other_prev_bbox_bottom = other_prev_bbox_top + other.bbox_height
+
+                if self_prev_bbox_right < other_prev_bbox_left:
+                    xdirection = 1
+                elif self_prev_bbox_left > other_prev_bbox_right:
+                    xdirection = -1
                 else:
-                    xcollision = False
-                    ycollision = False
+                    xdirection = 0
 
-                other.x = other.xprevious
-                other.y = other.yprevious
+                if self_prev_bbox_bottom < other_prev_bbox_top:
+                    ydirection = 1
+                elif self_prev_bbox_top > other_prev_bbox_bottom:
+                    ydirection = -1
+                else:
+                    ydirection = 0
 
-                if xcollision and ycollision:
-                    # Corner collision; determine direction by distance.
-                    if self.xvelocity > 0:
-                        xdepth = (self.bbox_right - other.bbox_left)
-                    else:
-                        xdepth = (other.bbox_right - self.bbox_left)
-
-                    if self.yvelocity > 0:
-                        ydepth = (self.bbox_bottom - other.bbox_top)
-                    else:
-                        ydepth = (other.bbox_bottom - self.bbox_top)
-
-                    if xdepth > ydepth:
-                        if self.xvelocity > 0:
-                            self.event_collision_right(other)
-                            other.event_collision_left(self)
-                        else:
-                            self.event_collision_left(other)
-                            other.event_collision_right(self)
-                    else:
-                        if self.yvelocity > 0:
-                            self.event_collision_bottom(other)
-                            other.event_collision_top(self)
-                        else:
-                            self.event_collision_top(other)
-                            other.event_collision_bottom(self)
-
-                elif xcollision:
-                    # Horizontal collision only.
-                    if self.xvelocity > 0:
+                if xdirection or ydirection:
+                    if xdirection == 1:
                         self.event_collision_right(other)
                         other.event_collision_left(self)
-                    else:
+                    elif xdirection == -1:
                         self.event_collision_left(other)
                         other.event_collision_right(self)
 
-                elif ycollision:
-                    # Vertical collision only.
-                    if self.yvelocity > 0:
+                    if ydirection == 1:
                         self.event_collision_bottom(other)
                         other.event_collision_top(self)
-                    else:
+                    elif ydirection == -1:
                         self.event_collision_top(other)
                         other.event_collision_bottom(self)
-
-                elif collision_new:
-                    # Wedge collision (both vertical and horizontal
-                    # collisions).
-                    if self.xvelocity > 0:
-                        self.event_collision_right(other)
-                        other.event_collision_left(self)
-                    else:
-                        self.event_collision_left(other)
-                        other.event_collision_right(self)
-                    if self.yvelocity > 0:
-                        self.event_collision_bottom(other)
-                        other.event_collision_top(self)
-                    else:
-                        self.event_collision_top(other)
-                        other.event_collision_bottom(self)
-
                 else:
-                    # No directional collision; this is
-                    # a continuous collision.
                     self.event_collision(other)
                     other.event_collision(self)
 
