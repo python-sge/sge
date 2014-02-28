@@ -23,6 +23,9 @@ Specification misc changes:
 * Joystick events' "joystick" argument renamed to "ID".
 * Joystick events now have a "name" argument indicating the joystick name.
 * sge.Room.objects changed from a tuple to a list.
+* xprevious and yprevious of StellarClass now indicate the x and y
+  values of the previous frame rather than the last x and y values
+  different from the current ones.
 
 0.6.0
 ------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 # The SGE Specification
-# Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net> 
+# Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net> 
 # 
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -221,11 +221,13 @@ class StellarClass(object):
 
     .. attribute:: xprevious
 
-       The previous value of :attr:`x`.  (Read-only)
+       The value of :attr:`x` at the end of the previous frame.
+       (Read-only)
 
     .. attribute:: yprevious
 
-       The previous value of :attr:`y`.  (Read-only)
+       The value of :attr:`y` at the end of the previous frame.
+       (Read-only)
 
     """
 

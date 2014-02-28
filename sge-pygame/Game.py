@@ -648,6 +648,11 @@ class Game(object):
                     numviews = len(self.current_room.views)
                     self._background_changed = True
 
+                # Set xprevious and yprevious
+                for obj in self.current_room.objects:
+                    obj.xprevious = obj.x
+                    obj.yprevious = obj.y
+
                 # Redraw
                 if self._background_changed or background is None:
                     w = max(1, self._window.get_width())

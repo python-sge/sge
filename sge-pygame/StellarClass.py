@@ -230,11 +230,13 @@ class StellarClass(object):
 
     .. attribute:: xprevious
 
-       The previous value of :attr:`x`.  (Read-only)
+       The value of :attr:`x` at the end of the previous frame.
+       (Read-only)
 
     .. attribute:: yprevious
 
-       The previous value of :attr:`y`.  (Read-only)
+       The value of :attr:`y` at the end of the previous frame.
+       (Read-only)
 
     """
 
@@ -244,7 +246,6 @@ class StellarClass(object):
 
     @x.setter
     def x(self, value):
-        self.xprevious = self._x
         self._x = value
 
         # Cause the Pygame sprite to make itself dirty
@@ -256,7 +257,6 @@ class StellarClass(object):
 
     @y.setter
     def y(self, value):
-        self.yprevious = self._y
         self._y = value
 
         # Cause the Pygame sprite to make itself dirty
