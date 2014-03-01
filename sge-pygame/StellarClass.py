@@ -339,11 +339,11 @@ class StellarClass(object):
 
     @property
     def bbox_right(self):
-        return self.x + self.bbox_x + self.bbox_width
+        return self.x + self.bbox_x + self.bbox_width - 1
 
     @bbox_right.setter
     def bbox_right(self, value):
-        self.x = value - self.bbox_width - self.bbox_x
+        self.x = value - self.bbox_width - self.bbox_x + 1
 
     @property
     def bbox_top(self):
@@ -355,11 +355,11 @@ class StellarClass(object):
 
     @property
     def bbox_bottom(self):
-        return self.y + self.bbox_y + self.bbox_height
+        return self.y + self.bbox_y + self.bbox_height - 1
 
     @bbox_bottom.setter
     def bbox_bottom(self, value):
-        self.y = value - self.bbox_height - self.bbox_y
+        self.y = value - self.bbox_height - self.bbox_y + 1
 
     @property
     def xvelocity(self):
@@ -1162,24 +1162,24 @@ class StellarClass(object):
 
             if self.collides(other):
                 self_prev_bbox_left = self.xprevious + self.bbox_x
-                self_prev_bbox_right = self_prev_bbox_left + self.bbox_width
+                self_prev_bbox_right = self_prev_bbox_left + self.bbox_width - 1
                 self_prev_bbox_top = self.yprevious + self.bbox_y
-                self_prev_bbox_bottom = self_prev_bbox_top + self.bbox_height
+                self_prev_bbox_bottom = self_prev_bbox_top + self.bbox_height - 1
                 other_prev_bbox_left = other.xprevious + other.bbox_x
-                other_prev_bbox_right = other_prev_bbox_left + other.bbox_width
+                other_prev_bbox_right = other_prev_bbox_left + other.bbox_width - 1
                 other_prev_bbox_top = other.yprevious + other.bbox_y
-                other_prev_bbox_bottom = other_prev_bbox_top + other.bbox_height
+                other_prev_bbox_bottom = other_prev_bbox_top + other.bbox_height - 1
 
-                if self_prev_bbox_right < other_prev_bbox_left:
+                if self_prev_bbox_right <= other_prev_bbox_left:
                     xdirection = 1
-                elif self_prev_bbox_left > other_prev_bbox_right:
+                elif self_prev_bbox_left >= other_prev_bbox_right:
                     xdirection = -1
                 else:
                     xdirection = 0
 
-                if self_prev_bbox_bottom < other_prev_bbox_top:
+                if self_prev_bbox_bottom <= other_prev_bbox_top:
                     ydirection = 1
-                elif self_prev_bbox_top > other_prev_bbox_bottom:
+                elif self_prev_bbox_top >= other_prev_bbox_bottom:
                     ydirection = -1
                 else:
                     ydirection = 0
