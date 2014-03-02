@@ -611,6 +611,7 @@ class Game(object):
                 # Update objects (including mouse)
                 for obj in self.current_room.objects:
                     if obj.active:
+                        obj.event_begin_step(real_time_passed)
                         obj._update(time_passed, delta_mult)
                         obj.event_step(real_time_passed)
                     else:
@@ -621,6 +622,13 @@ class Game(object):
                     obj = ref()
                     if obj is not None:
                         obj._detect_collisions()
+
+                # End step event
+                for obj in self.current_room.objects:
+                    if obj.active:
+                        obj.event_end_step(real_time_passed)
+                    else:
+                        obj.event_inactive_end_step(real_time_passed)
 
                 # Music control
                 if self._music is not None:

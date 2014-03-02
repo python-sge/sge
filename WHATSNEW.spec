@@ -17,6 +17,9 @@ Specification additions:
 + sge.Game.register_class
 + sge.Game.registered_classes
 + sge.Room.objects_by_class
++ sge.StellarClass.event_begin_step
++ sge.StellarClass.event_end_step
++ sge.StellarClass.event_inactive_end_step
 
 Specification misc changes:
 * Joystick handling functions now accept joystick names for "joystick" argument.

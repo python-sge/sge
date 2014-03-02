@@ -694,8 +694,44 @@ class StellarClass(object):
         """Destroy event."""
         pass
 
+    def event_begin_step(self, time_passed):
+        """Begin step event.
+
+        This event is executed each frame before automatic updates to
+        objects (such as the effects of the speed variables).
+
+        See the documentation for :meth:`sge.Game.event_step` for more
+        information.
+
+        .. note::
+
+           Automatic updates, the only occurances between this event and
+           :meth:`sge.StellarClass.event_step`, do not occur, so there
+           is no need for an "inactive" variant of this event.  Use
+           :meth:`sge.StellarClass.event_inactive_step` instead.
+
+        """
+        pass
+
     def event_step(self, time_passed):
         """Step event.
+
+        This event is executed each frame after automatic updates to
+        objects (such as the effects of the speed variables), but before
+        collision events.
+
+        See the documentation for :meth:`sge.Game.event_step` for more
+        information.
+
+        """
+        pass
+
+    def event_end_step(self, time_passed):
+        """Step event.
+
+        This event is executed each frame after automatic updates to
+        objects (such as the effects of the speed variables), but before
+        collision events.
 
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
@@ -900,11 +936,23 @@ class StellarClass(object):
     def event_inactive_step(self, time_passed):
         """Step event when this object is inactive.
 
-        See the documentation for :meth:`sge.Game.event_step` for more
-        information.  The object is considered to be inactive when
-        :attr:`active` is :attr:`False`.
+        See the documentation for :meth:`sge.StellarClass.event_step`
+        for more information.  The object is considered to be inactive
+        when :attr:`active` is :attr:`False`.
 
         """
+        pass
+
+    def event_inactive_end_step(self, time_passed):
+        """End step event when this object is inactive.
+
+        See the documentation for
+        :meth:`sge.StellarClass.event_end_step` for more information.
+        The object is considered to be inactive when :attr:`active` is
+        :attr:`False`.
+
+        """
+        pass
 
     def event_inactive_key_press(self, key, char):
         """Key press event when this object is inactive.
