@@ -936,6 +936,9 @@ def _show_modal(text, default, text_entry, buttons):
     orig_background = background
     sge.game._clock.tick()
 
+    # Make the mouse cursor visible
+    pygame.mouse.set_visible(True)
+
     while sge.game._running:
         # Events
         for event in pygame.event.get():
@@ -971,6 +974,7 @@ def _show_modal(text, default, text_entry, buttons):
                         del text_entered_list[cursor_position]
                         text_entered = ''.join(text_entered_list)
                 elif event.key == pygame.K_ESCAPE:
+                    _finish_modal()
                     return
                 elif event.unicode:
                     if text_entry:
@@ -985,10 +989,13 @@ def _show_modal(text, default, text_entry, buttons):
                     if button_entered == selection:
                         if text_entry:
                             if selection:
+                                _finish_modal()
                                 return text_entered
                             else:
+                                _finish_modal()
                                 return None
                         else:
+                            _finish_modal()
                             return selection
                     else:
                         button_entered = None
@@ -1027,10 +1034,13 @@ def _show_modal(text, default, text_entry, buttons):
                 if button_entered == selection:
                     if text_entry:
                         if selection:
+                            _finish_modal()
                             return text_entered
                         else:
+                            _finish_modal()
                             return None
                     else:
+                        _finish_modal()
                         return selection
                 else:
                     button_entered = None
@@ -1060,10 +1070,13 @@ def _show_modal(text, default, text_entry, buttons):
                             rect.top <= y <= rect.bottom):
                         if text_entry:
                             if button_clicked:
+                                _finish_modal()
                                 return text_entered
                             else:
+                                _finish_modal()
                                 return
                         else:
+                            _finish_modal()
                             return button_clicked
                     else:
                         button_clicked = None
@@ -1071,6 +1084,7 @@ def _show_modal(text, default, text_entry, buttons):
                 if sge.DEBUG:
                     print('Quit requested by the system.')
                 pygame.event.post(event)
+                _finish_modal()
                 return
             elif event.type == pygame.VIDEORESIZE:
                 if sge.DEBUG:
@@ -1120,10 +1134,10 @@ def _show_modal(text, default, text_entry, buttons):
 
         pygame.display.flip()
 
-    # Restore the look of the screen from before
-    window.blit(screenshot, (0, 0))
-    pygame.display.update()
+
+def _finish_modal():
     sge.game._background_changed = True
+    sge.game.mouse.set_cursor()
 
 
 def _scale(surface, width, height):

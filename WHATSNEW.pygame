@@ -15,6 +15,7 @@ Pygame SGE bugfixes:
 - Joystick checks returning None if non-existant components were checked
 - Objects list not being reset when it is supposed to be
 - Directional collision detection being faulty
+- Mouse being invisible while a modal dialog box was shown
 
 0.6.0
 ------------------------------------------------------------------------

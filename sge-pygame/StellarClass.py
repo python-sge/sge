@@ -559,8 +559,8 @@ class StellarClass(object):
         else:
             others = []
             for ref in sge.game._colliders:
-                if isinstance(obj(), other):
-                    others.append(obj())
+                if isinstance(ref(), other):
+                    others.append(ref())
 
         # Change x and y to be offset values; these are easier to use.
         if x is not None:
