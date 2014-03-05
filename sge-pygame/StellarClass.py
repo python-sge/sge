@@ -614,15 +614,16 @@ class StellarClass(object):
                             other._hitmask[
                                 a + other_xoffset][b + other_yoffset]):
                             return True
-
-                return False
                         
             else:
                 # Use bounding boxes.
-                return (self.bbox_left + x < other.bbox_right and
+                if (self.bbox_left + x < other.bbox_right and
                         self.bbox_right + x > other.bbox_left and
                         self.bbox_top + y < other.bbox_bottom and
-                        self.bbox_bottom + y > other.bbox_top)
+                        self.bbox_bottom + y > other.bbox_top):
+                    return True
+
+        return False
 
     def set_alarm(self, alarm_id, value):
         """Set an alarm.

@@ -16,6 +16,7 @@ Pygame SGE bugfixes:
 - Objects list not being reset when it is supposed to be
 - Directional collision detection being faulty
 - Mouse being invisible while a modal dialog box was shown
+- Collision detection of multiple objects (e.g. of the same class) not working
 
 0.6.0
 ------------------------------------------------------------------------
