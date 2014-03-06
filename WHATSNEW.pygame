@@ -17,6 +17,7 @@ Pygame SGE bugfixes:
 - Directional collision detection being faulty
 - Mouse being invisible while a modal dialog box was shown
 - Collision detection of multiple objects (e.g. of the same class) not working
+- Custom mouse sprites sometimes appearing behind other objects
 
 0.6.0
 ------------------------------------------------------------------------

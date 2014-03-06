@@ -276,6 +276,11 @@ class StellarClass(object):
         # Cause the Pygame sprite to make itself dirty
         self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
 
+        # Make the mouse have a higher Z-axis value
+        if ("mouse" in sge.game.objects and
+                sge.game.objects["mouse"].z <= value):
+            sge.game.objects["mouse"]._z = value + 1
+
     @property
     def sprite(self):
         return self._sprite
