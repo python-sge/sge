@@ -1428,8 +1428,6 @@ class Mouse(StellarClass):
     def visible(self, value):
         if sge.DEBUG:
             print("mouse.visible has been set to:", value)
-            if value and hasattr(self, "_visible") and not self._visible:
-                raise ValueError
 
         self._visible = value
         self.set_cursor()
