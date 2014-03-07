@@ -72,6 +72,11 @@ class Sprite(object):
 
        The suggested rate in frames per second to animate the image at.
 
+    .. attribute:: speed
+
+       The suggested rate to animate the image at as a factor of
+       :attr:`sge.game.fps`.
+
     .. attribute:: bbox_x
 
        The horizontal location relative to the sprite of the suggested
@@ -135,6 +140,14 @@ class Sprite(object):
         if self._transparent != value:
             self._transparent = value
             self._refresh()
+
+    @property
+    def speed(self):
+        return self.fps / sge.game.fps
+
+    @speed.setter
+    def speed(self, value):
+        self.fps = value * sge.game.fps
 
     @property
     def bbox_x(self):

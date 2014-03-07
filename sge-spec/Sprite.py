@@ -68,6 +68,11 @@ class Sprite(object):
 
        The suggested rate in frames per second to animate the image at.
 
+    .. attribute:: speed
+
+       The suggested rate to animate the image at as a factor of
+       :attr:`sge.game.fps`.
+
     .. attribute:: bbox_x
 
        The horizontal location relative to the sprite of the suggested

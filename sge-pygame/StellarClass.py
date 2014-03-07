@@ -190,6 +190,11 @@ class StellarClass(object):
        The animation rate in frames per second.  If set to
        :const:`None`, the value recommended by the sprite is used.
 
+    .. attribute:: image_speed
+
+       The animation rate as a factor of :attr:`sge.game.fps`.  If set
+       to :const:`None`, the value recommended by the sprite is used.
+
     .. attribute:: image_xscale
 
        The horizontal scale factor for the sprite.
@@ -434,9 +439,20 @@ class StellarClass(object):
                 # This would be caused by a round-off to 0 resulting
                 # from a much too high frame rate.  It would cause a
                 # division by 0 later, so this is meant to prevent that.
-                self._frame_time = 0.01
+                self._frame_time = 0.000001
         else:
             self._frame_time = None
+
+    @property
+    def image_speed(self):
+        return self.image_fps / sge.game.fps
+
+    @image_speed.setter
+    def image_speed(self, value):
+        if value is None:
+            value = self.sprite.speed if self.sprite is not None else 0
+
+        self.image_fps = value * sge.game.fps
 
     def __init__(self, x, y, z=0, ID=None, sprite=None, visible=True,
                  active=True, detects_collisions=True, bbox_x=None,

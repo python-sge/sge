@@ -20,6 +20,8 @@ Specification additions:
 + sge.StellarClass.event_begin_step
 + sge.StellarClass.event_end_step
 + sge.StellarClass.event_inactive_end_step
++ sge.Sprite.speed
++ sge.StellarClass.image_speed
 
 Specification misc changes:
 * Joystick handling functions now accept joystick names for "joystick" argument.

@@ -181,6 +181,11 @@ class StellarClass(object):
        The animation rate in frames per second.  If set to
        :const:`None`, the value recommended by the sprite is used.
 
+    .. attribute:: image_speed
+
+       The animation rate as a factor of :attr:`sge.game.fps`.  If set
+       to :const:`None`, the value recommended by the sprite is used.
+
     .. attribute:: image_xscale
 
        The horizontal scale factor for the sprite.
