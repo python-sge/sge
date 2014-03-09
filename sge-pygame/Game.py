@@ -418,8 +418,11 @@ class Game(object):
                 self._object_start_collision_ellipse[obj.id] = obj.collision_ellipse
                 self._object_start_collision_precise[obj.id] = obj.collision_precise
 
+            display_surface = self._window.copy()
+
             self.rooms[0].start()
             background = None
+            mouse_previous_rect = pygame.Rect(0, 0, 1, 1)
             numviews = 0
             _fps_time = 0
             self._clock.tick()
@@ -574,9 +577,11 @@ class Game(object):
                     elif event.type == pygame.VIDEORESIZE:
                         if sge.DEBUG:
                             print('Video resize detected.')
+                        self._window.blit(display_surface, (0, 0))
                         self._window_width = event.w
                         self._window_height = event.h
                         self._set_mode()
+                        display_surface = self._window.copy()
                         self._background_changed = True
 
                 real_time_passed = self._clock.tick(self.fps)
@@ -658,25 +663,27 @@ class Game(object):
 
                 # Redraw
                 if self._background_changed or background is None:
-                    w = max(1, self._window.get_width())
-                    h = max(1, self._window.get_height())
+                    w = max(1, display_surface.get_width())
+                    h = max(1, display_surface.get_height())
                     background = pygame.Surface((w, h))
                     b = self.current_room.background._get_background()
                     background.blit(b, (self._x, self._y))
-                    self._window.blit(background, (0, 0))
+                    display_surface.blit(background, (0, 0))
                     self._background_changed = False
-                    self._pygame_sprites.clear(self._window, background)
+                    self._pygame_sprites.clear(display_surface, background)
                     for sprite in self._pygame_sprites:
                         sprite.rect = pygame.Rect(0, 0, 1, 1)
                         sprite.image = pygame.Surface((1, 1))
                         sprite.image.set_colorkey((0, 0, 0))
                     self._pygame_sprites.update()
-                    self._pygame_sprites.draw(self._window)
-                    dirty = [self._window.get_rect()]
+                    self._pygame_sprites.draw(display_surface)
+                    dirty = [display_surface.get_rect()]
                 else:
-                    self._pygame_sprites.clear(self._window, background)
+                    self._pygame_sprites.clear(display_surface, background)
                     self._pygame_sprites.update()
-                    dirty = self._pygame_sprites.draw(self._window)
+                    dirty = self._pygame_sprites.draw(display_surface)
+
+                self._window.blit(display_surface, (0, 0))
 
                 top_bar = pygame.Rect(0, 0, w, self._y)
                 bottom_bar = pygame.Rect(0, h - self._y, w, self._y)
@@ -694,6 +701,22 @@ class Game(object):
                 if right_bar.w > 0:
                     self._window.fill((0, 0, 0), right_bar)
                     dirty.append(right_bar)
+
+                if (not self.grab_input and self.mouse.visible and
+                        self.mouse.sprite is not None):
+                    mx, my = pygame.mouse.get_pos()
+                    mouse_rect = pygame.Rect(
+                        mx - self.mouse.sprite.origin_x,
+                        my - self.mouse.sprite.origin_y,
+                        self.mouse.sprite.width, self.mouse.sprite.height)
+                    img = self.mouse.sprite._get_image(
+                        self.mouse.image_index, self.mouse.image_xscale,
+                        self.mouse.image_yscale, self.mouse.image_rotation,
+                        self.mouse.image_alpha, self.mouse.image_blend)
+                    self._window.blit(img, mouse_rect)
+                    dirty.append(mouse_rect)
+                    dirty.append(mouse_previous_rect)
+                    mouse_previous_rect = mouse_rect
 
                 if sge.hardware_rendering:
                     pygame.display.flip()

@@ -531,7 +531,10 @@ class StellarClass(object):
 
         self._rect = pygame.Rect(self.bbox_x, self.bbox_y, self.bbox_width,
                                  self.bbox_height)
-        self._pygame_sprite = _PygameSprite(self)
+        if self.id != "mouse":
+            self._pygame_sprite = _PygameSprite(self)
+        else:
+            self._pygame_sprite = _FakePygameSprite(self)
         self._set_mask()
 
         self.z = z
@@ -1174,7 +1177,7 @@ class StellarClass(object):
 
     @classmethod
     def create(cls, *args, **kwargs):
-        """Create an object of this class in the current room it.
+        """Create an object of this class in the current room.
 
         ``args`` and ``kwargs`` are passed to the constructor method of
         ``cls`` as arguments.  Calling
@@ -1348,7 +1351,6 @@ class Mouse(StellarClass):
                         view.yport <= mouse_y <= view.yport + view.height):
                     # We save this value so that if the mouse is in none of
                     # the views, the last known position in a view is used.
-                    print(mouse_x, view.x, view.xport)
                     self._x = (mouse_x - view.xport) + view.x
                     break
 
@@ -1521,7 +1523,7 @@ class _PygameSprite(pygame.sprite.DirtySprite):
     def __init__(self, parent, *groups):
         # See pygame.sprite.DirtySprite.__init__.__doc__.  ``parent``
         # is a StellarClass object that this object belongs to.
-        super(_PygameSprite, self).__init__(*groups)
+        super().__init__(*groups)
         self.parent = weakref.ref(parent)
         self.image = pygame.Surface((1, 1))
         self.image.set_colorkey((0, 0, 0))
@@ -1673,6 +1675,17 @@ class _PygameSprite(pygame.sprite.DirtySprite):
             if not original_used:
                 self.image = pygame.Surface((1, 1))
                 self.image.set_colorkey((0, 0, 0))
+
+
+class _FakePygameSprite(_PygameSprite):
+
+    # Fake Pygame sprite for "use" by the mouse.
+
+    def update(self):
+        pass
+
+    def update_rect(self):
+        pass
 
 
 class _PygameOneTimeSprite(pygame.sprite.DirtySprite):
