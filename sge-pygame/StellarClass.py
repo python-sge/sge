@@ -1348,7 +1348,8 @@ class Mouse(StellarClass):
                         view.yport <= mouse_y <= view.yport + view.height):
                     # We save this value so that if the mouse is in none of
                     # the views, the last known position in a view is used.
-                    self._x = mouse_x - view.x
+                    print(mouse_x, view.x, view.xport)
+                    self._x = (mouse_x - view.xport) + view.x
                     break
 
             return self._x
@@ -1380,7 +1381,7 @@ class Mouse(StellarClass):
                         view.yport <= mouse_y <= view.yport + view.height):
                     # We save this value so that if the mouse is in none of
                     # the views, the last known position in a view is used.
-                    self._y = mouse_y - view.y
+                    self._y = (mouse_y - view.yport) + view.y
                     break
 
             return self._y
