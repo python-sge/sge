@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -14,11 +14,6 @@
 # 
 # You should have received a copy of the GNU Lesser General Public License
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
-
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import os
 import math
@@ -638,8 +633,8 @@ def _show_modal(text, default, text_entry, buttons):
 
     # Box image
     box = pygame.Surface((box_w, box_h), pygame.SRCALPHA)
-    for i in xrange(0, box_w, box_fill.get_width()):
-        for j in xrange(0, box_h, box_fill.get_height()):
+    for i in range(0, box_w, box_fill.get_width()):
+        for j in range(0, box_h, box_fill.get_height()):
             box.blit(box_fill, (i, j))
 
     # Clear the way for the corners and edges (so transparency works
@@ -661,18 +656,18 @@ def _show_modal(text, default, text_entry, buttons):
     box.blit(box_bottomleft, (0, box_h - box_bottomleft.get_height()))
     box.blit(box_bottomright, (box_w - box_bottomright.get_width(),
                                box_h - box_bottomright.get_height()))
-    for i in xrange(box_topleft.get_width(), box_w - box_topright.get_width(),
+    for i in range(box_topleft.get_width(), box_w - box_topright.get_width(),
                     box_top.get_width()):
         box.blit(box_top, (i, 0))
-    for i in xrange(box_bottomleft.get_width(),
+    for i in range(box_bottomleft.get_width(),
                     box_w - box_bottomright.get_width(),
                     box_bottom.get_width()):
         box.blit(box_bottom, (i, box_h - box_bottom.get_height()))
-    for i in xrange(box_topleft.get_height(),
+    for i in range(box_topleft.get_height(),
                     box_h - box_bottomleft.get_height(),
                     box_left.get_height()):
         box.blit(box_left, (0, i))
-    for i in xrange(box_topright.get_height(),
+    for i in range(box_topright.get_height(),
                     box_h - box_bottomright.get_height(),
                     box_right.get_height()):
         box.blit(box_right, (box_w - box_right.get_width(), i))
@@ -681,8 +676,8 @@ def _show_modal(text, default, text_entry, buttons):
     # Text Entry image
     text_entry_field = pygame.Surface((text_entry_w, text_entry_h),
                                       pygame.SRCALPHA)
-    for i in xrange(0, text_entry_w, text_entry_fill.get_width()):
-        for j in xrange(0, text_entry_h, text_entry_fill.get_height()):
+    for i in range(0, text_entry_w, text_entry_fill.get_width()):
+        for j in range(0, text_entry_h, text_entry_fill.get_height()):
             text_entry_field.blit(text_entry_fill, (i, j))
 
     # Clear the way for the corners and edges (so transparency works
@@ -708,20 +703,20 @@ def _show_modal(text, default, text_entry, buttons):
     text_entry_field.blit(text_entry_bottomright,
                           (text_entry_w - text_entry_bottomright.get_width(),
                            text_entry_h - text_entry_bottomright.get_height()))
-    for i in xrange(text_entry_topleft.get_width(),
+    for i in range(text_entry_topleft.get_width(),
                     text_entry_w - text_entry_topright.get_width(),
                     text_entry_top.get_width()):
         text_entry_field.blit(text_entry_top, (i, 0))
-    for i in xrange(text_entry_bottomleft.get_width(),
+    for i in range(text_entry_bottomleft.get_width(),
                     text_entry_w - text_entry_bottomright.get_width(),
                     text_entry_bottom.get_width()):
         text_entry_field.blit(text_entry_bottom, (
             i, text_entry_h - text_entry_bottom.get_height()))
-    for i in xrange(text_entry_topleft.get_height(),
+    for i in range(text_entry_topleft.get_height(),
                     text_entry_h - text_entry_bottomleft.get_height(),
                     text_entry_left.get_height()):
         text_entry_field.blit(text_entry_left, (0, i))
-    for i in xrange(text_entry_topright.get_height(),
+    for i in range(text_entry_topright.get_height(),
                     text_entry_h - text_entry_bottomright.get_height(),
                     text_entry_right.get_height()):
         text_entry_field.blit(text_entry_right, (
@@ -739,8 +734,8 @@ def _show_modal(text, default, text_entry, buttons):
 
     # Button image
     button = pygame.Surface((button_w, button_h), pygame.SRCALPHA)
-    for i in xrange(0, button_w, button_fill.get_width()):
-        for j in xrange(0, button_h, button_fill.get_height()):
+    for i in range(0, button_w, button_fill.get_width()):
+        for j in range(0, button_h, button_fill.get_height()):
             button.blit(button_fill, (i, j))
 
     # Clear the way for the corners and edges (so transparency works
@@ -765,27 +760,27 @@ def _show_modal(text, default, text_entry, buttons):
     button.blit(button_bottomright,
                 (button_w - button_bottomright.get_width(),
                  button_h - button_bottomright.get_height()))
-    for i in xrange(button_topleft.get_width(),
+    for i in range(button_topleft.get_width(),
                     button_w - button_topright.get_width(),
                     button_top.get_width()):
         button.blit(button_top, (i, 0))
-    for i in xrange(button_bottomleft.get_width(),
+    for i in range(button_bottomleft.get_width(),
                     button_w - button_bottomright.get_width(),
                     button_bottom.get_width()):
         button.blit(button_bottom, (i, button_h - button_bottom.get_height()))
-    for i in xrange(button_topleft.get_height(),
+    for i in range(button_topleft.get_height(),
                     button_h - button_bottomleft.get_height(),
                     button_left.get_height()):
         button.blit(button_left, (0, i))
-    for i in xrange(button_topright.get_height(),
+    for i in range(button_topright.get_height(),
                     button_h - button_bottomright.get_height(),
                     button_right.get_height()):
         button.blit(button_right, (button_w - button_right.get_width(), i))
 
     # Button image when selected
     button_selected = pygame.Surface((button_w, button_h), pygame.SRCALPHA)
-    for i in xrange(0, button_w, button_selected_fill.get_width()):
-        for j in xrange(0, button_h, button_selected_fill.get_height()):
+    for i in range(0, button_w, button_selected_fill.get_width()):
+        for j in range(0, button_h, button_selected_fill.get_height()):
             button_selected.blit(button_selected_fill, (i, j))
 
     # Clear the way for the corners and edges (so transparency works
@@ -812,21 +807,21 @@ def _show_modal(text, default, text_entry, buttons):
     button_selected.blit(button_selected_bottomright,
                          (button_w - button_selected_bottomright.get_width(),
                           button_h - button_selected_bottomright.get_height()))
-    for i in xrange(button_selected_topleft.get_width(),
+    for i in range(button_selected_topleft.get_width(),
                     button_w - button_selected_topright.get_width(),
                     button_selected_top.get_width()):
         button_selected.blit(button_selected_top, (i, 0))
-    for i in xrange(button_selected_bottomleft.get_width(),
+    for i in range(button_selected_bottomleft.get_width(),
                     button_w - button_selected_bottomright.get_width(),
                     button_selected_bottom.get_width()):
         button_selected.blit(
             button_selected_bottom,
             (i, button_h - button_selected_bottom.get_height()))
-    for i in xrange(button_selected_topleft.get_height(),
+    for i in range(button_selected_topleft.get_height(),
                     button_h - button_selected_bottomleft.get_height(),
                     button_selected_left.get_height()):
         button_selected.blit(button_selected_left, (0, i))
-    for i in xrange(button_selected_topright.get_height(),
+    for i in range(button_selected_topright.get_height(),
                     button_h - button_selected_bottomright.get_height(),
                     button_selected_right.get_height()):
         button_selected.blit(
@@ -835,8 +830,8 @@ def _show_modal(text, default, text_entry, buttons):
 
     # Button image when pressed
     button_press = pygame.Surface((button_w, button_h), pygame.SRCALPHA)
-    for i in xrange(0, button_w, button_press_fill.get_width()):
-        for j in xrange(0, button_h, button_press_fill.get_height()):
+    for i in range(0, button_w, button_press_fill.get_width()):
+        for j in range(0, button_h, button_press_fill.get_height()):
             button_press.blit(button_press_fill, (i, j))
 
     # Clear the way for the corners and edges (so transparency works
@@ -862,20 +857,20 @@ def _show_modal(text, default, text_entry, buttons):
     button_press.blit(button_press_bottomright,
                       (button_w - button_press_bottomright.get_width(),
                        button_h - button_press_bottomright.get_height()))
-    for i in xrange(button_press_topleft.get_width(),
+    for i in range(button_press_topleft.get_width(),
                     button_w - button_press_topright.get_width(),
                     button_press_top.get_width()):
         button_press.blit(button_press_top, (i, 0))
-    for i in xrange(button_press_bottomleft.get_width(),
+    for i in range(button_press_bottomleft.get_width(),
                     button_w - button_press_bottomright.get_width(),
                     button_press_bottom.get_width()):
         button_press.blit(button_press_bottom,
                           (i, button_h - button_press_bottom.get_height()))
-    for i in xrange(button_press_topleft.get_height(),
+    for i in range(button_press_topleft.get_height(),
                     button_h - button_press_bottomleft.get_height(),
                     button_press_left.get_height()):
         button_press.blit(button_press_left, (0, i))
-    for i in xrange(button_press_topright.get_height(),
+    for i in range(button_press_topright.get_height(),
                     button_h - button_press_bottomright.get_height(),
                     button_press_right.get_height()):
         button_press.blit(button_press_right,
@@ -890,7 +885,7 @@ def _show_modal(text, default, text_entry, buttons):
     press_buttons = []
     button_rects = []
     button_y = box_h - 8
-    for i in xrange(len(buttons)):
+    for i in range(len(buttons)):
         button_surf = button.copy()
         button_selected_surf = button_selected.copy()
         button_press_surf = button_press.copy()
@@ -923,9 +918,9 @@ def _show_modal(text, default, text_entry, buttons):
         text_entered = ""
         cursor_position = 0
     prev_axis_value = []
-    for j in xrange(get_joysticks()):
+    for j in range(get_joysticks()):
         axes = []
-        for a in xrange(get_joystick_axes(j)):
+        for a in range(get_joystick_axes(j)):
             axes.append(0)
         prev_axis_value.append(axes)
     button_entered = None
@@ -1046,7 +1041,7 @@ def _show_modal(text, default, text_entry, buttons):
                     button_entered = None
             elif event.type == pygame.MOUSEMOTION:
                 x, y = event.pos
-                for i in xrange(len(button_rects)):
+                for i in range(len(button_rects)):
                     rect = button_rects[i]
                     if (rect.left <= x <= rect.right and
                             rect.top <= y <= rect.bottom):
@@ -1055,7 +1050,7 @@ def _show_modal(text, default, text_entry, buttons):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == sge.MOUSE_BUTTONS['left']:
                     x, y = event.pos
-                    for i in xrange(len(button_rects)):
+                    for i in range(len(button_rects)):
                         rect = button_rects[i]
                         if (rect.left <= x <= rect.right and
                                 rect.top <= y <= rect.bottom):
@@ -1159,12 +1154,12 @@ def _scale(surface, width, height):
 
 def _get_pygame_color(color):
     # Return the proper Pygame color.
-    if isinstance(color, basestring):
+    if isinstance(color, str):
         c = color.lower()
         if c in sge.COLORS:
             c = sge.COLORS[c]
 
-        return pygame.Color(bytes(c))
+        return pygame.Color(c)
     elif isinstance(color, int):
         r = int((color & 0xff0000) // (256 ** 2))
         g = int((color & 0x00ff00) // 256)

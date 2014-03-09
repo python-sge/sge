@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # Joystick Tester
 # Written in 2014 by Julian Marchant <onpon4@riseup.net>
@@ -11,11 +11,6 @@
 # You should have received a copy of the CC0 Public Domain Dedication
 # along with this software. If not, see
 # <http://creativecommons.org/publicdomain/zero/1.0/>.
-
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import sge
 
@@ -43,21 +38,21 @@ class Room(sge.Room):
 
     def set_joystick(self):
         self.joystick_axes = []
-        for i in xrange(sge.get_joystick_axes(self.current_joystick)):
+        for i in range(sge.get_joystick_axes(self.current_joystick)):
             self.joystick_axes.append(sge.get_joystick_axis(
                 self.current_joystick, i))
 
         self.joystick_hats = []
-        for i in xrange(sge.get_joystick_hats(self.current_joystick)):
+        for i in range(sge.get_joystick_hats(self.current_joystick)):
             self.joystick_hats.append(sge.get_joystick_hat(
                 self.current_joystick, i))
 
         self.joystick_balls = []
-        for i in xrange(sge.get_joystick_trackballs(self.current_joystick)):
+        for i in range(sge.get_joystick_trackballs(self.current_joystick)):
             self.joystick_balls.append(0)
 
         self.joystick_buttons = []
-        for i in xrange(sge.get_joystick_buttons(self.current_joystick)):
+        for i in range(sge.get_joystick_buttons(self.current_joystick)):
             self.joystick_buttons.append(sge.get_joystick_button_pressed(
                 self.current_joystick, i))
 
@@ -78,23 +73,23 @@ class Room(sge.Room):
     def print_state(self):
         lines = []
 
-        for i in xrange(len(self.joystick_axes)):
+        for i in range(len(self.joystick_axes)):
             lines.append("Axis {0}: {1}".format(i, self.joystick_axes[i]))
 
-        for i in xrange(len(self.joystick_hats)):
+        for i in range(len(self.joystick_hats)):
             lines.append("HAT {0}: {1}".format(
                 i, "{0} x {1}".format(*self.joystick_hats[i])))
 
-        for i in xrange(len(self.joystick_balls)):
+        for i in range(len(self.joystick_balls)):
             lines.append("Trackball {0}: {1}".format(
                 i, "{0} x {1}".format(*self.joystick_balls[i])))
 
-        for i in xrange(len(self.joystick_buttons)):
+        for i in range(len(self.joystick_buttons)):
             lines.append("Button {0}: {1}".format(
                 i, "Pressed" if self.joystick_buttons[i] else "Released"))
 
-        left_text = '\n'.join([lines[i] for i in xrange(0, len(lines), 2)])
-        right_text = '\n'.join([lines[i] for i in xrange(1, len(lines), 2)])
+        left_text = '\n'.join([lines[i] for i in range(0, len(lines), 2)])
+        right_text = '\n'.join([lines[i] for i in range(1, len(lines), 2)])
 
         glob.js_state_sprite.draw_clear()
         glob.js_state_sprite.draw_text("state", left_text, 0, 0, color="white")
@@ -115,7 +110,7 @@ class Room(sge.Room):
 
         if self.ball_nonzero:
             # Reset ball motion to 0
-            for i in xrange(len(self.joystick_balls)):
+            for i in range(len(self.joystick_balls)):
                 self.joystick_balls[i] = (0, 0)
 
             self.changed = True

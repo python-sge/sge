@@ -15,11 +15,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import os
 import sys
 import traceback
@@ -307,7 +302,7 @@ class StellarClass(object):
     def detects_collisions(self, value):
         self._detects_collisions = value
         position = None
-        for i in xrange(len(sge.game._colliders)):
+        for i in range(len(sge.game._colliders)):
             if sge.game._colliders[i]() is self:
                 position = i
                 break
@@ -628,8 +623,8 @@ class StellarClass(object):
                 other_xoffset = collide_rect.left - other_rect.left
                 other_yoffset = collide_rect.top - other_rect.top
 
-                for a in xrange(collide_rect.w):
-                    for b in xrange(collide_rect.h):
+                for a in range(collide_rect.w):
+                    for b in range(collide_rect.h):
                         if (self._hitmask[
                                 a + self_xoffset][b + self_yoffset] and
                             other._hitmask[
@@ -1225,7 +1220,7 @@ class StellarClass(object):
 
             # Delete self from the other object's list of colliders to
             # prevent redundancy.
-            for i in xrange(len(other._colliders)):
+            for i in range(len(other._colliders)):
                 if other._colliders[i]() is self:
                     del other._colliders[i]
                     break
@@ -1282,24 +1277,24 @@ class StellarClass(object):
             bottom = top + self.bbox_height
 
             mask = self.sprite._get_precise_mask(self.image_index)[left:right]
-            for i in xrange(len(mask)):
+            for i in range(len(mask)):
                 mask[i] = mask[i][top:bottom]
 
             self._hitmask = mask
         elif self.collision_ellipse:
             # Elliptical mask based on bounding box.
-            self._hitmask = [[False for y in xrange(self.bbox_height)]
-                             for x in xrange(self.bbox_width)]
+            self._hitmask = [[False for y in range(self.bbox_height)]
+                             for x in range(self.bbox_width)]
             a = len(self._hitmask) / 2
             b = len(self._hitmask[0]) / 2
-            for x in xrange(len(self._hitmask)):
-                for y in xrange(len(self._hitmask[x])):
+            for x in range(len(self._hitmask)):
+                for y in range(len(self._hitmask[x])):
                     if ((x - a) / a) ** 2 + ((y - b) / b) ** 2 <= 1:
                         self._hitmask[x][y] = True
         else:
             # Mask is all pixels in the bounding box.
-            self._hitmask = [[True for y in xrange(self.bbox_height)]
-                             for x in xrange(self.bbox_width)]
+            self._hitmask = [[True for y in range(self.bbox_height)]
+                             for x in range(self.bbox_width)]
 
     def _set_speed(self):
         # Set the speed and move direction based on xvelocity and

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # Pong Example
 # Written in 2013, 2014 by Julian Marchant <onpon4@riseup.net>
@@ -17,11 +17,6 @@
 A simple two-player Pong game.
 
 """
-
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import sge
 

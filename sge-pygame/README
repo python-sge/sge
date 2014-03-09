@@ -1,4 +1,4 @@
-Copyright (C) 2013 Julian Marchant <onpon4@riseup.net>
+Copyright (C) 2013, 2014 Julian Marchant <onpon4@riseup.net>
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -29,8 +29,8 @@ along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 Dependencies
 ------------
 
-- Python 2.6 or later, but not Python 3 <http://www.python.org>
-- Pygame 1.9 or later <http://pygame.org>
+- Python 3.0 <http://www.python.org>
+- Pygame 1.9.2 or later <http://pygame.org>
 
 Formats Support
 ---------------

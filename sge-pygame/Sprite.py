@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -14,11 +14,6 @@
 # 
 # You should have received a copy of the GNU Lesser General Public License
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
-
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import os
 import warnings
@@ -303,7 +298,7 @@ class Sprite(object):
 
                     img_w = max(1, sheet.get_width()) // n
                     img_h = max(1, sheet.get_height())
-                    for x in xrange(0, img_w * n, img_w):
+                    for x in range(0, img_w * n, img_w):
                         rect = pygame.Rect(x, 0, img_w, img_h)
                         img = sheet.subsurface(rect)
                         self._baseimages.append(img)
@@ -385,7 +380,7 @@ class Sprite(object):
 
         """
         color = sge._get_pygame_color(color)
-        for i in xrange(len(self._baseimages)):
+        for i in range(len(self._baseimages)):
             if frame is None or frame % len(self._baseimages) == i:
                 self._baseimages[i].set_at((x, y), color)
 
@@ -416,7 +411,7 @@ class Sprite(object):
         color = sge._get_pygame_color(color)
         thickness = abs(thickness)
 
-        for i in xrange(len(self._baseimages)):
+        for i in range(len(self._baseimages)):
             if frame is None or frame % len(self._baseimages) == i:
                 if anti_alias and thickness == 1:
                     pygame.draw.aaline(self._baseimages[i], color, (x1, y1),
@@ -458,7 +453,7 @@ class Sprite(object):
 
         rect = pygame.Rect(x, y, width, height)
 
-        for i in xrange(len(self._baseimages)):
+        for i in range(len(self._baseimages)):
             if frame is None or frame % len(self._baseimages) == i:
                 if fill is not None:
                     pygame.draw.rect(self._baseimages[i],
@@ -503,7 +498,7 @@ class Sprite(object):
 
         rect = pygame.Rect(x, y, width, height)
 
-        for i in xrange(len(self._baseimages)):
+        for i in range(len(self._baseimages)):
             if frame is None or frame % len(self._baseimages) == i:
                 if fill is not None:
                     c = sge._get_pygame_color(fill)
@@ -545,7 +540,7 @@ class Sprite(object):
             # There's no point in trying in this case.
             return
 
-        for i in xrange(len(self._baseimages)):
+        for i in range(len(self._baseimages)):
             if frame is None or frame % len(self._baseimages) == i:
                 if fill is not None:
                     c = sge._get_pygame_color(fill)
@@ -617,7 +612,7 @@ class Sprite(object):
             sge.BLEND_RGB_MAXIMUM: pygame.BLEND_RGB_MAX
             }.setdefault(blend_mode, 0)
 
-        for i in xrange(len(self._baseimages)):
+        for i in range(len(self._baseimages)):
             if frame is None or frame % len(self._baseimages) == i:
                 self._baseimages[i].blit(sprite._baseimages[i], (x, y),
                                          None, pygame_flags)
@@ -700,7 +695,7 @@ class Sprite(object):
         text_rect = text_surf.get_rect()
         box_rect = box_surf.get_rect()
 
-        for i in xrange(len(lines)):
+        for i in range(len(lines)):
             rendered_text = font._font.render(lines[i], anti_alias, color)
             rect = rendered_text.get_rect()
             rect.top = i * font._font.get_linesize()
@@ -741,7 +736,7 @@ class Sprite(object):
         else:
             box_rect.top = y
 
-        for i in xrange(len(self._baseimages)):
+        for i in range(len(self._baseimages)):
             if frame is None or frame % len(self._baseimages) == i:
                 self._baseimages[i].blit(box_surf, box_rect)
 
@@ -756,7 +751,7 @@ class Sprite(object):
           the first frame; set to :const:`None` to clear all frames.
 
         """
-        for i in xrange(len(self._baseimages)):
+        for i in range(len(self._baseimages)):
             if frame is None or frame % len(self._baseimages) == i:
                 if self._baseimages[i].get_flags() & pygame.SRCALPHA:
                     color = pygame.Color(0, 0, 0, 0)
@@ -788,7 +783,7 @@ class Sprite(object):
         reel = pygame.Surface((w, h), pygame.SRCALPHA)
         reel.fill(pygame.Color(0, 0, 0, 0))
 
-        for i in xrange(len(self._baseimages)):
+        for i in range(len(self._baseimages)):
             reel.blit(self._baseimages[i], (self.width * i, 0))
 
         try:
@@ -854,7 +849,7 @@ class Sprite(object):
         # methods to work properly, specifically whenever ``width`` and
         # ``height`` are set.  As a result, setting ``width`` and
         # ``height`` is destructive in this implementation.
-        for i in xrange(len(self._baseimages)):
+        for i in range(len(self._baseimages)):
             if sge.game.scale_smooth:
                 try:
                     self._baseimages[i] = pygame.transform.smoothscale(
@@ -936,15 +931,15 @@ class Sprite(object):
             image.lock()
             mask = []
             if image.get_flags() & pygame.SRCALPHA:
-                for x in xrange(image.get_width()):
+                for x in range(image.get_width()):
                     mask.append([])
-                    for y in xrange(image.get_height()):
+                    for y in range(image.get_height()):
                         mask[x].append(image.get_at((x, y)).a > 0)
             else:
                 colorkey = image.get_colorkey()
-                for x in xrange(image.get_width()):
+                for x in range(image.get_width()):
                     mask.append([])
-                    for y in xrange(image.get_height()):
+                    for y in range(image.get_height()):
                         mask[x].append(image.get_at((x, y)) == colorkey)
 
             image.unlock()

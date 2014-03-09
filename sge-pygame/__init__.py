@@ -360,8 +360,8 @@ along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 Dependencies
 ------------
 
-- Python 2.6 or later, but not Python 3 <http://www.python.org>
-- Pygame 1.9 or later <http://pygame.org>
+- Python 3.0 <http://www.python.org>
+- Pygame 1.9.2 or later <http://pygame.org>
 
 Formats Support
 ---------------
@@ -450,12 +450,7 @@ with the :attr:`sge.StellarClass.image_xscale` and
 
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
-__version__ = "0.6.0.17"
+__version__ = "0.6.0.18"
 
 import os
 

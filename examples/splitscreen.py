@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # Splitscreen Example
 # Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>
@@ -19,16 +19,14 @@ two different parts of the room.
 
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import sge
 import random
 
 
 class Game(sge.Game):
+    def event_game_start(self):
+        self.mouse.sprite = "circle"
+
     def event_key_press(self, key, char):
         if key == 'escape':
             self.end()
@@ -98,14 +96,14 @@ def main():
 
     # Create objects
     objects = []
-    for i in xrange(4):
+    for i in range(4):
         circle = Circle(64, 64, i)
         objects.append(circle)
 
     # Create views
     views = []
-    for x in xrange(2):
-        for y in xrange(2):
+    for x in range(2):
+        for y in range(2):
             views.append(sge.View(0, 0, 320 * x, 240 * y, 320, 240))
 
     # Create rooms

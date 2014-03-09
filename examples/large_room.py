@@ -1,7 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # Large Room Example
-# Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net>
+# Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -18,11 +18,6 @@ This is an example of split-screening being used, where two players see
 two different parts of the room.
 
 """
-
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import sge
 import random
@@ -86,7 +81,7 @@ class Circle(sge.StellarClass):
 
 def main():
     # Create Game object
-    Game(width=320, height=240)
+    Game(width=320, height=240, scale_smooth=True)
 
     # Load sprites
     sge.Sprite('circle', width=32, height=32, origin_x=16, origin_y=16)
@@ -98,15 +93,15 @@ def main():
 
     # Create objects
     objects = []
-    for i in xrange(1):
+    for i in range(1):
         circle = Circle(random.randrange(0, 640), random.randrange(0, 480),
                         i)
         objects.append(circle)
 
     # Create views
     views = []
-    for x in xrange(1):
-        for y in xrange(1):
+    for x in range(1):
+        for y in range(1):
             views.append(sge.View(0, 0, 320 * x, 240 * y, 320, 240))
 
     # Create rooms

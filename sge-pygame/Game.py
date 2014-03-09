@@ -15,11 +15,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import os
 
 import pygame
@@ -336,12 +331,12 @@ class Game(object):
         # Setup sound channels
         self._available_channels = []
         if pygame.mixer.get_init():
-            for i in xrange(pygame.mixer.get_num_channels()):
+            for i in range(pygame.mixer.get_num_channels()):
                 self._available_channels.append(pygame.mixer.Channel(i))
 
         # Setup joysticks
         if pygame.joystick.get_init():
-            for i in xrange(pygame.joystick.get_count()):
+            for i in range(pygame.joystick.get_count()):
                 joy = pygame.joystick.Joystick(i)
                 joy.init()
                 n = joy.get_name()
@@ -1463,5 +1458,5 @@ class Game(object):
         new_num_channels = old_num_channels + 4
         pygame.mixer.set_num_channels(new_num_channels)
 
-        for i in xrange(old_num_channels, new_num_channels):
+        for i in range(old_num_channels, new_num_channels):
             self._available_channels.append(pygame.mixer.Channel(i))

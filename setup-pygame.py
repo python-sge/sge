@@ -1,7 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # SGE setup.py
-# Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -22,8 +22,6 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import print_function
-
 import sys
 from distutils.core import setup
 
@@ -41,7 +39,7 @@ author_email = "onpon4@riseup.net"
 url = "http://stellarengine.nongnu.org"
 license = "GNU Lesser General Public License"
 idir = "sge"
-requires = ["pygame (>= 1.9.0)"]
+requires = ["pygame (> 1.9.1)"]
 
 setup(name=name,
       version='0.6.0',

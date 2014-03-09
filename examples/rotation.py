@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # Circle Popper
 # Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net>
@@ -19,11 +19,6 @@ This is a simple example of a possible game in Stellar Game Engine, just
 to give a general idea of how it will be used.
 
 """
-
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import sge
 import random

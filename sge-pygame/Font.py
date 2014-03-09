@@ -15,11 +15,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import os
 
 import pygame
@@ -180,7 +175,7 @@ class Font(object):
         """
         assert pygame.font.get_init()
 
-        if isinstance(name, basestring):
+        if isinstance(name, str):
             name = (name,)
 
         self.name = ''
@@ -338,7 +333,7 @@ class _PygameSpriteFont(pygame.font.Font):
         self.hsep = hsep
         self.vsep = vsep
 
-        for i in xrange(len(chars)):
+        for i in range(len(chars)):
             self.chars[chars[i]] = i
 
         self.width = self.sprite.width
@@ -360,7 +355,7 @@ class _PygameSpriteFont(pygame.font.Font):
         pg_color = pygame.Color(color)
         sge_color = (pg_color.r, pg_color.g, pg_color.b, pg_color.a)
 
-        for i in xrange(len(text)):
+        for i in range(len(text)):
             if text[i] in self.chars:
                 cimg = self.sprite._get_image(self.chars[text[i]],
                                               xscale=xscale,
