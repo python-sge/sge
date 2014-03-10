@@ -450,7 +450,7 @@ with the :attr:`sge.StellarClass.image_xscale` and
 
 """
 
-__version__ = "0.6.0.20"
+__version__ = "0.6.0.21"
 
 import os
 
