@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -22,18 +22,15 @@ development easier, which allows more rapid development by experienced
 game developers and also helps less experienced game developers learn
 how to develop games.
 
-Official implementations of the SGE are free software (where "free"
-refers to freedom, not price; see the `Free Software Definition
-<http://gnu.org/philosophy/free-sw.html>`_ for more information), and
-the documentation has been (to the extent legally possible) released to
-the public domain via the CC0 license.
+Official implementations of the SGE are `free/libre software
+<http://gnu.org/philosophy/free-sw.html>`_, and the SGE documentation is
+free/libre as well.
 
 Even if it isn't required of you, we encourage you to release your
-games' code under a free software license, such as the GNU General
-Public License, the Expat License (often ambiguously called the "MIT
-License"), or the Apache License 2.0.  Doing so is easy, does not
-negatively affect you, and is highly appreciated as a contribution to
-free software.
+games' code under a free/libre software license, such as the GNU General
+Public License, the Expat License, or the Apache License.  Doing so is
+easy, does not negatively affect you, and is highly appreciated as a
+contribution to free/libre software.
 
 SGE Concepts
 ============
@@ -59,17 +56,10 @@ attributes with ``v_`` or ``p_``.
 Events
 ------
 
-The SGE uses an event-based system, with events defined by special class
-methods with names starting with ``event_``.
-
-Except in certain special cases, the order that events are handled in is
-arbitrary; if Event A and Event B happen at the same time, one
-implementation might handle Event A first, another might handle Event B
-first, and another might handle either Event A or Event B first
-depending on the circumstances.  This is particularly important to keep
-in mind because, for example, there is no guarantee that the Step Event
-will be executed before or after collision detection is applied in a
-given frame, so code should not be written with that expectation.
+The SGE uses an event-based system.  When an event occurs, a certain
+event method (with a name that begins with ``event_``) is called. To
+define actions triggered by events, simply override the appropriate
+event method.
 
 The Mouse
 ---------
@@ -77,12 +67,13 @@ The Mouse
 The mouse is handled somewhat unusually by the SGE.  Rather than having
 functions or variables report the mouse position relative to the screen,
 the mouse position within the room, calculated based on its position on
-the screen by the SGE, is recorded in a special :class:`StellarClass`
-object which represents the mouse.  This mouse object can be found as
-:attr:`sge.game.mouse`, and it has the special object ID, ``"mouse"``.
+the screen by the SGE, is recorded in a special
+:class:`sge.StellarClass` object which represents the mouse.  This mouse
+object can be found as :attr:`sge.game.mouse`, and it has the special
+object ID, ``"mouse"``.
 
-The mouse object differs from most :class:`StellarClass` objects in a
-few ways.  Its speed variables cannot be manually set, and they always
+The mouse object differs from most :class:`sge.StellarClass` objects in
+a few ways.  Its speed variables cannot be manually set, and they always
 report numbers which correspond to the average motion of the mouse
 during the last quarter of a second.  Setting
 :attr:`sge.game.mouse.visible` toggles whether or not the mouse cursor
@@ -90,19 +81,16 @@ itself is visible, and setting :attr:`sge.game.mouse.sprite` sets the
 mouse cursor to the sprite assigned.
 
 In all other ways, the mouse object is exactly the same as all other
-:class:`StellarClass` objects.
+:class:`sge.StellarClass` objects.
 
 Colors
 ------
 
-Colors can be defined for the SGE in a few different ways.
+The SGE accepts a few different formats for defining colors.
 
-HTML Color Names
-~~~~~~~~~~~~~~~~
-
-The sixteen basic HTML colors, provided as strings, are accepted by the
-SGE.  These are case-insensitive, so ``"red"`` is interpreted the same
-as ``"Red"`` or ``"rEd"``.  The colors are:
+The sixteen basic HTML colors, provided as strings, are accepted.  These
+are case-insensitive, so ``"red"`` is interpreted the same as ``"Red"``
+or ``"rEd"``.  The colors are:
 
 - ``"white"``
 - ``"silver"``
@@ -121,16 +109,12 @@ as ``"Red"`` or ``"rEd"``.  The colors are:
 - ``"fuchsia"``
 - ``"purple"``
 
-RGB(A) Tuples
-~~~~~~~~~~~~~
-
-A tuple containing three or four values is accepted as a color by the
-SGE.  Each index represents a component of a color: first red, then
-green, then blue, with the values being integers from ``0`` to ``255``.
-For example, ``(255, 128, 0)`` indicates a color with full red
-intensity, 50% green intensity, and no blue intensity, which is a shade
-of orange.  Note that the components are colors of light, not colors of
-pigment.
+Tuples containing three or four integers are accepted.  Each index
+represents a component of a color: first red, then green, then blue,
+with the values being integers from ``0`` to ``255``.  For example,
+``(255, 128, 0)`` indicates a color with full red intensity, 50% green
+intensity, and no blue intensity, which is a shade of orange.  Note that
+the components are colors of light, not colors of pigment.
 
 The fourth value of the tuple, if specified, indicates the alpha
 transparency of the color, with the possible values again being integers
@@ -142,28 +126,24 @@ unspecified, it is assumed that the color is fully opaque.
 RGBA tuples are the only way to specify alpha transparency of colors in
 SGE.  All other methods for indicating color assume full opacity.
 
-HTML Hex Strings and Integers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+HTML hex strings and integers are accepted.  HTML hex strings are in the
+format ``"#RRGGBB"``, where ``RR``, ``GG``, and ``BB`` are replaced with
+the red, green, and blue components of the color, respectively, in
+hexadecimal form.  ``FF`` (equivalent to 255 in decimal form) is full
+intensity of the respective color, and ``00`` (equivalent to 0 in
+decimal form) is no intensity of the respective color.  For example,
+``"#FF8000"`` is the same as ``(255, 128, 0)``, or orange.
 
-HTML hex strings and integers are accepted as colors by the SGE.  HTML
-hex strings are in the format ``"#RRGGBB"``, where ``RR``, ``GG``, and
-``BB`` are replaced with the red, green, and blue components of the
-color, respectively, in hexadecimal form.  ``FF`` (equivalent to 255 in
-decimal form) is full intensity of the respective color, and ``00``
-(equivalent to 0 in decimal form) is no intensity of the respective
-color.  For example, ``"#FF8000"`` is the same as ``(255, 128, 0)``, or
-orange.
-
-Integers, treated as hexadecimals, are also accepted.  These are in the
-same form as HTML hex strings, but integral.  For example, ``0xFF8000``
-is the same as ``"#FF8000"``.
+Integers, treated as hexadecimals, are accepted in the same form as HTML
+hex strings, but integral.  For example, ``0xFF8000`` is the same as
+``"#FF8000"``.
 
 Position
 --------
 
 In all cases of positioning for the SGE, it is based on a
 two-dimensional graph with each unit being a pixel.  This graph is not
-quite like regular graphs; the horizontal direction, normally called
+quite like regular graphs.  The horizontal direction, normally called
 ``x``, is the same as the x-axis on a regular graph; ``0`` is the
 origin, positive numbers are to the right of the origin, and negative
 numbers are to the left of the origin.  However, in the vertical
@@ -360,13 +340,13 @@ along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 Dependencies
 ------------
 
-- Python 3.0 <http://www.python.org>
+- Python 3.0 or later <http://www.python.org>
 - Pygame 1.9.2 or later <http://pygame.org>
 
 Formats Support
 ---------------
 
-:class:`Sprite` supports the following image formats:
+:class:`sge.Sprite` supports the following image formats:
 
 - PNG
 - JPEG
@@ -379,12 +359,12 @@ Formats Support
 - Netpbm
 - X Pixmap
 
-:class:`Sound` supports the following audio formats:
+:class:`sge.Sound` supports the following audio formats:
 
 - Uncompressed WAV
 - Ogg Vorbis
 
-:class:`Music` supports the following audio formats:
+:class:`sge.Music` supports the following audio formats:
 
 - Ogg Vorbis
 - MP3 (support limited; use not recommended)
@@ -403,8 +383,8 @@ play.  If you encounter problems with loading images or playing sounds,
 check your build of Pygame.
 
 On some systems, the game will crash if :class:`sge.Music` attempts to
-load an unsupported format.  Since MP3's support is limited, it is best
-to avoid using it; consider using Ogg instead.
+load an unsupported format.  Since MP3 support is limited, it is best to
+avoid using it; consider using Ogg Vorbis instead.
 
 Missing Features
 ----------------
@@ -431,26 +411,9 @@ by default.
 Projection methods are highly inefficient, so they should be avoided if
 speed is important; use the :class:`sge.Sprite` draw methods instead.
 
-Other Notes
------------
-
-Changing the :attr:`sge.Sprite.width` and :attr:`sge.Sprite.height`
-attributes of :class:`sge.Sprite` objects is a destructive
-transformation in the Pygame SGE, so each time one of these variables
-changes, pixel information can be lost.  For example, scaling a 128x128
-pixel image down to 16x16 and then back up to 128x128 will not yield the
-same image, but rather either a pixelated version or a blurry version,
-depending on the value of :attr:`sge.game.scale_smooth`.  This is
-because of the way the drawing methods of :class:`sge.Sprite` are
-implemented.  Because of this, you should avoid changing this value as
-much as possible.  For best results, set it only when the sprite is
-created and then leave it alone; do any other routine transformations
-with the :attr:`sge.StellarClass.image_xscale` and
-:attr:`sge.StellarClass.image_yscale` attributes.
-
 """
 
-__version__ = "0.6.0.21"
+__version__ = "0.6.0.22"
 
 import os
 
@@ -506,11 +469,6 @@ if DEBUG:
     print(*sound_directories, sep="; ")
     print("Music directories set to:")
     print(*music_directories, sep="; ")
-
-    if hardware_rendering:
-        print("Hardware rendering enabled.")
-    else:
-        print("Hardware rendering disabled.")
 
 # Uncomment this line to tell SDL to center the window.  Disabled by
 # default because it seems to cause some weird behavior with window

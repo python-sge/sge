@@ -38,9 +38,27 @@ class Sprite(object):
 
        The width of the sprite.
 
+       .. note::
+
+          Changing this attribute is a destructive transformation: it
+          can result in loss of pixel information, especially if it is
+          done repeatedly.  Because of this, it is advised that you do
+          not adjust this value for routine scaling.  Use the
+          :attr:`image_xscale` attribute of a :class:`sge.StellarClass`
+          object instead.
+
     .. attribute:: height
 
        The height of the sprite.
+
+       .. note::
+
+          Changing this attribute is a destructive transformation: it
+          can result in loss of pixel information, especially if it is
+          done repeatedly.  Because of this, it is advised that you do
+          not adjust this value for routine scaling.  Use the
+          :attr:`image_yscale` attribute of a :class:`sge.StellarClass`
+          object instead.
 
     .. attribute:: origin_x
 

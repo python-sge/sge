@@ -20,13 +20,13 @@ along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 Dependencies
 ------------
 
-- Python 2.6 or later, but not Python 3 <http://www.python.org>
-- Pygame 1.9 or later <http://pygame.org>
+- Python 3.0 or later <http://www.python.org>
+- Pygame 1.9.2 or later <http://pygame.org>
 
 Formats Support
 ---------------
 
-:class:`Sprite` supports the following image formats:
+:class:`sge.Sprite` supports the following image formats:
 
 - PNG
 - JPEG
@@ -39,12 +39,12 @@ Formats Support
 - Netpbm
 - X Pixmap
 
-:class:`Sound` supports the following audio formats:
+:class:`sge.Sound` supports the following audio formats:
 
 - Uncompressed WAV
 - Ogg Vorbis
 
-:class:`Music` supports the following audio formats:
+:class:`sge.Music` supports the following audio formats:
 
 - Ogg Vorbis
 - MP3 (support limited; use not recommended)
@@ -63,8 +63,8 @@ play.  If you encounter problems with loading images or playing sounds,
 check your build of Pygame.
 
 On some systems, the game will crash if :class:`sge.Music` attempts to
-load an unsupported format.  Since MP3's support is limited, it is best
-to avoid using it; consider using Ogg instead.
+load an unsupported format.  Since MP3 support is limited, it is best to
+avoid using it; consider using Ogg Vorbis instead.
 
 Missing Features
 ----------------
@@ -90,20 +90,3 @@ by default.
 
 Projection methods are highly inefficient, so they should be avoided if
 speed is important; use the :class:`sge.Sprite` draw methods instead.
-
-Other Notes
------------
-
-Changing the :attr:`sge.Sprite.width` and :attr:`sge.Sprite.height`
-attributes of :class:`sge.Sprite` objects is a destructive
-transformation in the Pygame SGE, so each time one of these variables
-changes, pixel information can be lost.  For example, scaling a 128x128
-pixel image down to 16x16 and then back up to 128x128 will not yield the
-same image, but rather either a pixelated version or a blurry version,
-depending on the value of :attr:`sge.game.scale_smooth`.  This is
-because of the way the drawing methods of :class:`sge.Sprite` are
-implemented.  Because of this, you should avoid changing this value as
-much as possible.  For best results, set it only when the sprite is
-created and then leave it alone; do any other routine transformations
-with the :attr:`sge.StellarClass.image_xscale` and
-:attr:`sge.StellarClass.image_yscale` attributes.

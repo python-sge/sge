@@ -34,13 +34,9 @@ Shebang
 -------
 
 All Python files which are supposed to be executed should start with
-a shebang, which is a line that tells POSIX systems (such as Debian) how
-to execute the file.  In my case, the shebang is::
-
-    #!/usr/bin/env python2
-
-The above shebang should be used if you are writing code for Python 2.
-If you are using Python 3, instead use::
+a shebang, which is a line that tells POSIX systems (such as GNU/Linux
+systems, BSD, and OS X) how to execute the file.  For Python 3, the
+version of Python we will be using, the shebang is::
 
     #!/usr/bin/env python3
 
@@ -56,10 +52,10 @@ License
 
 The file is copyrighted by default, so if you do not give the file a
 license, it will be illegal for anyone to copy and share the program.
-You should always choose a free software license for your programs.  In
-this example, I will use CC0, which is a public domain dedication
-license.  You can use CC0 if you want, or you can choose another
-license.  You can learn about various free software licenses at
+You should always choose a free/libre software license for your
+programs.  In this example, I will use CC0, which is a public domain
+dedication tool.  You can use CC0 if you want, or you can choose another
+license.  You can learn about various free/libre software licenses at
 `http://gnu.org/licenses/ <http://gnu.org/licenses/>`_.
 
 The license text I am using for CC0 is::
@@ -80,18 +76,6 @@ Place your license text just under the shebang so that it is prominent.
 
 Imports
 -------
-
-If you are using Python 2, you should include the following lines which
-replace some Python 2 behaviors with Python 3 behaviors::
-
-    from __future__ import division
-    from __future__ import absolute_import
-    from __future__ import print_function
-    from __future__ import unicode_literals
-
-This collection of statements must not be preceded by any code other
-than comments and the module docstring, so put them right under the
-license text, or the module docstring if you have one.
 
 Because we are using the SGE, we must import the ``sge`` library.  Add
 the following line::
@@ -200,7 +184,7 @@ just do it once, since we're not changing the image? In fact, we can't.
 one frame.  You can think of it as working like a movie projector: if
 you keep the projector on, you will continue to see the image, but as
 soon as the projector stops projecting the image, you can no longer see
-the image from the projector.  :meth:`sge.Game.project_text` and other
+the image from the projector.  :meth:`sge.Room.project_text` and other
 similar projection methods work the same way.
 
 The main Function
@@ -226,8 +210,8 @@ and more well-defined.  This is what our main function will be::
 
         sge.game.start()
 
-First, we create a :class:`Game` object; we don't need to store it in
-anything since it is automatically stored in :data:`sge.game`.
+First, we create a :class:`sge.Game` object; we don't need to store it
+in anything since it is automatically stored in :data:`sge.game`.
 
 Second, we create a :class:`sge.Background` object to specify what the
 background looks like.  We make our background all white, with no
@@ -268,68 +252,7 @@ with black text in the center reading "Hello, world!" Pressing the Esc
 key or clicking on the close button in the window will close the
 program.  Congratulations on writing your first SGE program!
 
-This is the completed Hello World program for Python 2::
-
-    #!/usr/bin/env python2
-
-    # Hello, world!
-    # Written in 2013 by Julian Marchant <onpon4@riseup.net>
-    #
-    # To the extent possible under law, the author(s) have dedicated all
-    # copyright and related and neighboring rights to this software to the
-    # public domain worldwide. This software is distributed without any
-    # warranty.
-    #
-    # You should have received a copy of the CC0 Public Domain Dedication
-    # along with this software. If not, see
-    # <http://creativecommons.org/publicdomain/zero/1.0/>.
-
-    from __future__ import division
-    from __future__ import absolute_import
-    from __future__ import print_function
-    from __future__ import unicode_literals
-
-    import sge
-
-
-    class Game(sge.Game):
-
-        def event_key_press(self, key, char):
-            if key == 'escape':
-                self.event_close()
-
-        def event_close(self):
-            self.end()
-
-
-    class Room(sge.Room):
-
-        def event_step(self, time_passed):
-            self.project_text("my_font", "Hello, world!", sge.game.width / 2,
-                              sge.game.height / 2, 0, color="black",
-                              halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
-
-
-    def main():
-        # Create Game object
-        Game()
-
-        # Create backgrounds
-        background = sge.Background((), "white")
-
-        # Load fonts
-        sge.Font(ID="my_font")
-
-        # Create rooms
-        Room(background=background)
-
-        sge.game.start()
-
-
-    if __name__ == '__main__':
-        main()
-
-Or, if you're using Python 3, this is the final result::
+This is the completed Hello World program::
 
     #!/usr/bin/env python3
 

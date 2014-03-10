@@ -31,6 +31,7 @@ Specification misc changes:
 * xprevious and yprevious of StellarClass now indicate the x and y
   values of the previous frame rather than the last x and y values
   different from the current ones.
+* Changing sge.Sprite.width and sge.Sprite.height is now officially destructive.
 
 0.6.0
 ------------------------------------------------------------------------

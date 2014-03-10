@@ -22,30 +22,23 @@ attributes with ``v_`` or ``p_``.
 Events
 ------
 
-The SGE uses an event-based system, with events defined by special class
-methods with names starting with ``event_``.
-
-Except in certain special cases, the order that events are handled in is
-arbitrary; if Event A and Event B happen at the same time, one
-implementation might handle Event A first, another might handle Event B
-first, and another might handle either Event A or Event B first
-depending on the circumstances.  This is particularly important to keep
-in mind because, for example, there is no guarantee that the Step Event
-will be executed before or after collision detection is applied in a
-given frame, so code should not be written with that expectation.
+The SGE uses an event-based system.  When an event occurs, a certain
+event method (with a name that begins with ``event_``) is called. To
+define actions triggered by events, simply override the appropriate
+event method.
 
 The Mouse
 ---------
 
-The mouse is handled somewhat unusually by the SGE.  Rather than having
 functions or variables report the mouse position relative to the screen,
 the mouse position within the room, calculated based on its position on
-the screen by the SGE, is recorded in a special :class:`StellarClass`
-object which represents the mouse.  This mouse object can be found as
-:attr:`sge.game.mouse`, and it has the special object ID, ``"mouse"``.
+the screen by the SGE, is recorded in a special
+:class:`sge.StellarClass` object which represents the mouse.  This mouse
+object can be found as :attr:`sge.game.mouse`, and it has the special
+object ID, ``"mouse"``.
 
-The mouse object differs from most :class:`StellarClass` objects in a
-few ways.  Its speed variables cannot be manually set, and they always
+The mouse object differs from most :class:`sge.StellarClass` objects in
+a few ways.  Its speed variables cannot be manually set, and they always
 report numbers which correspond to the average motion of the mouse
 during the last quarter of a second.  Setting
 :attr:`sge.game.mouse.visible` toggles whether or not the mouse cursor
@@ -53,19 +46,16 @@ itself is visible, and setting :attr:`sge.game.mouse.sprite` sets the
 mouse cursor to the sprite assigned.
 
 In all other ways, the mouse object is exactly the same as all other
-:class:`StellarClass` objects.
+:class:`sge.StellarClass` objects.
 
 Colors
 ------
 
-Colors can be defined for the SGE in a few different ways.
+The SGE accepts a few different formats for defining colors.
 
-HTML Color Names
-~~~~~~~~~~~~~~~~
-
-The sixteen basic HTML colors, provided as strings, are accepted by the
-SGE.  These are case-insensitive, so ``"red"`` is interpreted the same
-as ``"Red"`` or ``"rEd"``.  The colors are:
+The sixteen basic HTML colors, provided as strings, are accepted.  These
+are case-insensitive, so ``"red"`` is interpreted the same as ``"Red"``
+or ``"rEd"``.  The colors are:
 
 - ``"white"``
 - ``"silver"``
@@ -84,16 +74,12 @@ as ``"Red"`` or ``"rEd"``.  The colors are:
 - ``"fuchsia"``
 - ``"purple"``
 
-RGB(A) Tuples
-~~~~~~~~~~~~~
-
-A tuple containing three or four values is accepted as a color by the
-SGE.  Each index represents a component of a color: first red, then
-green, then blue, with the values being integers from ``0`` to ``255``.
-For example, ``(255, 128, 0)`` indicates a color with full red
-intensity, 50% green intensity, and no blue intensity, which is a shade
-of orange.  Note that the components are colors of light, not colors of
-pigment.
+Tuples containing three or four integers are accepted.  Each index
+represents a component of a color: first red, then green, then blue,
+with the values being integers from ``0`` to ``255``.  For example,
+``(255, 128, 0)`` indicates a color with full red intensity, 50% green
+intensity, and no blue intensity, which is a shade of orange.  Note that
+the components are colors of light, not colors of pigment.
 
 The fourth value of the tuple, if specified, indicates the alpha
 transparency of the color, with the possible values again being integers
@@ -105,28 +91,24 @@ unspecified, it is assumed that the color is fully opaque.
 RGBA tuples are the only way to specify alpha transparency of colors in
 SGE.  All other methods for indicating color assume full opacity.
 
-HTML Hex Strings and Integers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+HTML hex strings and integers are accepted.  HTML hex strings are in the
+format ``"#RRGGBB"``, where ``RR``, ``GG``, and ``BB`` are replaced with
+the red, green, and blue components of the color, respectively, in
+hexadecimal form.  ``FF`` (equivalent to 255 in decimal form) is full
+intensity of the respective color, and ``00`` (equivalent to 0 in
+decimal form) is no intensity of the respective color.  For example,
+``"#FF8000"`` is the same as ``(255, 128, 0)``, or orange.
 
-HTML hex strings and integers are accepted as colors by the SGE.  HTML
-hex strings are in the format ``"#RRGGBB"``, where ``RR``, ``GG``, and
-``BB`` are replaced with the red, green, and blue components of the
-color, respectively, in hexadecimal form.  ``FF`` (equivalent to 255 in
-decimal form) is full intensity of the respective color, and ``00``
-(equivalent to 0 in decimal form) is no intensity of the respective
-color.  For example, ``"#FF8000"`` is the same as ``(255, 128, 0)``, or
-orange.
-
-Integers, treated as hexadecimals, are also accepted.  These are in the
-same form as HTML hex strings, but integral.  For example, ``0xFF8000``
-is the same as ``"#FF8000"``.
+Integers, treated as hexadecimals, are accepted in the same form as HTML
+hex strings, but integral.  For example, ``0xFF8000`` is the same as
+``"#FF8000"``.
 
 Position
 --------
 
 In all cases of positioning for the SGE, it is based on a
 two-dimensional graph with each unit being a pixel.  This graph is not
-quite like regular graphs; the horizontal direction, normally called
+quite like regular graphs.  The horizontal direction, normally called
 ``x``, is the same as the x-axis on a regular graph; ``0`` is the
 origin, positive numbers are to the right of the origin, and negative
 numbers are to the left of the origin.  However, in the vertical
