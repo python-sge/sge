@@ -345,6 +345,9 @@ class Sprite:
             if height is None:
                 height = 32
 
+            self._w = width
+            self._h = height
+
             # Choose name
             self.name = "sge-pygame-dynamicsprite"
             if ID is not None:
@@ -354,9 +357,7 @@ class Sprite:
                 while self.id in sge.game.sprites:
                     self.id += 1
 
-            img = pygame.Surface((width, height), pygame.SRCALPHA)
-            img.fill(pygame.Color(0, 0, 0, 0))
-            self._baseimages.append(img)
+            self.append_frame()
             if sge.DEBUG:
                 print("renamed to {}, ID is {}".format(self.name, self.id))
 
@@ -392,7 +393,9 @@ class Sprite:
 
     def append_frame(self):
         """Append a new blank frame to the end of the sprite."""
-        # TODO
+        img = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        img.fill(pygame.Color(0, 0, 0, 0))
+        self._baseimages.append(img)
 
     def insert_frame(self, frame):
         """Insert a new blank frame into the sprite.
@@ -403,7 +406,9 @@ class Sprite:
           in front of, where ``0`` is the first frame.
 
         """
-        # TODO
+        img = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        img.fill(pygame.Color(0, 0, 0, 0))
+        self._baseimages.insert(frame, img)
 
     def delete_frame(self, frame):
         """Delete a frame from the sprite.
@@ -414,7 +419,7 @@ class Sprite:
           the first frame.
 
         """
-        # TODO
+        del self._baseimages[frame]
 
     def draw_dot(self, x, y, color, frame=None):
         """Draw a single-pixel dot on the sprite.
@@ -888,7 +893,25 @@ class Sprite:
         bottom.
 
         """
-        # TODO
+        tileset = Sprite(name, origin_x=x, origin_y=y)
+        self = cls(width=width, height=height, origin_x=origin_x,
+                   origin_y=origin_y, transparent=transparent, bbox_x=bbox_x,
+                   bbox_y=bbox_y, bbox_width=bbox_width,
+                   bbox_height=bbox_height)
+
+        for i in range(1, rows):
+            for j in range(1, columns):
+                self.append_frame()
+
+        for i in range(rows):
+            for j in range(columns):
+                frame = i * columns + j
+                x_ = (width + xsep) * j
+                y_ = (height + ysep) * i
+                self.draw_sprite(tileset, 0, -x_ - self.origin_x,
+                                 -y_ - self.origin_y, frame=frame)
+
+        return self
 
     @classmethod
     def from_screenshot(cls, x=0, y=0, width=None, height=None):
