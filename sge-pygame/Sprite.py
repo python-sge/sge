@@ -845,6 +845,18 @@ class Sprite:
                 os.path.normpath(os.path.realpath(fname)))
             raise IOError(m)
 
+    def destroy(self):
+        """Destroy the sprite.
+
+        .. note::
+
+           If the sprite is being used, for example, by a
+           :class:`sge.StellarClass` object, it will not be completely
+           destroyed until this use stops.
+
+        """
+        del sge.game.sprites[self.id]
+
     @classmethod
     def from_tileset(cls, name, ID=None, x=0, y=0, columns=1, rows=1, xsep=0,
                      ysep=0, width=1, height=1, origin_x=0, origin_y=0,

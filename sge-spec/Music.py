@@ -1,5 +1,5 @@
 # The SGE Specification
-# Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net> 
+# Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net> 
 # 
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -115,6 +115,10 @@ class Music(object):
         information.
 
         """
+        # TODO
+
+    def destroy(self):
+        """Destroy the music."""
         # TODO
 
     @staticmethod

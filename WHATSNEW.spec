@@ -16,6 +16,16 @@ Specification additions:
 + sge.Sprite.insert_frame
 + sge.Sprite.delete_frame
 + sge.Sprite.from_tileset
++ sge.Sprite.destroy
++ sge.BackgroundLayer.destroy
++ sge.Background.destroy
++ sge.Sound.destroy
++ sge.Music.destroy
++ sge.Room.destroy
++ sge.Room.move
+
+Specification misc changes:
+* room_number argument added to sge.Room.__init__
 
 
 0.7.0

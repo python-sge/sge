@@ -413,7 +413,7 @@ speed is important; use the :class:`sge.Sprite` draw methods instead.
 
 """
 
-__version__ = "0.7.0.1"
+__version__ = "0.7.0.2"
 
 import os
 

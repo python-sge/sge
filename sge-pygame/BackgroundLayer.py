@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -201,6 +201,10 @@ class BackgroundLayer:
             self._frame_time = None
 
         sge.game.background_layers[self.id] = self
+
+    def destroy(self):
+        """Destroy the background layer."""
+        del sge.game.background_layers[self.id]
 
     def _update(self, time_passed):
         # Update the animation frame.

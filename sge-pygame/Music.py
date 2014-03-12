@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -162,6 +162,10 @@ class Music:
 
         sge.game.music[self.id] = self
 
+    def __del__(self):
+        if self.playing:
+            self.stop()
+
     def play(self, start=0, loops=1, maxtime=None, fade_time=None):
         """Play the music.
 
@@ -212,6 +216,10 @@ class Music:
 
         """
         sge.game._music_queue.append((self, start, loops, maxtime, fade_time))
+
+    def destroy(self):
+        """Destroy the music."""
+        del sge.game.music[self.id]
 
     @staticmethod
     def stop(fade_time=None):

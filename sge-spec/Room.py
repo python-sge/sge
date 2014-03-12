@@ -72,13 +72,13 @@ class Room(object):
     .. attribute:: room_number
 
        The index of this room in the game, where ``0`` is the first
-       room, or :const:`None` if this room has not been added to a game.
-       (Read-only)
+       room.  (Read-only)
 
     """
 
     def __init__(self, objects=(), width=None, height=None, views=None,
-                 background=None, background_x=0, background_y=0):
+                 background=None, background_x=0, background_y=0,
+                 room_number=None):
         """Constructor method.
 
         Arguments:
@@ -90,6 +90,9 @@ class Room(object):
         - ``background`` -- The :class:`sge.Background` object used.  If
           set to :const:`None`, a new background will be created with no
           layers and the color set to ``"black"``.
+        - ``room_number`` -- The position in :data:`sge.game.rooms` to
+          insert this room into.  If set to :const:`None`, it will be
+          appended to the end of the list.
 
         All other arguments set the respective initial attributes of the
         room.  See the documentation for :class:`sge.Room` for more
@@ -276,6 +279,28 @@ class Room(object):
 
         See the documentation for :meth:`sge.Sprite.draw_text` for more
         information.
+
+        """
+        # TODO
+
+    def move(self, room_number):
+        """Move the room.
+
+        Arguments:
+
+        - ``room_number`` -- The new position in :data:`sge.game.rooms` to
+          insert this room into.
+
+        """
+        # TODO
+
+    def destroy(self):
+        """Destroy the room.
+
+        .. note::
+
+           If the room is being used, it will not be completely
+           destroyed until this use stops.
 
         """
         # TODO

@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -241,6 +241,10 @@ class Font:
             text_height = min(text_height, height)
 
         return (text_width, text_height)
+
+    def destroy(self):
+        """Destroy the font."""
+        del sge.game.fonts[self.id]
 
     @classmethod
     def from_sprite(cls, sprite, chars, ID=None, hsep=0, vsep=0, size=12,

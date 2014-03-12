@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -90,6 +90,10 @@ class Background:
             sorted_layers.insert(i, layer)
 
         self.layers = tuple(sorted_layers)
+
+    def destroy(self):
+        """Destroy the background."""
+        del sge.game.backgrounds[self.id]
 
     def _get_background(self):
         # Return the static background this frame.

@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -65,6 +65,10 @@ class Sound:
        The number of instances of this sound playing.  (Read-only)
 
     """
+
+    # Defaults, to prevent problems with __del__
+    _sound = None
+    _channels = []
 
     @property
     def max_play(self):
@@ -159,6 +163,12 @@ class Sound:
 
         sge.game.sounds[self.id] = self
 
+    def __del__(self):
+        self.stop()
+
+        while self._channels:
+            sge.game._release_channel(self._channels.pop(0))
+
     def play(self, loops=1, volume=100, balance=0, maxtime=None,
              fade_time=None):
         """Play the sound.
@@ -243,6 +253,10 @@ class Sound:
         """Resume playback of the sound if paused."""
         for channel in self._channels:
             channel.unpause()
+
+    def destroy(self):
+        """Destroy the sound."""
+        del sge.game.sounds[self.id]
 
     @staticmethod
     def stop_all():
