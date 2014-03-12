@@ -21,6 +21,7 @@ Pygame SGE bugfixes:
 - Mouse not working with split-screen
 - Custom mouse sprites not working when the game was paused
 
+
 0.6.0
 ------------------------------------------------------------------------
 

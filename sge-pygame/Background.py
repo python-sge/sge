@@ -23,7 +23,7 @@ import sge
 __all__ = ['Background']
 
 
-class Background(object):
+class Background:
 
     """Background class.
 

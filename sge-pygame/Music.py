@@ -25,7 +25,7 @@ import sge
 __all__ = ['Music']
 
 
-class Music(object):
+class Music:
 
     """Music handling class.
 
@@ -139,7 +139,7 @@ class Music(object):
                 print("Directories searched:")
                 for d in sge.music_directories:
                     print(os.path.normpath(os.path.abspath(d)))
-                msg = 'File "{0}" not found.'.format(self.fname)
+                msg = 'File "{}" not found.'.format(self.fname)
                 raise IOError(msg)
 
             if ID is not None:

@@ -26,7 +26,7 @@ import sge
 __all__ = ['Sprite']
 
 
-class Sprite(object):
+class Sprite:
 
     """Class which holds information for images and animations.
 
@@ -120,6 +120,10 @@ class Sprite(object):
 
        The unique identifier of the sprite.  (Read-only)
 
+    .. attribute:: frames
+
+       The number of animation frames in the sprite.  (Read-only)
+
     """
 
     @property
@@ -184,6 +188,10 @@ class Sprite(object):
         else:
             self._bbox_y = -self.origin_y
 
+    @property
+    def frames(self):
+        return len(self._baseimages)
+
     def __init__(self, name=None, ID=None, width=None, height=None,
                  origin_x=0, origin_y=0, transparent=True, fps=60,
                  bbox_x=None, bbox_y=None, bbox_width=None,
@@ -229,7 +237,7 @@ class Sprite(object):
 
         """
         if sge.DEBUG:
-            print('Creating sprite "{0}"'.format(name))
+            print('Creating sprite "{}"'.format(name))
 
         self.name = name
         self._transparent = None
@@ -250,7 +258,7 @@ class Sprite(object):
                 i = 0
                 while self.id in sge.game.sprites:
                     i += 1
-                    self.id = "{0}{1}".format(self.name, i)
+                    self.id = "{}{}".format(self.name, i)
 
             for path in sge.image_directories:
                 if os.path.isdir(path):
@@ -286,7 +294,7 @@ class Sprite(object):
                     self._baseimages.append(img)
                 except pygame.error:
                     if sge.DEBUG:
-                        print("Ignored {0}; not a valid image.".format(fname_single))
+                        print("Ignored {}; not a valid image.".format(fname_single))
 
             if not self._baseimages and any(fname_frames):
                 # Load the multiple images
@@ -296,7 +304,7 @@ class Sprite(object):
                             self._baseimages.append(pygame.image.load(fname))
                         except pygame.error:
                             if sge.DEBUG:
-                                print("Ignored {0}; not a valid image.".format(fname))
+                                print("Ignored {}; not a valid image.".format(fname))
 
             if not self._baseimages and fname_strip:
                 # Load the strip (sprite sheet)
@@ -322,13 +330,13 @@ class Sprite(object):
                         self._baseimages.append(img)
                 except pygame.error:
                     if sge.DEBUG:
-                        print("Ignored {0}; not a valid image.".format(fname_strip))
+                        print("Ignored {}; not a valid image.".format(fname_strip))
 
             if not self._baseimages:
                 print("Directories searched:")
                 for d in sge.image_directories:
                     print(os.path.normpath(os.path.abspath(d)))
-                msg = 'Files for sprite name "{0}" not found.'.format(name)
+                msg = 'Files for sprite name "{}" not found.'.format(name)
                 raise IOError(msg)
         else:
             # Name is None; default to a blank rectangle.
@@ -350,7 +358,7 @@ class Sprite(object):
             img.fill(pygame.Color(0, 0, 0, 0))
             self._baseimages.append(img)
             if sge.DEBUG:
-                print("renamed to {0}, ID is {1}".format(self.name, self.id))
+                print("renamed to {}, ID is {}".format(self.name, self.id))
 
         if width is None:
             width = 1
@@ -382,6 +390,32 @@ class Sprite(object):
         self._refresh()
         sge.game.sprites[self.id] = self
 
+    def append_frame(self):
+        """Append a new blank frame to the end of the sprite."""
+        # TODO
+
+    def insert_frame(self, frame):
+        """Insert a new blank frame into the sprite.
+
+        Arguments:
+
+        - ``frame`` -- The frame of the sprite to insert the new frame
+          in front of, where ``0`` is the first frame.
+
+        """
+        # TODO
+
+    def delete_frame(self, frame):
+        """Delete a frame from the sprite.
+
+        Arguments:
+
+        - ``frame`` -- The frame of the sprite to delete, where ``0`` is
+          the first frame.
+
+        """
+        # TODO
+
     def draw_dot(self, x, y, color, frame=None):
         """Draw a single-pixel dot on the sprite.
 
@@ -398,8 +432,8 @@ class Sprite(object):
 
         """
         color = sge._get_pygame_color(color)
-        for i in range(len(self._baseimages)):
-            if frame is None or frame % len(self._baseimages) == i:
+        for i in range(self.frames):
+            if frame is None or frame % self.frames == i:
                 self._baseimages[i].set_at((x, y), color)
 
         self._refresh()
@@ -429,8 +463,8 @@ class Sprite(object):
         color = sge._get_pygame_color(color)
         thickness = abs(thickness)
 
-        for i in range(len(self._baseimages)):
-            if frame is None or frame % len(self._baseimages) == i:
+        for i in range(self.frames):
+            if frame is None or frame % self.frames == i:
                 if anti_alias and thickness == 1:
                     pygame.draw.aaline(self._baseimages[i], color, (x1, y1),
                                        (x2, y2))
@@ -471,8 +505,8 @@ class Sprite(object):
 
         rect = pygame.Rect(x, y, width, height)
 
-        for i in range(len(self._baseimages)):
-            if frame is None or frame % len(self._baseimages) == i:
+        for i in range(self.frames):
+            if frame is None or frame % self.frames == i:
                 if fill is not None:
                     pygame.draw.rect(self._baseimages[i],
                                      sge._get_pygame_color(fill), rect, 0)
@@ -516,8 +550,8 @@ class Sprite(object):
 
         rect = pygame.Rect(x, y, width, height)
 
-        for i in range(len(self._baseimages)):
-            if frame is None or frame % len(self._baseimages) == i:
+        for i in range(self.frames):
+            if frame is None or frame % self.frames == i:
                 if fill is not None:
                     c = sge._get_pygame_color(fill)
                     pygame.draw.ellipse(self._baseimages[i], c, rect)
@@ -558,8 +592,8 @@ class Sprite(object):
             # There's no point in trying in this case.
             return
 
-        for i in range(len(self._baseimages)):
-            if frame is None or frame % len(self._baseimages) == i:
+        for i in range(self.frames):
+            if frame is None or frame % self.frames == i:
                 if fill is not None:
                     c = sge._get_pygame_color(fill)
                     pygame.draw.circle(self._baseimages[i], c, (x, y), radius)
@@ -630,8 +664,8 @@ class Sprite(object):
             sge.BLEND_RGB_MAXIMUM: pygame.BLEND_RGB_MAX
             }.setdefault(blend_mode, 0)
 
-        for i in range(len(self._baseimages)):
-            if frame is None or frame % len(self._baseimages) == i:
+        for i in range(self.frames):
+            if frame is None or frame % self.frames == i:
                 self._baseimages[i].blit(sprite._baseimages[i], (x, y),
                                          None, pygame_flags)
 
@@ -754,8 +788,8 @@ class Sprite(object):
         else:
             box_rect.top = y
 
-        for i in range(len(self._baseimages)):
-            if frame is None or frame % len(self._baseimages) == i:
+        for i in range(self.frames):
+            if frame is None or frame % self.frames == i:
                 self._baseimages[i].blit(box_surf, box_rect)
 
         self._refresh()
@@ -769,8 +803,8 @@ class Sprite(object):
           the first frame; set to :const:`None` to clear all frames.
 
         """
-        for i in range(len(self._baseimages)):
-            if frame is None or frame % len(self._baseimages) == i:
+        for i in range(self.frames):
+            if frame is None or frame % self.frames == i:
                 if self._baseimages[i].get_flags() & pygame.SRCALPHA:
                     color = pygame.Color(0, 0, 0, 0)
                 else:
@@ -796,20 +830,53 @@ class Sprite(object):
         """
         # Assuming self.width and self.height are the size of all
         # surfaces in _baseimages (this should be the case).
-        w = self.width * len(self._baseimages)
+        w = self.width * self.frames
         h = self.height
         reel = pygame.Surface((w, h), pygame.SRCALPHA)
         reel.fill(pygame.Color(0, 0, 0, 0))
 
-        for i in range(len(self._baseimages)):
+        for i in range(self.frames):
             reel.blit(self._baseimages[i], (self.width * i, 0))
 
         try:
             pygame.image.save(reel, fname)
         except pygame.error:
-            m = 'Couldn\'t save to "{0}"'.format(
+            m = 'Couldn\'t save to "{}"'.format(
                 os.path.normpath(os.path.realpath(fname)))
             raise IOError(m)
+
+    @classmethod
+    def from_tileset(cls, name, ID=None, x=0, y=0, columns=1, rows=1, xsep=0,
+                     ysep=0, width=1, height=1, origin_x=0, origin_y=0,
+                     transparent=True, bbox_x=None, bbox_y=None,
+                     bbox_width=None, bbox_height=None):
+        """Return a sprite based on the tiles in a tileset.
+
+        Arguments:
+
+        - ``name`` -- The base name of the image file containing the
+          tileset, not including the file extension, to be found in one
+          of the paths specified in :data:`sge.image_directories`.
+        - ``x`` -- The horizontal location relative to the image of the
+          top-leftmost tile in the tileset.
+        - ``y`` -- The vertical location relative to the image of the
+          top-leftmost tile in the tileset.
+        - ``columns`` -- The number of columns in the tileset.
+        - ``rows`` -- The number of rows in the tileset.
+        - ``xsep`` -- The spacing between columns in the tileset.
+        - ``ysep`` -- The spacing between rows in the tileset.
+        - ``width`` -- The width of the tiles.
+        - ``height`` -- The height of the tiles.
+
+        For all other arguments, see the documentation for
+        :meth:`Sprite.__init__`.
+
+        Each tile in the tileset becomes a subimage of the returned
+        sprite, ordered first from left to right and then from top to
+        bottom.
+
+        """
+        # TODO
 
     @classmethod
     def from_screenshot(cls, x=0, y=0, width=None, height=None):
@@ -867,7 +934,7 @@ class Sprite(object):
         # methods to work properly, specifically whenever ``width`` and
         # ``height`` are set.  As a result, setting ``width`` and
         # ``height`` is destructive in this implementation.
-        for i in range(len(self._baseimages)):
+        for i in range(self.frames):
             if sge.game.scale_smooth:
                 try:
                     self._baseimages[i] = pygame.transform.smoothscale(

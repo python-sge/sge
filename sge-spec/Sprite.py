@@ -116,6 +116,10 @@ class Sprite(object):
 
        The unique identifier of the sprite.  (Read-only)
 
+    .. attribute:: frames
+
+       The number of animation frames in the sprite.  (Read-only)
+
     """
 
     def __init__(self, name=None, ID=None, width=None, height=None,
@@ -160,6 +164,32 @@ class Sprite(object):
         All other arguments set the respective initial attributes of the
         sprite.  See the documentation for :class:`Sprite` for more
         information.
+
+        """
+        # TODO
+
+    def append_frame(self):
+        """Append a new blank frame to the end of the sprite."""
+        # TODO
+
+    def insert_frame(self, frame):
+        """Insert a new blank frame into the sprite.
+
+        Arguments:
+
+        - ``frame`` -- The frame of the sprite to insert the new frame
+          in front of, where ``0`` is the first frame.
+
+        """
+        # TODO
+
+    def delete_frame(self, frame):
+        """Delete a frame from the sprite.
+
+        Arguments:
+
+        - ``frame`` -- The frame of the sprite to delete, where ``0`` is
+          the first frame.
 
         """
         # TODO
@@ -400,6 +430,39 @@ class Sprite(object):
         If the sprite has multiple frames, the image file saved will be
         a horizontal reel of each of the frames from left to right with
         no space in between the frames.
+
+        """
+        # TODO
+
+    @classmethod
+    def from_tileset(cls, name, ID=None, x=0, y=0, columns=1, rows=1, xsep=0,
+                     ysep=0, width=1, height=1, origin_x=0, origin_y=0,
+                     transparent=True, bbox_x=None, bbox_y=None,
+                     bbox_width=None, bbox_height=None):
+        """Return a sprite based on the tiles in a tileset.
+
+        Arguments:
+
+        - ``name`` -- The base name of the image file containing the
+          tileset, not including the file extension, to be found in one
+          of the paths specified in :data:`sge.image_directories`.
+        - ``x`` -- The horizontal location relative to the image of the
+          top-leftmost tile in the tileset.
+        - ``y`` -- The vertical location relative to the image of the
+          top-leftmost tile in the tileset.
+        - ``columns`` -- The number of columns in the tileset.
+        - ``rows`` -- The number of rows in the tileset.
+        - ``xsep`` -- The spacing between columns in the tileset.
+        - ``ysep`` -- The spacing between rows in the tileset.
+        - ``width`` -- The width of the tiles.
+        - ``height`` -- The height of the tiles.
+
+        For all other arguments, see the documentation for
+        :meth:`Sprite.__init__`.
+
+        Each tile in the tileset becomes a subimage of the returned
+        sprite, ordered first from left to right and then from top to
+        bottom.
 
         """
         # TODO

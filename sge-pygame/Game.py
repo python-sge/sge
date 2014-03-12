@@ -25,7 +25,7 @@ import sge
 __all__ = ['Game']
 
 
-class Game(object):
+class Game:
 
     """Class which handles the game.
 
@@ -597,7 +597,7 @@ class Game(object):
                     _fps_time += real_time_passed
                     if _fps_time >= 250:
                         _fps_time = 0
-                        self.window_text = "FPS: {0}; Delta: {1}".format(
+                        self.window_text = "FPS: {}; Delta: {}".format(
                             int(1000 / real_time_passed), delta_mult)
 
                 # Step events

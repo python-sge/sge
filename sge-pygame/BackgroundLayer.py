@@ -21,7 +21,7 @@ import sge
 __all__ = ['BackgroundLayer']
 
 
-class BackgroundLayer(object):
+class BackgroundLayer:
 
     """Special class used for background layers.
 

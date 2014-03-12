@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Pygame SGE's documentation!
+Welcome to The Pygame SGE's documentation!
 ======================================
 
 Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>

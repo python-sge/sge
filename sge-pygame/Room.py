@@ -21,7 +21,7 @@ import sge
 __all__ = ['Room']
 
 
-class Room(object):
+class Room:
 
     """Class for rooms.
 

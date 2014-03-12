@@ -21,7 +21,7 @@ import sge
 __all__ = ['View']
 
 
-class View(object):
+class View:
 
     """Class for room views.
 

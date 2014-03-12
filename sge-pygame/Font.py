@@ -25,7 +25,7 @@ import sge
 __all__ = ['Font', '_FakeFont']
 
 
-class Font(object):
+class Font:
 
     """Font handling class.
 

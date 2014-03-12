@@ -7,6 +7,17 @@ without any warranty.
 
 ========================================================================
 
+0.7.0-dev
+------------------------------------------------------------------------
+
+Specification additions:
++ sge.Sprite.frames
++ sge.Sprite.append_frame
++ sge.Sprite.insert_frame
++ sge.Sprite.delete_frame
++ sge.Sprite.from_tileset
+
+
 0.7.0
 ------------------------------------------------------------------------
 
@@ -32,6 +43,7 @@ Specification misc changes:
   values of the previous frame rather than the last x and y values
   different from the current ones.
 * Changing sge.Sprite.width and sge.Sprite.height is now officially destructive.
+
 
 0.6.0
 ------------------------------------------------------------------------

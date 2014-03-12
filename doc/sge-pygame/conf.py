@@ -41,7 +41,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'Pygame SGE'
+project = 'The Pygame SGE'
 copyright = '2012, 2013, 2014 Julian Marchant'
 
 # The version info for the project you're documenting, acts as replacement for

@@ -29,7 +29,7 @@ import sge
 __all__ = ['StellarClass', 'Mouse']
 
 
-class StellarClass(object):
+class StellarClass:
 
     """Class for game objects.
 
