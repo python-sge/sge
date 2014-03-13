@@ -474,7 +474,7 @@ class Sprite(object):
 
         Each tile in the tileset becomes a subimage of the returned
         sprite, ordered first from left to right and then from top to
-        bottom.
+        bottom.  The sprite's :attr:`fps` attribute is set to ``0``.
 
         """
         # TODO

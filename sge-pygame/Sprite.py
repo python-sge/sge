@@ -890,18 +890,20 @@ class Sprite:
 
         Each tile in the tileset becomes a subimage of the returned
         sprite, ordered first from left to right and then from top to
-        bottom.
+        bottom.  The sprite's :attr:`fps` attribute is set to ``0``.
 
         """
-        tileset = Sprite(name, origin_x=x, origin_y=y)
-        self = cls(width=width, height=height, origin_x=origin_x,
+        self = cls(name, ID=ID, width=width, height=height, origin_x=origin_x,
                    origin_y=origin_y, transparent=transparent, bbox_x=bbox_x,
                    bbox_y=bbox_y, bbox_width=bbox_width,
-                   bbox_height=bbox_height)
+                   bbox_height=bbox_height, fps=0)
+        tileset = Sprite(name, origin_x=x, origin_y=y)
 
         for i in range(1, rows):
             for j in range(1, columns):
                 self.append_frame()
+
+        self.draw_clear()
 
         for i in range(rows):
             for j in range(columns):
@@ -911,6 +913,7 @@ class Sprite:
                 self.draw_sprite(tileset, 0, -x_ - self.origin_x,
                                  -y_ - self.origin_y, frame=frame)
 
+        tileset.destroy()
         return self
 
     @classmethod

@@ -26,7 +26,7 @@ import pygame
 import sge
 
 
-__all__ = ['StellarClass', 'Mouse']
+__all__ = ['StellarClass', 'Mouse', '_PygameProjectionSprite']
 
 
 class StellarClass:
@@ -1677,6 +1677,31 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                 self.image.set_colorkey((0, 0, 0))
 
 
+class _PygameProjectionSprite(_PygameSprite):
+
+    # Special Pygame sprite used for room projections.
+
+    def __init__(self, x, y, z, sprite, image_index=0):
+        pygame.sprite.DirtySprite.__init__(self)
+        self.dirty = 1
+        self.x = x
+        self.y = y
+        self.z = z
+        self.sprite = sprite
+        self.image_index = image_index
+        self.image = sprite._get_image(image_index)
+        self.rect = self.image.get_rect()
+        self.x_offset = 0
+        self.y_offset = 0
+
+    def update(self):
+        if self.dirty:
+            self.image = self.sprite._get_image(self.image_index)
+            self.update_rect(self.x, self.y, self.z, self.sprite, 50, 50)
+        else:
+            self.kill()
+
+
 class _FakePygameSprite(_PygameSprite):
 
     # Fake Pygame sprite for "use" by the mouse.
@@ -1694,7 +1719,7 @@ class _PygameOneTimeSprite(pygame.sprite.DirtySprite):
     # itself.
 
     def __init__(self, image, rect, *groups):
-        super(_PygameOneTimeSprite, self).__init__(*groups)
+        super().__init__(*groups)
         self.image = image
         self.rect = rect
         self.dirty = 1

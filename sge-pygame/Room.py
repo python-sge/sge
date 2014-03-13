@@ -293,8 +293,9 @@ class Room:
         """
         sprite = sge.Sprite(None, width=1, height=1)
         sprite.draw_dot(0, 0, color)
-        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
-        self.add(p)
+        p = sge._PygameProjectionSprite(x, y, z, sprite)
+        sprite.destroy()
+        sge.game._pygame_sprites.add(p, layer=z)
 
     def project_line(self, x1, y1, x2, y2, z, color, thickness=1,
                      anti_alias=False):
@@ -327,8 +328,9 @@ class Room:
         y2 -= y
         sprite = sge.Sprite(None, width=w, height=h)
         sprite.draw_line(x1, y1, x2, y2, color, thickness, anti_alias)
-        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
-        self.add(p)
+        p = sge._PygameProjectionSprite(x, y, z, sprite)
+        sprite.destroy()
+        sge.game._pygame_sprites.add(p, layer=z)
 
     def project_rectangle(self, x, y, z, width, height, fill=None,
                           outline=None, outline_thickness=1):
@@ -356,8 +358,9 @@ class Room:
         sprite = sge.Sprite(None, width=w, height=h)
         sprite.draw_rectangle(draw_x, draw_y, w, h, fill, outline,
                               outline_thickness)
-        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
-        self.add(p)
+        p = sge._PygameProjectionSprite(x, y, z, sprite)
+        sprite.destroy()
+        sge.game._pygame_sprites.add(p, layer=z)
 
     def project_ellipse(self, x, y, z, width, height, fill=None,
                         outline=None, outline_thickness=1, anti_alias=False):
@@ -392,8 +395,9 @@ class Room:
         sprite = sge.Sprite(None, width=w, height=h)
         sprite.draw_ellipse(draw_x, draw_y, w, h, fill, outline,
                             outline_thickness)
-        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
-        self.add(p)
+        p = sge._PygameProjectionSprite(x, y, z, sprite)
+        sprite.destroy()
+        sge.game._pygame_sprites.add(p, layer=z)
 
     def project_circle(self, x, y, z, radius, fill=None, outline=None,
                        outline_thickness=1, anti_alias=False):
@@ -417,9 +421,9 @@ class Room:
         sprite = sge.Sprite(None, width=wh, height=wh)
         sprite.draw_circle(xy, xy, radius, fill, outline, outline_thickness,
                            anti_alias)
-        p = _Projection(x - radius, y - radius, z, sprite=sprite,
-                        detects_collisions=False)
-        self.add(p)
+        p = sge._PygameProjectionSprite(x - radius, y - radius, z, sprite)
+        sprite.destroy()
+        sge.game._pygame_sprites.add(p, layer=z)
 
     def project_sprite(self, sprite, image, x, y, z, blend_mode=None):
         """Project a sprite onto the room.
@@ -453,10 +457,9 @@ class Room:
             sge.BLEND_RGB_MAXIMUM: pygame.BLEND_RGB_MAX
             }.setdefault(blend_mode, 0)
 
-        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False,
-                        image_index=image, image_fps=0)
-        p._pygame_sprite.blendmode = pygame_flags
-        self.add(p)
+        p = sge._PygameProjectionSprite(x, y, z, sprite, image)
+        p.blendmode = pygame_flags
+        sge.game._pygame_sprites.add(p, layer=z)
 
     def project_text(self, font, text, x, y, z, width=None, height=None,
                     color="black", halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP,
@@ -486,8 +489,9 @@ class Room:
         sprite = sge.Sprite(None, width=w, height=h)
         sprite.draw_text(font, text, draw_x, draw_y, width, height, color,
                          halign, valign, anti_alias)
-        p = _Projection(x, y, z, sprite=sprite, detects_collisions=False)
-        self.add(p)
+        p = sge._PygameProjectionSprite(x, y, z, sprite)
+        sprite.destroy()
+        sge.game._pygame_sprites.add(p, layer=z)
 
     def move(self, room_number):
         """Move the room.
@@ -889,21 +893,3 @@ class Room:
             obj.bbox_height = self._object_start_bbox_height[obj.id]
             obj.collision_ellipse = self._object_start_collision_ellipse[obj.id]
             obj.collision_precise = self._object_start_collision_precise[obj.id]
-
-
-class _Projection(sge.StellarClass):
-
-    # Object which destroys itself after being shown for one frame.
-
-    def event_create(self):
-        self.detects_collisions = False
-        self.death_alarm = 2
-
-    def event_step(self, time_passed):
-        self.death_alarm -= 1
-        if self.death_alarm <= 0:
-            self.destroy()
-
-    def event_destroy(self):
-        if self.sprite is not None:
-            del sge.game.sprites[self.sprite.id]

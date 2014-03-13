@@ -413,7 +413,7 @@ speed is important; use the :class:`sge.Sprite` draw methods instead.
 
 """
 
-__version__ = "0.7.0.3"
+__version__ = "0.7.0.4"
 
 import os
 
@@ -427,7 +427,7 @@ from .Background import Background
 from .Font import Font
 from .Sound import Sound
 from .Music import Music
-from .StellarClass import StellarClass, Mouse
+from .StellarClass import StellarClass, Mouse, _PygameProjectionSprite
 from .Room import Room
 from .View import View
 from .functions import *

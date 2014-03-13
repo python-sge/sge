@@ -13,6 +13,9 @@ without any warranty.
 Pygame SGE misc changes:
 * Some extra cleanup when sge.Sound and sge.Music objects are garbage-collected.
 
+Pygame SGE bugfixes:
+- Room.draw_sprite destroying the sprite that is projected.
+
 
 0.7.0
 ------------------------------------------------------------------------
