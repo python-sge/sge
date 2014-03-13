@@ -363,6 +363,13 @@ class Game:
         self._object_start_collision_ellipse = {}
         self._object_start_collision_precise = {}
 
+        self._dot_cache = {}
+        self._line_cache = {}
+        self._rectangle_cache = {}
+        self._ellipse_cache = {}
+        self._circle_cache = {}
+        self._text_cache = {}
+
     def start(self):
         """Start the game at the first room.
 

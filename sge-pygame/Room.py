@@ -291,8 +291,15 @@ class Room:
         information.
 
         """
-        sprite = sge.Sprite(None, width=1, height=1)
-        sprite.draw_dot(0, 0, color)
+        i = (color,)
+        if i in sge.game._dot_cache:
+            sprite = sge.game._dot_cache[i]
+        else:
+            sprite = sge.Sprite(None, width=1, height=1)
+            sprite.draw_dot(0, 0, color)
+            sge.game._dot_cache[i] = sprite
+            sprite.destroy()
+
         p = sge._PygameProjectionSprite(x, y, z, sprite)
         sprite.destroy()
         sge.game._pygame_sprites.add(p, layer=z)
@@ -326,8 +333,16 @@ class Room:
         y1 -= y
         x2 -= x
         y2 -= y
-        sprite = sge.Sprite(None, width=w, height=h)
-        sprite.draw_line(x1, y1, x2, y2, color, thickness, anti_alias)
+
+        i = (x1, y1, x2, y2, color, thickness, anti_alias)
+        if i in sge.game._line_cache:
+            sprite = sge.game._line_cache[i]
+        else:
+            sprite = sge.Sprite(None, width=w, height=h)
+            sprite.draw_line(x1, y1, x2, y2, color, thickness, anti_alias)
+            sge.game._line_cache[i] = sprite
+            sprite.destroy()
+
         p = sge._PygameProjectionSprite(x, y, z, sprite)
         sprite.destroy()
         sge.game._pygame_sprites.add(p, layer=z)
@@ -348,16 +363,23 @@ class Room:
         more information.
 
         """
-        outline_thickness = abs(outline_thickness)
-        draw_x = outline_thickness // 2
-        draw_y = outline_thickness // 2
-        x -= draw_x
-        y -= draw_y
-        w = width + outline_thickness
-        h = height + outline_thickness
-        sprite = sge.Sprite(None, width=w, height=h)
-        sprite.draw_rectangle(draw_x, draw_y, w, h, fill, outline,
-                              outline_thickness)
+        i = (width, height, fill, outline, outline_thickness)
+        if i in sge.game._rectangle_cache:
+            sprite = sge.game._rectangle_cache[i]
+        else:
+            outline_thickness = abs(outline_thickness)
+            draw_x = outline_thickness // 2
+            draw_y = outline_thickness // 2
+            x -= draw_x
+            y -= draw_y
+            w = width + outline_thickness
+            h = height + outline_thickness
+            sprite = sge.Sprite(None, width=w, height=h)
+            sprite.draw_rectangle(draw_x, draw_y, w, h, fill, outline,
+                                  outline_thickness)
+            sge.game._rectangle_cache[i] = sprite
+            sprite.destroy()
+
         p = sge._PygameProjectionSprite(x, y, z, sprite)
         sprite.destroy()
         sge.game._pygame_sprites.add(p, layer=z)
@@ -385,16 +407,23 @@ class Room:
         more information.
 
         """
-        outline_thickness = abs(outline_thickness)
-        draw_x = outline_thickness // 2
-        draw_y = outline_thickness // 2
-        x -= draw_x
-        y -= draw_y
-        w = width + outline_thickness
-        h = height + outline_thickness
-        sprite = sge.Sprite(None, width=w, height=h)
-        sprite.draw_ellipse(draw_x, draw_y, w, h, fill, outline,
-                            outline_thickness)
+        i = (width, height, fill, outline, outline_thickness, anti_alias)
+        if i in sge.game._ellipse_cache:
+            sprite = sge.game._ellipse_cache[i]
+        else:
+            outline_thickness = abs(outline_thickness)
+            draw_x = outline_thickness // 2
+            draw_y = outline_thickness // 2
+            x -= draw_x
+            y -= draw_y
+            w = width + outline_thickness
+            h = height + outline_thickness
+            sprite = sge.Sprite(None, width=w, height=h)
+            sprite.draw_ellipse(draw_x, draw_y, w, h, fill, outline,
+                                outline_thickness)
+            sge.game._ellipse_cache[i] = sprite
+            sprite.destroy()
+
         p = sge._PygameProjectionSprite(x, y, z, sprite)
         sprite.destroy()
         sge.game._pygame_sprites.add(p, layer=z)
@@ -415,14 +444,20 @@ class Room:
         more information.
 
         """
-        outline_thickness = abs(outline_thickness)
-        xy = radius + outline_thickness // 2
-        wh = 2 * radius + outline_thickness
-        sprite = sge.Sprite(None, width=wh, height=wh)
-        sprite.draw_circle(xy, xy, radius, fill, outline, outline_thickness,
-                           anti_alias)
+        i = (radius, fill, outline, outline_thickness, anti_alias)
+        if i in sge.game._circle_cache:
+            sprite = sge.game._circle_cache[i]
+        else:
+            outline_thickness = abs(outline_thickness)
+            xy = radius + outline_thickness // 2
+            wh = 2 * radius + outline_thickness
+            sprite = sge.Sprite(None, width=wh, height=wh)
+            sprite.draw_circle(xy, xy, radius, fill, outline, outline_thickness,
+                               anti_alias)
+            sge.game._circle_cache[i] = sprite
+            sprite.destroy()
+
         p = sge._PygameProjectionSprite(x - radius, y - radius, z, sprite)
-        sprite.destroy()
         sge.game._pygame_sprites.add(p, layer=z)
 
     def project_sprite(self, sprite, image, x, y, z, blend_mode=None):
@@ -478,19 +513,25 @@ class Room:
         information.
 
         """
-        if not isinstance(font, sge.Font):
-            font = sge.game.fonts[font]
+        i = (font, text, width, height, color, halign, valign, anti_alias)
+        if i in sge.game._text_cache:
+            sprite = sge.game._text_cache[i]
+        else:
+            if not isinstance(font, sge.Font):
+                font = sge.game.fonts[font]
 
-        w, h = font.get_size(text, width, height)
-        draw_x = {sge.ALIGN_LEFT: 0, sge.ALIGN_CENTER: w / 2,
-                  sge.ALIGN_RIGHT: w}.setdefault(halign, w / 2)
-        draw_y = {sge.ALIGN_TOP: 0, sge.ALIGN_MIDDLE: h / 2,
-                  sge.ALIGN_BOTTOM: h}.setdefault(valign, h / 2)
-        sprite = sge.Sprite(None, width=w, height=h)
-        sprite.draw_text(font, text, draw_x, draw_y, width, height, color,
-                         halign, valign, anti_alias)
+            w, h = font.get_size(text, width, height)
+            draw_x = {sge.ALIGN_LEFT: 0, sge.ALIGN_CENTER: w / 2,
+                      sge.ALIGN_RIGHT: w}.setdefault(halign, w / 2)
+            draw_y = {sge.ALIGN_TOP: 0, sge.ALIGN_MIDDLE: h / 2,
+                      sge.ALIGN_BOTTOM: h}.setdefault(valign, h / 2)
+            sprite = sge.Sprite(None, width=w, height=h)
+            sprite.draw_text(font, text, draw_x, draw_y, width, height, color,
+                             halign, valign, anti_alias)
+            sge.game._text_cache[i] = sprite
+            sprite.destroy()
+
         p = sge._PygameProjectionSprite(x, y, z, sprite)
-        sprite.destroy()
         sge.game._pygame_sprites.add(p, layer=z)
 
     def move(self, room_number):

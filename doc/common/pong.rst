@@ -630,14 +630,9 @@ Let's start by defining some constants::
 There are a couple of ways to display the score.  The most obvious way
 is to project the score each frame, but we are instead going to create a
 custom sprite, an object to display that sprite, and re-draw to it as
-needed.  The reason for this is actually because of the implementation
-I'm using; the information specific to the Pygame SGE warns that
-projection methods are inefficient.  (In fact, the Pygame SGE implements
-these methods by creating a whole new sprite and object every single
-frame, which is an incredibly wasteful method.)  Other than that, using
-this method for more complicated HUDs can prove to be much easier and
-more organized than projecting directly onto the room, so it's good to
-know how to do it.
+needed.  While projection will work just fine for Pong, drawing to a
+sprite will be much easier than projections for more complicated HUDs,
+so it's good to know how to do it.
 
 HUD sprite and object
 ~~~~~~~~~~~~~~~~~~~~~

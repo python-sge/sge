@@ -1,4 +1,4 @@
-Information Specific to the Pygame SGE
+Information specific to the Pygame SGE
 ======================================
 
 License
@@ -56,14 +56,14 @@ For starting position in MOD files, the pattern order number is used
 instead of the number of milliseconds.
 
 If Pygame is built without full image support, :class:`sge.Sprite` will
-only support uncompressed BMP images.  In addition, the pygame.mixer
-module, which is used for audio playback, is optional and depends on
-SDL_mixer; if pygame.mixer is unavailable, sounds and music will not
-play.  If you encounter problems with loading images or playing sounds,
-check your build of Pygame.
+only be able to load uncompressed BMP images.
 
-On some systems, the game will crash if :class:`sge.Music` attempts to
-load an unsupported format.  Since MP3 support is limited, it is best to
+The pygame.mixer module, which is used for all audio playback, is
+optional and depends on SDL_mixer; if pygame.mixer is unavailable,
+sounds and music will not play.
+
+On some systems, :class:`sge.Music` attempting to load an unsupported
+format can crash the game.  Since MP3 support is limited, it is best to
 avoid using it; consider using Ogg Vorbis instead.
 
 Missing Features
@@ -87,6 +87,3 @@ performance in some cases.  It is not enabled by default.  To enable it,
 set :data:`sge.hardware_rendering` to :const:`True`.  The benefit of
 hardware acceleration is usually negligible, which is why it is disabled
 by default.
-
-Projection methods are highly inefficient, so they should be avoided if
-speed is important; use the :class:`sge.Sprite` draw methods instead.
