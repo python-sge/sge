@@ -16,6 +16,7 @@ Pygame SGE misc changes:
 
 Pygame SGE bugfixes:
 - Room.draw_sprite destroying the sprite that is projected.
+- Multiple views not working properly with scaling.
 
 
 0.7.0

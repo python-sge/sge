@@ -1609,8 +1609,8 @@ class _PygameSprite(pygame.sprite.DirtySprite):
             for view in views:
                 x = real_x - view.x - origin_x + view.xport
                 y = real_y - view.y - origin_y + view.yport
-                w = max(1, self.image.get_width())
-                h = max(1, self.image.get_height())
+                w = sprite.width
+                h = sprite.height
                 new_rect = self.image.get_rect()
                 new_rect.left = (round(x * sge.game._xscale) - self.x_offset +
                                  sge.game._x)
@@ -1620,10 +1620,10 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                                x + w <= view.xport + view.width and
                                y >= view.yport and
                                y + h <= view.yport + view.height)
-                within_view = (x + w >= view.xport and
-                               x <= view.xport + view.width and
-                               y + h >= view.yport and
-                               y <= view.yport + view.height)
+                within_view = (x + w > view.xport and
+                               x < view.xport + view.width and
+                               y + h > view.yport and
+                               y < view.yport + view.height)
 
                 if not original_used and inside_view:
                     original_used = True
@@ -1658,15 +1658,17 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                         if y + h > view.yport + view.height:
                             h -= (y + h) - (view.yport + view.height)
 
-                        x = round(x * sge.game._xscale) - self.x_offset
-                        y = round(y * sge.game._yscale) - self.y_offset
-                        cut_x = round(cut_x * sge.game._xscale)
-                        cut_y = round(cut_y * sge.game._yscale)
+                        x = (sge.game._x +
+                             round((x - self.x_offset) * sge.game._xscale))
+                        y = (sge.game._y +
+                             round((y - self.y_offset) * sge.game._yscale))
+                        cut_x *= sge.game._xscale
+                        cut_y *= sge.game._yscale
                         w = round(w * sge.game._xscale)
                         h = round(h * sge.game._yscale)
+                        rect = pygame.Rect(x, y, w, h)
                         cut_rect = pygame.Rect(cut_x, cut_y, w, h)
                         img = self.image.subsurface(cut_rect)
-                        rect = pygame.Rect(x, y, w, h)
 
                     # Create proxy one-time sprite
                     proxy = _PygameOneTimeSprite(img, rect)
