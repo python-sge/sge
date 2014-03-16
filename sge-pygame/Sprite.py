@@ -652,10 +652,9 @@ class Sprite:
         y -= sprite.origin_y
         image %= len(sprite._baseimages)
 
-        if blend_mode is not None:
-            if blend_mode & sge.BLEND_SCREEN:
-                w = "Screen blend mode not supported. Normal blending used instead."
-                warnings.warn(w)
+        if blend_mode is not None and blend_mode & sge.BLEND_SCREEN:
+            w = "Screen blend mode not supported. Normal blending used instead."
+            warnings.warn(w)
 
         pygame_flags = {
             sge.BLEND_RGBA_ADD: pygame.BLEND_RGBA_ADD,

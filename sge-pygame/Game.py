@@ -712,14 +712,13 @@ class Game:
                 if (not self.grab_input and self.mouse.visible and
                         self.mouse.sprite is not None):
                     mx, my = pygame.mouse.get_pos()
-                    mouse_rect = pygame.Rect(
-                        mx - self.mouse.sprite.origin_x,
-                        my - self.mouse.sprite.origin_y,
-                        self.mouse.sprite.width, self.mouse.sprite.height)
                     img = self.mouse.sprite._get_image(
                         self.mouse.image_index, self.mouse.image_xscale,
                         self.mouse.image_yscale, self.mouse.image_rotation,
                         self.mouse.image_alpha, self.mouse.image_blend)
+                    mouse_rect = img.get_rect(
+                        left=(mx - self.mouse.sprite.origin_x * self._xscale),
+                        top=(my - self.mouse.sprite.origin_y * self._yscale))
                     self._window.blit(img, mouse_rect)
                     dirty.append(mouse_rect)
                     dirty.append(mouse_previous_rect)
@@ -915,14 +914,13 @@ class Game:
             if (not self.grab_input and self.mouse.visible and
                     self.mouse.sprite is not None):
                 mx, my = pygame.mouse.get_pos()
-                mouse_rect = pygame.Rect(
-                    mx - self.mouse.sprite.origin_x,
-                    my - self.mouse.sprite.origin_y,
-                    self.mouse.sprite.width, self.mouse.sprite.height)
                 img = self.mouse.sprite._get_image(
                     self.mouse.image_index, self.mouse.image_xscale,
                     self.mouse.image_yscale, self.mouse.image_rotation,
                     self.mouse.image_alpha, self.mouse.image_blend)
+                mouse_rect = img.get_rect(
+                    left=(mx - self.mouse.sprite.origin_x * self._xscale),
+                    top=(my - self.mouse.sprite.origin_y * self._yscale))
                 self._window.blit(img, mouse_rect)
 
             pygame.display.flip()
