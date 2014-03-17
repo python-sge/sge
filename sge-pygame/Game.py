@@ -624,6 +624,25 @@ class Game:
                     else:
                         obj.event_inactive_step(real_time_passed)
 
+                # Set objects' colliders
+                room = self.current_room
+                for ref in self._colliders:
+                    obj = ref()
+                    if obj is not None:
+                        obj._colliders = []
+                        for area in obj._collision_areas:
+                            if area is not None:
+                                i, j = area
+                                for other in room._collision_areas[i][j]:
+                                    if (other is not obj and
+                                            other not in obj._colliders):
+                                        obj._colliders.append(other)
+                            else:
+                                for other in room._collision_area_void:
+                                    if (other is not obj and
+                                            other not in obj._colliders):
+                                        obj._colliders.append(other)
+
                 # Detect collisions
                 for ref in self._colliders:
                     obj = ref()

@@ -162,10 +162,6 @@ class Music:
 
         sge.game.music[self.id] = self
 
-    def __del__(self):
-        if self.playing:
-            self.stop()
-
     def play(self, start=0, loops=1, maxtime=None, fade_time=None):
         """Play the music.
 
@@ -219,6 +215,9 @@ class Music:
 
     def destroy(self):
         """Destroy the music."""
+        if self.playing:
+            self.stop()
+
         del sge.game.music[self.id]
 
     @staticmethod

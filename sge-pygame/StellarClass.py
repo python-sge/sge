@@ -498,6 +498,7 @@ class StellarClass:
                             sprite_bbox_height)
         self._collision_ellipse = collision_ellipse
         self._collision_precise = collision_precise
+        self._collision_areas = []
         self._colliders = []
 
         if ID is not None:
@@ -1212,7 +1213,46 @@ class StellarClass:
                 self.x += self.xvelocity * delta_mult
                 self.y += self.yvelocity * delta_mult
 
-        self._colliders = sge.game._colliders[:]
+        ##self._colliders = sge.game._colliders[:]
+
+        room = sge.game.current_room
+        area_size = room._collision_area_size
+        areas_x_start = int(self.bbox_left / area_size)
+        areas_x_num = math.ceil(self.bbox_width / area_size) + 1
+        areas_y_start = int(self.bbox_top / area_size)
+        areas_y_num = math.ceil(self.bbox_height / area_size) + 1
+
+        my_areas = []
+        for i in range(areas_x_start, areas_x_start + areas_x_num):
+            for j in range(areas_y_start, areas_y_start + areas_y_num):
+                if (i >= 0 and j >= 0 and room._collision_areas and
+                        i < len(room._collision_areas) and
+                        j < len(room._collision_areas[0])):
+                    my_areas.append((i, j))
+                elif None not in my_areas:
+                    my_areas.append(None)
+
+        for area in self._collision_areas:
+            if area not in my_areas:
+                if area is not None:
+                    i, j = area
+                    room_area = room._collision_areas[i][j]
+                else:
+                    room_area = room._collision_area_void
+
+                for i in range(len(room_area), 0, -1):
+                    if room_area[i - 1]() is self:
+                        del room_area[i - 1]
+
+        for area in my_areas:
+            if area not in self._collision_areas:
+                if area is not None:
+                    i, j = area
+                    room._collision_areas[i][j].append(weakref.ref(self))
+                else:
+                    room._collision_area_void.append(weakref.ref(self))
+
+        self._collision_areas = my_areas
 
     def _detect_collisions(self):
         for other_ref in self._colliders:

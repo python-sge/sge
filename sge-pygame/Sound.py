@@ -163,12 +163,6 @@ class Sound:
 
         sge.game.sounds[self.id] = self
 
-    def __del__(self):
-        self.stop()
-
-        while self._channels:
-            sge.game._release_channel(self._channels.pop(0))
-
     def play(self, loops=1, volume=100, balance=0, maxtime=None,
              fade_time=None):
         """Play the sound.
@@ -256,6 +250,11 @@ class Sound:
 
     def destroy(self):
         """Destroy the sound."""
+        self.stop()
+
+        while self._channels:
+            sge.game._release_channel(self._channels.pop(0))
+
         del sge.game.sounds[self.id]
 
     @staticmethod

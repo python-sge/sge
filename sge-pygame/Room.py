@@ -160,6 +160,24 @@ class Room:
         self._object_start_collision_ellipse = {}
         self._object_start_collision_precise = {}
 
+        if self.views:
+            self._collision_area_size = max(int(self.views[0].width / 10),
+                                            int(self.views[0].height / 10))
+        else:
+            self._collision_area_size = sge.COLLISION_AREA_SIZE_DEFAULT
+
+        size = self._collision_area_size
+        self._collision_areas = []
+        for i in range(0, self.width, size):
+            column = [[] for j in range(0, self.height, size)]
+            self._collision_areas.append(column)
+
+        # The "Void" is the area outside the room.  This area is
+        # infinite, so everything in the Void is checked against
+        # everything else in the Void (otherwise an infinite grid, which
+        # is impossible, would be needed).
+        self._collision_area_void = []
+
     def add(self, obj):
         """Add a StellarClass object to the room.
 
