@@ -327,6 +327,7 @@ class Game:
         self._js_names = {}
         self._js_ids = {}
         self._pygame_sprites = pygame.sprite.LayeredDirty()
+        self._window_projections = []
         self.mouse = sge.Mouse()
 
         # Setup sound channels
@@ -430,7 +431,7 @@ class Game:
 
             self.rooms[0].start()
             background = None
-            mouse_previous_rect = pygame.Rect(0, 0, 1, 1)
+            cleanup_rects = []
             numviews = 0
             _fps_time = 0
             self._clock.tick()
@@ -711,6 +712,12 @@ class Game:
 
                 self._window.blit(self._display_surface, (0, 0))
 
+                # Window projections
+                dirty.extend(cleanup_rects)
+                cleanup_rects = self._show_projections()
+                dirty.extend(cleanup_rects)
+
+                # Letterbox/pillarbox
                 top_bar = pygame.Rect(0, 0, w, self._y)
                 bottom_bar = pygame.Rect(0, h - self._y, w, self._y)
                 left_bar = pygame.Rect(0, 0, self._x, h)
@@ -727,21 +734,6 @@ class Game:
                 if right_bar.w > 0:
                     self._window.fill((0, 0, 0), right_bar)
                     dirty.append(right_bar)
-
-                if (not self.grab_input and self.mouse.visible and
-                        self.mouse.sprite is not None):
-                    mx, my = pygame.mouse.get_pos()
-                    img = self.mouse.sprite._get_image(
-                        self.mouse.image_index, self.mouse.image_xscale,
-                        self.mouse.image_yscale, self.mouse.image_rotation,
-                        self.mouse.image_alpha, self.mouse.image_blend)
-                    mouse_rect = img.get_rect(
-                        left=(mx - self.mouse.sprite.origin_x * self._xscale),
-                        top=(my - self.mouse.sprite.origin_y * self._yscale))
-                    self._window.blit(img, mouse_rect)
-                    dirty.append(mouse_rect)
-                    dirty.append(mouse_previous_rect)
-                    mouse_previous_rect = mouse_rect
 
                 if sge.hardware_rendering:
                     pygame.display.flip()
@@ -969,6 +961,157 @@ class Game:
                 for obj in room.objects:
                     if isinstance(obj, cls):
                         room.objects_by_class[cls].append(obj)
+
+    def project_dot(self, x, y, color):
+        """Project a single-pixel dot onto the game window.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the window to
+          project the dot.
+        - ``y`` -- The vertical location relative to the window to
+          project the dot.
+
+        See the documentation for :meth:`sge.Sprite.draw_dot` for more
+        information.
+
+        """
+        sprite = self._get_dot_sprite(color)
+        self.project_sprite(sprite, 0, x, y)
+
+    def project_line(self, x1, y1, x2, y2, color, thickness=1,
+                     anti_alias=False):
+        """Project a line segment onto the game window.
+
+        Arguments:
+
+        - ``x1`` -- The horizontal location relative to the window of
+          the first endpoint of the projected line segment.
+        - ``y1`` -- The vertical location relative to the window of the
+          first endpoint of the projected line segment.
+        - ``x2`` -- The horizontal location relative to the window of
+          the second endpoint of the projected line segment.
+        - ``y2`` -- The vertical location relative to the window of the
+          second endpoint of the projected line segment.
+
+        See the documentation for :meth:`sge.Sprite.draw_line` for more
+        information.
+
+        """
+        thickness = abs(thickness)
+        x = min(x1, x2) - thickness // 2
+        y = min(y1, y2) - thickness // 2
+        w = abs(x2 - x1) + thickness
+        h = abs(y2 - y1) + thickness
+        x1 -= x
+        y1 -= y
+        x2 -= x
+        y2 -= y
+
+        sprite = self._get_line_sprite(x1, y1, x2, y2, color, thickness,
+                                       anti_alias)
+        self.project_sprite(sprite, 0, x, y)
+
+    def project_rectangle(self, x, y, width, height, fill=None, outline=None,
+                          outline_thickness=1):
+        """Project a rectangle onto the game window.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the window to
+          project the rectangle.
+        - ``y`` -- The vertical location relative to the window to
+          project the rectangle.
+
+        See the documentation for :meth:`sge.Sprite.draw_rectangle` for
+        more information.
+
+        """
+        sprite = self._get_rectangle_sprite(width, height, fill, outline,
+                                            outline_thickness)
+        self.project_sprite(sprite, 0, x, y)
+
+    def project_ellipse(self, x, y, width, height, fill=None, outline=None,
+                        outline_thickness=1, anti_alias=False):
+        """Project an ellipse onto the game window.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the window to
+          position the imaginary rectangle containing the ellipse.
+        - ``y`` -- The vertical location relative to the window to
+          position the imaginary rectangle containing the ellipse.
+        - ``width`` -- The width of the ellipse.
+        - ``height`` -- The height of the ellipse.
+        - ``fill`` -- The color of the fill of the ellipse.
+        - ``outline`` -- The color of the outline of the ellipse.
+        - ``outline_thickness`` -- The thickness of the outline of the
+          ellipse.
+        - ``anti_alias`` -- Whether or not anti-aliasing should be used.
+
+        See the documentation for :meth:`sge.Sprite.draw_ellipse` for
+        more information.
+
+        """
+        sprite = self._get_ellipse_sprite(width, height, fill, outline,
+                                          outline_thickness, anti_alias)
+        self.project_sprite(sprite, 0, x, y)
+
+    def project_circle(self, x, y, radius, fill=None, outline=None,
+                       outline_thickness=1, anti_alias=False):
+        """Project a circle onto the game window.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the window to
+          position the center of the circle.
+        - ``y`` -- The vertical location relative to the window to
+          position the center of the circle.
+
+        See the documentation for :meth:`sge.Sprite.draw_circle` for
+        more information.
+
+        """
+        sprite = self._get_circle_sprite(radius, fill, outline,
+                                         outline_thickness, anti_alias)
+        self.project_sprite(sprite, 0, x - radius, y - radius)
+
+    def project_sprite(self, sprite, image, x, y, blend_mode=None):
+        """Project a sprite onto the game window.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the window to
+          project ``sprite``.
+        - ``y`` -- The vertical location relative to the window to
+          project ``sprite``.
+
+        See the documentation for :meth:`sge.Sprite.draw_sprite` for
+        more information.
+
+        """
+        img = sprite._get_image(image)
+        self._window_projections.append((img, x, y, blend_mode))
+
+    def project_text(self, font, text, x, y, width=None, height=None,
+                    color="black", halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP,
+                    anti_alias=True):
+        """Project text onto the game window.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the window to
+          project the text.
+        - ``y`` -- The vertical location relative to the window to
+          project the text.
+
+        See the documentation for :meth:`sge.Sprite.draw_text` for more
+        information.
+
+        """
+        sprite = self._get_text_sprite(font, text, width, height, color,
+                                       halign, valign, anti_alias)
+        self.project_sprite(sprite, 0, x, y)
 
     def event_game_start(self):
         """Game start event.
@@ -1507,6 +1650,130 @@ class Game:
         # Refresh sprites
         for s in self.sprites:
             self.sprites[s]._refresh()
+
+    def _get_dot_sprite(self, color):
+        # Return a sprite for the given dot.
+        i = (color,)
+        if i in self._dot_cache:
+            sprite = self._dot_cache[i]
+        else:
+            sprite = sge.Sprite(None, width=1, height=1)
+            sprite.draw_dot(0, 0, color)
+            self._dot_cache[i] = sprite
+            sprite.destroy()
+
+        return sprite
+
+    def _get_line_sprite(self, x1, y1, x2, y2, color, thickness, anti_alias):
+        # Return a sprite for the given line.
+        i = (x1, y1, x2, y2, color, thickness, anti_alias)
+        if i in self._line_cache:
+            sprite = self._line_cache[i]
+        else:
+            sprite = sge.Sprite(None, width=w, height=h)
+            sprite.draw_line(x1, y1, x2, y2, color, thickness, anti_alias)
+            self._line_cache[i] = sprite
+            sprite.destroy()
+
+        return sprite
+
+    def _get_rectangle_sprite(self, width, height, fill, outline,
+                              outline_thickness):
+        # Return a sprite for the given rectangle.
+        i = (width, height, fill, outline, outline_thickness)
+        if i in self._rectangle_cache:
+            sprite = self._rectangle_cache[i]
+        else:
+            outline_thickness = abs(outline_thickness)
+            draw_x = outline_thickness // 2
+            draw_y = outline_thickness // 2
+            x -= draw_x
+            y -= draw_y
+            w = width + outline_thickness
+            h = height + outline_thickness
+            sprite = sge.Sprite(None, width=w, height=h)
+            sprite.draw_rectangle(draw_x, draw_y, w, h, fill, outline,
+                                  outline_thickness)
+            self._rectangle_cache[i] = sprite
+            sprite.destroy()
+
+        return sprite
+
+    def _get_ellipse_sprite(self, width, height, fill, outline,
+                            outline_thickness, anti_alias):
+        # Return a sprite for the given ellipse.
+        i = (width, height, fill, outline, outline_thickness, anti_alias)
+        if i in self._ellipse_cache:
+            sprite = self._ellipse_cache[i]
+        else:
+            outline_thickness = abs(outline_thickness)
+            draw_x = outline_thickness // 2
+            draw_y = outline_thickness // 2
+            x -= draw_x
+            y -= draw_y
+            w = width + outline_thickness
+            h = height + outline_thickness
+            sprite = sge.Sprite(None, width=w, height=h)
+            sprite.draw_ellipse(draw_x, draw_y, w, h, fill, outline,
+                                outline_thickness)
+            self._ellipse_cache[i] = sprite
+            sprite.destroy()
+
+        return sprite
+
+    def _get_circle_sprite(self, radius, fill, outline, outline_thickness,
+                           anti_alias):
+        # Return a sprite for the given circle.
+        i = (radius, fill, outline, outline_thickness, anti_alias)
+        if i in self._circle_cache:
+            sprite = self._circle_cache[i]
+        else:
+            outline_thickness = abs(outline_thickness)
+            xy = radius + outline_thickness // 2
+            wh = 2 * radius + outline_thickness
+            sprite = sge.Sprite(None, width=wh, height=wh)
+            sprite.draw_circle(xy, xy, radius, fill, outline, outline_thickness,
+                               anti_alias)
+            self._circle_cache[i] = sprite
+            sprite.destroy()
+
+        return sprite
+
+    def _get_text_sprite(self, font, text, width, height, color, halign,
+                         valign, anti_alias):
+        # Return a sprite for the given text.
+        i = (font, text, width, height, color, halign, valign, anti_alias)
+        if i in sge.game._text_cache:
+            sprite = sge.game._text_cache[i]
+        else:
+            if not isinstance(font, sge.Font):
+                font = sge.game.fonts[font]
+
+            w, h = font.get_size(text, width, height)
+            draw_x = {sge.ALIGN_LEFT: 0, sge.ALIGN_CENTER: w / 2,
+                      sge.ALIGN_RIGHT: w}.setdefault(halign, w / 2)
+            draw_y = {sge.ALIGN_TOP: 0, sge.ALIGN_MIDDLE: h / 2,
+                      sge.ALIGN_BOTTOM: h}.setdefault(valign, h / 2)
+            sprite = sge.Sprite(None, width=w, height=h)
+            sprite.draw_text(font, text, draw_x, draw_y, width, height, color,
+                             halign, valign, anti_alias)
+            sge.game._text_cache[i] = sprite
+            sprite.destroy()
+
+        return sprite
+
+    def _show_projections(self):
+        # Show the window projections and return the area rects list.
+        rects = []
+        for projection in self._window_projections:
+            (image, x, y, blend_mode) = projection
+            rect = image.get_rect(left=(self._x + x * self._xscale),
+                                  top=(self._y + y * self._yscale))
+            self._window.blit(image, rect)
+            rects.append(rect)
+
+        self._window_projections = []
+        return rects
 
     def _get_channel(self):
         # Return a channel for a sound effect to use.

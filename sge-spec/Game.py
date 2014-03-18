@@ -229,6 +229,135 @@ class Game(object):
         """
         # TODO
 
+    def project_dot(self, x, y, color):
+        """Project a single-pixel dot onto the game window.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the window to
+          project the dot.
+        - ``y`` -- The vertical location relative to the window to
+          project the dot.
+
+        See the documentation for :meth:`sge.Sprite.draw_dot` for more
+        information.
+
+        """
+        # TODO
+
+    def project_line(self, x1, y1, x2, y2, color, thickness=1,
+                     anti_alias=False):
+        """Project a line segment onto the game window.
+
+        Arguments:
+
+        - ``x1`` -- The horizontal location relative to the window of
+          the first endpoint of the projected line segment.
+        - ``y1`` -- The vertical location relative to the window of the
+          first endpoint of the projected line segment.
+        - ``x2`` -- The horizontal location relative to the window of
+          the second endpoint of the projected line segment.
+        - ``y2`` -- The vertical location relative to the window of the
+          second endpoint of the projected line segment.
+
+        See the documentation for :meth:`sge.Sprite.draw_line` for more
+        information.
+
+        """
+        # TODO
+
+    def project_rectangle(self, x, y, width, height, fill=None, outline=None,
+                          outline_thickness=1):
+        """Project a rectangle onto the game window.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the window to
+          project the rectangle.
+        - ``y`` -- The vertical location relative to the window to
+          project the rectangle.
+
+        See the documentation for :meth:`sge.Sprite.draw_rectangle` for
+        more information.
+
+        """
+        # TODO
+
+    def project_ellipse(self, x, y, width, height, fill=None, outline=None,
+                        outline_thickness=1, anti_alias=False):
+        """Project an ellipse onto the game window.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the window to
+          position the imaginary rectangle containing the ellipse.
+        - ``y`` -- The vertical location relative to the window to
+          position the imaginary rectangle containing the ellipse.
+        - ``width`` -- The width of the ellipse.
+        - ``height`` -- The height of the ellipse.
+        - ``fill`` -- The color of the fill of the ellipse.
+        - ``outline`` -- The color of the outline of the ellipse.
+        - ``outline_thickness`` -- The thickness of the outline of the
+          ellipse.
+        - ``anti_alias`` -- Whether or not anti-aliasing should be used.
+
+        See the documentation for :meth:`sge.Sprite.draw_ellipse` for
+        more information.
+
+        """
+        # TODO
+
+    def project_circle(self, x, y, radius, fill=None, outline=None,
+                       outline_thickness=1, anti_alias=False):
+        """Project a circle onto the game window.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the window to
+          position the center of the circle.
+        - ``y`` -- The vertical location relative to the window to
+          position the center of the circle.
+
+        See the documentation for :meth:`sge.Sprite.draw_circle` for
+        more information.
+
+        """
+        # TODO
+
+    def project_sprite(self, sprite, image, x, y, blend_mode=None):
+        """Project a sprite onto the game window.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the window to
+          project ``sprite``.
+        - ``y`` -- The vertical location relative to the window to
+          project ``sprite``.
+
+        See the documentation for :meth:`sge.Sprite.draw_sprite` for
+        more information.
+
+        """
+        # TODO
+
+    def project_text(self, font, text, x, y, width=None, height=None,
+                    color="black", halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP,
+                    anti_alias=True):
+        """Project text onto the game window.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the window to
+          project the text.
+        - ``y`` -- The vertical location relative to the window to
+          project the text.
+
+        See the documentation for :meth:`sge.Sprite.draw_text` for more
+        information.
+
+        """
+        # TODO
+
     def event_game_start(self):
         """Game start event.
 

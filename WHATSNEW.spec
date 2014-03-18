@@ -23,6 +23,13 @@ Specification additions:
 + sge.Music.destroy
 + sge.Room.destroy
 + sge.Room.move
++ sge.Game.project_dot
++ sge.Game.project_line
++ sge.Game.project_rectangle
++ sge.Game.project_ellipse
++ sge.Game.project_circle
++ sge.Game.project_sprite
++ sge.Game.project_text
 
 Specification misc changes:
 * room_number argument added to sge.Room.__init__
