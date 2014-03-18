@@ -633,15 +633,14 @@ class Game:
                         for area in obj._collision_areas:
                             if area is not None:
                                 i, j = area
-                                for other in room._collision_areas[i][j]:
-                                    if (other is not obj and
-                                            other not in obj._colliders):
-                                        obj._colliders.append(other)
+                                room_area = room._collision_areas[i][j]
                             else:
-                                for other in room._collision_area_void:
-                                    if (other is not obj and
-                                            other not in obj._colliders):
-                                        obj._colliders.append(other)
+                                room_area = room._collision_area_void
+
+                            for other in room_area:
+                                if (other is not obj and
+                                        other not in obj._colliders):
+                                    obj._colliders.append(other)
 
                 # Detect collisions
                 for ref in self._colliders:
