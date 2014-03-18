@@ -30,6 +30,10 @@ sge.Room Methods
 
 .. automethod:: sge.Room.project_text
 
+.. automethod:: sge.Room.move
+
+.. automethod:: sge.Room.destroy
+
 sge.Room Event Methods
 ----------------------
 

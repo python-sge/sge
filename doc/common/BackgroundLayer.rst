@@ -7,3 +7,5 @@ sge.BackgroundLayer Methods
 ---------------------------
 
 .. automethod:: sge.BackgroundLayer.__init__
+
+.. automethod:: sge.BackgroundLayer.destroy

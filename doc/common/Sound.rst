@@ -16,4 +16,6 @@ sge.Sound Methods
 
 .. automethod:: sge.Sound.unpause
 
+.. automethod:: sge.Sound.destroy
+
 .. automethod:: sge.Sound.stop_all

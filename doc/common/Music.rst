@@ -12,6 +12,8 @@ sge.Music Methods
 
 .. automethod:: sge.Music.queue
 
+.. automethod:: sge.Music.destroy
+
 .. automethod:: sge.Music.stop
 
 .. automethod:: sge.Music.pause

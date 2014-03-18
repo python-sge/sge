@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to The Pygame SGE's documentation!
-======================================
+==========================================
 
 Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>
 
