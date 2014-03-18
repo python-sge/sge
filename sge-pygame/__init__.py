@@ -410,7 +410,7 @@ by default.
 
 """
 
-__version__ = "0.7.0.9"
+__version__ = "0.7.0.10"
 
 import os
 
@@ -456,16 +456,6 @@ sound_directories = [os.path.join(PROGRAM_DIR, 'data', 'sounds')]
 music_directories = [os.path.join(PROGRAM_DIR, 'data', 'music')]
 
 hardware_rendering = False
-
-if DEBUG:
-    print("Image directories set to:")
-    print(*image_directories, sep="; ")
-    print("Font directories set to:")
-    print(*font_directories, sep="; ")
-    print("Sound directories set to:")
-    print(*sound_directories, sep="; ")
-    print("Music directories set to:")
-    print(*music_directories, sep="; ")
 
 # Uncomment this line to tell SDL to center the window.  Disabled by
 # default because it seems to cause some weird behavior with window

@@ -16,6 +16,7 @@
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import warnings
 
 import pygame
 
@@ -425,7 +426,7 @@ class Game:
                 self._object_start_collision_ellipse[obj.id] = obj.collision_ellipse
                 self._object_start_collision_precise[obj.id] = obj.collision_precise
 
-            display_surface = self._window.copy()
+            self._display_surface = self._window.copy()
 
             self.rooms[0].start()
             background = None
@@ -584,12 +585,10 @@ class Game:
                     elif event.type == pygame.VIDEORESIZE:
                         if sge.DEBUG:
                             print('Video resize detected.')
-                        self._window.blit(display_surface, (0, 0))
+                        self._window.blit(self._display_surface, (0, 0))
                         self._window_width = event.w
                         self._window_height = event.h
                         self._set_mode()
-                        display_surface = self._window.copy()
-                        self._background_changed = True
 
                 real_time_passed = self._clock.tick(self.fps)
 
@@ -688,27 +687,29 @@ class Game:
 
                 # Redraw
                 if self._background_changed or background is None:
-                    w = max(1, display_surface.get_width())
-                    h = max(1, display_surface.get_height())
+                    w = max(1, self._display_surface.get_width())
+                    h = max(1, self._display_surface.get_height())
                     background = pygame.Surface((w, h))
                     b = self.current_room.background._get_background()
                     background.blit(b, (self._x, self._y))
-                    display_surface.blit(background, (0, 0))
+                    self._display_surface.blit(background, (0, 0))
                     self._background_changed = False
-                    self._pygame_sprites.clear(display_surface, background)
+                    self._pygame_sprites.clear(self._display_surface,
+                                               background)
                     for sprite in self._pygame_sprites:
                         sprite.rect = pygame.Rect(0, 0, 1, 1)
                         sprite.image = pygame.Surface((1, 1))
                         sprite.image.set_colorkey((0, 0, 0))
                     self._pygame_sprites.update()
-                    self._pygame_sprites.draw(display_surface)
-                    dirty = [display_surface.get_rect()]
+                    self._pygame_sprites.draw(self._display_surface)
+                    dirty = [self._display_surface.get_rect()]
                 else:
-                    self._pygame_sprites.clear(display_surface, background)
+                    self._pygame_sprites.clear(self._display_surface,
+                                               background)
                     self._pygame_sprites.update()
-                    dirty = self._pygame_sprites.draw(display_surface)
+                    dirty = self._pygame_sprites.draw(self._display_surface)
 
-                self._window.blit(display_surface, (0, 0))
+                self._window.blit(self._display_surface, (0, 0))
 
                 top_bar = pygame.Rect(0, 0, w, self._y)
                 bottom_bar = pygame.Rect(0, h - self._y, w, self._y)
@@ -1449,11 +1450,24 @@ class Game:
             if sge.hardware_rendering:
                 flags |= pygame.HWSURFACE | pygame.DOUBLEBUF
 
-            self._window = pygame.display.set_mode((0, 0), flags)
+            modes = pygame.display.list_modes()
+            if modes != -1 and modes:
+                self._window_width, self._window_height = modes[0]
+            else:
+                w = "Couldn't find out the maximum resolution! Assuming 640x480."
+                warnings.warn(w)
+                self._window_width = 640
+                self._window_height = 480
+
+            self._background_changed = True
+            self._window = pygame.display.set_mode(
+                (self._window_width, self._window_height), flags)
 
             if not self.scale:
-                self._xscale = info.current_w / self.width
-                self._yscale = info.current_h / self.height
+                ##self._xscale = info.current_w / self.width
+                ##self._yscale = info.current_h / self.height
+                self._xscale = self._window_width / self.width
+                self._yscale = self._window_height / self.height
 
                 if self.scale_proportional:
                     self._xscale = min(self._xscale, self._yscale)
@@ -1461,10 +1475,8 @@ class Game:
 
             w = max(1, self._window.get_width())
             h = max(1, self._window.get_height())
-            self._x = int(round((w - int(round(self.width * self._xscale))) /
-                                2))
-            self._y = int(round((h - int(round(self.height * self._yscale))) /
-                                2))
+            self._x = int(round((w - self.width * self._xscale) / 2))
+            self._y = int(round((h - self.height * self._yscale) / 2))
         else:
             self._x = 0
             self._y = 0
@@ -1486,10 +1498,11 @@ class Game:
 
             w = max(1, self._window.get_width())
             h = max(1, self._window.get_height())
-            self._x = int(round((w - int(round(self.width * self._xscale))) /
-                                2))
-            self._y = int(round((h - int(round(self.height * self._yscale))) /
-                                2))
+            self._x = int(round((w - self.width * self._xscale) / 2))
+            self._y = int(round((h - self.height * self._yscale) / 2))
+
+        self._display_surface = self._window.copy()
+        self._background_changed = True
 
         # Refresh sprites
         for s in self.sprites:
