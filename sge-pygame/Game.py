@@ -925,6 +925,8 @@ class Game:
             self.mouse.project_cursor()
             self._show_projections()
 
+            pygame.display.flip()
+
         # Restore the look of the screen from before it was paused
         self._window.blit(screenshot, (0, 0))
         pygame.display.update()
