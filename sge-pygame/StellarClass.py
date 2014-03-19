@@ -1477,17 +1477,6 @@ class Mouse(StellarClass):
 
         super(Mouse, self).__init__(0, 0, 0, ID='mouse')
 
-    def event_step(self, time_passed):
-        if (not sge.game.grab_input and self.visible and
-                self.sprite is not None):
-            x = (self.mouse_x / sge.game._xscale) - self.sprite.origin_x
-            y = (self.mouse_y / sge.game._yscale) - self.sprite.origin_y
-            img = self.sprite._get_image(
-                self.image_index, self.image_xscale, self.image_yscale, 
-                self.image_rotation, self.image_alpha, self.image_blend)
-
-            sge.game._window_projections.append((img, x, y, None))
-
     def event_collision(self, other):
         sge.game.event_mouse_collision(other)
 
@@ -1545,6 +1534,17 @@ class Mouse(StellarClass):
             pygame.mouse.set_visible(self.visible and self.sprite is None)
         else:
             pygame.mouse.set_visible(False)
+
+    def project_cursor(self):
+        if (not sge.game.grab_input and self.visible and
+                self.sprite is not None):
+            x = (self.mouse_x / sge.game._xscale) - self.sprite.origin_x
+            y = (self.mouse_y / sge.game._yscale) - self.sprite.origin_y
+            img = self.sprite._get_image(
+                self.image_index, self.image_xscale, self.image_yscale, 
+                self.image_rotation, self.image_alpha, self.image_blend)
+
+            sge.game._window_projections.append((img, x, y, None))
 
     def _reset(self):
         # Reset the mouse back to its original state, but NOT position.

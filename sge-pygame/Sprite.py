@@ -1011,8 +1011,10 @@ class Sprite:
                    blend=None):
         num %= len(self._images)
         # Return the properly sized surface.
-        if (xscale, yscale, rotation, alpha, blend) in self._images[num]:
-            return self._images[num][(xscale, yscale, rotation, alpha, blend)]
+        t = (sge.game._xscale, sge.game._yscale, xscale, yscale, rotation,
+             alpha, blend)
+        if t in self._images[num]:
+            return self._images[num][t]
         else:
             # Hasn't been scaled to this size yet
             if xscale != 0 and yscale != 0:
@@ -1041,7 +1043,7 @@ class Sprite:
                 img = pygame.Surface((1, 1))
                 img.set_colorkey((0, 0, 0), pygame.RLEACCEL)
 
-            self._images[num][(xscale, yscale, rotation, alpha, blend)] = img
+            self._images[num][t] = img
             return img
 
     def _get_precise_mask(self, num):

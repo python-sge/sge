@@ -713,6 +713,7 @@ class Game:
                 self._window.blit(self._display_surface, (0, 0))
 
                 # Window projections
+                self.mouse.project_cursor()
                 dirty.extend(cleanup_rects)
                 cleanup_rects = self._show_projections()
                 dirty.extend(cleanup_rects)
@@ -910,7 +911,6 @@ class Game:
                     self._window_width = event.w
                     self._window_height = event.h
                     self._set_mode()
-                    self._background_changed = True
                     screenshot = pygame.transform.scale(orig_screenshot,
                                                         (event.w, event.h))
                     background = pygame.transform.scale(orig_background,
@@ -922,19 +922,8 @@ class Game:
             # Redraw
             self._window.blit(background, (0, 0))
 
-            if (not self.grab_input and self.mouse.visible and
-                    self.mouse.sprite is not None):
-                mx, my = pygame.mouse.get_pos()
-                img = self.mouse.sprite._get_image(
-                    self.mouse.image_index, self.mouse.image_xscale,
-                    self.mouse.image_yscale, self.mouse.image_rotation,
-                    self.mouse.image_alpha, self.mouse.image_blend)
-                mouse_rect = img.get_rect(
-                    left=(mx - self.mouse.sprite.origin_x * self._xscale),
-                    top=(my - self.mouse.sprite.origin_y * self._yscale))
-                self._window.blit(img, mouse_rect)
-
-            pygame.display.flip()
+            self.mouse.project_cursor()
+            self._show_projections()
 
         # Restore the look of the screen from before it was paused
         self._window.blit(screenshot, (0, 0))
@@ -1001,8 +990,6 @@ class Game:
         thickness = abs(thickness)
         x = min(x1, x2) - thickness // 2
         y = min(y1, y2) - thickness // 2
-        w = abs(x2 - x1) + thickness
-        h = abs(y2 - y1) + thickness
         x1 -= x
         y1 -= y
         x2 -= x
@@ -1647,10 +1634,6 @@ class Game:
         self._display_surface = self._window.copy()
         self._background_changed = True
 
-        # Refresh sprites
-        for s in self.sprites:
-            self.sprites[s]._refresh()
-
     def _get_dot_sprite(self, color):
         # Return a sprite for the given dot.
         i = (color,)
@@ -1666,6 +1649,9 @@ class Game:
 
     def _get_line_sprite(self, x1, y1, x2, y2, color, thickness, anti_alias):
         # Return a sprite for the given line.
+        w = int(round(abs(x2 - x1) + thickness))
+        h = int(round(abs(y2 - y1) + thickness))
+        print(w, h)
         i = (x1, y1, x2, y2, color, thickness, anti_alias)
         if i in self._line_cache:
             sprite = self._line_cache[i]

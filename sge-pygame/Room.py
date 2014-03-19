@@ -337,8 +337,6 @@ class Room:
         thickness = abs(thickness)
         x = min(x1, x2) - thickness // 2
         y = min(y1, y2) - thickness // 2
-        w = abs(x2 - x1) + thickness
-        h = abs(y2 - y1) + thickness
         x1 -= x
         y1 -= y
         x2 -= x
