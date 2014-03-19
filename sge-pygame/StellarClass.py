@@ -683,6 +683,7 @@ class StellarClass:
 
     def destroy(self):
         """Destroy the object."""
+        sge.game._background_changed = True
         self.event_destroy()
         self._pygame_sprite.kill()
         del sge.game.objects[self.id]
