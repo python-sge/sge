@@ -18,6 +18,7 @@ Pygame SGE bugfixes:
 - Room.draw_sprite destroying the sprite that is projected.
 - Multiple views not working properly with scaling.
 - Changing from windowed to fullscreen mode resulting in the wrong resolution.
+- Rotated precise collision detection not working.
 
 
 0.7.0

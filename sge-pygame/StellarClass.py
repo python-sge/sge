@@ -322,7 +322,6 @@ class StellarClass:
     def collision_ellipse(self, value):
         if value != self._collision_ellipse:
             self._collision_ellipse = value
-            self._set_mask()
 
     @property
     def collision_precise(self):
@@ -332,7 +331,6 @@ class StellarClass:
     def collision_precise(self, value):
         if value != self._collision_precise:
             self._collision_precise = value
-            self._set_mask()
 
     @property
     def bbox_left(self):
@@ -536,6 +534,7 @@ class StellarClass:
             self._pygame_sprite = _PygameSprite(self)
         else:
             self._pygame_sprite = _FakePygameSprite(self)
+
         self._set_mask()
 
         self.z = z
@@ -597,43 +596,49 @@ class StellarClass:
             if (self.collision_precise or self.collision_ellipse or
                     other.collision_precise or other.collision_ellipse):
                 # Use masks.
-                self_rect = pygame.Rect(round(self.bbox_left + x),
-                                        round(self.bbox_top + y),
-                                        self.bbox_width, self.bbox_height)
-                other_rect = pygame.Rect(round(other.bbox_left),
-                                         round(other.bbox_top),
-                                         other.bbox_width, other.bbox_height)
+                self._set_mask()
+                other._set_mask()
 
-                if self.sprite is not None:
-                    # Offset for rotation
-                    w, h = self.sprite._get_image(
-                        self.image_index, self.image_xscale,
-                        self.image_yscale, self.image_rotation).get_size()
+                if self._hitmask and other._hitmask:
+                    self_rect = pygame.Rect(round(self.bbox_left + x),
+                                            round(self.bbox_top + y),
+                                            len(self._hitmask),
+                                            len(self._hitmask[0]))
+                    other_rect = pygame.Rect(round(other.bbox_left),
+                                             round(other.bbox_top),
+                                             len(other._hitmask),
+                                             len(other._hitmask[0]))
 
-                    nw, nh = self.sprite._get_image(
-                        self.image_index, self.image_xscale,
-                        self.image_yscale).get_size()
+                    if self.sprite is not None:
+                        # Offset for rotation
+                        w, h = self.sprite._get_image(
+                            self.image_index, self.image_xscale,
+                            self.image_yscale, self.image_rotation).get_size()
 
-                    offset = _get_rotation_offset(
-                        self.sprite.origin_x, self.sprite.origin_y,
-                        self.image_rotation, w, h, nw, nh)
+                        nw, nh = self.sprite._get_image(
+                            self.image_index, self.image_xscale,
+                            self.image_yscale).get_size()
 
-                    self_rect.left -= offset[0]
-                    self_rect.top -= offset[1]
+                        offset = _get_rotation_offset(
+                            self.sprite.origin_x, self.sprite.origin_y,
+                            self.image_rotation, w, h, nw, nh)
 
-                collide_rect = self_rect.clip(other_rect)
-                self_xoffset = collide_rect.left - self_rect.left
-                self_yoffset = collide_rect.top - self_rect.top
-                other_xoffset = collide_rect.left - other_rect.left
-                other_yoffset = collide_rect.top - other_rect.top
+                        self_rect.left -= offset[0] // sge.game._xscale
+                        self_rect.top -= offset[1] // sge.game._yscale
 
-                for a in range(collide_rect.w):
-                    for b in range(collide_rect.h):
-                        if (self._hitmask[
-                                a + self_xoffset][b + self_yoffset] and
-                            other._hitmask[
-                                a + other_xoffset][b + other_yoffset]):
-                            return True
+                    collide_rect = self_rect.clip(other_rect)
+                    self_xoffset = collide_rect.left - self_rect.left
+                    self_yoffset = collide_rect.top - self_rect.top
+                    other_xoffset = collide_rect.left - other_rect.left
+                    other_yoffset = collide_rect.top - other_rect.top
+
+                    for a in range(collide_rect.w):
+                        for b in range(collide_rect.h):
+                            if (self._hitmask[
+                                    a + self_xoffset][b + self_yoffset] and
+                                other._hitmask[
+                                    a + other_xoffset][b + other_yoffset]):
+                                return True
                         
             else:
                 # Use bounding boxes.
@@ -1307,16 +1312,9 @@ class StellarClass:
         # Properly set the hit mask based on the collision settings.
         if self.collision_precise:
             # Mask based on opacity of the current image.
-            left = self.bbox_x + self.sprite.origin_x
-            right = left + self.bbox_width
-            top = self.bbox_y + self.sprite.origin_y
-            bottom = top + self.bbox_height
-
-            mask = self.sprite._get_precise_mask(self.image_index)[left:right]
-            for i in range(len(mask)):
-                mask[i] = mask[i][top:bottom]
-
-            self._hitmask = mask
+            self._hitmask = self.sprite._get_precise_mask(
+                self.image_index, self.image_xscale, self.image_yscale,
+                self.image_rotation)
         elif self.collision_ellipse:
             # Elliptical mask based on bounding box.
             self._hitmask = [[False for y in range(self.bbox_height)]

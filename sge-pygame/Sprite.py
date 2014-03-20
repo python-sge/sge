@@ -1046,13 +1046,23 @@ class Sprite:
             self._images[num][t] = img
             return img
 
-    def _get_precise_mask(self, num):
+    def _get_precise_mask(self, num, xscale, yscale, rotation):
         # Return a precise mask (2D list of True/False values) for the
         # given image index.
-        if num in self._masks:
-            return self._masks[num]
+        mask_id = (num, xscale, yscale, rotation)
+        if mask_id in self._masks:
+            return self._masks[mask_id]
         else:
-            image = self._get_image(num)
+            #image = self._get_image(num, xscale, yscale, rotation)
+            image = self._set_transparency(self._baseimages[num])
+            xflip = xscale < 0
+            yflip = yscale < 0
+            image = pygame.transform.flip(image, xflip, yflip)
+            image = pygame.transform.scale(image, (self.width * abs(xscale),
+                                                   self.height * abs(yscale)))
+            if rotation:
+                image = pygame.transform.rotate(image, rotation)
+
             image.lock()
             mask = []
             if image.get_flags() & pygame.SRCALPHA:
@@ -1068,5 +1078,5 @@ class Sprite:
                         mask[x].append(image.get_at((x, y)) == colorkey)
 
             image.unlock()
-            self._masks[num] = mask
+            self._masks[mask_id] = mask
             return mask
