@@ -49,7 +49,7 @@ copyright = '2012, 2013, 2014 Julian Marchant'
 # built documents.
 #
 # The short X.Y version.
-version = '0.8.0'
+version = '0.8'
 # The full version, including alpha/beta/rc tags.
 release = '0.8.0'
 

@@ -340,7 +340,7 @@ along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 Dependencies
 ------------
 
-- Python 3.0 or later <http://www.python.org>
+- Python 3.1 or later <http://www.python.org>
 - Pygame 1.9.2 or later <http://pygame.org>
 
 Formats Support
@@ -410,7 +410,7 @@ by default.
 
 """
 
-__version__ = "0.7.0.15"
+__version__ = "0.8.0"
 
 import os
 
