@@ -449,7 +449,7 @@ class Sprite(object):
     @classmethod
     def from_tileset(cls, name, ID=None, x=0, y=0, columns=1, rows=1, xsep=0,
                      ysep=0, width=1, height=1, origin_x=0, origin_y=0,
-                     transparent=True, bbox_x=None, bbox_y=None,
+                     transparent=True, fps=0, bbox_x=None, bbox_y=None,
                      bbox_width=None, bbox_height=None):
         """Return a sprite based on the tiles in a tileset.
 

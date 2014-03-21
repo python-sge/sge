@@ -865,7 +865,7 @@ class Sprite:
     @classmethod
     def from_tileset(cls, name, ID=None, x=0, y=0, columns=1, rows=1, xsep=0,
                      ysep=0, width=1, height=1, origin_x=0, origin_y=0,
-                     transparent=True, bbox_x=None, bbox_y=None,
+                     transparent=True, fps=0, bbox_x=None, bbox_y=None,
                      bbox_width=None, bbox_height=None):
         """Return a sprite based on the tiles in a tileset.
 
@@ -890,13 +890,13 @@ class Sprite:
 
         Each tile in the tileset becomes a subimage of the returned
         sprite, ordered first from left to right and then from top to
-        bottom.  The sprite's :attr:`fps` attribute is set to ``0``.
+        bottom.
 
         """
         self = cls(name, ID=ID, width=width, height=height, origin_x=origin_x,
-                   origin_y=origin_y, transparent=transparent, bbox_x=bbox_x,
-                   bbox_y=bbox_y, bbox_width=bbox_width,
-                   bbox_height=bbox_height, fps=0)
+                   origin_y=origin_y, transparent=transparent, fps=fps,
+                   bbox_x=bbox_x, bbox_y=bbox_y, bbox_width=bbox_width,
+                   bbox_height=bbox_height)
         tileset = Sprite(name, origin_x=x, origin_y=y)
 
         for i in range(1, rows):
