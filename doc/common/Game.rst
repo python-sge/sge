@@ -16,6 +16,22 @@ sge.Game Methods
 
 .. automethod:: sge.Game.unpause
 
+.. automethod:: sge.Game.register_class
+
+.. automethod:: sge.Game.project_dot
+
+.. automethod:: sge.Game.project_line
+
+.. automethod:: sge.Game.project_rectangle
+
+.. automethod:: sge.Game.project_ellipse
+
+.. automethod:: sge.Game.project_circle
+
+.. automethod:: sge.Game.project_sprite
+
+.. automethod:: sge.Game.project_text
+
 sge.Game Event Methods
 ----------------------
 
