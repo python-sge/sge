@@ -268,8 +268,6 @@ class Game:
                 except pygame.error:
                     continue
 
-                print('This shouldn\'t show. Remove me.')
-
     def __init__(self, width=640, height=480, fullscreen=False, scale=0,
                  scale_proportional=True, scale_smooth=False, fps=60,
                  delta=False, delta_min=15, grab_input=False,
@@ -1653,7 +1651,6 @@ class Game:
         # Return a sprite for the given line.
         w = int(round(abs(x2 - x1) + thickness))
         h = int(round(abs(y2 - y1) + thickness))
-        print(w, h)
         i = (x1, y1, x2, y2, color, thickness, anti_alias)
         if i in self._line_cache:
             sprite = self._line_cache[i]
