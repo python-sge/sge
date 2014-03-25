@@ -64,22 +64,22 @@ class Sprite:
           :attr:`image_yscale` attribute of a :class:`sge.StellarClass`
           object instead.
 
-    .. attribute:: origin_x
-
-       The horizontal location of the origin relative to the left edge
-       of the images.
-
-    .. attribute:: origin_y
-
-       The vertical location of the origin relative to the top edge of
-       the images.
-
     .. attribute:: transparent
 
        Whether or not the image should be partially transparent.  If an
        image does not have an alpha channel, a colorkey will be used,
        with the transparent color being the color of the top-rightmost
        pixel.
+
+    .. attribute:: origin_x
+
+       The suggested horizontal location of the origin relative to the
+       left edge of the images.
+
+    .. attribute:: origin_y
+
+       The suggested vertical location of the origin relative to the top
+       edge of the images.
 
     .. attribute:: fps
 
@@ -193,7 +193,7 @@ class Sprite:
         return len(self._baseimages)
 
     def __init__(self, name=None, ID=None, width=None, height=None,
-                 origin_x=0, origin_y=0, transparent=True, fps=60,
+                 transparent=True, origin_x=0, origin_y=0, fps=60,
                  bbox_x=None, bbox_y=None, bbox_width=None,
                  bbox_height=None):
         """Constructor method.

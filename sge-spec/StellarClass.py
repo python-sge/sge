@@ -116,6 +116,20 @@ class StellarClass(object):
        The height of the bounding box in pixels.  If set to
        :const:`None`, the value recommended by the sprite is used.
 
+    .. attribute:: regulate_origin
+
+       If set to :const:`True`, the origin is automatically adjusted to
+       be the location of the pixel recommended by the sprite after
+       transformation.  This will cause rotation to be about the origin
+       rather than being about the center of the image.
+
+       .. note::
+
+          The value of this attribute has no effect on the bounding box.
+          If you wish for the bounding box to be adjusted as well, you
+          must do so manually.  As an alternative, you may want to
+          consider using precise collision detection instead.
+
     .. attribute:: collision_ellipse
 
        Whether or not an ellipse (rather than a rectangle) should be
@@ -170,6 +184,18 @@ class StellarClass(object):
        The animation frame currently being displayed, with ``0`` being
        the first one.
 
+    .. attribute:: image_origin_x
+
+       The horizontal location of the origin relative to the left edge
+       of the images.  If set to :const:`None`, the value recommended by
+       the sprite is used.
+
+    .. attribute:: image_origin_y
+
+       The vertical location of the origin relative to the top edge of
+       the images.  If set to :const:`None`, the value recommended by
+       the sprite is used.
+
     .. attribute:: image_fps
 
        The animation rate in frames per second.  If set to
@@ -193,6 +219,10 @@ class StellarClass(object):
        The rotation of the sprite in degrees, with rotation in a
        positive direction being counter-clockwise.
 
+       If :attr:`regulate_origin` is :const:`True`, the image is rotated
+       about the origin.  Otherwise, the image is rotated about its
+       center.
+
     .. attribute:: image_alpha
 
        The alpha value applied to the entire image, where ``255`` is the
@@ -207,6 +237,12 @@ class StellarClass(object):
     .. attribute:: id
 
        The unique identifier for this object.  (Read-only)
+
+    .. attribute:: mask
+
+       The current mask used for non-rectangular collision detection.
+       See the documentation for :func:`sge.collision.masks_collide` for
+       more information.  (Read-only)
 
     .. attribute:: xstart
 
@@ -228,15 +264,24 @@ class StellarClass(object):
        The value of :attr:`y` at the end of the previous frame.
        (Read-only)
 
+    .. attribute:: mask_x
+
+       The horizontal location of the mask in the room.  (Read-only)
+
+    .. attribute:: mask_y
+
+       The vertical location of the mask in the room.  (Read-only)
+
     """
 
     def __init__(self, x, y, z=0, ID=None, sprite=None, visible=True,
                  active=True, detects_collisions=True, bbox_x=None,
                  bbox_y=None, bbox_width=None, bbox_height=None,
-                 collision_ellipse=False, collision_precise=False,
-                 xvelocity=0, yvelocity=0, image_index=0, image_fps=None,
-                 image_xscale=1, image_yscale=1, image_rotation=0,
-                 image_alpha=255, image_blend=None):
+                 regulate_origin=False, collision_ellipse=False,
+                 collision_precise=False, xvelocity=0, yvelocity=0,
+                 image_index=0, image_origin_x=None, image_origin_y=None,
+                 image_fps=None, image_xscale=1, image_yscale=1,
+                 image_rotation=0, image_alpha=255, image_blend=None):
         """Constructor method.
 
         Arguments:

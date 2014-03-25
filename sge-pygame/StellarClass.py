@@ -126,6 +126,20 @@ class StellarClass:
        The height of the bounding box in pixels.  If set to
        :const:`None`, the value recommended by the sprite is used.
 
+    .. attribute:: regulate_origin
+
+       If set to :const:`True`, the origin is automatically adjusted to
+       be the location of the pixel recommended by the sprite after
+       transformation.  This will cause rotation to be about the origin
+       rather than being about the center of the image.
+
+       .. note::
+
+          The value of this attribute has no effect on the bounding box.
+          If you wish for the bounding box to be adjusted as well, you
+          must do so manually.  As an alternative, you may want to
+          consider using precise collision detection instead.
+
     .. attribute:: collision_ellipse
 
        Whether or not an ellipse (rather than a rectangle) should be
@@ -180,6 +194,18 @@ class StellarClass:
        The animation frame currently being displayed, with ``0`` being
        the first one.
 
+    .. attribute:: image_origin_x
+
+       The horizontal location of the origin relative to the left edge
+       of the images.  If set to :const:`None`, the value recommended by
+       the sprite is used.
+
+    .. attribute:: image_origin_y
+
+       The vertical location of the origin relative to the top edge of
+       the images.  If set to :const:`None`, the value recommended by
+       the sprite is used.
+
     .. attribute:: image_fps
 
        The animation rate in frames per second.  If set to
@@ -203,6 +229,10 @@ class StellarClass:
        The rotation of the sprite in degrees, with rotation in a
        positive direction being counter-clockwise.
 
+       If :attr:`regulate_origin` is :const:`True`, the image is rotated
+       about the origin.  Otherwise, the image is rotated about its
+       center.
+
     .. attribute:: image_alpha
 
        The alpha value applied to the entire image, where ``255`` is the
@@ -217,6 +247,12 @@ class StellarClass:
     .. attribute:: id
 
        The unique identifier for this object.  (Read-only)
+
+    .. attribute:: mask
+
+       The current mask used for non-rectangular collision detection.
+       See the documentation for :func:`sge.collision.masks_collide` for
+       more information.  (Read-only)
 
     .. attribute:: xstart
 
@@ -237,6 +273,14 @@ class StellarClass:
 
        The value of :attr:`y` at the end of the previous frame.
        (Read-only)
+
+    .. attribute:: mask_x
+
+       The horizontal location of the mask in the room.  (Read-only)
+
+    .. attribute:: mask_y
+
+       The vertical location of the mask in the room.  (Read-only)
 
     """
 
@@ -417,6 +461,58 @@ class StellarClass:
             self._image_index = 0
 
     @property
+    def image_origin_x(self):
+        if self.regulate_origin:
+            id_ = (self.sprite.id, self.sprite.width, self.sprite.height,
+                   self.sprite.origin_x, self.sprite.origin_y,
+                   self.image_xscale, self.image_yscale, self.image_rotation)
+
+            if id_ not in self._origins_x:
+                if self.image_rotation % 360:
+                    x_offset, y_offset = self._get_origin_offset()
+                    self._origins_x[id_] = self.sprite.origin_x + x_offset
+                    self._origins_y[id_] = self.sprite.origin_y + y_offset
+                else:
+                    self._origins_x[id_] = self.sprite.origin_x
+
+            self._image_origin_x = self._origins_x[id_]
+
+        return self._image_origin_x
+
+    @image_origin_x.setter
+    def image_origin_x(self, value):
+        if value is None:
+            value = self.sprite.origin_x if self.sprite is not None else 0
+
+        self._image_origin_x = value
+
+    @property
+    def image_origin_y(self):
+        if self.regulate_origin:
+            id_ = (self.sprite.id, self.sprite.width, self.sprite.height,
+                   self.sprite.origin_x, self.sprite.origin_y,
+                   self.image_xscale, self.image_yscale, self.image_rotation)
+
+            if id_ not in self._origins_y:
+                if self.image_rotation % 360:
+                    x_offset, y_offset = self._get_origin_offset()
+                    self._origins_x[id_] = self.sprite.origin_x + x_offset
+                    self._origins_y[id_] = self.sprite.origin_y + y_offset
+                else:
+                    self._origins_y[id_] = self.sprite.origin_y
+
+            self._image_origin_y = self._origins_y[id_]
+
+        return self._image_origin_y
+
+    @image_origin_y.setter
+    def image_origin_y(self, value):
+        if value is None:
+            value = self.sprite.origin_y if self.sprite is not None else 0
+
+        self._image_origin_y = value
+
+    @property
     def image_fps(self):
         return self._fps
 
@@ -447,13 +543,93 @@ class StellarClass:
 
         self.image_fps = value * sge.game.fps
 
+    @property
+    def mask(self):
+        if self.collision_precise:
+            id_ = ("precise", self.sprite.id, self.sprite.width,
+                   self.sprite.height, self.image_index, self.image_xscale,
+                   self.image_yscale, self.image_rotation)
+        else:
+            id_ = (self.collision_ellipse, self.bbox_x, self.bbox_y,
+                   self.bbox_width, self.bbox_height, self.image_xscale,
+                   self.image_yscale)
+
+        if id_ in self._masks:
+            return self._masks[id_]
+        else:
+            if self.collision_precise:
+                # Mask based on opacity of the current image.
+                mask = self.sprite._get_precise_mask(
+                    self.image_index, self.image_xscale, self.image_yscale,
+                    self.image_rotation)
+            elif self.collision_ellipse:
+                # Elliptical mask based on bounding box.
+                mask = [[False for y in range(self.bbox_height)]
+                        for x in range(self.bbox_width)]
+                a = len(mask) / 2
+                b = len(mask) / 2
+                for x in range(len(mask)):
+                    for y in range(len(mask)):
+                        if ((x - a) / a) ** 2 + ((y - b) / b) ** 2 <= 1:
+                            mask[x][y] = True
+            else:
+                # Mask is all pixels in the bounding box.
+                mask = [[True for y in range(self.bbox_height)]
+                        for x in range(self.bbox_width)]
+
+            self._masks[id_] = mask
+            return mask
+
+    @property
+    def mask_x(self):
+        if self.collision_precise:
+            id_ = (self.sprite.id, self.sprite.width, self.sprite.height,
+                   self.image_origin_x, self.image_origin_y, self.image_xscale,
+                   self.image_yscale, self.image_rotation)
+            if id_ in self._masks_x_offset:
+                offset = self._masks_x_offset[id_]
+                return self.x - (self.image_origin_x + offset)
+            elif self.image_rotation % 180:
+                width = self._get_image_width()
+                normal_width = self._get_normal_image_width()
+                offset = (width - normal_width) / 2
+                self._masks_x_offset[id_] = offset
+                return self.x - (self.image_origin_x + offset)
+            else:
+                self._masks_x_offset[id_] = 0
+                return self.x - self.image_origin_x
+        else:
+            return self.bbox_left
+
+    @property
+    def mask_y(self):
+        if self.collision_precise:
+            id_ = (self.sprite.id, self.sprite.width, self.sprite.height,
+                   self.image_origin_x, self.image_origin_y, self.image_xscale,
+                   self.image_yscale, self.image_rotation)
+            if id_ in self._masks_y_offset:
+                offset = self._masks_y_offset[id_]
+                return self.y - (self.image_origin_y + offset)
+            elif self.image_rotation % 180:
+                height = self._get_image_height()
+                normal_height = self._get_normal_image_height()
+                offset = (height - normal_height) / 2
+                self._masks_y_offset[id_] = offset
+                return self.y - (self.image_origin_y + offset)
+            else:
+                self._masks_y_offset[id_] = 0
+                return self.y - self.image_origin_y
+        else:
+            return self.bbox_top
+
     def __init__(self, x, y, z=0, ID=None, sprite=None, visible=True,
                  active=True, detects_collisions=True, bbox_x=None,
                  bbox_y=None, bbox_width=None, bbox_height=None,
-                 collision_ellipse=False, collision_precise=False,
-                 xvelocity=0, yvelocity=0, image_index=0, image_fps=None,
-                 image_xscale=1, image_yscale=1, image_rotation=0,
-                 image_alpha=255, image_blend=None):
+                 regulate_origin=False, collision_ellipse=False,
+                 collision_precise=False, xvelocity=0, yvelocity=0,
+                 image_index=0, image_origin_x=None, image_origin_y=None,
+                 image_fps=None, image_xscale=1, image_yscale=1,
+                 image_rotation=0, image_alpha=255, image_blend=None):
         """Constructor method.
 
         Arguments:
@@ -494,6 +670,7 @@ class StellarClass:
                            sprite_bbox_width)
         self.bbox_height = (bbox_height if bbox_height is not None else
                             sprite_bbox_height)
+        self.regulate_origin = regulate_origin
         self._collision_ellipse = collision_ellipse
         self._collision_precise = collision_precise
         self._collision_areas = []
@@ -519,12 +696,19 @@ class StellarClass:
         self.xvelocity = xvelocity
         self.yvelocity = yvelocity
         self._anim_count = 0
+        self._origins_x = {}
+        self._origins_y = {}
+        self.image_origin_x = image_origin_x
+        self.image_origin_y = image_origin_y
         self.image_fps = image_fps
         self.image_xscale = image_xscale
         self.image_yscale = image_yscale
         self.image_rotation = image_rotation
         self.image_alpha = image_alpha
         self.image_blend = image_blend
+        self._masks = {}
+        self._masks_x_offset = {}
+        self._masks_y_offset = {}
 
         self._alarms = {}
 
@@ -534,8 +718,6 @@ class StellarClass:
             self._pygame_sprite = _PygameSprite(self)
         else:
             self._pygame_sprite = _FakePygameSprite(self)
-
-        self._set_mask()
 
         self.z = z
 
@@ -570,6 +752,8 @@ class StellarClass:
         """
         if isinstance(other, StellarClass):
             others = [other]
+        elif other in sge.game.objects:
+            others = [sge.game.objects[other]]
         elif other in sge.game.current_room.objects_by_class:
             others = []
             for obj in sge.game.current_room.objects_by_class[other]:
@@ -596,56 +780,17 @@ class StellarClass:
             if (self.collision_precise or self.collision_ellipse or
                     other.collision_precise or other.collision_ellipse):
                 # Use masks.
-                self._set_mask()
-                other._set_mask()
-
-                if self._hitmask and other._hitmask:
-                    self_rect = pygame.Rect(round(self.bbox_left + x),
-                                            round(self.bbox_top + y),
-                                            len(self._hitmask),
-                                            len(self._hitmask[0]))
-                    other_rect = pygame.Rect(round(other.bbox_left),
-                                             round(other.bbox_top),
-                                             len(other._hitmask),
-                                             len(other._hitmask[0]))
-
-                    if self.sprite is not None:
-                        # Offset for rotation
-                        w, h = self.sprite._get_image(
-                            self.image_index, self.image_xscale,
-                            self.image_yscale, self.image_rotation).get_size()
-
-                        nw, nh = self.sprite._get_image(
-                            self.image_index, self.image_xscale,
-                            self.image_yscale).get_size()
-
-                        offset = _get_rotation_offset(
-                            self.sprite.origin_x, self.sprite.origin_y,
-                            self.image_rotation, w, h, nw, nh)
-
-                        self_rect.left -= offset[0] // sge.game._xscale
-                        self_rect.top -= offset[1] // sge.game._yscale
-
-                    collide_rect = self_rect.clip(other_rect)
-                    self_xoffset = collide_rect.left - self_rect.left
-                    self_yoffset = collide_rect.top - self_rect.top
-                    other_xoffset = collide_rect.left - other_rect.left
-                    other_yoffset = collide_rect.top - other_rect.top
-
-                    for a in range(collide_rect.w):
-                        for b in range(collide_rect.h):
-                            if (self._hitmask[
-                                    a + self_xoffset][b + self_yoffset] and
-                                other._hitmask[
-                                    a + other_xoffset][b + other_yoffset]):
-                                return True
+                if sge.collision.masks_collide(
+                        self.mask_x + x, self.mask_y + y, self.mask,
+                        other.mask_x, other.mask_y, other.mask):
+                    return True
                         
             else:
                 # Use bounding boxes.
-                if (self.bbox_left + x < other.bbox_right and
-                        self.bbox_right + x > other.bbox_left and
-                        self.bbox_top + y < other.bbox_bottom and
-                        self.bbox_bottom + y > other.bbox_top):
+                if sge.collision.rectangles_collide(
+                        self.bbox_left + x, self.bbox_top + y, self.bbox_width,
+                        self.bbox_height, other.bbox_left, other.bbox_top,
+                        other.bbox_width, other.bbox_height):
                     return True
 
         return False
@@ -1308,27 +1453,62 @@ class StellarClass:
                     self.event_collision(other)
                     other.event_collision(self)
 
-    def _set_mask(self):
-        # Properly set the hit mask based on the collision settings.
-        if self.collision_precise:
-            # Mask based on opacity of the current image.
-            self._hitmask = self.sprite._get_precise_mask(
-                self.image_index, self.image_xscale, self.image_yscale,
-                self.image_rotation)
-        elif self.collision_ellipse:
-            # Elliptical mask based on bounding box.
-            self._hitmask = [[False for y in range(self.bbox_height)]
-                             for x in range(self.bbox_width)]
-            a = len(self._hitmask) / 2
-            b = len(self._hitmask[0]) / 2
-            for x in range(len(self._hitmask)):
-                for y in range(len(self._hitmask[x])):
-                    if ((x - a) / a) ** 2 + ((y - b) / b) ** 2 <= 1:
-                        self._hitmask[x][y] = True
-        else:
-            # Mask is all pixels in the bounding box.
-            self._hitmask = [[True for y in range(self.bbox_height)]
-                             for x in range(self.bbox_width)]
+    def _get_image_width(self):
+        # Get the width of the sprite when scaled rotated.
+        return int(self.sprite._get_image(
+            self.image_index, self.image_xscale, self.image_yscale,
+            self.image_rotation).get_width() / sge.game._xscale)
+
+    def _get_normal_image_width(self):
+        # Get the width of the sprite without scaling and rotation.
+        return int(self.sprite._get_image(
+            self.image_index, self.image_xscale,
+            self.image_yscale).get_width() / sge.game._xscale)
+
+    def _get_image_height(self):
+        # Get the height of the sprite when scaled rotated.
+        return int(self.sprite._get_image(
+            self.image_index, self.image_xscale, self.image_yscale,
+            self.image_rotation).get_height() / sge.game._xscale)
+
+    def _get_normal_image_height(self):
+        # Get the height of the sprite without scaling and rotation.
+        return int(self.sprite._get_image(
+            self.image_index, self.image_xscale,
+            self.image_yscale).get_height() / sge.game._xscale)
+
+    def _get_origin_offset(self):
+        # Return the amount to offset the origin as (x, y).
+        new_origin_x = self.sprite.origin_x
+        new_origin_y = self.sprite.origin_y
+
+        if self.image_xscale < 0:
+            new_origin_x = self.sprite.width - self.sprite.origin_x
+        new_origin_x *= abs(self.image_xscale)
+
+        if self.image_yscale < 0:
+            new_origin_y = self.sprite.height - self.sprite.origin_y
+        new_origin_y *= abs(self.image_yscale)
+
+        x_offset = new_origin_x - self.sprite.origin_x
+        y_offset = new_origin_y - self.sprite.origin_y
+
+        width = self._get_image_width()
+        height = self._get_image_height()
+        normal_width = self._get_normal_image_width()
+        normal_height = self._get_normal_image_height()
+
+        center_x = self.sprite.origin_x - normal_width / 2
+        center_y = self.sprite.origin_y - normal_height / 2
+        start_angle = math.atan2(-center_y, center_x)
+        radius = math.hypot(center_x, center_y)
+        new_angle = start_angle + math.radians(self.image_rotation)
+        new_center_x = self.sprite.origin_x + radius * math.cos(new_angle)
+        new_center_y = self.sprite.origin_y - radius * math.sin(new_angle)
+        x_offset += new_center_x + normal_width / 2
+        y_offset += new_center_y + normal_height / 2
+
+        return (x_offset, y_offset)
 
     def _set_speed(self):
         # Set the speed and move direction based on xvelocity and
@@ -1531,8 +1711,8 @@ class Mouse(StellarClass):
     def project_cursor(self):
         if (not sge.game.grab_input and self.visible and
                 self.sprite is not None):
-            x = (self.mouse_x / sge.game._xscale) - self.sprite.origin_x
-            y = (self.mouse_y / sge.game._yscale) - self.sprite.origin_y
+            x = (self.mouse_x / sge.game._xscale) - self.image_origin_x
+            y = (self.mouse_y / sge.game._yscale) - self.image_origin_y
             img = self.sprite._get_image(
                 self.image_index, self.image_xscale, self.image_yscale, 
                 self.image_rotation, self.image_alpha, self.image_blend)
@@ -1570,8 +1750,6 @@ class _PygameSprite(pygame.sprite.DirtySprite):
         self.image = pygame.Surface((1, 1))
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
-        self.x_offset = 0
-        self.y_offset = 0
 
     def update(self):
         if self.parent() is not None:
@@ -1586,22 +1764,20 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                     self.image = new_image
                     self.dirty = 1
 
-                    w, h = self.image.get_size()
-
-                    nw, nh = parent.sprite._get_image(
-                        parent.image_index, parent.image_xscale,
-                        parent.image_yscale).get_size()
-
-                    self.x_offset, self.y_offset = _get_rotation_offset(
-                        parent.sprite.origin_x, parent.sprite.origin_y,
-                        parent.image_rotation, w, h, nw, nh)
-
-                if self.visible != self.parent().visible:
-                    self.visible = int(self.parent().visible)
+                if self.visible != parent.visible:
+                    self.visible = int(parent.visible)
                     self.dirty = 1
 
+                width = parent._get_image_width()
+                normal_width = parent._get_normal_image_width()
+                height = parent._get_image_height()
+                normal_height = parent._get_normal_image_height()
+                x_offset = (width - normal_width) / 2
+                y_offset = (height - normal_height) / 2
+
                 self.update_rect(parent.x, parent.y, parent.z, parent.sprite,
-                                 parent.image_xscale, parent.image_yscale)
+                                 parent.image_origin_x + x_offset,
+                                 parent.image_origin_y + y_offset)
             else:
                 self.image = pygame.Surface((1, 1))
                 self.image.set_colorkey((0, 0, 0))
@@ -1609,21 +1785,11 @@ class _PygameSprite(pygame.sprite.DirtySprite):
         else:
             self.kill()
 
-    def update_rect(self, x, y, z, sprite, image_xscale, image_yscale):
+    def update_rect(self, x, y, z, sprite, origin_x, origin_y):
         # Update the rect of this Pygame sprite, based on the SGE sprite
         # and coordinates given.  This involves creating "proxy"
         # one-time sprites for multiple views if necessary.
         views = sge.game.current_room.views
-
-        if image_xscale >= 0:
-            origin_x = sprite.origin_x * abs(image_xscale)
-        else:
-            origin_x = (sprite.width - sprite.origin_x) * abs(image_xscale)
-
-        if image_yscale >= 0:
-            origin_y = sprite.origin_y * abs(image_yscale)
-        else:
-            origin_y = (sprite.height - sprite.origin_y) * abs(image_yscale)
 
         if (len(views) == 1 and views[0].xport == 0 and views[0].yport == 0 and
                 views[0].width == sge.game.width and
@@ -1633,10 +1799,8 @@ class _PygameSprite(pygame.sprite.DirtySprite):
             x = x - views[0].x - origin_x
             y = y - views[0].y - origin_y
             new_rect = self.image.get_rect()
-            new_rect.left = (round(x * sge.game._xscale) - self.x_offset +
-                             sge.game._x)
-            new_rect.top = (round(y * sge.game._yscale) - self.y_offset +
-                            sge.game._y)
+            new_rect.left = round(x * sge.game._xscale) + sge.game._x
+            new_rect.top = round(y * sge.game._yscale) + sge.game._y
 
             if self.rect != new_rect:
                 self.rect = new_rect
@@ -1654,10 +1818,8 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                 w = sprite.width
                 h = sprite.height
                 new_rect = self.image.get_rect()
-                new_rect.left = (round(x * sge.game._xscale) - self.x_offset +
-                                 sge.game._x)
-                new_rect.top = (round(y * sge.game._yscale) - self.y_offset +
-                                sge.game._y)
+                new_rect.left = round(x * sge.game._xscale) + sge.game._x
+                new_rect.top = round(y * sge.game._yscale) + sge.game._y
                 inside_view = (x >= view.xport and
                                x + w <= view.xport + view.width and
                                y >= view.yport and
@@ -1700,10 +1862,8 @@ class _PygameSprite(pygame.sprite.DirtySprite):
                         if y + h > view.yport + view.height:
                             h -= (y + h) - (view.yport + view.height)
 
-                        x = (sge.game._x +
-                             round((x - self.x_offset) * sge.game._xscale))
-                        y = (sge.game._y +
-                             round((y - self.y_offset) * sge.game._yscale))
+                        x = sge.game._x + round(x * sge.game._xscale)
+                        y = sge.game._y + round(y * sge.game._yscale)
                         cut_x *= sge.game._xscale
                         cut_y *= sge.game._yscale
                         w = round(w * sge.game._xscale)
@@ -1735,13 +1895,12 @@ class _PygameProjectionSprite(_PygameSprite):
         self.image_index = image_index
         self.image = sprite._get_image(image_index)
         self.rect = self.image.get_rect()
-        self.x_offset = 0
-        self.y_offset = 0
 
     def update(self):
         if self.dirty:
             self.image = self.sprite._get_image(self.image_index)
-            self.update_rect(self.x, self.y, self.z, self.sprite, 50, 50)
+            self.update_rect(self.x, self.y, self.z, self.sprite,
+                             self.sprite.origin_x, self.sprite.origin_y)
         else:
             self.kill()
 
@@ -1771,33 +1930,3 @@ class _PygameOneTimeSprite(pygame.sprite.DirtySprite):
     def update(self):
         if not self.dirty:
             self.kill()
-
-
-def _get_rotation_offset(origin_x, origin_y, rotation, image_width,
-                         image_height, image_width_normal,
-                         image_height_normal):
-    # Return what to offset an origin when the object is rotated as a
-    # two-part tuple: (x_offset, y_offset)
-    x_offset = 0
-    y_offset = 0
-
-    if rotation % 180:
-        # Adjust offset for the borders getting bigger.
-        x_offset += (image_width - image_width_normal) / 2
-        y_offset += (image_height - image_height_normal) / 2
-
-    if rotation % 360:
-        # Rotate about the origin
-        center_x = image_width_normal / 2
-        center_y = image_height_normal / 2
-        xorig = origin_x - center_x
-        yorig = origin_y - center_y
-        start_angle = math.atan2(-yorig, xorig)
-        radius = math.hypot(xorig, yorig)
-        new_angle = start_angle + math.radians(rotation)
-        new_center_x = origin_x + radius * math.cos(new_angle)
-        new_center_y = origin_y - radius * math.sin(new_angle)
-        x_offset += new_center_x + center_x
-        y_offset += new_center_y + center_y
-
-    return (x_offset, y_offset)

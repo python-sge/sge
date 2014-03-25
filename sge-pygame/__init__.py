@@ -410,7 +410,7 @@ by default.
 
 """
 
-__version__ = "0.8.0.1"
+__version__ = "0.8.0.3"
 
 import os
 
@@ -428,6 +428,7 @@ from .StellarClass import StellarClass, Mouse, _PygameProjectionSprite
 from .Room import Room
 from .View import View
 from .functions import *
+from . import collision
 
 
 __all__ = [

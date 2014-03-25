@@ -7,6 +7,25 @@ without any warranty.
 
 ========================================================================
 
+0.8.0-dev
+------------------------------------------------------------------------
+
+Specification additions:
++ sge.collision
++ sge.StellarClass.regulate_origin
++ sge.StellarClass.image_origin_x
++ sge.StellarClass.image_origin_y
++ sge.StellarClass.mask
++ sge.StellarClass.mask_x
++ sge.StellarClass.mask_y
+
+Specification misc changes:
+* Rotation and scaling are no longer relative to the origin unless the
+  new regulate_origin attribute is True.
+* New attributes added to sge.StellarClass.__init__'s arguments.
+* transparent argument moved in front of origin_x argument in sge.Sprite.__init__.
+
+
 0.8.0
 ------------------------------------------------------------------------
 
