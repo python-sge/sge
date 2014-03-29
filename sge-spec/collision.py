@@ -14,7 +14,7 @@
 # above as well as the notices contained in other source files with your
 # own copyright notice.  Recommended free  licenses are  the GNU General
 # Public License, GNU Lesser General Public License, Expat License, or
-# Apache License 2.0.
+# Apache License.
 
 __all__ = ["rectangles_collide", "masks_collide"]
 
@@ -75,3 +75,76 @@ def masks_collide(x1, y1, mask1, x2, y2, mask2):
                         return True
 
     return False
+
+
+def rectangle(x, y, w, h, other=None):
+    """Return a list of objects colliding with a rectangle.
+
+    Arguments:
+
+    - ``x`` -- The horizontal position of the rectangle.
+    - ``y`` -- The vertical position of the rectangle.
+    - ``w`` -- The width of the rectangle.
+    - ``h`` -- The height of the rectangle.
+    - ``other`` -- What to check for collisions with.  See the
+      documentation for :meth:`sge.StellarClass.collision` for more
+      information.
+
+    """
+    # TODO
+
+
+def ellipse(x, y, w, h, other=None):
+    """Return a list of objects colliding with an ellipse.
+
+    Arguments:
+
+    - ``x`` -- The horizontal position of the imaginary rectangle
+      containing the ellipse.
+    - ``y`` -- The vertical position of the imaginary rectangle
+      containing the ellipse.
+    - ``w`` -- The width of the ellipse.
+    - ``h`` -- The height of the ellipse.
+    - ``other`` -- What to check for collisions with.  See the
+      documentation for :meth:`sge.StellarClass.collision` for more
+      information.
+
+    """
+    # TODO
+
+
+def circle(x, y, radius, other=None):
+    """Return a list of objects colliding with a circle.
+
+    Arguments:
+
+    - ``x`` -- The horizontal position of the center of the circle.
+    - ``y`` -- The vertical position of the center of the circle.
+    - ``radius`` -- The radius of the circle.
+    - ``other`` -- What to check for collisions with.  See the
+      documentation for :meth:`sge.StellarClass.collision` for more
+      information.
+
+    """
+    # TODO
+
+
+def line(x1, y1, x2, y2, other=None):
+    """Return a list of objects colliding with a line segment.
+
+    Arguments:
+
+    - ``x1`` -- The horizontal position of the first endpoint of the
+      line segment.
+    - ``y1`` -- The vertical position of the first endpoint of the line
+      segment.
+    - ``x2`` -- The horizontal position of the second endpoint of the
+      line segment.
+    - ``y2`` -- The vertical position of the second endpoint of the line
+      segment.
+    - ``other`` -- What to check for collisions with.  See the
+      documentation for :meth:`sge.StellarClass.collision` for more
+      information.
+
+    """
+    # TODO

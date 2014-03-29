@@ -21,6 +21,14 @@ import sge
 __all__ = ["rectangles_collide", "masks_collide"]
 
 
+class _cache:
+
+    rectangle_masks = {}
+    ellipse_masks = {}
+    circle_masks = {}
+    line_masks = {}
+
+
 def rectangles_collide(x1, y1, w1, h1, x2, y2, w2, h2):
     """Return whether or not two rectangles collide.
 
@@ -77,3 +85,228 @@ def masks_collide(x1, y1, mask1, x2, y2, mask2):
                         return True
 
     return False
+
+
+def rectangle(x, y, w, h, other=None):
+    """Return a list of objects colliding with a rectangle.
+
+    Arguments:
+
+    - ``x`` -- The horizontal position of the rectangle.
+    - ``y`` -- The vertical position of the rectangle.
+    - ``w`` -- The width of the rectangle.
+    - ``h`` -- The height of the rectangle.
+    - ``other`` -- What to check for collisions with.  See the
+      documentation for :meth:`sge.StellarClass.collision` for more
+      information.
+
+    """
+    room = sge.game.current_room
+    areas = _get_rectangle_collision_areas(x, y, w, h)
+    others = _get_others(areas, other)
+    collisions = []
+    mask_id = (x, y, w, h)
+
+    if mask_id in _cache.rectangle_masks:
+        mask = _cache.rectangle_masks[mask_id]
+    else:
+        mask = [[True for j in range(h)] for i in range(w)]
+        _cache.rectangle_masks[mask_id] = mask
+
+    for other in others:
+        if other.collision_precise or other.collision_ellipse:
+            if masks_collide(x, y, mask, other.mask_x, other.mask_y,
+                             other.mask):
+                collisions.append(other)
+        else:
+            if rectangles_collide(x, y, w, h, other.bbox_left, other.bbox_top,
+                                  other.bbox_width, other.bbox_height):
+                collisions.append(other)
+
+    return collisions
+
+
+def ellipse(x, y, w, h, other=None):
+    """Return a list of objects colliding with an ellipse.
+
+    Arguments:
+
+    - ``x`` -- The horizontal position of the imaginary rectangle
+      containing the ellipse.
+    - ``y`` -- The vertical position of the imaginary rectangle
+      containing the ellipse.
+    - ``w`` -- The width of the ellipse.
+    - ``h`` -- The height of the ellipse.
+    - ``other`` -- What to check for collisions with.  See the
+      documentation for :meth:`sge.StellarClass.collision` for more
+      information.
+
+    """
+    room = sge.game.current_room
+    areas = _get_rectangle_collision_areas(x, y, w, h)
+    others = _get_others(areas, other)
+    collisions = []
+    mask_id = (x, y, w, h)
+
+    if mask_id in _cache.ellipse_masks:
+        mask = _cache.ellipse_masks[mask_id]
+    else:
+        mask = [[False for j in range(h)] for i in range(w)]
+        a = len(mask) / 2
+        b = len(mask[0] / 2 if mask else 0
+
+        for i in range(len(mask)):
+            for j in range(len(mask[i])):
+                if ((i - a) / a) ** 2 + ((j - b) / b) ** 2 <= 1:
+                    mask[i][j] = True
+
+        _cache.ellipse_masks[mask_id] = mask
+
+    for other in others:
+        if masks_collide(x, y, mask, other.mask_x, other.mask_y,
+                         other.mask):
+            collisions.append(other)
+
+    return collisions
+
+
+def circle(x, y, radius, other=None):
+    """Return a list of objects colliding with a circle.
+
+    Arguments:
+
+    - ``x`` -- The horizontal position of the center of the circle.
+    - ``y`` -- The vertical position of the center of the circle.
+    - ``radius`` -- The radius of the circle.
+    - ``other`` -- What to check for collisions with.  See the
+      documentation for :meth:`sge.StellarClass.collision` for more
+      information.
+
+    """
+    room = sge.game.current_room
+    diameter = radius * 2
+    areas = _get_rectangle_collision_areas(x, y, diameter, diameter)
+    others = _get_others(areas, other)
+    collisions = []
+    mask_id = (x, y, radius)
+
+    if mask_id in _cache.circle_masks:
+        mask = _cache.circle_masks[mask_id]
+    else:
+        mask = [[False for j in range(diameter)] for i in range(diameter)]
+
+        for i in range(len(mask)):
+            for j in range(len(mask[i])):
+                if (i - x) ** 2 + (j - y) ** 2 <= radius ** 2:
+                    mask[i][j] = True
+
+        _cache.circle_masks[mask_id] = mask
+
+    for other in others:
+        if masks_collide(x - radius, y - radius, mask, other.mask_x,
+                         other.mask_y, other.mask):
+            collisions.append(other)
+
+    return collisions
+
+
+def line(x1, y1, x2, y2, other=None):
+    """Return a list of objects colliding with a line segment.
+
+    Arguments:
+
+    - ``x1`` -- The horizontal position of the first endpoint of the
+      line segment.
+    - ``y1`` -- The vertical position of the first endpoint of the line
+      segment.
+    - ``x2`` -- The horizontal position of the second endpoint of the
+      line segment.
+    - ``y2`` -- The vertical position of the second endpoint of the line
+      segment.
+    - ``other`` -- What to check for collisions with.  See the
+      documentation for :meth:`sge.StellarClass.collision` for more
+      information.
+
+    """
+    room = sge.game.current_room
+    x = min(x1, x2)
+    y = min(y1, y2)
+    w = abs(x2 - x1)
+    h = abs(y2 - y1)
+    areas = _get_rectangle_collision_areas(x, y, w, h)
+    others = _get_others(areas, other)
+    collisions = []
+    mask_id = (w, h)
+
+    if mask_id in _cache.line_masks:
+        mask = _cache.line_masks[mask_id]
+    else:
+        mask = [[False for j in range(h)] for i in range(w)]
+        m = h / w
+        b = y1 - m * x1
+
+        for i in range(len(mask)):
+            j = int(round(m * i + b))
+            if 0 <= j < len(mask[i]):
+                mask[i][j] = True
+
+        _cache.line_masks[mask_id] = mask
+
+    for other in others:
+        if masks_collide(x, y, mask, other.mask_x, other.mask_y,
+                         other.mask):
+            collisions.append(other)
+
+    return collisions
+
+
+def _get_rectangle_collision_areas(x, y, w, h):
+    # Get a list of collision areas a rect is in.
+    room = sge.game.current_room
+    area_size = room._collision_area_size
+    areas_x_start = int(x / area_size)
+    areas_x_num = math.ceil(w / area_size) + 1
+    areas_y_start = int(y / area_size)
+    areas_y_num = math.ceil(h / area_size) + 1
+    areas = []
+
+    for i in range(areas_x_start, areas_x_start + areas_x_num):
+        for j in range(areas_y_start, areas_y_start + areas_y_num):
+            if (i >= 0 and j >= 0 and room._collision_areas and
+                    i < len(room._collision_areas) and
+                    j < len(room._collision_areas[0])):
+                areas.append((i, j))
+            elif None not in areas:
+                areas.append(None)
+
+    return areas
+
+
+def _get_others(areas, other=None):
+    room = sge.game.current_room
+    others = []
+
+    for area in areas:
+        if area is not None:
+            i, j = area
+            room_area = room._collision_areas[i][j]
+        else:
+            room_area = room._collision_area_void
+
+        for obj in room_area:
+            if other is None or other is obj:
+                others.append(obj)
+            elif isinstance(other, (list, tuple)):
+                if obj in other:
+                    others.append(obj)
+            elif other in sge.game.objects:
+                if obj is sge.game.objects[other]:
+                    others.append(obj)
+            else:
+                try:
+                    if isinstance(obj, other):
+                        others.append(obj)
+                except TypeError:
+                    other = []
+
+    return others

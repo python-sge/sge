@@ -298,14 +298,21 @@ class StellarClass(object):
         """
         # TODO
 
-    def collides(self, other, x=None, y=None):
-        """Return whether or not this object collides with another.
+    def collision(self, other=None, x=None, y=None):
+        """Return a list of objects colliding with this object.
 
         Arguments:
 
-        - ``other`` -- The object to check for a collision with, or the
-          unique identifier of said object.  ``other`` can also be a
-          class to check for collisions with.
+        - ``other`` -- What to check for collisions with.  Can be one of
+          the following:
+
+          - A :class:`sge.StellarClass` object.
+          - The unique identifier of a :class:`sge.StellarClass` object.
+          - A list of :class:`sge.StellarClass` objects and/or unique
+            identifiers of :class:`sge.StellarClass` objects.
+          - A class derived from :class:`sge.StellarClass`.
+          - :const:`None`: Check for collisions with all objects.
+
         - ``x`` -- The horizontal position to pretend this object is at
           for the purpose of the collision detection.  If set to
           :const:`None`, :attr:`x` will be used.

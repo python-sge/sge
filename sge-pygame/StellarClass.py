@@ -291,6 +291,7 @@ class StellarClass:
     @x.setter
     def x(self, value):
         self._x = value
+        self._update_collision_areas()
 
         # Cause the Pygame sprite to make itself dirty
         self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
@@ -302,6 +303,7 @@ class StellarClass:
     @y.setter
     def y(self, value):
         self._y = value
+        self._update_collision_areas()
 
         # Cause the Pygame sprite to make itself dirty
         self._pygame_sprite.rect = pygame.Rect(0, 0, 1, 1)
@@ -357,6 +359,42 @@ class StellarClass:
         else:
             if position is not None:
                 del sge.game._colliders[position]
+
+    @property
+    def bbox_x(self):
+        return self._bbox_x
+
+    @bbox_x.setter
+    def bbox_x(self, value):
+        self._bbox_x = value
+        self._update_collision_areas()
+
+    @property
+    def bbox_y(self):
+        return self._bbox_y
+
+    @bbox_y.setter
+    def bbox_y(self, value):
+        self._bbox_y = value
+        self._update_collision_areas()
+
+    @property
+    def bbox_width(self):
+        return self._bbox_width
+
+    @bbox_width.setter
+    def bbox_width(self, value):
+        self._bbox_width = value
+        self._update_collision_areas()
+
+    @property
+    def bbox_height(self):
+        return self._bbox_height
+
+    @bbox_height.setter
+    def bbox_height(self, value):
+        self._bbox_height = value
+        self._update_collision_areas()
 
     @property
     def collision_ellipse(self):
@@ -567,9 +605,10 @@ class StellarClass:
                 mask = [[False for y in range(self.bbox_height)]
                         for x in range(self.bbox_width)]
                 a = len(mask) / 2
-                b = len(mask) / 2
+                b = len(mask[0]) / 2 if mask else 0
+
                 for x in range(len(mask)):
-                    for y in range(len(mask)):
+                    for y in range(len(mask[x])):
                         if ((x - a) / a) ** 2 + ((y - b) / b) ** 2 <= 1:
                             mask[x][y] = True
             else:
@@ -664,12 +703,12 @@ class StellarClass:
             sprite_bbox_y = 0
             sprite_bbox_width = 1
             sprite_bbox_height = 1
-        self.bbox_x = bbox_x if bbox_x is not None else sprite_bbox_x
-        self.bbox_y = bbox_y if bbox_y is not None else sprite_bbox_y
-        self.bbox_width = (bbox_width if bbox_width is not None else
-                           sprite_bbox_width)
-        self.bbox_height = (bbox_height if bbox_height is not None else
-                            sprite_bbox_height)
+        self._bbox_x = bbox_x if bbox_x is not None else sprite_bbox_x
+        self._bbox_y = bbox_y if bbox_y is not None else sprite_bbox_y
+        self._bbox_width = (bbox_width if bbox_width is not None else
+                            sprite_bbox_width)
+        self._bbox_height = (bbox_height if bbox_height is not None else
+                             sprite_bbox_height)
         self.regulate_origin = regulate_origin
         self._collision_ellipse = collision_ellipse
         self._collision_precise = collision_precise
@@ -720,6 +759,7 @@ class StellarClass:
             self._pygame_sprite = _FakePygameSprite(self)
 
         self.z = z
+        self._update_collision_areas()
 
         self._start_x = self.x
         self._start_y = self.y
@@ -734,14 +774,21 @@ class StellarClass:
         self._start_collision_ellipse = self.collision_ellipse
         self._start_collision_precise = self.collision_precise
 
-    def collides(self, other, x=None, y=None):
-        """Return whether or not this object collides with another.
+    def collision(self, other=None, x=None, y=None):
+        """Return a list of objects colliding with this object.
 
         Arguments:
 
-        - ``other`` -- The object to check for a collision with, or the
-          unique identifier of said object.  ``other`` can also be a
-          class to check for collisions with.
+        - ``other`` -- What to check for collisions with.  Can be one of
+          the following:
+
+          - A :class:`sge.StellarClass` object.
+          - The unique identifier of a :class:`sge.StellarClass` object.
+          - A list of :class:`sge.StellarClass` objects and/or unique
+            identifiers of :class:`sge.StellarClass` objects.
+          - A class derived from :class:`sge.StellarClass`.
+          - :const:`None`: Check for collisions with all objects.
+
         - ``x`` -- The horizontal position to pretend this object is at
           for the purpose of the collision detection.  If set to
           :const:`None`, :attr:`x` will be used.
@@ -750,20 +797,33 @@ class StellarClass:
           :const:`None`, :attr:`y` will be used.
 
         """
-        if isinstance(other, StellarClass):
-            others = [other]
-        elif other in sge.game.objects:
-            others = [sge.game.objects[other]]
-        elif other in sge.game.current_room.objects_by_class:
-            others = []
-            for obj in sge.game.current_room.objects_by_class[other]:
-                if obj.detects_collisions:
-                    others.append(obj)
-        else:
-            others = []
-            for ref in sge.game._colliders:
-                if isinstance(ref(), other):
-                    others.append(ref())
+        room = sge.game.current_room
+        others = []
+        collisions = []
+
+        for area in self._collision_areas:
+            if area is not None:
+                i, j = area
+                room_area = room._collision_areas[i][j]
+            else:
+                room_area = room._collision_area_void
+
+            for obj in room_area:
+                if obj is not self:
+                    if other is None or other is obj:
+                        others.append(obj)
+                    elif isinstance(other, (list, tuple)):
+                        if obj in other:
+                            others.append(obj)
+                    elif other in sge.game.objects:
+                        if obj is sge.game.objects[other]:
+                            others.append(obj)
+                    else:
+                        try:
+                            if isinstance(obj, other):
+                                others.append(obj)
+                        except TypeError:
+                            other = []
 
         # Change x and y to be offset values; these are easier to use.
         if x is not None:
@@ -783,17 +843,16 @@ class StellarClass:
                 if sge.collision.masks_collide(
                         self.mask_x + x, self.mask_y + y, self.mask,
                         other.mask_x, other.mask_y, other.mask):
-                    return True
-                        
+                    collisions.append(other)
             else:
                 # Use bounding boxes.
                 if sge.collision.rectangles_collide(
                         self.bbox_left + x, self.bbox_top + y, self.bbox_width,
                         self.bbox_height, other.bbox_left, other.bbox_top,
                         other.bbox_width, other.bbox_height):
-                    return True
+                    collisions.append(other)
 
-        return False
+        return collisions
 
     def set_alarm(self, alarm_id, value):
         """Set an alarm.
@@ -1358,22 +1417,17 @@ class StellarClass:
                 self.x += self.xvelocity * delta_mult
                 self.y += self.yvelocity * delta_mult
 
+    def _update_collision_areas(self):
         room = sge.game.current_room
-        area_size = room._collision_area_size
-        areas_x_start = int(self.bbox_left / area_size)
-        areas_x_num = math.ceil(self.bbox_width / area_size) + 1
-        areas_y_start = int(self.bbox_top / area_size)
-        areas_y_num = math.ceil(self.bbox_height / area_size) + 1
 
-        my_areas = []
-        for i in range(areas_x_start, areas_x_start + areas_x_num):
-            for j in range(areas_y_start, areas_y_start + areas_y_num):
-                if (i >= 0 and j >= 0 and room._collision_areas and
-                        i < len(room._collision_areas) and
-                        j < len(room._collision_areas[0])):
-                    my_areas.append((i, j))
-                elif None not in my_areas:
-                    my_areas.append(None)
+        if self.collision_precise:
+            my_areas = sge.collision._get_rectangle_collision_areas(
+                self.mask_x, self.mask_y, len(self.mask),
+                len(self.mask[0]) if mask else 0)
+        else:
+            my_areas = sge.collision._get_rectangle_collision_areas(
+                self.bbox_left, self.bbox_top, self.bbox_width,
+                self.bbox_height)
 
         for area in self._collision_areas:
             if area not in my_areas:
@@ -1411,7 +1465,7 @@ class StellarClass:
                     del other._colliders[i]
                     break
 
-            if self.collides(other):
+            if self.collision(other):
                 self_prev_bbox_left = self.xprevious + self.bbox_x
                 self_prev_bbox_right = self_prev_bbox_left + self.bbox_width
                 self_prev_bbox_top = self.yprevious + self.bbox_y

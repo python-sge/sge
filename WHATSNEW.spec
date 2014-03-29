@@ -18,6 +18,10 @@ Specification additions:
 + sge.StellarClass.mask
 + sge.StellarClass.mask_x
 + sge.StellarClass.mask_y
++ sge.StellarClass.collision
+
+Specification removals:
+- sge.StellarClass.collides
 
 Specification misc changes:
 * Rotation and scaling are no longer relative to the origin unless the
