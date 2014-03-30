@@ -44,7 +44,7 @@ class Circle(sge.StellarClass):
         self.image_blend = self.normal_image_blend
         for obj in sge.game.current_room.objects:
             if (obj is not self and isinstance(obj, Circle) and
-                    self.collides(obj)):
+                    self.collision(obj)):
                 self.image_blend = 'olive'
                 break
 

@@ -49,11 +49,10 @@ class Circle(sge.StellarClass):
         self.image_alpha = 128
 
     def set_color(self):
-        self.image_blend = self.normal_image_blend
-        for obj in sge.game.current_room.objects_by_class[Circle]:
-            if obj is not self and self.collides(obj):
-                self.image_blend = 'olive'
-                break
+        if self.collision(Circle):
+            self.image_blend = 'olive'
+        else:
+            self.image_blend = self.normal_image_blend
 
     def event_create(self):
         self.set_color()

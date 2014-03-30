@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
+import math
+
 import sge
 
 
@@ -153,7 +155,7 @@ def ellipse(x, y, w, h, other=None):
     else:
         mask = [[False for j in range(h)] for i in range(w)]
         a = len(mask) / 2
-        b = len(mask[0] / 2 if mask else 0
+        b = len(mask[0]) / 2 if mask else 0
 
         for i in range(len(mask)):
             for j in range(len(mask[i])):
@@ -293,20 +295,25 @@ def _get_others(areas, other=None):
         else:
             room_area = room._collision_area_void
 
-        for obj in room_area:
-            if other is None or other is obj:
-                others.append(obj)
-            elif isinstance(other, (list, tuple)):
-                if obj in other:
+        for ref in room_area:
+            obj = ref()
+            if obj is not None:
+                if other is None:
                     others.append(obj)
-            elif other in sge.game.objects:
-                if obj is sge.game.objects[other]:
-                    others.append(obj)
-            else:
-                try:
-                    if isinstance(obj, other):
+                elif isinstance(other, sge.StellarClass):
+                    if obj is other:
                         others.append(obj)
-                except TypeError:
-                    other = []
+                elif isinstance(other, (list, tuple)):
+                    if obj in other:
+                        others.append(obj)
+                elif other in sge.game.objects:
+                    if obj is sge.game.objects[other]:
+                        others.append(obj)
+                else:
+                    try:
+                        if isinstance(obj, other):
+                            others.append(obj)
+                    except TypeError:
+                        pass
 
     return others

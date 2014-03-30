@@ -759,7 +759,6 @@ class StellarClass:
             self._pygame_sprite = _FakePygameSprite(self)
 
         self.z = z
-        self._update_collision_areas()
 
         self._start_x = self.x
         self._start_y = self.y
@@ -808,10 +807,14 @@ class StellarClass:
             else:
                 room_area = room._collision_area_void
 
-            for obj in room_area:
-                if obj is not self:
-                    if other is None or other is obj:
+            for ref in room_area:
+                obj = ref()
+                if obj is not None and obj is not self:
+                    if other is None:
                         others.append(obj)
+                    elif isinstance(other, StellarClass):
+                        if obj is other:
+                            others.append(obj)
                     elif isinstance(other, (list, tuple)):
                         if obj in other:
                             others.append(obj)
@@ -823,7 +826,7 @@ class StellarClass:
                             if isinstance(obj, other):
                                 others.append(obj)
                         except TypeError:
-                            other = []
+                            pass
 
         # Change x and y to be offset values; these are easier to use.
         if x is not None:
@@ -1417,13 +1420,15 @@ class StellarClass:
                 self.x += self.xvelocity * delta_mult
                 self.y += self.yvelocity * delta_mult
 
+        self._update_collision_areas()
+
     def _update_collision_areas(self):
         room = sge.game.current_room
 
         if self.collision_precise:
             my_areas = sge.collision._get_rectangle_collision_areas(
                 self.mask_x, self.mask_y, len(self.mask),
-                len(self.mask[0]) if mask else 0)
+                len(self.mask[0]) if self.mask else 0)
         else:
             my_areas = sge.collision._get_rectangle_collision_areas(
                 self.bbox_left, self.bbox_top, self.bbox_width,
@@ -1721,7 +1726,8 @@ class Mouse(StellarClass):
 
     def _update(self, time_passed, delta_mult):
         self.update_speed(time_passed)
-        super(Mouse, self)._update(time_passed, delta_mult)
+        super()._update(time_passed, delta_mult)
+        self._update_collision_areas()
 
     def update_speed(self, time_passed):
         # Update the speed variables.  ``time_passed`` is the number of

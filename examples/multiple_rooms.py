@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Multiple Rooms Example
-# Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net>
+# Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -11,13 +11,6 @@
 # You should have received a copy of the CC0 Public Domain Dedication
 # along with this software. If not, see
 # <http://creativecommons.org/publicdomain/zero/1.0/>.
-
-"""Stellar Game Engine example
-
-This is a simple example of a possible game in Stellar Game Engine, just
-to give a general idea of how it will be used.
-
-"""
 
 import sge
 import random
@@ -44,20 +37,20 @@ class Circle(sge.StellarClass):
 
     def event_create(self):
         self.image_alpha = 200
-        if self.collides(sge.game.mouse):
+        if self.collision(sge.game.mouse):
             self.image_blend = '#ff0000'
         else:
             self.image_blend = 'blue'
 
     def event_mouse_move(self, x, y):
-        if self.collides(sge.game.mouse):
+        if self.collision(sge.game.mouse):
             self.image_blend = "red"
         else:
             self.image_blend = (0, 0, 255)
 
     def event_mouse_button_press(self, button):
         if button == 'left':
-            if self.collides(sge.game.mouse):
+            if self.collision(sge.game.mouse):
                 self.destroy()
 
     def event_destroy(self):
