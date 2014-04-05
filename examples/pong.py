@@ -112,7 +112,7 @@ class Player(sge.StellarClass):
             self.hit_direction = -1
 
         y = sge.game.height / 2
-        super(Player, self).__init__(x, y, 0, sprite="paddle")
+        super().__init__(x, y, 0, sprite="paddle")
 
     def event_create(self):
         self.v_score = 0
@@ -152,7 +152,7 @@ class Ball(sge.StellarClass):
     def __init__(self):
         x = sge.game.width / 2
         y = sge.game.height / 2
-        super(Ball, self).__init__(x, y, 1, sprite="ball")
+        super().__init__(x, y, 1, sprite="ball")
 
     def event_create(self):
         refresh_hud()

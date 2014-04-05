@@ -1707,7 +1707,7 @@ class Mouse(StellarClass):
         self.mouse_yprevious = self.mouse_y
         self.previous_speeds = []
 
-        super(Mouse, self).__init__(0, 0, 0, ID='mouse')
+        super().__init__(0, 0, 0, ID='mouse')
 
     def event_collision(self, other):
         sge.game.event_mouse_collision(other)

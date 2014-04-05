@@ -33,7 +33,7 @@ class Game(sge.Game):
 
 class Circle(sge.StellarClass):
     def __init__(self, x, y):
-        super(Circle, self).__init__(x, y, 5, sprite='circle', collision_precise=True)
+        super().__init__(x, y, 5, sprite='circle', collision_precise=True)
 
     def event_create(self):
         self.image_alpha = 200
@@ -63,7 +63,7 @@ class Circle(sge.StellarClass):
 
 class CirclePop(sge.StellarClass):
     def __init__(self, x, y):
-        super(CirclePop, self).__init__(x, y, 5, sprite='circle_pop')
+        super().__init__(x, y, 5, sprite='circle_pop')
 
     def event_animation_end(self):
         self.destroy()
@@ -77,7 +77,7 @@ class CirclePop(sge.StellarClass):
 class Room(sge.Room):
     def __init__(self, text, objects=(), views=None, background=None):
         self.text = text
-        super(Room, self).__init__(objects, views=views, background=background)
+        super().__init__(objects, views=views, background=background)
 
     def event_room_start(self):
         glob.music.play(loops=None)

@@ -43,7 +43,7 @@ class Game(sge.Game):
 
 class Circle(sge.StellarClass):
     def __init__(self, x, y, player=0):
-        super(Circle, self).__init__(x, y, 1, sprite='circle', collision_precise=True)
+        super().__init__(x, y, 1, sprite='circle', collision_precise=True)
         self.player = player
         self.normal_image_blend = ['red', 'blue', 'yellow', 'green'][self.player]
         self.image_alpha = 128
