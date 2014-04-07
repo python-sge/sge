@@ -330,9 +330,13 @@ class Game:
 
         # Setup sound channels
         self._available_channels = []
+        self._all_channels = []
         if pygame.mixer.get_init():
             for i in range(pygame.mixer.get_num_channels()):
-                self._available_channels.append(pygame.mixer.Channel(i))
+                channel = pygame.mixer.Channel(i)
+                channel.set_endevent(sge.SOUND_END_EVENT)
+                self._available_channels.append(channel)
+                self._all_channels.append(channel)
 
         # Setup joysticks
         if pygame.joystick.get_init():
@@ -588,6 +592,16 @@ class Game:
                         self._window_width = event.w
                         self._window_height = event.h
                         self._set_mode()
+                    elif event.type == sge.SOUND_END_EVENT:
+                        for i in self.sounds:
+                            for channel in (self.sounds[i]._channels +
+                                            self.sounds[i]._temp_channels):
+                                if channel is self._all_channels[event.code]:
+                                    self.sounds[i].playing -= 1
+                                    if self.sounds[i].playing < 0:
+                                        self.sounds[i].playing = 0
+                                        if sge.DEBUG:
+                                            print("Hey, I'm playing less than none?!")
 
                 real_time_passed = self._clock.tick(self.fps)
 
@@ -913,6 +927,16 @@ class Game:
                                                         (event.w, event.h))
                     background = pygame.transform.scale(orig_background,
                                                         (event.w, event.h))
+                elif event.type == sge.SOUND_END_EVENT:
+                    for i in self.sounds:
+                        for channel in (self.sounds[i]._channels +
+                                        self.sounds[i]._temp_channels):
+                            if channel is self._all_channels[event.code]:
+                                self.sounds[i].playing -= 1
+                                if self.sounds[i].playing < 0:
+                                    self.sounds[i].playing = 0
+                                    if sge.DEBUG:
+                                        print("Hey, I'm playing less than none?!")
 
             # Time management
             self._clock.tick(self.fps)
@@ -1783,4 +1807,7 @@ class Game:
         pygame.mixer.set_num_channels(new_num_channels)
 
         for i in range(old_num_channels, new_num_channels):
-            self._available_channels.append(pygame.mixer.Channel(i))
+            new_channel = pygame.mixer.Channel(i)
+            new_channel.set_endevent(sge.SOUND_END_EVENT)
+            self._available_channels.append(new_channel)
+            self._all_channels.append(new_channel)
