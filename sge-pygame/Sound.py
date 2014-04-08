@@ -89,12 +89,14 @@ class Sound:
         else:
             return 0
 
-    #@property
-    #def playing(self):
-    #    if self._sound is not None:
-    #        return self._sound.get_num_channels()
-    #    else:
-    #        return 0
+    @property
+    def playing(self):
+        n = 0
+        for channel in self._channels + self._temp_channels:
+            if channel.get_busy():
+                n += 1
+
+        return n
 
     def __init__(self, fname, ID=None, volume=100, max_play=1):
         """Constructor method.
@@ -156,7 +158,6 @@ class Sound:
         self.fname = fname
         self.volume = volume
         self.max_play = max_play
-        self.playing = 0
 
         sge.game.sounds[self.id] = self
 
@@ -200,8 +201,6 @@ class Sound:
                 right_volume *= 1 - abs(balance)
             elif balance > 0:
                 left_volume *= 1 - abs(balance)
-
-            self.playing += 1
 
             if self.max_play:
                 for channel in self._channels:
