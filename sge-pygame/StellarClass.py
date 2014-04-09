@@ -338,7 +338,8 @@ class StellarClass:
         else:
             self._sprite = sge.game.sprites[value]
 
-        self.image_index = self.image_index % len(self._sprite._images)
+        if self._sprite is not None:
+            self.image_index = self.image_index % len(self._sprite._images)
 
     @property
     def detects_collisions(self):
@@ -515,13 +516,13 @@ class StellarClass:
 
             self._image_origin_x = self._origins_x[id_]
 
-        return self._image_origin_x
+        if self._image_origin_x is None:
+            return self.sprite.origin_x if self.sprite is not None else 0
+        else:
+            return self._image_origin_x
 
     @image_origin_x.setter
     def image_origin_x(self, value):
-        if value is None:
-            value = self.sprite.origin_x if self.sprite is not None else 0
-
         self._image_origin_x = value
 
     @property
@@ -541,13 +542,13 @@ class StellarClass:
 
             self._image_origin_y = self._origins_y[id_]
 
-        return self._image_origin_y
+        if self._image_origin_y is None:
+            return self.sprite.origin_y if self.sprite is not None else 0
+        else:
+            return self._image_origin_y
 
     @image_origin_y.setter
     def image_origin_y(self, value):
-        if value is None:
-            value = self.sprite.origin_y if self.sprite is not None else 0
-
         self._image_origin_y = value
 
     @property
