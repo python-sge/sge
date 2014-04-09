@@ -1091,6 +1091,9 @@ def _show_modal(text, default, text_entry, buttons):
 
         # Time management
         sge.game._clock.tick(60)
+
+        # Music control
+        sge.game._handle_music()
         
         # Redraw
         window.blit(background, (0, 0))

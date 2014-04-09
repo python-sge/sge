@@ -12,6 +12,7 @@ without any warranty.
 
 Pygame SGE bugfixes:
 - sge.Sound.playinng never decreasing.
+- Music not being controlled when paused or when a dialog was up.
 
 
 0.8.0

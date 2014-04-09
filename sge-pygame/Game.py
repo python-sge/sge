@@ -654,26 +654,7 @@ class Game:
                         obj.event_inactive_end_step(real_time_passed)
 
                 # Music control
-                if self._music is not None:
-                    if pygame.mixer.music.get_busy():
-                        time_played = pygame.mixer.music.get_pos()
-                        fade_time = self._music._fade_time
-                        timeout = self._music._timeout
-
-                        if fade_time:
-                            real_volume = self._music.volume / 100
-                            if time_played < fade_time:
-                                volume = real_volume * time_played / fade_time
-                                pygame.mixer.music.set_volume(volume)
-                            else:
-                                pygame.mixer.music.set_volume(real_volume)
-
-                        if timeout and time_played >= timeout:
-                            self._music.stop()
-                            
-                    elif self._music_queue:
-                        music = self._music_queue.pop(0)
-                        music[0].play(*music[1:])
+                self._handle_music()
 
                 if numviews != len(self.current_room.views):
                     numviews = len(self.current_room.views)
@@ -916,6 +897,9 @@ class Game:
 
             # Time management
             self._clock.tick(self.fps)
+
+            # Music control
+            self._handle_music()
             
             # Redraw
             self._window.blit(background, (0, 0))
@@ -1784,3 +1768,26 @@ class Game:
 
         for i in range(old_num_channels, new_num_channels):
             self._available_channels.append(pygame.mixer.Channel(i))
+
+    def _handle_music(self):
+        # Call each frame to control the music playback.
+        if self._music is not None:
+            if pygame.mixer.music.get_busy():
+                time_played = pygame.mixer.music.get_pos()
+                fade_time = self._music._fade_time
+                timeout = self._music._timeout
+
+                if fade_time:
+                    real_volume = self._music.volume / 100
+                    if time_played < fade_time:
+                        volume = real_volume * time_played / fade_time
+                        pygame.mixer.music.set_volume(volume)
+                    else:
+                        pygame.mixer.music.set_volume(real_volume)
+
+                if timeout and time_played >= timeout:
+                    self._music.stop()
+                    
+            elif self._music_queue:
+                music = self._music_queue.pop(0)
+                music[0].play(*music[1:])
