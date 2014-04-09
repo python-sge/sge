@@ -11,7 +11,8 @@ without any warranty.
 ------------------------------------------------------------------------
 
 Specification additions:
-+ sge.collision
++ sge.collision.rectangles_collide
++ sge.collision.masks_collide
 + sge.StellarClass.regulate_origin
 + sge.StellarClass.image_origin_x
 + sge.StellarClass.image_origin_y
@@ -19,6 +20,10 @@ Specification additions:
 + sge.StellarClass.mask_x
 + sge.StellarClass.mask_y
 + sge.StellarClass.collision
++ sge.collision.rectangle
++ sge.collision.ellipse
++ sge.collision.circle
++ sge.collision.line
 
 Specification removals:
 - sge.StellarClass.collides
