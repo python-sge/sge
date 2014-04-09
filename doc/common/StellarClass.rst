@@ -51,6 +51,8 @@ sge.StellarClass Event Methods
 
 .. automethod:: sge.StellarClass.event_joystick_button_release
 
+.. automethod:: sge.StellarClass.event_update_position
+
 .. automethod:: sge.StellarClass.event_collision
 
 .. automethod:: sge.StellarClass.event_collision_left

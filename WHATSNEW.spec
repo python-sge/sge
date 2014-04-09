@@ -24,6 +24,7 @@ Specification additions:
 + sge.collision.ellipse
 + sge.collision.circle
 + sge.collision.line
++ sge.StellarClass.event_update_position
 
 Specification removals:
 - sge.StellarClass.collides

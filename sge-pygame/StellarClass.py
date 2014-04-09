@@ -1082,6 +1082,29 @@ class StellarClass:
         """
         pass
 
+    def event_update_position(self, delta_mult):
+        """Update position event.
+
+        Called when it's time to update the position of the object.
+        This method handles this functionality, so defining this will
+        override the default behavior and allow you to handle the speed
+        variables in a special way.
+
+        Arguments:
+
+        - ``delta_mult`` -- What the speed should be multiplied by this
+          frame due to delta timing.  If :attr:`sge.Game.delta` is
+          :const:`False`, this is always ``1``.
+
+        The default behavior of this method is::
+
+            self.x += self.xvelocity * delta_mult
+            self.y += self.yvelocity * delta_mult
+
+        """
+        self.x += self.xvelocity * delta_mult
+        self.y += self.yvelocity * delta_mult
+
     def event_collision(self, other):
         """Default collision event.
 
@@ -1415,10 +1438,8 @@ class StellarClass:
                 self.event_alarm(a)
 
         # Movement
-        if self.xvelocity or self.yvelocity:
-            if self.id != "mouse":
-                self.x += self.xvelocity * delta_mult
-                self.y += self.yvelocity * delta_mult
+        if self.id != "mouse":
+            self.event_update_position(delta_mult)
 
         self._update_collision_areas()
 
