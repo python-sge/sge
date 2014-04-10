@@ -501,18 +501,15 @@ class StellarClass:
 
     @property
     def image_origin_x(self):
-        if self.regulate_origin:
+        if self.regulate_origin and self.sprite is not None:
             id_ = (self.sprite.id, self.sprite.width, self.sprite.height,
                    self.sprite.origin_x, self.sprite.origin_y,
                    self.image_xscale, self.image_yscale, self.image_rotation)
 
             if id_ not in self._origins_x:
-                if self.image_rotation % 360:
-                    x_offset, y_offset = self._get_origin_offset()
-                    self._origins_x[id_] = self.sprite.origin_x + x_offset
-                    self._origins_y[id_] = self.sprite.origin_y + y_offset
-                else:
-                    self._origins_x[id_] = self.sprite.origin_x
+                x_offset, y_offset = self._get_origin_offset()
+                self._origins_x[id_] = self.sprite.origin_x + x_offset
+                self._origins_y[id_] = self.sprite.origin_y + y_offset
 
             self._image_origin_x = self._origins_x[id_]
 
@@ -527,18 +524,15 @@ class StellarClass:
 
     @property
     def image_origin_y(self):
-        if self.regulate_origin:
+        if self.regulate_origin and self.sprite is not None:
             id_ = (self.sprite.id, self.sprite.width, self.sprite.height,
                    self.sprite.origin_x, self.sprite.origin_y,
                    self.image_xscale, self.image_yscale, self.image_rotation)
 
             if id_ not in self._origins_y:
-                if self.image_rotation % 360:
-                    x_offset, y_offset = self._get_origin_offset()
-                    self._origins_x[id_] = self.sprite.origin_x + x_offset
-                    self._origins_y[id_] = self.sprite.origin_y + y_offset
-                else:
-                    self._origins_y[id_] = self.sprite.origin_y
+                x_offset, y_offset = self._get_origin_offset()
+                self._origins_x[id_] = self.sprite.origin_x + x_offset
+                self._origins_y[id_] = self.sprite.origin_y + y_offset
 
             self._image_origin_y = self._origins_y[id_]
 
@@ -1563,31 +1557,35 @@ class StellarClass:
         new_origin_x = self.sprite.origin_x
         new_origin_y = self.sprite.origin_y
 
-        if self.image_xscale < 0:
-            new_origin_x = self.sprite.width - self.sprite.origin_x
-        new_origin_x *= abs(self.image_xscale)
-
-        if self.image_yscale < 0:
-            new_origin_y = self.sprite.height - self.sprite.origin_y
-        new_origin_y *= abs(self.image_yscale)
-
-        x_offset = new_origin_x - self.sprite.origin_x
-        y_offset = new_origin_y - self.sprite.origin_y
-
         width = self._get_image_width()
         height = self._get_image_height()
         normal_width = self._get_normal_image_width()
         normal_height = self._get_normal_image_height()
 
-        center_x = self.sprite.origin_x - normal_width / 2
-        center_y = self.sprite.origin_y - normal_height / 2
-        start_angle = math.atan2(-center_y, center_x)
-        radius = math.hypot(center_x, center_y)
-        new_angle = start_angle + math.radians(self.image_rotation)
-        new_center_x = self.sprite.origin_x + radius * math.cos(new_angle)
-        new_center_y = self.sprite.origin_y - radius * math.sin(new_angle)
-        x_offset += new_center_x + normal_width / 2
-        y_offset += new_center_y + normal_height / 2
+        if self.image_rotation % 360:
+            center_x = normal_width / 2
+            center_y = normal_height / 2
+            c_origin_x = new_origin_x - center_x
+            c_origin_y = new_origin_y - center_y
+            start_angle = math.atan2(c_origin_y, c_origin_x)
+            radius = math.hypot(c_origin_x, c_origin_y)
+            new_angle = start_angle + math.radians(self.image_rotation)
+            new_c_origin_x = radius * math.cos(new_angle)
+            new_c_origin_y = radius * math.sin(new_angle)
+            new_origin_x = new_c_origin_x + center_x
+            new_origin_y = new_c_origin_y + center_y
+
+        if self.image_xscale < 0:
+            new_origin_x = width - new_origin_x
+
+        if self.image_yscale < 0:
+            new_origin_y = height - new_origin_y
+
+        new_origin_x *= abs(self.image_xscale)
+        new_origin_y *= abs(self.image_yscale)
+
+        x_offset = new_origin_x - self.sprite.origin_x
+        y_offset = new_origin_y - self.sprite.origin_y
 
         return (x_offset, y_offset)
 
