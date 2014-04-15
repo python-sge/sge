@@ -8,7 +8,7 @@ sge.StellarClass Methods
 
 .. automethod:: sge.StellarClass.__init__
 
-.. automethod:: sge.StellarClass.collides
+.. automethod:: sge.StellarClass.collision
 
 .. automethod:: sge.StellarClass.set_alarm
 

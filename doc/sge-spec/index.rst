@@ -19,6 +19,7 @@ Contents:
    hello_world
    pong
    globalvars
+   modules
    classes
    functions
 

@@ -16,7 +16,14 @@
 # Public License, GNU Lesser General Public License, Expat License, or
 # Apache License.
 
-__all__ = ["rectangles_collide", "masks_collide"]
+"""
+This module provides easy-to-use collision detection functions, from
+basic rectangle-based collision detection to shape-based collision
+detection.
+"""
+
+__all__ = ["rectangles_collide", "masks_collide", "rectangle", "ellipse",
+           "circle", "line"]
 
 
 def rectangles_collide(x1, y1, w1, h1, x2, y2, w2, h2):

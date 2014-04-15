@@ -1,0 +1,1 @@
+../common/collision.rst

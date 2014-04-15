@@ -15,12 +15,19 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+This module provides easy-to-use collision detection functions, from
+basic rectangle-based collision detection to shape-based collision
+detection.
+"""
+
 import math
 
 import sge
 
 
-__all__ = ["rectangles_collide", "masks_collide"]
+__all__ = ["rectangles_collide", "masks_collide", "rectangle", "ellipse",
+           "circle", "line"]
 
 
 class _cache:
