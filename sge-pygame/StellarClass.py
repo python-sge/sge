@@ -1557,21 +1557,21 @@ class StellarClass:
         new_origin_x = self.sprite.origin_x
         new_origin_y = self.sprite.origin_y
 
-        width = self._get_image_width()
-        height = self._get_image_height()
-        normal_width = self._get_normal_image_width()
-        normal_height = self._get_normal_image_height()
+        width = self._get_image_width() / abs(self.image_xscale)
+        height = self._get_image_height() / abs(self.image_yscale)
+        normal_width = self._get_normal_image_width() / abs(self.image_xscale)
+        normal_height = self._get_normal_image_height() / abs(self.image_yscale)
 
         if self.image_rotation % 360:
             center_x = normal_width / 2
             center_y = normal_height / 2
             c_origin_x = new_origin_x - center_x
             c_origin_y = new_origin_y - center_y
-            start_angle = math.atan2(c_origin_y, c_origin_x)
+            start_angle = math.atan2(-c_origin_y, c_origin_x)
             radius = math.hypot(c_origin_x, c_origin_y)
             new_angle = start_angle + math.radians(self.image_rotation)
             new_c_origin_x = radius * math.cos(new_angle)
-            new_c_origin_y = radius * math.sin(new_angle)
+            new_c_origin_y = -(radius * math.sin(new_angle))
             new_origin_x = new_c_origin_x + center_x
             new_origin_y = new_c_origin_y + center_y
 
