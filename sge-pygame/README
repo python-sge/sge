@@ -69,9 +69,10 @@ avoid using it; consider using Ogg Vorbis instead.
 Missing Features
 ----------------
 
-:meth:`sge.Sprite.draw_line` and :meth:`sge.Room.project_line` support
-anti-aliasing for lines with a thickness of 1 only.
-:meth:`sge.Sprite.draw_text` and :meth:`sge.Room.project_text` support
+:meth:`sge.Sprite.draw_line`, :meth:`sge.Room.project_line`, and
+:meth:`sge.Game.project_line` support anti-aliasing for lines with a
+thickness of 1 only.  :meth:`sge.Sprite.draw_text`,
+:meth:`sge.Room.project_text`, and :meth:`sge.Game.project_text` support
 anti-aliasing in all cases.  No other drawing or projecting methods
 support anti-aliasing.
 
