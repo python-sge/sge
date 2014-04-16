@@ -184,7 +184,7 @@ the corresponding method in the parent class, making our new
 Next up, we need to add code to allow the paddles to move.  The easiest
 place to do this is in the step event::
 
-    def event_step(self, time_passed):
+    def event_step(self, time_passed, delta_mult):
         # Movement
         key_motion = (sge.get_key_pressed(self.down_key) -
                       sge.get_key_pressed(self.up_key))
@@ -343,7 +343,7 @@ by the receiving player.  This actually would be realistic behavior, but
 it wouldn't be very fun.  We will fix both of these problems in the step
 event::
 
-    def event_step(self, time_passed):
+    def event_step(self, time_passed, delta_mult):
         # Scoring
         if self.bbox_right < 0:
             self.serve(-1)
@@ -513,7 +513,7 @@ This is what we have so far::
             y = sge.game.height / 2
             super().__init__(x, y, 0, sprite="paddle")
 
-        def event_step(self, time_passed):
+        def event_step(self, time_passed, delta_mult):
             # Movement
             key_motion = (sge.get_key_pressed(self.down_key) -
                           sge.get_key_pressed(self.up_key))
@@ -537,7 +537,7 @@ This is what we have so far::
         def event_create(self):
             self.serve()
 
-        def event_step(self, time_passed):
+        def event_step(self, time_passed, delta_mult):
             # Scoring
             if self.bbox_right < 0:
                 self.serve(-1)
@@ -1059,7 +1059,7 @@ final result::
         def event_create(self):
             self.v_score = 0
 
-        def event_step(self, time_passed):
+        def event_step(self, time_passed, delta_mult):
             # Movement
             key_motion = (sge.get_key_pressed(self.down_key) -
                           sge.get_key_pressed(self.up_key))
@@ -1084,7 +1084,7 @@ final result::
             refresh_hud()
             self.serve()
 
-        def event_step(self, time_passed):
+        def event_step(self, time_passed, delta_mult):
             # Scoring
             if self.bbox_right < 0:
                 glob.player2.score += 1

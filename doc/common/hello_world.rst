@@ -139,7 +139,7 @@ center of the screen.  This will be our room class::
 
     class Room(sge.Room):
 
-        def event_step(self, time_passed):
+        def event_step(self, time_passed, delta_mult):
             self.project_text("my_font", "Hello, world!", sge.game.width / 2,
                               sge.game.height / 2, 0, color="black",
                               halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
@@ -283,7 +283,7 @@ This is the completed Hello World program::
 
     class Room(sge.Room):
 
-        def event_step(self, time_passed):
+        def event_step(self, time_passed, delta_mult):
             self.project_text("my_font", "Hello, world!", sge.game.width / 2,
                               sge.game.height / 2, 0, color="black",
                               halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
