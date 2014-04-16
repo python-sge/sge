@@ -335,7 +335,7 @@ class Room(object):
         """
         pass
 
-    def event_step(self, time_passed):
+    def event_step(self, time_passed, delta_mult):
         """Room step event.
 
         See the documentation for :meth:`sge.Game.event_step` for more

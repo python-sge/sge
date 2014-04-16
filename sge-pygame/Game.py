@@ -606,8 +606,8 @@ class Game:
                             int(1000 / real_time_passed), delta_mult)
 
                 # Step events
-                self.event_step(real_time_passed)
-                self.current_room.event_step(real_time_passed)
+                self.event_step(real_time_passed, delta_mult)
+                self.current_room.event_step(real_time_passed, delta_mult)
 
                 # Update background layers
                 for i in self.background_layers:
@@ -616,11 +616,11 @@ class Game:
                 # Update objects (including mouse)
                 for obj in self.current_room.objects:
                     if obj.active:
-                        obj.event_begin_step(real_time_passed)
+                        obj.event_begin_step(real_time_passed, delta_mult)
                         obj._update(time_passed, delta_mult)
-                        obj.event_step(real_time_passed)
+                        obj.event_step(real_time_passed, delta_mult)
                     else:
-                        obj.event_inactive_step(real_time_passed)
+                        obj.event_inactive_step(real_time_passed, delta_mult)
 
                 # Set objects' colliders
                 room = self.current_room
@@ -649,9 +649,10 @@ class Game:
                 # End step event
                 for obj in self.current_room.objects:
                     if obj.active:
-                        obj.event_end_step(real_time_passed)
+                        obj.event_end_step(real_time_passed, delta_mult)
                     else:
-                        obj.event_inactive_end_step(real_time_passed)
+                        obj.event_inactive_end_step(real_time_passed,
+                                                    delta_mult)
 
                 # Music control
                 self._handle_music()
@@ -1103,7 +1104,7 @@ class Game:
         """
         pass
 
-    def event_step(self, time_passed):
+    def event_step(self, time_passed, delta_mult):
         """Global step event.
 
         Called once each frame.
@@ -1112,6 +1113,9 @@ class Game:
 
         - ``time_passed`` -- The number of milliseconds that have passed
           during the last frame.
+        - ``delta_mult`` -- What speed and movement should be multiplied
+          by this frame due to delta timing.  If :attr:`delta` is
+          :const:`False`, this is always ``1``.
 
         """
         pass

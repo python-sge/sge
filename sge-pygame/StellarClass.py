@@ -917,7 +917,7 @@ class StellarClass:
         """Destroy event."""
         pass
 
-    def event_begin_step(self, time_passed):
+    def event_begin_step(self, time_passed, delta_mult):
         """Begin step event.
 
         This event is executed each frame before automatic updates to
@@ -929,14 +929,15 @@ class StellarClass:
         .. note::
 
            Automatic updates, the only occurances between this event and
-           :meth:`sge.StellarClass.event_step`, do not occur, so there
-           is no need for an "inactive" variant of this event.  Use
-           :meth:`sge.StellarClass.event_inactive_step` instead.
+           :meth:`sge.StellarClass.event_step`, do not occur unless the
+           object is active, so there is no "inactive" variant of this
+           event.  Use :meth:`sge.StellarClass.event_inactive_step`
+           instead.
 
         """
         pass
 
-    def event_step(self, time_passed):
+    def event_step(self, time_passed, delta_mult):
         """Step event.
 
         This event is executed each frame after automatic updates to
@@ -949,7 +950,7 @@ class StellarClass:
         """
         pass
 
-    def event_end_step(self, time_passed):
+    def event_end_step(self, time_passed, delta_mult):
         """Step event.
 
         This event is executed each frame after automatic updates to
@@ -1085,16 +1086,13 @@ class StellarClass:
         override the default behavior and allow you to handle the speed
         variables in a special way.
 
-        Arguments:
-
-        - ``delta_mult`` -- What the speed should be multiplied by this
-          frame due to delta timing.  If :attr:`sge.Game.delta` is
-          :const:`False`, this is always ``1``.
-
         The default behavior of this method is::
 
             self.x += self.xvelocity * delta_mult
             self.y += self.yvelocity * delta_mult
+
+        See the documentation for :meth:`sge.Game.event_step` for more
+        information.
 
         """
         self.x += self.xvelocity * delta_mult
@@ -1179,7 +1177,7 @@ class StellarClass:
         """
         self.event_collision(other)
 
-    def event_inactive_step(self, time_passed):
+    def event_inactive_step(self, time_passed, delta_mult):
         """Step event when this object is inactive.
 
         See the documentation for :meth:`sge.StellarClass.event_step`
@@ -1189,7 +1187,7 @@ class StellarClass:
         """
         pass
 
-    def event_inactive_end_step(self, time_passed):
+    def event_inactive_end_step(self, time_passed, delta_mult):
         """End step event when this object is inactive.
 
         See the documentation for

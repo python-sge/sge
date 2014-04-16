@@ -118,7 +118,7 @@ class Player(sge.StellarClass):
         self.v_score = 0
         self.trackball_motion = 0
 
-    def event_step(self, time_passed):
+    def event_step(self, time_passed, delta_mult):
         # Movement
         key_motion = (sge.get_key_pressed(self.down_key) -
                       sge.get_key_pressed(self.up_key))
@@ -158,7 +158,7 @@ class Ball(sge.StellarClass):
         refresh_hud()
         self.serve()
 
-    def event_step(self, time_passed):
+    def event_step(self, time_passed, delta_mult):
         # Scoring
         if self.bbox_right < 0:
             glob.player2.score += 1

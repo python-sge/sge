@@ -27,7 +27,7 @@ class Game(sge.Game):
     def event_game_start(self):
         self.mouse.sprite = "circle"
 
-    def event_step(self, time_passed):
+    def event_step(self, time_passed, delta_mult):
         self.project_line(self.width / 2, 0, self.width / 2, self.height,
                           "black", thickness=3)
         self.project_line(0, self.height / 2, self.width, self.height / 2,
@@ -57,7 +57,7 @@ class Circle(sge.StellarClass):
     def event_create(self):
         self.set_color()
 
-    def event_step(self, time_passed):
+    def event_step(self, time_passed, delta_mult):
         left_key = ['left', 'a', 'j', 'kp_4'][self.player]
         right_key = ['right', 'd', 'l', 'kp_6'][self.player]
         up_key = ['up', 'w', 'i', 'kp_8'][self.player]

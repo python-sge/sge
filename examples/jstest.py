@@ -103,7 +103,7 @@ class Room(sge.Room):
         self.ball_nonzero = False
         self.set_joystick()
 
-    def event_step(self, time_passed):
+    def event_step(self, time_passed, delta_mult):
         if self.changed:
             self.changed = False
             self.print_state()

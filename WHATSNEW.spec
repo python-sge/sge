@@ -34,6 +34,7 @@ Specification misc changes:
   new regulate_origin attribute is True.
 * New attributes added to sge.StellarClass.__init__'s arguments.
 * transparent argument moved in front of origin_x argument in sge.Sprite.__init__.
+* Step events now have a "delta_mult" argument.
 
 
 0.8.0

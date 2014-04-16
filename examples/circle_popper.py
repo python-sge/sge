@@ -83,7 +83,7 @@ class Room(sge.Room):
     def event_room_start(self):
         glob.music.play(loops=None)
 
-    def event_step(self, time_passed):
+    def event_step(self, time_passed, delta_mult):
         text = "I am amazing text!\n\nYaaaaaaaaaaay~!"
         self.project_text(glob.font, text, 320, 0, 3, color="black",
                           halign=sge.ALIGN_CENTER)

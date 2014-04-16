@@ -377,7 +377,7 @@ class Game(object):
         """
         pass
 
-    def event_step(self, time_passed):
+    def event_step(self, time_passed, delta_mult):
         """Global step event.
 
         Called once each frame.
@@ -386,6 +386,9 @@ class Game(object):
 
         - ``time_passed`` -- The number of milliseconds that have passed
           during the last frame.
+        - ``delta_mult`` -- What speed and movement should be multiplied
+          by this frame due to delta timing.  If :attr:`delta` is
+          :const:`False`, this is always ``1``.
 
         """
         pass

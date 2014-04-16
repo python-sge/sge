@@ -49,8 +49,8 @@ class Circle(sge.StellarClass):
             self.image_xscale = 2
             self.image_yscale = 2
 
-    def event_step(self, time_passed):
-        self.image_rotation += 2
+    def event_step(self, time_passed, delta_mult):
+        self.image_rotation += 2 * delta_mult
         sge.game.current_room.project_circle(self.x, self.y, self.z + 1, 8,
                                              outline="green")
 

@@ -50,7 +50,7 @@ class Circle(sge.StellarClass):
     def event_create(self):
         self.set_color()
 
-    def event_step(self, time_passed):
+    def event_step(self, time_passed, delta_mult):
         left_key = ['left', 'a', 'j', 'kp_4'][self.player]
         right_key = ['right', 'd', 'l', 'kp_6'][self.player]
         up_key = ['up', 'w', 'i', 'kp_8'][self.player]
