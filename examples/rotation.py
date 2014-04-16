@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Circle Popper
+# Rotation Example
 # Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
@@ -11,14 +11,6 @@
 # You should have received a copy of the CC0 Public Domain Dedication
 # along with this software. If not, see
 # <http://creativecommons.org/publicdomain/zero/1.0/>.
-
-
-"""Stellar Game Engine example
-
-This is a simple example of a possible game in Stellar Game Engine, just
-to give a general idea of how it will be used.
-
-"""
 
 import sge
 import random

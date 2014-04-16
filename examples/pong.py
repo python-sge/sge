@@ -12,12 +12,6 @@
 # along with this software. If not, see
 # <http://creativecommons.org/publicdomain/zero/1.0/>.
 
-"""Pong
-
-A simple two-player Pong game.
-
-"""
-
 import sge
 
 PADDLE_SPEED = 4

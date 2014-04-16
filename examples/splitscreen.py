@@ -12,13 +12,6 @@
 # along with this software. If not, see
 # <http://creativecommons.org/publicdomain/zero/1.0/>.
 
-"""Split-screen Example
-
-This is an example of split-screening being used, where two players see
-two different parts of the room.
-
-"""
-
 import sge
 import random
 
