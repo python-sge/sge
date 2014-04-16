@@ -1,4 +1,4 @@
-Copyright (C) 2013 Julian Marchant <onpon4@riseup.net>
+Copyright (C) 2013, 2014 Julian Marchant <onpon4@riseup.net>
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -70,12 +70,18 @@ Implementations are expected to have the same major and minor version
 numbers as the SGE specification they follow.  The bugfix version number
 and revision number may differ from the specification. 
 
-The special major version number "0" indicates the incomplete version.
-This is for the time before a complete, stable, and well-tested release
-is available.  While the major version number is 0, the minor version
-number doubles as the major version number; for example, version 0.3.0
-of the specification is permitted to break backward compatibility with
-version 0.2.0.  All other version number components remain the same.
+The special major version number "0" indicates an alpha or beta version.
+This is for stable releases of the SGE specification which don't yet
+have well-tested implementations as well as SGE implementations which
+are either incomplete or not well-tested. While the major version number
+is 0, the minor version number doubles as the major version number; for
+example, version 0.3.0 of the specification is permitted to break
+backward compatibility with version 0.2.0.  All other version number
+components remain the same.
+
+Releases of the SGE specification with a major version number of other
+than "0" must be identical to a previous release which has "0" as its
+major version number.
 
 
 Incrementing Version Numbers
