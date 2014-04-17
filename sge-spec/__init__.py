@@ -95,7 +95,7 @@ or ``"rEd"``.  The colors are:
 
 - ``"white"``
 - ``"silver"``
-- ``"gray``
+- ``"gray"``
 - ``"black"``
 - ``"red"``
 - ``"maroon"``
@@ -339,7 +339,7 @@ Dependencies
 
 """
 
-__version__ = "0.9.0"
+__version__ = "0.9.0.1"
 
 import os
 

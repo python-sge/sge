@@ -1673,7 +1673,7 @@ class Game:
             w = width + outline_thickness
             h = height + outline_thickness
             sprite = sge.Sprite(None, width=w, height=h)
-            sprite.draw_rectangle(draw_x, draw_y, w, h, fill, outline,
+            sprite.draw_rectangle(draw_x, draw_y, width, height, fill, outline,
                                   outline_thickness)
             self._rectangle_cache[i] = sprite
             sprite.destroy()
@@ -1693,7 +1693,7 @@ class Game:
             w = width + outline_thickness
             h = height + outline_thickness
             sprite = sge.Sprite(None, width=w, height=h)
-            sprite.draw_ellipse(draw_x, draw_y, w, h, fill, outline,
+            sprite.draw_ellipse(draw_x, draw_y, width, height, fill, outline,
                                 outline_thickness)
             self._ellipse_cache[i] = sprite
             sprite.destroy()

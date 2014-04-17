@@ -84,6 +84,21 @@ class Room(sge.Room):
         glob.music.play(loops=None)
 
     def event_step(self, time_passed, delta_mult):
+        self.project_rectangle(5, 5, 3, 32, 32, fill="red", outline="green",
+                               outline_thickness=3)
+        self.project_ellipse(16, 100, 3, 64, 64, fill="yellow",
+                             outline="fuchsia", outline_thickness=4)
+        self.project_line(64, 64, 78, 100, 3, "black", thickness=2)
+        self.project_dot(90, 32, 3, "maroon")
+        self.project_dot(91, 32, 3, "maroon")
+        self.project_dot(92, 32, 3, "maroon")
+        self.project_dot(93, 32, 3, "maroon")
+        self.project_dot(90, 33, 3, "maroon")
+        self.project_dot(91, 33, 3, "maroon")
+        self.project_dot(92, 33, 3, "maroon")
+        self.project_dot(90, 34, 3, "maroon")
+        self.project_dot(91, 34, 3, "maroon")
+        self.project_dot(90, 35, 3, "maroon")
         text = "I am amazing text!\n\nYaaaaaaaaaaay~!"
         self.project_text(glob.font, text, 320, 0, 3, color="black",
                           halign=sge.ALIGN_CENTER)

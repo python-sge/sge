@@ -1162,7 +1162,10 @@ def _get_pygame_color(color):
         if c in sge.COLORS:
             c = sge.COLORS[c]
 
-        return pygame.Color(c)
+        try:
+            return pygame.Color(c)
+        except ValueError:
+            return pygame.Color((0, 0, 0, 0))
     elif isinstance(color, int):
         r = int((color & 0xff0000) // (256 ** 2))
         g = int((color & 0x00ff00) // 256)
@@ -1170,11 +1173,14 @@ def _get_pygame_color(color):
         return pygame.Color(r, g, b)
     else:
         try:
-            while len(color) < 3:
-                color.append(0)
-            return pygame.Color(*color[:4])
-        except TypeError:
-            return pygame.Color(color)
+            try:
+                while len(color) < 3:
+                    color.append(0)
+                return pygame.Color(*color[:4])
+            except TypeError:
+                return pygame.Color(color)
+        except ValueError:
+            return pygame.Color((0, 0, 0, 0))
 
 
 def _scold_user_on_lose_vs_loose(attempted_name):

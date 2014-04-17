@@ -59,7 +59,7 @@ or ``"rEd"``.  The colors are:
 
 - ``"white"``
 - ``"silver"``
-- ``"gray``
+- ``"gray"``
 - ``"black"``
 - ``"red"``
 - ``"maroon"``
