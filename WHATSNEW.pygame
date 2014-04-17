@@ -7,6 +7,14 @@ without any warranty.
 
 ========================================================================
 
+0.9.0-dev
+------------------------------------------------------------------------
+
+Pygame SGE bugfixes:
+- sge.Game.project_rectangle, sge.Game.project_ellipse,
+  sge.Room.project_rectangle, and sge.Room.project_ellipse being broken.
+
+
 0.9.0
 ------------------------------------------------------------------------
 

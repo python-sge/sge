@@ -362,6 +362,11 @@ class Room:
         more information.
 
         """
+        outline_thickness = abs(outline_thickness)
+        draw_x = outline_thickness // 2
+        draw_y = outline_thickness // 2
+        x -= draw_x
+        y -= draw_y
         sprite = sge.game._get_rectangle_sprite(width, height, fill, outline,
                                                 outline_thickness)
         self.project_sprite(sprite, 0, x, y, z)
@@ -389,6 +394,11 @@ class Room:
         more information.
 
         """
+        outline_thickness = abs(outline_thickness)
+        draw_x = outline_thickness // 2
+        draw_y = outline_thickness // 2
+        x -= draw_x
+        y -= draw_y
         sprite = sge.game._get_ellipse_sprite(width, height, fill, outline,
                                               outline_thickness, anti_alias)
         self.project_sprite(sprite, 0, x, y, z)
