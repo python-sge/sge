@@ -7,13 +7,13 @@ without any warranty.
 
 ========================================================================
 
-0.9.0-dev
+0.9.1
 ------------------------------------------------------------------------
 
 Pygame SGE bugfixes:
 - sge.Game.project_rectangle, sge.Game.project_ellipse,
-  sge.Room.project_rectangle, and sge.Room.project_ellipse being broken.
-- Projection methods with outlines not projecting the shapes correctly.
+  sge.Room.project_rectangle, and sge.Room.project_ellipse being broken
+- Projection methods with outlines not projecting the shapes correctly
 
 
 0.9.0
@@ -32,10 +32,10 @@ Pygame SGE misc changes:
 * Collision detection divided into sections within rooms, making it more efficient.
 
 Pygame SGE bugfixes:
-- Room.draw_sprite destroying the sprite that is projected.
-- Multiple views not working properly with scaling.
-- Changing from windowed to fullscreen mode resulting in the wrong resolution.
-- Rotated precise collision detection not working.
+- Room.draw_sprite destroying the sprite that is projected
+- Multiple views not working properly with scaling
+- Changing from windowed to fullscreen mode resulting in the wrong resolution
+- Rotated precise collision detection not working
 
 
 0.7.0
@@ -58,8 +58,8 @@ Pygame SGE bugfixes:
 
 Pygame SGE bugfixes:
 - Changing a font's size causing bold, underline, and italic to be reset
-- sge.Music.play "loops" argument not conforming to the spec.
-- Objects and views getting reset wrongly when the room was (re)started.
+- sge.Music.play "loops" argument not conforming to the spec
+- Objects and views getting reset wrongly when the room was (re)started
 
 
 0.5.1
