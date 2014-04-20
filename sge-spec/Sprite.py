@@ -313,10 +313,10 @@ class Sprite(object):
         - ``sprite`` -- The sprite to draw with.
         - ``image`` -- The frame of ``sprite`` to draw with, where ``0``
           is the first frame.
-        - ``x`` -- The horizontal location relative to ``self`` to draw
-          ``sprite``.
-        - ``y`` -- The vertical location relative to ``self`` to draw
-          ``sprite``.
+        - ``x`` -- The horizontal location relative to ``self`` to
+          position the origin of ``sprite``.
+        - ``y`` -- The vertical location relative to ``self`` to
+          position the origin of ``sprite``.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
