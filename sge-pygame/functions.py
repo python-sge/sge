@@ -1088,6 +1088,10 @@ def _show_modal(text, default, text_entry, buttons):
                 sge.game._window_height = event.h
                 sge.game._set_mode()
                 sge.game._background_changed = True
+            elif event.type == sge.MUSIC_END_EVENT:
+                if sge.game._music_queue:
+                    music = sge.game._music_queue.pop(0)
+                    music[0].play(*music[1:])
 
         # Time management
         sge.game._clock.tick(60)

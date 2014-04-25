@@ -286,6 +286,8 @@ class Game:
         pygame.mixer.pre_init(channels=2, buffer=1024)
         pygame.init()
 
+        pygame.mixer.music.set_endevent(sge.MUSIC_END_EVENT)
+
         sge.game = self
 
         self._width = width
@@ -588,6 +590,10 @@ class Game:
                         self._window_width = event.w
                         self._window_height = event.h
                         self._set_mode()
+                    elif event.type == sge.MUSIC_END_EVENT:
+                        if self._music_queue:
+                            music = self._music_queue.pop(0)
+                            music[0].play(*music[1:])
 
                 real_time_passed = self._clock.tick(self.fps)
 
@@ -895,6 +901,10 @@ class Game:
                                                         (event.w, event.h))
                     background = pygame.transform.scale(orig_background,
                                                         (event.w, event.h))
+                elif event.type == sge.MUSIC_END_EVENT:
+                    if self._music_queue:
+                        music = self._music_queue.pop(0)
+                        music[0].play(*music[1:])
 
             # Time management
             self._clock.tick(self.fps)
@@ -1797,7 +1807,3 @@ class Game:
 
                 if timeout and time_played >= timeout:
                     self._music.stop()
-                    
-            elif self._music_queue:
-                music = self._music_queue.pop(0)
-                music[0].play(*music[1:])
