@@ -411,7 +411,7 @@ by default.
 
 """
 
-__version__ = "0.9.1.2"
+__version__ = "0.9.1.3"
 
 import os
 
@@ -433,19 +433,27 @@ from . import collision
 
 
 __all__ = [
+    # Modules
+    "collision",
+
     # Constants
     'IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP',
-    'ALIGN_MIDDLE', 'ALIGN_BOTTOM',
+    'ALIGN_MIDDLE', 'ALIGN_BOTTOM', 'BLEND_RGBA_ADD', 'BLEND_RGBA_SUBTRACT',
+    'BLEND_RGBA_MULTIPLY', 'BLEND_RGBA_SCREEN', 'BLEND_RGBA_MINIMUM',
+    'BLEND_RGBA_MAXIMUM', 'BLEND_RGB_ADD', 'BLEND_RGB_SUBTRACT',
+    'BLEND_RGB_MULTIPLY', 'BLEND_RGB_SCREEN', 'BLEND_RGB_MINIMUM',
+    'BLEND_RGB_MAXIMUM',
 
     # Classes
     'Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',
     'Music', 'StellarClass', 'Room', 'View',
 
     # Functions
-    'create_object', 'sound_stop_all', 'music_clear_queue', 'music_stop_all',
-    'get_key_pressed', 'get_mouse_button_pressed', 'get_joystick_axis',
-    'get_joystick_hat', 'get_joystick_button_pressed', 'get_joysticks',
-    'get_joystick_axes', 'get_joystick_hats', 'get_joystick_buttons'
+    'show_message', 'get_text_entry', 'get_key_pressed',
+    'get_mouse_button_pressed', 'get_joystick_axis', 'get_joystick_hat',
+    'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_name',
+    'get_joystick_id', 'get_joystick_axes', 'get_joystick_hats',
+    'get_joystick_trackballs', 'get_joystick_buttons'
     ]
 
 # Global variables
