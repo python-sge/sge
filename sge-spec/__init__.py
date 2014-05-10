@@ -339,24 +339,25 @@ Dependencies
 
 """
 
-__version__ = "0.9.1.2"
+__version__ = "0.9.1.3"
 
 import os
 
 # Import implementation-specific libraries like Pygame here
 
-from .constants import *
-from .Game import Game
-from .Sprite import Sprite
-from .BackgroundLayer import BackgroundLayer
-from .Background import Background
-from .Font import Font
-from .Sound import Sound
-from .Music import Music
-from .StellarClass import StellarClass, Mouse
-from .Room import Room
-from .View import View
-from .functions import *
+from sge.constants import *
+from sge.Game import Game
+from sge.Sprite import Sprite
+from sge.BackgroundLayer import BackgroundLayer
+from sge.Background import Background
+from sge.Font import Font
+from sge.Sound import Sound
+from sge.Music import Music
+from sge.StellarClass import StellarClass, Mouse
+from sge.Room import Room
+from sge.View import View
+from sge.functions import *
+from sge import collision
 
 
 __all__ = [

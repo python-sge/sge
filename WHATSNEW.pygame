@@ -11,7 +11,8 @@ without any warranty.
 ------------------------------------------------------------------------
 
 Pygame SGE bugfixes:
-- 2-frame delay between a music ending and the queued music starting.
+- 2-frame delay between a music ending and the queued music starting
+- Small chance of a crash happening
 
 
 0.9.1

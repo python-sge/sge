@@ -440,23 +440,35 @@ class Game:
                 # Pygame events
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
-                        k = sge.KEY_NAMES[event.key]
-                        self.event_key_press(k, event.unicode)
-                        self.current_room.event_key_press(k, event.unicode)
-                        for obj in self.current_room.objects:
-                            if obj.active:
-                                obj.event_key_press(k, event.unicode)
-                            else:
-                                obj.event_inactive_key_press(k, event.unicode)
+                        try:
+                            k = sge.KEY_NAMES[event.key]
+                        except KeyError:
+                            w = "Don't know how to handle the key, ``{}``.".format(
+                                event.key)
+                            warnings.warn(w)
+                        else:
+                            self.event_key_press(k, event.unicode)
+                            self.current_room.event_key_press(k, event.unicode)
+                            for obj in self.current_room.objects:
+                                if obj.active:
+                                    obj.event_key_press(k, event.unicode)
+                                else:
+                                    obj.event_inactive_key_press(
+                                        k, event.unicode)
                     elif event.type == pygame.KEYUP:
-                        k = sge.KEY_NAMES[event.key]
-                        self.event_key_release(k)
-                        self.current_room.event_key_release(k)
-                        for obj in self.current_room.objects:
-                            if obj.active:
-                                obj.event_key_release(k)
-                            else:
-                                obj.event_inactive_key_release(k)
+                        try:
+                            k = sge.KEY_NAMES[event.key]
+                        except KeyError:
+                            w = "Don't know how to handle the key, ``{}``.".format(
+                                event.key)
+                        else:
+                            self.event_key_release(k)
+                            self.current_room.event_key_release(k)
+                            for obj in self.current_room.objects:
+                                if obj.active:
+                                    obj.event_key_release(k)
+                                else:
+                                    obj.event_inactive_key_release(k)
                     elif event.type == pygame.MOUSEMOTION:
                         mx, my = event.pos
                         self.mouse.mouse_x = mx - self._x
