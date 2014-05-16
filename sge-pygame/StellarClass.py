@@ -1969,9 +1969,12 @@ class _PygameProjectionSprite(_PygameSprite):
         self.x = x
         self.y = y
         self.z = z
-        self.sprite = sprite
+        if isinstance(sprite, sge.Sprite):
+            self.sprite = sprite
+        else:
+            self.sprite = sge.game.sprites[sprite]
         self.image_index = image_index
-        self.image = sprite._get_image(image_index)
+        self.image = self.sprite._get_image(image_index)
         self.rect = self.image.get_rect()
 
     def update(self):

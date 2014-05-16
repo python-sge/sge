@@ -13,6 +13,7 @@ without any warranty.
 Pygame SGE bugfixes:
 - 2-frame delay between a music ending and the queued music starting
 - Small chance of a crash happening
+- Passing sprite IDs to Room.project_sprite not working
 
 
 0.9.1
