@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# SGE setup.py
+# setup.py
 # Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
@@ -50,6 +50,8 @@ setup(name=name,
       url=url,
       license=license,
       packages=['sge'],
-      package_dir={'sge':idir},
+      package_dir={'sge': idir},
+      package_data={'sge': ["*.ttf", "*.png", "COPYING", "COPYING.LESSER",
+                            "LICENSES"]},
       requires=requires,
      )

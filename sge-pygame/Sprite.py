@@ -291,20 +291,23 @@ class Sprite:
                 # Load the single image
                 try:
                     img = pygame.image.load(fname_single)
-                    self._baseimages.append(img)
                 except pygame.error:
                     if sge.DEBUG:
                         print("Ignored {}; not a valid image.".format(fname_single))
+                else:
+                    self._baseimages.append(img)
 
             if not self._baseimages and any(fname_frames):
                 # Load the multiple images
                 for fname in fname_frames:
                     if fname:
                         try:
-                            self._baseimages.append(pygame.image.load(fname))
+                            img = pygame.image.load(fname)
                         except pygame.error:
                             if sge.DEBUG:
                                 print("Ignored {}; not a valid image.".format(fname))
+                        else:
+                            self._baseimages.append(img)
 
             if not self._baseimages and fname_strip:
                 # Load the strip (sprite sheet)
@@ -319,6 +322,10 @@ class Sprite:
 
                 try:
                     sheet = pygame.image.load(fname_strip)
+                except pygame.error:
+                    if sge.DEBUG:
+                        print("Ignored {}; not a valid image.".format(fname_strip))
+                else:
                     assert split[1][5:].isdigit()
                     n = int(split[1][5:])
 
@@ -328,9 +335,6 @@ class Sprite:
                         rect = pygame.Rect(x, 0, img_w, img_h)
                         img = sheet.subsurface(rect)
                         self._baseimages.append(img)
-                except pygame.error:
-                    if sge.DEBUG:
-                        print("Ignored {}; not a valid image.".format(fname_strip))
 
             if not self._baseimages:
                 print("Directories searched:")

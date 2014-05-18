@@ -13,12 +13,10 @@ First, make sure you have an appropriate Python version and all
 dependencies.  You can learn what Python version is appropriate and what
 other dependencies are needed from "sge/README".
 
-You can install the SGE with the included setup.py script, e.g.:
+Once you have all the dependencies, install the SGE with the included
+setup.py script, e.g.:
 
     python setup.py install
-
-Alternatively, you can just copy the "sge" directory to the directory of
-your project.
 
 USAGE
 

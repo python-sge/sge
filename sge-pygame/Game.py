@@ -263,10 +263,11 @@ class Game:
             for path in sge.image_directories:
                 try:
                     image = pygame.image.load(os.path.join(path, value))
-                    pygame.display.set_icon(image)
-                    break
                 except pygame.error:
                     continue
+                else:
+                    pygame.display.set_icon(image)
+                    break
 
     def __init__(self, width=640, height=480, fullscreen=False, scale=0,
                  scale_proportional=True, scale_smooth=False, fps=60,

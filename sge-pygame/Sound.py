@@ -124,9 +124,10 @@ class Sound:
                 path = os.path.join(path, fname)
                 try:
                     self._sound = pygame.mixer.Sound(path)
-                    break
                 except pygame.error:
                     pass
+                else:
+                    break
 
             if self._sound is None:
                 print("Directories searched:")

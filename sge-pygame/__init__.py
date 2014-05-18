@@ -411,7 +411,7 @@ by default.
 
 """
 
-__version__ = "0.9.1.5"
+__version__ = "0.9.1.6"
 
 import os
 
