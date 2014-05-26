@@ -204,6 +204,10 @@ class Game:
         if value != self._fullscreen:
             self._fullscreen = value
             self._set_mode()
+            if not self.fullscreen and not self.scale:
+                old_scale = self.scale
+                self.scale = 1
+                self.scale = old_scale
 
     @property
     def scale(self):
@@ -1631,8 +1635,13 @@ class Game:
         else:
             self._x = 0
             self._y = 0
+            flags = 0
+
             # Decide window size
-            if not self.scale:
+            if self.scale:
+                self._window_width = self.width * self.scale
+                self._window_height = self.height * self.scale
+            else:
                 self._xscale = self._window_width / self.width
                 self._yscale = self._window_height / self.height
 
@@ -1640,7 +1649,8 @@ class Game:
                     self._xscale = min(self._xscale, self._yscale)
                     self._yscale = self._xscale
 
-            flags = pygame.RESIZABLE
+                flags |= pygame.RESIZABLE
+
             if sge.hardware_rendering:
                 flags |= pygame.HWSURFACE | pygame.DOUBLEBUF
 
