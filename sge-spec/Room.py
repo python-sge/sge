@@ -321,10 +321,8 @@ class Room(object):
         Called when the room resumes without being reset to its original
         state (i.e. via :meth:`sge.Room.resume`).
 
-        By default, this calls :meth:`sge.Room.event_room_start`.
-
         """
-        self.event_room_start()
+        pass
 
     def event_room_end(self):
         """Room end event.
