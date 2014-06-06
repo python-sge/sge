@@ -110,6 +110,8 @@ class Room:
         self.background_x = background_x
         self.background_y = background_y
 
+        self._alarms = {}
+
         if views is not None:
             self.views = list(views)
         else:
@@ -263,6 +265,35 @@ class Room:
 
         self._started = True
         self._has_started = True
+
+    def set_alarm(self, alarm_id, value):
+        """Set an alarm.
+
+        After this method is called, ``value`` will reduce by 1 each
+        frame (adjusted for delta timing if it is enabled) until it
+        reaches 0, at which point :meth:`sge.Room.event_alarm` will be
+        executed with ``alarm_id``.
+
+        See the documentation for :meth:`sge.Game.set_alarm` for more
+        information.
+
+        """
+        if value is not None:
+            self._alarms[alarm_id] = value
+        elif alarm_id in self._alarms:
+            del self._alarms[alarm_id]
+
+    def get_alarm(self, alarm_id):
+        """Return the value of an alarm.
+
+        See the documentation for :meth:`sge.Game.get_alarm` for more
+        information.
+
+        """
+        if alarm_id in self._alarms:
+            return self._alarms[alarm_id]
+        else:
+            return None
 
     def end(self, next_room=None, resume=True):
         """End the current room.
@@ -536,6 +567,15 @@ class Room:
         """Room step event.
 
         See the documentation for :meth:`sge.Game.event_step` for more
+        information.
+
+        """
+        pass
+
+    def event_alarm(self, alarm_id):
+        """Alarm event.
+
+        See the documentation for :meth:`sge.Game.event_alarm` for more
         information.
 
         """

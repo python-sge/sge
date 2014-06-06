@@ -10,6 +10,14 @@ without any warranty.
 0.9.2-dev
 ------------------------------------------------------------------------
 
+Specification additions:
++ sge.Game.set_alarm
++ sge.Game.get_alarm
++ sge.Game.event_alarm
++ sge.Room.set_alarm
++ sge.Room.get_alarm
++ sge.Room.event_alarm
+
 Specification misc changes:
 * sge.Room.event_room_resume no longer calls sge.Room.event_room_start by default.
 

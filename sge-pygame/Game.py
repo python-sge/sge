@@ -357,6 +357,8 @@ class Game:
 
         self.window_icon = None
 
+        self._alarms = {}
+
         self._object_start_x = {}
         self._object_start_y = {}
         self._object_start_z = {}
@@ -627,6 +629,25 @@ class Game:
                         _fps_time = 0
                         self.window_text = "FPS: {}; Delta: {}".format(
                             int(1000 / real_time_passed), delta_mult)
+
+                # Alarms
+                activated_alarms = []
+                for a in self._alarms:
+                    self._alarms[a] -= delta_mult
+                    if self._alarms[a] <= 0:
+                        activated_alarms.append(a)
+                for a in activated_alarms:
+                    del self._alarms[a]
+                    self.event_alarm(a)
+
+                activated_alarms = []
+                for a in self.current_room._alarms:
+                    self.current_room._alarms[a] -= delta_mult
+                    if self.current_room._alarms[a] <= 0:
+                        activated_alarms.append(a)
+                for a in activated_alarms:
+                    del self.current_room._alarms[a]
+                    self.current_room.event_alarm(a)
 
                 # Step events
                 self.event_step(real_time_passed, delta_mult)
@@ -963,6 +984,42 @@ class Game:
                     if isinstance(obj, cls):
                         room.objects_by_class[cls].append(obj)
 
+    def set_alarm(self, alarm_id, value):
+        """Set an alarm.
+
+        Arguments:
+
+        - ``alarm_id`` -- The unique identifier of the alarm to set.
+          Any value can be used as a unique identifier for an alarm.
+        - ``value`` -- The value to set the alarm to.  Set to
+          :const:`None` to disable the alarm.
+
+        After this method is called, ``value`` will reduce by 1 each
+        frame (adjusted for delta timing if it is enabled) until it
+        reaches 0, at which point :meth:`sge.Game.event_alarm` will be
+        executed with ``alarm_id``.
+
+        """
+        if value is not None:
+            self._alarms[alarm_id] = value
+        elif alarm_id in self._alarms:
+            del self._alarms[alarm_id]
+
+    def get_alarm(self, alarm_id):
+        """Return the value of an alarm.
+
+        Arguments:
+
+        - ``alarm_id`` -- The unique identifier of the alarm to check.
+
+        If the alarm has not been set, :const:`None` will be returned.
+
+        """
+        if alarm_id in self._alarms:
+            return self._alarms[alarm_id]
+        else:
+            return None
+
     def project_dot(self, x, y, color):
         """Project a single-pixel dot onto the game window.
 
@@ -1153,6 +1210,19 @@ class Game:
         - ``delta_mult`` -- What speed and movement should be multiplied
           by this frame due to delta timing.  If :attr:`delta` is
           :const:`False`, this is always ``1``.
+
+        """
+        pass
+
+    def event_alarm(self, alarm_id):
+        """Alarm event.
+
+        Called when the value of an alarm reaches 0.
+
+        Arguments:
+
+        - ``alarm_id`` -- The unique identifier of the alarm which was
+          set off.
 
         """
         pass

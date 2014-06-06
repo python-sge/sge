@@ -81,6 +81,10 @@ class CirclePop(sge.StellarClass):
 class Room(sge.Room):
 
     def event_room_start(self):
+        self.shake = 0
+        self.event_room_resume()
+
+    def event_room_resume(self):
         glob.music.play(loops=None)
 
     def event_step(self, time_passed, delta_mult):
@@ -102,6 +106,33 @@ class Room(sge.Room):
         text = "I am amazing text!\n\nYaaaaaaaaaaay~!"
         self.project_text(glob.font, text, 320, 0, 3, color="black",
                           halign=sge.ALIGN_CENTER)
+
+    def event_alarm(self, alarm_id):
+        if alarm_id == "shake":
+            self.views[0].xport += random.uniform(-2, 2)
+            self.views[0].yport += random.uniform(-2, 2)
+            self.shake -= 1
+            if self.shake > 0:
+                self.set_alarm("shake", 1)
+            else:
+                self.views[0].xport = 0
+                self.views[0].yport = 0
+        elif alarm_id == "shake_down":
+            self.views[0].yport = 3
+            self.set_alarm("shake_up", 1)
+        elif alarm_id == "shake_up":
+            self.views[0].yport = 0
+            self.shake -= 1
+            if self.shake > 0:
+                self.set_alarm("shake_down", 1)
+
+    def event_key_press(self, key, char):
+        if key in ("ctrl_left", "ctrl_right"):
+            self.shake = 20
+            self.event_alarm("shake_down")
+        elif key in ("shift_left", "shift_right"):
+            self.shake = 20
+            self.event_alarm("shake")
 
 
 def main():

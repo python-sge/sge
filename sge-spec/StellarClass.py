@@ -326,17 +326,13 @@ class StellarClass(object):
     def set_alarm(self, alarm_id, value):
         """Set an alarm.
 
-        Arguments:
-
-        - ``alarm_id`` -- The unique identifier of the alarm to set.
-          Any value can be used as a unique identifier for an alarm.
-        - ``value`` -- The value to set the alarm to.  Set to
-          :const:`None` to disable the alarm.
-
         After this method is called, ``value`` will reduce by 1 each
         frame (adjusted for delta timing if it is enabled) until it
         reaches 0, at which point :meth:`sge.StellarClass.event_alarm`
         will be executed with ``alarm_id``.
+
+        See the documentation for :meth:`sge.Game.set_alarm` for more
+        information.
 
         """
         # TODO
@@ -344,11 +340,8 @@ class StellarClass(object):
     def get_alarm(self, alarm_id):
         """Return the value of an alarm.
 
-        Arguments:
-
-        - ``alarm_id`` -- The unique identifier of the alarm to check.
-
-        If the alarm has not been set, :const:`None` will be returned.
+        See the documentation for :meth:`sge.Game.get_alarm` for more
+        information.
 
         """
         # TODO
@@ -418,12 +411,8 @@ class StellarClass(object):
     def event_alarm(self, alarm_id):
         """Alarm event.
 
-        Called when the value of an alarm reaches 0.
-
-        Arguments:
-
-        - ``alarm_id`` -- The unique identifier of the alarm which was
-          set off.
+        See the documentation for :meth:`sge.Game.event_alarm` for more
+        information.
 
         """
         pass

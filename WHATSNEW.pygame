@@ -15,6 +15,7 @@ Pygame SGE misc changes:
 
 Pygame SGE bugfixes:
 - Window size being the monitor size when exiting fullscreen
+- Alarms being broken
 
 
 0.9.2

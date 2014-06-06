@@ -128,6 +128,29 @@ class Room(object):
         """
         # TODO
 
+    def set_alarm(self, alarm_id, value):
+        """Set an alarm.
+
+        After this method is called, ``value`` will reduce by 1 each
+        frame (adjusted for delta timing if it is enabled) until it
+        reaches 0, at which point :meth:`sge.Room.event_alarm` will be
+        executed with ``alarm_id``.
+
+        See the documentation for :meth:`sge.Game.set_alarm` for more
+        information.
+
+        """
+        # TODO
+
+    def get_alarm(self, alarm_id):
+        """Return the value of an alarm.
+
+        See the documentation for :meth:`sge.Game.get_alarm` for more
+        information.
+
+        """
+        # TODO
+
     def end(self, next_room=None, resume=True):
         """End the current room.
 
@@ -337,6 +360,15 @@ class Room(object):
         """Room step event.
 
         See the documentation for :meth:`sge.Game.event_step` for more
+        information.
+
+        """
+        pass
+
+    def event_alarm(self, alarm_id):
+        """Alarm event.
+
+        See the documentation for :meth:`sge.Game.event_alarm` for more
         information.
 
         """
