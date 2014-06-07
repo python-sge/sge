@@ -1,3 +1,5 @@
-import transitions
+__version__ = "0.1.0"
 
-__all__ = ["transitions"]
+import transition
+
+__all__ = ["transition"]

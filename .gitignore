@@ -13,6 +13,7 @@ sdist
 develop-eggs
 .installed.cfg
 sge-pygame/__pycache__
+xsge/__pycache__
 doc/sge-pygame/_build
 
 # Installer logs
