@@ -18,6 +18,8 @@
 This module provides a framework for transition animations.
 """
 
+import random
+
 import sge
 
 __all__ = []
@@ -45,6 +47,7 @@ class Room(sge.Room):
     def event_room_start(self):
         self.transition_time_passed = 0
         self.transition_complete_last = 0
+        self.transition_variables = {}
 
     def update_fade(self, complete):
         w = self.transition_sprite.width
@@ -97,6 +100,52 @@ class Room(sge.Room):
                                                blend_mode=sge.BLEND_RGBA_SUBTRACT)
             eraser.destroy()
 
+    def update_wipe_left(self, complete):
+        w = self.transition_sprite.width * complete
+        h = self.transition_sprite.height
+        self.transition_sprite.draw_erase(0, 0, w, h)
+
+    def update_wipe_right(self, complete):
+        w = self.transition_sprite.width * complete
+        x = self.transition_sprite.width - w
+        h = self.transition_sprite.height
+        self.transition_sprite.draw_erase(x, 0, w, h)
+
+    def update_wipe_top(self, complete):
+        w = self.transition_sprite.width
+        h = self.transition_sprite.height * complete
+        self.transition_sprite.draw_erase(0, 0, w, h)
+
+    def update_wipe_bottom(self, complete):
+        w = self.transition_sprite.width
+        h = self.transition_sprite.height * complete
+        y = self.transition_sprite.height - h
+        self.transition_sprite.draw_erase(0, y, w, h)
+
+    def update_wipe_matrix(self, complete):
+        psize = 16
+        w = self.transition_sprite.width
+        h = self.transition_sprite.height
+        mw = int(round(w / psize))
+        mh = int(round(h / psize))
+        if "remaining" in self.transition_variables:
+            remaining = self.transition_variables["remaining"]
+        else:
+            remaining = []
+            for x in range(mw):
+                for y in range(mh):
+                    remaining.append((x, y))
+
+        diff = complete - self.transition_complete_last
+        new_erase = int(round(mw * mh * diff))
+        while new_erase > 0 and remaining:
+            new_erase -= 1
+            x, y = remaining.pop(random.randrange(len(remaining)))
+            self.transition_sprite.draw_erase(x * psize, y * psize, psize,
+                                              psize)
+
+        self.transition_variables["remaining"] = remaining
+
     def show_transition(self, transition, sprite, duration):
         """Show a transition.
 
@@ -118,6 +167,21 @@ class Room(sge.Room):
             on the destructiveness of changing :attr:`sge.Sprite.width`
             and :attr:`sge.Sprite.height`.
 
+          - :const:`xsge.transition.WIPE_LEFT` -- Wipe transition from
+            left to right.
+
+          - :const:`xsge.transition.WIPE_RIGHT` -- Wipe transition from
+            right to left.
+
+          - :const:`xsge.transition.WIPE_TOP` -- Wipe transition from
+            top to bottom.
+
+          - :const:`xsge.transition.WIPE_BOTTOM` -- Wipe transition from
+            bottom to top.
+
+          - :const:`xsge.transition.WIPE_MATRIX` -- Matrix wipe
+            transition.
+
         - ``sprite`` -- The sprite to use as the first image (the one
           being transitioned out of).  Generally should be a screenshot
           of the previous room.
@@ -128,12 +192,16 @@ class Room(sge.Room):
         """
         self.transition_update = {
             FADE: self.update_fade, DISSOLVE: self.update_dissolve,
-            PIXELATE: self.update_pixelate
-            }.setdefault(transition, lambda: None)
+            PIXELATE: self.update_pixelate, WIPE_LEFT: self.update_wipe_left,
+            WIPE_RIGHT: self.update_wipe_right, WIPE_TOP: self.update_wipe_top,
+            WIPE_BOTTOM: self.update_wipe_bottom,
+            WIPE_MATRIX: self.update_wipe_matrix
+            }.setdefault(transition, lambda c: None)
         self.transition_sprite = sprite
         self.transition_duration = duration
         self.transition_time_passed = 0
         self.transition_complete_last = 0
+        self.transition_variables = {}
 
     def transition_start(self, transition=FADE, duration=1500):
         """Start the room, using a transition.
@@ -198,3 +266,4 @@ class Room(sge.Room):
                 self.transition_duration = 0
                 self.transition_time_passed = 0
                 self.transition_complete_last = 0
+                self.transition_variables = {}

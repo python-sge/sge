@@ -99,6 +99,16 @@ class Room(transition.Room):
             self.transition_end(transition=transition.DISSOLVE)
         elif key == "3":
             self.transition_end(transition=transition.PIXELATE)
+        elif key == "4":
+            self.transition_end(transition=transition.WIPE_LEFT)
+        elif key == "5":
+            self.transition_end(transition=transition.WIPE_RIGHT)
+        elif key == "6":
+            self.transition_end(transition=transition.WIPE_TOP)
+        elif key == "7":
+            self.transition_end(transition=transition.WIPE_BOTTOM)
+        elif key == "w":
+            self.transition_end(transition=transition.WIPE_MATRIX)
 
 
 def main():
