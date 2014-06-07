@@ -110,6 +110,7 @@ class Room:
         self.background_x = background_x
         self.background_y = background_y
         self._destroyed = False
+        self._new_objects = []
 
         self._alarms = {}
 
@@ -164,8 +165,6 @@ class Room:
         self._object_start_bbox_height = {}
         self._object_start_collision_ellipse = {}
         self._object_start_collision_precise = {}
-
-        self._new_objects = []
 
         if self.views:
             self._collision_area_size = max(int(self.views[0].width / 10),

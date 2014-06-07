@@ -38,10 +38,11 @@ WIPE_MATRIX = 12
 
 class Room(sge.Room):
 
+    transition_update = None
+    transition_sprite = None
+    transition_duration = 0
+
     def event_room_start(self):
-        self.transition_update = None
-        self.transition_sprite = None
-        self.transition_duration = 0
         self.transition_time_passed = 0
         self.transition_complete_last = 0
 
@@ -49,10 +50,14 @@ class Room(sge.Room):
         w = self.transition_sprite.width
         h = self.transition_sprite.height
         if complete < 0.5:
-            complete *= 2
-            diff = complete - self.transition_complete_last
-            c = (0, 0, 0, int(round(diff * 255)))
-            self.transition_sprite.draw_rectangle(0, 0, w, h, fill=c)
+            diff = (complete - self.transition_complete_last) * 2
+            c = [int(round(diff * 255))] * 3
+            darkener = sge.Sprite(width=self.transition_sprite.width,
+                                  height=self.transition_sprite.height)
+            darkener.draw_rectangle(0, 0, w, h, c)
+            self.transition_sprite.draw_sprite(
+                darkener, 0, 0, 0, blend_mode=sge.BLEND_RGB_SUBTRACT)
+            darkener.destroy()
         else:
             complete = (complete - 0.5) * 2
             c = (0, 0, 0, int(round(255 - complete * 255)))
@@ -76,22 +81,21 @@ class Room(sge.Room):
         h = self.transition_sprite.height
         if complete < 0.5:
             complete *= 2
-            swidth = max(1, int(round(w * (1 - complete))))
-            sheight = max(1, int(round(h * (1 - complete))))
+            swidth = max(1, w * (1 - complete))
+            sheight = max(1, h * (1 - complete))
             self.transition_sprite.width = swidth
             self.transition_sprite.height = sheight
             self.transition_sprite.width = w
             self.transition_sprite.height = h
         else:
-            complete = (complete - 0.5) * 2
-            swidth = max(1, int(round(w * complete)))
-            sheight = max(1, int(round(h * complete)))
-            self.transition_sprite.destroy()
-            self.transition_sprite = sge.Sprite.from_screenshot()
-            self.transition_sprite.width = swidth
-            self.transition_sprite.height = sheight
-            self.transition_sprite.width = w
-            self.transition_sprite.height = h
+            diff = (complete - self.transition_complete_last) * 2
+            c = (0, 0, 0, int(round(diff * 255)))
+            eraser = sge.Sprite(width=self.transition_sprite.width,
+                                height=self.transition_sprite.height)
+            eraser.draw_rectangle(0, 0, w, h, c)
+            self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
+                                               blend_mode=sge.BLEND_RGBA_SUBTRACT)
+            eraser.destroy()
 
     def show_transition(self, transition, sprite, duration):
         """Show a transition.
@@ -108,9 +112,11 @@ class Room(sge.Room):
             first room with the second room.
 
           - :const:`xsge.transition.PIXELATE` -- Pixelate the first
-            room, then un-pixelate the second room.  If
+            room, then fade into the second room.  If
             :attr:`sge.game.scale_smooth` is :const:`True`, the effect
-            will instead be to blur and unblur the rooms.
+            will instead be to blur and unblur the rooms.  This relies
+            on the destructiveness of changing :attr:`sge.Sprite.width`
+            and :attr:`sge.Sprite.height`.
 
         - ``sprite`` -- The sprite to use as the first image (the one
           being transitioned out of).  Generally should be a screenshot
@@ -126,9 +132,10 @@ class Room(sge.Room):
             }.setdefault(transition, lambda: None)
         self.transition_sprite = sprite
         self.transition_duration = duration
+        self.transition_time_passed = 0
         self.transition_complete_last = 0
 
-    def transition_start(self, transition=FADE, duration=3000):
+    def transition_start(self, transition=FADE, duration=1500):
         """Start the room, using a transition.
 
         See the documentation for :meth:`sge.Room.start` and
@@ -138,10 +145,9 @@ class Room(sge.Room):
         """
         screenshot = sge.Sprite.from_screenshot()
         self.show_transition(transition, screenshot, duration)
-        self.add(transition_obj)
         self.start()
 
-    def transition_resume(self, transition=FADE, duration=3000):
+    def transition_resume(self, transition=FADE, duration=1500):
         """Resume the room, using a transition.
 
         See the documentation for :meth:`sge.Room.resume` and
@@ -151,10 +157,29 @@ class Room(sge.Room):
         """
         screenshot = sge.Sprite.from_screenshot()
         self.show_transition(transition, screenshot, duration)
-        self.add(transition_obj)
         self.resume()
 
-    def event_step(self, time_passed):
+    def transition_end(self, transition=FADE, duration=1500, next_room=None,
+                       resume=True):
+        """End the room, using a transition for the next room.
+
+        See the documentation for :meth:`sge.Room.end` and
+        :meth:`xsge.transition.Room.show_transition` for more
+        information.
+
+        """
+        if next_room is None:
+            next_room = self.room_number + 1
+
+        if (next_room >= -len(sge.game.rooms) and
+                next_room < len(sge.game.rooms)):
+            screenshot = sge.Sprite.from_screenshot()
+            sge.game.rooms[next_room].show_transition(transition, screenshot,
+                                                      duration)
+
+        self.end(next_room=next_room, resume=resume)
+
+    def event_step(self, time_passed, delta_mult):
         if (self.transition_update is not None and
                 self.transition_sprite is not None and
                 self.transition_duration > 0):
@@ -171,3 +196,5 @@ class Room(sge.Room):
                 self.transition_update = None
                 self.transition_sprite = None
                 self.transition_duration = 0
+                self.transition_time_passed = 0
+                self.transition_complete_last = 0

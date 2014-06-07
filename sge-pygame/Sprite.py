@@ -977,17 +977,19 @@ class Sprite:
         # methods to work properly, specifically whenever ``width`` and
         # ``height`` are set.  As a result, setting ``width`` and
         # ``height`` is destructive in this implementation.
+        width = int(round(self.width))
+        height = int(round(self.height))
         for i in range(self.frames):
             if sge.game.scale_smooth:
                 try:
                     self._baseimages[i] = pygame.transform.smoothscale(
-                        self._baseimages[i], (self.width, self.height))
+                        self._baseimages[i], (width, height))
                 except pygame.error:
                     self._baseimages[i] = pygame.transform.scale(
-                        self._baseimages[i], (self.width, self.height))
+                        self._baseimages[i], (width, height))
             else:
                 self._baseimages[i] = pygame.transform.scale(
-                    self._baseimages[i], (self.width, self.height))
+                    self._baseimages[i], (width, height))
 
     def _refresh(self):
         # Set the _images list based on the variables.
