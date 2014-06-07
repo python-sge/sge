@@ -803,13 +803,20 @@ class Sprite:
 
         self._refresh()
 
-    def draw_clear(self, frame=None):
-        """Erase everything from the sprite.
+    def draw_erase(self, x, y, width, height, frame=None):
+        """Erase part of the sprite.
 
         Arguments:
 
-        - ``frame`` -- The frame of the sprite to clear, where ``0`` is
-          the first frame; set to :const:`None` to clear all frames.
+        - ``x`` -- The horizontal location relative to the sprite of the
+          area to erase.
+        - ``y`` -- The vertical location relative to the sprite of the
+          area to erase.
+        - ``width`` -- The width of the area to erase.
+        - ``height`` -- The height of the area to erase.
+        - ``frame`` -- The frame of the sprite to erase from, where
+          ``0`` is the first frame; set to :const:`None` to erase from
+          all frames.
 
         """
         for i in range(self.frames):
@@ -819,9 +826,21 @@ class Sprite:
                 else:
                     color = self._baseimages[i].get_colorkey()
 
-                self._baseimages[i].fill(color)
+                rect = pygame.Rect(x, y, width, height)
+                self._baseimages[i].fill(color, rect)
 
         self._refresh()
+
+    def draw_clear(self, frame=None):
+        """Erase everything from the sprite.
+
+        Arguments:
+
+        - ``frame`` -- The frame of the sprite to clear, where ``0`` is
+          the first frame; set to :const:`None` to clear all frames.
+
+        """
+        self.draw_erase(0, 0, self.width, self.height, frame)
 
     def save(self, fname):
         """Save the sprite to an image file.

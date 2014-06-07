@@ -17,6 +17,7 @@ Specification additions:
 + sge.Room.set_alarm
 + sge.Room.get_alarm
 + sge.Room.event_alarm
++ sge.Sprite.draw_erase
 
 Specification misc changes:
 * sge.Room.event_room_resume no longer calls sge.Room.event_room_start by default.

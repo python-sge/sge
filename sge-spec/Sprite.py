@@ -407,6 +407,24 @@ class Sprite(object):
         """
         # TODO
 
+    def draw_erase(self, x, y, width, height, frame=None):
+        """Erase part of the sprite.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the sprite of the
+          area to erase.
+        - ``y`` -- The vertical location relative to the sprite of the
+          area to erase.
+        - ``width`` -- The width of the area to erase.
+        - ``height`` -- The height of the area to erase.
+        - ``frame`` -- The frame of the sprite to erase from, where
+          ``0`` is the first frame; set to :const:`None` to erase from
+          all frames.
+
+        """
+        # TODO
+
     def draw_clear(self, frame=None):
         """Erase everything from the sprite.
 
@@ -416,7 +434,7 @@ class Sprite(object):
           the first frame; set to :const:`None` to clear all frames.
 
         """
-        # TODO
+        self.draw_erase(0, 0, self.width, self.height, frame)
 
     def save(self, fname):
         """Save the sprite to an image file.
