@@ -886,7 +886,8 @@ class StellarClass:
         sge.game._background_changed = True
         self.event_destroy()
         self._pygame_sprite.kill()
-        del sge.game.objects[self.id]
+        if self.id in sge.game.objects:
+            del sge.game.objects[self.id]
 
         for room in sge.game.rooms:
             while self in room.objects:

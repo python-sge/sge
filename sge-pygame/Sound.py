@@ -254,7 +254,8 @@ class Sound:
         while self._channels:
             sge.game._release_channel(self._channels.pop(0))
 
-        del sge.game.sounds[self.id]
+        if self.id in sge.game.sounds:
+            del sge.game.sounds[self.id]
 
     @staticmethod
     def stop_all():

@@ -204,7 +204,8 @@ class BackgroundLayer:
 
     def destroy(self):
         """Destroy the background layer."""
-        del sge.game.background_layers[self.id]
+        if self.id in sge.game.background_layers:
+            del sge.game.background_layers[self.id]
 
     def _update(self, time_passed):
         # Update the animation frame.

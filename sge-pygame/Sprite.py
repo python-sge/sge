@@ -864,7 +864,8 @@ class Sprite:
            destroyed until this use stops.
 
         """
-        del sge.game.sprites[self.id]
+        if self.id in sge.game.sprites:
+            del sge.game.sprites[self.id]
 
     @classmethod
     def from_tileset(cls, name, ID=None, x=0, y=0, columns=1, rows=1, xsep=0,

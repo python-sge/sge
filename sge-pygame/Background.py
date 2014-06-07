@@ -93,7 +93,8 @@ class Background:
 
     def destroy(self):
         """Destroy the background."""
-        del sge.game.backgrounds[self.id]
+        if self.id in sge.game.backgrounds:
+            del sge.game.backgrounds[self.id]
 
     def _get_background(self):
         # Return the static background this frame.

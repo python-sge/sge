@@ -218,7 +218,8 @@ class Music:
         if self.playing:
             self.stop()
 
-        del sge.game.music[self.id]
+        if self.id in sge.game.music:
+            del sge.game.music[self.id]
 
     @staticmethod
     def stop(fade_time=None):

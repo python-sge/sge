@@ -109,6 +109,7 @@ class Room:
         self._start_height = self.height
         self.background_x = background_x
         self.background_y = background_y
+        self._destroyed = False
 
         self._alarms = {}
 
@@ -164,6 +165,8 @@ class Room:
         self._object_start_collision_ellipse = {}
         self._object_start_collision_precise = {}
 
+        self._new_objects = []
+
         if self.views:
             self._collision_area_size = max(int(self.views[0].width / 10),
                                             int(self.views[0].height / 10))
@@ -204,6 +207,8 @@ class Room:
                 sge.game._pygame_sprites.add(obj._pygame_sprite, layer=obj.z)
                 if self._started:
                     obj.event_create()
+            else:
+                self._new_objects.append(obj)
 
     def start(self):
         """Start the room.
@@ -261,6 +266,9 @@ class Room:
             for obj in self.objects:
                 obj.event_create()
         else:
+            while self._new_objects:
+                self._new_objects[0].event_create()
+                del self._new_objects[0]
             self.event_room_resume()
 
         self._started = True
@@ -533,7 +541,9 @@ class Room:
            destroyed until this use stops.
 
         """
-        del sge.game.rooms[self.room_number]
+        if not self._destroyed and len(sge.game.rooms) < self.room_number:
+            self._destroyed = True
+            del sge.game.rooms[self.room_number]
 
     def event_room_start(self):
         """Room start event.
