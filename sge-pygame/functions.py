@@ -479,7 +479,7 @@ def _show_modal(text, default, text_entry, buttons):
     while box_h + text_h > screen_h and box_w < screen_w:
         box_w = min(box_w + 4, screen_w)
         text_w = box_w - 16
-        text_h = font.get_size(text, text_w)
+        text_h = font.get_size(text, text_w)[1]
 
     box_h = max(120, box_h + text_h)
     button_w = min(80, int(box_w / len(buttons)))
@@ -724,12 +724,12 @@ def _show_modal(text, default, text_entry, buttons):
 
     text_entry_rect = text_entry_field.get_rect()
     text_entry_rect.left = 4
-    text_entry_rect.bottom = box_h - text_entry_h - 8
+    text_entry_rect.bottom = box_h - button_h - text_entry_h + 4
     if text_entry:
         box.blit(text_entry_field, text_entry_rect)
-    text_entry_rect.w -= 4
+    text_entry_rect.w -= 8
     text_entry_rect.h -= 4
-    text_entry_rect.left += box_rect.left + 2
+    text_entry_rect.left += box_rect.left + 4
     text_entry_rect.top += box_rect.top + 2
 
     # Button image

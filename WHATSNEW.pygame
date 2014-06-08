@@ -18,6 +18,7 @@ Pygame SGE bugfixes:
 - Window size being the monitor size when exiting fullscreen
 - Alarms being broken
 - Setting sprites to non-integer sizes causing a crash
+- Text entry area in sge.get_text_entry being in the wrong place
 
 
 0.9.2
