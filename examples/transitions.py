@@ -107,6 +107,14 @@ class Room(transition.Room):
             self.transition_end(transition=transition.WIPE_TOP)
         elif key == "7":
             self.transition_end(transition=transition.WIPE_BOTTOM)
+        elif key == "8":
+            self.transition_end(transition=transition.WIPE_TOPLEFT)
+        elif key == "9":
+            self.transition_end(transition=transition.WIPE_TOPRIGHT)
+        elif key == "0":
+            self.transition_end(transition=transition.WIPE_BOTTOMLEFT)
+        elif key == "q":
+            self.transition_end(transition=transition.WIPE_BOTTOMRIGHT)
         elif key == "w":
             self.transition_end(transition=transition.WIPE_MATRIX)
 

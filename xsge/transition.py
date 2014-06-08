@@ -18,6 +18,7 @@
 This module provides a framework for transition animations.
 """
 
+import math
 import random
 
 import sge
@@ -96,8 +97,8 @@ class Room(sge.Room):
             eraser = sge.Sprite(width=self.transition_sprite.width,
                                 height=self.transition_sprite.height)
             eraser.draw_rectangle(0, 0, w, h, c)
-            self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
-                                               blend_mode=sge.BLEND_RGBA_SUBTRACT)
+            self.transition_sprite.draw_sprite(
+                eraser, 0, 0, 0, blend_mode=sge.BLEND_RGBA_SUBTRACT)
             eraser.destroy()
 
     def update_wipe_left(self, complete):
@@ -121,6 +122,54 @@ class Room(sge.Room):
         h = self.transition_sprite.height * complete
         y = self.transition_sprite.height - h
         self.transition_sprite.draw_erase(0, y, w, h)
+
+    def update_wipe_topleft(self, complete):
+        w = self.transition_sprite.width
+        h = self.transition_sprite.height
+        dw = math.hypot(w, h)
+        lw = int(round(2 * dw * complete))
+        eraser = sge.Sprite(width=self.transition_sprite.width,
+                            height=self.transition_sprite.height)
+        eraser.draw_line(-w, h, w, -h, (0, 0, 0, 255), thickness=lw,
+                         anti_alias=True)
+        self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
+                                           blend_mode=sge.BLEND_RGBA_SUBTRACT)
+
+    def update_wipe_topright(self, complete):
+        w = self.transition_sprite.width
+        h = self.transition_sprite.height
+        dw = math.hypot(w, h)
+        lw = int(round(2 * dw * complete))
+        eraser = sge.Sprite(width=self.transition_sprite.width,
+                            height=self.transition_sprite.height)
+        eraser.draw_line(0, -h, w + w, h, (0, 0, 0, 255), thickness=lw,
+                         anti_alias=True)
+        self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
+                                           blend_mode=sge.BLEND_RGBA_SUBTRACT)
+
+    def update_wipe_bottomleft(self, complete):
+        w = self.transition_sprite.width
+        h = self.transition_sprite.height
+        dw = math.hypot(w, h)
+        lw = int(round(2 * dw * complete))
+        eraser = sge.Sprite(width=self.transition_sprite.width,
+                            height=self.transition_sprite.height)
+        eraser.draw_line(-w, 0, w, h + h, (0, 0, 0, 255), thickness=lw,
+                         anti_alias=True)
+        self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
+                                           blend_mode=sge.BLEND_RGBA_SUBTRACT)
+
+    def update_wipe_bottomright(self, complete):
+        w = self.transition_sprite.width
+        h = self.transition_sprite.height
+        dw = math.hypot(w, h)
+        lw = int(round(2 * dw * complete))
+        eraser = sge.Sprite(width=self.transition_sprite.width,
+                            height=self.transition_sprite.height)
+        eraser.draw_line(0, h + h, w + w, 0, (0, 0, 0, 255), thickness=lw,
+                         anti_alias=True)
+        self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
+                                           blend_mode=sge.BLEND_RGBA_SUBTRACT)
 
     def update_wipe_matrix(self, complete):
         psize = 16
@@ -195,6 +244,10 @@ class Room(sge.Room):
             PIXELATE: self.update_pixelate, WIPE_LEFT: self.update_wipe_left,
             WIPE_RIGHT: self.update_wipe_right, WIPE_TOP: self.update_wipe_top,
             WIPE_BOTTOM: self.update_wipe_bottom,
+            WIPE_TOPLEFT: self.update_wipe_topleft,
+            WIPE_TOPRIGHT: self.update_wipe_topright,
+            WIPE_BOTTOMLEFT: self.update_wipe_bottomleft,
+            WIPE_BOTTOMRIGHT: self.update_wipe_bottomright,
             WIPE_MATRIX: self.update_wipe_matrix
             }.setdefault(transition, lambda c: None)
         self.transition_sprite = sprite
