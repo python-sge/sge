@@ -21,6 +21,13 @@ Specification additions:
 + sge.StellarClass.checks_collisions
 + sge.StellarClass.tangible
 + sge.Game.collision_events_enabled
++ sge.keyboard.get_pressed
++ sge.keyboard.get_modifier
++ sge.keyboard.get_focused
++ sge.keyboard.set_repeat
++ sge.keyboard.get_repeat_enabled
++ sge.keyboard.get_repeat_interval
++ sge.keyboard.get_repeat_delay
 
 Specification removals:
 - sge.StellarClass.detects_collisions
