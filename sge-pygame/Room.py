@@ -930,7 +930,6 @@ class Room:
             view.height = self._view_start_height[id(view)]
 
         for obj in self.objects:
-            print(self._object_start_x)
             if obj is not sge.game.mouse:
                 obj.x = self._object_start_x[obj.id]
                 obj.y = self._object_start_y[obj.id]

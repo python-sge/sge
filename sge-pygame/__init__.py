@@ -549,12 +549,12 @@ from sge.StellarClass import StellarClass, Mouse, _PygameProjectionSprite
 from sge.Room import Room
 from sge.View import View
 from sge.functions import *
-from sge import collision, keyboard
+from sge import collision, joystick, keyboard, mouse
 
 
 __all__ = [
     # Modules
-    "collision", "keyboard",
+    "collision", "joystick", "keyboard", "mouse",
 
     # Constants
     'IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP',
@@ -569,11 +569,7 @@ __all__ = [
     'Music', 'StellarClass', 'Room', 'View',
 
     # Functions
-    'show_message', 'get_text_entry', 'get_key_pressed',
-    'get_mouse_button_pressed', 'get_joystick_axis', 'get_joystick_hat',
-    'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_name',
-    'get_joystick_id', 'get_joystick_axes', 'get_joystick_hats',
-    'get_joystick_trackballs', 'get_joystick_buttons'
+    'show_message', 'get_text_entry'
     ]
 
 # Global variables
@@ -591,6 +587,64 @@ hardware_rendering = False
 # default because it seems to cause some weird behavior with window
 # resizing on at least some systems.
 #os.environ['SDL_VIDEO_CENTERED'] = '1'
+
+
+def _scale(surface, width, height):
+    # Scale the given surface to the given width and height, taking the
+    # scale factor of the screen into account.
+    width = int(round(width * game._xscale))
+    height = int(round(height * game._yscale))
+
+    if game.scale_smooth:
+        try:
+            new_surf = pygame.transform.smoothscale(surface, (width, height))
+        except pygame.error:
+            new_surf = pygame.transform.scale(surface, (width, height))
+    else:
+        new_surf = pygame.transform.scale(surface, (width, height))
+
+    return new_surf
+
+
+def _get_pygame_color(color):
+    # Return the proper Pygame color.
+    if isinstance(color, str):
+        c = color.lower()
+        if c in COLORS:
+            c = COLORS[c]
+
+        try:
+            return pygame.Color(c)
+        except ValueError:
+            return pygame.Color((0, 0, 0, 0))
+    elif isinstance(color, int):
+        r = int((color & 0xff0000) // (256 ** 2))
+        g = int((color & 0x00ff00) // 256)
+        b = color & 0x0000ff
+        return pygame.Color(r, g, b)
+    else:
+        try:
+            try:
+                while len(color) < 3:
+                    color.append(0)
+                return pygame.Color(*color[:4])
+            except TypeError:
+                return pygame.Color(color)
+        except ValueError:
+            return pygame.Color((0, 0, 0, 0))
+
+
+def _scold_user_on_lose_vs_loose(attempted_name):
+    # Tell the user that they misspelled "lose" as "loose".
+    m = '\n'.join((
+        'Huh? I don\'t have a method called "{}".'.format(attempted_name),
+        'You do know that "lose" (a verb meaning "to fail to keep or hold")',
+        'is not spelled the same as "loose" (an adjective meaning "not',
+        'tightly fastened, attached, or held"), right?'))
+
+    print(m)
+    m = m.replace('\n', ' ')
+    show_message(m)
 
 
 if DEBUG:

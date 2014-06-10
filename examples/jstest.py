@@ -38,29 +38,29 @@ class Room(sge.Room):
 
     def set_joystick(self):
         self.joystick_axes = []
-        for i in range(sge.get_joystick_axes(self.current_joystick)):
-            self.joystick_axes.append(sge.get_joystick_axis(
+        for i in range(sge.joystick.get_axes(self.current_joystick)):
+            self.joystick_axes.append(sge.joystick.get_axis(
                 self.current_joystick, i))
 
         self.joystick_hats = []
-        for i in range(sge.get_joystick_hats(self.current_joystick)):
-            self.joystick_hats.append(sge.get_joystick_hat(
+        for i in range(sge.joystick.get_hats(self.current_joystick)):
+            self.joystick_hats.append(sge.joystick.get_hat(
                 self.current_joystick, i))
 
         self.joystick_balls = []
-        for i in range(sge.get_joystick_trackballs(self.current_joystick)):
+        for i in range(sge.joystick.get_trackballs(self.current_joystick)):
             self.joystick_balls.append(0)
 
         self.joystick_buttons = []
-        for i in range(sge.get_joystick_buttons(self.current_joystick)):
-            self.joystick_buttons.append(sge.get_joystick_button_pressed(
+        for i in range(sge.joystick.get_buttons(self.current_joystick)):
+            self.joystick_buttons.append(sge.joystick.get_pressed(
                 self.current_joystick, i))
 
         glob.js_selection_sprite.draw_clear()
 
         title_text = 'Joystick {0} ("{1}")'.format(
-            sge.get_joystick_id(self.current_joystick),
-            sge.get_joystick_name(self.current_joystick))
+            sge.joystick.get_id(self.current_joystick),
+            sge.joystick.get_name(self.current_joystick))
 
         x = glob.js_selection_sprite.width / 2
         y = glob.js_selection_sprite.height / 2
@@ -119,11 +119,11 @@ class Room(sge.Room):
     def event_key_press(self, key, char):
         if key == "left":
             self.current_joystick -= 1
-            self.current_joystick %= sge.get_joysticks()
+            self.current_joystick %= sge.joystick.get_joysticks()
             self.set_joystick()
         elif key == "right":
             self.current_joystick += 1
-            self.current_joystick %= sge.get_joysticks()
+            self.current_joystick %= sge.joystick.get_joysticks()
             self.set_joystick()
 
     def event_joystick_axis_move(self, name, ID, axis, value):
@@ -179,10 +179,10 @@ def main():
 
     # Create objects
     selection_object = sge.StellarClass(0, 0, sprite=glob.js_selection_sprite,
-                                        detects_collisions=False)
+                                        tangible=False)
     state_object = sge.StellarClass(0, TITLE_HEIGHT,
                                     sprite=glob.js_state_sprite,
-                                    detects_collisions=False)
+                                    tangible=False)
     objects = (selection_object, state_object)
 
     # Create rooms

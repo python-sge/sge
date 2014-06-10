@@ -447,12 +447,12 @@ from sge.StellarClass import StellarClass, Mouse
 from sge.Room import Room
 from sge.View import View
 from sge.functions import *
-from sge import collision, keyboard
+from sge import collision, joystick, keyboard, mouse
 
 
 __all__ = [
     # Modules
-    "collision", "keyboard",
+    "collision", "joystick", "keyboard", "mouse",
 
     # Constants
     'IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP',
@@ -467,11 +467,7 @@ __all__ = [
     'Music', 'StellarClass', 'Room', 'View',
 
     # Functions
-    'show_message', 'get_text_entry', 'get_key_pressed',
-    'get_mouse_button_pressed', 'get_joystick_axis', 'get_joystick_hat',
-    'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_name',
-    'get_joystick_id', 'get_joystick_axes', 'get_joystick_hats',
-    'get_joystick_trackballs', 'get_joystick_buttons'
+    'show_message', 'get_text_entry'
     ]
 
 # Global variables

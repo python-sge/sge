@@ -28,9 +28,29 @@ Specification additions:
 + sge.keyboard.get_repeat_enabled
 + sge.keyboard.get_repeat_interval
 + sge.keyboard.get_repeat_delay
++ sge.mouse.get_pressed
++ sge.joystick.get_axis
++ sge.joystick.get_hat
++ sge.joystick.get_pressed
++ sge.joystick.get_joysticks
++ sge.joystick.get_name
++ sge.joystick.get_id
++ sge.joystick.get_axes
++ sge.joystick.get_hats
++ sge.joystick.get_trackballs
++ sge.joystick.get_buttons
 
 Specification removals:
 - sge.StellarClass.detects_collisions
+- sge.get_key_pressed
+- sge.get_mouse_button_pressed
+- sge.get_joystick_axis
+- sge.get_joystick_hat
+- sge.get_joystick_id
+- sge.get_joystick_axes
+- sge.get_joystick_hats
+- sge.get_joystick_trackballs
+- sge.get_joystick_buttons
 
 Specification misc changes:
 * sge.Room.event_room_resume no longer calls sge.Room.event_room_start by default.

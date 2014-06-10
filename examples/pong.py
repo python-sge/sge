@@ -114,9 +114,9 @@ class Player(sge.StellarClass):
 
     def event_step(self, time_passed, delta_mult):
         # Movement
-        key_motion = (sge.get_key_pressed(self.down_key) -
-                      sge.get_key_pressed(self.up_key))
-        axis_motion = sge.get_joystick_axis(self.joystick, 1)
+        key_motion = (sge.keyboard.get_pressed(self.down_key) -
+                      sge.keyboard.get_pressed(self.up_key))
+        axis_motion = sge.joystick.get_axis(self.joystick, 1)
 
         if (abs(axis_motion) > abs(key_motion) and
                 abs(axis_motion) > abs(self.trackball_motion)):

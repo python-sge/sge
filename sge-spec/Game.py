@@ -454,8 +454,8 @@ class Game(object):
           press, or an empty Unicode string if no Unicode character is
           associated with the key press.
 
-        See the documentation for :func:`sge.get_key_pressed` for more
-        information.
+        See the documentation for :func:`sge.keyboard.get_pressed` for
+        more information.
 
         """
         pass
@@ -463,8 +463,8 @@ class Game(object):
     def event_key_release(self, key):
         """Key release event.
 
-        See the documentation for :func:`sge.get_key_pressed` for more
-        information.
+        See the documentation for :func:`sge.keyboard.get_pressed` for
+        more information.
 
         """
         pass
@@ -487,8 +487,8 @@ class Game(object):
 
         Called when a mouse button is pressed.
 
-        See the documentation for :func:`sge.get_mouse_button_pressed`
-        for more information.
+        See the documentation for :func:`sge.mouse.get_pressed` for more
+        information.
 
         """
         pass
@@ -498,8 +498,8 @@ class Game(object):
 
         Called when a mouse button is released.
 
-        See the documentation for :func:`sge.get_mouse_button_pressed`
-        for more information.
+        See the documentation for :func:`sge.mouse.get_pressed` for more
+        information.
 
         """
         pass
@@ -518,7 +518,7 @@ class Game(object):
           ``1``, where ``0`` is centered, ``-1`` is all the way to the
           left or up, and ``1`` is all the way to the right or down.
 
-        See the documentation for :func:`sge.get_joystick_axis` for more
+        See the documentation for :func:`sge.joystick.get_axis` for more
         information.
 
         """
@@ -540,7 +540,7 @@ class Game(object):
         - ``y`` -- The vertical position of the HAT, where ``0`` is
           centered, ``-1`` is up, and ``1`` is down.
 
-        See the documentation for :func:`sge.get_joystick_hat` for more
+        See the documentation for :func:`sge.joystick.get_hat` for more
         information.
 
         """
@@ -575,8 +575,8 @@ class Game(object):
         - ``ID`` -- The number of the joystick, where ``0`` is the first
           joystick.
 
-        See the documentation for
-        :func:`sge.get_joystick_button_pressed` for more information.
+        See the documentation for :func:`sge.joystick.get_pressed` for
+        more information.
 
         """
         pass
@@ -592,8 +592,8 @@ class Game(object):
         - ``ID`` -- The number of the joystick, where ``0`` is the first
           joystick.
 
-        See the documentation for
-        :func:`sge.get_joystick_button_pressed` for more information.
+        See the documentation for :func:`sge.joystick.get_pressed` for
+        more information.
 
         """
         pass

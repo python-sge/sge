@@ -48,10 +48,10 @@ class Circle(sge.StellarClass):
         right_key = ['right', 'd', 'l', 'kp_6'][self.player]
         up_key = ['up', 'w', 'i', 'kp_8'][self.player]
         down_key = ['down', 's', 'k', 'kp_5'][self.player]
-        self.xvelocity = (sge.get_key_pressed(right_key) -
-                          sge.get_key_pressed(left_key))
-        self.yvelocity = (sge.get_key_pressed(down_key) -
-                          sge.get_key_pressed(up_key))
+        self.xvelocity = (sge.keyboard.get_pressed(right_key) -
+                          sge.keyboard.get_pressed(left_key))
+        self.yvelocity = (sge.keyboard.get_pressed(down_key) -
+                          sge.keyboard.get_pressed(up_key))
 
         # Limit the circles to inside the room.
         if self.bbox_left < 0:
