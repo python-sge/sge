@@ -339,50 +339,12 @@ Dependencies
 
 """
 
-__version__ = "0.9.2.6"
+__version__ = "0.9.2.7"
 
 import sys
 import os
 
 # Import implementation-specific libraries like Pygame here
-
-from sge.Game import Game
-from sge.Sprite import Sprite
-from sge.BackgroundLayer import BackgroundLayer
-from sge.Background import Background
-from sge.Font import Font
-from sge.Sound import Sound
-from sge.Music import Music
-from sge.StellarClass import StellarClass, Mouse
-from sge.Room import Room
-from sge.View import View
-from sge.functions import *
-from sge import collision, keyboard
-
-
-__all__ = [
-    # Modules
-    "collision", "keyboard",
-
-    # Constants
-    'IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP',
-    'ALIGN_MIDDLE', 'ALIGN_BOTTOM', 'BLEND_RGBA_ADD', 'BLEND_RGBA_SUBTRACT',
-    'BLEND_RGBA_MULTIPLY', 'BLEND_RGBA_SCREEN', 'BLEND_RGBA_MINIMUM',
-    'BLEND_RGBA_MAXIMUM', 'BLEND_RGB_ADD', 'BLEND_RGB_SUBTRACT',
-    'BLEND_RGB_MULTIPLY', 'BLEND_RGB_SCREEN', 'BLEND_RGB_MINIMUM',
-    'BLEND_RGB_MAXIMUM',
-
-    # Classes
-    'Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',
-    'Music', 'StellarClass', 'Room', 'View',
-
-    # Functions
-    'show_message', 'get_text_entry', 'get_key_pressed',
-    'get_mouse_button_pressed', 'get_joystick_axis', 'get_joystick_hat',
-    'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_name',
-    'get_joystick_id', 'get_joystick_axes', 'get_joystick_hats',
-    'get_joystick_trackballs', 'get_joystick_buttons'
-    ]
 
 # Constants
 PROGRAM_DIR = os.path.dirname(sys.argv[0])
@@ -473,6 +435,44 @@ MOUSE_BUTTONS = {"left": 0, "right": 1, "middle": 2, "wheel_up": 3,
 MOUSE_BUTTON_NAMES = {}
 for pair in MOUSE_BUTTONS.items():
     MOUSE_BUTTON_NAMES[pair[1]] = pair[0]
+
+from sge.Game import Game
+from sge.Sprite import Sprite
+from sge.BackgroundLayer import BackgroundLayer
+from sge.Background import Background
+from sge.Font import Font
+from sge.Sound import Sound
+from sge.Music import Music
+from sge.StellarClass import StellarClass, Mouse
+from sge.Room import Room
+from sge.View import View
+from sge.functions import *
+from sge import collision, keyboard
+
+
+__all__ = [
+    # Modules
+    "collision", "keyboard",
+
+    # Constants
+    'IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP',
+    'ALIGN_MIDDLE', 'ALIGN_BOTTOM', 'BLEND_RGBA_ADD', 'BLEND_RGBA_SUBTRACT',
+    'BLEND_RGBA_MULTIPLY', 'BLEND_RGBA_SCREEN', 'BLEND_RGBA_MINIMUM',
+    'BLEND_RGBA_MAXIMUM', 'BLEND_RGB_ADD', 'BLEND_RGB_SUBTRACT',
+    'BLEND_RGB_MULTIPLY', 'BLEND_RGB_SCREEN', 'BLEND_RGB_MINIMUM',
+    'BLEND_RGB_MAXIMUM',
+
+    # Classes
+    'Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',
+    'Music', 'StellarClass', 'Room', 'View',
+
+    # Functions
+    'show_message', 'get_text_entry', 'get_key_pressed',
+    'get_mouse_button_pressed', 'get_joystick_axis', 'get_joystick_hat',
+    'get_joystick_button_pressed', 'get_joysticks', 'get_joystick_name',
+    'get_joystick_id', 'get_joystick_axes', 'get_joystick_hats',
+    'get_joystick_trackballs', 'get_joystick_buttons'
+    ]
 
 # Global variables
 game = None
