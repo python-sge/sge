@@ -20,6 +20,7 @@ Specification additions:
 + sge.Sprite.draw_erase
 + sge.StellarClass.checks_collisions
 + sge.StellarClass.tangible
++ sge.Game.collision_events_enabled
 
 Specification removals:
 - sge.StellarClass.detects_collisions

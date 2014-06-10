@@ -104,6 +104,12 @@ class Game(object):
        specified in :data:`sge.image_directories` to use as the window
        icon.  If set to :const:`None`, the SGE chooses the icon.
 
+    .. attribute:: collision_events_enabled
+
+       Whether or not collision events should be executed.  Setting this
+       to :const:`False` will improve performence if collision events
+       are not needed.
+
     .. attribute:: registered_classes
 
        A list containing all classes which have been registered with
@@ -171,7 +177,8 @@ class Game(object):
     def __init__(self, width=640, height=480, fullscreen=False, scale=None,
                  scale_proportional=True, scale_smooth=False, fps=60,
                  delta=False, delta_min=15, grab_input=False,
-                 window_text=None, window_icon=None):
+                 window_text=None, window_icon=None,
+                 collision_events_enabled=True):
         """Constructor method.
 
         Arguments set the respective initial attributes of the game.

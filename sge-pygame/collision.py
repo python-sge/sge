@@ -273,9 +273,9 @@ def _get_rectangle_collision_areas(x, y, w, h):
     # Get a list of collision areas a rect is in.
     room = sge.game.current_room
     area_size = room._collision_area_size
-    areas_x_start = int(x / area_size)
+    areas_x_start = math.floor(x / area_size)
     areas_x_num = math.ceil(w / area_size) + 1
-    areas_y_start = int(y / area_size)
+    areas_y_start = math.floor(y / area_size)
     areas_y_num = math.ceil(h / area_size) + 1
     areas = []
 

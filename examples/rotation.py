@@ -28,7 +28,7 @@ class Game(sge.Game):
 class Circle(sge.StellarClass):
     def __init__(self, x, y):
         super().__init__(x, y, 5, sprite='rotator', regulate_origin=True,
-                         checks_collisions=False, collision_precise=True)
+                         collision_precise=True)
 
     def event_create(self):
         self.image_alpha = 200
@@ -54,7 +54,7 @@ class Circle(sge.StellarClass):
 
 def main():
     # Create Game object
-    game = Game(delta=True)
+    game = Game(delta=True, collision_events_enabled=False)
 
     # Load sprites
     sge.Sprite('rotator')

@@ -39,8 +39,7 @@ class Game(sge.Game):
 
 class Circle(sge.StellarClass):
     def __init__(self, x, y):
-        super().__init__(x, y, 5, sprite='circle', checks_collisions=False,
-                         collision_precise=True)
+        super().__init__(x, y, 5, sprite='circle', collision_precise=True)
 
     def event_create(self):
         self.image_alpha = 200
@@ -122,7 +121,7 @@ class Room(transition.Room):
 
 def main():
     # Create Game object
-    game = Game()
+    game = Game(collision_events_enabled=False)
 
     # Load sprites
     circle_sprite = sge.Sprite('circle', width=64, height=64, origin_x=32,

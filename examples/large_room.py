@@ -73,7 +73,8 @@ class Circle(sge.StellarClass):
 
 def main():
     # Create Game object
-    Game(width=320, height=240, scale_smooth=True)
+    Game(width=320, height=240, scale_smooth=True,
+         collision_events_enabled=False)
 
     # Load sprites
     sge.Sprite('circle', width=32, height=32, origin_x=16, origin_y=16)

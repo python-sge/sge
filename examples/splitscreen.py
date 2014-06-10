@@ -80,7 +80,7 @@ class Circle(sge.StellarClass):
 
 def main():
     # Create Game object
-    Game(width=640, height=480)
+    Game(width=640, height=480, collision_events_enabled=False)
 
     sge.game.register_class(Circle)
 

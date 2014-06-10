@@ -111,6 +111,12 @@ class Game:
        specified in :data:`sge.image_directories` to use as the window
        icon.  If set to :const:`None`, the SGE chooses the icon.
 
+    .. attribute:: collision_events_enabled
+
+       Whether or not collision events should be executed.  Setting this
+       to :const:`False` will improve performence if collision events
+       are not needed.
+
     .. attribute:: registered_classes
 
        A list containing all classes which have been registered with
@@ -276,7 +282,8 @@ class Game:
     def __init__(self, width=640, height=480, fullscreen=False, scale=0,
                  scale_proportional=True, scale_smooth=False, fps=60,
                  delta=False, delta_min=15, grab_input=False,
-                 window_text=None, window_icon=None):
+                 window_text=None, window_icon=None,
+                 collision_events_enabled=True):
         """Constructor method.
 
         Arguments set the respective initial attributes of the game.
@@ -308,6 +315,7 @@ class Game:
         self.delta_min = delta_min
         self.window_text = window_text
         self.window_icon = window_icon
+        self.collision_events_enabled = collision_events_enabled
 
         self.registered_classes = []
         self.sprites = {}
@@ -698,29 +706,30 @@ class Game:
 
                     obj._update_collision_areas()
 
-                # Set objects' colliders
-                room = self.current_room
-                for ref in self._colliders:
-                    obj = ref()
-                    if obj is not None:
-                        obj._colliders = []
-                        for area in obj._collision_areas:
-                            if area is not None:
-                                i, j = area
-                                room_area = room._collision_areas[i][j]
-                            else:
-                                room_area = room._collision_area_void
+                if self.collision_events_enabled:
+                    # Set objects' colliders
+                    room = self.current_room
+                    for ref in self._colliders:
+                        obj = ref()
+                        if obj is not None:
+                            obj._colliders = []
+                            for area in obj._collision_areas:
+                                if area is not None:
+                                    i, j = area
+                                    room_area = room._collision_areas[i][j]
+                                else:
+                                    room_area = room._collision_area_void
 
-                            for other in room_area:
-                                if (other is not obj and
-                                        other not in obj._colliders):
-                                    obj._colliders.append(other)
+                                for other in room_area:
+                                    if (other is not obj and
+                                            other not in obj._colliders):
+                                        obj._colliders.append(other)
 
-                # Detect collisions
-                for ref in self._colliders:
-                    obj = ref()
-                    if obj is not None:
-                        obj._detect_collisions()
+                    # Detect collisions
+                    for ref in self._colliders:
+                        obj = ref()
+                        if obj is not None:
+                            obj._detect_collisions()
 
                 # End step event
                 for obj in self.current_room.objects:
