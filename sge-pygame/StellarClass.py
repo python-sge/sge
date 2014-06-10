@@ -715,15 +715,17 @@ class StellarClass:
         self._collision_areas = []
         self._colliders = []
 
+        objects = sge.game.objects.copy()
         if ID is not None:
             self.id = ID
         else:
             ID = 0
-            while ID in sge.game.objects:
+            while ID in objects:
                 ID += 1
             self.id = ID
 
-        sge.game.objects[self.id] = self
+        objects[self.id] = self
+        sge.game.objects = objects
 
         self._x = x
         self._y = y
@@ -895,17 +897,25 @@ class StellarClass:
         sge.game._background_changed = True
         self.event_destroy()
         self._pygame_sprite.kill()
-        if self.id in sge.game.objects:
-            del sge.game.objects[self.id]
+        objects = sge.game.objects.copy()
+        if self.id in objects:
+            del objects[self.id]
+        sge.game.objects = objects
 
         for room in sge.game.rooms:
-            while self in room.objects:
-                room.objects.remove(self)
+            objects = room.objects[:]
+            while self in objects:
+                objects.remove(self)
+            room.objects = objects
 
-            for cls in room.objects_by_class:
+            objects_by_class = room.objects_by_class.copy()
+            for cls in objects_by_class:
                 if isinstance(self, cls):
-                    while self in room.objects_by_class[cls]:
-                        room.objects_by_class[cls].remove(self)
+                    objects = objects_by_class[cls][:]
+                    while self in objects:
+                        objects.remove(self)
+                    objects_by_class[cls] = objects
+            room.objects_by_class = objects_by_class
 
     def event_create(self):
         """Create event.

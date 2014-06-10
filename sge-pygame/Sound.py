@@ -118,6 +118,8 @@ class Sound:
         information.
 
         """
+        sounds = sge.game.sounds.copy()
+
         if fname is not None and pygame.mixer.get_init():
             self._sound = None
             for path in sge.sound_directories:
@@ -140,7 +142,7 @@ class Sound:
                 self.id = ID
             else:
                 self.id = os.path.splitext(os.path.basename(fname))[0]
-                while self.id in sge.game.sounds:
+                while self.id in sounds:
                     self.id += "_"
         else:
             self._sound = None
@@ -149,7 +151,7 @@ class Sound:
                 self.id = ID
             else:
                 i = 0
-                while i in sge.game.sounds:
+                while i in sounds:
                     i += 1
 
                 self.id = i
@@ -160,7 +162,8 @@ class Sound:
         self.volume = volume
         self.max_play = max_play
 
-        sge.game.sounds[self.id] = self
+        sounds[self.id] = self
+        sge.game.sounds = sounds
 
     def play(self, loops=1, volume=100, balance=0, maxtime=None,
              fade_time=None):
@@ -254,8 +257,10 @@ class Sound:
         while self._channels:
             sge.game._release_channel(self._channels.pop(0))
 
-        if self.id in sge.game.sounds:
-            del sge.game.sounds[self.id]
+        sounds = sge.game.sounds.copy()
+        if self.id in sounds:
+            del sounds[self.id]
+        sge.game.sounds = sounds
 
     @staticmethod
     def stop_all():

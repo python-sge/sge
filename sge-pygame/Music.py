@@ -121,6 +121,8 @@ class Music:
         information.
 
         """
+        music = sge.game.music.copy()
+
         self.fname = fname
         self.volume = volume
         self._timeout = None
@@ -146,7 +148,7 @@ class Music:
                 self.id = ID
             else:
                 self.id = os.path.splitext(os.path.basename(self.fname))[0]
-                while self.id in sge.game.music:
+                while self.id in music:
                     self.id += "_"
         else:
             self._full_fname = None
@@ -155,12 +157,13 @@ class Music:
                 self.id = ID
             else:
                 i = 0
-                while i in sge.game.music:
+                while i in music:
                     i += 1
 
                 self.id = i
 
-        sge.game.music[self.id] = self
+        music[self.id] = self
+        sge.game.music = music
 
     def play(self, start=0, loops=1, maxtime=None, fade_time=None):
         """Play the music.
@@ -218,8 +221,10 @@ class Music:
         if self.playing:
             self.stop()
 
-        if self.id in sge.game.music:
-            del sge.game.music[self.id]
+        music = sge.game.music.copy()
+        if self.id in music:
+            del music[self.id]
+        sge.game.music = music
 
     @staticmethod
     def stop(fade_time=None):

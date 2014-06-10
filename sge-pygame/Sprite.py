@@ -239,6 +239,8 @@ class Sprite:
         if sge.DEBUG:
             print('Creating sprite "{}"'.format(name))
 
+        sprites = sge.game.sprites.copy()
+
         self.name = name
         self._transparent = None
         self._baseimages = []
@@ -256,7 +258,7 @@ class Sprite:
                 self.id = self.name
 
                 i = 0
-                while self.id in sge.game.sprites:
+                while self.id in sprites:
                     i += 1
                     self.id = "{}{}".format(self.name, i)
 
@@ -358,7 +360,7 @@ class Sprite:
                 self.id = ID
             else:
                 self.id = 0
-                while self.id in sge.game.sprites:
+                while self.id in sprites:
                     self.id += 1
 
             self.append_frame()
@@ -393,7 +395,8 @@ class Sprite:
         self.bbox_width = bbox_width
         self.bbox_height = bbox_height
         self._refresh()
-        sge.game.sprites[self.id] = self
+        sprites[self.id] = self
+        sge.game.sprites = sprites
 
     def append_frame(self):
         """Append a new blank frame to the end of the sprite."""
@@ -883,8 +886,10 @@ class Sprite:
            destroyed until this use stops.
 
         """
-        if self.id in sge.game.sprites:
-            del sge.game.sprites[self.id]
+        sprites = sge.game.sprites.copy()
+        if self.id in sprites:
+            del sprites[self.id]
+        sge.game.sprites = sprites
 
     @classmethod
     def from_tileset(cls, name, ID=None, x=0, y=0, columns=1, rows=1, xsep=0,

@@ -170,6 +170,8 @@ class BackgroundLayer:
         for more information.
 
         """
+        background_layers = sge.game.background_layers.copy()
+
         self._sprite = None
         self.sprite = sprite
         self._x = x
@@ -185,7 +187,7 @@ class BackgroundLayer:
         else:
             self.id = self.sprite.id
 
-            while self.id in sge.game.background_layers:
+            while self.id in background_layers:
                 self.id += "_"
 
         self._image_index = 0
@@ -200,12 +202,15 @@ class BackgroundLayer:
         else:
             self._frame_time = None
 
-        sge.game.background_layers[self.id] = self
+        background_layers[self.id] = self
+        sge.game.background_layers = background_layers
 
     def destroy(self):
         """Destroy the background layer."""
-        if self.id in sge.game.background_layers:
-            del sge.game.background_layers[self.id]
+        background_layers = sge.game.background_layers.copy()
+        if self.id in background_layers:
+            del background_layers[self.id]
+            sge.game.background_layers = background_layers
 
     def _update(self, time_passed):
         # Update the animation frame.

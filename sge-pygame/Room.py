@@ -133,12 +133,14 @@ class Room:
             self.background = sge.Background((), 'black')
         self._start_background = self.background
 
-        if room_number is None:
-            self.room_number = len(sge.game.rooms)
-            sge.game.rooms.append(self)
+        rooms = sge.game.rooms[:]
+        if room_number is None or room_number >= len(rooms):
+            self.room_number = len(rooms)
+            rooms.append(self)
         else:
             self.room_number = room_number
-            sge.game.rooms.insert(room_number, self)
+            rooms.insert(room_number, self)
+        sge.game.rooms = rooms
 
         self._started = False
         self._has_started = False
@@ -197,11 +199,17 @@ class Room:
             obj = sge.game.objects[obj]
 
         if obj not in self.objects:
-            self.objects.append(obj)
+            objects = self.objects[:]
+            objects.append(obj)
+            self.objects = objects
 
-            for cls in self.objects_by_class:
+            objects_by_class = self.objects_by_class.copy()
+            for cls in objects_by_class:
                 if isinstance(obj, cls):
-                    self.objects_by_class[cls].append(obj)
+                    objects = objects_by_class[cls][:]
+                    objects.append(obj)
+                    objects_by_class[cls] = objects
+            self.objects_by_class = objects_by_class
 
             if self is sge.game.current_room:
                 sge.game._pygame_sprites.add(obj._pygame_sprite, layer=obj.z)
@@ -531,9 +539,12 @@ class Room:
           insert this room into.
 
         """
-        del sge.game.rooms[self.room_number]
-        self.room_number = room_number
-        sge.game.rooms.insert(room_number, self)
+        rooms = sge.game.rooms[:]
+        if not self._destroyed and len(rooms) < self.room_number:
+            del rooms[self.room_number]
+            self.room_number = room_number
+            rooms.insert(room_number, self)
+            sge.game.rooms = rooms
 
     def destroy(self):
         """Destroy the room.
@@ -544,9 +555,11 @@ class Room:
            destroyed until this use stops.
 
         """
-        if not self._destroyed and len(sge.game.rooms) < self.room_number:
+        rooms = sge.game.rooms[:]
+        if not self._destroyed and len(rooms) < self.room_number:
             self._destroyed = True
-            del sge.game.rooms[self.room_number]
+            del rooms[self.room_number]
+            sge.game.rooms = rooms
 
     def event_room_start(self):
         """Room start event.

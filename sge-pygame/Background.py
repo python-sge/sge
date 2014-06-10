@@ -62,15 +62,17 @@ class Background:
         """
         self.color = color
 
+        backgrounds = sge.game.backgrounds.copy()
         if ID is not None:
             self.id = ID
         else:
             ID = 0
-            while ID in sge.game.backgrounds:
+            while ID in backgrounds:
                 ID += 1
             self.id = ID
 
-        sge.game.backgrounds[self.id] = self
+        backgrounds[self.id] = self
+        sge.game.backgrounds = backgrounds
 
         unsorted_layers = []
         sorted_layers = []
@@ -93,8 +95,10 @@ class Background:
 
     def destroy(self):
         """Destroy the background."""
-        if self.id in sge.game.backgrounds:
-            del sge.game.backgrounds[self.id]
+        backgrounds = sge.game.backgrounds.copy()
+        if self.id in backgrounds:
+            del backgrounds[self.id]
+            sge.game.backgrounds = backgrounds
 
     def _get_background(self):
         # Return the static background this frame.

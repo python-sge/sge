@@ -210,15 +210,17 @@ class Font:
         self.bold = bold
         self.italic = italic
 
+        fonts = sge.game.fonts.copy()
         if ID is not None:
             self.id = ID
         else:
             self.id = self.name
 
-            while self.id in sge.game.fonts:
+            while self.id in fonts:
                 self.id += "_"
 
-        sge.game.fonts[self.id] = self
+        fonts[self.id] = self
+        sge.game.fonts = fonts
 
     def get_size(self, text, width=None, height=None):
         """Return the size of a certain string of text when rendered.
@@ -244,7 +246,10 @@ class Font:
 
     def destroy(self):
         """Destroy the font."""
-        del sge.game.fonts[self.id]
+        fonts = sge.game.fonts.copy()
+        if self.id in fonts:
+            del fonts[self.id]
+            sge.game.fonts = fonts
 
     @classmethod
     def from_sprite(cls, sprite, chars, ID=None, hsep=0, vsep=0, size=12,
@@ -432,12 +437,14 @@ class _SpriteFont(Font):
         self.bold = bold
         self.italic = italic
 
+        fonts = sge.game.fonts.copy()
         if ID is not None:
             self.id = ID
         else:
             self.id = self.name
 
-            while self.id in sge.game.fonts:
+            while self.id in fonts:
                 self.id += "_"
 
-        sge.game.fonts[self.id] = self
+        fonts[self.id] = self
+        sge.game.fonts = fonts
