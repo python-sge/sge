@@ -1436,8 +1436,6 @@ class StellarClass:
         if self.id != "mouse":
             self.event_update_position(delta_mult)
 
-        self._update_collision_areas()
-
     def _update_collision_areas(self):
         if self.tangible:
             room = sge.game.current_room

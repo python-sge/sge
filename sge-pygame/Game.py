@@ -696,6 +696,8 @@ class Game:
                     else:
                         obj.event_inactive_step(real_time_passed, delta_mult)
 
+                    obj._update_collision_areas()
+
                 # Set objects' colliders
                 room = self.current_room
                 for ref in self._colliders:
