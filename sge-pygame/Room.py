@@ -118,7 +118,7 @@ class Room:
             self.views = list(views)
         else:
             self.views = [sge.View(0, 0)]
-        self._start_views = self.views[:]
+        self._start_views = []
 
         self._view_start_x = {}
         self._view_start_y = {}
@@ -151,14 +151,15 @@ class Room:
         self.add(sge.game.mouse)
         for obj in objects:
             self.add(obj)
-        self._start_objects = self.objects[:]
+        self._start_objects = []
 
         self._object_start_x = {}
         self._object_start_y = {}
         self._object_start_z = {}
         self._object_start_sprite = {}
         self._object_start_visible = {}
-        self._object_start_detects_collisions = {}
+        self._object_start_checks_collisions = {}
+        self._object_start_tangible = {}
         self._object_start_bbox_x = {}
         self._object_start_bbox_y = {}
         self._object_start_bbox_width = {}
@@ -238,13 +239,15 @@ class Room:
             sge.game._pygame_sprites.add(obj._pygame_sprite, layer=obj.z)
 
         if not self._has_started:
+            self._start_objects = self.objects[:]
             for obj in self.objects:
                 self._object_start_x[obj.id] = obj.x
                 self._object_start_y[obj.id] = obj.y
                 self._object_start_z[obj.id] = obj.z
                 self._object_start_sprite[obj.id] = obj.sprite
                 self._object_start_visible[obj.id] = obj.visible
-                self._object_start_detects_collisions[obj.id] = obj.detects_collisions
+                self._object_start_checks_collisions[obj.id] = obj.checks_collisions
+                self._object_start_tangible[obj.id] = obj.tangible
                 self._object_start_bbox_x[obj.id] = obj.bbox_x
                 self._object_start_bbox_y[obj.id] = obj.bbox_y
                 self._object_start_bbox_width[obj.id] = obj.bbox_width
@@ -252,6 +255,7 @@ class Room:
                 self._object_start_collision_ellipse[obj.id] = obj.collision_ellipse
                 self._object_start_collision_precise[obj.id] = obj.collision_precise
 
+            self._start_views = self.views[:]
             for view in self.views:
                 self._view_start_x[id(view)] = view.x
                 self._view_start_y[id(view)] = view.y
@@ -913,6 +917,7 @@ class Room:
             view.height = self._view_start_height[id(view)]
 
         for obj in self.objects:
+            print(self._object_start_x)
             if obj is not sge.game.mouse:
                 obj.x = self._object_start_x[obj.id]
                 obj.y = self._object_start_y[obj.id]
@@ -920,7 +925,8 @@ class Room:
             obj.z = self._object_start_z[obj.id]
             obj.sprite = self._object_start_sprite[obj.id]
             obj.visible = self._object_start_visible[obj.id]
-            obj.detects_collisions = self._object_start_detects_collisions[obj.id]
+            obj.checks_collisions = self._object_start_checks_collisions[obj.id]
+            obj.tangible = self._object_start_tangible[obj.id]
             obj.bbox_x = self._object_start_bbox_x[obj.id]
             obj.bbox_y = self._object_start_bbox_y[obj.id]
             obj.bbox_width = self._object_start_bbox_width[obj.id]

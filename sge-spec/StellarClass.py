@@ -68,8 +68,8 @@ class StellarClass(object):
           addition, collision events and destroy events still occur even
           if the object is inactive.  If you wish for the object to not
           be visible, set :attr:`visible` to :const:`False`.  If you
-          wish for the object to not be involved in collisions, set
-          :attr:`detects_collisions` to :const:`False`.
+          wish for the object to not perform collision events, set
+          :attr:`checks_collisions` to :const:`False`.
 
        .. note::
 
@@ -82,17 +82,39 @@ class StellarClass(object):
           would otherwise occur, or to prevent the object from moving
           through walls).
 
-    .. attribute:: detects_collisions
+    .. attribute:: checks_collisions
 
-       Whether or not the object should be involved in collision
-       detection.  Setting this to :const:`False` can improve
-       performance if the object doesn't need to detect collisions.
+       Whether or not the object should check for collisions
+       automatically and cause collision events.  If an object is not
+       using collision events, setting this to :const:`False` will give
+       a boost in performance.
+
+       .. note::
+
+          This will not prevent automatic collision detection by other
+          objects from detecting this object, and it will also not
+          prevent this object's collision events from being executed.
+          If you wish to disable collision detection entirely, set
+          :attr:`tangible` to :const:`False`.
+
+    .. attribute:: tangible
+
+       Whether or not collisions involving the object can be detected.
+       Setting this to :const:`False` can improve performance if the
+       object doesn't need to be involved in collisions.
 
        Depending on the game, a useful strategy to boost performance can
        be to exclude an object from collision detection while it is
        outside the view.  If you do this, you likely also to set
        :attr:`active` to :const:`False` as well so that the object
        doesn't move in undesireable ways (e.g. through walls).
+
+       .. note::
+
+          If this is :const:`False`, :attr:`checks_collisions` is
+          implied to be :const:`False` as well regardless of its actual
+          value.  This is because checking for collisions which can't be
+          detected is meaningless.
 
     .. attribute:: bbox_x
 
@@ -275,8 +297,8 @@ class StellarClass(object):
     """
 
     def __init__(self, x, y, z=0, ID=None, sprite=None, visible=True,
-                 active=True, detects_collisions=True, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
+                 active=True, checks_collisions=True, tangible=True,
+                 bbox_x=None, bbox_y=None, bbox_width=None, bbox_height=None,
                  regulate_origin=False, collision_ellipse=False,
                  collision_precise=False, xvelocity=0, yvelocity=0,
                  image_index=0, image_origin_x=None, image_origin_y=None,

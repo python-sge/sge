@@ -18,6 +18,11 @@ Specification additions:
 + sge.Room.get_alarm
 + sge.Room.event_alarm
 + sge.Sprite.draw_erase
++ sge.StellarClass.checks_collisions
++ sge.StellarClass.tangible
+
+Specification removals:
+- sge.StellarClass.detects_collisions
 
 Specification misc changes:
 * sge.Room.event_room_resume no longer calls sge.Room.event_room_start by default.

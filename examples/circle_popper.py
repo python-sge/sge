@@ -36,7 +36,8 @@ class Game(sge.Game):
 class Circle(sge.StellarClass):
 
     def __init__(self, x, y):
-        super().__init__(x, y, 5, sprite='circle', collision_precise=True)
+        super().__init__(x, y, 5, sprite='circle', checks_collisions=False,
+                         collision_precise=True)
 
     def event_create(self):
         self.image_alpha = 200
@@ -67,7 +68,7 @@ class Circle(sge.StellarClass):
 class CirclePop(sge.StellarClass):
 
     def __init__(self, x, y):
-        super().__init__(x, y, 5, sprite='circle_pop')
+        super().__init__(x, y, 5, sprite='circle_pop', tangible=False)
 
     def event_animation_end(self):
         self.destroy()

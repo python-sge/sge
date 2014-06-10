@@ -359,12 +359,22 @@ class Game:
 
         self._alarms = {}
 
+        self._start_sprites = {}
+        self._start_background_layers = {}
+        self._start_backgrounds = {}
+        self._start_fonts = {}
+        self._start_sounds = {}
+        self._start_music = {}
+        self._start_objects = {}
+        self._start_rooms = []
+
         self._object_start_x = {}
         self._object_start_y = {}
         self._object_start_z = {}
         self._object_start_sprite = {}
         self._object_start_visible = {}
-        self._object_start_detects_collisions = {}
+        self._object_start_checks_collisions = {}
+        self._object_start_tangible = {}
         self._object_start_bbox_x = {}
         self._object_start_bbox_y = {}
         self._object_start_bbox_width = {}
@@ -390,8 +400,14 @@ class Game:
             if sge.DEBUG:
                 print("Restarting the game.")
 
-            for room in self.rooms:
-                room._reset()
+            self.sprites = self._start_sprites
+            self.background_layers = self._start_background_layers
+            self.backgrounds = self._start_backgrounds
+            self.fonts = self._start_fonts
+            self.sounds = self._start_sounds
+            self.music = self._start_music
+            self.objects = self._start_objects
+            self.rooms = self._start_rooms
 
             for i in self.objects:
                 obj = self.objects[i]
@@ -402,13 +418,17 @@ class Game:
                 obj.z = self._object_start_z[obj.id]
                 obj.sprite = self._object_start_sprite[obj.id]
                 obj.visible = self._object_start_visible[obj.id]
-                obj.detects_collisions = self._object_start_detects_collisions[obj.id]
+                obj.checks_collisions = self._object_start_checks_collisions[obj.id]
+                obj.tangible = self._object_start_tangible[obj.id]
                 obj.bbox_x = self._object_start_bbox_x[obj.id]
                 obj.bbox_y = self._object_start_bbox_y[obj.id]
                 obj.bbox_width = self._object_start_bbox_width[obj.id]
                 obj.bbox_height = self._object_start_bbox_height[obj.id]
                 obj.collision_ellipse = self._object_start_collision_ellipse[obj.id]
                 obj.collision_precise = self._object_start_collision_precise[obj.id]
+
+            for room in self.rooms:
+                room._reset()
 
             self.rooms[0].start()
         else:
@@ -419,6 +439,15 @@ class Game:
             self.event_game_start()
 
             # Store the initial state of objects
+            self._start_sprites = self.sprites
+            self._start_background_layers = self.background_layers
+            self._start_backgrounds = self.backgrounds
+            self._start_fonts = self.fonts
+            self._start_sounds = self.sounds
+            self._start_music = self.music
+            self._start_objects = self.objects
+            self._start_rooms = self.rooms
+
             for i in self.objects:
                 obj = self.objects[i]
                 self._object_start_x[obj.id] = obj.x
@@ -426,7 +455,8 @@ class Game:
                 self._object_start_z[obj.id] = obj.z
                 self._object_start_sprite[obj.id] = obj.sprite
                 self._object_start_visible[obj.id] = obj.visible
-                self._object_start_detects_collisions[obj.id] = obj.detects_collisions
+                self._object_start_checks_collisions[obj.id] = obj.checks_collisions
+                self._object_start_tangible[obj.id] = obj.tangible
                 self._object_start_bbox_x[obj.id] = obj.bbox_x
                 self._object_start_bbox_y[obj.id] = obj.bbox_y
                 self._object_start_bbox_width[obj.id] = obj.bbox_width

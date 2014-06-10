@@ -106,7 +106,7 @@ class Player(sge.StellarClass):
             self.hit_direction = -1
 
         y = sge.game.height / 2
-        super().__init__(x, y, 0, sprite="paddle")
+        super().__init__(x, y, 0, sprite="paddle", checks_collisions=False)
 
     def event_create(self):
         self.v_score = 0
@@ -263,7 +263,7 @@ def main():
     Player(2)
     glob.ball = Ball()
     hud = sge.StellarClass(sge.game.width / 2, 0, -10, sprite=glob.hud_sprite,
-                           detects_collisions=False)
+                           tangible=False)
     objects = (glob.player1, glob.player2, glob.ball, hud)
 
     # Create rooms

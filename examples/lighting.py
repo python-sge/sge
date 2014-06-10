@@ -39,7 +39,7 @@ class Circle(sge.StellarClass):
         self.image_blend = 'blue'
 
         self.darkness = sge.StellarClass(0, 0, 10000, sprite='darkness',
-                                         detects_collisions=False)
+                                         tangible=False)
         sge.game.current_room.add(self.darkness)
 
     def event_step(self, time_passed, delta_mult):

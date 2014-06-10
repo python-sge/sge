@@ -78,8 +78,8 @@ class StellarClass:
           addition, collision events and destroy events still occur even
           if the object is inactive.  If you wish for the object to not
           be visible, set :attr:`visible` to :const:`False`.  If you
-          wish for the object to not be involved in collisions, set
-          :attr:`detects_collisions` to :const:`False`.
+          wish for the object to not perform collision events, set
+          :attr:`checks_collisions` to :const:`False`.
 
        .. note::
 
@@ -92,17 +92,39 @@ class StellarClass:
           would otherwise occur, or to prevent the object from moving
           through walls).
 
-    .. attribute:: detects_collisions
+    .. attribute:: checks_collisions
 
-       Whether or not the object should be involved in collision
-       detection.  Setting this to :const:`False` can improve
-       performance if the object doesn't need to detect collisions.
+       Whether or not the object should check for collisions
+       automatically and cause collision events.  If an object is not
+       using collision events, setting this to :const:`False` will give
+       a boost in performance.
+
+       .. note::
+
+          This will not prevent automatic collision detection by other
+          objects from detecting this object, and it will also not
+          prevent this object's collision events from being executed.
+          If you wish to disable collision detection entirely, set
+          :attr:`tangible` to :const:`False`.
+
+    .. attribute:: tangible
+
+       Whether or not collisions involving the object can be detected.
+       Setting this to :const:`False` can improve performance if the
+       object doesn't need to be involved in collisions.
 
        Depending on the game, a useful strategy to boost performance can
        be to exclude an object from collision detection while it is
        outside the view.  If you do this, you likely also to set
        :attr:`active` to :const:`False` as well so that the object
        doesn't move in undesireable ways (e.g. through walls).
+
+       .. note::
+
+          If this is :const:`False`, :attr:`checks_collisions` is
+          implied to be :const:`False` as well regardless of its actual
+          value.  This is because checking for collisions which can't be
+          detected is meaningless.
 
     .. attribute:: bbox_x
 
@@ -342,19 +364,19 @@ class StellarClass:
             self.image_index = self.image_index % len(self._sprite._images)
 
     @property
-    def detects_collisions(self):
-        return self._detects_collisions
+    def tangible(self):
+        return self._tangible
 
-    @detects_collisions.setter
-    def detects_collisions(self, value):
-        self._detects_collisions = value
+    @tangible.setter
+    def tangible(self, value):
+        self._tangible = value
         position = None
         for i in range(len(sge.game._colliders)):
             if sge.game._colliders[i]() is self:
                 position = i
                 break
 
-        if self._detects_collisions:
+        if self._tangible:
             if position is None:
                 sge.game._colliders.append(weakref.ref(self))
         else:
@@ -396,24 +418,6 @@ class StellarClass:
     def bbox_height(self, value):
         self._bbox_height = value
         self._update_collision_areas()
-
-    @property
-    def collision_ellipse(self):
-        return self._collision_ellipse
-
-    @collision_ellipse.setter
-    def collision_ellipse(self, value):
-        if value != self._collision_ellipse:
-            self._collision_ellipse = value
-
-    @property
-    def collision_precise(self):
-        return self._collision_precise
-
-    @collision_precise.setter
-    def collision_precise(self, value):
-        if value != self._collision_precise:
-            self._collision_precise = value
 
     @property
     def bbox_left(self):
@@ -657,8 +661,8 @@ class StellarClass:
             return self.bbox_top
 
     def __init__(self, x, y, z=0, ID=None, sprite=None, visible=True,
-                 active=True, detects_collisions=True, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
+                 active=True, checks_collisions=True, tangible=True,
+                 bbox_x=None, bbox_y=None, bbox_width=None, bbox_height=None,
                  regulate_origin=False, collision_ellipse=False,
                  collision_precise=False, xvelocity=0, yvelocity=0,
                  image_index=0, image_origin_x=None, image_origin_y=None,
@@ -687,7 +691,8 @@ class StellarClass:
         self.sprite = sprite
         self.visible = visible
         self.active = active
-        self.detects_collisions = detects_collisions
+        self.checks_collisions = checks_collisions
+        self.tangible = tangible
         if self.sprite is not None:
             sprite_bbox_x = self.sprite.bbox_x
             sprite_bbox_y = self.sprite.bbox_y
@@ -705,8 +710,8 @@ class StellarClass:
         self._bbox_height = (bbox_height if bbox_height is not None else
                              sprite_bbox_height)
         self.regulate_origin = regulate_origin
-        self._collision_ellipse = collision_ellipse
-        self._collision_precise = collision_precise
+        self.collision_ellipse = collision_ellipse
+        self.collision_precise = collision_precise
         self._collision_areas = []
         self._colliders = []
 
@@ -760,7 +765,7 @@ class StellarClass:
         self._start_z = self.z
         self._start_sprite = self.sprite
         self._start_visible = self.visible
-        self._start_detects_collisions = self.detects_collisions
+        self._start_checks_collisions = self.checks_collisions
         self._start_bbox_x = self.bbox_x
         self._start_bbox_y = self.bbox_y
         self._start_bbox_width = self.bbox_width
@@ -791,66 +796,70 @@ class StellarClass:
           :const:`None`, :attr:`y` will be used.
 
         """
-        room = sge.game.current_room
-        others = []
-        collisions = []
+        if self.tangible:
+            room = sge.game.current_room
+            others = []
+            collisions = []
 
-        for area in self._collision_areas:
-            if area is not None:
-                i, j = area
-                room_area = room._collision_areas[i][j]
-            else:
-                room_area = room._collision_area_void
+            for area in self._collision_areas:
+                if area is not None:
+                    i, j = area
+                    room_area = room._collision_areas[i][j]
+                else:
+                    room_area = room._collision_area_void
 
-            for ref in room_area:
-                obj = ref()
-                if obj is not None and obj is not self:
-                    if other is None:
-                        others.append(obj)
-                    elif isinstance(other, StellarClass):
-                        if obj is other:
+                for ref in room_area:
+                    obj = ref()
+                    if obj is not None and obj is not self:
+                        if other is None:
                             others.append(obj)
-                    elif isinstance(other, (list, tuple)):
-                        if obj in other:
-                            others.append(obj)
-                    elif other in sge.game.objects:
-                        if obj is sge.game.objects[other]:
-                            others.append(obj)
-                    else:
-                        try:
-                            if isinstance(obj, other):
+                        elif isinstance(other, StellarClass):
+                            if obj is other:
                                 others.append(obj)
-                        except TypeError:
-                            pass
+                        elif isinstance(other, (list, tuple)):
+                            if obj in other:
+                                others.append(obj)
+                        elif other in sge.game.objects:
+                            if obj is sge.game.objects[other]:
+                                others.append(obj)
+                        else:
+                            try:
+                                if isinstance(obj, other):
+                                    others.append(obj)
+                            except TypeError:
+                                pass
 
-        # Change x and y to be offset values; these are easier to use.
-        if x is not None:
-            x -= self.x
-        else:
-            x = 0
-
-        if y is not None:
-            y -= self.y
-        else:
-            y = 0
-
-        for other in others:
-            if (self.collision_precise or self.collision_ellipse or
-                    other.collision_precise or other.collision_ellipse):
-                # Use masks.
-                if sge.collision.masks_collide(
-                        self.mask_x + x, self.mask_y + y, self.mask,
-                        other.mask_x, other.mask_y, other.mask):
-                    collisions.append(other)
+            # Change x and y to be offset values; these are easier to use.
+            if x is not None:
+                x -= self.x
             else:
-                # Use bounding boxes.
-                if sge.collision.rectangles_collide(
-                        self.bbox_left + x, self.bbox_top + y, self.bbox_width,
-                        self.bbox_height, other.bbox_left, other.bbox_top,
-                        other.bbox_width, other.bbox_height):
-                    collisions.append(other)
+                x = 0
 
-        return collisions
+            if y is not None:
+                y -= self.y
+            else:
+                y = 0
+
+            for other in others:
+                if (self.collision_precise or self.collision_ellipse or
+                        other.collision_precise or other.collision_ellipse):
+                    # Use masks.
+                    if sge.collision.masks_collide(
+                            self.mask_x + x, self.mask_y + y, self.mask,
+                            other.mask_x, other.mask_y, other.mask):
+                        collisions.append(other)
+                else:
+                    # Use bounding boxes.
+                    if sge.collision.rectangles_collide(
+                            self.bbox_left + x, self.bbox_top + y,
+                            self.bbox_width, self.bbox_height, other.bbox_left,
+                            other.bbox_top, other.bbox_width,
+                            other.bbox_height):
+                        collisions.append(other)
+
+            return collisions
+        else:
+            return []
 
     def set_alarm(self, alarm_id, value):
         """Set an alarm.
@@ -1430,94 +1439,102 @@ class StellarClass:
         self._update_collision_areas()
 
     def _update_collision_areas(self):
-        room = sge.game.current_room
+        if self.tangible:
+            room = sge.game.current_room
 
-        if self.collision_precise:
-            my_areas = sge.collision._get_rectangle_collision_areas(
-                self.mask_x, self.mask_y, len(self.mask),
-                len(self.mask[0]) if self.mask else 0)
+            if self.collision_precise:
+                my_areas = sge.collision._get_rectangle_collision_areas(
+                    self.mask_x, self.mask_y, len(self.mask),
+                    len(self.mask[0]) if self.mask else 0)
+            else:
+                my_areas = sge.collision._get_rectangle_collision_areas(
+                    self.bbox_left, self.bbox_top, self.bbox_width,
+                    self.bbox_height)
+
+            for area in self._collision_areas:
+                if area not in my_areas:
+                    if area is not None:
+                        i, j = area
+                        room_area = room._collision_areas[i][j]
+                    else:
+                        room_area = room._collision_area_void
+
+                    for i in range(len(room_area), 0, -1):
+                        if room_area[i - 1]() is self:
+                            del room_area[i - 1]
+
+            for area in my_areas:
+                if area not in self._collision_areas:
+                    if area is not None:
+                        i, j = area
+                        room._collision_areas[i][j].append(weakref.ref(self))
+                    else:
+                        room._collision_area_void.append(weakref.ref(self))
+
+            self._collision_areas = my_areas
         else:
-            my_areas = sge.collision._get_rectangle_collision_areas(
-                self.bbox_left, self.bbox_top, self.bbox_width,
-                self.bbox_height)
-
-        for area in self._collision_areas:
-            if area not in my_areas:
-                if area is not None:
-                    i, j = area
-                    room_area = room._collision_areas[i][j]
-                else:
-                    room_area = room._collision_area_void
-
-                for i in range(len(room_area), 0, -1):
-                    if room_area[i - 1]() is self:
-                        del room_area[i - 1]
-
-        for area in my_areas:
-            if area not in self._collision_areas:
-                if area is not None:
-                    i, j = area
-                    room._collision_areas[i][j].append(weakref.ref(self))
-                else:
-                    room._collision_area_void.append(weakref.ref(self))
-
-        self._collision_areas = my_areas
+            self._collision_areas = []
 
     def _detect_collisions(self):
-        for other_ref in self._colliders:
-            if other_ref() is not None and other_ref() is not self:
-                other = other_ref()
-            else:
-                continue
-
-            # Delete self from the other object's list of colliders to
-            # prevent redundancy.
-            for i in range(len(other._colliders)):
-                if other._colliders[i]() is self:
-                    del other._colliders[i]
-                    break
-
-            if self.collision(other):
-                self_prev_bbox_left = self.xprevious + self.bbox_x
-                self_prev_bbox_right = self_prev_bbox_left + self.bbox_width
-                self_prev_bbox_top = self.yprevious + self.bbox_y
-                self_prev_bbox_bottom = self_prev_bbox_top + self.bbox_height
-                other_prev_bbox_left = other.xprevious + other.bbox_x
-                other_prev_bbox_right = other_prev_bbox_left + other.bbox_width
-                other_prev_bbox_top = other.yprevious + other.bbox_y
-                other_prev_bbox_bottom = other_prev_bbox_top + other.bbox_height
-
-                if self_prev_bbox_right <= other_prev_bbox_left:
-                    xdirection = 1
-                elif self_prev_bbox_left >= other_prev_bbox_right:
-                    xdirection = -1
+        if self.checks_collisions:
+            for other_ref in self._colliders:
+                if other_ref() is not None and other_ref() is not self:
+                    other = other_ref()
                 else:
-                    xdirection = 0
+                    continue
 
-                if self_prev_bbox_bottom <= other_prev_bbox_top:
-                    ydirection = 1
-                elif self_prev_bbox_top >= other_prev_bbox_bottom:
-                    ydirection = -1
-                else:
-                    ydirection = 0
+                # Delete self from the other object's list of colliders to
+                # prevent redundancy.
+                for i in range(len(other._colliders)):
+                    if other._colliders[i]() is self:
+                        del other._colliders[i]
+                        break
 
-                if xdirection or ydirection:
-                    if xdirection == 1:
-                        self.event_collision_right(other)
-                        other.event_collision_left(self)
-                    elif xdirection == -1:
-                        self.event_collision_left(other)
-                        other.event_collision_right(self)
+                if self.collision(other):
+                    self_prev_bbox_left = self.xprevious + self.bbox_x
+                    self_prev_bbox_right = (self_prev_bbox_left +
+                                            self.bbox_width)
+                    self_prev_bbox_top = self.yprevious + self.bbox_y
+                    self_prev_bbox_bottom = (self_prev_bbox_top +
+                                             self.bbox_height)
+                    other_prev_bbox_left = other.xprevious + other.bbox_x
+                    other_prev_bbox_right = (other_prev_bbox_left +
+                                             other.bbox_width)
+                    other_prev_bbox_top = other.yprevious + other.bbox_y
+                    other_prev_bbox_bottom = (other_prev_bbox_top +
+                                              other.bbox_height)
 
-                    if ydirection == 1:
-                        self.event_collision_bottom(other)
-                        other.event_collision_top(self)
-                    elif ydirection == -1:
-                        self.event_collision_top(other)
-                        other.event_collision_bottom(self)
-                else:
-                    self.event_collision(other)
-                    other.event_collision(self)
+                    if self_prev_bbox_right <= other_prev_bbox_left:
+                        xdirection = 1
+                    elif self_prev_bbox_left >= other_prev_bbox_right:
+                        xdirection = -1
+                    else:
+                        xdirection = 0
+
+                    if self_prev_bbox_bottom <= other_prev_bbox_top:
+                        ydirection = 1
+                    elif self_prev_bbox_top >= other_prev_bbox_bottom:
+                        ydirection = -1
+                    else:
+                        ydirection = 0
+
+                    if xdirection or ydirection:
+                        if xdirection == 1:
+                            self.event_collision_right(other)
+                            other.event_collision_left(self)
+                        elif xdirection == -1:
+                            self.event_collision_left(other)
+                            other.event_collision_right(self)
+
+                        if ydirection == 1:
+                            self.event_collision_bottom(other)
+                            other.event_collision_top(self)
+                        elif ydirection == -1:
+                            self.event_collision_top(other)
+                            other.event_collision_bottom(self)
+                    else:
+                        self.event_collision(other)
+                        other.event_collision(self)
 
     def _get_image_width(self):
         # Get the width of the sprite when scaled rotated.
