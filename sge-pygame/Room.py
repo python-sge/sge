@@ -653,7 +653,7 @@ class Room:
         """
         pass
 
-    def event_joystick_axis_move(self, name, ID, axis, value):
+    def event_joystick_axis_move(self, js_name, js_id, axis, value):
         """Joystick axis move event.
 
         See the documentation for
@@ -662,7 +662,7 @@ class Room:
         """
         pass
 
-    def event_joystick_hat_move(self, name, ID, hat, x, y):
+    def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
         """Joystick HAT move event.
 
         See the documentation for
@@ -671,7 +671,7 @@ class Room:
         """
         pass
 
-    def event_joystick_trackball_move(self, name, ID, ball, x, y):
+    def event_joystick_trackball_move(self, js_name, js_id, ball, x, y):
         """Joystick trackball move event.
 
         See the documentation for
@@ -681,7 +681,7 @@ class Room:
         """
         pass
 
-    def event_joystick_button_press(self, name, ID, button):
+    def event_joystick_button_press(self, js_name, js_id, button):
         """Joystick button press event.
 
         See the documentation for
@@ -691,7 +691,7 @@ class Room:
         """
         pass
 
-    def event_joystick_button_release(self, name, ID, button):
+    def event_joystick_button_release(self, js_name, js_id, button):
         """Joystick button release event.
 
         See the documentation for
@@ -799,7 +799,7 @@ class Room:
         """
         pass
 
-    def event_paused_joystick_axis_move(self, name, ID, axis, value):
+    def event_paused_joystick_axis_move(self, js_name, js_id, axis, value):
         """Joystick axis move event when paused.
 
         See the documentation for
@@ -808,7 +808,7 @@ class Room:
         """
         pass
 
-    def event_paused_joystick_hat_move(self, name, ID, hat, x, y):
+    def event_paused_joystick_hat_move(self, js_name, js_id, hat, x, y):
         """Joystick HAT move event when paused.
 
         See the documentation for
@@ -817,7 +817,7 @@ class Room:
         """
         pass
 
-    def event_paused_joystick_trackball_move(self, name, ID, ball, x, y):
+    def event_paused_joystick_trackball_move(self, js_name, js_id, ball, x, y):
         """Joystick trackball move event when paused.
 
         See the documentation for
@@ -827,7 +827,7 @@ class Room:
         """
         pass
 
-    def event_paused_joystick_button_press(self, name, ID, button):
+    def event_paused_joystick_button_press(self, js_name, js_id, button):
         """Joystick button press event when paused.
 
         See the documentation for
@@ -837,7 +837,7 @@ class Room:
         """
         pass
 
-    def event_paused_joystick_button_release(self, name, ID, button):
+    def event_paused_joystick_button_release(self, js_name, js_id, button):
         """Joystick button release event when paused.
 
         See the documentation for

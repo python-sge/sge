@@ -39,6 +39,27 @@ Specification additions:
 + sge.joystick.get_hats
 + sge.joystick.get_trackballs
 + sge.joystick.get_buttons
++ sge.mouse.get_x
++ sge.mouse.get_y
++ sge.Game.input_events
++ sge.Game.pump_input
++ sge.Game.regulate_speed
++ sge.Game.refresh
++ sge.input.KeyPress
++ sge.input.KeyRelease
++ sge.input.MouseMove
++ sge.input.MouseButtonPress
++ sge.input.MouseButtonRelease
++ sge.input.JoystickAxisMove
++ sge.input.JoystickHatMove
++ sge.input.JoystickTrackballMove
++ sge.input.JoystickButtonPress
++ sge.input.JoystickButtonRelease
++ sge.input.KeyboardFocusGain
++ sge.input.KeyboardFocusLose
++ sge.input.MouseFocusGain
++ sge.input.MouseFocusLose
++ sge.input.QuitRequest
 
 Specification removals:
 - sge.StellarClass.detects_collisions
@@ -54,6 +75,8 @@ Specification removals:
 
 Specification misc changes:
 * sge.Room.event_room_resume no longer calls sge.Room.event_room_start by default.
+* "name" and "ID" arguments for joystick events renamed to "js_name" and
+  "js_id", respectively.
 
 
 0.9.2

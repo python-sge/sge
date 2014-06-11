@@ -110,6 +110,18 @@ class Game(object):
        to :const:`False` will improve performence if collision events
        are not needed.
 
+    .. attribute:: input_events
+
+       A list containing all input event objects which have not yet been
+       handled, in the order in which they occurred.
+
+       .. note::
+
+          If you handle input events manually, be sure to delete them
+          from this list, preferably by getting them with
+          :meth:`list.pop`.  Otherwise, the event will be handled more
+          than once, which is usually not what you want.
+
     .. attribute:: registered_classes
 
        A list containing all classes which have been registered with
@@ -224,6 +236,61 @@ class Game(object):
 
     def unpause(self):
         """Unpause the game."""
+        # TODO
+
+    def pump_input(self):
+        """Cause the SGE to recieve input from the OS.
+
+        This method needs to be called periodically for the SGE to
+        recieve events from the OS, such as key presses and mouse
+        movement, as well as to assure the OS that the program is not
+        locked up.
+
+        Upon calling this, each event is translated into the appropriate
+        class in :mod:`sge.input` and the resulting object is appended
+        to :attr:`input_events`.
+
+        You normally don't need to use this function directly.  It is
+        called automatically in each frame of the SGE's main loop.  You
+        only need to use this function directly if you take control away
+        from the SGE's main loop, e.g. to create your own loop.
+
+        """
+        # TODO
+
+    def regulate_speed(self, fps=None):
+        """Regulate the SGE's running speed and return the time passed.
+
+        Arguments:
+
+        - ``fps`` -- The target frame rate in frames per second.  Set to
+          :const:`None` to target the current value of :attr:`fps`.
+
+        When this method is called, the program will sleep long enough
+        so that the game runs at ``fps`` frames per second, then return
+        the number of milliseconds that passed between the previous call
+        and the current call of this method.
+
+        You normally don't need to use this function directly.  It is
+        called automatically in each frame of the SGE's main loop.  You
+        only need to use this function directly if you want to create
+        your own loop.
+
+        """
+        # TODO
+
+    def refresh(self):
+        """Refresh the screen.
+
+        This method needs to be called for changes to the screen to be
+        seen by the user.  It should be called every frame.
+
+        You normally don't need to use this function directly.  It is
+        called automatically in each frame of the SGE's main loop.  You
+        only need to use this function directly if you take control away
+        from the SGE's main loop, e.g. to create your own loop.
+
+        """
         # TODO
 
     def register_class(self, cls):
@@ -446,16 +513,8 @@ class Game(object):
     def event_key_press(self, key, char):
         """Key press event.
 
-        Called when a key on the keyboard is pressed.
-
-        Arguments:
-
-        - ``char`` -- The Unicode character associated with the key
-          press, or an empty Unicode string if no Unicode character is
-          associated with the key press.
-
-        See the documentation for :func:`sge.keyboard.get_pressed` for
-        more information.
+        See the documentation for :class:`sge.input.KeyPress` for more
+        information.
 
         """
         pass
@@ -463,8 +522,8 @@ class Game(object):
     def event_key_release(self, key):
         """Key release event.
 
-        See the documentation for :func:`sge.keyboard.get_pressed` for
-        more information.
+        See the documentation for :class:`sge.input.KeyRelease` for more
+        information.
 
         """
         pass
@@ -472,12 +531,8 @@ class Game(object):
     def event_mouse_move(self, x, y):
         """Mouse move event.
 
-        Called when the mouse moves.
-
-        Arguments:
-
-        - ``x`` -- The horizontal relative movement of the mouse.
-        - ``y`` -- The vertical relative movement of the mouse.
+        See the documentation for :class:`sge.input.MouseMove` for more
+        information.
 
         """
         pass
@@ -485,10 +540,8 @@ class Game(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        Called when a mouse button is pressed.
-
-        See the documentation for :func:`sge.mouse.get_pressed` for more
-        information.
+        See the documentation for :class:`sge.input.MouseButtonPress`
+        for more information.
 
         """
         pass
@@ -496,104 +549,53 @@ class Game(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        Called when a mouse button is released.
-
-        See the documentation for :func:`sge.mouse.get_pressed` for more
-        information.
+        See the documentation for :class:`sge.input.MouseButtonRelease`
+        for more information.
 
         """
         pass
 
-    def event_joystick_axis_move(self, name, ID, axis, value):
+    def event_joystick_axis_move(self, js_name, js_id, axis, value):
         """Joystick axis move event.
 
-        Called when an axis on a joystick changes position.
-
-        Arguments:
-
-        - ``name`` -- The name of the joystick.
-        - ``ID`` -- The number of the joystick, where ``0`` is the first
-          joystick.
-        - ``value`` -- The tilt of the axis as a float from ``-1`` to
-          ``1``, where ``0`` is centered, ``-1`` is all the way to the
-          left or up, and ``1`` is all the way to the right or down.
-
-        See the documentation for :func:`sge.joystick.get_axis` for more
-        information.
+        See the documentation for :class:`sge.input.JoystickAxisMove`
+        for more information.
 
         """
         pass
 
-    def event_joystick_hat_move(self, name, ID, hat, x, y):
+    def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
         """Joystick HAT move event.
 
-        Called when a HAT switch (also called the POV hat, POV switch,
-        or d-pad) changes position.
-
-        Arguments:
-
-        - ``name`` -- The name of the joystick.
-        - ``ID`` -- The number of the joystick, where ``0`` is the first
-          joystick.
-        - ``x`` -- The horizontal position of the HAT, where ``0`` is
-          centered, ``-1`` is left, and ``1`` is right.
-        - ``y`` -- The vertical position of the HAT, where ``0`` is
-          centered, ``-1`` is up, and ``1`` is down.
-
-        See the documentation for :func:`sge.joystick.get_hat` for more
-        information.
+        See the documentation for :class:`sge.input.JoystickHatMove`
+        for more information.
 
         """
         pass
 
-    def event_joystick_trackball_move(self, name, ID, ball, x, y):
+    def event_joystick_trackball_move(self, js_name, js_id, ball, x, y):
         """Joystick trackball move event.
 
-        Called when a trackball on a joystick moves.
-
-        Arguments:
-
-        - ``name`` -- The name of the joystick.
-        - ``ID`` -- The number of the joystick, where ``0`` is the first
-          joystick.
-        - ``ball`` -- The number of the trackball, where ``0`` is the
-          first trackball on the joystick.
-        - ``x`` -- The horizontal relative movement of the trackball.
-        - ``y`` -- The vertical relative movement of the trackball.
+        See the documentation for
+        :class:`sge.input.JoystickTrackballMove` for more information.
 
         """
         pass
 
-    def event_joystick_button_press(self, name, ID, button):
+    def event_joystick_button_press(self, js_name, js_id, button):
         """Joystick button press event.
 
-        Called when a joystick button is pressed.
-
-        Arguments:
-
-        - ``name`` -- The name of the joystick.
-        - ``ID`` -- The number of the joystick, where ``0`` is the first
-          joystick.
-
-        See the documentation for :func:`sge.joystick.get_pressed` for
-        more information.
+        See the documentation for :class:`sge.input.JoystickButtonPress`
+        for more information.
 
         """
         pass
 
-    def event_joystick_button_release(self, name, ID, button):
+    def event_joystick_button_release(self, js_name, js_id, button):
         """Joystick button release event.
 
-        Called when a joystick button is pressed.
-
-        Arguments:
-
-        - ``name`` -- The name of the joystick.
-        - ``ID`` -- The number of the joystick, where ``0`` is the first
-          joystick.
-
-        See the documentation for :func:`sge.joystick.get_pressed` for
-        more information.
+        See the documentation for
+        :class:`sge.input.JoystickButtonRelease` for more information.
 
         """
         pass
@@ -601,19 +603,8 @@ class Game(object):
     def event_gain_keyboard_focus(self):
         """Gain keyboard focus event.
 
-        Called when the game gains keyboard focus.  Keyboard focus is
-        normally needed for key press and release events to be received.
-
-        .. note::
-
-           On some window systems, such as the one used by Windows, no
-           distinction is made between keyboard and mouse focus, but on
-           some other window systems, such as the X Window System, a
-           distinction is made: one window can have keyboard focus while
-           another has mouse focus.  Be careful to observe the
-           difference; failing to do so may result in annoying bugs,
-           and you won't notice these bugs if you are testing on a
-           window manager that doesn't recognize the difference.
+        See the documentation for :class:`sge.input.KeyboardFocusGain`
+        for more information.
 
         """
         pass
@@ -621,13 +612,8 @@ class Game(object):
     def event_lose_keyboard_focus(self):
         """Lose keyboard focus event.
 
-        Called when the game loses keyboard focus.  Keyboard focus is
-        normally needed for key press and release events to be received.
-
-        .. note::
-
-           See the note in the documentation for
-           :meth:`event_gain_keyboard_focus`.
+        See the documentation for :class:`sge.input.KeyboardFocusLose`
+        for more information.
 
         """
         pass
@@ -635,14 +621,8 @@ class Game(object):
     def event_gain_mouse_focus(self):
         """Gain mouse focus event.
 
-        Called when the game gains mouse focus.  Mouse focus may be
-        needed for mouse motion, button press, and button release events
-        to be received.
-
-        .. note::
-
-           See the note in the documentation for
-           :meth:`event_gain_keyboard_focus`.
+        See the documentation for :class:`sge.input.MouseFocusGain` for
+        more information.
 
         """
         pass
@@ -650,14 +630,8 @@ class Game(object):
     def event_lose_mouse_focus(self):
         """Lose mouse focus event.
 
-        Called when the game loses mouse focus.  Mouse focus may be
-        needed for mouse motion, button press, and button release events
-        to be received.
-
-        .. note::
-
-           See the note in the documentation for
-           :meth:`event_gain_keyboard_focus`.
+        See the documentation for :class:`sge.input.MouseFocusLose` for
+        more information.
 
         """
         pass
@@ -665,10 +639,11 @@ class Game(object):
     def event_close(self):
         """Close event.
 
-        Called when the operating system tells the game to close, e.g.
-        when the user presses the close button in the window frame.  It
-        is always called after any :meth:`sge.Room.event_close`
+        This is always called after any :meth:`sge.Room.event_close`
         occurring at the same time.
+
+        See the documentation for :class:`sge.input.QuitRequest` for
+        more information.
 
         """
         pass
@@ -770,7 +745,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_axis_move(self, name, ID, axis, value):
+    def event_paused_joystick_axis_move(self, js_name, js_id, axis, value):
         """Joystick axis move event when paused.
 
         See the documentation for
@@ -779,7 +754,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_hat_move(self, name, ID, hat, x, y):
+    def event_paused_joystick_hat_move(self, js_name, js_id, hat, x, y):
         """Joystick HAT move event when paused.
 
         See the documentation for
@@ -788,7 +763,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_trackball_move(self, name, ID, ball, x, y):
+    def event_paused_joystick_trackball_move(self, js_name, js_id, ball, x, y):
         """Joystick trackball move event when paused.
 
         See the documentation for
@@ -798,7 +773,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_button_press(self, name, ID, button):
+    def event_paused_joystick_button_press(self, js_name, js_id, button):
         """Joystick button press event when paused.
 
         See the documentation for
@@ -808,7 +783,7 @@ class Game(object):
         """
         pass
 
-    def event_paused_joystick_button_release(self, name, ID, button):
+    def event_paused_joystick_button_release(self, js_name, js_id, button):
         """Joystick button release event when paused.
 
         See the documentation for

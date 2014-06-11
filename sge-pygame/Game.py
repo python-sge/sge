@@ -117,6 +117,18 @@ class Game:
        to :const:`False` will improve performence if collision events
        are not needed.
 
+    .. attribute:: input_events
+
+       A list containing all input event objects which have not yet been
+       handled, in the order in which they occurred.
+
+       .. note::
+
+          If you handle input events manually, be sure to delete them
+          from this list, preferably by getting them with
+          :meth:`list.pop`.  Otherwise, the event will be handled more
+          than once, which is usually not what you want.
+
     .. attribute:: registered_classes
 
        A list containing all classes which have been registered with
@@ -317,6 +329,7 @@ class Game:
         self.window_icon = window_icon
         self.collision_events_enabled = collision_events_enabled
 
+        self.input_events = []
         self.registered_classes = []
         self.sprites = {}
         self.background_layers = {}
@@ -340,6 +353,9 @@ class Game:
         self._js_names = {}
         self._js_ids = {}
         self._pygame_sprites = pygame.sprite.LayeredDirty()
+        self._numviews = 0
+        self._background = None
+        self._cleanup_rects = []
         self._window_projections = []
         self.mouse = sge.Mouse()
 
@@ -475,184 +491,151 @@ class Game:
             self._display_surface = self._window.copy()
 
             self.rooms[0].start()
-            background = None
-            cleanup_rects = []
-            numviews = 0
             _fps_time = 0
             self._clock.tick()
 
             while self._running:
-                # Pygame events
-                for event in pygame.event.get():
-                    if event.type == pygame.KEYDOWN:
-                        try:
-                            k = sge.KEY_NAMES[event.key]
-                        except KeyError:
-                            w = "Don't know how to handle the key, ``{}``.".format(
-                                event.key)
-                            warnings.warn(w)
-                        else:
-                            self.event_key_press(k, event.unicode)
-                            self.current_room.event_key_press(k, event.unicode)
-                            for obj in self.current_room.objects:
-                                if obj.active:
-                                    obj.event_key_press(k, event.unicode)
-                                else:
-                                    obj.event_inactive_key_press(
-                                        k, event.unicode)
-                    elif event.type == pygame.KEYUP:
-                        try:
-                            k = sge.KEY_NAMES[event.key]
-                        except KeyError:
-                            w = "Don't know how to handle the key, ``{}``.".format(
-                                event.key)
-                        else:
-                            self.event_key_release(k)
-                            self.current_room.event_key_release(k)
-                            for obj in self.current_room.objects:
-                                if obj.active:
-                                    obj.event_key_release(k)
-                                else:
-                                    obj.event_inactive_key_release(k)
-                    elif event.type == pygame.MOUSEMOTION:
-                        mx, my = event.pos
-                        self.mouse.mouse_x = mx - self._x
-                        self.mouse.mouse_y = my - self._y
-                        self.event_mouse_move(*event.rel)
-                        self.current_room.event_mouse_move(*event.rel)
+                # Input events
+                self.pump_input()
+                while self.input_events:
+                    event = self.input_events.pop(0)
+
+                    if isinstance(event, sge.input.KeyPress):
+                        self.event_key_press(event.key, event.char)
+                        self.current_room.event_key_press(event.key,
+                                                          event.char)
                         for obj in self.current_room.objects:
                             if obj.active:
-                                obj.event_mouse_move(*event.rel)
+                                obj.event_key_press(event.key, event.char)
                             else:
-                                obj.event_inactive_mouse_move(*event.rel)
-                    elif event.type == pygame.MOUSEBUTTONDOWN:
-                        b = sge.MOUSE_BUTTON_NAMES[event.button]
-                        self.event_mouse_button_press(b)
-                        self.current_room.event_mouse_button_press(b)
+                                obj.event_inactive_key_press(event.key,
+                                                             event.char)
+                    elif isinstance(event, sge.input.KeyRelease):
+                        self.event_key_release(event.key)
+                        self.current_room.event_key_release(event.key)
                         for obj in self.current_room.objects:
                             if obj.active:
-                                obj.event_mouse_button_press(b)
+                                obj.event_key_release(event.key)
                             else:
-                                obj.event_inactive_mouse_button_press(b)
-                    elif event.type == pygame.MOUSEBUTTONUP:
-                        b = sge.MOUSE_BUTTON_NAMES[event.button]
-                        self.event_mouse_button_release(b)
-                        self.current_room.event_mouse_button_release(b)
+                                obj.event_inactive_key_release(event.key)
+                    elif isinstance(event, sge.input.MouseMove):
+                        self.event_mouse_move(event.x, event.y)
+                        self.current_room.event_mouse_move(event.x, event.y)
                         for obj in self.current_room.objects:
                             if obj.active:
-                                obj.event_mouse_button_release(b)
+                                obj.event_mouse_move(event.x, event.y)
                             else:
-                                obj.event_inactive_mouse_button_release(b)
-                    elif event.type == pygame.JOYAXISMOTION:
-                        jsname = self._js_names[event.joy]
-                        self.event_joystick_axis_move(jsname, event.joy,
-                                                      event.axis, event.value)
+                                obj.event_inactive_mouse_move(event.x, event.y)
+                    elif isinstance(event, sge.input.MouseButtonPress):
+                        self.event_mouse_button_press(event.button)
+                        self.current_room.event_mouse_button_press(
+                            event.button)
+                        for obj in self.current_room.objects:
+                            if obj.active:
+                                obj.event_mouse_button_press(event.button)
+                            else:
+                                obj.event_inactive_mouse_button_press(
+                                    event.button)
+                    elif isinstance(event, sge.input.MouseButtonRelease):
+                        self.event_mouse_button_release(event.button)
+                        self.current_room.event_mouse_button_release(
+                            event.button)
+                        for obj in self.current_room.objects:
+                            if obj.active:
+                                obj.event_mouse_button_release(event.button)
+                            else:
+                                obj.event_inactive_mouse_button_release(
+                                    event.button)
+                    elif isinstance(event, sge.input.JoystickAxisMove):
+                        self.event_joystick_axis_move(
+                            event.js_name, event.js_id, event.axis,
+                            event.value)
                         self.current_room.event_joystick_axis_move(
-                            jsname, event.joy, event.axis, event.value)
+                            event.js_name, event.js_id, event.axis,
+                            event.value)
                         for obj in self.current_room.objects:
                             if obj.active:
                                 obj.event_joystick_axis_move(
-                                    jsname, event.joy, event.axis, event.value)
+                                    event.js_name, event.js_id, event.axis,
+                                    event.value)
                             else:
                                 obj.event_inactive_joystick_axis_move(
-                                    jsname, event.joy, event.axis, event.value)
-                    elif event.type == pygame.JOYHATMOTION:
-                        jsname = self._js_names[event.joy]
-                        self.event_joystick_hat_move(jsname, event.joy,
-                                                     event.hat, *event.value)
+                                    event.js_name, event.js_id, event.axis,
+                                    event.value)
+                    elif isinstance(event, sge.input.JoystickHatMove):
+                        self.event_joystick_hat_move(
+                            event.js_name, event.js_id, event.hat, event.x,
+                            event.y)
                         self.current_room.event_joystick_hat_move(
-                            jsname, event.joy, event.hat, *event.value)
+                            event.js_name, event.js_id, event.hat, event.x,
+                            event.y)
                         for obj in self.current_room.objects:
                             if obj.active:
                                 obj.event_joystick_hat_move(
-                                    jsname, event.joy, event.hat, *event.value)
+                                    event.js_name, event.js_id, event.hat,
+                                    event.x, event.y)
                             else:
                                 obj.event_inactive_joystick_hat_move(
-                                    jsname, event.joy, event.hat, *event.value)
-                    elif event.type == pygame.JOYBALLMOTION:
-                        jsname = self._js_names[event.joy]
+                                    event.js_name, event.js_id, event.hat,
+                                    event.x, event.y)
+                    elif isinstance(event, sge.input.JoystickTrackballMove):
                         self.event_joystick_trackball_move(
-                            jsname, event.joy, event.ball, *event.rel)
+                            event.js_name, event.js_id, event.ball, event.x,
+                            event.y)
                         self.current_room.event_joystick_trackball_move(
-                            jsname, event.joy, event.ball, *event.rel)
+                            event.js_name, event.js_id, event.ball, event.x,
+                            event.y)
                         for obj in self.current_room.objects:
                             if obj.active:
                                 obj.event_joystick_trackball_move(
-                                    jsname, event.joy, event.ball, *event.rel)
+                                    event.js_name, event.js_id, event.ball,
+                                    event.x, event.y)
                             else:
                                 obj.event_inactive_joystick_trackball_move(
-                                    jsname, event.joy, event.ball, *event.rel)
-                    elif event.type == pygame.JOYBUTTONDOWN:
-                        jsname = self._js_names[event.joy]
-                        self.event_joystick_button_press(jsname, event.joy,
-                                                         event.button)
+                                    event.js_name, event.js_id, event.ball,
+                                    event.x, event.y)
+                    elif isinstance(event, sge.input.JoystickButtonPress):
+                        self.event_joystick_button_press(
+                            event.js_name, event.js_id, event.button)
                         self.current_room.event_joystick_button_press(
-                            jsname, event.joy, event.button)
+                            event.js_name, event.js_id, event.button)
                         for obj in self.current_room.objects:
                             if obj.active:
                                 obj.event_joystick_button_press(
-                                    jsname, event.joy, event.button)
+                                    event.js_name, event.js_id, event.button)
                             else:
                                 obj.event_inactive_joystick_button_press(
-                                    jsname, event.joy, event.button)
-                    elif event.type == pygame.JOYBUTTONUP:
-                        jsname = self._js_names[event.joy]
-                        self.event_joystick_button_release(jsname, event.joy,
-                                                           event.button)
+                                    event.js_name, event.js_id, event.button)
+                    elif isinstance(event, sge.input.JoystickButtonRelease):
+                        self.event_joystick_button_release(
+                            event.js_name, event.js_id, event.button)
                         self.current_room.event_joystick_button_release(
-                            jsname, event.joy, event.button)
+                            event.js_name, event.js_id, event.button)
                         for obj in self.current_room.objects:
                             if obj.active:
                                 obj.event_joystick_button_release(
-                                    jsname, event.joy, event.button)
+                                    event.js_name, event.js_id, event.button)
                             else:
                                 obj.event_inactive_joystick_button_release(
-                                    jsname, event.joy, event.button)
-                    elif event.type == pygame.ACTIVEEVENT:
-                        if event.gain:
-                            if 2 & event.state:
-                                # Gain keyboard focus
-                                if sge.DEBUG:
-                                    print('Gained keyboard focus.')
-                                self.event_gain_keyboard_focus()
-                                self.current_room.event_gain_keyboard_focus()
-                            if 1 & event.state:
-                                # Gain mouse focus
-                                if sge.DEBUG:
-                                    print('Gained mouse focus.')
-                                self.event_gain_mouse_focus()
-                                self.current_room.event_gain_mouse_focus()
-                        else:
-                            if 2 & event.state:
-                                # Lose keyboard focus
-                                if sge.DEBUG:
-                                    print('Lost keyboard focus.')
-                                self.event_lose_keyboard_focus()
-                                self.current_room.event_lose_keyboard_focus()
-                            if 1 & event.state:
-                                # Lose mouse focus
-                                if sge.DEBUG:
-                                    print('Lost mouse focus.')
-                                self.event_lose_mouse_focus()
-                                self.current_room.event_lose_mouse_focus()
-                    elif event.type == pygame.QUIT:
-                        if sge.DEBUG:
-                            print('Quit requested by the system.')
+                                    event.js_name, event.js_id, event.button)
+                    elif isinstance(event, sge.input.KeyboardFocusGain):
+                        self.event_gain_keyboard_focus()
+                        self.current_room.event_gain_keyboard_focus()
+                    elif isinstance(event, sge.input.KeyboardFocusLose):
+                        self.event_lose_keyboard_focus()
+                        self.current_room.event_lose_keyboard_focus()
+                    elif isinstance(event, sge.input.MouseFocusGain):
+                        self.event_gain_mouse_focus()
+                        self.current_room.event_gain_mouse_focus()
+                    elif isinstance(event, sge.input.MouseFocusLose):
+                        self.event_lose_mouse_focus()
+                        self.current_room.event_lose_mouse_focus()
+                    elif isinstance(event, sge.input.QuitRequest):
                         self.current_room.event_close()
                         self.event_close()
-                    elif event.type == pygame.VIDEORESIZE:
-                        if sge.DEBUG:
-                            print('Video resize detected.')
-                        self._window.blit(self._display_surface, (0, 0))
-                        self._window_width = event.w
-                        self._window_height = event.h
-                        self._set_mode()
-                    elif event.type == sge.MUSIC_END_EVENT:
-                        if self._music_queue:
-                            music = self._music_queue.pop(0)
-                            music[0].play(*music[1:])
 
-                real_time_passed = self._clock.tick(self.fps)
+                # Regulate speed
+                real_time_passed = self.regulate_speed()
 
                 if self.delta:
                     time_passed = min(real_time_passed, 1000 / self.delta_min)
@@ -739,72 +722,13 @@ class Game:
                         obj.event_inactive_end_step(real_time_passed,
                                                     delta_mult)
 
-                # Music control
-                self._handle_music()
-
-                if numviews != len(self.current_room.views):
-                    numviews = len(self.current_room.views)
-                    self._background_changed = True
-
                 # Set xprevious and yprevious
                 for obj in self.current_room.objects:
                     obj.xprevious = obj.x
                     obj.yprevious = obj.y
 
-                # Redraw
-                if self._background_changed or background is None:
-                    w = max(1, self._display_surface.get_width())
-                    h = max(1, self._display_surface.get_height())
-                    background = pygame.Surface((w, h))
-                    b = self.current_room.background._get_background()
-                    background.blit(b, (self._x, self._y))
-                    self._display_surface.blit(background, (0, 0))
-                    self._background_changed = False
-                    self._pygame_sprites.clear(self._display_surface,
-                                               background)
-                    for sprite in self._pygame_sprites:
-                        sprite.rect = pygame.Rect(0, 0, 1, 1)
-                        sprite.image = pygame.Surface((1, 1))
-                        sprite.image.set_colorkey((0, 0, 0))
-                    self._pygame_sprites.update()
-                    self._pygame_sprites.draw(self._display_surface)
-                    dirty = [self._display_surface.get_rect()]
-                else:
-                    self._pygame_sprites.clear(self._display_surface,
-                                               background)
-                    self._pygame_sprites.update()
-                    dirty = self._pygame_sprites.draw(self._display_surface)
-
-                self._window.blit(self._display_surface, (0, 0))
-
-                # Window projections
-                self.mouse.project_cursor()
-                dirty.extend(cleanup_rects)
-                cleanup_rects = self._show_projections()
-                dirty.extend(cleanup_rects)
-
-                # Letterbox/pillarbox
-                top_bar = pygame.Rect(0, 0, w, self._y)
-                bottom_bar = pygame.Rect(0, h - self._y, w, self._y)
-                left_bar = pygame.Rect(0, 0, self._x, h)
-                right_bar = pygame.Rect(w - self._x, 0, self._x, h)
-                if top_bar.h > 0:
-                    self._window.fill((0, 0, 0), top_bar)
-                    dirty.append(top_bar)
-                if bottom_bar.h > 0:
-                    self._window.fill((0, 0, 0), bottom_bar)
-                    dirty.append(bottom_bar)
-                if left_bar.w > 0:
-                    self._window.fill((0, 0, 0), left_bar)
-                    dirty.append(left_bar)
-                if right_bar.w > 0:
-                    self._window.fill((0, 0, 0), right_bar)
-                    dirty.append(right_bar)
-
-                if sge.hardware_rendering:
-                    pygame.display.flip()
-                else:
-                    pygame.display.update(dirty)
+                # Refresh
+                self.refresh()
 
             self.event_game_end()
             pygame.quit()
@@ -832,181 +756,363 @@ class Game:
         with them.
 
         """
-        if sprite is not None:
-            image = sprite._get_image(0)
-        else:
+        if sprite is None:
+            sge.image_directories.append(os.path.dirname(__file__))
             try:
-                image = pygame.image.load(
-                    os.path.join(os.path.dirname(__file__),
-                                 'sge_pause.png')).convert_alpha()
-            except pygame.error:
-                image = pygame.Surface((16, 16))
-                image.fill((255, 255, 255), pygame.Rect(0, 0, 4, 16))
-                image.fill((255, 255, 255), pygame.Rect(12, 0, 4, 16))
-                image.set_colorkey((0, 0, 0))
+                sprite = sge.Sprite("_pygame_sge_pause")
+            except IOError:
+                font = sge.Font("Droid Sans", size=24)
+                sprite = sge.Sprite(width=320, height=240)
+                sprite.draw_text(font, "Paused", 160, 120,
+                                 halign=sge.ALIGN_CENTER,
+                                 valign=sge.ALIGN_MIDDLE)
+                font.destroy()
 
-        rect = image.get_rect(center=self._window.get_rect().center)
+            del sge.image_directories[-1]
 
         self._paused = True
-        screenshot = self._window.copy()
-        background = screenshot.copy()
-        dimmer = pygame.Surface(self._window.get_size(), pygame.SRCALPHA)
-        dimmer.fill(pygame.Color(0, 0, 0, 128))
-        background.blit(dimmer, (0, 0))
-        background.blit(image, rect)
-        orig_screenshot = screenshot
-        orig_background = background
-        self._clock.tick()
 
         while self._paused and self._running:
-            # Events
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    k = sge.KEY_NAMES[event.key]
-                    self.event_paused_key_press(k, event.unicode)
-                    self.current_room.event_paused_key_press(k, event.unicode)
-                    for obj in self.current_room.objects:
-                        obj.event_paused_key_press(k, event.unicode)
-                elif event.type == pygame.KEYUP:
-                    k = sge.KEY_NAMES[event.key]
-                    self.event_paused_key_release(k)
-                    self.current_room.event_paused_key_release(k)
-                    for obj in self.current_room.objects:
-                        obj.event_paused_key_release(k)
-                elif event.type == pygame.MOUSEMOTION:
-                    mx, my = event.pos
-                    self.mouse.mouse_x = mx - self._x
-                    self.mouse.mouse_y = my - self._y
-                    self.event_paused_mouse_move(*event.rel)
-                    self.current_room.event_paused_mouse_move(*event.rel)
-                    for obj in self.current_room.objects:
-                        obj.event_paused_mouse_move(*event.rel)
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    b = sge.MOUSE_BUTTON_NAMES[event.button]
-                    self.event_paused_mouse_button_press(b)
-                    self.current_room.event_paused_mouse_button_press(b)
-                    for obj in self.current_room.objects:
-                        obj.event_paused_mouse_button_press(b)
-                elif event.type == pygame.MOUSEBUTTONUP:
-                    b = sge.MOUSE_BUTTON_NAMES[event.button]
-                    self.event_paused_mouse_button_release(b)
-                    self.current_room.event_paused_mouse_button_release(b)
-                    for obj in self.current_room.objects:
-                        obj.event_paused_mouse_button_release(b)
-                elif event.type == pygame.JOYAXISMOTION:
-                    jsname = self._js_names[event.joy]
-                    self.event_paused_joystick_axis_move(
-                        jsname, event.joy, event.axis, event.value)
-                    self.current_room.event_paused_joystick_axis_move(
-                        jsname, event.joy, event.axis, event.value)
-                    for obj in self.current_room.objects:
-                        obj.event_paused_joystick_axis_move(
-                            jsname, event.joy, event.axis, event.value)
-                elif event.type == pygame.JOYHATMOTION:
-                    jsname = self._js_names[event.joy]
-                    self.event_paused_joystick_hat_move(
-                        jsname, event.joy, event.hat, *event.value)
-                    self.current_room.event_paused_joystick_hat_move(
-                        jsname, event.joy, event.hat, *event.value)
-                    for obj in self.current_room.objects:
-                        obj.event_paused_joystick_hat_move(
-                            jsname, event.joy, event.hat, *event.value)
-                elif event.type == pygame.JOYBALLMOTION:
-                    jsname = self._js_names[event.joy]
-                    self.event_paused_joystick_trackball_move(
-                        jsname, event.joy, event.ball, *event.rel)
-                    self.current_room.event_paused_joystick_trackball_move(
-                        jsname, event.joy, event.ball, *event.rel)
-                    for obj in self.current_room.objects:
-                        obj.event_paused_joystick_trackball_move(
-                            jsname, event.joy, event.ball, *event.rel)
-                elif event.type == pygame.JOYBUTTONDOWN:
-                    jsname = self._js_names[event.joy]
-                    self.event_paused_joystick_button_press(
-                        jsname, event.joy, event.button)
-                    self.current_room.event_paused_joystick_button_press(
-                        jsname, event.joy, event.button)
-                    for obj in self.current_room.objects:
-                        obj.event_paused_joystick_button_press(
-                            jsname, event.joy, event.button)
-                elif event.type == pygame.JOYBUTTONUP:
-                    jsname = self._js_names[event.joy]
-                    self.event_paused_joystick_button_release(
-                        jsname, event.joy, event.button)
-                    self.current_room.event_paused_joystick_button_release(
-                        jsname, event.joy, event.button)
-                    for obj in self.current_room.objects:
-                        obj.event_paused_joystick_button_release(
-                            jsname, event.joy, event.button)
-                elif event.type == pygame.ACTIVEEVENT:
-                    if event.gain:
-                        if 2 & event.state:
-                            # Gain keyboard focus
-                            if sge.DEBUG:
-                                print('Gained keyboard focus.')
-                            self.event_paused_gain_keyboard_focus()
-                            self.current_room.event_paused_gain_keyboard_focus()
-                        if 1 & event.state:
-                            # Gain mouse focus
-                            if sge.DEBUG:
-                                print('Gained mouse focus.')
-                            self.event_paused_gain_mouse_focus()
-                            self.current_room.event_paused_gain_mouse_focus()
-                    else:
-                        if 2 & event.state:
-                            # Lose keyboard focus
-                            if sge.DEBUG:
-                                print('Lost keyboard focus.')
-                            self.event_paused_lose_keyboard_focus()
-                            self.current_room.event_paused_lose_keyboard_focus()
-                        if 1 & event.state:
-                            # Lose mouse focus
-                            if sge.DEBUG:
-                                print('Lost mouse focus.')
-                            self.event_paused_lose_mouse_focus()
-                            self.current_room.event_paused_lose_mouse_focus()
-                elif event.type == pygame.QUIT:
-                    if sge.DEBUG:
-                        print('Quit requested by the system.')
-                    self.current_room.event_paused_close()
-                    self.event_paused_close()
-                elif event.type == pygame.VIDEORESIZE:
-                    if sge.DEBUG:
-                        print('Video resize detected.')
-                    self._window_width = event.w
-                    self._window_height = event.h
-                    self._set_mode()
-                    screenshot = pygame.transform.scale(orig_screenshot,
-                                                        (event.w, event.h))
-                    background = pygame.transform.scale(orig_background,
-                                                        (event.w, event.h))
-                elif event.type == sge.MUSIC_END_EVENT:
-                    if self._music_queue:
-                        music = self._music_queue.pop(0)
-                        music[0].play(*music[1:])
+            # Input events
+                self.pump_input()
+                while self.input_events:
+                    event = self.input_events.pop(0)
 
-            # Time management
-            self._clock.tick(self.fps)
+                    if isinstance(event, sge.input.KeyPress):
+                        self.event_paused_key_press(event.key, event.char)
+                        self.current_room.event_paused_key_press(event.key,
+                                                                 event.char)
+                        for obj in self.current_room.objects:
+                            obj.event_paused_key_press(event.key, event.char)
+                    elif isinstance(event, sge.input.KeyRelease):
+                        self.event_paused_key_release(event.key)
+                        self.current_room.event_paused_key_release(event.key)
+                        for obj in self.current_room.objects:
+                            obj.event_paused_key_release(event.key)
+                    elif isinstance(event, sge.input.MouseMove):
+                        self.event_paused_mouse_move(event.x, event.y)
+                        self.current_room.event_paused_mouse_move(event.x,
+                                                                  event.y)
+                        for obj in self.current_room.objects:
+                            obj.event_paused_mouse_move(event.x, event.y)
+                    elif isinstance(event, sge.input.MouseButtonPress):
+                        self.event_paused_mouse_button_press(event.button)
+                        self.current_room.event_paused_mouse_button_press(
+                            event.button)
+                        for obj in self.current_room.objects:
+                            obj.event_paused_mouse_button_press(event.button)
+                    elif isinstance(event, sge.input.MouseButtonRelease):
+                        self.event_paused_mouse_button_release(event.button)
+                        self.current_room.event_paused_mouse_button_release(
+                            event.button)
+                        for obj in self.current_room.objects:
+                            obj.event_paused_mouse_button_release(event.button)
+                    elif isinstance(event, sge.input.JoystickAxisMove):
+                        self.event_paused_joystick_axis_move(
+                            event.js_name, event.js_id, event.axis,
+                            event.value)
+                        self.current_room.event_paused_joystick_axis_move(
+                            event.js_name, event.js_id, event.axis,
+                            event.value)
+                        for obj in self.current_room.objects:
+                            obj.event_paused_joystick_axis_move(
+                                event.js_name, event.js_id, event.axis,
+                                event.value)
+                    elif isinstance(event, sge.input.JoystickHatMove):
+                        self.event_paused_joystick_hat_move(
+                            event.js_name, event.js_id, event.hat, event.x,
+                            event.y)
+                        self.current_room.event_paused_joystick_hat_move(
+                            event.js_name, event.js_id, event.hat, event.x,
+                            event.y)
+                        for obj in self.current_room.objects:
+                            obj.event_paused_joystick_hat_move(
+                                event.js_name, event.js_id, event.hat,
+                                event.x, event.y)
+                    elif isinstance(event, sge.input.JoystickTrackballMove):
+                        self.event_paused_joystick_trackball_move(
+                            event.js_name, event.js_id, event.ball, event.x,
+                            event.y)
+                        self.current_room.event_paused_joystick_trackball_move(
+                            event.js_name, event.js_id, event.ball, event.x,
+                            event.y)
+                        for obj in self.current_room.objects:
+                            obj.event_paused_joystick_trackball_move(
+                                event.js_name, event.js_id, event.ball,
+                                event.x, event.y)
+                    elif isinstance(event, sge.input.JoystickButtonPress):
+                        self.event_paused_joystick_button_press(
+                            event.js_name, event.js_id, event.button)
+                        self.current_room.event_paused_joystick_button_press(
+                            event.js_name, event.js_id, event.button)
+                        for obj in self.current_room.objects:
+                            obj.event_paused_joystick_button_press(
+                                event.js_name, event.js_id, event.button)
+                    elif isinstance(event, sge.input.JoystickButtonRelease):
+                        self.event_paused_joystick_button_release(
+                            event.js_name, event.js_id, event.button)
+                        self.current_room.event_paused_joystick_button_release(
+                            event.js_name, event.js_id, event.button)
+                        for obj in self.current_room.objects:
+                            obj.event_paused_joystick_button_release(
+                                event.js_name, event.js_id, event.button)
+                    elif isinstance(event, sge.input.KeyboardFocusGain):
+                        self.event_paused_gain_keyboard_focus()
+                        self.current_room.event_paused_gain_keyboard_focus()
+                    elif isinstance(event, sge.input.KeyboardFocusLose):
+                        self.event_paused_lose_keyboard_focus()
+                        self.current_room.event_paused_lose_keyboard_focus()
+                    elif isinstance(event, sge.input.MouseFocusGain):
+                        self.event_paused_gain_mouse_focus()
+                        self.current_room.event_paused_gain_mouse_focus()
+                    elif isinstance(event, sge.input.MouseFocusLose):
+                        self.event_paused_lose_mouse_focus()
+                        self.current_room.event_paused_lose_mouse_focus()
+                    elif isinstance(event, sge.input.QuitRequest):
+                        self.current_room.event_paused_close()
+                        self.event_paused_close()
 
-            # Music control
-            self._handle_music()
-            
-            # Redraw
-            self._window.blit(background, (0, 0))
+                # Regulate speed
+                self.regulate_speed()
 
-            self.mouse.project_cursor()
-            self._show_projections()
+                # Project sprite
+                x = (self.width - sprite.width) / 2
+                y = (self.height - sprite.height) / 2
+                self.project_sprite(sprite, 0, x, y)
 
-            pygame.display.flip()
+                # Refresh
+                self.refresh()
 
-        # Restore the look of the screen from before it was paused
-        self._window.blit(screenshot, (0, 0))
-        pygame.display.update()
-        self._background_changed = True
+        sprite.destroy()
+        self.pump_input()
+        self.input_events = []
 
     def unpause(self):
         """Unpause the game."""
         self._paused = False
+
+    def pump_input(self):
+        """Cause the SGE to recieve input from the OS.
+
+        This method needs to be called periodically for the SGE to
+        recieve events from the OS, such as key presses and mouse
+        movement, as well as to assure the OS that the program is not
+        locked up.
+
+        Upon calling this, each event is translated into the appropriate
+        class in :mod:`sge.input` and the resulting object is appended
+        to :attr:`input_events`.
+
+        You normally don't need to use this function directly.  It is
+        called automatically in each frame of the SGE's main loop.  You
+        only need to use this function directly if you take control away
+        from the SGE's main loop, e.g. to create your own loop.
+
+        """
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                try:
+                    k = sge.KEY_NAMES[event.key]
+                except KeyError:
+                    w = "Don't know how to handle the key, ``{}``.".format(
+                        event.key)
+                    warnings.warn(w)
+                else:
+                    input_event = sge.input.KeyPress(k, event.unicode)
+                    self.input_events.append(input_event)
+            elif event.type == pygame.KEYUP:
+                try:
+                    k = sge.KEY_NAMES[event.key]
+                except KeyError:
+                    w = "Don't know how to handle the key, ``{}``.".format(
+                        event.key)
+                else:
+                    input_event = sge.input.KeyRelease(k)
+                    self.input_events.append(input_event)
+            elif event.type == pygame.MOUSEMOTION:
+                mx, my = event.pos
+                self.mouse.mouse_x = mx - self._x
+                self.mouse.mouse_y = my - self._y
+                input_event = sge.input.MouseMove(*event.rel)
+                self.input_events.append(input_event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                try:
+                    b = sge.MOUSE_BUTTON_NAMES[event.button]
+                except KeyError:
+                    w = "Don't know how to handle mouse button {}.".format(
+                        event.button)
+                else:
+                    input_event = sge.input.MouseButtonPress(b)
+                    self.input_events.append(input_event)
+            elif event.type == pygame.MOUSEBUTTONUP:
+                try:
+                    b = sge.MOUSE_BUTTON_NAMES[event.button]
+                except KeyError:
+                    w = "Don't know how to handle mouse button {}.".format(
+                        event.button)
+                else:
+                    input_event = sge.input.MouseButtonRelease(b)
+                    self.input_events.append(input_event)
+            elif event.type == pygame.JOYAXISMOTION:
+                jsname = self._js_names[event.joy]
+                input_event = sge.input.JoystickAxisMove(
+                    jsname, event.joy, event.axis, event.value)
+                self.input_events.append(input_event)
+            elif event.type == pygame.JOYHATMOTION:
+                jsname = self._js_names[event.joy]
+                input_event = sge.input.JoystickHatMove(
+                    jsname, event.joy, event.hat, *event.value)
+                self.input_events.append(input_event)
+            elif event.type == pygame.JOYBALLMOTION:
+                jsname = self._js_names[event.joy]
+                input_event = sge.input.JoystickTrackballMove(
+                    jsname, event.joy, event.ball, *event.rel)
+                self.input_events.append(input_event)
+            elif event.type == pygame.JOYBUTTONDOWN:
+                jsname = self._js_names[event.joy]
+                input_event = sge.input.JoystickButtonPress(jsname, event.joy,
+                                                            event.button)
+                self.input_events.append(input_event)
+            elif event.type == pygame.JOYBUTTONUP:
+                jsname = self._js_names[event.joy]
+                input_event = sge.input.JoystickButtonRelease(
+                    jsname, event.joy, event.button)
+                self.input_events.append(input_event)
+            elif event.type == pygame.ACTIVEEVENT:
+                if event.gain:
+                    if 2 & event.state:
+                        # Gain keyboard focus
+                        if sge.DEBUG:
+                            print('Gained keyboard focus.')
+                        self.input_events.append(sge.input.KeyboardFocusGain())
+                    if 1 & event.state:
+                        # Gain mouse focus
+                        if sge.DEBUG:
+                            print('Gained mouse focus.')
+                        self.input_events.append(sge.input.KeyboardFocusLose())
+                else:
+                    if 2 & event.state:
+                        # Lose keyboard focus
+                        if sge.DEBUG:
+                            print('Lost keyboard focus.')
+                        self.input_events.append(sge.input.MouseFocusGain())
+                    if 1 & event.state:
+                        # Lose mouse focus
+                        if sge.DEBUG:
+                            print('Lost mouse focus.')
+                        self.input_events.append(sge.input.MouseFocusLose())
+            elif event.type == pygame.QUIT:
+                if sge.DEBUG:
+                    print('Quit requested by the system.')
+                self.input_events.append(sge.input.QuitRequest())
+            elif event.type == pygame.VIDEORESIZE:
+                if sge.DEBUG:
+                    print('Video resize detected.')
+                self._window.blit(self._display_surface, (0, 0))
+                self._window_width = event.w
+                self._window_height = event.h
+                self._set_mode()
+            elif event.type == sge.MUSIC_END_EVENT:
+                if self._music_queue:
+                    music = self._music_queue.pop(0)
+                    music[0].play(*music[1:])
+
+    def regulate_speed(self, fps=None):
+        """Regulate the SGE's running speed and return the time passed.
+
+        Arguments:
+
+        - ``fps`` -- The target frame rate in frames per second.  Set to
+          :const:`None` to target the current value of :attr:`fps`.
+
+        When this method is called, the program will sleep long enough
+        so that the game runs at ``fps`` frames per second, then return
+        the number of milliseconds that passed between the previous call
+        and the current call of this method.
+
+        You normally don't need to use this function directly.  It is
+        called automatically in each frame of the SGE's main loop.  You
+        only need to use this function directly if you want to create
+        your own loop.
+
+        """
+        if fps is None:
+            fps = self.fps
+
+        return self._clock.tick(fps)
+
+    def refresh(self):
+        """Refresh the screen.
+
+        This method needs to be called for changes to the screen to be
+        seen by the user.  It should be called every frame.
+
+        You normally don't need to use this function directly.  It is
+        called automatically in each frame of the SGE's main loop.  You
+        only need to use this function directly if you take control away
+        from the SGE's main loop, e.g. to create your own loop.
+
+        """
+        # Music control
+        self._handle_music()
+
+        # Check for changes in views
+        if self._numviews != len(self.current_room.views):
+            self._numviews = len(self.current_room.views)
+            self._background_changed = True
+
+        # Redraw
+        w = max(1, self._display_surface.get_width())
+        h = max(1, self._display_surface.get_height())
+        if self._background_changed or self._background is None:
+            self._background = pygame.Surface((w, h))
+            b = self.current_room.background._get_background()
+            self._background.blit(b, (self._x, self._y))
+            self._display_surface.blit(self._background, (0, 0))
+            self._background_changed = False
+            self._pygame_sprites.clear(self._display_surface, self._background)
+            for sprite in self._pygame_sprites:
+                sprite.rect = pygame.Rect(0, 0, 1, 1)
+                sprite.image = pygame.Surface((1, 1))
+                sprite.image.set_colorkey((0, 0, 0))
+            self._pygame_sprites.update()
+            self._pygame_sprites.draw(self._display_surface)
+            dirty = [self._display_surface.get_rect()]
+        else:
+            self._pygame_sprites.clear(self._display_surface, self._background)
+            self._pygame_sprites.update()
+            dirty = self._pygame_sprites.draw(self._display_surface)
+
+        self._window.blit(self._display_surface, (0, 0))
+
+        # Window projections
+        self.mouse.project_cursor()
+        dirty.extend(self._cleanup_rects)
+        self._cleanup_rects = self._show_projections()
+        dirty.extend(self._cleanup_rects)
+
+        # Letterbox/pillarbox
+        top_bar = pygame.Rect(0, 0, w, self._y)
+        bottom_bar = pygame.Rect(0, h - self._y, w, self._y)
+        left_bar = pygame.Rect(0, 0, self._x, h)
+        right_bar = pygame.Rect(w - self._x, 0, self._x, h)
+        if top_bar.h > 0:
+            self._window.fill((0, 0, 0), top_bar)
+            dirty.append(top_bar)
+        if bottom_bar.h > 0:
+            self._window.fill((0, 0, 0), bottom_bar)
+            dirty.append(bottom_bar)
+        if left_bar.w > 0:
+            self._window.fill((0, 0, 0), left_bar)
+            dirty.append(left_bar)
+        if right_bar.w > 0:
+            self._window.fill((0, 0, 0), right_bar)
+            dirty.append(right_bar)
+
+        if sge.hardware_rendering:
+            pygame.display.flip()
+        else:
+            pygame.display.update(dirty)
 
     def register_class(self, cls):
         """Register a class with the SGE.
@@ -1271,16 +1377,8 @@ class Game:
     def event_key_press(self, key, char):
         """Key press event.
 
-        Called when a key on the keyboard is pressed.
-
-        Arguments:
-
-        - ``char`` -- The Unicode character associated with the key
-          press, or an empty Unicode string if no Unicode character is
-          associated with the key press.
-
-        See the documentation for :func:`sge.keyboard.get_pressed` for
-        more information.
+        See the documentation for :class:`sge.input.KeyPress` for more
+        information.
 
         """
         pass
@@ -1288,8 +1386,8 @@ class Game:
     def event_key_release(self, key):
         """Key release event.
 
-        See the documentation for :func:`sge.keyboard.get_pressed` for
-        more information.
+        See the documentation for :class:`sge.input.KeyRelease` for more
+        information.
 
         """
         pass
@@ -1297,12 +1395,8 @@ class Game:
     def event_mouse_move(self, x, y):
         """Mouse move event.
 
-        Called when the mouse moves.
-
-        Arguments:
-
-        - ``x`` -- The horizontal relative movement of the mouse.
-        - ``y`` -- The vertical relative movement of the mouse.
+        See the documentation for :class:`sge.input.MouseMove` for more
+        information.
 
         """
         pass
@@ -1310,10 +1404,8 @@ class Game:
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        Called when a mouse button is pressed.
-
-        See the documentation for :func:`sge.mouse.get_pressed` for more
-        information.
+        See the documentation for :class:`sge.input.MouseButtonPress`
+        for more information.
 
         """
         pass
@@ -1321,104 +1413,53 @@ class Game:
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        Called when a mouse button is released.
-
-        See the documentation for :func:`sge.mouse.get_pressed` for more
-        information.
+        See the documentation for :class:`sge.input.MouseButtonRelease`
+        for more information.
 
         """
         pass
 
-    def event_joystick_axis_move(self, name, ID, axis, value):
+    def event_joystick_axis_move(self, js_name, js_id, axis, value):
         """Joystick axis move event.
 
-        Called when an axis on a joystick changes position.
-
-        Arguments:
-
-        - ``name`` -- The name of the joystick.
-        - ``ID`` -- The number of the joystick, where ``0`` is the first
-          joystick.
-        - ``value`` -- The tilt of the axis as a float from ``-1`` to
-          ``1``, where ``0`` is centered, ``-1`` is all the way to the
-          left or up, and ``1`` is all the way to the right or down.
-
-        See the documentation for :func:`sge.joystick.get_axis` for more
-        information.
+        See the documentation for :class:`sge.input.JoystickAxisMove`
+        for more information.
 
         """
         pass
 
-    def event_joystick_hat_move(self, name, ID, hat, x, y):
+    def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
         """Joystick HAT move event.
 
-        Called when a HAT switch (also called the POV hat, POV switch,
-        or d-pad) changes position.
-
-        Arguments:
-
-        - ``name`` -- The name of the joystick.
-        - ``ID`` -- The number of the joystick, where ``0`` is the first
-          joystick.
-        - ``x`` -- The horizontal position of the HAT, where ``0`` is
-          centered, ``-1`` is left, and ``1`` is right.
-        - ``y`` -- The vertical position of the HAT, where ``0`` is
-          centered, ``-1`` is up, and ``1`` is down.
-
-        See the documentation for :func:`sge.joystick.get_hat` for more
-        information.
+        See the documentation for :class:`sge.input.JoystickHatMove`
+        for more information.
 
         """
         pass
 
-    def event_joystick_trackball_move(self, name, ID, ball, x, y):
+    def event_joystick_trackball_move(self, js_name, js_id, ball, x, y):
         """Joystick trackball move event.
 
-        Called when a trackball on a joystick moves.
-
-        Arguments:
-
-        - ``name`` -- The name of the joystick.
-        - ``ID`` -- The number of the joystick, where ``0`` is the first
-          joystick.
-        - ``ball`` -- The number of the trackball, where ``0`` is the
-          first trackball on the joystick.
-        - ``x`` -- The horizontal relative movement of the trackball.
-        - ``y`` -- The vertical relative movement of the trackball.
+        See the documentation for
+        :class:`sge.input.JoystickTrackballMove` for more information.
 
         """
         pass
 
-    def event_joystick_button_press(self, name, ID, button):
+    def event_joystick_button_press(self, js_name, js_id, button):
         """Joystick button press event.
 
-        Called when a joystick button is pressed.
-
-        Arguments:
-
-        - ``name`` -- The name of the joystick.
-        - ``ID`` -- The number of the joystick, where ``0`` is the first
-          joystick.
-
-        See the documentation for :func:`sge.joystick.get_pressed` for
-        more information.
+        See the documentation for :class:`sge.input.JoystickButtonPress`
+        for more information.
 
         """
         pass
 
-    def event_joystick_button_release(self, name, ID, button):
+    def event_joystick_button_release(self, js_name, js_id, button):
         """Joystick button release event.
 
-        Called when a joystick button is pressed.
-
-        Arguments:
-
-        - ``name`` -- The name of the joystick.
-        - ``ID`` -- The number of the joystick, where ``0`` is the first
-          joystick.
-
-        See the documentation for :func:`sge.joystick.get_pressed` for
-        more information.
+        See the documentation for
+        :class:`sge.input.JoystickButtonRelease` for more information.
 
         """
         pass
@@ -1426,19 +1467,8 @@ class Game:
     def event_gain_keyboard_focus(self):
         """Gain keyboard focus event.
 
-        Called when the game gains keyboard focus.  Keyboard focus is
-        normally needed for key press and release events to be received.
-
-        .. note::
-
-           On some window systems, such as the one used by Windows, no
-           distinction is made between keyboard and mouse focus, but on
-           some other window systems, such as the X Window System, a
-           distinction is made: one window can have keyboard focus while
-           another has mouse focus.  Be careful to observe the
-           difference; failing to do so may result in annoying bugs,
-           and you won't notice these bugs if you are testing on a
-           window manager that doesn't recognize the difference.
+        See the documentation for :class:`sge.input.KeyboardFocusGain`
+        for more information.
 
         """
         pass
@@ -1446,13 +1476,8 @@ class Game:
     def event_lose_keyboard_focus(self):
         """Lose keyboard focus event.
 
-        Called when the game loses keyboard focus.  Keyboard focus is
-        normally needed for key press and release events to be received.
-
-        .. note::
-
-           See the note in the documentation for
-           :meth:`event_gain_keyboard_focus`.
+        See the documentation for :class:`sge.input.KeyboardFocusLose`
+        for more information.
 
         """
         if sge.DEBUG:
@@ -1463,14 +1488,8 @@ class Game:
     def event_gain_mouse_focus(self):
         """Gain mouse focus event.
 
-        Called when the game gains mouse focus.  Mouse focus may be
-        needed for mouse motion, button press, and button release events
-        to be received.
-
-        .. note::
-
-           See the note in the documentation for
-           :meth:`event_gain_keyboard_focus`.
+        See the documentation for :class:`sge.input.MouseFocusGain` for
+        more information.
 
         """
         pass
@@ -1478,14 +1497,8 @@ class Game:
     def event_lose_mouse_focus(self):
         """Lose mouse focus event.
 
-        Called when the game loses mouse focus.  Mouse focus may be
-        needed for mouse motion, button press, and button release events
-        to be received.
-
-        .. note::
-
-           See the note in the documentation for
-           :meth:`event_gain_keyboard_focus`.
+        See the documentation for :class:`sge.input.MouseFocusLose` for
+        more information.
 
         """
         if sge.DEBUG:
@@ -1496,10 +1509,11 @@ class Game:
     def event_close(self):
         """Close event.
 
-        Called when the operating system tells the game to close, e.g.
-        when the user presses the close button in the window frame.  It
-        is always called after any :meth:`sge.Room.event_close`
+        This is always called after any :meth:`sge.Room.event_close`
         occurring at the same time.
+
+        See the documentation for :class:`sge.input.QuitRequest` for
+        more information.
 
         """
         pass
@@ -1601,7 +1615,7 @@ class Game:
         """
         pass
 
-    def event_paused_joystick_axis_move(self, name, ID, axis, value):
+    def event_paused_joystick_axis_move(self, js_name, js_id, axis, value):
         """Joystick axis move event when paused.
 
         See the documentation for
@@ -1610,7 +1624,7 @@ class Game:
         """
         pass
 
-    def event_paused_joystick_hat_move(self, name, ID, hat, x, y):
+    def event_paused_joystick_hat_move(self, js_name, js_id, hat, x, y):
         """Joystick HAT move event when paused.
 
         See the documentation for
@@ -1619,7 +1633,7 @@ class Game:
         """
         pass
 
-    def event_paused_joystick_trackball_move(self, name, ID, ball, x, y):
+    def event_paused_joystick_trackball_move(self, js_name, js_id, ball, x, y):
         """Joystick trackball move event when paused.
 
         See the documentation for
@@ -1629,7 +1643,7 @@ class Game:
         """
         pass
 
-    def event_paused_joystick_button_press(self, name, ID, button):
+    def event_paused_joystick_button_press(self, js_name, js_id, button):
         """Joystick button press event when paused.
 
         See the documentation for
@@ -1639,7 +1653,7 @@ class Game:
         """
         pass
 
-    def event_paused_joystick_button_release(self, name, ID, button):
+    def event_paused_joystick_button_release(self, js_name, js_id, button):
         """Joystick button release event when paused.
 
         See the documentation for

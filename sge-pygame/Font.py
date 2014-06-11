@@ -22,7 +22,7 @@ import pygame
 import sge
 
 
-__all__ = ['Font', '_FakeFont']
+__all__ = ['Font']
 
 
 class Font:
@@ -179,25 +179,26 @@ class Font:
             name = (name,)
 
         self.name = ''
-        compatible_fonts = (
-            ("liberation serif", "tinos", "times new roman",
-             "nimbus roman no9 l", "nimbus roman", "freeserif",
-             "dejavu serif"),
-            ("liberation sans", "arimo", "arial", "nimbus sans l", "freesans",
-             "dejavu sans"),
-            ("liberation sans narrow", "arial narrow"),
-            ("liberation mono", "cousine", "courier new", "courier",
-             "nimbus mono l", "freemono", "texgyrecursor", "courier prime",
-             "dejavu sans mono"))
+        compatible_fonts = [
+            ["liberation serif", "tinos", "nimbus roman no9 l", "nimbus roman",
+             "freeserif", "dejavu serif", "droid serif", "bitstream charter",
+             "times new roman"],
+            ["droid sans", "liberation sans", "arimo", "nimbus sans l",
+             "freesans", "dejavu sans", "droid sans fallback", "arial"],
+            ["liberation sans narrow", "freecondensed",
+             "sans condensed uralic", "arial narrow"],
+            ["liberation mono", "cousine", "nimbus mono l", "freemono",
+             "texgyrecursor", "courier prime", "dejavu sans mono",
+             "droid sans mono", "courier new", "courier"]]
 
         try:
             for n in name:
                 for fonts in compatible_fonts:
                     if n.lower() in fonts:
-                        n = ','.join((n, ','.join(fonts)))
+                        n = ','.join([n, ','.join(fonts)])
                         break
 
-                self.name = ','.join((self.name, n))
+                self.name = ','.join([self.name, n])
         except TypeError:
             # Most likely a non-iterable value, such as None, so we
             # assume the default font is to be used.
@@ -309,9 +310,9 @@ class Font:
                     while words:
                         current_line = words.pop(0)
                         while (words and self._font.size(' '.join(
-                                (current_line, words[0])))[0] <= width):
-                            current_line = ' '.join((current_line,
-                                                     words.pop(0)))
+                                [current_line, words[0]]))[0] <= width):
+                            current_line = ' '.join([current_line,
+                                                     words.pop(0)])
                         split_text.append(current_line)
             return split_text
 

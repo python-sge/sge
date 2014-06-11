@@ -126,37 +126,37 @@ class Room(sge.Room):
             self.current_joystick %= sge.joystick.get_joysticks()
             self.set_joystick()
 
-    def event_joystick_axis_move(self, name, ID, axis, value):
-        if (self.current_joystick in (name, ID) and
+    def event_joystick_axis_move(self, js_name, js_id, axis, value):
+        if (self.current_joystick in (js_name, js_id) and
                 axis < len(self.joystick_axes)):
             self.joystick_axes[axis] = value
 
         self.changed = True
 
-    def event_joystick_hat_move(self, name, ID, hat, x, y):
-        if (self.current_joystick in (name, ID) and
+    def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
+        if (self.current_joystick in (js_name, js_id) and
                 hat < len(self.joystick_hats)):
             self.joystick_hats[hat] = (x, y)
 
         self.changed = True
 
-    def event_joystick_trackball_move(self, name, ID, ball, x, y):
-        if (self.current_joystick in (name, ID) and
+    def event_joystick_trackball_move(self, js_name, js_id, ball, x, y):
+        if (self.current_joystick in (js_name, js_id) and
                 ball < len(self.joystick_balls)):
             self.joystick_balls[ball] = (x, y)
 
         self.changed = True
         self.ball_nonzero = True
 
-    def event_joystick_button_press(self, name, ID, button):
-        if (self.current_joystick in (name, ID) and
+    def event_joystick_button_press(self, js_name, js_id, button):
+        if (self.current_joystick in (js_name, js_id) and
                 button < len(self.joystick_buttons)):
             self.joystick_buttons[button] = True
 
         self.changed = True
 
-    def event_joystick_button_release(self, name, ID, button):
-        if (self.current_joystick in (name, ID) and
+    def event_joystick_button_release(self, js_name, js_id, button):
+        if (self.current_joystick in (js_name, js_id) and
                 button < len(self.joystick_buttons)):
             self.joystick_buttons[button] = False
 

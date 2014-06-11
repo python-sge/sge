@@ -411,7 +411,7 @@ by default.
 
 """
 
-__version__ = "0.9.2.14"
+__version__ = "0.9.2.15"
 
 import sys
 import os
@@ -549,7 +549,7 @@ from sge.StellarClass import StellarClass, Mouse, _PygameProjectionSprite
 from sge.Room import Room
 from sge.View import View
 from sge.functions import *
-from sge import collision, joystick, keyboard, mouse
+from sge import collision, input, joystick, keyboard, mouse
 
 
 __all__ = [

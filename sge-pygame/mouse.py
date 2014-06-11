@@ -39,7 +39,7 @@ import pygame
 import sge
 
 
-__all__ = ["get_pressed"]
+__all__ = ["get_pressed", "get_x", "get_y"]
 
 
 def get_pressed(button):
@@ -68,3 +68,23 @@ def get_pressed(button):
         return pygame.mouse.get_pressed()[b]
     else:
         return False
+
+
+def get_x():
+    """Return the horizontal location of the mouse cursor.
+
+    This function differs from :attr:`sge.game.mouse.x` in that the
+    location returned is relative to the window, not the room.
+
+    """
+    return pygame.mouse.get_pos()[0]
+
+
+def get_y():
+    """Return the vertical location of the mouse cursor.
+
+    This function differs from :attr:`sge.game.mouse.y` in that the
+    location returned is relative to the window, not the room.
+
+    """
+    return pygame.mouse.get_pos()[1]
