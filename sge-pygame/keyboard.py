@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+This module provides functions related to keyboard input.
+"""
+
 import pygame
 
 import sge

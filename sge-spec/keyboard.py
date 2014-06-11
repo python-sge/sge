@@ -16,6 +16,10 @@
 # Public License, GNU Lesser General Public License, Expat License, or
 # Apache License 2.0.
 
+"""
+This module provides functions related to keyboard input.
+"""
+
 import sge
 
 

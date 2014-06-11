@@ -1,4 +1,4 @@
-# SGE Transition Framework
+# xSGE Transition Framework
 # Copyright (C) 2014 Julian Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,8 @@ import random
 
 import sge
 
-__all__ = []
+
+__all__ = ["Room"]
 
 FADE = 1
 DISSOLVE = 2
@@ -227,6 +228,18 @@ class Room(sge.Room):
 
           - :const:`xsge.transition.WIPE_BOTTOM` -- Wipe transition from
             bottom to top.
+
+          - :const:`xsge.transition.WIPE_TOPLEFT` -- Diagonal wipe
+            transition from top-left to bottom-right.
+
+          - :const:`xsge.transition.WIPE_TOPRIGHT` -- Diagonal wipe
+            transition from top-right to bottom-left.
+
+          - :const:`xsge.transition.WIPE_BOTTOMLEFT` -- Diagonal wipe
+            transition from bottom-left to top-right.
+
+          - :const:`xsge.transition.WIPE_BOTTOMRIGHT` -- Diagonal wipe
+            transition from bottom-right to top-left.
 
           - :const:`xsge.transition.WIPE_MATRIX` -- Matrix wipe
             transition.

@@ -51,7 +51,6 @@ setup(name=name,
       license=license,
       packages=['sge'],
       package_dir={'sge': idir},
-      package_data={'sge': ["*.ttf", "*.png", "COPYING", "COPYING.LESSER",
-                            "LICENSES"]},
+      package_data={'sge': ["*.png", "COPYING", "COPYING.LESSER", "LICENSES"]},
       requires=requires,
      )

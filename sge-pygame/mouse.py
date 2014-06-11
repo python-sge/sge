@@ -15,6 +15,25 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+This module provides functions related to the mouse input.
+
+Many other mouse functionalities are provided through attributes of
+:attr:`sge.game.mouse`:
+
+- :attr:`sge.game.mouse.x` and `sge.game.mouse.y` indicate the position
+  of the mouse relative to the room.  Set these attributes to change the
+  position of the mouse.
+- :attr:`sge.game.mouse.xvelocity`, :attr:`sge.game.mouse.yvelocity`,
+  :attr:`sge.game.mouse.speed`, and
+  :attr:`sge.game.mouse.move_direction` indicate the average movement of
+  the mouse during the last 250 milliseconds.
+- :attr:`sge.game.mouse.sprite` controls what the mouse cursor looks
+  like.  Set to :const:`None` for the default mouse cursor.
+- :attr:`sge.game.mouse.visible` controls whether or not the mouse
+  cursor is visible.
+"""
+
 import pygame
 
 import sge

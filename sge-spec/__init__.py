@@ -339,7 +339,7 @@ Dependencies
 
 """
 
-__version__ = "0.9.2.7"
+__version__ = "0.9.2.8"
 
 import sys
 import os

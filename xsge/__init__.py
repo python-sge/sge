@@ -24,8 +24,8 @@ They should would with any implementation that follows the
 specification.
 """
 
-__version__ = "0.0.0.4"
+__version__ = "0.0.0.5"
 
-from xsge import transition
+from xsge import gui, transition
 
-__all__ = ["transition"]
+__all__ = ["gui", "transition"]
