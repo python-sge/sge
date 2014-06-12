@@ -436,6 +436,41 @@ class Sprite(object):
         """
         self.draw_erase(0, 0, self.width, self.height, frame)
 
+    def draw_lock(self):
+        """Lock the sprite for continuous drawing.
+
+        Use this method to "lock" the sprite for being drawn on several
+        times in a row.  What exactly this does depends on the
+        implementation and it may even do nothing at all, but calling
+        this method before doing several draw actions on the sprite in a
+        row gives the SGE a chance to make the drawing more efficient.
+
+        After you are done with continuous drawing, call
+        :meth:`sge.Sprite.draw_unlock` to let the SGE know that you are
+        done drawing.
+
+        .. warning::
+
+           Do not cause a sprite to be used while it's locked.  For
+           example, don't leave it locked for the duration of a frame,
+           and don't draw it or project it on anything.  The effect of
+           using a locked sprite could be as minor as graphical errors
+           and as severe as crashing the program, depending on the SGE
+           implementation.  Always call :meth:`sge.Sprite.draw_unlock`
+           immediately after you're done drawing for a while.
+
+        """
+        # TODO
+
+    def draw_unlock(self):
+        """Unlock the sprite.
+
+        Use this method to "unlock" the sprite after it has been
+        "locked" for continuous drawing by :meth:`sge.Sprite.draw_lock`.
+
+        """
+        # TODO
+
     def save(self, fname):
         """Save the sprite to an image file.
 

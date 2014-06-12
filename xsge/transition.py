@@ -188,11 +188,13 @@ class Room(sge.Room):
 
         diff = complete - self.transition_complete_last
         new_erase = int(round(mw * mh * diff))
+        self.transition_sprite.draw_lock()
         while new_erase > 0 and remaining:
             new_erase -= 1
             x, y = remaining.pop(random.randrange(len(remaining)))
             self.transition_sprite.draw_erase(x * psize, y * psize, psize,
                                               psize)
+        self.transition_sprite.draw_unlock()
 
         self.transition_variables["remaining"] = remaining
 

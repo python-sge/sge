@@ -60,6 +60,8 @@ Specification additions:
 + sge.input.MouseFocusGain
 + sge.input.MouseFocusLose
 + sge.input.QuitRequest
++ sge.Sprite.draw_lock
++ sge.Sprite.draw_unlock
 
 Specification removals:
 - sge.StellarClass.detects_collisions

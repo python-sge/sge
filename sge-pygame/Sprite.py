@@ -394,6 +394,7 @@ class Sprite:
         self.bbox_y = bbox_y
         self.bbox_width = bbox_width
         self.bbox_height = bbox_height
+        self._locked = False
         self._refresh()
         sprites[self.id] = self
         sge.game.sprites = sprites
@@ -444,9 +445,16 @@ class Sprite:
 
         """
         color = sge._get_pygame_color(color)
-        for i in range(self.frames):
-            if frame is None or frame % self.frames == i:
-                self._baseimages[i].set_at((x, y), color)
+        if color.a == 255:
+            for i in range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    self._baseimages[i].set_at((x, y), color)
+        else:
+            rect = pygame.Rect(x, y, 1, 1)
+            for i in range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    self._baseimages[i].set_at((x, y), color)
+                    pygame.draw.rect(self._baseimages[i], color, rect)
 
         self._refresh()
 
@@ -845,6 +853,48 @@ class Sprite:
         """
         self.draw_erase(0, 0, self.width, self.height, frame)
 
+    def draw_lock(self):
+        """Lock the sprite for continuous drawing.
+
+        Use this method to "lock" the sprite for being drawn on several
+        times in a row.  What exactly this does depends on the
+        implementation and it may even do nothing at all, but calling
+        this method before doing several draw actions on the sprite in a
+        row gives the SGE a chance to make the drawing more efficient.
+
+        After you are done with continuous drawing, call
+        :meth:`sge.Sprite.draw_unlock` to let the SGE know that you are
+        done drawing.
+
+        .. warning::
+
+           Do not cause a sprite to be used while it's locked.  For
+           example, don't leave it locked for the duration of a frame,
+           and don't draw it or project it on anything.  The effect of
+           using a locked sprite could be as minor as graphical errors
+           and as severe as crashing the program, depending on the SGE
+           implementation.  Always call :meth:`sge.Sprite.draw_unlock`
+           immediately after you're done drawing for a while.
+
+        """
+        if not self._locked:
+            self._locked = True
+            for img in self._baseimages:
+                img.lock()
+
+    def draw_unlock(self):
+        """Unlock the sprite.
+
+        Use this method to "unlock" the sprite after it has been
+        "locked" for continuous drawing by :meth:`sge.Sprite.draw_lock`.
+
+        """
+        if self._locked:
+            self._locked = False
+            for img in self._baseimages:
+                img.unlock()
+            self._refresh()
+
     def save(self, fname):
         """Save the sprite to an image file.
 
@@ -1017,12 +1067,13 @@ class Sprite:
 
     def _refresh(self):
         # Set the _images list based on the variables.
-        sge.game._background_changed = True
-        self._images = []
-        for image in self._baseimages:
-            img = self._set_transparency(image)
-            img = sge._scale(img, self.width, self.height)
-            self._images.append({(1, 1, 0, 255, None):img})
+        if not self._locked:
+            sge.game._background_changed = True
+            self._images = []
+            for image in self._baseimages:
+                img = self._set_transparency(image)
+                img = sge._scale(img, self.width, self.height)
+                self._images.append({(1, 1, 0, 255, None):img})
 
     def _set_transparency(self, image):
         # Return a copy of the surface with transparency properly set
