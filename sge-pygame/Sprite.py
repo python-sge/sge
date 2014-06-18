@@ -450,11 +450,11 @@ class Sprite:
                 if frame is None or frame % self.frames == i:
                     self._baseimages[i].set_at((x, y), color)
         else:
-            rect = pygame.Rect(x, y, 1, 1)
+            stamp = pygame.Surface((1, 1), pygame.SRCALPHA)
+            stamp.fill(color)
             for i in range(self.frames):
                 if frame is None or frame % self.frames == i:
-                    self._baseimages[i].set_at((x, y), color)
-                    pygame.draw.rect(self._baseimages[i], color, rect)
+                    self._baseimages[i].blit(stamp, (x, y))
 
         self._refresh()
 
@@ -483,14 +483,26 @@ class Sprite:
         color = sge._get_pygame_color(color)
         thickness = abs(thickness)
 
-        for i in range(self.frames):
-            if frame is None or frame % self.frames == i:
-                if anti_alias and thickness == 1:
-                    pygame.draw.aaline(self._baseimages[i], color, (x1, y1),
-                                       (x2, y2))
-                else:
-                    pygame.draw.line(self._baseimages[i], color, (x1, y1),
-                                     (x2, y2), thickness)
+        if color.a == 255:
+            for i in range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    if anti_alias and thickness == 1:
+                        pygame.draw.aaline(self._baseimages[i], color,
+                                           (x1, y1), (x2, y2))
+                    else:
+                        pygame.draw.line(self._baseimages[i], color, (x1, y1),
+                                         (x2, y2), thickness)
+        else:
+            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            stamp.fill(pygame.Color(0, 0, 0, 0))
+            if anti_alias and thickness == 1:
+                pygame.draw.aaline(stamp, color, (x1, y1), (x2, y2))
+            else:
+                pygame.draw.line(stamp, color, (x1, y1), (x2, y2), thickness)
+
+            for i in range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    self._baseimages[i].blit(stamp, (0, 0))
 
         self._refresh()
 
@@ -524,17 +536,32 @@ class Sprite:
             return
 
         rect = pygame.Rect(x, y, width, height)
+        if fill is not None:
+            pg_fill = sge._get_pygame_color(fill)
+        if outline is not None:
+            pg_outl = sge._get_pygame_color(outline)
 
-        for i in range(self.frames):
-            if frame is None or frame % self.frames == i:
-                if fill is not None:
-                    pygame.draw.rect(self._baseimages[i],
-                                     sge._get_pygame_color(fill), rect, 0)
+        if ((fill is None or pg_fill.a == 255) and
+                (outline is None or pg_outl.a == 255)):
+            for i in range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    if fill is not None:
+                        self._baseimages[i].fill(pg_fill, rect)
 
-                if outline is not None:
-                    pygame.draw.rect(self._baseimages[i],
-                                     sge._get_pygame_color(outline), rect,
-                                     outline_thickness)
+                    if outline is not None:
+                        pygame.draw.rect(self._baseimages[i], pg_outl, rect,
+                                         outline_thickness)
+        else:
+            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            stamp.fill(pygame.Color(0, 0, 0, 0))
+            if fill is not None:
+                stamp.fill(pg_fill, rect)
+            if outline is not None:
+                pygame.draw.rect(stamp, pg_outl, rect, outline_thickness)
+
+            for i in range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    self._baseimages[i].blit(stamp, (0, 0))
 
         self._refresh()
 
@@ -569,17 +596,32 @@ class Sprite:
             return
 
         rect = pygame.Rect(x, y, width, height)
+        if fill is not None:
+            pg_fill = sge._get_pygame_color(fill)
+        if outline is not None:
+            pg_outl = sge._get_pygame_color(outline)
 
-        for i in range(self.frames):
-            if frame is None or frame % self.frames == i:
-                if fill is not None:
-                    c = sge._get_pygame_color(fill)
-                    pygame.draw.ellipse(self._baseimages[i], c, rect)
+        if ((fill is None or pg_fill.a == 255) and
+                (outline is None or pg_outl.a == 255)):
+            for i in range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    if fill is not None:
+                        pygame.draw.ellipse(self._baseimages[i], pg_fill, rect)
 
-                if outline is not None:
-                    c = sge._get_pygame_color(outline)
-                    pygame.draw.ellipse(self._baseimages[i], c, rect,
-                                        outline_thickness)
+                    if outline is not None:
+                        pygame.draw.ellipse(self._baseimages[i], pg_outl, rect,
+                                            outline_thickness)
+        else:
+            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            stamp.fill(pygame.Color(0, 0, 0, 0))
+            if fill is not None:
+                pygame.draw.ellipse(stamp, pg_fill, rect)
+            if outline is not None:
+                pygame.draw.ellipse(stamp, pg_outl, rect, outline_thickness)
+
+            for i in range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    self._baseimages[i].blit(stamp, (0, 0))
 
         self._refresh()
 
@@ -612,16 +654,34 @@ class Sprite:
             # There's no point in trying in this case.
             return
 
-        for i in range(self.frames):
-            if frame is None or frame % self.frames == i:
-                if fill is not None:
-                    c = sge._get_pygame_color(fill)
-                    pygame.draw.circle(self._baseimages[i], c, (x, y), radius)
+        if fill is not None:
+            pg_fill = sge._get_pygame_color(fill)
+        if outline is not None:
+            pg_outl = sge._get_pygame_color(outline)
 
-                if outline is not None:
-                    c = sge._get_pygame_color(outline)
-                    pygame.draw.circle(self._baseimages[i], c, (x, y), radius,
-                                       outline_thickness)
+        if ((fill is None or pg_fill.a == 255) and
+                (outline is None or pg_outl.a == 255)):
+            for i in range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    if fill is not None:
+                        pygame.draw.circle(self._baseimages[i], pg_fill,
+                                           (x, y), radius)
+
+                    if outline is not None:
+                        pygame.draw.circle(self._baseimages[i], pg_outl,
+                                           (x, y), radius, outline_thickness)
+        else:
+            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            stamp.fill(pygame.Color(0, 0, 0, 0))
+            if fill is not None:
+                pygame.draw.circle(stamp, pg_fill, (x, y), radius)
+            if outline is not None:
+                pygame.draw.circle(stamp, pg_outl, (x, y), radius,
+                                   outline_thickness)
+
+            for i in range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    self._baseimages[i].blit(stamp, (0, 0))
 
         self._refresh()
 

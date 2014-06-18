@@ -411,7 +411,7 @@ by default.
 
 """
 
-__version__ = "0.9.2.16"
+__version__ = "0.9.2.17"
 
 import sys
 import os
@@ -616,7 +616,7 @@ def _get_pygame_color(color):
         try:
             return pygame.Color(c)
         except ValueError:
-            return pygame.Color((0, 0, 0, 0))
+            return pygame.Color(0, 0, 0, 0)
     elif isinstance(color, int):
         r = int((color & 0xff0000) // (256 ** 2))
         g = int((color & 0x00ff00) // 256)
@@ -631,7 +631,7 @@ def _get_pygame_color(color):
             except TypeError:
                 return pygame.Color(color)
         except ValueError:
-            return pygame.Color((0, 0, 0, 0))
+            return pygame.Color(0, 0, 0, 0)
 
 
 def _scold_user_on_lose_vs_loose(attempted_name):

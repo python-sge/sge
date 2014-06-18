@@ -29,9 +29,17 @@ class Game(sge.Game):
     def event_key_press(self, key, char):
         if key == 'escape':
             self.end()
+        elif key in ("p", "enter"):
+            self.pause()
 
     def event_close(self):
         self.end()
+
+    def event_paused_key_press(self, key, char):
+        self.unpause()
+
+    def event_paused_close(self):
+        self.event_close()
 
 
 class Circle(sge.StellarClass):

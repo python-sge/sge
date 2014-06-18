@@ -774,114 +774,111 @@ class Game:
 
         while self._paused and self._running:
             # Input events
-                self.pump_input()
-                while self.input_events:
-                    event = self.input_events.pop(0)
+            self.pump_input()
+            while self.input_events:
+                event = self.input_events.pop(0)
 
-                    if isinstance(event, sge.input.KeyPress):
-                        self.event_paused_key_press(event.key, event.char)
-                        self.current_room.event_paused_key_press(event.key,
-                                                                 event.char)
-                        for obj in self.current_room.objects:
-                            obj.event_paused_key_press(event.key, event.char)
-                    elif isinstance(event, sge.input.KeyRelease):
-                        self.event_paused_key_release(event.key)
-                        self.current_room.event_paused_key_release(event.key)
-                        for obj in self.current_room.objects:
-                            obj.event_paused_key_release(event.key)
-                    elif isinstance(event, sge.input.MouseMove):
-                        self.event_paused_mouse_move(event.x, event.y)
-                        self.current_room.event_paused_mouse_move(event.x,
-                                                                  event.y)
-                        for obj in self.current_room.objects:
-                            obj.event_paused_mouse_move(event.x, event.y)
-                    elif isinstance(event, sge.input.MouseButtonPress):
-                        self.event_paused_mouse_button_press(event.button)
-                        self.current_room.event_paused_mouse_button_press(
-                            event.button)
-                        for obj in self.current_room.objects:
-                            obj.event_paused_mouse_button_press(event.button)
-                    elif isinstance(event, sge.input.MouseButtonRelease):
-                        self.event_paused_mouse_button_release(event.button)
-                        self.current_room.event_paused_mouse_button_release(
-                            event.button)
-                        for obj in self.current_room.objects:
-                            obj.event_paused_mouse_button_release(event.button)
-                    elif isinstance(event, sge.input.JoystickAxisMove):
-                        self.event_paused_joystick_axis_move(
+                if isinstance(event, sge.input.KeyPress):
+                    self.event_paused_key_press(event.key, event.char)
+                    self.current_room.event_paused_key_press(event.key,
+                                                             event.char)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_key_press(event.key, event.char)
+                elif isinstance(event, sge.input.KeyRelease):
+                    self.event_paused_key_release(event.key)
+                    self.current_room.event_paused_key_release(event.key)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_key_release(event.key)
+                elif isinstance(event, sge.input.MouseMove):
+                    self.event_paused_mouse_move(event.x, event.y)
+                    self.current_room.event_paused_mouse_move(event.x, event.y)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_mouse_move(event.x, event.y)
+                elif isinstance(event, sge.input.MouseButtonPress):
+                    self.event_paused_mouse_button_press(event.button)
+                    self.current_room.event_paused_mouse_button_press(
+                        event.button)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_mouse_button_press(event.button)
+                elif isinstance(event, sge.input.MouseButtonRelease):
+                    self.event_paused_mouse_button_release(event.button)
+                    self.current_room.event_paused_mouse_button_release(
+                        event.button)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_mouse_button_release(event.button)
+                elif isinstance(event, sge.input.JoystickAxisMove):
+                    self.event_paused_joystick_axis_move(
+                        event.js_name, event.js_id, event.axis, event.value)
+                    self.current_room.event_paused_joystick_axis_move(
+                        event.js_name, event.js_id, event.axis, event.value)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_joystick_axis_move(
                             event.js_name, event.js_id, event.axis,
                             event.value)
-                        self.current_room.event_paused_joystick_axis_move(
-                            event.js_name, event.js_id, event.axis,
-                            event.value)
-                        for obj in self.current_room.objects:
-                            obj.event_paused_joystick_axis_move(
-                                event.js_name, event.js_id, event.axis,
-                                event.value)
-                    elif isinstance(event, sge.input.JoystickHatMove):
-                        self.event_paused_joystick_hat_move(
-                            event.js_name, event.js_id, event.hat, event.x,
-                            event.y)
-                        self.current_room.event_paused_joystick_hat_move(
-                            event.js_name, event.js_id, event.hat, event.x,
-                            event.y)
-                        for obj in self.current_room.objects:
-                            obj.event_paused_joystick_hat_move(
-                                event.js_name, event.js_id, event.hat,
-                                event.x, event.y)
-                    elif isinstance(event, sge.input.JoystickTrackballMove):
-                        self.event_paused_joystick_trackball_move(
-                            event.js_name, event.js_id, event.ball, event.x,
-                            event.y)
-                        self.current_room.event_paused_joystick_trackball_move(
-                            event.js_name, event.js_id, event.ball, event.x,
-                            event.y)
-                        for obj in self.current_room.objects:
-                            obj.event_paused_joystick_trackball_move(
-                                event.js_name, event.js_id, event.ball,
-                                event.x, event.y)
-                    elif isinstance(event, sge.input.JoystickButtonPress):
-                        self.event_paused_joystick_button_press(
+                elif isinstance(event, sge.input.JoystickHatMove):
+                    self.event_paused_joystick_hat_move(
+                        event.js_name, event.js_id, event.hat, event.x,
+                        event.y)
+                    self.current_room.event_paused_joystick_hat_move(
+                        event.js_name, event.js_id, event.hat, event.x,
+                        event.y)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_joystick_hat_move(
+                            event.js_name, event.js_id, event.hat,
+                            event.x, event.y)
+                elif isinstance(event, sge.input.JoystickTrackballMove):
+                    self.event_paused_joystick_trackball_move(
+                        event.js_name, event.js_id, event.ball, event.x,
+                        event.y)
+                    self.current_room.event_paused_joystick_trackball_move(
+                        event.js_name, event.js_id, event.ball, event.x,
+                        event.y)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_joystick_trackball_move(
+                            event.js_name, event.js_id, event.ball,
+                            event.x, event.y)
+                elif isinstance(event, sge.input.JoystickButtonPress):
+                    self.event_paused_joystick_button_press(
+                        event.js_name, event.js_id, event.button)
+                    self.current_room.event_paused_joystick_button_press(
+                        event.js_name, event.js_id, event.button)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_joystick_button_press(
                             event.js_name, event.js_id, event.button)
-                        self.current_room.event_paused_joystick_button_press(
+                elif isinstance(event, sge.input.JoystickButtonRelease):
+                    self.event_paused_joystick_button_release(
+                        event.js_name, event.js_id, event.button)
+                    self.current_room.event_paused_joystick_button_release(
+                        event.js_name, event.js_id, event.button)
+                    for obj in self.current_room.objects:
+                        obj.event_paused_joystick_button_release(
                             event.js_name, event.js_id, event.button)
-                        for obj in self.current_room.objects:
-                            obj.event_paused_joystick_button_press(
-                                event.js_name, event.js_id, event.button)
-                    elif isinstance(event, sge.input.JoystickButtonRelease):
-                        self.event_paused_joystick_button_release(
-                            event.js_name, event.js_id, event.button)
-                        self.current_room.event_paused_joystick_button_release(
-                            event.js_name, event.js_id, event.button)
-                        for obj in self.current_room.objects:
-                            obj.event_paused_joystick_button_release(
-                                event.js_name, event.js_id, event.button)
-                    elif isinstance(event, sge.input.KeyboardFocusGain):
-                        self.event_paused_gain_keyboard_focus()
-                        self.current_room.event_paused_gain_keyboard_focus()
-                    elif isinstance(event, sge.input.KeyboardFocusLose):
-                        self.event_paused_lose_keyboard_focus()
-                        self.current_room.event_paused_lose_keyboard_focus()
-                    elif isinstance(event, sge.input.MouseFocusGain):
-                        self.event_paused_gain_mouse_focus()
-                        self.current_room.event_paused_gain_mouse_focus()
-                    elif isinstance(event, sge.input.MouseFocusLose):
-                        self.event_paused_lose_mouse_focus()
-                        self.current_room.event_paused_lose_mouse_focus()
-                    elif isinstance(event, sge.input.QuitRequest):
-                        self.current_room.event_paused_close()
-                        self.event_paused_close()
+                elif isinstance(event, sge.input.KeyboardFocusGain):
+                    self.event_paused_gain_keyboard_focus()
+                    self.current_room.event_paused_gain_keyboard_focus()
+                elif isinstance(event, sge.input.KeyboardFocusLose):
+                    self.event_paused_lose_keyboard_focus()
+                    self.current_room.event_paused_lose_keyboard_focus()
+                elif isinstance(event, sge.input.MouseFocusGain):
+                    self.event_paused_gain_mouse_focus()
+                    self.current_room.event_paused_gain_mouse_focus()
+                elif isinstance(event, sge.input.MouseFocusLose):
+                    self.event_paused_lose_mouse_focus()
+                    self.current_room.event_paused_lose_mouse_focus()
+                elif isinstance(event, sge.input.QuitRequest):
+                    self.current_room.event_paused_close()
+                    self.event_paused_close()
 
-                # Regulate speed
-                self.regulate_speed()
+            # Regulate speed
+            self.regulate_speed()
 
-                # Project sprite
-                x = (self.width - sprite.width) / 2
-                y = (self.height - sprite.height) / 2
-                self.project_sprite(sprite, 0, x, y)
+            # Project sprite
+            x = (self.width - sprite.width) / 2
+            y = (self.height - sprite.height) / 2
+            self.project_sprite(sprite, 0, x, y)
 
-                # Refresh
-                self.refresh()
+            # Refresh
+            self.refresh()
 
         sprite.destroy()
         self.pump_input()
@@ -1429,7 +1426,7 @@ class Game:
         pass
 
     def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        """Joystick HAT move event.
+        """Joystick hat move event.
 
         See the documentation for :class:`sge.input.JoystickHatMove`
         for more information.
@@ -1572,8 +1569,8 @@ class Game:
     def event_paused_key_press(self, key, char):
         """Key press event when paused.
 
-        See the documentation for :meth:`sge.Game.event_key_press` for
-        more information.
+        See the documentation for :class:`sge.input.KeyPress` for more
+        information.
 
         """
         pass
@@ -1581,8 +1578,8 @@ class Game:
     def event_paused_key_release(self, key):
         """Key release event when paused.
 
-        See the documentation for :meth:`sge.Game.event_key_release` for
-        more information.
+        See the documentation for :class:`sge.input.KeyRelease` for more
+        information.
 
         """
         pass
@@ -1590,8 +1587,8 @@ class Game:
     def event_paused_mouse_move(self, x, y):
         """Mouse move event when paused.
 
-        See the documentation for :meth:`sge.Game.event_mouse_move` for
-        more information.
+        See the documentation for :class:`sge.input.MouseMove` for more
+        information.
 
         """
         pass
@@ -1599,8 +1596,8 @@ class Game:
     def event_paused_mouse_button_press(self, button):
         """Mouse button press event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_mouse_button_press` for more information.
+        See the documentation for :class:`sge.input.MouseButtonPress`
+        for more information.
 
         """
         pass
@@ -1608,9 +1605,8 @@ class Game:
     def event_paused_mouse_button_release(self, button):
         """Mouse button release event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_mouse_button_release` for more
-        information.
+        See the documentation for :class:`sge.input.MouseButtonRelease`
+        for more information.
 
         """
         pass
@@ -1618,17 +1614,17 @@ class Game:
     def event_paused_joystick_axis_move(self, js_name, js_id, axis, value):
         """Joystick axis move event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_axis_move` for more information.
+        See the documentation for :class:`sge.input.JoystickAxisMove`
+        for more information.
 
         """
         pass
 
     def event_paused_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        """Joystick HAT move event when paused.
+        """Joystick hat move event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_hat_move` for more information.
+        See the documentation for :class:`sge.input.JoystickHatMove` for
+        more information.
 
         """
         pass
@@ -1637,8 +1633,7 @@ class Game:
         """Joystick trackball move event when paused.
 
         See the documentation for
-        :meth:`sge.Game.event_joystick_trackball_move` for more
-        information.
+        :class:`sge.input.JoystickTrackballMove` for more information.
 
         """
         pass
@@ -1646,9 +1641,8 @@ class Game:
     def event_paused_joystick_button_press(self, js_name, js_id, button):
         """Joystick button press event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_button_press` for more
-        information.
+        See the documentation for :class:`sge.input.JoystickButtonPress`
+        for more information.
 
         """
         pass
@@ -1657,8 +1651,7 @@ class Game:
         """Joystick button release event when paused.
 
         See the documentation for
-        :meth:`sge.Game.event_joystick_button_release` for more
-        information.
+        :class:`sge.input.JoystickButtonRelease` for more information.
 
         """
         pass
@@ -1666,8 +1659,8 @@ class Game:
     def event_paused_gain_keyboard_focus(self):
         """Gain keyboard focus event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_gain_keyboard_focus` for more information.
+        See the documentation for :class:`sge.input.KeyboardFocusGain`
+        for more information.
 
         """
         pass
@@ -1675,8 +1668,8 @@ class Game:
     def event_paused_lose_keyboard_focus(self):
         """Lose keyboard focus event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_lose_keyboard_focus` for more information.
+        See the documentation for :class:`sge.input.KeyboardFocusLose`
+        for more information.
 
         """
         if sge.DEBUG:
@@ -1687,8 +1680,8 @@ class Game:
     def event_paused_gain_mouse_focus(self):
         """Gain mouse focus event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_gain_mouse_focus` for more information.
+        See the documentation for :class:`sge.input.MouseFocusGain` for
+        more information.
 
         """
         pass
@@ -1696,8 +1689,8 @@ class Game:
     def event_paused_lose_mouse_focus(self):
         """Lose mouse focus event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_lose_mouse_focus` for more information.
+        See the documentation for :class:`sge.input.MouseFocusLose` for
+        more information.
 
         """
         if sge.DEBUG:

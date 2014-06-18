@@ -996,8 +996,8 @@ class StellarClass:
     def event_key_press(self, key, char):
         """Key press event.
 
-        See the documentation for :meth:`sge.Game.event_key_press` for
-        more information.
+        See the documentation for :class:`sge.input.KeyPress` for more
+        information.
 
         """
         pass
@@ -1005,8 +1005,8 @@ class StellarClass:
     def event_key_release(self, key):
         """Key release event.
 
-        See the documentation for :meth:`sge.Game.event_key_release` for
-        more information.
+        See the documentation for :class:`sge.input.KeyRelease` for more
+        information.
 
         """
         pass
@@ -1014,8 +1014,8 @@ class StellarClass:
     def event_mouse_move(self, x, y):
         """Mouse move event.
 
-        See the documentation for :meth:`sge.Game.event_mouse_move` for
-        more information.
+        See the documentation for :class:`sge.input.MouseMove` for more
+        information.
 
         """
         pass
@@ -1023,8 +1023,8 @@ class StellarClass:
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        See the documentation for
-        :meth:`sge.Game.event_mouse_button_press` for more information.
+        See the documentation for :class:`sge.input.MouseButtonPress`
+        for more information.
 
         """
         pass
@@ -1032,9 +1032,8 @@ class StellarClass:
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        See the documentation for
-        :meth:`sge.Game.event_mouse_button_release` for more
-        information.
+        See the documentation for :class:`sge.input.MouseButtonRelease`
+        for more information.
 
         """
         pass
@@ -1042,17 +1041,17 @@ class StellarClass:
     def event_joystick_axis_move(self, js_name, js_id, axis, value):
         """Joystick axis move event.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_axis_move` for more information.
+        See the documentation for :class:`sge.input.JoystickAxisMove`
+        for more information.
 
         """
         pass
 
     def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        """Joystick HAT move event.
+        """Joystick hat move event.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_hat_move` for more information.
+        See the documentation for :class:`sge.input.JoystickHatMove` for
+        more information.
 
         """
         pass
@@ -1061,8 +1060,7 @@ class StellarClass:
         """Joystick trackball move event.
 
         See the documentation for
-        :meth:`sge.Game.event_joystick_trackball_move` for more
-        information.
+        :class:`sge.input.JoystickTrackballMove` for more information.
 
         """
         pass
@@ -1070,9 +1068,8 @@ class StellarClass:
     def event_joystick_button_press(self, js_name, js_id, button):
         """Joystick button press event.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_button_press` for more
-        information.
+        See the documentation for :class:`sge.input.JoystickButtonPress`
+        for more information.
 
         """
         pass
@@ -1081,8 +1078,7 @@ class StellarClass:
         """Joystick button release event.
 
         See the documentation for
-        :meth:`sge.Game.event_joystick_button_release` for more
-        information.
+        :class:`sge.input.JoystickButtonRelease` for more information.
 
         """
         pass
@@ -1191,7 +1187,7 @@ class StellarClass:
 
         See the documentation for :meth:`sge.StellarClass.event_step`
         for more information.  The object is considered to be inactive
-        when :attr:`active` is :attr:`False`.
+        when :attr:`active` is :const:`False`.
 
         """
         pass
@@ -1202,7 +1198,7 @@ class StellarClass:
         See the documentation for
         :meth:`sge.StellarClass.event_end_step` for more information.
         The object is considered to be inactive when :attr:`active` is
-        :attr:`False`.
+        :const:`False`.
 
         """
         pass
@@ -1210,9 +1206,11 @@ class StellarClass:
     def event_inactive_key_press(self, key, char):
         """Key press event when this object is inactive.
 
-        See the documentation for :meth:`sge.Game.event_key_press` for
-        more information.  The object is considered to be inactive when
-        :attr:`active` is :const:`False`.
+        The object is considered to be inactive when :attr:`active` is
+        :const:`False`.
+
+        See the documentation for :class:`sge.input.KeyPress` for more
+        information.
 
         """
         pass
@@ -1220,9 +1218,11 @@ class StellarClass:
     def event_inactive_key_release(self, key):
         """Key release event when this object is inactive.
 
-        See the documentation for :meth:`sge.Game.event_key_release` for
-        more information.  The object is considered to be inactive when
-        :attr:`active` is :attr:`False`.
+        The object is considered to be inactive when :attr:`active` is
+        :const:`False`.
+
+        See the documentation for :class:`sge.input.KeyRelease` for more
+        information.
 
         """
         pass
@@ -1230,9 +1230,11 @@ class StellarClass:
     def event_inactive_mouse_move(self, x, y):
         """Mouse move event when this object is inactive.
 
-        See the documentation for :meth:`sge.Game.event_mouse_move` for
-        more information.  The object is considered to be inactive when
-        :attr:`active` is :attr:`False`.
+        The object is considered to be inactive when :attr:`active` is
+        :const:`False`.
+
+        See the documentation for :class:`sge.input.MouseMove` for more
+        information.
 
         """
         pass
@@ -1240,10 +1242,11 @@ class StellarClass:
     def event_inactive_mouse_button_press(self, button):
         """Mouse button press event when this object is inactive.
 
-        See the documentation for
-        :meth:`sge.Game.event_mouse_button_press` for more information.
         The object is considered to be inactive when :attr:`active` is
-        :attr:`False`.
+        :const:`False`.
+
+        See the documentation for :class:`sge.input.MouseButtonPress`
+        for more information.
 
         """
         pass
@@ -1251,10 +1254,11 @@ class StellarClass:
     def event_inactive_mouse_button_release(self, button):
         """Mouse button release event when this object is inactive.
 
-        See the documentation for
-        :meth:`sge.Game.event_mouse_button_release` for more
-        information.  The object is considered to be inactive when
-        :attr:`active` is :attr:`False`.
+        The object is considered to be inactive when :attr:`active` is
+        :const:`False`.
+
+        See the documentation for :class:`sge.input.MouseButtonRelease`
+        for more information.
 
         """
         pass
@@ -1262,21 +1266,23 @@ class StellarClass:
     def event_inactive_joystick_axis_move(self, js_name, js_id, axis, value):
         """Joystick axis move event when this object is inactive.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_axis_move` for more information.
         The object is considered to be inactive when :attr:`active` is
-        :attr:`False`.
+        :const:`False`.
+
+        See the documentation for :class:`sge.input.JoystickAxisMove`
+        for more information.
 
         """
         pass
 
     def event_inactive_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        """Joystick HAT move event when this object is inactive.
+        """Joystick hat move event when this object is inactive.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_hat_move` for more information.
         The object is considered to be inactive when :attr:`active` is
-        :attr:`False`.
+        :const:`False`.
+
+        See the documentation for :class:`sge.input.JoystickHatMove` for
+        more information.
 
         """
         pass
@@ -1284,10 +1290,11 @@ class StellarClass:
     def event_inactive_joystick_trackball_move(self, js_name, js_id, ball, x, y):
         """Joystick trackball move event when this object is inactive.
 
+        The object is considered to be inactive when :attr:`active` is
+        :const:`False`.
+
         See the documentation for
-        :meth:`sge.Game.event_joystick_trackball_move` for more
-        information.  The object is considered to be inactive when
-        :attr:`active` is :attr:`False`.
+        :class:`sge.input.JoystickTrackballMove` for more information.
 
         """
         pass
@@ -1295,10 +1302,11 @@ class StellarClass:
     def event_inactive_joystick_button_press(self, js_name, js_id, button):
         """Joystick button press event when this object is inactive.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_button_press` for more
-        information.  The object is considered to be inactive when
-        :attr:`active` is :attr:`False`.
+        The object is considered to be inactive when :attr:`active` is
+        :const:`False`.
+
+        See the documentation for :class:`sge.input.JoystickButtonPress`
+        for more information.
 
         """
         pass
@@ -1306,10 +1314,11 @@ class StellarClass:
     def event_inactive_joystick_button_release(self, js_name, js_id, button):
         """Joystick button release event when this object is inactive.
 
+        The object is considered to be inactive when :attr:`active` is
+        :const:`False`.
+
         See the documentation for
-        :meth:`sge.Game.event_joystick_button_release` for more
-        information.  The object is considered to be inactive when
-        :attr:`active` is :attr:`False`.
+        :class:`sge.input.JoystickButtonRelease` for more information.
 
         """
         pass
@@ -1317,8 +1326,8 @@ class StellarClass:
     def event_paused_key_press(self, key, char):
         """Key press event when paused.
 
-        See the documentation for :meth:`sge.Game.event_key_press` for
-        more information.
+        See the documentation for :class:`sge.input.KeyPress` for more
+        information.
 
         """
         pass
@@ -1326,8 +1335,8 @@ class StellarClass:
     def event_paused_key_release(self, key):
         """Key release event when paused.
 
-        See the documentation for :meth:`sge.Game.event_key_release` for
-        more information.
+        See the documentation for :class:`sge.input.KeyRelease` for more
+        information.
 
         """
         pass
@@ -1335,8 +1344,8 @@ class StellarClass:
     def event_paused_mouse_move(self, x, y):
         """Mouse move event when paused.
 
-        See the documentation for :meth:`sge.Game.event_mouse_move` for
-        more information.
+        See the documentation for :class:`sge.input.MouseMove` for more
+        information.
 
         """
         pass
@@ -1344,8 +1353,8 @@ class StellarClass:
     def event_paused_mouse_button_press(self, button):
         """Mouse button press event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_mouse_button_press` for more information.
+        See the documentation for :class:`sge.input.MouseButtonPress`
+        for more information.
 
         """
         pass
@@ -1353,9 +1362,8 @@ class StellarClass:
     def event_paused_mouse_button_release(self, button):
         """Mouse button release event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_mouse_button_release` for more
-        information.
+        See the documentation for :class:`sge.input.MouseButtonRelease`
+        for more information.
 
         """
         pass
@@ -1363,17 +1371,17 @@ class StellarClass:
     def event_paused_joystick_axis_move(self, js_name, js_id, axis, value):
         """Joystick axis move event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_axis_move` for more information.
+        See the documentation for :class:`sge.input.JoystickAxisMove`
+        for more information.
 
         """
         pass
 
     def event_paused_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        """Joystick HAT move event when paused.
+        """Joystick hat move event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_hat_move` for more information.
+        See the documentation for :class:`sge.input.JoystickHatMove` for
+        more information.
 
         """
         pass
@@ -1382,8 +1390,7 @@ class StellarClass:
         """Joystick trackball move event when paused.
 
         See the documentation for
-        :meth:`sge.Game.event_joystick_trackball_move` for more
-        information.
+        :class:`sge.input.JoystickTrackballMove` for more information.
 
         """
         pass
@@ -1391,9 +1398,8 @@ class StellarClass:
     def event_paused_joystick_button_press(self, js_name, js_id, button):
         """Joystick button press event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_button_press` for more
-        information.
+        See the documentation for :class:`sge.input.JoystickButtonPress`
+        for more information.
 
         """
         pass
@@ -1402,8 +1408,7 @@ class StellarClass:
         """Joystick button release event when paused.
 
         See the documentation for
-        :meth:`sge.Game.event_joystick_button_release` for more
-        information.
+        :class:`sge.input.JoystickButtonRelease` for more information.
 
         """
         pass

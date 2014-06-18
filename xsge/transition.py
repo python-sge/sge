@@ -173,7 +173,7 @@ class Room(sge.Room):
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
 
     def update_wipe_matrix(self, complete):
-        psize = 16
+        psize = 4
         w = self.transition_sprite.width
         h = self.transition_sprite.height
         mw = int(round(w / psize))

@@ -377,8 +377,8 @@ class Room(object):
     def event_key_press(self, key, char):
         """Key press event.
 
-        See the documentation for :meth:`sge.Game.event_key_press` for
-        more information.
+        See the documentation for :class:`sge.input.KeyPress` for more
+        information.
 
         """
         pass
@@ -386,8 +386,8 @@ class Room(object):
     def event_key_release(self, key):
         """Key release event.
 
-        See the documentation for :meth:`sge.Game.event_key_release` for
-        more information.
+        See the documentation for :class:`sge.input.KeyRelease` for more
+        information.
 
         """
         pass
@@ -395,8 +395,8 @@ class Room(object):
     def event_mouse_move(self, x, y):
         """Mouse move event.
 
-        See the documentation for :meth:`sge.Game.event_mouse_move` for
-        more information.
+        See the documentation for :class:`sge.input.MouseMove` for more
+        information.
 
         """
         pass
@@ -404,8 +404,8 @@ class Room(object):
     def event_mouse_button_press(self, button):
         """Mouse button press event.
 
-        See the documentation for
-        :meth:`sge.Game.event_mouse_button_press` for more information.
+        See the documentation for :class:`sge.input.MouseButtonPress`
+        for more information.
 
         """
         pass
@@ -413,9 +413,8 @@ class Room(object):
     def event_mouse_button_release(self, button):
         """Mouse button release event.
 
-        See the documentation for
-        :meth:`sge.Game.event_mouse_button_release` for more
-        information.
+        See the documentation for :class:`sge.input.MouseButtonRelease`
+        for more information.
 
         """
         pass
@@ -423,17 +422,17 @@ class Room(object):
     def event_joystick_axis_move(self, js_name, js_id, axis, value):
         """Joystick axis move event.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_axis_move` for more information.
+        See the documentation for :class:`sge.input.JoystickAxisMove`
+        for more information.
 
         """
         pass
 
     def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        """Joystick HAT move event.
+        """Joystick hat move event.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_hat_move` for more information.
+        See the documentation for :class:`sge.input.JoystickHatMove` for
+        more information.
 
         """
         pass
@@ -442,8 +441,7 @@ class Room(object):
         """Joystick trackball move event.
 
         See the documentation for
-        :meth:`sge.Game.event_joystick_trackball_move` for more
-        information.
+        :class:`sge.input.JoystickTrackballMove` for more information.
 
         """
         pass
@@ -451,9 +449,8 @@ class Room(object):
     def event_joystick_button_press(self, js_name, js_id, button):
         """Joystick button press event.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_button_press` for more
-        information.
+        See the documentation for :class:`sge.input.JoystickButtonPress`
+        for more information.
 
         """
         pass
@@ -462,8 +459,7 @@ class Room(object):
         """Joystick button release event.
 
         See the documentation for
-        :meth:`sge.Game.event_joystick_button_release` for more
-        information.
+        :class:`sge.input.JoystickButtonRelease` for more information.
 
         """
         pass
@@ -471,8 +467,8 @@ class Room(object):
     def event_gain_keyboard_focus(self):
         """Gain keyboard focus event.
 
-        See the documentation for
-        :meth:`sge.Game.event_gain_keyboard_focus` for more information.
+        See the documentation for :class:`sge.input.KeyboardFocusGain`
+        for more information.
 
         """
         pass
@@ -480,8 +476,8 @@ class Room(object):
     def event_lose_keyboard_focus(self):
         """Lose keyboard focus event.
 
-        See the documentation for
-        :meth:`sge.Game.event_lose_keyboard_focus` for more information.
+        See the documentation for :class:`sge.input.KeyboardFocusLose`
+        for more information.
 
         """
         pass
@@ -489,8 +485,8 @@ class Room(object):
     def event_gain_mouse_focus(self):
         """Gain mouse focus event.
 
-        See the documentation for
-        :meth:`sge.Game.event_gain_mouse_focus` for more information.
+        See the documentation for :class:`sge.input.MouseFocusGain` for
+        more information.
 
         """
         pass
@@ -498,8 +494,8 @@ class Room(object):
     def event_lose_mouse_focus(self):
         """Lose mouse focus event.
 
-        See the documentation for
-        :meth:`sge.Game.event_lose_mouse_focus` for more information.
+        See the documentation for :class:`sge.input.MouseFocusLose` for
+        more information.
 
         """
         pass
@@ -507,9 +503,11 @@ class Room(object):
     def event_close(self):
         """Close event.
 
-        See the documentation for :meth:`sge.Game.event_close` for more
-        information.  This is always called before any game close events
+        This is always called before any :meth:`sge.Game.event_close`
         occurring at the same time.
+
+        See the documentation for :class:`sge.input.QuitRequest` for
+        more information.
 
         """
         pass
@@ -517,8 +515,8 @@ class Room(object):
     def event_paused_key_press(self, key, char):
         """Key press event when paused.
 
-        See the documentation for :meth:`sge.Game.event_key_press` for
-        more information.
+        See the documentation for :class:`sge.input.KeyPress` for more
+        information.
 
         """
         pass
@@ -526,8 +524,8 @@ class Room(object):
     def event_paused_key_release(self, key):
         """Key release event when paused.
 
-        See the documentation for :meth:`sge.Game.event_key_release` for
-        more information.
+        See the documentation for :class:`sge.input.KeyRelease` for more
+        information.
 
         """
         pass
@@ -535,8 +533,8 @@ class Room(object):
     def event_paused_mouse_move(self, x, y):
         """Mouse move event when paused.
 
-        See the documentation for :meth:`sge.Game.event_mouse_move` for
-        more information.
+        See the documentation for :class:`sge.input.MouseMove` for more
+        information.
 
         """
         pass
@@ -544,8 +542,8 @@ class Room(object):
     def event_paused_mouse_button_press(self, button):
         """Mouse button press event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_mouse_button_press` for more information.
+        See the documentation for :class:`sge.input.MouseButtonPress`
+        for more information.
 
         """
         pass
@@ -553,9 +551,8 @@ class Room(object):
     def event_paused_mouse_button_release(self, button):
         """Mouse button release event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_mouse_button_release` for more
-        information.
+        See the documentation for :class:`sge.input.MouseButtonRelease`
+        for more information.
 
         """
         pass
@@ -563,17 +560,17 @@ class Room(object):
     def event_paused_joystick_axis_move(self, js_name, js_id, axis, value):
         """Joystick axis move event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_axis_move` for more information.
+        See the documentation for :class:`sge.input.JoystickAxisMove`
+        for more information.
 
         """
         pass
 
     def event_paused_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        """Joystick HAT move event when paused.
+        """Joystick hat move event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_hat_move` for more information.
+        See the documentation for :class:`sge.input.JoystickHatMove` for
+        more information.
 
         """
         pass
@@ -582,8 +579,7 @@ class Room(object):
         """Joystick trackball move event when paused.
 
         See the documentation for
-        :meth:`sge.Game.event_joystick_trackball_move` for more
-        information.
+        :class:`sge.input.JoystickTrackballMove` for more information.
 
         """
         pass
@@ -591,9 +587,8 @@ class Room(object):
     def event_paused_joystick_button_press(self, js_name, js_id, button):
         """Joystick button press event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_joystick_button_press` for more
-        information.
+        See the documentation for :class:`sge.input.JoystickButtonPress`
+        for more information.
 
         """
         pass
@@ -602,8 +597,7 @@ class Room(object):
         """Joystick button release event when paused.
 
         See the documentation for
-        :meth:`sge.Game.event_joystick_button_release` for more
-        information.
+        :class:`sge.input.JoystickButtonRelease` for more information.
 
         """
         pass
@@ -611,8 +605,8 @@ class Room(object):
     def event_paused_gain_keyboard_focus(self):
         """Gain keyboard focus event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_gain_keyboard_focus` for more information.
+        See the documentation for :class:`sge.input.KeyboardFocusGain`
+        for more information.
 
         """
         pass
@@ -620,8 +614,8 @@ class Room(object):
     def event_paused_lose_keyboard_focus(self):
         """Lose keyboard focus event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_lose_keyboard_focus` for more information.
+        See the documentation for :class:`sge.input.KeyboardFocusLose`
+        for more information.
 
         """
         pass
@@ -629,8 +623,8 @@ class Room(object):
     def event_paused_gain_mouse_focus(self):
         """Gain mouse focus event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_gain_mouse_focus` for more information.
+        See the documentation for :class:`sge.input.MouseFocusGain` for
+        more information.
 
         """
         pass
@@ -638,8 +632,8 @@ class Room(object):
     def event_paused_lose_mouse_focus(self):
         """Lose mouse focus event when paused.
 
-        See the documentation for
-        :meth:`sge.Game.event_lose_mouse_focus` for more information.
+        See the documentation for :class:`sge.input.MouseFocusLose` for
+        more information.
 
         """
         pass
@@ -647,7 +641,7 @@ class Room(object):
     def event_paused_close(self):
         """Close event when paused.
 
-        See the documentation for :meth:`sge.Game.event_close` for more
+        See the documentation for :meth:`sge.Room.event_close` for more
         information.
 
         """
