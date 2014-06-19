@@ -238,6 +238,7 @@ class Window:
         self.title = title
         self.border = border
         self.widgets = []
+        self.keyboard_focused_widget = None
         self._border_grab = None
         self._close_button_pressed = False
 
@@ -569,16 +570,35 @@ class FileSelectionDialog(Dialog):
 
 class Widget:
 
+    @property
+    def z(self):
+        return self._z
+
+    @z.setter
+    def z(self, value):
+        self._z = value
+        parent = self.parent()
+        if parent is not None:
+            if self in parent.widgets:
+                parent.widgets.remove(self)
+
+            i = 0
+            while i < len(parent.widgets) and parent.widgets[i].z <= value:
+                i += 1
+
+            parent.widgets.insert(i, self)
+
     def __init__(self, parent, x, y, z, sprite):
         self.parent = weakref.ref(parent)
         self.x = x
         self.y = y
-        self.sprite = sprite
+        self.z = z
+        self.sprite = sprite.copy()
 
     def destroy(self):
         """Destroy this widget."""
         parent = self.parent()
-        if parent is not None:
+        if parent is not None and self in parent.widgets:
             parent.widgets.remove(self)
 
         self.sprite.destroy()
@@ -640,7 +660,88 @@ class Widget:
 
 class Button(Widget):
 
-    pass
+    def __init__(self, parent, x, y, z, text, width=None):
+        super().__init__(parent, x, y, z, sge.Sprite(width=1, height=1))
+        self.text = text
+        self.width = width
+        self.pressed = False
+        self.sprite_normal = None
+        self.sprite_selected = None
+        self.sprite_pressed = None
+        self.redraw()
+
+    def redraw(self):
+        h = button_sprite.height
+        if self.width is None:
+            w = button_font.get_size(self.text, height=h)[0]
+        else:
+            w = self.width
+
+        sprite_w = w + button_left_sprite.width + button_right_sprite.width
+        left = button_left_sprite.width
+        right = sprite_w - button_right_sprite.width
+        self.sprite_normal = sge.Sprite(width=sprite_w, height=h)
+        self.sprite_normal.draw_lock()
+        for i in range(left, right, button_sprite.width):
+            self.sprite_normal.draw_sprite(button_sprite, 0, i, 0)
+        self.sprite_normal.draw_sprite(button_left_sprite, 0, 0, 0)
+        self.sprite_normal.draw_sprite(button_right_sprite, 0, right, 0)
+        self.sprite_normal.draw_text(button_font, self.text, sprite_w / 2,
+                                     h / 2, width=w, height=h,
+                                     color=button_text_color,
+                                     halign=sge.ALIGN_CENTER,
+                                     valign=sge.ALIGN_MIDDLE)
+        self.sprite_normal.draw_unlock()
+
+        sprite_w = (w + button_selected_left_sprite.width +
+                    button_selected_right_sprite.width)
+        left = button_selected_left_sprite.width
+        right = sprite_w - button_selected_right_sprite.width
+        self.sprite_selected = sge.Sprite(width=sprite_w, height=h)
+        self.sprite_selected.draw_lock()
+        for i in range(left, right, button_selected_sprite.width):
+            self.sprite_selected.draw_sprite(button_selected_sprite, 0, i, 0)
+        self.sprite_selected.draw_sprite(button_selected_left_sprite, 0, 0, 0)
+        self.sprite_selected.draw_sprite(button_selected_right_sprite, 0,
+                                         right, 0)
+        self.sprite_selected.draw_text(button_font, self.text, sprite_w / 2,
+                                       h / 2, width=w, height=h,
+                                       color=button_text_color,
+                                       halign=sge.ALIGN_CENTER,
+                                       valign=sge.ALIGN_MIDDLE)
+        self.sprite_selected.draw_unlock()
+
+        sprite_w = (w + button_pressed_left_sprite.width +
+                    button_pressed_right_sprite.width)
+        left = button_pressed_left_sprite.width
+        right = sprite_w - button_pressed_right_sprite.width
+        self.sprite_pressed = sge.Sprite(width=sprite_w, height=h)
+        self.sprite_pressed.draw_lock()
+        for i in range(left, right, button_pressed_sprite.width):
+            self.sprite_pressed.draw_sprite(button_pressed_sprite, 0, i, 0)
+        self.sprite_pressed.draw_sprite(button_pressed_left_sprite, 0, 0, 0)
+        self.sprite_pressed.draw_sprite(button_pressed_right_sprite, 0, right,
+                                        0)
+        self.sprite_pressed.draw_text(button_font, self.text, sprite_w / 2,
+                                      h / 2, width=w, height=h,
+                                      color=button_text_color,
+                                      halign=sge.ALIGN_CENTER,
+                                      valign=sge.ALIGN_MIDDLE)
+        self.sprite_pressed.draw_unlock()
+
+    def refresh(self):
+        parent = self.parent()
+        if parent is not None:
+            if (parent.keyboard_focused_widget is self or
+                    parent.get_mouse_focused_widget() is self):
+                if self.pressed:
+                    self.sprite = self.sprite_pressed
+                else:
+                    self.sprite = self.sprite_selected
+            else:
+                self.sprite = self.sprite_normal
+
+        super().refresh()
 
 
 class CheckBox(Widget):
