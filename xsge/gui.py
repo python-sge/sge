@@ -664,7 +664,7 @@ class Button(Widget):
         super().__init__(parent, x, y, z, sge.Sprite(width=1, height=1))
         self.text = text
         self.width = width
-        self.pressed = False
+        self._pressed = False
         self.sprite_normal = None
         self.sprite_selected = None
         self.sprite_pressed = None
@@ -734,7 +734,7 @@ class Button(Widget):
         if parent is not None:
             if (parent.keyboard_focused_widget is self or
                     parent.get_mouse_focused_widget() is self):
-                if self.pressed:
+                if self._pressed:
                     self.sprite = self.sprite_pressed
                 else:
                     self.sprite = self.sprite_selected
@@ -742,6 +742,31 @@ class Button(Widget):
                 self.sprite = self.sprite_normal
 
         super().refresh()
+
+    def event_key_press(self, key, char):
+        self._pressed = True
+
+    def event_key_release(self, key):
+        if self._pressed:
+            self._pressed = False
+            self.event_press()
+
+    def event_mouse_button_press(self, button):
+        self._pressed = True
+
+    def event_mouse_button_release(self, button):
+        if self._pressed:
+            self._pressed = False
+            self.event_press()
+
+    def event_press(self):
+        """Press event.
+
+        Called when this button is clicked on, or when the Enter key is
+        pressed while this button is selected.
+
+        """
+        pass
 
 
 class CheckBox(Widget):
