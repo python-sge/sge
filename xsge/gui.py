@@ -149,8 +149,10 @@ class Handler(sge.StellarClass):
                 widget.event_global_key_release(key)
 
     def event_mouse_button_press(self, button):
+        global keyboard_focused_window
         window = get_mouse_focused_window()
         if window is not None:
+            keyboard_focused_window = window
             window.move_to_front()
             if window.get_mouse_on_titlebar():
                 window.event_titlebar_mouse_button_press(button)
@@ -350,6 +352,15 @@ class Window:
             y = self.sprite.height - window_border_bottomright_sprite.height
             self.sprite.draw_sprite(window_border_bottomright_sprite, 0, x, y)
 
+            x = self.sprite.width / 2
+            y = window_border_top_sprite.height / 2
+            self.sprite.draw_text(title_font, self.title, x, y,
+                                  width=self.sprite.width,
+                                  height=window_border_top_sprite.height,
+                                  color=title_text_color,
+                                  halign=sge.ALIGN_CENTER,
+                                  valign=sge.ALIGN_MIDDLE)
+
             self.sprite.draw_unlock()
         else:
             self.sprite.width = self.width
@@ -441,7 +452,15 @@ class Window:
         for more information.
 
         """
-        pass
+        if key == "tab":
+            if self.widgets:
+                try:
+                    i = self.widgets.index(self.keyboard_focused_widget)
+                except ValueError:
+                    self.keyboard_focused_widget = self.widgets[0]
+                else:
+                    i = (i + 1) % len(self.widgets)
+                    self.keyboard_focused_widget = self.widgets[i]
 
     def event_key_release(self, key):
         """Key release event.
@@ -943,8 +962,10 @@ class Button(Widget):
     def refresh(self):
         parent = self.parent()
         if parent is not None:
-            if (parent.keyboard_focused_widget is self or
-                    parent.get_mouse_focused_widget() is self):
+            if ((keyboard_focused_window is parent and
+                 parent.keyboard_focused_widget is self) or
+                    (get_mouse_focused_window() is parent and
+                     parent.get_mouse_focused_widget() is self)):
                 if self._pressed:
                     self.sprite = self.sprite_pressed
                 else:
@@ -955,20 +976,30 @@ class Button(Widget):
         super().refresh()
 
     def event_key_press(self, key, char):
-        self._pressed = True
+        if key in ("enter", "kp_enter"):
+            self._pressed = True
 
     def event_key_release(self, key):
-        if self._pressed:
-            self._pressed = False
-            self.event_press()
+        if key in ("enter", "kp_enter"):
+            if self._pressed:
+                self.event_press()
 
     def event_mouse_button_press(self, button):
-        self._pressed = True
+        if button == "left":
+            self._pressed = True
 
     def event_mouse_button_release(self, button):
-        if self._pressed:
+        if button == "left":
+            if self._pressed:
+                self.event_press()
+
+    def event_global_key_release(self, key):
+        if key in ("enter", "kp_enter"):
             self._pressed = False
-            self.event_press()
+
+    def event_global_mouse_button_release(self, button):
+        if button == "left":
+            self._pressed = False
 
     def event_press(self):
         """Press event.
@@ -1074,7 +1105,7 @@ def init():
     button_font = sge.Font(["DroidSans-Bold.ttf", "Droid Sans"], size=12)
     combobox_item_font = default_font
     textbox_font = default_font
-    title_font = sge.Font(["DroidSans-Bold.ttf", "Droid Sans"], size=13)
+    title_font = sge.Font(["DroidSans-Bold.ttf", "Droid Sans"], size=14)
 
     try:
         button_sprite = sge.Sprite("_gui_button")
@@ -1134,8 +1165,8 @@ def init():
         button_sprite = sge.Sprite(width=1, height=24)
         button_sprite.draw_rectangle(0, 0, 1, 24, fill="black")
         button_sprite.draw_rectangle(0, 1, 1, 22, fill="white")
-        button_left_sprite = sge.Sprite(width=8, height=24)
-        button_left_sprite.draw_rectangle(0, 0, 8, 24, fill="black")
+        button_left_sprite = sge.Sprite(width=10, height=24)
+        button_left_sprite.draw_rectangle(0, 0, 10, 24, fill="black")
         button_right_sprite = button_left_sprite
         button_selected_sprite = sge.Sprite(width=1, height=24)
         button_selected_sprite.draw_rectangle(0, 0, 1, 24, fill="black")
@@ -1251,7 +1282,13 @@ if __name__ == '__main__':
     sge.Room(objects=[handler])
 
     window = Window(8, 8, 240, 240, title="Test window 1")
-    Button(window, 8, 8, 0, "My button")
+    button = Button(window, 8, 8, 0, "My button")
+    label = Label(window, 8, 32, 0, "My label")
+    label2 = Label(window, 8, 64, 0, "my label " * 50, width=224)
+    button2 = Button(window, 16, 100, 5, "Another button", width=150)
     window.show()
+    
+    window2 = Window(480, 200, 320, 320, title="Test window 2")
+    window2.show()
 
     sge.game.start()
