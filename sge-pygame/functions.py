@@ -90,7 +90,7 @@ def _show_modal(text, default, text_entry, buttons):
     button_h = 24
 
     for button in buttons:
-        button_w = max(button_w, font.get_size(button)[0])
+        button_w = max(button_w, font.get_width(button))
     
     box_w = min(screen_w, max(320, (button_w + 4) * len(buttons) + 4))
     box_h = button_h + 12
@@ -99,12 +99,12 @@ def _show_modal(text, default, text_entry, buttons):
     if text_entry:
         box_h += text_entry_h + 8
     text_w = box_w - 16
-    text_h = font.get_size(text, text_w)[1]
+    text_h = font.get_height(text, text_w)
 
     while box_h + text_h > screen_h and box_w < screen_w:
         box_w = min(box_w + 4, screen_w)
         text_w = box_w - 16
-        text_h = font.get_size(text, text_w)[1]
+        text_h = font.get_height(text, text_w)
 
     box_h = max(120, box_h + text_h)
     button_w = min(80, int(box_w / len(buttons)))

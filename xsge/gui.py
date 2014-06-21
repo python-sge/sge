@@ -742,7 +742,7 @@ class Button(Widget):
     def redraw(self):
         h = button_sprite.height
         if self.width is None:
-            w = button_font.get_size(self.text, height=h)[0]
+            w = button_font.get_width(self.text, height=h)[0]
         else:
             w = self.width
 

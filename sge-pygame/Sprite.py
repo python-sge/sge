@@ -818,8 +818,9 @@ class Sprite:
             font = sge.game.fonts[font]
 
         lines = font._split_text(text, width)
-        width, height = font.get_size(text, width, height)
-        fake_height = font.get_size(text, width)[1]
+        width = font.get_width(text, width, height)
+        height = font.get_height(text, width, height)
+        fake_height = font.get_height(text, width)
         color = sge._get_pygame_color(color)
 
         text_surf = pygame.Surface((width, fake_height), pygame.SRCALPHA)

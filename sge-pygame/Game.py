@@ -1877,7 +1877,8 @@ class Game:
             if not isinstance(font, sge.Font):
                 font = sge.game.fonts[font]
 
-            w, h = font.get_size(text, width, height)
+            w = font.get_width(text, width, height)
+            h = font.get_height(text, width, height)
             draw_x = {sge.ALIGN_LEFT: 0, sge.ALIGN_CENTER: w / 2,
                       sge.ALIGN_RIGHT: w}.setdefault(halign, w / 2)
             draw_y = {sge.ALIGN_TOP: 0, sge.ALIGN_MIDDLE: h / 2,

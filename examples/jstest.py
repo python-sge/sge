@@ -44,8 +44,9 @@ class Room(sge.Room):
 
         self.joystick_hats = []
         for i in range(sge.joystick.get_hats(self.current_joystick)):
-            self.joystick_hats.append(sge.joystick.get_hat(
-                self.current_joystick, i))
+            self.joystick_hats.append((
+                sge.joystick.get_hat_x(self.current_joystick, i),
+                sge.joystick.get_hat_y(self.current_joystick, i))
 
         self.joystick_balls = []
         for i in range(sge.joystick.get_trackballs(self.current_joystick)):
