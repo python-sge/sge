@@ -130,6 +130,11 @@ class Handler(sge.StellarClass):
             if widget is not None:
                 widget.event_key_press(key, char)
 
+        for window in windows:
+            window.event_global_key_press(key, char)
+            for widget in window.widgets:
+                widget.event_global_key_press(key, char)
+
     def event_key_release(self, key):
         window = keyboard_focused_window
         if window is not None:
@@ -137,6 +142,11 @@ class Handler(sge.StellarClass):
             widget = window.keyboard_focused_widget
             if widget is not None:
                 widget.event_key_release(key)
+
+        for window in windows:
+            window.event_global_key_release(key)
+            for widget in window.widgets:
+                widget.event_global_key_release(key)
 
     def event_mouse_button_press(self, button):
         window = get_mouse_focused_window()
@@ -150,6 +160,11 @@ class Handler(sge.StellarClass):
                 if widget is not None:
                     widget.event_mouse_button_press(button)
 
+        for window in windows:
+            window.event_global_mouse_button_press(button)
+            for widget in window.widgets:
+                widget.event_global_mouse_button_press(button)
+
     def event_mouse_button_release(self, button):
         window = get_mouse_focused_window()
         if window is not None:
@@ -160,6 +175,11 @@ class Handler(sge.StellarClass):
                 widget = window.get_mouse_focused_widget()
                 if widget is not None:
                     widget.event_mouse_button_release(button)
+
+        for window in windows:
+            window.event_global_mouse_button_release(button)
+            for widget in window.widgets:
+                widget.event_global_mouse_button_release(button)
 
 
 class Window:
@@ -236,6 +256,7 @@ class Window:
         self.width = width
         self.height = height
         self.title = title
+        self.background_color = background_color
         self.border = border
         self.widgets = []
         self.keyboard_focused_widget = None
@@ -361,7 +382,22 @@ class Window:
                 self.sprite.height != target_height):
             self.redraw()
 
-        sge.game.project_sprite(self.sprite, 0, self.x, self.y)
+        x = self.x - window_border_left_sprite.width
+        y = self.y - window_border_top_sprite.height
+
+        if x < 0:
+            x = 0
+        elif x + self.sprite.width >= sge.game.width:
+            x = sge.game.width - self.sprite.width
+        if y < 0:
+            y = 0
+        elif y + self.sprite.height >= sge.game.height:
+            y = sge.game.height - self.sprite.height
+
+        self.x = x + window_border_left_sprite.width
+        self.y = y + window_border_top_sprite.height
+
+        sge.game.project_sprite(self.sprite, 0, x, y)
 
         for widget in self.widgets:
             widget.refresh()
@@ -389,8 +425,10 @@ class Window:
         x = sge.mouse.get_x()
         y = sge.mouse.get_y()
         for widget in self.widgets[::-1]:
-            if (widget.x <= x < widget.x + widget.sprite.width and
-                    widget.y <= y < widget.y + widget.sprite.height):
+            widget_x = self.x + widget.x
+            widget_y = self.y + widget.y
+            if (widget_x <= x < widget_x + widget.sprite.width and
+                    widget_y <= y < widget_y + widget.sprite.height):
                 return widget
 
         return None
@@ -453,7 +491,7 @@ class Window:
                 self._close_button_pressed = True
         else:
             if button == "left":
-                self._border_grab = (x - self.x, y - self.y)
+                self._border_grab = (self.x - x, self.y - y)
             elif button == "middle":
                 self.move_to_back()
 
@@ -471,7 +509,7 @@ class Window:
         close_button_w = window_border_topright_sprite.width
         close_button_x = (border_x + self.sprite.width - close_button_w)
         if close_button_x <= x < close_button_x + close_button_w:
-            if button = "left":
+            if button == "left":
                 if self._close_button_pressed:
                     self.event_close()
         else:
@@ -480,8 +518,49 @@ class Window:
                     self.x = sge.mouse.get_x() + self._border_grab[0]
                     self.y = sge.mouse.get_y() + self._border_grab[1]
 
-        self._close_button_pressed = False
-        self._border_grab = None
+        self.event_global_mouse_button_release(button)
+
+    def event_global_key_press(self, key, char):
+        """Global key press event.
+
+        Called when a key is pressed, regardless of which window has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.KeyPress` for more information.
+
+        """
+        pass
+
+    def event_global_key_release(self, key):
+        """Global key release event.
+
+        Called when a key is released, regardless of which window has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.KeyRelease` for more information.
+
+        """
+        pass
+
+    def event_global_mouse_button_press(self, button):
+        """Global mouse button press event.
+
+        Called when a mouse button is pressed, regardless of which
+        window has mouse focus.  See the documentation for
+        :class:`sge.input.MouseButtonPress` for more information.
+
+        """
+        pass
+
+    def event_global_mouse_button_release(self, button):
+        """Global mouse button release event.
+
+        Called when a mouse button is released, regardless of which
+        window has mouse focus.  See the documentation for
+        :class:`sge.input.MouseButtonRelease` for more information.
+
+        """
+        if button == "left":
+            self._close_button_pressed = False
+            self._border_grab = None
 
     def event_close(self):
         """Close event.
@@ -593,7 +672,7 @@ class Widget:
         self.x = x
         self.y = y
         self.z = z
-        self.sprite = sprite.copy()
+        self.sprite = sprite
 
     def destroy(self):
         """Destroy this widget."""
@@ -667,6 +746,46 @@ class Widget:
         """
         pass
 
+    def event_global_key_press(self, key, char):
+        """Global key press event.
+
+        Called when a key is pressed, regardless of which widget has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.KeyPress` for more information.
+
+        """
+        pass
+
+    def event_global_key_release(self, key):
+        """Global key release event.
+
+        Called when a key is released, regardless of which widget has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.KeyRelease` for more information.
+
+        """
+        pass
+
+    def event_global_mouse_button_press(self, button):
+        """Global mouse button press event.
+
+        Called when a mouse button is pressed, regardless of which
+        widget has mouse focus.  See the documentation for
+        :class:`sge.input.MouseButtonPress` for more information.
+
+        """
+        pass
+
+    def event_global_mouse_button_release(self, button):
+        """Global mouse button release event.
+
+        Called when a mouse button is released, regardless of which
+        widget has mouse focus.  See the documentation for
+        :class:`sge.input.MouseButtonRelease` for more information.
+
+        """
+        pass
+
 
 class Label(Widget):
 
@@ -683,6 +802,18 @@ class Label(Widget):
        The font this label's text should be rendered with.  If set to
        :const:`None`, the value of :data:`xsge.gui.default_font` is
        used.
+
+    .. attribute:: width
+
+       The width of the imaginary rectangle the text is drawn in.  See
+       the documentation for :meth:`sge.Sprite.draw_text` for more
+       information.
+
+    .. attribute:: height
+
+       The height of the imaginary rectangle the text is drawn in.  See
+       the documentation for :meth:`sge.Sprite.draw_text` for more
+       information.
 
     .. attribute:: halign
 
@@ -705,24 +836,35 @@ class Label(Widget):
 
     @font.setter
     def font(self, value):
-        if value is not None:
-            self._font = value
-        else:
-            self._font = default_font
+        self._font = value if value is not None else default_font
 
-    def __init__(self, parent, x, y, z, text, font=None, halign=sge.ALIGN_LEFT,
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, value):
+        self._color = value if value is not None else text_color
+
+    def __init__(self, parent, x, y, z, text, font=None, width=None,
+                 height=None, color=None, halign=sge.ALIGN_LEFT,
                  valign=sge.ALIGN_TOP):
         super().__init__(parent, x, y, z, sge.Sprite(width=1, height=1))
         self.text = text
         self.font = font
+        self.width = width
+        self.height = height
+        self.color = color
         self.halign = halign
         self.valign = valign
 
     def refresh(self):
         parent = self.parent()
         if parent is not None:
-            sge.game.project_text(self.sprite, 0, parent.x + self.x,
-                                    parent.y + self.y)
+            sge.game.project_text(self.font, self.text, parent.x + self.x,
+                                  parent.y + self.y, width=self.width,
+                                  height=self.height, color=self.color,
+                                  halign=self.halign, valign=self.valign)
         else:
             self.destroy()
 
@@ -742,7 +884,7 @@ class Button(Widget):
     def redraw(self):
         h = button_sprite.height
         if self.width is None:
-            w = button_font.get_width(self.text, height=h)[0]
+            w = button_font.get_width(self.text, height=h)
         else:
             w = self.width
 
@@ -923,16 +1065,16 @@ def init():
     global window_border_topleft_sprite
     global window_border_topright_sprite
 
-    default_font = sge.Font(["DroidSans.ttf", "Droid Sans"], size=10)
-    button_font = sge.Font(["DroidSans-Bold.ttf", "Droid Sans"], size=10)
-    combobox_item_font = default_font
-    textbox_font = default_font
-    title_font = sge.Font(["DroidSans-Bold.ttf", "Droid Sans"], size=11)
-
     orig_image_directories = sge.image_directories
     orig_font_directories = sge.font_directories
     sge.image_directories = [DATADIR]
     sge.font_directories = [DATADIR]
+
+    default_font = sge.Font(["DroidSans.ttf", "Droid Sans"], size=12)
+    button_font = sge.Font(["DroidSans-Bold.ttf", "Droid Sans"], size=12)
+    combobox_item_font = default_font
+    textbox_font = default_font
+    title_font = sge.Font(["DroidSans-Bold.ttf", "Droid Sans"], size=13)
 
     try:
         button_sprite = sge.Sprite("_gui_button")
@@ -1075,7 +1217,7 @@ def init():
     sge.font_directories = orig_font_directories
 
 
-get_mouse_focused_window():
+def get_mouse_focused_window():
     """Return the window that currently has mouse focus.
 
     The window with mouse focus is the one which is closest to the front
@@ -1098,3 +1240,18 @@ get_mouse_focused_window():
             return window
 
     return None
+
+
+if __name__ == '__main__':
+    # Test
+    sge.Game(width=800, height=600)
+    sge.game.event_close = sge.game.end
+    init()
+    handler = Handler()
+    sge.Room(objects=[handler])
+
+    window = Window(8, 8, 240, 240, title="Test window 1")
+    Button(window, 8, 8, 0, "My button")
+    window.show()
+
+    sge.game.start()

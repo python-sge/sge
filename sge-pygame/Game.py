@@ -291,7 +291,7 @@ class Game:
                     pygame.display.set_icon(image)
                     break
 
-    def __init__(self, width=640, height=480, fullscreen=False, scale=0,
+    def __init__(self, width=640, height=480, fullscreen=False, scale=None,
                  scale_proportional=True, scale_smooth=False, fps=60,
                  delta=False, delta_min=15, grab_input=False,
                  window_text=None, window_icon=None,

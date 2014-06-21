@@ -940,8 +940,8 @@ class Sprite:
         """
         if not self._locked:
             self._locked = True
-            for img in self._baseimages:
-                img.lock()
+            ##for img in self._baseimages:
+            ##    img.lock()
 
     def draw_unlock(self):
         """Unlock the sprite.
@@ -952,8 +952,8 @@ class Sprite:
         """
         if self._locked:
             self._locked = False
-            for img in self._baseimages:
-                img.unlock()
+            ##for img in self._baseimages:
+            ##    img.unlock()
             self._refresh()
 
     def save(self, fname):

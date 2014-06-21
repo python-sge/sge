@@ -164,10 +164,10 @@ def main():
     circle2 = Circle(22, 48)
     circle3 = Circle(486, 301)
     circle4 = Circle(50, 400)
-    objects = (circle, circle2, circle3, circle4)
+    objects = [circle, circle2, circle3, circle4]
 
     # Create view
-    views = (sge.View(0, 0),)
+    views = [sge.View(0, 0)]
 
     # Create rooms
     room1 = Room(objects, views=views, background=background)
