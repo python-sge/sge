@@ -109,8 +109,17 @@ class Font(object):
         """
         # TODO
 
-    def get_size(self, text, width=None, height=None):
-        """Return the size of a certain string of text when rendered.
+    def get_width(self, text, width=None, height=None):
+        """Return the width of a certain string of text when rendered.
+
+        See the documentation for :meth:`sge.Sprite.draw_text` for
+        information about the arguments.
+
+        """
+        # TODO
+
+    def get_height(self, text, width=None, height=None):
+        """Return the height of a certain string of text when rendered.
 
         See the documentation for :meth:`sge.Sprite.draw_text` for
         information about the arguments.

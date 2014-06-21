@@ -223,8 +223,8 @@ class Font:
         fonts[self.id] = self
         sge.game.fonts = fonts
 
-    def get_size(self, text, width=None, height=None):
-        """Return the size of a certain string of text when rendered.
+    def get_width(self, text, width=None, height=None):
+        """Return the width of a certain string of text when rendered.
 
         See the documentation for :meth:`sge.Sprite.draw_text` for
         information about the arguments.
@@ -232,18 +232,28 @@ class Font:
         """
         lines = self._split_text(text, width)
         text_width = 0
-        text_height = self._font.get_linesize() * len(lines)
-
         for line in lines:
             text_width = max(text_width, self._font.size(line)[0])
 
         if width is not None:
             text_width = min(text_width, width)
 
+        return text_width
+
+    def get_height(self, text, width=None, height=None):
+        """Return the height of a certain string of text when rendered.
+
+        See the documentation for :meth:`sge.Sprite.draw_text` for
+        information about the arguments.
+
+        """
+        lines = self._split_text(text, width)
+        text_height = self._font.get_linesize() * len(lines)
+
         if height is not None:
             text_height = min(text_height, height)
 
-        return (text_width, text_height)
+        return text_height
 
     def destroy(self):
         """Destroy the font."""

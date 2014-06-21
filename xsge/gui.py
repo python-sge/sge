@@ -603,6 +603,16 @@ class Widget:
 
         self.sprite.destroy()
 
+    def redraw(self):
+        """Re-draw this widget's sprite.
+
+        Call this method if you change any variables that should affect
+        this widget's appearance.  This method automatically makes any
+        changes necessary to :attr:`self.sprite`.
+
+        """
+        pass
+
     def refresh(self):
         """Project this widget onto the game window.
 
@@ -656,6 +666,65 @@ class Widget:
 
         """
         pass
+
+
+class Label(Widget):
+
+    """Label widget.
+
+    This widget simply displays some text.
+
+    .. attribute:: text
+
+       The text this label should display.
+
+    .. attribute:: font
+
+       The font this label's text should be rendered with.  If set to
+       :const:`None`, the value of :data:`xsge.gui.default_font` is
+       used.
+
+    .. attribute:: halign
+
+       The horizontal alignment of the text.  See the documentation for
+       :meth:`sge.Sprite.draw_text` for more information.
+
+    .. attribute:: valign
+
+       The vertical alignment of the text.  See the documentation for
+       :meth:`sge.Sprite.draw_text` for more information.
+
+    See the documentation for :class:`xsge.gui.Widget` for more
+    information.
+
+    """
+
+    @property
+    def font(self):
+        return self._font
+
+    @font.setter
+    def font(self, value):
+        if value is not None:
+            self._font = value
+        else:
+            self._font = default_font
+
+    def __init__(self, parent, x, y, z, text, font=None, halign=sge.ALIGN_LEFT,
+                 valign=sge.ALIGN_TOP):
+        super().__init__(parent, x, y, z, sge.Sprite(width=1, height=1))
+        self.text = text
+        self.font = font
+        self.halign = halign
+        self.valign = valign
+
+    def refresh(self):
+        parent = self.parent()
+        if parent is not None:
+            sge.game.project_text(self.sprite, 0, parent.x + self.x,
+                                    parent.y + self.y)
+        else:
+            self.destroy()
 
 
 class Button(Widget):

@@ -23,9 +23,9 @@ This module provides functions related to joystick input.
 import sge
 
 
-__all__ = ["get_axis", "get_hat", "get_button_pressed", "get_joysticks",
-           "get_name", "get_id", "get_axes", "get_hats", "get_trackballs",
-           "get_buttons"]
+__all__ = ["get_axis", "get_hat_x", "get_hat_y", "get_button_pressed",
+           "get_joysticks", "get_name", "get_id", "get_axes", "get_hats",
+           "get_trackballs", "get_buttons"]
 
 
 def get_axis(joystick, axis):
@@ -47,20 +47,35 @@ def get_axis(joystick, axis):
     # TODO
 
 
-def get_hat(joystick, hat):
-    """Return the position of a joystick HAT.
+def get_hat_x(joystick, hat):
+    """Return the horizontal position of a joystick hat (d-pad).
 
     Arguments:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
-    - ``hat`` -- The number of the HAT to check, where ``0`` is the
-      first HAT of the joystick.
+    - ``hat`` -- The number of the hat to check, where ``0`` is the
+      first hat of the joystick.
 
-    Return a two-part tuple in the form ``(x, y)``.  ``x`` can be ``-1``
-    (left), ``0`` (horizontally centered), or ``1`` (right).  ``y`` can
-    be ``-1`` (up), ``0`` (vertically centered), or ``1`` (down).
-    Return ``(0, 0)`` if the requested joystick or axis does not exist.
+    Return ``-1`` (left), ``0`` (centered), or ``1`` (right).  Return
+    ``0`` if the requested joystick or hat does not exist.
+
+    """
+    # TODO
+
+
+def get_hat_y(joystick, hat):
+    """Return the vertical position of a joystick hat (d-pad).
+
+    Arguments:
+
+    - ``joystick`` -- The number of the joystick to check, where ``0``
+      is the first joystick, or the name of the joystick to check.
+    - ``hat`` -- The number of the hat to check, where ``0`` is the
+      first hat of the joystick.
+
+    Return ``-1`` (up), ``0`` (centered), or ``1`` (down).  Return ``0``
+    if the requested joystick or hat does not exist.
 
     """
     # TODO

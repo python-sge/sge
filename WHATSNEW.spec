@@ -30,7 +30,8 @@ Specification additions:
 + sge.keyboard.get_repeat_delay
 + sge.mouse.get_pressed
 + sge.joystick.get_axis
-+ sge.joystick.get_hat
++ sge.joystick.get_hat_x
++ sge.joystick.get_hat_y
 + sge.joystick.get_pressed
 + sge.joystick.get_joysticks
 + sge.joystick.get_name
@@ -62,6 +63,8 @@ Specification additions:
 + sge.input.QuitRequest
 + sge.Sprite.draw_lock
 + sge.Sprite.draw_unlock
++ sge.Font.get_width
++ sge.Font.get_height
 
 Specification removals:
 - sge.StellarClass.detects_collisions
@@ -74,6 +77,7 @@ Specification removals:
 - sge.get_joystick_hats
 - sge.get_joystick_trackballs
 - sge.get_joystick_buttons
+- sge.Font.get_size
 
 Specification misc changes:
 * sge.Room.event_room_resume no longer calls sge.Room.event_room_start by default.
