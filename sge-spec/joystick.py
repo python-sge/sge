@@ -23,9 +23,19 @@ This module provides functions related to joystick input.
 import sge
 
 
-__all__ = ["get_axis", "get_hat_x", "get_hat_y", "get_button_pressed",
-           "get_joysticks", "get_name", "get_id", "get_axes", "get_hats",
-           "get_trackballs", "get_buttons"]
+__all__ = ["refresh", "get_axis", "get_hat_x", "get_hat_y",
+           "get_button_pressed", "get_joysticks", "get_name", "get_id",
+           "get_axes", "get_hats", "get_trackballs", "get_buttons"]
+
+
+def refresh():
+    """Refresh the SGE's knowledge of joysticks.
+
+    Call this method to allow the SGE to use joysticks that were plugged
+    in while the game was running.
+
+    """
+    # TODO
 
 
 def get_axis(joystick, axis):

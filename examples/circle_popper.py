@@ -107,6 +107,15 @@ class Room(sge.Room):
         self.project_text(glob.font, text, 320, 0, 3, color="black",
                           halign=sge.ALIGN_CENTER)
 
+        if sge.keyboard.get_pressed("left"):
+            self.views[0].xport -= 1
+        if sge.keyboard.get_pressed("right"):
+            self.views[0].xport += 1
+        if sge.keyboard.get_pressed("up"):
+            self.views[0].yport -= 1
+        if sge.keyboard.get_pressed("down"):
+            self.views[0].yport += 1
+
     def event_alarm(self, alarm_id):
         if alarm_id == "shake":
             self.views[0].xport += random.uniform(-2, 2)

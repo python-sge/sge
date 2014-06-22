@@ -349,9 +349,6 @@ class Game:
         self._music_queue = []
         self._running = False
         self._clock = pygame.time.Clock()
-        self._joysticks = []
-        self._js_names = {}
-        self._js_ids = {}
         self._pygame_sprites = pygame.sprite.LayeredDirty()
         self._numviews = 0
         self._background = None
@@ -366,18 +363,11 @@ class Game:
                 self._available_channels.append(pygame.mixer.Channel(i))
 
         # Setup joysticks
-        if pygame.joystick.get_init():
-            for i in range(pygame.joystick.get_count()):
-                joy = pygame.joystick.Joystick(i)
-                joy.init()
-                n = joy.get_name()
-                self._js_names[i] = n
-                self._js_ids[n] = i
-                self._joysticks.append(joy)
+        sge.joystick.refresh()
 
         if not pygame.font.get_init():
-            global Font
-            Font = _FakeFont
+            w = "pygame.font module not initialized! Are you missing SDL_ttf?"
+            warnings.warn(w)
 
         self.window_icon = None
 

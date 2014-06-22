@@ -24,9 +24,32 @@ import pygame
 import sge
 
 
-__all__ = ["get_axis", "get_hat_x", "get_hat_y", "get_button_pressed",
-           "get_joysticks", "get_name", "get_id", "get_axes", "get_hats",
-           "get_trackballs", "get_buttons"]
+__all__ = ["refresh", "get_axis", "get_hat_x", "get_hat_y",
+           "get_button_pressed", "get_joysticks", "get_name", "get_id",
+           "get_axes", "get_hats", "get_trackballs", "get_buttons"]
+
+
+def refresh():
+    """Refresh the SGE's knowledge of joysticks.
+
+    Call this method to allow the SGE to use joysticks that were plugged
+    in while the game was running.
+
+    """
+    sge.game._joysticks = []
+    sge.game._js_names = {}
+    sge.game._js_ids = {}
+    pygame.joystick.quit()
+    pygame.joystick.init()
+
+    if pygame.joystick.get_init():
+        for i in range(pygame.joystick.get_count()):
+            joy = pygame.joystick.Joystick(i)
+            joy.init()
+            n = joy.get_name()
+            sge.game._joysticks.append(joy)
+            sge.game._js_names[i] = n
+            sge.game._js_ids[n] = i
 
 
 def get_axis(joystick, axis):

@@ -65,6 +65,7 @@ Specification additions:
 + sge.Sprite.draw_unlock
 + sge.Font.get_width
 + sge.Font.get_height
++ sge.joystick.refresh
 
 Specification removals:
 - sge.StellarClass.detects_collisions

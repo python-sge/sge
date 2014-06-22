@@ -42,7 +42,7 @@ class Background:
 
     .. attribute:: layers
 
-       A tuple containing all :class:`sge.BackgroundLayer` objects used
+       A list containing all :class:`sge.BackgroundLayer` objects used
        in this background.  (Read-only)
 
     """
@@ -91,7 +91,7 @@ class Background:
 
             sorted_layers.insert(i, layer)
 
-        self.layers = tuple(sorted_layers)
+        self.layers = sorted_layers
 
     def destroy(self):
         """Destroy the background."""
@@ -113,10 +113,15 @@ class Background:
                                     background.get_width() - 1))
             view_yport = max(0, min(int(round(view.yport * sge.game._yscale)),
                                     background.get_height() - 1))
-            view_w = min(view.width * sge.game._xscale,
-                         background.get_width() - view_xport)
-            view_h = min(view.height * sge.game._yscale,
-                         background.get_height() - view_yport)
+            left_cutoff = abs(int(round(min(0, view.xport) *
+                                        sge.game._xscale)))
+            top_cutoff = abs(int(round(min(0, view.yport) * sge.game._yscale)))
+            view_w = max(1, (min(view.width * sge.game._xscale,
+                                background.get_width() - view_xport) -
+                             left_cutoff))
+            view_h = max(1, (min(view.height * sge.game._yscale,
+                                 background.get_height() - view_yport) -
+                             top_cutoff))
             surf = background.subsurface(view_xport, view_yport, view_w,
                                          view_h)
             for layer in self.layers:
@@ -124,11 +129,11 @@ class Background:
                 x = int(round(
                     (sge.game.current_room.background_x + layer.x -
                      (view.x * layer.xscroll_rate)) *
-                    sge.game._xscale))
+                    sge.game._xscale)) - left_cutoff
                 y = int(round(
                     (sge.game.current_room.background_y + layer.y -
                      (view.y * layer.yscroll_rate)) *
-                    sge.game._yscale))
+                    sge.game._yscale)) - top_cutoff
                 image_w = max(1, image.get_width())
                 image_h = max(1, image.get_height())
 

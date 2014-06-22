@@ -209,8 +209,6 @@ class Font:
            everyone sees text rendered the same way you do.
 
         """
-        assert pygame.font.get_init()
-
         self.name = name
         self._font = None
         self.size = size

@@ -23,6 +23,7 @@ Pygame SGE bugfixes:
 - Destruction of objects causing problems with concurrent iteration
 - Drawing partially transparent shapes not working as intended
 - Font files not being loaded successfully when multiple choices given
+- Backgrounds not displaying properly with view ports outside the window
 
 
 0.9.2

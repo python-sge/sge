@@ -126,6 +126,9 @@ class Room(sge.Room):
             self.current_joystick += 1
             self.current_joystick %= sge.joystick.get_joysticks()
             self.set_joystick()
+        elif key == "space":
+            sge.joystick.refresh()
+            self.set_joystick()
 
     def event_joystick_axis_move(self, js_name, js_id, axis, value):
         if (self.current_joystick in (js_name, js_id) and

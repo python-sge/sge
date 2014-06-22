@@ -35,7 +35,7 @@ class Background(object):
 
     .. attribute:: layers
 
-       A tuple containing all :class:`sge.BackgroundLayer` objects used
+       A list containing all :class:`sge.BackgroundLayer` objects used
        in this background.  (Read-only)
 
     """
