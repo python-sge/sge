@@ -78,6 +78,8 @@ Specification removals:
 - sge.get_joystick_trackballs
 - sge.get_joystick_buttons
 - sge.Font.get_size
+- sge.show_message
+- sge.get_text_entry
 
 Specification misc changes:
 * sge.Room.event_room_resume no longer calls sge.Room.event_room_start by default.

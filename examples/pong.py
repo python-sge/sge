@@ -59,9 +59,7 @@ class Game(sge.Game):
                 self.current_room.start()
 
     def event_close(self):
-        m = "Are you sure you want to quit?"
-        if sge.show_message(m, ("No", "Yes")):
-            self.end()
+        self.end()
 
     def event_paused_key_press(self, key, char):
         if key == 'escape':

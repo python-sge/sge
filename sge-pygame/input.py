@@ -24,7 +24,6 @@ You normally don't need to use input event objects directly.  Input
 events are handled automatically in each frame of the SGE's main loop.
 You only need to use input event objects directly if you take control
 away from the SGE's main loop, e.g. to create your own loop.
-
 """
 
 

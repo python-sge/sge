@@ -339,7 +339,7 @@ Dependencies
 
 """
 
-__version__ = "0.9.2.12"
+__version__ = "0.9.2.13"
 
 import sys
 import os
@@ -446,13 +446,12 @@ from sge.Music import Music
 from sge.StellarClass import StellarClass, Mouse
 from sge.Room import Room
 from sge.View import View
-from sge.functions import *
-from sge import collision, joystick, keyboard, mouse
+from sge import collision, input, joystick, keyboard, mouse
 
 
 __all__ = [
     # Modules
-    "collision", "joystick", "keyboard", "mouse",
+    "collision", "input", "joystick", "keyboard", "mouse",
 
     # Constants
     'IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP',
