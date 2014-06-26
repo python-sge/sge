@@ -14,7 +14,7 @@
 # above as well as the notices contained in other source files with your
 # own copyright notice.  Recommended free  licenses are  the GNU General
 # Public License, GNU Lesser General Public License, Expat License, or
-# Apache License 2.0.
+# Apache License.
 
 """
 This module provides input event classes.  Input event objects are used
@@ -26,7 +26,6 @@ events are handled automatically in each frame of the SGE's main loop.
 You only need to use input event objects directly if you take control
 away from the SGE's main loop, e.g. to create your own loop.
 """
-
 
 __all__ = ["KeyPress", "KeyRelease", "MouseMove", "MouseButtonPress",
            "MouseButtonRelease", "JoystickAxisMove", "JoystickHatMove",
@@ -44,15 +43,145 @@ class KeyPress:
     .. attribute:: key
 
        The identifier string of the key that was pressed.  See the
-       documentation for :func:`sge.keyboard.get_pressed` for more
-       information.
+       table below.
 
     .. attribute:: char
 
        The Unicode character associated with the key press, or an empty
        Unicode string if no Unicode character is associated with the key
-       press.  See the documentation for
-       :func:`sge.keyboard.get_pressed` for more information.
+       press.  See the table below.
+
+    ==================== ======================= =================
+    Key Name             Identifier String       Unicode Character
+    ==================== ======================= =================
+    0                    ``"0"``                 ``"0"``
+    1                    ``"1"``                 ``"1"``
+    2                    ``"2"``                 ``"2"``
+    3                    ``"3"``                 ``"3"``
+    4                    ``"4"``                 ``"4"``
+    5                    ``"5"``                 ``"5"``
+    6                    ``"6"``                 ``"6"``
+    7                    ``"7"``                 ``"7"``
+    8                    ``"8"``                 ``"8"``
+    9                    ``"9"``                 ``"9"``
+    A                    ``"a"``                 ``"a"``
+    B                    ``"b"``                 ``"b"``
+    C                    ``"c"``                 ``"c"``
+    D                    ``"d"``                 ``"d"``
+    E                    ``"e"``                 ``"e"``
+    F                    ``"f"``                 ``"f"``
+    G                    ``"g"``                 ``"g"``
+    H                    ``"h"``                 ``"h"``
+    I                    ``"i"``                 ``"i"``
+    J                    ``"j"``                 ``"j"``
+    K                    ``"k"``                 ``"k"``
+    L                    ``"l"``                 ``"l"``
+    M                    ``"m"``                 ``"m"``
+    N                    ``"n"``                 ``"n"``
+    O                    ``"o"``                 ``"o"``
+    P                    ``"p"``                 ``"p"``
+    Q                    ``"q"``                 ``"q"``
+    R                    ``"r"``                 ``"r"``
+    S                    ``"s"``                 ``"s"``
+    T                    ``"t"``                 ``"t"``
+    U                    ``"u"``                 ``"u"``
+    V                    ``"v"``                 ``"v"``
+    W                    ``"w"``                 ``"w"``
+    X                    ``"x"``                 ``"x"``
+    Y                    ``"y"``                 ``"y"``
+    Z                    ``"z"``                 ``"z"``
+    Period               ``"period"``            ``"."``
+    Comma                ``"comma"``             ``","``
+    Less Than            ``"less_than"``         ``"<"``
+    Greater Than         ``"greater_than"``      ``">"``
+    Forward Slash        ``"slash"``             ``"/"``
+    Question Mark        ``"question"``          ``"?"``
+    Apostrophe           ``"apostrophe"``        ``"'"``
+    Quotation Mark       ``"quote"``             ``'"'``
+    Colon                ``"colon"``             ``":"``
+    Semicolon            ``"semicolon"``         ``";"``
+    Exclamation Point    ``"exclamation"``       ``"!"``
+    At                   ``"at"``                ``"@"``
+    Hash                 ``"hash"``              ``"#"``
+    Dollar Sign          ``"dollar"``            ``"$"``
+    Carat                ``"carat"``             ``"^"``
+    Ampersand            ``"ampersand"``         ``"&"``
+    Asterisk             ``"asterisk"``          ``"*"``
+    Left Parenthesis     ``"parenthesis_left"``  ``"("``
+    Right Parenthesis    ``"parenthesis_right"`` ``")"``
+    Hyphen               ``"hyphen"``            ``"-"``
+    Underscore           ``"underscore"``        ``"_"``
+    Plus Sign            ``"plus"``              ``"+"``
+    Equals Sign          ``"equals"``            ``"="``
+    Left Bracket         ``"bracket_left"``      ``"["``
+    Right Bracket        ``"bracket_right"``     ``"]"``
+    Backslash            ``"backslash"``         ``"\\\\"``
+    Backtick             ``"backtick"``          ``"`"``
+    Euro                 ``"euro"``              ``"\\u20ac"``
+    Keypad 0             ``"kp_0"``              ``"0"``
+    Keypad 1             ``"kp_1"``              ``"1"``
+    Keypad 2             ``"kp_2"``              ``"2"``
+    Keypad 3             ``"kp_3"``              ``"3"``
+    Keypad 4             ``"kp_4"``              ``"4"``
+    Keypad 5             ``"kp_5"``              ``"5"``
+    Keypad 6             ``"kp_6"``              ``"6"``
+    Keypad 7             ``"kp_7"``              ``"7"``
+    Keypad 8             ``"kp_8"``              ``"8"``
+    Keypad 9             ``"kp_9"``              ``"9"``
+    Keypad Decimal Point ``"kp_point"``          ``"."``
+    Keypad Plus          ``"kp_plus"``           ``"+"``
+    Keypad Minus         ``"kp_minus"``          ``"-"``
+    Keypad Multiply      ``"kp_multiply"``       ``"*"``
+    Keypad Divide        ``"kp_divide"``         ``"/"``
+    Keypad Equals        ``"kp_equals"``         ``"="``
+    Keypad Enter         ``"kp_enter"``          ``"\\n"``
+    Left Arrow           ``"left"``
+    Right Arrow          ``"right"``
+    Up Arrow             ``"up"``
+    Down Arrow           ``"down"``
+    Home                 ``"home"``
+    End                  ``"end"``
+    Page Up              ``"pageup"``
+    Page Down            ``"pagedown"``
+    Tab                  ``"tab"``               ``"\\t"``
+    Space Bar            ``"space"``             ``" "``
+    Enter/Return         ``"enter"``             ``"\\n"``
+    Backspace            ``"backspace"``         ``"\\b"``
+    Delete               ``"delete"``
+    Clear                ``"clear"``
+    Left Shift           ``"shift_left"``
+    Right Shift          ``"shift_right"``
+    Left Ctrl            ``"ctrl_left"``
+    Right Ctrl           ``"ctrl_right"``
+    Left Alt             ``"alt_left"``
+    Right Alt            ``"alt_right"``
+    Left Super           ``"super_left"``
+    Right Super          ``"super_right"``
+    Mode                 ``"mode"``
+    Menu                 ``"menu"``
+    Caps Lock            ``"caps_lock"``
+    Esc                  ``"escape"``
+    Num Lock             ``"num_lock"``
+    Scroll Lock          ``"scroll_lock"``
+    Break                ``"break"``
+    Insert               ``"insert"``
+    Pause                ``"pause"``
+    Power                ``"power"``
+    Print Screen         ``"print_screen"``
+    SysRq                ``"sysrq"``
+    F1                   ``"f1"``
+    F2                   ``"f2"``
+    F3                   ``"f3"``
+    F4                   ``"f4"``
+    F5                   ``"f5"``
+    F6                   ``"f6"``
+    F7                   ``"f7"``
+    F8                   ``"f8"``
+    F9                   ``"f9"``
+    F10                  ``"f10"``
+    F11                  ``"f11"``
+    F12                  ``"f12"``
+    ==================== ======================= =================
 
     """
 
@@ -70,8 +199,7 @@ class KeyRelease:
     .. attribute:: key
 
        The identifier string of the key that was released.  See the
-       documentation for :func:`sge.keyboard.get_pressed` for more
-       information.
+       table in the documentation for :class:`sge.input.KeyPress`.
 
     """
 
@@ -109,8 +237,19 @@ class MouseButtonPress:
     .. attribute:: button
 
        The identifier string of the mouse button that was pressed.  See
-       the documentation for :func:`sge.mouse.get_pressed` for more
-       information.
+       the table below.
+
+    ====================== =================
+    Mouse Button Name      Identifier String
+    ====================== =================
+    Left mouse button      ``"left"``
+    Right mouse button     ``"right"``
+    Middle mouse button    ``"middle"``
+    Mouse wheel up         ``"wheel_up"``
+    Mouse wheel down       ``"wheel_down"``
+    Mouse wheel tilt left  ``"wheel_left"``
+    Mouse wheel tilt right ``"wheel_right"``
+    ====================== =================
 
     """
 
@@ -127,8 +266,8 @@ class MouseButtonRelease:
     .. attribute:: button
 
        The identifier string of the mouse button that was released.  See
-       the documentation for :func:`sge.mouse.get_pressed` for more
-       information.
+       the table in the documentation for
+       :class:`sge.input.MouseButtonPress`.
 
     """
 

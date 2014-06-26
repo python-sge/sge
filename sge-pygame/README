@@ -21,7 +21,7 @@ Dependencies
 ------------
 
 - Python 3.1 or later <http://www.python.org>
-- Pygame 1.9.2 or later <http://pygame.org>
+- Pygame 1.9.2a0 or later <http://pygame.org>
 
 Formats Support
 ---------------

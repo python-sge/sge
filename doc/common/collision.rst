@@ -1,10 +1,11 @@
+*************
 sge.collision
-=============
+*************
 
 .. automodule:: sge.collision
 
 sge.collision Functions
------------------------
+=======================
 
 .. autofunction:: sge.collision.rectangles_collide
 

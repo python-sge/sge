@@ -14,7 +14,7 @@
 # above as well as the notices contained in other source files with your
 # own copyright notice.  Recommended free  licenses are  the GNU General
 # Public License, GNU Lesser General Public License, Expat License, or
-# Apache License 2.0.
+# Apache License.
 
 """
 This module provides functions related to the mouse input.
@@ -22,9 +22,9 @@ This module provides functions related to the mouse input.
 Many other mouse functionalities are provided through attributes of
 :attr:`sge.game.mouse`:
 
-- :attr:`sge.game.mouse.x` and `sge.game.mouse.y` indicate the position
-  of the mouse relative to the room.  Set these attributes to change the
-  position of the mouse.
+- :attr:`sge.game.mouse.x` and :attr:`sge.game.mouse.y` indicate the
+  position of the mouse relative to the room.  Set these attributes to
+  change the position of the mouse.
 - :attr:`sge.game.mouse.xvelocity`, :attr:`sge.game.mouse.yvelocity`,
   :attr:`sge.game.mouse.speed`, and
   :attr:`sge.game.mouse.move_direction` indicate the average movement of
@@ -44,22 +44,8 @@ __all__ = ["get_pressed", "get_x", "get_y"]
 def get_pressed(button):
     """Return whether or not a mouse button is pressed.
 
-    Arguments:
-
-    - ``button`` -- The identifier string of the mouse button to check;
-      see below for a table of the identifier strings.
-
-    ====================== =================
-    Mouse Button Name      Identifier String
-    ====================== =================
-    Left mouse button      ``"left"``
-    Right mouse button     ``"right"``
-    Middle mouse button    ``"middle"``
-    Mouse wheel up         ``"wheel_up"``
-    Mouse wheel down       ``"wheel_down"``
-    Mouse wheel tilt left  ``"wheel_left"``
-    Mouse wheel tilt right ``"wheel_right"``
-    ====================== =================
+    See the documentation for :class:`sge.input.MouseButtonPress` for
+    more information.
 
     """
     # TODO

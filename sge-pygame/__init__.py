@@ -26,11 +26,11 @@ Official implementations of the SGE are `free/libre software
 <http://gnu.org/philosophy/free-sw.html>`_, and the SGE documentation is
 free/libre as well.
 
-Even if it isn't required of you, we encourage you to release your
-games' code under a free/libre software license, such as the GNU General
-Public License, the Expat License, or the Apache License.  Doing so is
-easy, does not negatively affect you, and is highly appreciated as a
-contribution to free/libre software.
+Even if it isn't required, you are encouraged to release your games'
+code under a free/libre software license, such as the GNU General Public
+License, the Expat License, or the Apache License.  Doing so is easy,
+does not negatively affect you, and is highly appreciated as a
+contribution to a free society.
 
 SGE Concepts
 ============
@@ -341,7 +341,7 @@ Dependencies
 ------------
 
 - Python 3.1 or later <http://www.python.org>
-- Pygame 1.9.2 or later <http://pygame.org>
+- Pygame 1.9.2a0 or later <http://pygame.org>
 
 Formats Support
 ---------------
@@ -411,7 +411,7 @@ by default.
 
 """
 
-__version__ = "0.9.2.23"
+__version__ = "0.9.2.25"
 
 import sys
 import os

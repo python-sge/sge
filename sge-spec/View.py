@@ -14,7 +14,7 @@
 # above as well as the notices contained in other source files with your
 # own copyright notice.  Recommended free  licenses are  the GNU General
 # Public License, GNU Lesser General Public License, Expat License, or
-# Apache License 2.0.
+# Apache License.
 
 __all__ = ['View']
 

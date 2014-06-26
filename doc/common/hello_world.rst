@@ -1,29 +1,16 @@
-First Example: Hello, world!
-============================
+*************************
+Tutorial 1: Hello, world!
+*************************
 
 The easiest way to learn something new is with an example.  We will
 start with a very basic example: the traditional "Hello, world!"
 program.  This example will just project "Hello, world!" onto the
 screen.
 
-Setting Up the Project
-----------------------
+Setting Up a Project
+====================
 
 First, we must create our project directory.  I will use "~/hello".
-
-Next, we need to get the SGE to work with our project.  There are two
-ways to do this: the most obvious way is to run the included steup.py
-script from the terminal::
-
-    ./setup.py install
-
-This will install the SGE system-wide.
-
-The second way, which I will use, is to simply copy the "sge" folder to
-"~/hello".  This will enable the SGE to work only with this project.
-
-Be sure to use an implementation that is compatible with the version of
-Python you are using.
 
 Next, create the game source file inside "~/hello".  I am calling it
 "hello.py".
@@ -82,7 +69,8 @@ the following line::
 
     import sge
 
-With that, you should be good to go.
+Adding Game Logic
+=================
 
 The Game Class
 --------------
@@ -90,8 +78,7 @@ The Game Class
 In SGE games, everything is controlled by a "game" object.  The game
 object controls everything at the global level, including global events.
 To define global events, we need to subclass :class:`sge.Game` and
-create our own game class.  Because only one :class:`sge.Game` object is
-allowed to exist in any one game, we can just call this class ``Game``::
+create our own game class.  We can just call this class ``Game``::
 
     class Game(sge.Game):
 
@@ -129,22 +116,21 @@ avoiding needless duplication of work.
 The Room Class
 --------------
 
-Next, we need to define a room class.  In the SGE, rooms are
-distinguished places where things happen; for example, each level in a
-game would typically be its own room, the title screen might be a room,
-the credits screen might be a room, and the options menu might be a
-room.  In this example, we are only going to have one room, and this
-room is going to serve only one function: display "Hello, world!" in the
-center of the screen.  This will be our room class::
+Rooms are distinguished places where things happen; for example, each
+level in a game would typically be its own room, the title screen might
+be a room, the credits screen might be a room, and the options menu
+might be a room.  In this example, we are only going to have one room,
+and this room is going to serve only one function: display "Hello,
+world!" in the center of the screen.  This will be our room class::
 
     class Room(sge.Room):
 
         def event_step(self, time_passed, delta_mult):
-            self.project_text("my_font", "Hello, world!", sge.game.width / 2,
-                              sge.game.height / 2, 0, color="black",
-                              halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
+            sge.game.project_text("my_font", "Hello, world!", sge.game.width / 2,
+                                  sge.game.height / 2, color="black",
+                                  halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
 
-You can see that the room class is defined very similar to the game
+You can see that the room class is defined very similarly to the game
 class.  We subclass :class:`sge.Room` and add a method to override
 :meth:`sge.Room.event_step`, which defines the step event of our room
 class.  The step event happens over and over again, once every "frame".
@@ -153,23 +139,18 @@ makes small changes to the image on the screen and then gives you the
 new image in a fraction of a second, providing an illusion of movement.
 
 To display "Hello, world!" onto the screen, we use
-:meth:`sge.Room.project_text`, which instantly displays any text we want
-inside the room.  The first argument of this method is the font to use;
-we don't have a font yet, but we are going to define one later and give
-it the unique idetifier, ``"my_font"``.  Next is the text to display,
-which for us is ``"Hello, world!"``.
+:meth:`sge.Game.project_text`, which instantly displays any text we want
+onto the screen.  :data:`sge.game` is a variable that always points to
+the :class:`sge.Game` object currently in use.
+
+The first argument of this method is the font to use; we don't have a
+font yet, but we are going to define one later and give it the unique
+idetifier, ``"my_font"``.  Next is the text to display, which for us is
+``"Hello, world!"``.
 
 The next arguments are the horizontal and vertical location of the text
-in the room; we set these to half of the game's width and height,
-respectively, to place the text in the center of the screen.
-:data:`sge.game` is a variable that always points to the
-:class:`sge.Game` object currently in use.
-
-Following the position arguments is the Z-axis value of the projection,
-which tells the SGE what to do if two objects overlap.  We don't have
-anything else that the projection could overlap with, so it doesn't
-matter what we set this to.  I chose ``0``, but you can choose any
-number.
+on the screen; we set these to half of the game's width and height,
+respectively, to place the text in the center.
 
 Now that all required arguments are defined, we are going to define the
 color of the text as a keyword argument, setting it explicitly to black.
@@ -180,27 +161,40 @@ respectively.
 
 You might be wondering: why do we keep doing this every frame? Can't we
 just do it once, since we're not changing the image? In fact, we can't.
-:meth:`sge.Room.project_text` shows our text, but it only does so for
+:meth:`sge.Game.project_text` shows our text, but it only does so for
 one frame.  You can think of it as working like a movie projector: if
 you keep the projector on, you will continue to see the image, but as
 soon as the projector stops projecting the image, you can no longer see
-the image from the projector.  :meth:`sge.Room.project_text` and other
+the image from the projector.  :meth:`sge.Game.project_text` and other
 similar projection methods work the same way.
+
+Starting the Game
+=================
+
+If you try to run hello.py now, you will notice that nothing happens.
+This is because, while we defined the game logic, we didn't actually
+execute it.
+
+Additionally, we are still missing a resource: the font object we want
+to use to project text onto the screen.  We need to load this resource.
+
+We are going to fix both of these problems by defining and then calling
+a :func:`main` function.
 
 The main Function
 -----------------
 
-The :func:`main` function is where everything starts.  Technically,
-Python doesn't require this to be a function, much less a function
-called :func:`main`, but using a main function makes the code cleaner
-and more well-defined.  This is what our main function will be::
+Technically, Python doesn't require this to be a function, much less a
+function called :func:`main`, but using a main function makes the code
+cleaner and more well-defined.  This is what our :func:`main` definition
+will be::
 
     def main():
         # Create Game object
         Game()
 
         # Create backgrounds
-        background = sge.Background((), "white")
+        background = sge.Background([], "white")
 
         # Load fonts
         sge.Font(ID="my_font")
@@ -215,37 +209,37 @@ in anything since it is automatically stored in :data:`sge.game`.
 
 Second, we create a :class:`sge.Background` object to specify what the
 background looks like.  We make our background all white, with no
-layers.
+layers.  (Layers are used to give backgrounds more than a solid color,
+which we don't need.)
 
 Third, we create our font. We don't really care what this font looks
 like, so we allow the SGE to pick a font.  If you do care what font is
 used, you can pass the name of a font onto the ``name`` keyword
-argument.  Since we are referencing the font by ID rather than by a
-variable, there is no need for us to assign the font to a variable.
+argument.  Since we are referencing the font by ID, there is no need for
+us to assign the font to a variable.
 
 Fourth, we create a room. Again, we don't need to assign it to a
 variable. The only argument we pass is the background argument; we set
 this to the background we created earlier.
 
 Finally, with everything in place, we call the :meth:`sge.Game.start`
-method of our game object.
+method of our game object.  This executes all the game logic we defined
+earlier.
 
-If you try to run the file at this point, you won't get any results.
-That's because we never called the main function.  To fix that problem,
-add this to the bottom of the file, after the definition of the main
-function::
+To actually call :func:`main`, add this to the bottom of the file, after
+the definition of :func:`main`::
 
     if __name__ == '__main__':
         main()
 
-:data:`__name__` is a special Python variable; if it is set to
+:data:`__name__` is a special Python variable: if it is set to
 ``"__main__"``, that means that the current module is the main module,
 i.e. this file was executed rather than imported.  It is a good practice
 to include this distinction between being executed and being imported in
 all of your Python scripts.
 
 The Final Result
-----------------
+================
 
 That's it!  If you execute the script now, you will see a white screen
 with black text in the center reading "Hello, world!" Pressing the Esc
@@ -284,9 +278,9 @@ This is the completed Hello World program::
     class Room(sge.Room):
 
         def event_step(self, time_passed, delta_mult):
-            self.project_text("my_font", "Hello, world!", sge.game.width / 2,
-                              sge.game.height / 2, 0, color="black",
-                              halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
+            sge.game.project_text("my_font", "Hello, world!", sge.game.width / 2,
+                                  sge.game.height / 2, color="black",
+                                  halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
 
 
     def main():
@@ -294,7 +288,7 @@ This is the completed Hello World program::
         Game()
 
         # Create backgrounds
-        background = sge.Background((), "white")
+        background = sge.Background([], "white")
 
         # Load fonts
         sge.Font(ID="my_font")
@@ -307,6 +301,3 @@ This is the completed Hello World program::
 
     if __name__ == '__main__':
         main()
-
-Now that you have built your first basic program, you are ready to make
-a real game: Pong.

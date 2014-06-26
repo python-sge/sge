@@ -15,14 +15,11 @@ To develop an implementation of SGE:
 * Edit setup.py to include the name of the implementation and proper
   information about it.
 * Replace this README with README.dist
-
-Then, go to the "sge" directory and:
-
-* Define the values of the constants in constants.py.
-* Replace the license text on top of all source code files with
-  appropriate license text for the license you intend to use for your
-  implementation.  Suggested license choices are the GNU GPL, the GNU
-  LGPL, the Apache License 2.0, or the Expat License.
+* Define the values of the constants in sge/constants.py.
+* Replace the license text on top of all source code files in the "sge"
+  directory with appropriate license text for the license you intend to
+  use for your implementation.  Suggested license choices are the GNU
+  GPL, the GNU LGPL, the Apache License, or the Expat License.
 * Replace the "TODO" comments found throughout the Python files with
   actual functionality.
 * Insert the name of your implementation into the
@@ -31,19 +28,10 @@ Then, go to the "sge" directory and:
   this section.
 * Other than the implementation-specific information section, please do
   NOT modify the docstrings.
-* Replace README with a file containing all important
+* Replace sge/README with a file containing all important
   implementation-specific information.  You can just copy the
   appropriate section from the docstring of __init__.py.
-
-Finally, go to the "doc" directory and:
-
-* Replace "template" in the name of "template.rst" with a string
-  identifying your implementation.  Modify its contents appropriately.
-* Replace "template" in the toctree directive of index.rst with the
-  string you used in the previous step.
-* Add your name to the copyright notice in "index.rst", or modify the
-  copyright notice to specify a different license.
-* Use the resulting files in this directory to generate Sphinx
+* Use the files in the "doc" directory to generate Sphinx
   documentation (e.g. with sphinx-quickstart).
 
 To test the implementation, use the examples found in the examples

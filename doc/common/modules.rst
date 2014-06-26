@@ -1,5 +1,6 @@
+*******
 Modules
-=======
+*******
 
 Contents:
 
@@ -7,4 +8,8 @@ Contents:
    :maxdepth: 1
 
    collision
+   input
+   joystick
+   keyboard
+   mouse
 

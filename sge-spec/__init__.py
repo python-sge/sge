@@ -14,7 +14,7 @@
 # above as well as the notices contained in other source files with your
 # own copyright notice.  Recommended free  licenses are the GNU General
 # Public License, GNU Lesser General Public License, Expat License, or
-# Apache License 2.0.
+# Apache License.
 
 """
 The Stellar Game Engine (abbreviated "SGE", pronounced as "Sage") is a
@@ -27,11 +27,11 @@ Official implementations of the SGE are `free/libre software
 <http://gnu.org/philosophy/free-sw.html>`_, and the SGE documentation is
 free/libre as well.
 
-Even if it isn't required of you, we encourage you to release your
-games' code under a free/libre software license, such as the GNU General
-Public License, the Expat License, or the Apache License.  Doing so is
-easy, does not negatively affect you, and is highly appreciated as a
-contribution to free/libre software.
+Even if it isn't required, you are encouraged to release your games'
+code under a free/libre software license, such as the GNU General Public
+License, the Expat License, or the Apache License.  Doing so is easy,
+does not negatively affect you, and is highly appreciated as a
+contribution to a free society.
 
 SGE Concepts
 ============
@@ -339,7 +339,7 @@ Dependencies
 
 """
 
-__version__ = "0.9.2.15"
+__version__ = "0.9.2.16"
 
 import sys
 import os

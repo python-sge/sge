@@ -14,14 +14,11 @@
 # above as well as the notices contained in other source files with your
 # own copyright notice.  Recommended free  licenses are  the GNU General
 # Public License, GNU Lesser General Public License, Expat License, or
-# Apache License 2.0.
+# Apache License.
 
 """
 This module provides functions related to joystick input.
 """
-
-import sge
-
 
 __all__ = ["refresh", "get_axis", "get_hat_x", "get_hat_y",
            "get_button_pressed", "get_joysticks", "get_name", "get_id",
