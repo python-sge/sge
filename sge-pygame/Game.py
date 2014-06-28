@@ -1290,7 +1290,12 @@ class Game:
         more information.
 
         """
+        if not isinstance(sprite, sge.Sprite):
+            sprite = self.sprites[sprite]
+
         img = sprite._get_image(image)
+        x -= sprite.origin_x
+        y -= sprite.origin_y
         self._window_projections.append((img, x, y, blend_mode))
 
     def project_text(self, font, text, x, y, width=None, height=None,

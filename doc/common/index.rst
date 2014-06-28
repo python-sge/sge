@@ -17,6 +17,7 @@ Contents:
    sge
    hello_world
    pong
+   pong_better
    classes
    modules
 

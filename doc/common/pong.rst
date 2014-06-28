@@ -2,6 +2,8 @@
 Tutorial 2: Pong
 ****************
 
+.. contents::
+
 Now that you've seen the basics of the SGE, it's time to create an
 actual game. Although Pong might seem extremely simple, it will give you
 a great foundation for developing more complex games in the future.
@@ -368,9 +370,9 @@ It's time to define our :func:`main` function.
 
 We are going to define some global variables, so at the top of
 :func:`main`, we must declare them with ``global``.  These global
-variables will be :data:`player`, :data:`player2`, and :data:`ball`.  As
-the names suggest, these variables will indicate the player 1, player 2,
-and ball objects, respectively.
+variables will be :data:`player` and :data:`player2`.  As the names
+suggest, these variables will indicate the player 1 and player 2
+objects, respectively.
 
 We are going to pass some arguments to the creation of our :class:`Game`
 object: we are going to define ``width`` as ``640``, ``height`` as
@@ -436,9 +438,9 @@ Creating Objects
 Don't forget to create our objects!  In :data:`player1`, store a
 :class:`Player` object with the ``player`` argument specified as ``1``.
 In :data:`player2`, store a :class:`Player` object with the ``player``
-argument specified as ``2``.  In :data:`ball`, store a :class:`Ball`
-object.  Put all of these objects in a list and assign this list to a
-variable called ``objects``.
+argument specified as ``2``.  Finally, create a :class:`Ball` object.
+Put all of these objects in a list and assign this list to a variable
+called ``objects``.
 
 Creating Rooms
 --------------
@@ -485,7 +487,6 @@ You should now have a script that looks something like this::
 
     player1 = None
     player2 = None
-    ball = None
 
 
     class Game(sge.Game):
@@ -604,7 +605,6 @@ You should now have a script that looks something like this::
     def main():
         global player1
         global player2
-        global ball
 
         # Create Game object
         Game(width=640, height=480, fps=120)

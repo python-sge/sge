@@ -135,6 +135,7 @@ class Room(sge.Room):
                          anti_alias=True)
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
+        eraser.destroy()
 
     def update_wipe_topright(self, complete):
         w = self.transition_sprite.width
@@ -147,6 +148,7 @@ class Room(sge.Room):
                          anti_alias=True)
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
+        eraser.destroy()
 
     def update_wipe_bottomleft(self, complete):
         w = self.transition_sprite.width
@@ -159,6 +161,7 @@ class Room(sge.Room):
                          anti_alias=True)
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
+        eraser.destroy()
 
     def update_wipe_bottomright(self, complete):
         w = self.transition_sprite.width
@@ -171,6 +174,7 @@ class Room(sge.Room):
                          anti_alias=True)
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
+        eraser.destroy()
 
     def update_wipe_matrix(self, complete):
         psize = 4

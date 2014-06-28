@@ -27,7 +27,6 @@ TEXT_OFFSET = 16
 
 player1 = None
 player2 = None
-ball = None
 hud_sprite = None
 bounce_sound = None
 bounce_wall_sound = None
@@ -39,6 +38,9 @@ class Game(sge.Game):
 
     def event_game_start(self):
         self.mouse.visible = False
+
+    def event_step(self, time_passed, delta_mult):
+        self.project_sprite(hud_sprite, 0, self.width / 2, 0)
 
     def event_key_press(self, key, char):
         global game_in_progress
@@ -75,15 +77,7 @@ class Game(sge.Game):
 
 class Player(sge.StellarClass):
 
-    @property
-    def score(self):
-        return self.v_score
-
-    @score.setter
-    def score(self, value):
-        if value != self.v_score:
-            self.v_score = value
-            refresh_hud()
+    score = 0
 
     def __init__(self, player):
         if player == 1:
@@ -103,7 +97,8 @@ class Player(sge.StellarClass):
         super().__init__(x, y, sprite="paddle", checks_collisions=False)
 
     def event_create(self):
-        self.v_score = 0
+        self.score = 0
+        refresh_hud()
         self.trackball_motion = 0
 
     def event_step(self, time_passed, delta_mult):
@@ -115,8 +110,7 @@ class Player(sge.StellarClass):
         if (abs(axis_motion) > abs(key_motion) and
                 abs(axis_motion) > abs(self.trackball_motion)):
             self.yvelocity = axis_motion * PADDLE_SPEED
-        elif (abs(self.trackball_motion) > abs(key_motion) and
-              abs(self.trackball_motion) > abs(axis_motion)):
+        elif abs(self.trackball_motion) > abs(key_motion):
             self.yvelocity = self.trackball_motion * PADDLE_SPEED
         else:
             self.yvelocity = key_motion * PADDLE_SPEED
@@ -131,8 +125,7 @@ class Player(sge.StellarClass):
 
     def event_joystick_trackball_move(self, joystick, ball, x, y):
         if joystick == self.joystick:
-            if abs(y) > abs(self.trackball_motion):
-                self.trackball_motion = y
+            self.trackball_motion += y
 
 
 class Ball(sge.StellarClass):
@@ -143,17 +136,18 @@ class Ball(sge.StellarClass):
         super().__init__(x, y, sprite="ball")
 
     def event_create(self):
-        refresh_hud()
         self.serve()
 
     def event_step(self, time_passed, delta_mult):
         # Scoring
         if self.bbox_right < 0:
             player2.score += 1
+            refresh_hud()
             score_sound.play()
             self.serve(-1)
         elif self.bbox_left > sge.game.current_room.width:
             player1.score += 1
+            refresh_hud()
             score_sound.play()
             self.serve(1)
 
@@ -229,7 +223,6 @@ def main():
     global score_sound
     global player1
     global player2
-    global ball
 
     # Create Game object
     Game(width=640, height=480, fps=120)
@@ -243,7 +236,7 @@ def main():
                                  paddle_sprite.height, fill="white")
     ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
                                fill="white")
-    hud_sprite = sge.Sprite(width=320, height=160, origin_x=160, origin_y=0)
+    hud_sprite = sge.Sprite(width=320, height=120, origin_x=160, origin_y=0)
 
     # Load backgrounds
     layers = [sge.BackgroundLayer("paddle", sge.game.width / 2, 0, -10000,
@@ -251,7 +244,7 @@ def main():
     background = sge.Background(layers, "black")
 
     # Load fonts
-    sge.Font('Liberation Mono', ID="hud", size=48)
+    sge.Font("Droid Sans Mono", ID="hud", size=48)
 
     # Load sounds
     bounce_sound = sge.Sound('bounce.wav')
@@ -262,9 +255,7 @@ def main():
     player1 = Player(1)
     player2 = Player(2)
     ball = Ball()
-    hud = sge.StellarClass(sge.game.width / 2, 0, -10, sprite=hud_sprite,
-                           tangible=False)
-    objects = [player1, player2, ball, hud]
+    objects = [player1, player2, ball]
 
     # Create rooms
     sge.Room(objects, background=background)

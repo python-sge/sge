@@ -24,7 +24,7 @@ They should would with any implementation that follows the
 specification.
 """
 
-__version__ = "0.0.0.13"
+__version__ = "0.0.0.14"
 
 from xsge import gui, transition
 

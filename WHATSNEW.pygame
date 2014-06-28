@@ -24,6 +24,8 @@ Pygame SGE bugfixes:
 - Drawing partially transparent shapes not working as intended
 - Font files not being loaded successfully when multiple choices given
 - Backgrounds not displaying properly with view ports outside the window
+- Game projections of sprites not taking suggested origin into account
+- sge.Game.project_sprite not working with sprite IDs
 
 
 0.9.2

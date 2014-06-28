@@ -2,6 +2,8 @@
 Tutorial 1: Hello, world!
 *************************
 
+.. contents::
+
 The easiest way to learn something new is with an example.  We will
 start with a very basic example: the traditional "Hello, world!"
 program.  This example will just project "Hello, world!" onto the
