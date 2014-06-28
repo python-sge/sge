@@ -250,7 +250,8 @@ sounds.  Generate three sounds: one for the ball bouncing off a paddle
 ("bounce_wall.wav"), and one for the ball passing by a player
 ("score.wav").  Alternatively, you can copy the sounds I generated from
 examples/data/sounds.  Create a folder in your project directory with
-the name "data" and put your sounds in that folder.
+the name "data", create a folder within the data folder with the name
+"sounds", and put your sounds in the "sounds" folder.
 
 .. note::
 
