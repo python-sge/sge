@@ -241,9 +241,9 @@ position of an object when it was first created, which in the case of
 For the second task, we have an argument called ``direction``.  If it is
 :const:`None`, it randomly becomes either ``1`` or ``-1``.  The
 value is then multiplied by a constant called :const:`BALL_START_SPEED`,
-and this becomes the ball's :attr:`sge.StellarClass.xvelocity` value.
-The ball's :attr:`sge.StellarClass.yvelocity` value is then set to
-``0``.
+which we will set to ``2``, and this becomes the ball's
+:attr:`sge.StellarClass.xvelocity` value.  The ball's
+:attr:`sge.StellarClass.yvelocity` value is then set to ``0``.
 
 The result looks like this::
 

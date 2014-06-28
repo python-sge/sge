@@ -7,12 +7,13 @@ without any warranty.
 
 ========================================================================
 
-0.9.2-dev
+0.10.0
 ------------------------------------------------------------------------
 
 Pygame SGE misc changes:
 * If sge.game.scale is set, the window is now not resizable.
 * Objects can now be destroyed multiple times safely.
+* Pause screen improved.
 
 Pygame SGE bugfixes:
 - Window size being the monitor size when exiting fullscreen

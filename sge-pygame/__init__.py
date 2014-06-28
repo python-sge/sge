@@ -61,27 +61,12 @@ event method (with a name that begins with ``event_``) is called. To
 define actions triggered by events, simply override the appropriate
 event method.
 
-The Mouse
----------
-
-The mouse is handled somewhat unusually by the SGE.  Rather than having
-functions or variables report the mouse position relative to the screen,
-the mouse position within the room, calculated based on its position on
-the screen by the SGE, is recorded in a special
-:class:`sge.StellarClass` object which represents the mouse.  This mouse
-object can be found as :attr:`sge.game.mouse`, and it has the special
-object ID, ``"mouse"``.
-
-The mouse object differs from most :class:`sge.StellarClass` objects in
-a few ways.  Its speed variables cannot be manually set, and they always
-report numbers which correspond to the average motion of the mouse
-during the last quarter of a second.  Setting
-:attr:`sge.game.mouse.visible` toggles whether or not the mouse cursor
-itself is visible, and setting :attr:`sge.game.mouse.sprite` sets the
-mouse cursor to the sprite assigned.
-
-In all other ways, the mouse object is exactly the same as all other
-:class:`sge.StellarClass` objects.
+At a lower level, it is possible to read "input events" from
+:attr:`sge.game.input_events` and handle them manually.  See the
+documentation for :mod:`sge.input` for more information.  This is not
+recommended, however, unless you are running your own loop for some
+reason (in which case it is necessary to do this in order to get input
+from the user).
 
 Colors
 ------
@@ -176,6 +161,45 @@ chooses which one is considered to be closer to the viewer.  The SGE is
 allowed to change this decision, but only while the objects in question
 are not overlapping, since changing the decision while the two objects
 are overlapping would cause an undesirable flicker effect.
+
+The Game Loop
+-------------
+
+There can occasionally be times where you want to run your own loop,
+independent of the SGE's main loop.  This is not recommended in general,
+but if you must (to freeze the game, for example), you should know the
+general game loop structure::
+
+    while True:
+        # Input events
+        sge.game.pump_input()
+        while sge.game.input_events:
+            event = sge.game.input_events.pop(0)
+
+            # Handle event
+
+        # Regulate speed
+        time_passed = sge.game.regulate_speed()
+
+        # Logic (e.g. collision detection and step events)
+
+        # Refresh
+        sge.game.refresh()
+
+:meth:`sge.Game.pump_input` should be called every frame regardless of
+whether or not user input is needed.  Failing to call it will cause the
+queue to build up, but more importantly, the OS may decide that the
+program has locked up if it doesn't get a response for a long time.
+
+:meth:`sge.Game.regulate_speed` limits the frame rate of the game and
+tells you how much time has passed since the last frame.  It is not
+technically necessary, but using it is highly recommended; otherwise,
+the CPU will be working harder than it needs to and if things are
+moving, their speed will be irregular.
+
+:meth:`sge.Game.refresh` is necessary for any changes to the screen to
+be seen by the user.  This includes new objects, removed objects, new
+projections, discontinued projections, etc.
 
 Global Variables and Constants
 ==============================
@@ -411,7 +435,7 @@ by default.
 
 """
 
-__version__ = "0.9.2.26"
+__version__ = "0.10.0"
 
 import sys
 import os

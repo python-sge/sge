@@ -30,11 +30,11 @@ version of Python we will be using, the shebang is::
     #!/usr/bin/env python3
 
 The shebang should be the very first line of the file.  You should also
-make sure that the file itself uses Unix-style line endings ("\n"); this
-can be done in most text editors via a drop-down list available when you
-save, and is done by IDLE automatically.  Windows-style line endings
-("\r\n") are often interpreted wrongly in POSIX systems, which defeats
-the purpose of the shebang.
+make sure that the file itself uses Unix-style line endings ("\\n");
+this can be done in most text editors via a drop-down list available
+when you save, and is done by IDLE automatically.  Windows-style line
+endings ("\\r\\n") are often interpreted wrongly in POSIX systems, which
+defeats the purpose of the shebang.
 
 License
 -------

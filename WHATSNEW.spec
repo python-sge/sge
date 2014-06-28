@@ -7,7 +7,7 @@ without any warranty.
 
 ========================================================================
 
-0.9.2-dev
+0.10.0
 ------------------------------------------------------------------------
 
 Specification additions:
@@ -86,6 +86,7 @@ Specification misc changes:
 * sge.Room.event_room_resume no longer calls sge.Room.event_room_start by default.
 * "name" and "ID" arguments for joystick events renamed to "js_name" and
   "js_id", respectively.
+* IMPLEMENTATION set to "SGE Specification" instead of "SGE Template".
 
 
 0.9.2

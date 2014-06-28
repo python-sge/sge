@@ -637,10 +637,10 @@ class Dialog(Window):
                     return
 
             # Regulate speed
-            sge.game.regulate_speed()
+            time_passed = sge.game.regulate_speed()
 
             # Project windows
-            handler.event_step()
+            handler.event_step(time_passed, 1)
 
             # Refresh
             sge.game.refresh()

@@ -27,7 +27,8 @@ Many other mouse functionalities are provided through attributes of
 - :attr:`sge.game.mouse.xvelocity`, :attr:`sge.game.mouse.yvelocity`,
   :attr:`sge.game.mouse.speed`, and
   :attr:`sge.game.mouse.move_direction` indicate the average movement of
-  the mouse during the last 250 milliseconds.
+  the mouse during the last 250 milliseconds.  They cannot be manually
+  set.
 - :attr:`sge.game.mouse.sprite` controls what the mouse cursor looks
   like.  Set to :const:`None` for the default mouse cursor.
 - :attr:`sge.game.mouse.visible` controls whether or not the mouse

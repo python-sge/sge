@@ -15,7 +15,7 @@ To develop an implementation of SGE:
 * Edit setup.py to include the name of the implementation and proper
   information about it.
 * Replace this README with README.dist
-* Define the values of the constants in sge/constants.py.
+* Define the values of the constants in sge/__init__.py.
 * Replace the license text on top of all source code files in the "sge"
   directory with appropriate license text for the license you intend to
   use for your implementation.  Suggested license choices are the GNU
@@ -23,9 +23,9 @@ To develop an implementation of SGE:
 * Replace the "TODO" comments found throughout the Python files with
   actual functionality.
 * Insert the name of your implementation into the
-  implementation-specific information section of __init__.py and insert
-  all important information that is specific to your implementation in
-  this section.
+  implementation-specific information section of sge/__init__.py and
+  insert all important information that is specific to your
+  implementation in this section.
 * Other than the implementation-specific information section, please do
   NOT modify the docstrings.
 * Replace sge/README with a file containing all important
