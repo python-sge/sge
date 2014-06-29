@@ -686,20 +686,22 @@ class Widget:
 
             parent.widgets.insert(i, self)
 
-    def __init__(self, parent, x, y, z, sprite):
+    def __init__(self, parent, x, y, z, sprite=None):
         self.parent = weakref.ref(parent)
         self.x = x
         self.y = y
         self.z = z
-        self.sprite = sprite
+        if sprite is not None:
+            self.sprite = sprite
+        else:
+            self.sprite = sge.Sprite(width=1, height=1)
+            self.sprite.destroy()
 
     def destroy(self):
         """Destroy this widget."""
         parent = self.parent()
         if parent is not None and self in parent.widgets:
             parent.widgets.remove(self)
-
-        self.sprite.destroy()
 
     def redraw(self):
         """Re-draw this widget's sprite.
@@ -868,7 +870,7 @@ class Label(Widget):
     def __init__(self, parent, x, y, z, text, font=None, width=None,
                  height=None, color=None, halign=sge.ALIGN_LEFT,
                  valign=sge.ALIGN_TOP):
-        super().__init__(parent, x, y, z, sge.Sprite(width=1, height=1))
+        super().__init__(parent, x, y, z)
         self.text = text
         self.font = font
         self.width = width
@@ -899,6 +901,12 @@ class Button(Widget):
         self.sprite_selected = None
         self.sprite_pressed = None
         self.redraw()
+
+    def destroy(self):
+        super().destroy()
+        self.sprite_normal.destroy()
+        self.sprite_selected.destroy()
+        self.sprite_pressed.destroy()
 
     def redraw(self):
         h = button_sprite.height
@@ -1013,12 +1021,98 @@ class Button(Widget):
 
 class CheckBox(Widget):
 
-    pass
+    def __init__(self, parent, x, y, z, enabled=False):
+        super().__init__(parent, x, y, z)
+        self.enabled = enabled
+        self._pressed = False
+
+    def refresh(self):
+        if self.enabled:
+            self.sprite = checkbox_on_sprite
+        else:
+            self.sprite = checkbox_off_sprite
+
+        super().refresh()
+
+    def event_key_press(self, key, char):
+        if key in ("enter", "kp_enter"):
+            self._pressed = True
+
+    def event_key_release(self, key):
+        if key in ("enter", "kp_enter"):
+            if self._pressed:
+                self.enabled = not self.enabled
+                self.event_toggle()
+
+    def event_mouse_button_press(self, button):
+        if button == "left":
+            self._pressed = True
+
+    def event_mouse_button_release(self, button):
+        if button == "left":
+            if self._pressed:
+                self.enabled = not self.enabled
+                self.event_toggle()
+
+    def event_global_key_release(self, key):
+        if key in ("enter", "kp_enter"):
+            self._pressed = False
+
+    def event_global_mouse_button_release(self, button):
+        if button == "left":
+            self._pressed = False
+
+    def event_toggle(self):
+        """Toggle event.
+
+        Called when the state of the checkbox is toggled by the user.
+
+        """
+        pass
 
 
-class ComboBox(Widget):
+class RadioButton(CheckBox):
 
-    pass
+    def refresh(self):
+        if self.enabled:
+            self.sprite = radiobutton_on_sprite
+        else:
+            self.sprite = radiobutton_off_sprite
+
+        Widget.refresh(self)
+
+    def _enable(self):
+        # Enable the radiobutton, disable any others, and call
+        # event_toggle.
+        if not self.enabled:
+            self.enabled = True
+            parent = self.parent()
+            if parent is not None:
+                for widget in parent.widgets:
+                    if widget is not self and isinstance(widget, RadioButton):
+                        if widget.enabled:
+                            widget.enabled = False
+                            widget.event_toggle()
+
+            self.event_toggle()
+
+    def event_key_release(self, key):
+        if key in ("enter", "kp_enter"):
+            if self._pressed:
+                self._enable()
+
+    def event_mouse_button_release(self, button):
+        if button == "left":
+            if self._pressed:
+                self._enable()
+
+    def event_toggle(self):
+        """Toggle event.
+
+        Called when the state of the checkbox is toggled by the user.
+
+        """
+        pass
 
 
 class ProgressBar(Widget):
@@ -1026,12 +1120,12 @@ class ProgressBar(Widget):
     pass
 
 
-class RadioButton(Widget):
+class TextBox(Widget):
 
     pass
 
 
-class TextBox(Widget):
+class ComboBox(TextBox):
 
     pass
 
@@ -1289,6 +1383,10 @@ if __name__ == '__main__':
     window.show()
     
     window2 = Window(480, 200, 320, 320, title="Test window 2")
+    checkbox = CheckBox(window2, 16, 16, 0)
+    radio = RadioButton(window2, 16, 48, 0)
+    radio2 = RadioButton(window2, 16, 80, 0)
+    radio3 = RadioButton(window2, 16, 112, 0)
     window2.show()
 
     sge.game.start()
