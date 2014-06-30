@@ -1117,7 +1117,40 @@ class RadioButton(CheckBox):
 
 class ProgressBar(Widget):
 
-    pass
+    def __init__(self, parent, x, y, z, width=128, progress=0):
+        super().__init__(parent, x, y, z, sge.Sprite(width=1, height=1))
+        self.width = width
+        self.progress = progress
+        self.redraw()
+
+    def redraw(self):
+        self.progress = max(0, min(self.progress, 1))
+        self.sprite.width = self.width
+        self.sprite.height = progressbar_container_sprite.height
+        left = progressbar_container_left_sprite.width
+        right = self.width - progressbar_container_right_sprite.width
+        y = int(round((progressbar_container_sprite.height -
+                       progressbar_sprite.height) / 2))
+        pixels = int(round(self.progress * (right - left)))
+
+        self.sprite.draw_lock()
+
+        for x in range(left, right, progressbar_container_sprite.width):
+            self.sprite.draw_sprite(progressbar_container_sprite, 0, x, 0)
+
+        for x in range(left, left + pixels, progressbar_sprite.width):
+            self.sprite.draw_sprite(progressbar_sprite, 0, x, y)
+
+        self.sprite.draw_sprite(progressbar_container_left_sprite, 0, 0, 0)
+        self.sprite.draw_erase(right, 0, self.sprite.width - right,
+                               self.sprite.height)
+        self.sprite.draw_sprite(progressbar_container_right_sprite, 0, right,
+                                0)
+        self.sprite.draw_sprite(progressbar_left_sprite, 0,
+                                left - progressbar_left_sprite.width, y)
+        self.sprite.draw_sprite(progressbar_right_sprite, 0, left + pixels, y)
+
+        self.sprite.draw_unlock()
 
 
 class TextBox(Widget):
@@ -1387,6 +1420,7 @@ if __name__ == '__main__':
     radio = RadioButton(window2, 16, 48, 0)
     radio2 = RadioButton(window2, 16, 80, 0)
     radio3 = RadioButton(window2, 16, 112, 0)
+    progress = ProgressBar(window2, 16, 144, 0, 288, progress=0.5)
     window2.show()
 
     sge.game.start()
