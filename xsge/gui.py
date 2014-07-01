@@ -18,10 +18,6 @@
 This module provides a simple toolkit for adding GUIs to a SGE game as
 well as support for modal dialog boxes.
 
-.. data:: DATADIR
-
-   The directory this module searches for data files in.
-
 .. data:: windows
 
    A list of all windows that are currently supposed to be visible.
@@ -44,6 +40,8 @@ __all__ = ["Frame", "Window", "Dialog", "MessageDialog", "TextEntryDialog",
            "ProgressBar", "RadioButton", "TextBox"]
 
 DATADIR = os.path.join(os.path.dirname(__file__), "gui_data")
+TEXTBOX_MIN_EDGE = 4
+TEXTBOX_CURSOR_BLINK_TIME = 500
 
 windows = []
 keyboard_focused_window = None
@@ -52,6 +50,8 @@ text_color = "black"
 button_text_color = "black"
 combobox_item_text_color = "black"
 textbox_text_color = "black"
+textbox_text_selected_color = "white"
+textbox_highlight_color = "blue"
 title_text_color = "white"
 default_font = None
 button_font = None
@@ -120,6 +120,9 @@ class Handler(sge.StellarClass):
 
     def event_step(self, time_passed, delta_mult):
         for window in windows[:]:
+            window.event_step(time_passed, delta_mult)
+            for widget in window.widgets:
+                widget.event_step(time_passed, delta_mult)
             window.refresh()
 
     def event_key_press(self, key, char):
@@ -444,6 +447,16 @@ class Window:
 
         return None
 
+    def event_step(self, time_passed, delta_mult):
+        """Step event.
+
+        Called once every frame, before refreshing.  See the
+        documentation for :meth:`sge.Game.event_step` for more
+        information.
+
+        """
+        pass
+
     def event_key_press(self, key, char):
         """Key press event.
 
@@ -727,6 +740,16 @@ class Widget:
         else:
             self.destroy()
 
+    def event_step(self, time_passed, delta_mult):
+        """Step event.
+
+        Called once every frame, before refreshing.  See the
+        documentation for :meth:`sge.Game.event_step` for more
+        information.
+
+        """
+        pass
+
     def event_key_press(self, key, char):
         """Key press event.
 
@@ -967,7 +990,7 @@ class Button(Widget):
                                       valign=sge.ALIGN_MIDDLE)
         self.sprite_pressed.draw_unlock()
 
-    def refresh(self):
+    def event_step(self, time_passed, delta_mult):
         parent = self.parent()
         if parent is not None:
             if ((keyboard_focused_window is parent and
@@ -980,8 +1003,6 @@ class Button(Widget):
                     self.sprite = self.sprite_selected
             else:
                 self.sprite = self.sprite_normal
-
-        super().refresh()
 
     def event_key_press(self, key, char):
         if key in ("enter", "kp_enter"):
@@ -1026,13 +1047,11 @@ class CheckBox(Widget):
         self.enabled = enabled
         self._pressed = False
 
-    def refresh(self):
+    def event_step(self, time_passed, delta_mult):
         if self.enabled:
             self.sprite = checkbox_on_sprite
         else:
             self.sprite = checkbox_off_sprite
-
-        super().refresh()
 
     def event_key_press(self, key, char):
         if key in ("enter", "kp_enter"):
@@ -1073,13 +1092,11 @@ class CheckBox(Widget):
 
 class RadioButton(CheckBox):
 
-    def refresh(self):
+    def event_step(self, time_passed, delta_mult):
         if self.enabled:
             self.sprite = radiobutton_on_sprite
         else:
             self.sprite = radiobutton_off_sprite
-
-        Widget.refresh(self)
 
     def _enable(self):
         # Enable the radiobutton, disable any others, and call
@@ -1109,7 +1126,7 @@ class RadioButton(CheckBox):
     def event_toggle(self):
         """Toggle event.
 
-        Called when the state of the checkbox is toggled by the user.
+        Called when the state of the radiobutton is toggled by the user.
 
         """
         pass
@@ -1123,6 +1140,10 @@ class ProgressBar(Widget):
         self.progress = progress
         self.redraw()
 
+    def destroy(self):
+        super().destroy()
+        self.sprite.destroy()
+
     def redraw(self):
         self.progress = max(0, min(self.progress, 1))
         self.sprite.width = self.width
@@ -1134,6 +1155,9 @@ class ProgressBar(Widget):
         pixels = int(round(self.progress * (right - left)))
 
         self.sprite.draw_lock()
+        self.sprite.draw_clear()
+
+        self.sprite.draw_sprite(progressbar_container_left_sprite, 0, 0, 0)
 
         for x in range(left, right, progressbar_container_sprite.width):
             self.sprite.draw_sprite(progressbar_container_sprite, 0, x, 0)
@@ -1141,7 +1165,6 @@ class ProgressBar(Widget):
         for x in range(left, left + pixels, progressbar_sprite.width):
             self.sprite.draw_sprite(progressbar_sprite, 0, x, y)
 
-        self.sprite.draw_sprite(progressbar_container_left_sprite, 0, 0, 0)
         self.sprite.draw_erase(right, 0, self.sprite.width - right,
                                self.sprite.height)
         self.sprite.draw_sprite(progressbar_container_right_sprite, 0, right,
@@ -1155,7 +1178,313 @@ class ProgressBar(Widget):
 
 class TextBox(Widget):
 
-    pass
+    def __init__(self, parent, x, y, z, width=32, text=""):
+        super().__init__(parent, x, y, z, sge.Sprite(width=1, height=1))
+        self.width = width
+        self.text = text
+        self._cursor_pos = 0
+        self._clicked_pos = None
+        self._selected = None
+        self._text_x = 0
+        self._cursor_shown = True
+        self._cursor_blink_time = TEXTBOX_CURSOR_BLINK_TIME
+        self.redraw()
+
+    def destroy(self):
+        super().destroy()
+        self.sprite.destroy()
+
+    def redraw(self):
+        self.sprite.width = self.width
+        self.sprite.height = textbox_sprite.height
+        self._cursor_h = textbox_font.get_height("Tqgp")
+        left = textbox_left_sprite.width
+        right = self.width - textbox_right_sprite.width
+
+        self.sprite.draw_lock()
+        self.sprite.draw_clear()
+
+        self.sprite.draw_sprite(textbox_left_sprite, 0, 0, 0)
+
+        for i in range(left, right, textbox_sprite.width):
+            self.sprite.draw_sprite(textbox_sprite, 0, i, 0)
+
+        self.sprite.draw_erase(right, 0, self.sprite.width - right,
+                               self.sprite.height)
+        self.sprite.draw_sprite(textbox_right_sprite, 0, right, 0)
+
+        self.sprite.draw_unlock()
+
+    def refresh(self):
+        super().refresh()
+
+        parent = self.parent()
+        if parent is not None:
+            self._cursor_pos = max(0, min(self._cursor_pos,
+                                          len(self.text)))
+
+            text_area_w = (self.width - textbox_right_sprite.width -
+                           textbox_left_sprite.width)
+            text_y = textbox_sprite.height / 2
+            cursor_x = textbox_font.get_width(self.text[:self._cursor_pos])
+            cursor_y = text_y - self._cursor_h / 2
+
+            if 0 < self._cursor_pos < len(self.text):
+                min_edge = TEXTBOX_MIN_EDGE
+            else:
+                min_edge = 0
+
+            if self._text_x + cursor_x < min_edge:
+                self._text_x = min_edge - cursor_x
+            elif self._text_x + cursor_x > text_area_w - min_edge:
+                self._text_x = text_area_w - min_edge - cursor_x
+
+            text_sprite = sge.Sprite(width=text_area_w,
+                                     height=textbox_sprite.height)
+            text_sprite.draw_lock()
+
+            text_sprite.draw_text(textbox_font, self.text, self._text_x,
+                                      text_y, color=textbox_text_color,
+                                      valign=sge.ALIGN_MIDDLE)
+
+            if self._selected is None:
+                if (self._cursor_shown and
+                        parent.keyboard_focused_widget is self):
+                    text_sprite.draw_line(cursor_x + self._text_x, cursor_y,
+                                          cursor_x + self._text_x,
+                                          cursor_y + self._cursor_h,
+                                          textbox_text_color)
+            else:
+                a, b = self._selected
+                x = textbox_font.get_width(self.text[:a])
+                w = textbox_font.get_width(self.text[a:b])
+                y = text_y - self._cursor_h / 2
+                text_sprite.draw_rectangle(x + self._text_x, y, w,
+                                           self._cursor_h,
+                                           fill=textbox_highlight_color)
+                text_sprite.draw_text(textbox_font, self.text[a:b],
+                                      x + self._text_x, text_y,
+                                      color=textbox_text_selected_color,
+                                      valign=sge.ALIGN_MIDDLE)
+
+            
+
+            text_sprite.draw_unlock()
+
+            sge.game.project_sprite(
+                text_sprite, 0, parent.x + self.x + textbox_left_sprite.width,
+                parent.y + self.y)
+            text_sprite.destroy()
+
+    def _show_cursor(self):
+        # Forcibly show the cursor (restarting the animation).
+        self._cursor_shown = True
+        self._cursor_blink_time = TEXTBOX_CURSOR_BLINK_TIME
+
+    def _get_previous_word(self):
+        # Return the index of the start of the previous or current word.
+        i = max(0, self._cursor_pos - 1)
+        while i > 0 and not self.text[i].isalnum():
+            i -= 1
+
+        while i > 0 and self.text[i].isalnum():
+            i -= 1
+
+        return i
+
+    def _get_next_word(self):
+        # Return the index of the end of the next or current word.
+        i = min(self._cursor_pos + 1, len(self.text))
+        while i < len(self.text) and not self.text[i].isalnum():
+            i += 1
+
+        while i < len(self.text) and self.text[i].isalnum():
+            i += 1
+
+        return i
+
+    def _move_selection(self, pos):
+        # Move the selection so that the cursor is at ``pos``.
+        if self._selected is not None:
+            if self._selected[0] == self._cursor_pos:
+                fixed_pos = self._selected[1]
+            else:
+                fixed_pos = self._selected[0]
+
+            if fixed_pos > pos:
+                self._selected = (pos, fixed_pos)
+            elif pos > fixed_pos:
+                self._selected = (fixed_pos, pos)
+            else:
+                self._selected = None
+        else:
+            if self._cursor_pos > pos:
+                self._selected = (pos, self._cursor_pos)
+            elif pos > self._cursor_pos:
+                self._selected = (self._cursor_pos, pos)
+            else:
+                self._selected = None
+
+        self._cursor_pos = pos
+
+    def _delete_selection(self):
+        # Delete the currently selected text.
+        if self._selected is not None:
+            a, b = self._selected
+            self._cursor_pos = a
+            self.text = ''.join([self.text[:a], self.text[b:]])
+            self._selected = None
+
+    def _get_cursor_position(self):
+        # Get the cursor position from mouse position ``x``.
+        parent = self.parent()
+        if parent is not None:
+            x = (sge.mouse.get_x() - parent.x - self.x - self._text_x -
+                 textbox_left_sprite.width)
+            i = 0
+            while (i < len(self.text) and
+                   textbox_font.get_width(self.text[:i]) < x):
+                print(textbox_font.get_width(self.text[:i]), x)
+                i += 1
+            print(textbox_font.get_width(self.text[:i]), x)
+
+            # TODO: This feels very inaccurate.  Need an algorithm to
+            # decrement i depending on the exact position of the mouse.
+            return i
+
+        return 0
+
+    def _update_selection(self):
+        # Update the selection, for use when the mouse button is held
+        # down.
+        self._cursor_pos = self._get_cursor_position()
+        if self._cursor_pos > self._clicked_pos:
+            self._selected = (self._clicked_pos, self._cursor_pos)
+        elif self._cursor_pos < self._clicked_pos:
+            self._selected = (self._cursor_pos, self._clicked_pos)
+        else:
+            self._selected = None
+
+    def event_step(self, time_passed, delta_mult):
+        self._cursor_blink_time -= time_passed
+        if self._cursor_blink_time <= 0:
+            self._cursor_shown = not self._cursor_shown
+            self._cursor_blink_time += TEXTBOX_CURSOR_BLINK_TIME
+
+        if self._clicked_pos is not None:
+            self._update_selection()
+
+    def event_key_press(self, key, char):
+        if sge.keyboard.get_modifier("ctrl"):
+            if key == "left":
+                if sge.keyboard.get_modifier("shift"):
+                    self._move_selection(self._get_previous_word())
+                else:
+                    if self._selected is not None:
+                        self._cursor_pos = self._selected[0]
+                        self._selected = None
+                    else:
+                        self._cursor_pos = self._get_previous_word()
+
+                    self._show_cursor()
+            elif key == "right":
+                if sge.keyboard.get_modifier("shift"):
+                    self._move_selection(self._get_next_word())
+                else:
+                    if self._selected is not None:
+                        self._cursor_pos = self._selected[0]
+                        self._selected = None
+                    else:
+                        self._cursor_pos = self._get_next_word()
+
+                    self._show_cursor()
+            elif key == 'a':
+                self._selected = (0, len(self.text))
+                self._cursor_pos = len(self.text)
+            elif key == 'x':
+                # TODO: Need some sort of cross-platform "copy to
+                # clipboard" function.
+                pass
+            elif key == 'c':
+                # TODO: Need some sort of cross-platform "copy to
+                # clipboard" function.
+                pass
+            elif key == 'v':
+                # TODO: Need some sort of cross-platform "paste from
+                # clipboard" function.
+                pass
+        else:
+            if key == "left":
+                if sge.keyboard.get_modifier("shift"):
+                    pos = max(0, self._cursor_pos - 1)
+                    self._move_selection(pos)
+                else:
+                    if self._selected is not None:
+                        self._cursor_pos = self._selected[0]
+                        self._selected = None
+                    elif self._cursor_pos > 0:
+                        self._cursor_pos -= 1
+
+                    self._show_cursor()
+            elif key == "right":
+                if sge.keyboard.get_modifier("shift"):
+                    pos = min(self._cursor_pos + 1, len(self.text))
+                    self._move_selection(pos)
+                else:
+                    if self._selected is not None:
+                        self._cursor_pos = self._selected[1]
+                        self._selected = None
+                    elif self._cursor_pos < len(self.text):
+                        self._cursor_pos += 1
+
+                    self._show_cursor()
+            elif key == "home":
+                self._cursor_pos = 0
+                self._show_cursor()
+            elif key == "end":
+                self._cursor_pos = len(self.text)
+                self._show_cursor()
+            elif key == "backspace":
+                if self._selected is None and self._cursor_pos > 0:
+                    self._selected = (self._cursor_pos - 1, self._cursor_pos)
+
+                self._delete_selection()
+                self._show_cursor()
+            elif key == "delete":
+                if (self._selected is None and
+                        self._cursor_pos < len(self.text)):
+                    self._selected = (self._cursor_pos, self._cursor_pos + 1)
+
+                self._delete_selection()
+                self._show_cursor()
+            elif char:
+                self._delete_selection()
+                i = self._cursor_pos
+                self.text = ''.join([self.text[:i], char, self.text[i:]])
+                self._cursor_pos += 1
+                self._show_cursor()
+
+    def event_mouse_button_press(self, button):
+        if button == "left":
+            parent = self.parent()
+            if parent is not None:
+                parent.keyboard_focused_widget = self
+                self._clicked_pos = self._get_cursor_position()
+                self._show_cursor()
+
+    def event_global_mouse_button_release(self, button):
+        if button == "left":
+            if self._clicked_pos is not None:
+                self._update_selection()
+                self._clicked_pos = None
+
+    def event_change_text(self):
+        """Change text event.
+
+        Called when the user changes the text in the textbox.
+
+        """
+        pass
 
 
 class ComboBox(TextBox):
@@ -1421,6 +1750,8 @@ if __name__ == '__main__':
     radio2 = RadioButton(window2, 16, 80, 0)
     radio3 = RadioButton(window2, 16, 112, 0)
     progress = ProgressBar(window2, 16, 144, 0, 288, progress=0.5)
+    textbox = TextBox(window2, 16, 176, 0, width=288, text="mytext")
     window2.show()
 
+    sge.keyboard.set_repeat(interval=10, delay=500)
     sge.game.start()
