@@ -376,7 +376,8 @@ objects, respectively.
 
 We are going to pass some arguments to the creation of our :class:`Game`
 object: we are going to define ``width`` as ``640``, ``height`` as
-``480``, and ``fps`` as ``120``.  Specify them as keyword arguments.
+``480``, ``fps`` as ``120``, and ``window_text`` as ``"Pong"``.  Specify
+them as keyword arguments.
 
 Loading Sprites
 ---------------
@@ -607,7 +608,7 @@ You should now have a script that looks something like this::
         global player2
 
         # Create Game object
-        Game(width=640, height=480, fps=120)
+        Game(width=640, height=480, fps=120, window_text="Pong")
 
         # Load sprites
         paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,

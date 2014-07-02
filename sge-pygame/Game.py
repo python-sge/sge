@@ -476,7 +476,6 @@ class Game:
             self._display_surface = self._window.copy()
 
             self.rooms[0].start()
-            _fps_time = 0
             self._clock.tick()
 
             while self._running:
@@ -1290,6 +1289,15 @@ class Game:
         """
         sprite = self._get_text_sprite(font, text, width, height, color,
                                        halign, valign, anti_alias)
+        if halign == sge.ALIGN_RIGHT:
+            x -= sprite.width
+        elif halign == sge.ALIGN_CENTER:
+            x -= sprite.width / 2
+        if valign == sge.ALIGN_BOTTOM:
+            y -= sprite.height
+        elif valign == sge.ALIGN_MIDDLE:
+            y -= sprite.height / 2
+
         self.project_sprite(sprite, 0, x, y)
 
     def event_game_start(self):

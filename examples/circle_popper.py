@@ -25,6 +25,23 @@ class glob(object):
 
 class Game(sge.Game):
 
+    def event_game_start(self):
+        self.fps_time = 0
+        self.fps_frames = 0
+        self.fps_text = ""
+
+    def event_step(self, time_passed, delta_mult):
+        self.fps_time += time_passed
+        self.fps_frames += 1
+        if self.fps_time >= 250:
+            self.fps_text = str(round((1000 * self.fps_frames) /
+                                      self.fps_time))
+            self.fps_time = 0
+            self.fps_frames = 0
+
+        self.project_text(glob.font, self.fps_text, self.width - 8, 8,
+                          halign=sge.ALIGN_RIGHT)
+
     def event_key_press(self, key, char):
         if key == 'escape':
             self.end()

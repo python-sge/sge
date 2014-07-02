@@ -38,9 +38,22 @@ class Game(sge.Game):
 
     def event_game_start(self):
         self.mouse.visible = False
+        self.fps_time = 0
+        self.fps_frames = 0
+        self.fps_text = ""
 
     def event_step(self, time_passed, delta_mult):
         self.project_sprite(hud_sprite, 0, self.width / 2, 0)
+
+        self.fps_time += time_passed
+        self.fps_frames += 1
+        if self.fps_time >= 250:
+            self.fps_text = str(round((1000 * self.fps_frames) /
+                                      self.fps_time))
+            self.fps_time = 0
+            self.fps_frames = 0
+
+        self.project_text("hud", self.fps_text, 8, 8, color="gray")
 
     def event_key_press(self, key, char):
         global game_in_progress
@@ -225,7 +238,7 @@ def main():
     global player2
 
     # Create Game object
-    Game(width=640, height=480, fps=120)
+    Game(width=640, height=480, fps=120, window_text="Pong")
 
     # Load sprites
     paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,

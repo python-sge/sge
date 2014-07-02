@@ -577,7 +577,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
         global player2
 
         # Create Game object
-        Game(width=640, height=480, fps=120)
+        Game(width=640, height=480, fps=120, window_text="Pong")
 
         # Load sprites
         paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,
