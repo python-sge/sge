@@ -713,10 +713,7 @@ class Room:
         for more information.
 
         """
-        if sge.DEBUG:
-            bad_name = "event_loose_keyboard_focus"
-            if hasattr(self, bad_name):
-                sge._scold_user_on_lose_vs_loose(bad_name)
+        pass
 
     def event_gain_mouse_focus(self):
         """Gain mouse focus event.
@@ -734,10 +731,7 @@ class Room:
         more information.
 
         """
-        if sge.DEBUG:
-            bad_name = "event_loose_mouse_focus"
-            if hasattr(self, bad_name):
-                sge._scold_user_on_lose_vs_loose(bad_name)
+        pass
 
     def event_close(self):
         """Close event.
@@ -857,10 +851,7 @@ class Room:
         for more information.
 
         """
-        if sge.DEBUG:
-            bad_name = "event_paused_loose_keyboard_focus"
-            if hasattr(self, bad_name):
-                sge._scold_user_on_lose_vs_loose(bad_name)
+        pass
 
     def event_paused_gain_mouse_focus(self):
         """Gain mouse focus event when paused.
@@ -878,10 +869,7 @@ class Room:
         more information.
 
         """
-        if sge.DEBUG:
-            bad_name = "event_paused_loose_mouse_focus"
-            if hasattr(self, bad_name):
-                sge._scold_user_on_lose_vs_loose(bad_name)
+        pass
 
     def event_paused_close(self):
         """Close event when paused.

@@ -411,9 +411,6 @@ class Game:
 
         """
         if self._running:
-            if sge.DEBUG:
-                print("Restarting the game.")
-
             self.sprites = self._start_sprites
             self.background_layers = self._start_background_layers
             self.backgrounds = self._start_backgrounds
@@ -446,8 +443,6 @@ class Game:
 
             self.rooms[0].start()
         else:
-            if sge.DEBUG:
-                print("Starting the game.")
             self._running = True
             self._background_changed = True
             self.event_game_start()
@@ -634,13 +629,6 @@ class Game:
                     time_passed = 1000 / self.fps
                     delta_mult = 1
 
-                if sge.DEBUG:
-                    _fps_time += real_time_passed
-                    if _fps_time >= 250:
-                        _fps_time = 0
-                        self.window_text = "FPS: {}; Delta: {}".format(
-                            int(1000 / real_time_passed), delta_mult)
-
                 # Alarms
                 activated_alarms = []
                 for a in self._alarms:
@@ -723,8 +711,6 @@ class Game:
             self.event_game_end()
             pygame.quit()
             sge.game = None
-            if sge.DEBUG:
-                print("Game ended normally.")
 
     def end(self):
         """Properly end the game."""
@@ -969,32 +955,20 @@ class Game:
                 if event.gain:
                     if 2 & event.state:
                         # Gain keyboard focus
-                        if sge.DEBUG:
-                            print('Gained keyboard focus.')
                         self.input_events.append(sge.input.KeyboardFocusGain())
                     if 1 & event.state:
                         # Gain mouse focus
-                        if sge.DEBUG:
-                            print('Gained mouse focus.')
                         self.input_events.append(sge.input.KeyboardFocusLose())
                 else:
                     if 2 & event.state:
                         # Lose keyboard focus
-                        if sge.DEBUG:
-                            print('Lost keyboard focus.')
                         self.input_events.append(sge.input.MouseFocusGain())
                     if 1 & event.state:
                         # Lose mouse focus
-                        if sge.DEBUG:
-                            print('Lost mouse focus.')
                         self.input_events.append(sge.input.MouseFocusLose())
             elif event.type == pygame.QUIT:
-                if sge.DEBUG:
-                    print('Quit requested by the system.')
                 self.input_events.append(sge.input.QuitRequest())
             elif event.type == pygame.VIDEORESIZE:
-                if sge.DEBUG:
-                    print('Video resize detected.')
                 self._window.blit(self._display_surface, (0, 0))
                 self._window_width = event.w
                 self._window_height = event.h
@@ -1472,10 +1446,7 @@ class Game:
         for more information.
 
         """
-        if sge.DEBUG:
-            bad_name = "event_loose_keyboard_focus"
-            if hasattr(self, bad_name):
-                sge._scold_user_on_lose_vs_loose(bad_name)
+        pass
 
     def event_gain_mouse_focus(self):
         """Gain mouse focus event.
@@ -1493,10 +1464,7 @@ class Game:
         more information.
 
         """
-        if sge.DEBUG:
-            bad_name = "event_loose_mouse_focus"
-            if hasattr(self, bad_name):
-                sge._scold_user_on_lose_vs_loose(bad_name)
+        pass
 
     def event_close(self):
         """Close event.
@@ -1667,10 +1635,7 @@ class Game:
         for more information.
 
         """
-        if sge.DEBUG:
-            bad_name = "event_paused_loose_keyboard_focus"
-            if hasattr(self, bad_name):
-                sge._scold_user_on_lose_vs_loose(bad_name)
+        pass
 
     def event_paused_gain_mouse_focus(self):
         """Gain mouse focus event when paused.
@@ -1688,10 +1653,7 @@ class Game:
         more information.
 
         """
-        if sge.DEBUG:
-            bad_name = "event_paused_loose_mouse_focus"
-            if hasattr(self, bad_name):
-                sge._scold_user_on_lose_vs_loose(bad_name)
+        pass
 
     def event_paused_close(self):
         """Close event when paused.

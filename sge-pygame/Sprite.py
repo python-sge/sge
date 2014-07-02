@@ -236,9 +236,6 @@ class Sprite:
         information.
 
         """
-        if sge.DEBUG:
-            print('Creating sprite "{}"'.format(name))
-
         sprites = sge.game.sprites.copy()
 
         self.name = name
@@ -294,8 +291,7 @@ class Sprite:
                 try:
                     img = pygame.image.load(fname_single)
                 except pygame.error:
-                    if sge.DEBUG:
-                        print("Ignored {}; not a valid image.".format(fname_single))
+                    pass
                 else:
                     self._baseimages.append(img)
 
@@ -306,8 +302,7 @@ class Sprite:
                         try:
                             img = pygame.image.load(fname)
                         except pygame.error:
-                            if sge.DEBUG:
-                                print("Ignored {}; not a valid image.".format(fname))
+                            pass
                         else:
                             self._baseimages.append(img)
 
@@ -325,8 +320,7 @@ class Sprite:
                 try:
                     sheet = pygame.image.load(fname_strip)
                 except pygame.error:
-                    if sge.DEBUG:
-                        print("Ignored {}; not a valid image.".format(fname_strip))
+                    pass
                 else:
                     assert split[1][5:].isdigit()
                     n = int(split[1][5:])
@@ -364,8 +358,6 @@ class Sprite:
                     self.id += 1
 
             self.append_frame()
-            if sge.DEBUG:
-                print("renamed to {}, ID is {}".format(self.name, self.id))
 
         if width is None:
             width = 1

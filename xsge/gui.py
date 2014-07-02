@@ -1344,9 +1344,7 @@ class TextBox(Widget):
             i = 0
             while (i < len(self.text) and
                    textbox_font.get_width(self.text[:i]) < x):
-                print(textbox_font.get_width(self.text[:i]), x)
                 i += 1
-            print(textbox_font.get_width(self.text[:i]), x)
 
             # TODO: This feels very inaccurate.  Need an algorithm to
             # decrement i depending on the exact position of the mouse.
@@ -1457,7 +1455,7 @@ class TextBox(Widget):
 
                 self._delete_selection()
                 self._show_cursor()
-            elif char:
+            elif char and char not in ('\n', '\t', '\b', '\r', '\x1b'):
                 self._delete_selection()
                 i = self._cursor_pos
                 self.text = ''.join([self.text[:i], char, self.text[i:]])

@@ -135,52 +135,52 @@ class KeyPress:
     Keypad Divide        ``"kp_divide"``         ``"/"``
     Keypad Equals        ``"kp_equals"``         ``"="``
     Keypad Enter         ``"kp_enter"``          ``"\\n"``
-    Left Arrow           ``"left"``
-    Right Arrow          ``"right"``
-    Up Arrow             ``"up"``
-    Down Arrow           ``"down"``
-    Home                 ``"home"``
-    End                  ``"end"``
-    Page Up              ``"pageup"``
-    Page Down            ``"pagedown"``
+    Left Arrow           ``"left"``              ``""``
+    Right Arrow          ``"right"``             ``""``
+    Up Arrow             ``"up"``                ``""``
+    Down Arrow           ``"down"``              ``""``
+    Home                 ``"home"``              ``""``
+    End                  ``"end"``               ``""``
+    Page Up              ``"pageup"``            ``""``
+    Page Down            ``"pagedown"``          ``""``
     Tab                  ``"tab"``               ``"\\t"``
     Space Bar            ``"space"``             ``" "``
     Enter/Return         ``"enter"``             ``"\\n"``
     Backspace            ``"backspace"``         ``"\\b"``
-    Delete               ``"delete"``
-    Clear                ``"clear"``
-    Left Shift           ``"shift_left"``
-    Right Shift          ``"shift_right"``
-    Left Ctrl            ``"ctrl_left"``
-    Right Ctrl           ``"ctrl_right"``
-    Left Alt             ``"alt_left"``
-    Right Alt            ``"alt_right"``
-    Left Super           ``"super_left"``
-    Right Super          ``"super_right"``
-    Mode                 ``"mode"``
-    Menu                 ``"menu"``
-    Caps Lock            ``"caps_lock"``
-    Esc                  ``"escape"``
-    Num Lock             ``"num_lock"``
-    Scroll Lock          ``"scroll_lock"``
-    Break                ``"break"``
-    Insert               ``"insert"``
-    Pause                ``"pause"``
-    Power                ``"power"``
-    Print Screen         ``"print_screen"``
-    SysRq                ``"sysrq"``
-    F1                   ``"f1"``
-    F2                   ``"f2"``
-    F3                   ``"f3"``
-    F4                   ``"f4"``
-    F5                   ``"f5"``
-    F6                   ``"f6"``
-    F7                   ``"f7"``
-    F8                   ``"f8"``
-    F9                   ``"f9"``
-    F10                  ``"f10"``
-    F11                  ``"f11"``
-    F12                  ``"f12"``
+    Delete               ``"delete"``            ``""``
+    Clear                ``"clear"``             ``""``
+    Left Shift           ``"shift_left"``        ``""``
+    Right Shift          ``"shift_right"``       ``""``
+    Left Ctrl            ``"ctrl_left"``         ``""``
+    Right Ctrl           ``"ctrl_right"``        ``""``
+    Left Alt             ``"alt_left"``          ``""``
+    Right Alt            ``"alt_right"``         ``""``
+    Left Super           ``"super_left"``        ``""``
+    Right Super          ``"super_right"``       ``""``
+    Mode                 ``"mode"``              ``""``
+    Menu                 ``"menu"``              ``""``
+    Caps Lock            ``"caps_lock"``         ``""``
+    Esc                  ``"escape"``            ``""``
+    Num Lock             ``"num_lock"``          ``""``
+    Scroll Lock          ``"scroll_lock"``       ``""``
+    Break                ``"break"``             ``""``
+    Insert               ``"insert"``            ``""``
+    Pause                ``"pause"``             ``""``
+    Power                ``"power"``             ``""``
+    Print Screen         ``"print_screen"``      ``""``
+    SysRq                ``"sysrq"``             ``""``
+    F1                   ``"f1"``                ``""``
+    F2                   ``"f2"``                ``""``
+    F3                   ``"f3"``                ``""``
+    F4                   ``"f4"``                ``""``
+    F5                   ``"f5"``                ``""``
+    F6                   ``"f6"``                ``""``
+    F7                   ``"f7"``                ``""``
+    F8                   ``"f8"``                ``""``
+    F9                   ``"f9"``                ``""``
+    F10                  ``"f10"``               ``""``
+    F11                  ``"f11"``               ``""``
+    F12                  ``"f12"``               ``""``
     ==================== ======================= =================
 
     """

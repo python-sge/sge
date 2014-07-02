@@ -435,7 +435,7 @@ by default.
 
 """
 
-__version__ = "0.10.0"
+__version__ = "0.10.0.1"
 
 import sys
 import os
@@ -446,7 +446,6 @@ import pygame
 PROGRAM_DIR = os.path.dirname(sys.argv[0])
 IMPLEMENTATION = "Pygame SGE"
 COLLISION_AREA_SIZE_DEFAULT = 128
-DEBUG = True
 
 ALIGN_LEFT = 2
 ALIGN_CENTER = 3
@@ -655,20 +654,3 @@ def _get_pygame_color(color):
                 return pygame.Color(color)
         except ValueError:
             return pygame.Color(0, 0, 0, 0)
-
-
-def _scold_user_on_lose_vs_loose(attempted_name):
-    # Tell the user that they misspelled "lose" as "loose".
-    m = '\n'.join((
-        'Huh? I don\'t have a method called "{}".'.format(attempted_name),
-        'You do know that "lose" (a verb meaning "to fail to keep or hold")',
-        'is not spelled the same as "loose" (an adjective meaning "not',
-        'tightly fastened, attached, or held"), right?'))
-
-    print(m)
-    m = m.replace('\n', ' ')
-    show_message(m)
-
-
-if DEBUG:
-    print("SGE Art of Debugging enabled.")

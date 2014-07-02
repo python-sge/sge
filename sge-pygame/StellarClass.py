@@ -1735,9 +1735,6 @@ class Mouse(StellarClass):
 
     @visible.setter
     def visible(self, value):
-        if sge.DEBUG:
-            print("mouse.visible has been set to:", value)
-
         self._visible = value
         self.set_cursor()
 
