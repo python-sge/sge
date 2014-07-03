@@ -1,17 +1,17 @@
 # Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
-# 
+#
 # This file is part of the Pygame SGE.
-# 
+#
 # The Pygame SGE is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # The Pygame SGE is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Lesser General Public License
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -128,7 +128,7 @@ class Sprite:
 
     @property
     def width(self):
-        return self._w
+        return int(round(self._w))
 
     @width.setter
     def width(self, value):
@@ -139,7 +139,7 @@ class Sprite:
 
     @property
     def height(self):
-        return self._h
+        return int(round(self._h))
 
     @height.setter
     def height(self, value):
@@ -264,7 +264,8 @@ class Sprite:
                     fnames = os.listdir(path)
                     for fname in fnames:
                         full_fname = os.path.join(path, fname)
-                        if fname.startswith(name) and os.path.isfile(full_fname):
+                        if (fname.startswith(name) and
+                                os.path.isfile(full_fname)):
                             root, ext = os.path.splitext(fname)
                             if root == name:
                                 split = [name, '']
@@ -1126,7 +1127,7 @@ class Sprite:
             for image in self._baseimages:
                 img = self._set_transparency(image)
                 img = sge._scale(img, self.width, self.height)
-                self._images.append({(1, 1, 0, 255, None):img})
+                self._images.append({(1, 1, 0, 255, None): img})
 
     def _set_transparency(self, image):
         # Return a copy of the surface with transparency properly set

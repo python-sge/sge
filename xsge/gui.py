@@ -35,27 +35,26 @@ import weakref
 import sge
 
 
-__all__ = ["Frame", "Window", "Dialog", "MessageDialog", "TextEntryDialog",
-           "FileSelectionDialog", "Widget", "Button", "CheckBox", "ComboBox",
-           "ProgressBar", "RadioButton", "TextBox"]
+__all__ = ["Handler", "Window", "Dialog", "Widget", "Button", "CheckBox",
+           "RadioButton", "ProgressBar", "TextBox", "MessageDialog",
+           "TextEntryDialog", "FileSelectionDialog"]
 
 DATADIR = os.path.join(os.path.dirname(__file__), "gui_data")
 TEXTBOX_MIN_EDGE = 4
 TEXTBOX_CURSOR_BLINK_TIME = 500
+DIALOG_PADDING = 8
 
 windows = []
 keyboard_focused_window = None
 window_background_color = "#A4A4A4"
 text_color = "black"
 button_text_color = "black"
-combobox_item_text_color = "black"
 textbox_text_color = "black"
 textbox_text_selected_color = "white"
 textbox_highlight_color = "blue"
 title_text_color = "white"
 default_font = None
 button_font = None
-combobox_item_font = None
 textbox_font = None
 title_font = None
 button_sprite = None
@@ -69,21 +68,6 @@ button_selected_left_sprite = None
 button_selected_right_sprite = None
 checkbox_off_sprite = None
 checkbox_on_sprite = None
-combobox_closed_sprite = None
-combobox_closed_left_sprite = None
-combobox_closed_right_sprite = None
-combobox_item_sprite = None
-combobox_itemsep_sprite = None
-combobox_itemsep_left_sprite = None
-combobox_itemsep_right_sprite = None
-combobox_open_left_sprite = None
-combobox_open_right_sprite = None
-combobox_open_bottom_sprite = None
-combobox_open_bottomleft_sprite = None
-combobox_open_bottomright_sprite = None
-combobox_open_top_sprite = None
-combobox_open_topleft_sprite = None
-combobox_open_topright_sprite = None
 progressbar_sprite = None
 progressbar_left_sprite = None
 progressbar_right_sprite = None
@@ -547,8 +531,8 @@ class Window:
         else:
             if button == "left":
                 if self._border_grab is not None:
-                    self.x = sge.mouse.get_x() + self._border_grab[0]
-                    self.y = sge.mouse.get_y() + self._border_grab[1]
+                    self.x = x + self._border_grab[0]
+                    self.y = y + self._border_grab[1]
 
         self.event_global_mouse_button_release(button)
 
@@ -628,7 +612,6 @@ class Dialog(Window):
 
         """
         super().show()
-        handler = Handler()
         while self in windows:
             # Input events
             sge.game.pump_input()
@@ -636,47 +619,76 @@ class Dialog(Window):
                 event = sge.game.input_events.pop(0)
 
                 if isinstance(event, sge.input.KeyPress):
-                    handler.event_key_press(event.key, event.char)
+                    self.event_key_press(event.key, event.char)
+                    widget = self.keyboard_focused_widget
+                    if widget is not None:
+                        widget.event_key_press(event.key, event.char)
+                    self.event_global_key_press(event.key, event.char)
+                    for widget in self.widgets:
+                        widget.event_global_key_press(event.key, event.char)
                 elif isinstance(event, sge.input.KeyRelease):
-                    handler.event_key_release(event.key)
+                    self.event_key_release(event.key)
+                    widget = self.keyboard_focused_widget
+                    if widget is not None:
+                        widget.event_key_release(event.key)
+                    self.event_global_key_release(event.key)
+                    for widget in self.widgets:
+                        widget.event_global_key_release(event.key)
                 elif isinstance(event, sge.input.MouseButtonPress):
-                    handler.event_mouse_button_press(event.button)
+                    if get_mouse_focused_window() is self:
+                        if self.get_mouse_on_titlebar():
+                            self.event_titlebar_mouse_button_press(
+                                event.button)
+                        else:
+                            self.event_mouse_button_press(event.button)
+                            widget = self.get_mouse_focused_widget()
+                            if widget is not None:
+                                widget.event_mouse_button_press(event.button)
+
+                    self.event_global_mouse_button_press(event.button)
+                    for widget in self.widgets:
+                        widget.event_global_mouse_button_press(event.button)
                 elif isinstance(event, sge.input.MouseButtonRelease):
-                    handler.event_mouse_button_release(event.button)
+                    if get_mouse_focused_window() is self:
+                        if self.get_mouse_on_titlebar():
+                            self.event_titlebar_mouse_button_release(
+                                event.button)
+                        else:
+                            self.event_mouse_button_release(event.button)
+                            widget = self.get_mouse_focused_widget()
+                            if widget is not None:
+                                widget.event_mouse_button_release(event.button)
+
+                    self.event_global_mouse_button_release(event.button)
+                    for widget in self.widgets:
+                        widget.event_global_mouse_button_release(event.button)
                 elif isinstance(event, sge.input.QuitRequest):
                     sge.game.input_events.insert(0, event)
                     self.hide()
-                    handler.destroy()
                     return
 
             # Regulate speed
             time_passed = sge.game.regulate_speed()
 
+            if sge.game.delta:
+                t = min(time_passed, 1000 / sge.game.delta_min)
+                delta_mult = t / (1000 / sge.game.fps)
+            else:
+                delta_mult = 1
+
             # Project windows
-            handler.event_step(time_passed, 1)
+            self.event_step(time_passed, delta_mult)
+            for widget in self.widgets:
+                widget.event_step(time_passed, delta_mult)
+
+            for window in windows[:]:
+                window.refresh()
 
             # Refresh
             sge.game.refresh()
 
-        self.hide()
-        handler.destroy()
         sge.game.pump_input()
         sge.game.input_events = []
-
-
-class MessageDialog(Dialog):
-
-    pass
-
-
-class TextEntryDialog(Dialog):
-
-    pass
-
-
-class FileSelectionDialog(Dialog):
-
-    pass
 
 
 class Widget:
@@ -934,11 +946,12 @@ class Button(Widget):
     def redraw(self):
         h = button_sprite.height
         if self.width is None:
-            w = button_font.get_width(self.text, height=h)
+            w = int(round(button_font.get_width(self.text, height=h)))
+            sprite_w = w + button_left_sprite.width + button_right_sprite.width
         else:
-            w = self.width
+            sprite_w = int(round(self.width))
+            w = sprite_w - button_left_sprite.width - button_right_sprite.width
 
-        sprite_w = w + button_left_sprite.width + button_right_sprite.width
         left = button_left_sprite.width
         right = sprite_w - button_right_sprite.width
         self.sprite_normal = sge.Sprite(width=sprite_w, height=h)
@@ -1267,8 +1280,6 @@ class TextBox(Widget):
                                       color=textbox_text_selected_color,
                                       valign=sge.ALIGN_MIDDLE)
 
-            
-
             text_sprite.draw_unlock()
 
             sge.game.project_sprite(
@@ -1485,9 +1496,110 @@ class TextBox(Widget):
         pass
 
 
-class ComboBox(TextBox):
+class MessageDialog(Dialog):
+
+    def __init__(self, message, buttons=("Ok",), width=320, height=120,
+                 title="Message"):
+        x = sge.game.width / 2 - width / 2
+        y = sge.game.height / 2 - height / 2
+        super().__init__(x, y, width, height, title=title)
+        button_w = max(1, int(round(width / len(buttons) - DIALOG_PADDING *
+                                    (len(buttons) + 1))))
+        button_h = button_sprite.height
+        label_w = max(1, width - DIALOG_PADDING * 2)
+        label_h = max(1, height - button_h - DIALOG_PADDING * 3)
+        Label(self, DIALOG_PADDING, DIALOG_PADDING, 0, message, width=label_w,
+              height=label_h)
+
+        y = height - button_h - DIALOG_PADDING
+        for i in range(len(buttons)):
+            x = i * (button_w + DIALOG_PADDING) + DIALOG_PADDING
+            button = Button(self, x, y, 0, buttons[i], width=button_w)
+
+            def event_press(self=button, x=i):
+                parent = self.parent()
+                if parent is not None:
+                    parent._return_button(x)
+
+            button.event_press = event_press
+
+        self.choice = None
+
+    def _return_button(self, x):
+        # Return button with index ``x``.
+        self.choice = x
+        self.destroy()
+
+
+class TextEntryDialog(Dialog):
+
+    def __init__(self, message="", width=320, height=152, text="",
+                 title="Text Entry"):
+        x = sge.game.width / 2 - width / 2
+        y = sge.game.height / 2 - height / 2
+        super().__init__(x, y, width, height, title=title)
+        button_w = max(1, width / 2 - DIALOG_PADDING * 3)
+        button_h = button_sprite.height
+        textbox_w = max(1, width - DIALOG_PADDING * 2)
+        textbox_h = textbox_sprite.height
+        label_w = textbox_w
+        label_h = max(1, height - button_h - textbox_h - DIALOG_PADDING * 4)
+
+        x = DIALOG_PADDING
+        y = DIALOG_PADDING
+        Label(self, x, y, 0, message, width=label_w, height=label_h)
+
+        y = label_h + DIALOG_PADDING * 2
+        self.textbox = TextBox(self, x, y, 0, width=textbox_w, text=text)
+
+        y = height - button_h - DIALOG_PADDING
+        x = DIALOG_PADDING
+        button = Button(self, x, y, 0, "Cancel", width=button_w)
+
+        def event_press(self=button):
+            parent = self.parent()
+            if parent is not None:
+                parent.destroy()
+
+        button.event_press = event_press
+
+        x = button_w + DIALOG_PADDING * 2
+        button = Button(self, x, y, 0, "Ok", width=button_w)
+
+        def event_press(self=button):
+            parent = self.parent()
+            if parent is not None:
+                parent._return_text(parent.textbox.text)
+
+        button.event_press = event_press
+
+        self.text = None
+
+    def _return_text(self, s):
+        # Return ``s`` as this dialog's text.
+        self.text = s
+        self.destroy()
+
+
+class FileSelectionDialog(Dialog):
 
     pass
+
+
+def show_message(message, buttons=("Ok",), width=320, height=120,
+                 title="Message"):
+    w = MessageDialog(message, buttons=buttons, width=width, height=height,
+                      title=title)
+    w.show()
+    return w.choice
+
+
+def get_text_entry(message="", width=320, height=152, text="",
+                   title="Text Entry"):
+    w = TextEntryDialog(message=message, width=width, height=height, text=text,
+                        title=title)
+    w.show()
+    return w.text
 
 
 def init():
@@ -1500,7 +1612,6 @@ def init():
     """
     global default_font
     global button_font
-    global combobox_item_font
     global textbox_font
     global title_font
     global button_sprite
@@ -1514,21 +1625,6 @@ def init():
     global button_selected_right_sprite
     global checkbox_off_sprite
     global checkbox_on_sprite
-    global combobox_closed_sprite
-    global combobox_closed_left_sprite
-    global combobox_closed_right_sprite
-    global combobox_item_sprite
-    global combobox_itemsep_sprite
-    global combobox_itemsep_left_sprite
-    global combobox_itemsep_right_sprite
-    global combobox_open_left_sprite
-    global combobox_open_right_sprite
-    global combobox_open_bottom_sprite
-    global combobox_open_bottomleft_sprite
-    global combobox_open_bottomright_sprite
-    global combobox_open_top_sprite
-    global combobox_open_topleft_sprite
-    global combobox_open_topright_sprite
     global progressbar_sprite
     global progressbar_left_sprite
     global progressbar_right_sprite
@@ -1557,7 +1653,6 @@ def init():
 
     default_font = sge.Font(["DroidSans.ttf", "Droid Sans"], size=12)
     button_font = sge.Font(["DroidSans-Bold.ttf", "Droid Sans"], size=12)
-    combobox_item_font = default_font
     textbox_font = default_font
     title_font = sge.Font(["DroidSans-Bold.ttf", "Droid Sans"], size=14)
 
@@ -1573,24 +1668,6 @@ def init():
         button_selected_right_sprite = sge.Sprite("_gui_button_selected_right")
         checkbox_off_sprite = sge.Sprite("_gui_checkbox_off")
         checkbox_on_sprite = sge.Sprite("_gui_checkbox_on")
-        combobox_closed_sprite = sge.Sprite("_gui_combobox_closed")
-        combobox_closed_left_sprite = sge.Sprite("_gui_combobox_closed_left")
-        combobox_closed_right_sprite = sge.Sprite("_gui_combobox_closed_right")
-        combobox_item_sprite = sge.Sprite("_gui_combobox_item")
-        combobox_itemsep_sprite = sge.Sprite("_gui_combobox_itemsep")
-        combobox_itemsep_left_sprite = sge.Sprite(
-            "_gui_combobox_itemsep_right")
-        combobox_open_left_sprite = sge.Sprite("_gui_combobox_open_left")
-        combobox_open_right_sprite = sge.Sprite("_gui_combobox_open_right")
-        combobox_open_bottom_sprite = sge.Sprite("_gui_combobox_open_bottom")
-        combobox_open_bottomleft_sprite = sge.Sprite(
-            "_gui_combobox_open_bottomleft")
-        combobox_open_bottomright_sprite = sge.Sprite(
-            "_gui_combobox_open_bottomright")
-        combobox_open_top_sprite = sge.Sprite("_gui_combobox_open_top")
-        combobox_open_topleft_sprite = sge.Sprite("_gui_combobox_open_topleft")
-        combobox_open_topright_sprite = sge.Sprite(
-            "_gui_combobox_open_topright")
         progressbar_sprite = sge.Sprite("_gui_progressbar")
         progressbar_left_sprite = sge.Sprite("_gui_progressbar_left")
         progressbar_right_sprite = sge.Sprite("_gui_progressbar_right")
@@ -1637,36 +1714,6 @@ def init():
         checkbox_on_sprite.draw_sprite(checkbox_off_sprite, 0, 0, 0)
         checkbox_on_sprite.draw_line(0, 0, 15, 15, "black")
         checkbox_on_sprite.draw_line(0, 15, 15, 0, "black")
-        combobox_closed_sprite = button_sprite
-        combobox_closed_left_sprite = sge.Sprite(width=4, height=24)
-        combobox_closed_left_sprite.draw_rectangle(0, 0, 4, 24, fill="black")
-        combobox_closed_right_sprite = sge.Sprite(width=25, height=24)
-        combobox_closed_right_sprite.draw_rectangle(0, 0, 25, 24, fill="black")
-        combobox_closed_right_sprite.draw_circle(12, 12, 5, fill="white")
-        combobox_item_sprite = sge.Sprite(width=1, height=20)
-        combobox_item_sprite.draw_rectangle(0, 0, 1, 20, fill="white")
-        combobox_itemsep_sprite = sge.Sprite(width=1, height=2)
-        combobox_itemsep_sprite.draw_rectangle(0, 0, 1, 2, fill="gray")
-        combobox_itemsep_left_sprite = combobox_itemsep_sprite
-        combobox_itemsep_right_sprite = combobox_itemsep_sprite
-        combobox_open_left_sprite = sge.Sprite(width=4, height=1)
-        combobox_open_left_sprite.draw_rectangle(0, 0, 4, 1, fill="black")
-        combobox_open_right_sprite = combobox_open_left_sprite
-        combobox_open_bottom_sprite = sge.Sprite(width=1, height=4)
-        combobox_open_bottom_sprite.draw_rectangle(0, 0, 1, 4, fill="black")
-        combobox_open_bottomleft_sprite = sge.Sprite(width=4, height=4)
-        combobox_open_bottomleft_sprite.draw_rectangle(0, 0, 4, 4,
-                                                       fill="black")
-        combobox_open_bottomright_sprite = combobox_open_bottomleft_sprite
-        combobox_open_top_sprite = sge.Sprite(width=1, height=25)
-        combobox_open_top_sprite.draw_rectangle(0, 0, 1, 25, fill="black")
-        combobox_open_top_sprite.draw_rectangle(0, 1, 1, 22, fill="white")
-        combobox_open_topleft_sprite = sge.Sprite(width=4, height=25)
-        combobox_open_topleft_sprite.draw_rectangle(0, 0, 4, 25, fill="black")
-        combobox_open_topright_sprite = sge.Sprite(width=25, height=25)
-        combobox_open_topright_sprite.draw_rectangle(0, 0, 25, 25,
-                                                     fill="black")
-        combobox_open_topright_sprite.draw_circle(12, 12, 5, fill="white")
         progressbar_sprite = sge.Sprite(width=1, height=18)
         progressbar_sprite.draw_rectangle(0, 0, 1, 18, fill="white")
         progressbar_left_sprite = sge.Sprite(width=2, height=18)
@@ -1680,13 +1727,18 @@ def init():
         progressbar_container_right_sprite = progressbar_container_left_sprite
         radiobutton_off_sprite = checkbox_off_sprite
         radiobutton_on_sprite = checkbox_on_sprite
-        textbox_sprite = combobox_closed_sprite
-        textbox_left_sprite = combobox_closed_left_sprite
+        textbox_sprite = button_sprite
+        textbox_left_sprite = sge.Sprite(width=4, height=24)
+        textbox_left_sprite.draw_rectangle(0, 0, 4, 24, fill="black")
         textbox_right_sprite = textbox_left_sprite
-        window_border_left_sprite = combobox_open_left_sprite
+        window_border_left_sprite = sge.Sprite(width=4, height=1)
+        window_border_left_sprite.draw_rectangle(0, 0, 4, 1, fill="black")
         window_border_right_sprite = window_border_left_sprite
-        window_border_bottom_sprite = combobox_open_bottom_sprite
-        window_border_bottomleft_sprite = combobox_open_bottomleft_sprite
+        window_border_bottom_sprite = sge.Sprite(width=1, height=4)
+        window_border_bottom_sprite.draw_rectangle(0, 0, 1, 4, fill="black")
+        window_border_bottomleft_sprite = sge.Sprite(width=4, height=4)
+        window_border_bottomleft_sprite.draw_rectangle(0, 0, 4, 4,
+                                                       fill="black")
         window_border_bottomright_sprite = window_border_bottomleft_sprite
         window_border_top_sprite = sge.Sprite(width=1, height=28)
         window_border_top_sprite.draw_rectangle(0, 0, 1, 28, fill="black")
@@ -1740,8 +1792,10 @@ if __name__ == '__main__':
     label = Label(window, 8, 32, 0, "My label")
     label2 = Label(window, 8, 64, 0, "my label " * 50, width=224)
     button2 = Button(window, 16, 100, 5, "Another button", width=150)
+    button.event_press = lambda: print(show_message("You just pressed my buttons!" * 50))
+    button2.event_press = lambda: print(get_text_entry("Who are you?!" * 50))
     window.show()
-    
+
     window2 = Window(480, 200, 320, 320, title="Test window 2")
     checkbox = CheckBox(window2, 16, 16, 0)
     radio = RadioButton(window2, 16, 48, 0)
