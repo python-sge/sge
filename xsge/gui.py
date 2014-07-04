@@ -32,6 +32,16 @@ well as support for modal dialog boxes.
 import os
 import weakref
 
+try:
+    from tkinter import Tk
+except ImportError:
+    class Tk:
+        def withdraw(self): pass
+        def clipboard_clear(self): pass
+        def clipboard_append(self, *args, **kwargs): pass
+        def selection_get(self, *args, **kwargs): return ''
+        def destroy(self): pass
+
 import sge
 
 
@@ -1210,7 +1220,7 @@ class TextBox(Widget):
     def redraw(self):
         self.sprite.width = self.width
         self.sprite.height = textbox_sprite.height
-        self._cursor_h = textbox_font.get_height("Tqgp")
+        self._cursor_h = textbox_font.get_height("|")
         left = textbox_left_sprite.width
         right = self.width - textbox_right_sprite.width
 
@@ -1257,8 +1267,8 @@ class TextBox(Widget):
             text_sprite.draw_lock()
 
             text_sprite.draw_text(textbox_font, self.text, self._text_x,
-                                      text_y, color=textbox_text_color,
-                                      valign=sge.ALIGN_MIDDLE)
+                                  text_y, color=textbox_text_color,
+                                  valign=sge.ALIGN_MIDDLE)
 
             if self._selected is None:
                 if (self._cursor_shown and
@@ -1357,8 +1367,8 @@ class TextBox(Widget):
                    textbox_font.get_width(self.text[:i]) < x):
                 i += 1
 
-            # TODO: This feels very inaccurate.  Need an algorithm to
-            # decrement i depending on the exact position of the mouse.
+            # FIXME: This feels inaccurate, but I can't think of any way
+            # to reliably make it better.  Leaving it as-is for now.
             return i
 
         return 0
@@ -1411,17 +1421,31 @@ class TextBox(Widget):
                 self._selected = (0, len(self.text))
                 self._cursor_pos = len(self.text)
             elif key == 'x':
-                # TODO: Need some sort of cross-platform "copy to
-                # clipboard" function.
-                pass
+                if self._selected is not None:
+                    a, b = self._selected
+                    r = Tk()
+                    r.withdraw()
+                    r.clipboard_clear()
+                    r.clipboard_append(self.text[a:b])
+                    r.destroy()
+                    self._delete_selection()
             elif key == 'c':
-                # TODO: Need some sort of cross-platform "copy to
-                # clipboard" function.
-                pass
+                if self._selected is not None:
+                    a, b = self._selected
+                    r = Tk()
+                    r.withdraw()
+                    r.clipboard_clear()
+                    r.clipboard_append(self.text[a:b])
+                    r.destroy()
             elif key == 'v':
-                # TODO: Need some sort of cross-platform "paste from
-                # clipboard" function.
-                pass
+                self._delete_selection()
+                r = Tk()
+                r.withdraw()
+                new_text = r.selection_get(selection="CLIPBOARD")
+                r.destroy()
+                self.text = ''.join([self.text[:self._cursor_pos], new_text,
+                                     self.text[self._cursor_pos:]])
+                self._cursor_pos += len(new_text)
         else:
             if key == "left":
                 if sge.keyboard.get_modifier("shift"):
@@ -1449,9 +1473,11 @@ class TextBox(Widget):
                     self._show_cursor()
             elif key == "home":
                 self._cursor_pos = 0
+                self._selected = None
                 self._show_cursor()
             elif key == "end":
                 self._cursor_pos = len(self.text)
+                self._selected = None
                 self._show_cursor()
             elif key == "backspace":
                 if self._selected is None and self._cursor_pos > 0:
@@ -1538,7 +1564,7 @@ class TextEntryDialog(Dialog):
         x = sge.game.width / 2 - width / 2
         y = sge.game.height / 2 - height / 2
         super().__init__(x, y, width, height, title=title)
-        button_w = max(1, width / 2 - DIALOG_PADDING * 3)
+        button_w = max(1, (width - DIALOG_PADDING * 3) / 2)
         button_h = button_sprite.height
         textbox_w = max(1, width - DIALOG_PADDING * 2)
         textbox_h = textbox_sprite.height
@@ -1584,22 +1610,6 @@ class TextEntryDialog(Dialog):
 class FileSelectionDialog(Dialog):
 
     pass
-
-
-def show_message(message, buttons=("Ok",), width=320, height=120,
-                 title="Message"):
-    w = MessageDialog(message, buttons=buttons, width=width, height=height,
-                      title=title)
-    w.show()
-    return w.choice
-
-
-def get_text_entry(message="", width=320, height=152, text="",
-                   title="Text Entry"):
-    w = TextEntryDialog(message=message, width=width, height=height, text=text,
-                        title=title)
-    w.show()
-    return w.text
 
 
 def init():
@@ -1779,6 +1789,22 @@ def get_mouse_focused_window():
     return None
 
 
+def show_message(message, buttons=("Ok",), width=320, height=120,
+                 title="Message"):
+    w = MessageDialog(message, buttons=buttons, width=width, height=height,
+                      title=title)
+    w.show()
+    return w.choice
+
+
+def get_text_entry(message="", width=320, height=152, text="",
+                   title="Text Entry"):
+    w = TextEntryDialog(message=message, width=width, height=height, text=text,
+                        title=title)
+    w.show()
+    return w.text
+
+
 if __name__ == '__main__':
     # Test
     sge.Game(width=800, height=600)
@@ -1792,7 +1818,8 @@ if __name__ == '__main__':
     label = Label(window, 8, 32, 0, "My label")
     label2 = Label(window, 8, 64, 0, "my label " * 50, width=224)
     button2 = Button(window, 16, 100, 5, "Another button", width=150)
-    button.event_press = lambda: print(show_message("You just pressed my buttons!" * 50))
+    button.event_press = lambda: print(show_message(
+        "You just pressed my buttons!" * 50))
     button2.event_press = lambda: print(get_text_entry("Who are you?!" * 50))
     window.show()
 
