@@ -21,8 +21,6 @@ well as support for modal dialog boxes.
 .. data:: windows
 
    A list of all windows that are currently supposed to be visible.
-   Windows in this list will be displayed when :func:`xsge.gui.refresh`
-   is called.
 
    You don't need to modify this list manually. Instead, use
    :meth:`xsge.gui.Window.show` and :meth:`xsge.gui.Window.hide` to add
@@ -54,8 +52,6 @@ TEXTBOX_MIN_EDGE = 4
 TEXTBOX_CURSOR_BLINK_TIME = 500
 DIALOG_PADDING = 8
 
-windows = []
-keyboard_focused_window = None
 window_background_color = "#A4A4A4"
 text_color = "black"
 button_text_color = "black"
@@ -107,49 +103,82 @@ class Handler(sge.StellarClass):
     to be used.  It feeds SGE events to the windows so they can react to
     user input.  It also refreshes all windows every frame.
 
+    .. attribute:: windows
+
+       A list of all windows that are currently handled by this handler.
+
+       You don't need to modify this list manually. Instead, use
+       :meth:`xsge.gui.Window.show` and :meth:`xsge.gui.Window.hide` to
+       add and remove windows from this list, respectively.
+
     """
 
     def __init__(self):
         super().__init__(0, 0, visible=False, tangible=False)
+        self.windows = []
+        self.keyboard_focused_window = None
+
+    def get_mouse_focused_window(self):
+        """Return the window that currently has mouse focus.
+
+        The window with mouse focus is the one which is closest to the front
+        that is touching the mouse cursor.
+
+        Return :const:`None` if no window has focus.
+
+        """
+        x = sge.mouse.get_x()
+        y = sge.mouse.get_y()
+        for window in reversed(self.windows):
+            border_x = window.x
+            border_y = window.y
+            if window.border:
+                border_x -= window_border_left_sprite.width
+                border_y -= window_border_top_sprite.height
+
+            if (border_x <= x < border_x + window.sprite.width and
+                    border_y <= y < border_y + window.sprite.height):
+                return window
+
+        return None
 
     def event_step(self, time_passed, delta_mult):
-        for window in windows[:]:
+        for window in self.windows[:]:
             window.event_step(time_passed, delta_mult)
             for widget in window.widgets:
                 widget.event_step(time_passed, delta_mult)
             window.refresh()
 
     def event_key_press(self, key, char):
-        window = keyboard_focused_window
+        window = self.keyboard_focused_window
         if window is not None:
             window.event_key_press(key, char)
             widget = window.keyboard_focused_widget
             if widget is not None:
                 widget.event_key_press(key, char)
 
-        for window in windows:
+        for window in self.windows[:]:
             window.event_global_key_press(key, char)
             for widget in window.widgets:
                 widget.event_global_key_press(key, char)
 
     def event_key_release(self, key):
-        window = keyboard_focused_window
+        window = self.keyboard_focused_window
         if window is not None:
             window.event_key_release(key)
             widget = window.keyboard_focused_widget
             if widget is not None:
                 widget.event_key_release(key)
 
-        for window in windows:
+        for window in self.windows[:]:
             window.event_global_key_release(key)
             for widget in window.widgets:
                 widget.event_global_key_release(key)
 
     def event_mouse_button_press(self, button):
-        global keyboard_focused_window
-        window = get_mouse_focused_window()
+        window = self.get_mouse_focused_window()
         if window is not None:
-            keyboard_focused_window = window
+            self.keyboard_focused_window = window
             window.move_to_front()
             if window.get_mouse_on_titlebar():
                 window.event_titlebar_mouse_button_press(button)
@@ -159,13 +188,13 @@ class Handler(sge.StellarClass):
                 if widget is not None:
                     widget.event_mouse_button_press(button)
 
-        for window in windows:
+        for window in self.windows[:]:
             window.event_global_mouse_button_press(button)
             for widget in window.widgets:
                 widget.event_global_mouse_button_press(button)
 
     def event_mouse_button_release(self, button):
-        window = get_mouse_focused_window()
+        window = self.get_mouse_focused_window()
         if window is not None:
             if window.get_mouse_on_titlebar():
                 window.event_titlebar_mouse_button_release(button)
@@ -175,7 +204,7 @@ class Handler(sge.StellarClass):
                 if widget is not None:
                     widget.event_mouse_button_release(button)
 
-        for window in windows:
+        for window in self.windows[:]:
             window.event_global_mouse_button_release(button)
             for widget in window.widgets:
                 widget.event_global_mouse_button_release(button)
@@ -187,6 +216,17 @@ class Window:
 
     Window objects are used to contain widgets.  They can be moved
     around the game window by the user.
+
+    .. attribute:: parent
+
+       A weak reference to this window's parent handler object, which is
+       used to display it when it is supposed to be visible.
+
+       .. note::
+
+          The value passed to the ``parent`` argument of
+          :meth:`__init__` should be a strong reference, not a weak
+          reference.
 
     .. attribute:: x
 
@@ -248,8 +288,9 @@ class Window:
         else:
             self._background_color = window_background_color
 
-    def __init__(self, x, y, width, height, title="", background_color=None,
-                 border=True):
+    def __init__(self, parent, x, y, width, height, title="",
+                 background_color=None, border=True):
+        self.parent = weakref.ref(parent)
         self.x = x
         self.y = y
         self.width = width
@@ -266,30 +307,36 @@ class Window:
         self.redraw()
 
     def show(self):
-        """Add this window to :data:`xsge.gui.windows`."""
-        global windows
-        if self not in windows:
-            windows.append(self)
-        else:
-            self.move_to_front()
+        """Add this window to its parent handler."""
+        parent = self.parent()
+        if parent is not None:
+            if self not in parent.windows:
+                parent.windows.append(self)
+            else:
+                self.move_to_front()
 
     def hide(self):
-        """Remove this window from :data:`xsge.gui.windows`."""
-        global windows
-        if self in windows:
-            windows.remove(self)
+        """Remove this window from its parent handler."""
+        parent = self.parent()
+        if parent is not None:
+            if self in parent.windows:
+                parent.windows.remove(self)
 
     def move_to_front(self):
         """Move this window in front of all other windows."""
-        global windows
-        if self in windows:
-            windows.append(windows.pop(windows.index(self)))
+        parent = self.parent()
+        if parent is not None:
+            if self in parent.windows:
+                i = parent.windows.index(self)
+                parent.windows.append(parent.windows.pop(i))
 
     def move_to_back(self):
         """Move this window behind all other windows."""
-        global windows
-        if self in windows:
-            windows.insert(0, windows.pop(windows.index(self)))
+        parent = self.parent()
+        if parent is not None:
+            if self in parent.windows:
+                i = parent.windows.index(self)
+                parent.windows.insert(0, parent.windows.pop(i))
 
     def destroy(self):
         """Destroy this window."""
@@ -616,89 +663,59 @@ class Dialog(Window):
         """Show this dialog and start its loop.
 
         Like :meth:`xsge.gui.Window.show`, this method adds the dialog
-        to :data:`xsge.gui.windows`.  It then starts this dialog's loop.
+        to its parent.  It then starts this dialog's loop.
         Call :meth:`xsge.gui.Dialog.hide` on this dialog to end the
         loop.
 
         """
-        super().show()
-        while self in windows:
-            # Input events
+        parent = self.parent()
+        if parent is not None:
+            super().show()
+            screenshot = sge.Sprite.from_screenshot()
+            while self in parent.windows:
+                # Input events
+                sge.game.pump_input()
+                while sge.game.input_events:
+                    event = sge.game.input_events.pop(0)
+
+                    if isinstance(event, sge.input.KeyPress):
+                        parent.event_key_press(event.key, event.char)
+                    elif isinstance(event, sge.input.KeyRelease):
+                        parent.event_key_release(event.key)
+                    elif isinstance(event, sge.input.MouseButtonPress):
+                        parent.event_mouse_button_press(event.button)
+                    elif isinstance(event, sge.input.MouseButtonRelease):
+                        parent.event_mouse_button_release(event.button)
+                    elif isinstance(event, sge.input.QuitRequest):
+                        sge.game.input_events.insert(0, event)
+                        self.hide()
+                        return
+
+                # Regulate speed
+                time_passed = sge.game.regulate_speed()
+
+                if sge.game.delta:
+                    t = min(time_passed, 1000 / sge.game.delta_min)
+                    delta_mult = t / (1000 / sge.game.fps)
+                else:
+                    delta_mult = 1
+
+                # Project screenshot
+                sge.game.project_sprite(screenshot, 0, 0, 0)
+
+                # Project windows
+                self.event_step(time_passed, delta_mult)
+                for widget in self.widgets:
+                    widget.event_step(time_passed, delta_mult)
+
+                for window in parent.windows[:]:
+                    window.refresh()
+
+                # Refresh
+                sge.game.refresh()
+
             sge.game.pump_input()
-            while sge.game.input_events:
-                event = sge.game.input_events.pop(0)
-
-                if isinstance(event, sge.input.KeyPress):
-                    self.event_key_press(event.key, event.char)
-                    widget = self.keyboard_focused_widget
-                    if widget is not None:
-                        widget.event_key_press(event.key, event.char)
-                    self.event_global_key_press(event.key, event.char)
-                    for widget in self.widgets:
-                        widget.event_global_key_press(event.key, event.char)
-                elif isinstance(event, sge.input.KeyRelease):
-                    self.event_key_release(event.key)
-                    widget = self.keyboard_focused_widget
-                    if widget is not None:
-                        widget.event_key_release(event.key)
-                    self.event_global_key_release(event.key)
-                    for widget in self.widgets:
-                        widget.event_global_key_release(event.key)
-                elif isinstance(event, sge.input.MouseButtonPress):
-                    if get_mouse_focused_window() is self:
-                        if self.get_mouse_on_titlebar():
-                            self.event_titlebar_mouse_button_press(
-                                event.button)
-                        else:
-                            self.event_mouse_button_press(event.button)
-                            widget = self.get_mouse_focused_widget()
-                            if widget is not None:
-                                widget.event_mouse_button_press(event.button)
-
-                    self.event_global_mouse_button_press(event.button)
-                    for widget in self.widgets:
-                        widget.event_global_mouse_button_press(event.button)
-                elif isinstance(event, sge.input.MouseButtonRelease):
-                    if get_mouse_focused_window() is self:
-                        if self.get_mouse_on_titlebar():
-                            self.event_titlebar_mouse_button_release(
-                                event.button)
-                        else:
-                            self.event_mouse_button_release(event.button)
-                            widget = self.get_mouse_focused_widget()
-                            if widget is not None:
-                                widget.event_mouse_button_release(event.button)
-
-                    self.event_global_mouse_button_release(event.button)
-                    for widget in self.widgets:
-                        widget.event_global_mouse_button_release(event.button)
-                elif isinstance(event, sge.input.QuitRequest):
-                    sge.game.input_events.insert(0, event)
-                    self.hide()
-                    return
-
-            # Regulate speed
-            time_passed = sge.game.regulate_speed()
-
-            if sge.game.delta:
-                t = min(time_passed, 1000 / sge.game.delta_min)
-                delta_mult = t / (1000 / sge.game.fps)
-            else:
-                delta_mult = 1
-
-            # Project windows
-            self.event_step(time_passed, delta_mult)
-            for widget in self.widgets:
-                widget.event_step(time_passed, delta_mult)
-
-            for window in windows[:]:
-                window.refresh()
-
-            # Refresh
-            sge.game.refresh()
-
-        sge.game.pump_input()
-        sge.game.input_events = []
+            sge.game.input_events = []
 
 
 class Widget:
@@ -1016,10 +1033,12 @@ class Button(Widget):
     def event_step(self, time_passed, delta_mult):
         parent = self.parent()
         if parent is not None:
-            if ((keyboard_focused_window is parent and
-                 parent.keyboard_focused_widget is self) or
-                    (get_mouse_focused_window() is parent and
-                     parent.get_mouse_focused_widget() is self)):
+            handler = parent.parent()
+            if (handler is not None and
+                ((handler.keyboard_focused_window is parent and
+                  parent.keyboard_focused_widget is self) or
+                 (handler.get_mouse_focused_window() is parent and
+                  parent.get_mouse_focused_widget() is self))):
                 if self._pressed:
                     self.sprite = self.sprite_pressed
                 else:
@@ -1524,11 +1543,11 @@ class TextBox(Widget):
 
 class MessageDialog(Dialog):
 
-    def __init__(self, message, buttons=("Ok",), width=320, height=120,
+    def __init__(self, parent, message, buttons=("Ok",), width=320, height=120,
                  title="Message"):
         x = sge.game.width / 2 - width / 2
         y = sge.game.height / 2 - height / 2
-        super().__init__(x, y, width, height, title=title)
+        super().__init__(parent, x, y, width, height, title=title)
         button_w = max(1, int(round(width / len(buttons) - DIALOG_PADDING *
                                     (len(buttons) + 1))))
         button_h = button_sprite.height
@@ -1559,11 +1578,11 @@ class MessageDialog(Dialog):
 
 class TextEntryDialog(Dialog):
 
-    def __init__(self, message="", width=320, height=152, text="",
+    def __init__(self, parent, message="", width=320, height=152, text="",
                  title="Text Entry"):
         x = sge.game.width / 2 - width / 2
         y = sge.game.height / 2 - height / 2
-        super().__init__(x, y, width, height, title=title)
+        super().__init__(parent, x, y, width, height, title=title)
         button_w = max(1, (width - DIALOG_PADDING * 3) / 2)
         button_h = button_sprite.height
         textbox_w = max(1, width - DIALOG_PADDING * 2)
@@ -1764,44 +1783,23 @@ def init():
     sge.font_directories = orig_font_directories
 
 
-def get_mouse_focused_window():
-    """Return the window that currently has mouse focus.
-
-    The window with mouse focus is the one which is closest to the front
-    that is touching the mouse cursor.
-
-    Return :const:`None` if no window has focus.
-
-    """
-    x = sge.mouse.get_x()
-    y = sge.mouse.get_y()
-    for window in windows[::-1]:
-        border_x = window.x
-        border_y = window.y
-        if window.border:
-            border_x -= window_border_left_sprite.width
-            border_y -= window_border_top_sprite.height
-
-        if (border_x <= x < border_x + window.sprite.width and
-                border_y <= y < border_y + window.sprite.height):
-            return window
-
-    return None
-
-
 def show_message(message, buttons=("Ok",), width=320, height=120,
                  title="Message"):
-    w = MessageDialog(message, buttons=buttons, width=width, height=height,
-                      title=title)
+    handler = Handler()
+    w = MessageDialog(handler, message, buttons=buttons, width=width,
+                      height=height, title=title)
     w.show()
+    w.destroy()
     return w.choice
 
 
 def get_text_entry(message="", width=320, height=152, text="",
                    title="Text Entry"):
-    w = TextEntryDialog(message=message, width=width, height=height, text=text,
-                        title=title)
+    handler = Handler()
+    w = TextEntryDialog(handler, message=message, width=width, height=height,
+                        text=text, title=title)
     w.show()
+    w.destroy()
     return w.text
 
 
@@ -1813,7 +1811,7 @@ if __name__ == '__main__':
     handler = Handler()
     sge.Room(objects=[handler])
 
-    window = Window(8, 8, 240, 240, title="Test window 1")
+    window = Window(handler, 8, 8, 240, 240, title="Test window 1")
     button = Button(window, 8, 8, 0, "My button")
     label = Label(window, 8, 32, 0, "My label")
     label2 = Label(window, 8, 64, 0, "my label " * 50, width=224)
@@ -1823,7 +1821,7 @@ if __name__ == '__main__':
     button2.event_press = lambda: print(get_text_entry("Who are you?!" * 50))
     window.show()
 
-    window2 = Window(480, 200, 320, 320, title="Test window 2")
+    window2 = Window(handler, 480, 200, 320, 320, title="Test window 2")
     checkbox = CheckBox(window2, 16, 16, 0)
     radio = RadioButton(window2, 16, 48, 0)
     radio2 = RadioButton(window2, 16, 80, 0)
