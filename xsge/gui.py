@@ -18,13 +18,62 @@
 This module provides a simple toolkit for adding GUIs to a SGE game as
 well as support for modal dialog boxes.
 
-.. data:: windows
+.. data:: window_background_color
+.. data:: keyboard_focused_box_color
+.. data:: text_color
+.. data:: button_text_color
+.. data:: textbox_text_color
+.. data:: textbox_text_selected_color
+.. data:: textbox_highlight_color
+.. data:: title_text_color
 
-   A list of all windows that are currently supposed to be visible.
+   The colors used by this module.  They can be safely changed, but be
+   sure to call :meth:`redraw` on all windows and widgets that would be
+   affected; some changes might not become visible until you do.
 
-   You don't need to modify this list manually. Instead, use
-   :meth:`xsge.gui.Window.show` and :meth:`xsge.gui.Window.hide` to add
-   and remove windows from this list, respectively.
+.. data:: default_font
+.. data:: button_font
+.. data:: textbox_font
+.. data:: title_font
+
+   The fonts used by this module.  They can be safely changed, but be
+   sure to call :meth:`redraw` on all windows and widgets that would be
+   affected; some changes might not become visible until you do.
+
+.. data:: button_sprite
+.. data:: button_left_sprite
+.. data:: button_right_sprite
+.. data:: button_pressed_sprite
+.. data:: button_pressed_left_sprite
+.. data:: button_pressed_right_sprite
+.. data:: button_selected_sprite
+.. data:: button_selected_left_sprite
+.. data:: button_selected_right_sprite
+.. data:: checkbox_off_sprite
+.. data:: checkbox_on_sprite
+.. data:: progressbar_sprite
+.. data:: progressbar_left_sprite
+.. data:: progressbar_right_sprite
+.. data:: progressbar_container_sprite
+.. data:: progressbar_container_left_sprite
+.. data:: progressbar_container_right_sprite
+.. data:: radiobutton_off_sprite
+.. data:: radiobutton_on_sprite
+.. data:: textbox_sprite
+.. data:: textbox_left_sprite
+.. data:: textbox_right_sprite
+.. data:: window_border_left_sprite
+.. data:: window_border_right_sprite
+.. data:: window_border_bottom_sprite
+.. data:: window_border_bottomleft_sprite
+.. data:: window_border_bottomright_sprite
+.. data:: window_border_top_sprite
+.. data:: window_border_topleft_sprite
+.. data:: window_border_topright_sprite
+
+   The sprites used by this module.  They can be safely changed, but be
+   sure to call :meth:`redraw` on all windows and widgets that would be
+   affected; some changes might not become visible until you do.
 """
 
 import os
@@ -53,6 +102,7 @@ TEXTBOX_CURSOR_BLINK_TIME = 500
 DIALOG_PADDING = 8
 
 window_background_color = "#A4A4A4"
+keyboard_focused_box_color = (0, 0, 0, 170)
 text_color = "black"
 button_text_color = "black"
 textbox_text_color = "black"
@@ -222,11 +272,8 @@ class Window:
        A weak reference to this window's parent handler object, which is
        used to display it when it is supposed to be visible.
 
-       .. note::
-
-          The value passed to the ``parent`` argument of
-          :meth:`__init__` should be a strong reference, not a weak
-          reference.
+       If a strong reference is assigned to this attribute, it will
+       automatically be changed to a weak reference.
 
     .. attribute:: x
 
@@ -278,6 +325,17 @@ class Window:
     """
 
     @property
+    def parent(self):
+        return self._parent
+
+    @parent.setter
+    def parent(self, value):
+        if isinstance(value, weakref.ref):
+            self._parent = value
+        else:
+            self._parent = weakref.ref(value)
+
+    @property
     def background_color(self):
         return self._background_color
 
@@ -290,7 +348,7 @@ class Window:
 
     def __init__(self, parent, x, y, width, height, title="",
                  background_color=None, border=True):
-        self.parent = weakref.ref(parent)
+        self.parent = parent
         self.x = x
         self.y = y
         self.width = width
@@ -458,6 +516,7 @@ class Window:
             widget.refresh()
 
     def get_mouse_on_titlebar(self):
+        """Return whether or not the mouse is on the title bar."""
         if self.border:
             mouse_x = sge.mouse.get_x()
             mouse_y = sge.mouse.get_y()
@@ -511,10 +570,17 @@ class Window:
                 try:
                     i = self.widgets.index(self.keyboard_focused_widget)
                 except ValueError:
-                    self.keyboard_focused_widget = self.widgets[0]
-                else:
-                    i = (i + 1) % len(self.widgets)
-                    self.keyboard_focused_widget = self.widgets[i]
+                    i = -1
+
+                while True:
+                    i += 1
+
+                    if i >= len(self.widgets):
+                        self.keyboard_focused_widget = None
+                        break
+                    elif self.widgets[i].tab_focus:
+                        self.keyboard_focused_widget = self.widgets[i]
+                        break
 
     def event_key_release(self, key):
         """Key release event.
@@ -652,7 +718,8 @@ class Dialog(Window):
     """Dialog class.
 
     Dialogs are windows with their own loops, also called modal windows.
-    They are used to display messages outside of regular windows.
+    They are used for tasks that must be completed before the main
+    program continues, such as pop-up messages.
 
     See the documentation for :class:`xsge.gui.Window` for more
     information.
@@ -663,15 +730,14 @@ class Dialog(Window):
         """Show this dialog and start its loop.
 
         Like :meth:`xsge.gui.Window.show`, this method adds the dialog
-        to its parent.  It then starts this dialog's loop.
-        Call :meth:`xsge.gui.Dialog.hide` on this dialog to end the
-        loop.
+        to its parent.  It then starts this dialog's loop.  Call
+        :meth:`xsge.gui.Dialog.hide` on this dialog to end the loop.
 
         """
         parent = self.parent()
         if parent is not None:
             super().show()
-            screenshot = sge.Sprite.from_screenshot()
+            parent.keyboard_focused_window = self
             while self in parent.windows:
                 # Input events
                 sge.game.pump_input()
@@ -679,13 +745,54 @@ class Dialog(Window):
                     event = sge.game.input_events.pop(0)
 
                     if isinstance(event, sge.input.KeyPress):
-                        parent.event_key_press(event.key, event.char)
+                        self.event_key_press(event.key, event.char)
+                        widget = self.keyboard_focused_widget
+                        if widget is not None:
+                            widget.event_key_press(event.key, event.char)
+                        self.event_global_key_press(event.key, event.char)
+                        for widget in self.widgets:
+                            widget.event_global_key_press(event.key,
+                                                          event.char)
                     elif isinstance(event, sge.input.KeyRelease):
-                        parent.event_key_release(event.key)
+                        self.event_key_release(event.key)
+                        widget = self.keyboard_focused_widget
+                        if widget is not None:
+                            widget.event_key_release(event.key)
+                        self.event_global_key_release(event.key)
+                        for widget in self.widgets:
+                            widget.event_global_key_release(event.key)
                     elif isinstance(event, sge.input.MouseButtonPress):
-                        parent.event_mouse_button_press(event.button)
+                        if parent.get_mouse_focused_window() is self:
+                            if self.get_mouse_on_titlebar():
+                                self.event_titlebar_mouse_button_press(
+                                    event.button)
+                            else:
+                                self.event_mouse_button_press(event.button)
+                                widget = self.get_mouse_focused_widget()
+                                if widget is not None:
+                                    widget.event_mouse_button_press(
+                                        event.button)
+
+                        self.event_global_mouse_button_press(event.button)
+                        for widget in self.widgets:
+                            widget.event_global_mouse_button_press(
+                                event.button)
                     elif isinstance(event, sge.input.MouseButtonRelease):
-                        parent.event_mouse_button_release(event.button)
+                        if parent.get_mouse_focused_window() is self:
+                            if self.get_mouse_on_titlebar():
+                                self.event_titlebar_mouse_button_release(
+                                    event.button)
+                            else:
+                                self.event_mouse_button_release(event.button)
+                                widget = self.get_mouse_focused_widget()
+                                if widget is not None:
+                                    widget.event_mouse_button_release(
+                                        event.button)
+
+                        self.event_global_mouse_button_release(event.button)
+                        for widget in self.widgets:
+                            widget.event_global_mouse_button_release(
+                                event.button)
                     elif isinstance(event, sge.input.QuitRequest):
                         sge.game.input_events.insert(0, event)
                         self.hide()
@@ -699,9 +806,6 @@ class Dialog(Window):
                     delta_mult = t / (1000 / sge.game.fps)
                 else:
                     delta_mult = 1
-
-                # Project screenshot
-                sge.game.project_sprite(screenshot, 0, 0, 0)
 
                 # Project windows
                 self.event_step(time_passed, delta_mult)
@@ -719,6 +823,8 @@ class Dialog(Window):
 
 
 class Widget:
+
+    tab_focus = True
 
     @property
     def z(self):
@@ -776,6 +882,10 @@ class Widget:
         if parent is not None:
             sge.game.project_sprite(self.sprite, 0, parent.x + self.x,
                                     parent.y + self.y)
+            if parent.keyboard_focused_widget is self:
+                sge.game.project_rectangle(
+                    parent.x + self.x, parent.y + self.y, self.sprite.width,
+                    self.sprite.height, outline=keyboard_focused_box_color)
         else:
             self.destroy()
 
@@ -913,6 +1023,8 @@ class Label(Widget):
 
     """
 
+    tab_focus = False
+
     @property
     def font(self):
         return self._font
@@ -1029,6 +1141,14 @@ class Button(Widget):
                                       halign=sge.ALIGN_CENTER,
                                       valign=sge.ALIGN_MIDDLE)
         self.sprite_pressed.draw_unlock()
+
+    def refresh(self):
+        parent = self.parent()
+        if parent is not None:
+            sge.game.project_sprite(self.sprite, 0, parent.x + self.x,
+                                    parent.y + self.y)
+        else:
+            self.destroy()
 
     def event_step(self, time_passed, delta_mult):
         parent = self.parent()
@@ -1176,6 +1296,8 @@ class RadioButton(CheckBox):
 
 class ProgressBar(Widget):
 
+    tab_focus = False
+
     def __init__(self, parent, x, y, z, width=128, progress=0):
         super().__init__(parent, x, y, z, sge.Sprite(width=1, height=1))
         self.width = width
@@ -1258,10 +1380,11 @@ class TextBox(Widget):
         self.sprite.draw_unlock()
 
     def refresh(self):
-        super().refresh()
-
         parent = self.parent()
         if parent is not None:
+            sge.game.project_sprite(self.sprite, 0, parent.x + self.x,
+                                    parent.y + self.y)
+
             self._cursor_pos = max(0, min(self._cursor_pos,
                                           len(self.text)))
 
@@ -1315,6 +1438,8 @@ class TextBox(Widget):
                 text_sprite, 0, parent.x + self.x + textbox_left_sprite.width,
                 parent.y + self.y)
             text_sprite.destroy()
+        else:
+            self.destroy()
 
     def _show_cursor(self):
         # Forcibly show the cursor (restarting the animation).
@@ -1597,6 +1722,16 @@ class TextEntryDialog(Dialog):
         y = label_h + DIALOG_PADDING * 2
         self.textbox = TextBox(self, x, y, 0, width=textbox_w, text=text)
 
+        def event_key_press(key, char, self=self.textbox):
+            if key in ("enter", "kp_enter"):
+                parent = self.parent()
+                if parent is not None:
+                    parent._return_text(self.text)
+            else:
+                TextBox.event_key_press(self, key, char)
+
+        self.textbox.event_key_press = event_key_press
+
         y = height - button_h - DIALOG_PADDING
         x = DIALOG_PADDING
         button = Button(self, x, y, 0, "Cancel", width=button_w)
@@ -1619,6 +1754,7 @@ class TextEntryDialog(Dialog):
         button.event_press = event_press
 
         self.text = None
+        self.keyboard_focused_widget = self.textbox
 
     def _return_text(self, s):
         # Return ``s`` as this dialog's text.
@@ -1783,20 +1919,18 @@ def init():
     sge.font_directories = orig_font_directories
 
 
-def show_message(message, buttons=("Ok",), width=320, height=120,
+def show_message(parent, message, buttons=("Ok",), width=320, height=120,
                  title="Message"):
-    handler = Handler()
-    w = MessageDialog(handler, message, buttons=buttons, width=width,
+    w = MessageDialog(parent, message, buttons=buttons, width=width,
                       height=height, title=title)
     w.show()
     w.destroy()
     return w.choice
 
 
-def get_text_entry(message="", width=320, height=152, text="",
+def get_text_entry(parent, message="", width=320, height=152, text="",
                    title="Text Entry"):
-    handler = Handler()
-    w = TextEntryDialog(handler, message=message, width=width, height=height,
+    w = TextEntryDialog(parent, message=message, width=width, height=height,
                         text=text, title=title)
     w.show()
     w.destroy()
@@ -1816,9 +1950,10 @@ if __name__ == '__main__':
     label = Label(window, 8, 32, 0, "My label")
     label2 = Label(window, 8, 64, 0, "my label " * 50, width=224)
     button2 = Button(window, 16, 100, 5, "Another button", width=150)
-    button.event_press = lambda: print(show_message(
-        "You just pressed my buttons!" * 50))
-    button2.event_press = lambda: print(get_text_entry("Who are you?!" * 50))
+    button.event_press = lambda handler=handler: print(show_message(
+        handler, "You just pressed my buttons!" * 50))
+    button2.event_press = lambda handler=handler: print(get_text_entry(
+        handler, "Who are you?!" * 50))
     window.show()
 
     window2 = Window(handler, 480, 200, 320, 320, title="Test window 2")
