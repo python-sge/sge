@@ -739,6 +739,8 @@ class Dialog(Window):
             super().show()
             parent.keyboard_focused_window = self
             while self in parent.windows:
+                self.move_to_front()
+
                 # Input events
                 sge.game.pump_input()
                 while sge.game.input_events:
@@ -823,6 +825,40 @@ class Dialog(Window):
 
 
 class Widget:
+
+    """Widget class.
+
+    Widget objects are things like controls and decorations that exist
+    on windows.
+
+    .. attribute:: parent
+
+       A weak reference to this widget's parent window.
+
+       If a strong reference is assigned to this attribute, it will
+       automatically be changed to a weak reference.
+
+    .. attribute:: x
+
+       The horizontal position of the widget relative to its parent
+       window.
+
+    .. attribute:: y
+
+       The vertical position of the widget relative to its parent
+       window.
+
+    .. attribute:: z
+
+       The Z-axis position of the widget.  Widgets with a higher Z-axis
+       value are in front of widgets with a lower Z-axis value.  This
+       value is not connected in any way to Z-axis values in the SGE.
+
+    .. attribute:: sprite
+
+       The sprite this widget displays as itself.
+
+    """
 
     tab_focus = True
 
@@ -1066,10 +1102,35 @@ class Label(Widget):
 
 class Button(Widget):
 
-    def __init__(self, parent, x, y, z, text, width=None):
-        super().__init__(parent, x, y, z, sge.Sprite(width=1, height=1))
+    """Button widget.
+
+    This widget contains some text and can be clicked on by the user.
+
+    .. attribute:: text
+
+       The text contained in the button.
+
+    .. attribute:: width
+
+       The width of the button.  If set to :const:`None`, the width is
+       chosen based on the width of the rendered text.
+
+    .. attribute:: halign
+
+       The horizontal alignment of the text.  See the documentation for
+       :meth:`sge.Sprite.draw_text` for more information.
+
+    See the documentation for :class:`xsge.gui.Widget` for more
+    information.
+
+    """
+
+    def __init__(self, parent, x, y, z, text, width=None,
+                 halign=sge.ALIGN_CENTER):
+        super().__init__(parent, x, y, z)
         self.text = text
         self.width = width
+        self.halign = halign
         self._pressed = False
         self.sprite_normal = None
         self.sprite_selected = None
@@ -1102,7 +1163,7 @@ class Button(Widget):
         self.sprite_normal.draw_text(button_font, self.text, sprite_w / 2,
                                      h / 2, width=w, height=h,
                                      color=button_text_color,
-                                     halign=sge.ALIGN_CENTER,
+                                     halign=self.halign,
                                      valign=sge.ALIGN_MIDDLE)
         self.sprite_normal.draw_unlock()
 
@@ -1120,7 +1181,7 @@ class Button(Widget):
         self.sprite_selected.draw_text(button_font, self.text, sprite_w / 2,
                                        h / 2, width=w, height=h,
                                        color=button_text_color,
-                                       halign=sge.ALIGN_CENTER,
+                                       halign=self.halign,
                                        valign=sge.ALIGN_MIDDLE)
         self.sprite_selected.draw_unlock()
 
@@ -1138,7 +1199,7 @@ class Button(Widget):
         self.sprite_pressed.draw_text(button_font, self.text, sprite_w / 2,
                                       h / 2, width=w, height=h,
                                       color=button_text_color,
-                                      halign=sge.ALIGN_CENTER,
+                                      halign=self.halign,
                                       valign=sge.ALIGN_MIDDLE)
         self.sprite_pressed.draw_unlock()
 
@@ -1204,6 +1265,19 @@ class Button(Widget):
 
 class CheckBox(Widget):
 
+    """Check box widget.
+
+    This widget can be toggled "on" or "off" by clicking on it.
+
+    .. attribute:: enabled
+
+       Whether or not the checkbox is on.
+
+    See the documentation for :class:`xsge.gui.Widget` for more
+    information.
+
+    """
+
     def __init__(self, parent, x, y, z, enabled=False):
         super().__init__(parent, x, y, z)
         self.enabled = enabled
@@ -1254,6 +1328,18 @@ class CheckBox(Widget):
 
 class RadioButton(CheckBox):
 
+    """Radio button widget.
+
+    This widget is mostly like :class:`xsge.gui.CheckBox`, but clicking
+    on it while it is on will not turn it off, and only one radio button
+    can be on at any given time (i.e. enabling one radio button on a
+    window will disable all others on the same window).
+
+    See the documentation for :class:`xsge.gui.CheckBox` for more
+    information.
+
+    """
+
     def event_step(self, time_passed, delta_mult):
         if self.enabled:
             self.sprite = radiobutton_on_sprite
@@ -1295,6 +1381,23 @@ class RadioButton(CheckBox):
 
 
 class ProgressBar(Widget):
+
+    """Progress bar widget.
+
+    This widget displays a bar which can be used to show progress (e.g.
+    of some task being done).
+
+    .. attribute:: width
+
+       The width of the progress bar.
+
+    .. attribute:: progress
+
+       The progress indicated by the progress bar as a factor (i.e.
+       ``0`` is no completion, ``1`` is full completion, and ``0.5`` is
+       half completion).
+
+    """
 
     tab_focus = False
 
@@ -1341,6 +1444,23 @@ class ProgressBar(Widget):
 
 
 class TextBox(Widget):
+
+    """Text box widget.
+
+    This widget provides a place for the user to enter text.
+
+    .. attribute:: width
+
+       The width of the text box.
+
+    .. attribute:: text
+
+       The text in the text box by default.
+
+    See the documentation for :class:`xsge.gui.Widget` for more
+    information.
+
+    """
 
     def __init__(self, parent, x, y, z, width=32, text=""):
         super().__init__(parent, x, y, z, sge.Sprite(width=1, height=1))
@@ -1668,13 +1788,31 @@ class TextBox(Widget):
 
 class MessageDialog(Dialog):
 
+    """Message dialog.
+
+    This dialog shows a message box and accepts button input.  All
+    buttons cause the dialog to close and set :attr:`choice` to the
+    button pressed.
+
+    .. attribute:: choice
+
+       The button clicked.  If a button hasn't been clicked (i.e. the
+       dialog hasn't yet been closed or was closed by clicking on the
+       close button), it is set to :const:`None`.
+
+    See the documentation for :class:`xsge.gui.Dialog` for more
+    information.
+
+    """
+
     def __init__(self, parent, message, buttons=("Ok",), width=320, height=120,
                  title="Message"):
+        """See :func:`xsge.gui.show_message`."""
         x = sge.game.width / 2 - width / 2
         y = sge.game.height / 2 - height / 2
         super().__init__(parent, x, y, width, height, title=title)
-        button_w = max(1, int(round(width / len(buttons) - DIALOG_PADDING *
-                                    (len(buttons) + 1))))
+        button_w = max(1, int(round((width - DIALOG_PADDING *
+                                     (len(buttons) + 1)) / len(buttons))))
         button_h = button_sprite.height
         label_w = max(1, width - DIALOG_PADDING * 2)
         label_h = max(1, height - button_h - DIALOG_PADDING * 3)
@@ -1693,6 +1831,7 @@ class MessageDialog(Dialog):
 
             button.event_press = event_press
 
+        self.keyboard_focused_widget = button
         self.choice = None
 
     def _return_button(self, x):
@@ -1703,8 +1842,26 @@ class MessageDialog(Dialog):
 
 class TextEntryDialog(Dialog):
 
+    """Text entry dialog.
+
+    This dialog shows a message and has the user enter some text.  Two
+    buttons are shown: a "Cancel" button that closes the dialog, and an
+    "Ok" button that sets :attr:`text` to the text entered and then
+    closes the dialog.
+
+    .. attribute:: text
+
+       The text entered after the "Ok" button is clicked.  If the "Ok"
+       button hasn't been clicked, this is :const:`None`.
+
+    See the documentation for :class:`xsge.gui.Dialog` for more
+    information.
+
+    """
+
     def __init__(self, parent, message="", width=320, height=152, text="",
                  title="Text Entry"):
+        """See :func:`xsge.gui.get_text_entry`."""
         x = sge.game.width / 2 - width / 2
         y = sge.game.height / 2 - height / 2
         super().__init__(parent, x, y, width, height, title=title)
@@ -1721,6 +1878,8 @@ class TextEntryDialog(Dialog):
 
         y = label_h + DIALOG_PADDING * 2
         self.textbox = TextBox(self, x, y, 0, width=textbox_w, text=text)
+        if text:
+            self.textbox._selected = (0, len(text))
 
         def event_key_press(key, char, self=self.textbox):
             if key in ("enter", "kp_enter"):
@@ -1921,6 +2080,28 @@ def init():
 
 def show_message(parent, message, buttons=("Ok",), width=320, height=120,
                  title="Message"):
+    """Show a message and return the button pressed.
+
+    Arguments:
+
+    - ``parent`` -- The parent handler of the :class:`MessageDialog`
+      object created.
+    - ``message`` -- The message shown to the user.
+    - ``buttons`` -- A list of strings to put inside the buttons, from
+      left to right.
+    - ``width`` -- The width of the :class:`MessageDialog` created.
+    - ``height`` -- The height of the :class:`MessageDialog` created.
+    - ``title`` -- The window title of the :class:`MessageDialog`
+      created.
+
+    Value returned is the index of the button pressed, where ``0`` is
+    the leftmost button, or :const:`None` if no button was pressed (i.e.
+    the close button on the window frame was pressed instead).
+
+    See the documentation for :class:`MessageDialog` for more
+    information.
+
+    """
     w = MessageDialog(parent, message, buttons=buttons, width=width,
                       height=height, title=title)
     w.show()
@@ -1930,6 +2111,26 @@ def show_message(parent, message, buttons=("Ok",), width=320, height=120,
 
 def get_text_entry(parent, message="", width=320, height=152, text="",
                    title="Text Entry"):
+    """Return text entered by the user.
+
+    Arguments:
+
+    - ``parent`` -- The parent handler of the :class:`MessageDialog`
+      object created.
+    - ``message`` -- The message shown to the user.
+    - ``width`` -- The width of the :class:`MessageDialog` created.
+    - ``height`` -- The height of the :class:`MessageDialog` created.
+    - ``text`` -- The text in the text box by default.
+    - ``title`` -- The window title of the :class:`MessageDialog`
+      created.
+
+    Value returned is the text entered if the "Ok" button is pressed, or
+    :const:`None` otherwise.
+
+    See the documentation for :class:`TextEntryDialog` for more
+    information.
+
+    """
     w = TextEntryDialog(parent, message=message, width=width, height=height,
                         text=text, title=title)
     w.show()
@@ -1953,7 +2154,7 @@ if __name__ == '__main__':
     button.event_press = lambda handler=handler: print(show_message(
         handler, "You just pressed my buttons!" * 50))
     button2.event_press = lambda handler=handler: print(get_text_entry(
-        handler, "Who are you?!" * 50))
+        handler, "Who are you?!" * 50, text="abcdefg"))
     window.show()
 
     window2 = Window(handler, 480, 200, 320, 320, title="Test window 2")
