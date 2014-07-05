@@ -2136,35 +2136,3 @@ def get_text_entry(parent, message="", width=320, height=152, text="",
     w.show()
     w.destroy()
     return w.text
-
-
-if __name__ == '__main__':
-    # Test
-    sge.Game(width=800, height=600)
-    sge.game.event_close = sge.game.end
-    init()
-    handler = Handler()
-    sge.Room(objects=[handler])
-
-    window = Window(handler, 8, 8, 240, 240, title="Test window 1")
-    button = Button(window, 8, 8, 0, "My button")
-    label = Label(window, 8, 32, 0, "My label")
-    label2 = Label(window, 8, 64, 0, "my label " * 50, width=224)
-    button2 = Button(window, 16, 100, 5, "Another button", width=150)
-    button.event_press = lambda handler=handler: print(show_message(
-        handler, "You just pressed my buttons!" * 50))
-    button2.event_press = lambda handler=handler: print(get_text_entry(
-        handler, "Who are you?!" * 50, text="abcdefg"))
-    window.show()
-
-    window2 = Window(handler, 480, 200, 320, 320, title="Test window 2")
-    checkbox = CheckBox(window2, 16, 16, 0)
-    radio = RadioButton(window2, 16, 48, 0)
-    radio2 = RadioButton(window2, 16, 80, 0)
-    radio3 = RadioButton(window2, 16, 112, 0)
-    progress = ProgressBar(window2, 16, 144, 0, 288, progress=0.5)
-    textbox = TextBox(window2, 16, 176, 0, width=288, text="mytext")
-    window2.show()
-
-    sge.keyboard.set_repeat(interval=10, delay=500)
-    sge.game.start()

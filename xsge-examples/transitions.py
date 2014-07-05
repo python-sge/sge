@@ -23,12 +23,14 @@ from xsge import transition
 
 
 class glob(object):
+
     font = None
     pop_sound = None
     music = None
 
 
 class Game(sge.Game):
+
     def event_key_press(self, key, char):
         if key == 'escape':
             self.end()
@@ -38,6 +40,7 @@ class Game(sge.Game):
 
 
 class Circle(sge.StellarClass):
+
     def __init__(self, x, y):
         super().__init__(x, y, 5, sprite='circle', collision_precise=True)
 
@@ -68,6 +71,7 @@ class Circle(sge.StellarClass):
 
 
 class CirclePop(sge.StellarClass):
+
     def __init__(self, x, y):
         super().__init__(x, y, 5, sprite='circle_pop', tangible=False)
 
@@ -81,6 +85,7 @@ class CirclePop(sge.StellarClass):
 
 
 class Room(transition.Room):
+
     def __init__(self, text, objects=(), views=None, background=None):
         self.text = text
         super().__init__(objects, views=views, background=background)
