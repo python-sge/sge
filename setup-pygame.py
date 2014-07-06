@@ -42,7 +42,7 @@ idir = "sge"
 requires = ["pygame (> 1.9.1)"]
 
 setup(name=name,
-      version='0.10.0',
+      version='0.10.1',
       description='A 2-D game engine for Python',
       long_description=long_description,
       author=author,
