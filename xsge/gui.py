@@ -1472,7 +1472,7 @@ class TextBox(Widget):
 
     """
 
-    def __init__(self, parent, x, y, z, width=32, text="", text_limit=10000):
+    def __init__(self, parent, x, y, z, width=32, text="", text_limit=1000):
         super(TextBox, self).__init__(parent, x, y, z,
                                       sge.Sprite(width=1, height=1))
         self.width = width
