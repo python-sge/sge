@@ -19,57 +19,57 @@ This module provides a simple toolkit for adding GUIs to a SGE game as
 well as support for modal dialog boxes.
 
 .. data:: window_background_color
-.. data:: keyboard_focused_box_color
-.. data:: text_color
-.. data:: button_text_color
-.. data:: textbox_text_color
-.. data:: textbox_text_selected_color
-.. data:: textbox_highlight_color
-.. data:: title_text_color
+          keyboard_focused_box_color
+          text_color
+          button_text_color
+          textbox_text_color
+          textbox_text_selected_color
+          textbox_highlight_color
+          title_text_color
 
    The colors used by this module.  They can be safely changed, but be
    sure to call :meth:`redraw` on all windows and widgets that would be
    affected; some changes might not become visible until you do.
 
 .. data:: default_font
-.. data:: button_font
-.. data:: textbox_font
-.. data:: title_font
+          button_font
+          textbox_font
+          title_font
 
    The fonts used by this module.  They can be safely changed, but be
    sure to call :meth:`redraw` on all windows and widgets that would be
    affected; some changes might not become visible until you do.
 
 .. data:: button_sprite
-.. data:: button_left_sprite
-.. data:: button_right_sprite
-.. data:: button_pressed_sprite
-.. data:: button_pressed_left_sprite
-.. data:: button_pressed_right_sprite
-.. data:: button_selected_sprite
-.. data:: button_selected_left_sprite
-.. data:: button_selected_right_sprite
-.. data:: checkbox_off_sprite
-.. data:: checkbox_on_sprite
-.. data:: progressbar_sprite
-.. data:: progressbar_left_sprite
-.. data:: progressbar_right_sprite
-.. data:: progressbar_container_sprite
-.. data:: progressbar_container_left_sprite
-.. data:: progressbar_container_right_sprite
-.. data:: radiobutton_off_sprite
-.. data:: radiobutton_on_sprite
-.. data:: textbox_sprite
-.. data:: textbox_left_sprite
-.. data:: textbox_right_sprite
-.. data:: window_border_left_sprite
-.. data:: window_border_right_sprite
-.. data:: window_border_bottom_sprite
-.. data:: window_border_bottomleft_sprite
-.. data:: window_border_bottomright_sprite
-.. data:: window_border_top_sprite
-.. data:: window_border_topleft_sprite
-.. data:: window_border_topright_sprite
+          button_left_sprite
+          button_right_sprite
+          button_pressed_sprite
+          button_pressed_left_sprite
+          button_pressed_right_sprite
+          button_selected_sprite
+          button_selected_left_sprite
+          button_selected_right_sprite
+          checkbox_off_sprite
+          checkbox_on_sprite
+          progressbar_sprite
+          progressbar_left_sprite
+          progressbar_right_sprite
+          progressbar_container_sprite
+          progressbar_container_left_sprite
+          progressbar_container_right_sprite
+          radiobutton_off_sprite
+          radiobutton_on_sprite
+          textbox_sprite
+          textbox_left_sprite
+          textbox_right_sprite
+          window_border_left_sprite
+          window_border_right_sprite
+          window_border_bottom_sprite
+          window_border_bottomleft_sprite
+          window_border_bottomright_sprite
+          window_border_top_sprite
+          window_border_topleft_sprite
+          window_border_topright_sprite
 
    The sprites used by this module.  They can be safely changed, but be
    sure to call :meth:`redraw` on all windows and widgets that would be
@@ -2088,21 +2088,23 @@ def show_message(parent, message, buttons=("Ok",), width=320, height=120,
 
     Arguments:
 
-    - ``parent`` -- The parent handler of the :class:`MessageDialog`
-      object created.
+    - ``parent`` -- The parent handler of the
+      :class:`xsge.gui.MessageDialog` object created.
     - ``message`` -- The message shown to the user.
     - ``buttons`` -- A list of strings to put inside the buttons, from
       left to right.
-    - ``width`` -- The width of the :class:`MessageDialog` created.
-    - ``height`` -- The height of the :class:`MessageDialog` created.
-    - ``title`` -- The window title of the :class:`MessageDialog`
-      created.
+    - ``width`` -- The width of the :class:`xsge.gui.MessageDialog`
+      object created.
+    - ``height`` -- The height of the :class:`xsge.gui.MessageDialog`
+      object created.
+    - ``title`` -- The window title of the
+      :class:`xsge.gui.MessageDialog` object created.
 
     Value returned is the index of the button pressed, where ``0`` is
     the leftmost button, or :const:`None` if no button was pressed (i.e.
     the close button on the window frame was pressed instead).
 
-    See the documentation for :class:`MessageDialog` for more
+    See the documentation for :class:`xsge.gui.MessageDialog` for more
     information.
 
     """
@@ -2119,19 +2121,21 @@ def get_text_entry(parent, message="", width=320, height=152, text="",
 
     Arguments:
 
-    - ``parent`` -- The parent handler of the :class:`MessageDialog`
-      object created.
+    - ``parent`` -- The parent handler of the
+      :class:`xsge.gui.TextEntryDialog` object created.
     - ``message`` -- The message shown to the user.
-    - ``width`` -- The width of the :class:`MessageDialog` created.
-    - ``height`` -- The height of the :class:`MessageDialog` created.
+    - ``width`` -- The width of the :class:`xsge.gui.TextEntryDialog`
+      object created.
+    - ``height`` -- The height of the :class:`xsge.gui.TextEntryDialog`
+      object created.
     - ``text`` -- The text in the text box by default.
-    - ``title`` -- The window title of the :class:`MessageDialog`
-      created.
+    - ``title`` -- The window title of the
+      :class:`xsge.gui.TextEntryDialog` object created.
 
     Value returned is the text entered if the "Ok" button is pressed, or
     :const:`None` otherwise.
 
-    See the documentation for :class:`TextEntryDialog` for more
+    See the documentation for :class:`xsge.gui.TextEntryDialog` for more
     information.
 
     """

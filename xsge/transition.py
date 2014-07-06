@@ -49,6 +49,16 @@ IRIS_OUT = 14
 
 class Room(sge.Room):
 
+    """
+    This class is a variant of :class:`sge.Room` with transition
+    support.  Transitions are done using
+    :meth:`xsge.transition.Room.show_transition`.  In general, it is
+    best to use :meth:`xsge.transition.Room.transition_start`,
+    :meth:`xsge.transition.Room.transition_resume`, and
+    :meth:`xsge.transition.Room.transition_end`, which show transitions
+    in between the current and next room.
+    """
+
     transition_update = None
     transition_sprite = None
     transition_duration = 0

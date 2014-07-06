@@ -15,6 +15,7 @@ develop-eggs
 sge-pygame/__pycache__
 xsge/__pycache__
 doc/sge-pygame/_build
+doc/xsge/_build
 
 # Installer logs
 pip-log.txt

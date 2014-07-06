@@ -17,11 +17,11 @@
 """
 xSGE is a collection of extensions for the SGE licensed under the GNU
 General Public License.  They are designed to give additional features
-to games which are released under the GNU GPL without any extra work.
+to free/libre software games which aren't necessary, but are nice to
+have.
 
 xSGE extensions are not dependent on any particular SGE implementation.
-They should would with any implementation that follows the
-specification.
+They should work with any implementation that follows the specification.
 """
 
 from __future__ import division
@@ -29,7 +29,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.0.0.26"
+__version__ = "0.0.0.27"
 
 from xsge import gui, transition
 
