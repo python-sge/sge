@@ -1921,11 +1921,6 @@ class TextEntryDialog(Dialog):
         self.destroy()
 
 
-class FileSelectionDialog(Dialog):
-
-    pass
-
-
 def init():
     """Prepare this module for use.
 

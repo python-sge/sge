@@ -122,6 +122,10 @@ class Room(transition.Room):
             self.transition_end(transition=transition.WIPE_BOTTOMRIGHT)
         elif key == "w":
             self.transition_end(transition=transition.WIPE_MATRIX)
+        elif key == "e":
+            self.transition_end(transition=transition.IRIS_IN)
+        elif key == "r":
+            self.transition_end(transition=transition.IRIS_OUT)
 
 
 def main():

@@ -437,6 +437,8 @@ class Sprite:
           frames.
 
         """
+        x = int(round(x))
+        y = int(round(y))
         color = sge._get_pygame_color(color)
         if color.a == 255:
             for i in range(self.frames):
@@ -473,6 +475,11 @@ class Sprite:
           frames.
 
         """
+        x1 = int(round(x1))
+        y1 = int(round(y1))
+        x2 = int(round(x2))
+        y2 = int(round(y2))
+        thickness = int(round(thickness))
         color = sge._get_pygame_color(color)
         thickness = abs(thickness)
 
@@ -520,6 +527,10 @@ class Sprite:
           frames.
 
         """
+        x = int(round(x))
+        y = int(round(y))
+        width = int(round(width))
+        height = int(round(height))
         outline_thickness = abs(outline_thickness)
         if outline_thickness == 0:
             outline = None
@@ -580,6 +591,10 @@ class Sprite:
           frames.
 
         """
+        x = int(round(x))
+        y = int(round(y))
+        width = int(round(width))
+        height = int(round(height))
         outline_thickness = abs(outline_thickness)
         if outline_thickness == 0:
             outline = None
@@ -639,6 +654,9 @@ class Sprite:
           frames.
 
         """
+        x = int(round(x))
+        y = int(round(y))
+        radius = int(round(radius))
         outline_thickness = abs(outline_thickness)
         if outline_thickness == 0:
             outline = None
@@ -713,11 +731,13 @@ class Sprite:
           :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
 
         """
+        x = int(round(x))
+        y = int(round(y))
         if not isinstance(sprite, sge.Sprite):
             sprite = sge.game.sprites[sprite]
 
-        x -= sprite.origin_x
-        y -= sprite.origin_y
+        x -= int(round(sprite.origin_x))
+        y -= int(round(sprite.origin_y))
         image %= len(sprite._baseimages)
 
         if blend_mode is not None and blend_mode & sge.BLEND_SCREEN:
@@ -809,6 +829,8 @@ class Sprite:
         """
         if not isinstance(font, sge.Font):
             font = sge.game.fonts[font]
+        x = int(round(x))
+        y = int(round(y))
 
         lines = font._split_text(text, width)
         width = font.get_width(text, width, height)

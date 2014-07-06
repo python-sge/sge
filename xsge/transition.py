@@ -38,6 +38,8 @@ WIPE_TOPRIGHT = 9
 WIPE_BOTTOMLEFT = 10
 WIPE_BOTTOMRIGHT = 11
 WIPE_MATRIX = 12
+IRIS_IN = 13
+IRIS_OUT = 14
 
 
 class Room(sge.Room):
@@ -51,7 +53,7 @@ class Room(sge.Room):
         self.transition_complete_last = 0
         self.transition_variables = {}
 
-    def update_fade(self, complete):
+    def _update_fade(self, complete):
         w = self.transition_sprite.width
         h = self.transition_sprite.height
         if complete < 0.5:
@@ -69,7 +71,7 @@ class Room(sge.Room):
             self.transition_sprite.draw_clear()
             self.transition_sprite.draw_rectangle(0, 0, w, h, fill=c)
 
-    def update_dissolve(self, complete):
+    def _update_dissolve(self, complete):
         w = self.transition_sprite.width
         h = self.transition_sprite.height
         diff = complete - self.transition_complete_last
@@ -81,7 +83,7 @@ class Room(sge.Room):
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.destroy()
 
-    def update_pixelate(self, complete):
+    def _update_pixelate(self, complete):
         w = self.transition_sprite.width
         h = self.transition_sprite.height
         if complete < 0.5:
@@ -102,29 +104,29 @@ class Room(sge.Room):
                 eraser, 0, 0, 0, blend_mode=sge.BLEND_RGBA_SUBTRACT)
             eraser.destroy()
 
-    def update_wipe_left(self, complete):
+    def _update_wipe_left(self, complete):
         w = self.transition_sprite.width * complete
         h = self.transition_sprite.height
         self.transition_sprite.draw_erase(0, 0, w, h)
 
-    def update_wipe_right(self, complete):
+    def _update_wipe_right(self, complete):
         w = self.transition_sprite.width * complete
         x = self.transition_sprite.width - w
         h = self.transition_sprite.height
         self.transition_sprite.draw_erase(x, 0, w, h)
 
-    def update_wipe_top(self, complete):
+    def _update_wipe_top(self, complete):
         w = self.transition_sprite.width
         h = self.transition_sprite.height * complete
         self.transition_sprite.draw_erase(0, 0, w, h)
 
-    def update_wipe_bottom(self, complete):
+    def _update_wipe_bottom(self, complete):
         w = self.transition_sprite.width
         h = self.transition_sprite.height * complete
         y = self.transition_sprite.height - h
         self.transition_sprite.draw_erase(0, y, w, h)
 
-    def update_wipe_topleft(self, complete):
+    def _update_wipe_topleft(self, complete):
         w = self.transition_sprite.width
         h = self.transition_sprite.height
         dw = math.hypot(w, h)
@@ -137,7 +139,7 @@ class Room(sge.Room):
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.destroy()
 
-    def update_wipe_topright(self, complete):
+    def _update_wipe_topright(self, complete):
         w = self.transition_sprite.width
         h = self.transition_sprite.height
         dw = math.hypot(w, h)
@@ -150,7 +152,7 @@ class Room(sge.Room):
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.destroy()
 
-    def update_wipe_bottomleft(self, complete):
+    def _update_wipe_bottomleft(self, complete):
         w = self.transition_sprite.width
         h = self.transition_sprite.height
         dw = math.hypot(w, h)
@@ -163,7 +165,7 @@ class Room(sge.Room):
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.destroy()
 
-    def update_wipe_bottomright(self, complete):
+    def _update_wipe_bottomright(self, complete):
         w = self.transition_sprite.width
         h = self.transition_sprite.height
         dw = math.hypot(w, h)
@@ -175,8 +177,9 @@ class Room(sge.Room):
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.destroy()
+        
 
-    def update_wipe_matrix(self, complete):
+    def _update_wipe_matrix(self, complete):
         psize = 4
         w = self.transition_sprite.width
         h = self.transition_sprite.height
@@ -201,6 +204,39 @@ class Room(sge.Room):
         self.transition_sprite.draw_unlock()
 
         self.transition_variables["remaining"] = remaining
+
+    def _update_iris_in(self, complete):
+        x = self.transition_sprite.width / 2
+        y = self.transition_sprite.height / 2
+        r = int(round(math.hypot(x, y) * (1 - complete)))
+        eraser = sge.Sprite(width=self.transition_sprite.width,
+                            height=self.transition_sprite.height)
+        eraser_eraser = sge.Sprite(width=self.transition_sprite.width,
+                                   height=self.transition_sprite.height)
+        eraser_eraser.draw_circle(x, y, r, fill=(0, 0, 0, 255))
+
+        eraser.draw_lock()
+        eraser.draw_rectangle(0, 0, eraser.width, eraser.height,
+                              fill=(0, 0, 0, 255))
+        eraser.draw_sprite(eraser_eraser, 0, 0, 0,
+                           blend_mode=sge.BLEND_RGBA_SUBTRACT)
+        eraser.draw_unlock()
+        eraser_eraser.destroy()
+
+        self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
+                                           blend_mode=sge.BLEND_RGBA_SUBTRACT)
+        eraser.destroy()
+
+    def _update_iris_out(self, complete):
+        x = self.transition_sprite.width / 2
+        y = self.transition_sprite.height / 2
+        r = int(round(math.hypot(x, y) * complete))
+        eraser = sge.Sprite(width=self.transition_sprite.width,
+                            height=self.transition_sprite.height)
+        eraser.draw_circle(x, y, r, fill=(0, 0, 0, 255))
+        self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
+                                           blend_mode=sge.BLEND_RGBA_SUBTRACT)
+        eraser.destroy()
 
     def show_transition(self, transition, sprite, duration):
         """Show a transition.
@@ -250,6 +286,10 @@ class Room(sge.Room):
           - :const:`xsge.transition.WIPE_MATRIX` -- Matrix wipe
             transition.
 
+          - :const:`xsge.transition.IRIS_IN` -- Iris in transition.
+
+          - :const:`xsge.transition.IRIS_OUT` -- Iris out transition.
+
         - ``sprite`` -- The sprite to use as the first image (the one
           being transitioned out of).  Generally should be a screenshot
           of the previous room.
@@ -259,15 +299,17 @@ class Room(sge.Room):
 
         """
         self.transition_update = {
-            FADE: self.update_fade, DISSOLVE: self.update_dissolve,
-            PIXELATE: self.update_pixelate, WIPE_LEFT: self.update_wipe_left,
-            WIPE_RIGHT: self.update_wipe_right, WIPE_TOP: self.update_wipe_top,
-            WIPE_BOTTOM: self.update_wipe_bottom,
-            WIPE_TOPLEFT: self.update_wipe_topleft,
-            WIPE_TOPRIGHT: self.update_wipe_topright,
-            WIPE_BOTTOMLEFT: self.update_wipe_bottomleft,
-            WIPE_BOTTOMRIGHT: self.update_wipe_bottomright,
-            WIPE_MATRIX: self.update_wipe_matrix
+            FADE: self._update_fade, DISSOLVE: self._update_dissolve,
+            PIXELATE: self._update_pixelate, WIPE_LEFT: self._update_wipe_left,
+            WIPE_RIGHT: self._update_wipe_right,
+            WIPE_TOP: self._update_wipe_top,
+            WIPE_BOTTOM: self._update_wipe_bottom,
+            WIPE_TOPLEFT: self._update_wipe_topleft,
+            WIPE_TOPRIGHT: self._update_wipe_topright,
+            WIPE_BOTTOMLEFT: self._update_wipe_bottomleft,
+            WIPE_BOTTOMRIGHT: self._update_wipe_bottomright,
+            WIPE_MATRIX: self._update_wipe_matrix,
+            IRIS_IN: self._update_iris_in, IRIS_OUT: self._update_iris_out
             }.setdefault(transition, lambda c: None)
         self.transition_sprite = sprite
         self.transition_duration = duration
