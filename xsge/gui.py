@@ -1461,18 +1461,23 @@ class TextBox(Widget):
 
     .. attribute:: text
 
-       The text in the text box by default.
+       The text in the text box.
+
+    .. attribute:: text_limit
+
+       The maximum number of characters allowed in the text box.
 
     See the documentation for :class:`xsge.gui.Widget` for more
     information.
 
     """
 
-    def __init__(self, parent, x, y, z, width=32, text=""):
+    def __init__(self, parent, x, y, z, width=32, text="", text_limit=10000):
         super(TextBox, self).__init__(parent, x, y, z,
                                       sge.Sprite(width=1, height=1))
         self.width = width
         self.text = text
+        self.text_limit = text_limit
         self._cursor_pos = 0
         self._clicked_pos = None
         self._selected = None
@@ -1648,6 +1653,18 @@ class TextBox(Widget):
             self.text = ''.join([self.text[:a], self.text[b:]])
             self._selected = None
 
+    def _insert_text(self, text):
+        # Insert the indicated text at the current cursor position.  If
+        # text is selected, it is deleted first.
+        self._delete_selection()
+
+        if len(self.text) + len(text) <= self.text_limit:
+            i = self._cursor_pos
+            self.text = ''.join([self.text[:i], text, self.text[i:]])
+            self._cursor_pos += len(text)
+
+        self._show_cursor()
+
     def _get_cursor_position(self):
         # Get the cursor position from mouse position ``x``.
         parent = self.parent()
@@ -1730,14 +1747,11 @@ class TextBox(Widget):
                     r.clipboard_append(self.text[a:b])
                     r.destroy()
             elif key == 'v':
-                self._delete_selection()
                 r = Tk()
                 r.withdraw()
                 new_text = r.selection_get(selection="CLIPBOARD")
                 r.destroy()
-                self.text = ''.join([self.text[:self._cursor_pos], new_text,
-                                     self.text[self._cursor_pos:]])
-                self._cursor_pos += len(new_text)
+                self._insert_text(new_text.replace('\n', ' '))
         else:
             if key == "left":
                 if sge.keyboard.get_modifier("shift"):
@@ -1786,11 +1800,7 @@ class TextBox(Widget):
                 self._show_cursor()
             elif char and char not in ('\n', '\t', '\b', '\r', '\a', '\f',
                                        '\v', '\x1b'):
-                self._delete_selection()
-                i = self._cursor_pos
-                self.text = ''.join([self.text[:i], char, self.text[i:]])
-                self._cursor_pos += 1
-                self._show_cursor()
+                self._insert_text(char)
 
     def event_mouse_button_press(self, button):
         if button == "left":
