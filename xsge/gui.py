@@ -1512,11 +1512,30 @@ class TextBox(Widget):
             sge.game.project_sprite(self.sprite, 0, parent.x + self.x,
                                     parent.y + self.y)
 
-            self._cursor_pos = max(0, min(self._cursor_pos,
-                                          len(self.text)))
+            self._cursor_pos = max(0, min(self._cursor_pos, len(self.text)))
 
             text_area_w = (self.width - textbox_right_sprite.width -
                            textbox_left_sprite.width)
+
+            tl = self._cursor_pos
+            # The first loop is necessary because sometimes the cursor
+            # is not within the visible area for a brief moment.  This
+            # accounts for that.
+            while (tl < len(self.text) and
+                   self._text_x + textbox_font.get_width(self.text[:tl]) < 0):
+                tl += 1
+            while (tl > 0 and
+                   self._text_x + textbox_font.get_width(self.text[:tl]) >= 0):
+                tl -= 1
+
+            text_x = self._text_x + textbox_font.get_width(self.text[:tl])
+
+            tr = tl
+            while (tr < len(self.text) and
+                   (text_x + textbox_font.get_width(self.text[tl:tr]) <=
+                    text_area_w)):
+                tr += 1
+
             text_y = textbox_sprite.height / 2
             cursor_x = textbox_font.get_width(self.text[:self._cursor_pos])
             cursor_y = text_y - self._cursor_h / 2
@@ -1535,7 +1554,7 @@ class TextBox(Widget):
                                      height=textbox_sprite.height)
             text_sprite.draw_lock()
 
-            text_sprite.draw_text(textbox_font, self.text, self._text_x,
+            text_sprite.draw_text(textbox_font, self.text[tl:tr], text_x,
                                   text_y, color=textbox_text_color,
                                   valign=sge.ALIGN_MIDDLE)
 
@@ -1548,6 +1567,8 @@ class TextBox(Widget):
                                           textbox_text_color)
             else:
                 a, b = self._selected
+                a = max(a, tl)
+                b = min(b, tr)
                 x = textbox_font.get_width(self.text[:a])
                 w = textbox_font.get_width(self.text[a:b])
                 y = text_y - self._cursor_h / 2
@@ -1763,7 +1784,8 @@ class TextBox(Widget):
 
                 self._delete_selection()
                 self._show_cursor()
-            elif char and char not in ('\n', '\t', '\b', '\r', '\x1b'):
+            elif char and char not in ('\n', '\t', '\b', '\r', '\a', '\f',
+                                       '\v', '\x1b'):
                 self._delete_selection()
                 i = self._cursor_pos
                 self.text = ''.join([self.text[:i], char, self.text[i:]])
