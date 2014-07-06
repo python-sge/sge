@@ -26,6 +26,11 @@ You only need to use input event objects directly if you take control
 away from the SGE's main loop, e.g. to create your own loop.
 """
 
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
 
 __all__ = ["KeyPress", "KeyRelease", "MouseMove", "MouseButtonPress",
            "MouseButtonRelease", "JoystickAxisMove", "JoystickHatMove",
@@ -34,7 +39,7 @@ __all__ = ["KeyPress", "KeyRelease", "MouseMove", "MouseButtonPress",
            "MouseFocusGain", "MouseFocusLose", "QuitRequest"]
 
 
-class KeyPress:
+class KeyPress(object):
 
     """Key press input event class.
 
@@ -190,7 +195,7 @@ class KeyPress:
         self.char = char
 
 
-class KeyRelease:
+class KeyRelease(object):
 
     """Key release input event class.
 
@@ -207,7 +212,7 @@ class KeyRelease:
         self.key = key
 
 
-class MouseMove:
+class MouseMove(object):
 
     """Mouse move input event class.
 
@@ -228,7 +233,7 @@ class MouseMove:
         self.y = y
 
 
-class MouseButtonPress:
+class MouseButtonPress(object):
 
     """Mouse button press input event class.
 
@@ -257,7 +262,7 @@ class MouseButtonPress:
         self.button = button
 
 
-class MouseButtonRelease:
+class MouseButtonRelease(object):
 
     """Mouse button release input event class.
 
@@ -275,7 +280,7 @@ class MouseButtonRelease:
         self.button = button
 
 
-class JoystickAxisMove:
+class JoystickAxisMove(object):
 
     """Joystick axis move input event class.
 
@@ -309,7 +314,7 @@ class JoystickAxisMove:
         self.value = value
 
 
-class JoystickHatMove:
+class JoystickHatMove(object):
 
     """Joystick hat move input event class.
 
@@ -348,7 +353,7 @@ class JoystickHatMove:
         self.y = y
 
 
-class JoystickTrackballMove:
+class JoystickTrackballMove(object):
 
     """Joystick trackball move input event class.
 
@@ -385,7 +390,7 @@ class JoystickTrackballMove:
         self.y = y
 
 
-class JoystickButtonPress:
+class JoystickButtonPress(object):
 
     """Joystick button press input event class.
 
@@ -412,7 +417,7 @@ class JoystickButtonPress:
         self.button = button
 
 
-class JoystickButtonRelease:
+class JoystickButtonRelease(object):
 
     """Joystick button release input event class.
 
@@ -439,7 +444,7 @@ class JoystickButtonRelease:
         self.button = button
 
 
-class KeyboardFocusGain:
+class KeyboardFocusGain(object):
 
     """Keyboard focus gain input event class.
 
@@ -460,7 +465,7 @@ class KeyboardFocusGain:
     """
 
 
-class KeyboardFocusLose:
+class KeyboardFocusLose(object):
 
     """Keyboard focus lose input event class.
 
@@ -475,7 +480,7 @@ class KeyboardFocusLose:
     """
 
 
-class MouseFocusGain:
+class MouseFocusGain(object):
 
     """Mouse focus gain input event class.
 
@@ -490,7 +495,7 @@ class MouseFocusGain:
     """
 
 
-class MouseFocusLose:
+class MouseFocusLose(object):
 
     """Mouse focus lose input event class.
 
@@ -505,7 +510,7 @@ class MouseFocusLose:
     """
 
 
-class QuitRequest:
+class QuitRequest(object):
 
     """Quit request input event class.
 

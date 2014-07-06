@@ -76,13 +76,18 @@ well as support for modal dialog boxes.
    affected; some changes might not become visible until you do.
 """
 
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import os
 import weakref
 
 try:
     from tkinter import Tk
 except ImportError:
-    class Tk:
+    class Tk(object):
         def withdraw(self): pass
         def clipboard_clear(self): pass
         def clipboard_append(self, *args, **kwargs): pass
@@ -164,7 +169,7 @@ class Handler(sge.StellarClass):
     """
 
     def __init__(self):
-        super().__init__(0, 0, visible=False, tangible=False)
+        super(Handler, self).__init__(0, 0, visible=False, tangible=False)
         self.windows = []
         self.keyboard_focused_window = None
 
@@ -260,7 +265,7 @@ class Handler(sge.StellarClass):
                 widget.event_global_mouse_button_release(button)
 
 
-class Window:
+class Window(object):
 
     """Window class.
 
@@ -736,7 +741,7 @@ class Dialog(Window):
         """
         parent = self.parent()
         if parent is not None:
-            super().show()
+            super(Dialog, self).show()
             parent.keyboard_focused_window = self
             while self in parent.windows:
                 self.move_to_front()
@@ -824,7 +829,7 @@ class Dialog(Window):
             sge.game.input_events = []
 
 
-class Widget:
+class Widget(object):
 
     """Widget class.
 
@@ -1080,7 +1085,7 @@ class Label(Widget):
     def __init__(self, parent, x, y, z, text, font=None, width=None,
                  height=None, color=None, halign=sge.ALIGN_LEFT,
                  valign=sge.ALIGN_TOP):
-        super().__init__(parent, x, y, z)
+        super(Label, self).__init__(parent, x, y, z)
         self.text = text
         self.font = font
         self.width = width
@@ -1127,7 +1132,7 @@ class Button(Widget):
 
     def __init__(self, parent, x, y, z, text, width=None,
                  halign=sge.ALIGN_CENTER):
-        super().__init__(parent, x, y, z)
+        super(Button, self).__init__(parent, x, y, z)
         self.text = text
         self.width = width
         self.halign = halign
@@ -1138,7 +1143,7 @@ class Button(Widget):
         self.redraw()
 
     def destroy(self):
-        super().destroy()
+        super(Button, self).destroy()
         self.sprite_normal.destroy()
         self.sprite_selected.destroy()
         self.sprite_pressed.destroy()
@@ -1279,7 +1284,7 @@ class CheckBox(Widget):
     """
 
     def __init__(self, parent, x, y, z, enabled=False):
-        super().__init__(parent, x, y, z)
+        super(CheckBox, self).__init__(parent, x, y, z)
         self.enabled = enabled
         self._pressed = False
 
@@ -1402,13 +1407,14 @@ class ProgressBar(Widget):
     tab_focus = False
 
     def __init__(self, parent, x, y, z, width=128, progress=0):
-        super().__init__(parent, x, y, z, sge.Sprite(width=1, height=1))
+        super(ProgressBar, self).__init__(parent, x, y, z,
+                                          sge.Sprite(width=1, height=1))
         self.width = width
         self.progress = progress
         self.redraw()
 
     def destroy(self):
-        super().destroy()
+        super(ProgressBar, self).destroy()
         self.sprite.destroy()
 
     def redraw(self):
@@ -1463,7 +1469,8 @@ class TextBox(Widget):
     """
 
     def __init__(self, parent, x, y, z, width=32, text=""):
-        super().__init__(parent, x, y, z, sge.Sprite(width=1, height=1))
+        super(TextBox, self).__init__(parent, x, y, z,
+                                      sge.Sprite(width=1, height=1))
         self.width = width
         self.text = text
         self._cursor_pos = 0
@@ -1475,7 +1482,7 @@ class TextBox(Widget):
         self.redraw()
 
     def destroy(self):
-        super().destroy()
+        super(TextBox, self).destroy()
         self.sprite.destroy()
 
     def redraw(self):
@@ -1810,7 +1817,8 @@ class MessageDialog(Dialog):
         """See :func:`xsge.gui.show_message`."""
         x = sge.game.width / 2 - width / 2
         y = sge.game.height / 2 - height / 2
-        super().__init__(parent, x, y, width, height, title=title)
+        super(MessageDialog, self).__init__(parent, x, y, width, height,
+                                            title=title)
         button_w = max(1, int(round((width - DIALOG_PADDING *
                                      (len(buttons) + 1)) / len(buttons))))
         button_h = button_sprite.height
@@ -1864,7 +1872,8 @@ class TextEntryDialog(Dialog):
         """See :func:`xsge.gui.get_text_entry`."""
         x = sge.game.width / 2 - width / 2
         y = sge.game.height / 2 - height / 2
-        super().__init__(parent, x, y, width, height, title=title)
+        super(TextEntryDialog, self).__init__(parent, x, y, width, height,
+                                              title=title)
         button_w = max(1, (width - DIALOG_PADDING * 3) / 2)
         button_h = button_sprite.height
         textbox_w = max(1, width - DIALOG_PADDING * 2)

@@ -435,7 +435,12 @@ by default.
 
 """
 
-__version__ = "0.10.0.4"
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+__version__ = "0.10.0.5"
 
 import sys
 import os

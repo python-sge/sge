@@ -21,6 +21,11 @@ basic rectangle-based collision detection to shape-based collision
 detection.
 """
 
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import math
 
 import sge
@@ -30,7 +35,7 @@ __all__ = ["rectangles_collide", "masks_collide", "rectangle", "ellipse",
            "circle", "line"]
 
 
-class _cache:
+class _cache(object):
 
     rectangle_masks = {}
     ellipse_masks = {}
@@ -273,10 +278,10 @@ def _get_rectangle_collision_areas(x, y, w, h):
     # Get a list of collision areas a rect is in.
     room = sge.game.current_room
     area_size = room._collision_area_size
-    areas_x_start = math.floor(x / area_size)
-    areas_x_num = math.ceil(w / area_size) + 1
-    areas_y_start = math.floor(y / area_size)
-    areas_y_num = math.ceil(h / area_size) + 1
+    areas_x_start = int(math.floor(x / area_size))
+    areas_x_num = int(math.ceil(w / area_size) + 1)
+    areas_y_start = int(math.floor(y / area_size))
+    areas_y_num = int(math.ceil(h / area_size) + 1)
     areas = []
 
     for i in range(areas_x_start, areas_x_start + areas_x_num):

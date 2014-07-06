@@ -24,8 +24,14 @@ They should would with any implementation that follows the
 specification.
 """
 
-__version__ = "0.0.0.25"
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+__version__ = "0.0.0.26"
 
 from xsge import gui, transition
+
 
 __all__ = ["gui", "transition"]

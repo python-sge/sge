@@ -12,6 +12,11 @@
 # along with this software. If not, see
 # <http://creativecommons.org/publicdomain/zero/1.0/>.
 
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import random
 
 import sge
@@ -107,7 +112,8 @@ class Player(sge.StellarClass):
             self.hit_direction = -1
 
         y = sge.game.height / 2
-        super().__init__(x, y, sprite="paddle", checks_collisions=False)
+        super(Player, self).__init__(x, y, sprite="paddle",
+                                     checks_collisions=False)
 
     def event_create(self):
         self.score = 0
@@ -146,7 +152,7 @@ class Ball(sge.StellarClass):
     def __init__(self):
         x = sge.game.width / 2
         y = sge.game.height / 2
-        super().__init__(x, y, sprite="ball")
+        super(Ball, self).__init__(x, y, sprite="ball")
 
     def event_create(self):
         self.serve()

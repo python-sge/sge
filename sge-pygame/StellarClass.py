@@ -15,6 +15,11 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import os
 import sys
 import traceback
@@ -29,7 +34,7 @@ import sge
 __all__ = ['StellarClass', 'Mouse', '_PygameProjectionSprite']
 
 
-class StellarClass:
+class StellarClass(object):
 
     """Class for game objects.
 
@@ -1745,7 +1750,7 @@ class Mouse(StellarClass):
         self.mouse_yprevious = self.mouse_y
         self.previous_speeds = []
 
-        super().__init__(0, 0, 0, ID='mouse')
+        super(Mouse, self).__init__(0, 0, 0, ID='mouse')
 
     def event_collision(self, other):
         sge.game.event_mouse_collision(other)
@@ -1764,7 +1769,7 @@ class Mouse(StellarClass):
 
     def _update(self, time_passed, delta_mult):
         self.update_speed(time_passed)
-        super()._update(time_passed, delta_mult)
+        super(Mouse, self)._update(time_passed, delta_mult)
         self._update_collision_areas()
 
     def update_speed(self, time_passed):
@@ -1843,7 +1848,7 @@ class _PygameSprite(pygame.sprite.DirtySprite):
     def __init__(self, parent, *groups):
         # See pygame.sprite.DirtySprite.__init__.__doc__.  ``parent``
         # is a StellarClass object that this object belongs to.
-        super().__init__(*groups)
+        super(_PygameSprite, self).__init__(*groups)
         self.parent = weakref.ref(parent)
         self.image = pygame.Surface((1, 1))
         self.image.set_colorkey((0, 0, 0))
@@ -2023,7 +2028,7 @@ class _PygameOneTimeSprite(pygame.sprite.DirtySprite):
     # itself.
 
     def __init__(self, image, rect, *groups):
-        super().__init__(*groups)
+        super(_PygameOneTimeSprite, self).__init__(*groups)
         self.image = image
         self.rect = rect
         self.dirty = 1

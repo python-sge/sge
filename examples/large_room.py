@@ -12,6 +12,11 @@
 # along with this software. If not, see
 # <http://creativecommons.org/publicdomain/zero/1.0/>.
 
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import sge
 import random
 
@@ -27,7 +32,8 @@ class Game(sge.Game):
 
 class Circle(sge.StellarClass):
     def __init__(self, x, y, player=0):
-        super().__init__(x, y, 1, sprite='circle', collision_precise=True)
+        super(Circle, self).__init__(x, y, 1, sprite='circle',
+              collision_precise=True)
         self.player = player
         self.normal_image_blend = ['red', 'blue', 'yellow', 'green'][self.player]
         self.image_alpha = 128
