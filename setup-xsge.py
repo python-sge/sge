@@ -26,23 +26,25 @@ import sys
 from distutils.core import setup
 
 long_description = """
-The Stellar Game Engine (abbreviated "SGE", pronounced as "Sage") is a
-free 2-D game engine. The purpose of the SGE is to make game development
-easier, which allows more rapid development by experienced game
-developers and also helps less experienced game developers learn how to
-develop games.
+xSGE is a collection of extensions for the SGE licensed under the GNU
+General Public License.  They are designed to give additional features
+to games which are released under the GNU GPL without any extra work.
+
+xSGE extensions are not dependent on any particular SGE implementation.
+They should would with any implementation that follows the
+specification.
 """.strip()
 
-setup(name="sge-pygame",
-      version="0.10.1",
+setup(name="xsge",
+      version="0.1.0",
       description="A 2-D game engine for Python",
       long_description=long_description,
       author="Julian Marchant",
       author_email="onpon4@riseup.net",
       url="http://stellarengine.nongnu.org",
-      license="GNU Lesser General Public License",
-      packages=["sge"],
-      package_dir={"sge": "sge"},
-      package_data={"sge": ["*.png", "COPYING", "COPYING.LESSER", "LICENSES"]},
-      requires=["pygame (> 1.9.1)"],
-      )
+      license="GNU General Public License,
+      packages=["xsge"],
+      package_dir={"xsge": "xsge"},
+      package_data={"xsge": ["COPYING", "gui_data"]},
+      requires=["sge"],
+     )

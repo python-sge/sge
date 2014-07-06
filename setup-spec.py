@@ -33,24 +33,16 @@ developers and also helps less experienced game developers learn how to
 develop games.
 """.strip()
 
-name = "sge"
-author = "Julian Marchant"
-author_email = "onpon4@riseup.net"
-url = "http://stellarengine.nongnu.org"
-license = "CC0"
-idir = "sge"
-requires = []
-
-setup(name=name,
-      version='0.10.1',
-      description='A 2-D game engine for Python',
+setup(name="sge",
+      version="0.10.1",
+      description="A 2-D game engine for Python",
       long_description=long_description,
-      author=author,
-      author_email=author_email,
-      url=url,
-      license=license,
-      packages=['sge'],
-      package_dir={'sge': idir},
-      package_data={'sge': ["COPYING"]},
-      requires=requires,
+      author="Julian Marchant",
+      author_email="onpon4@riseup.net",
+      url="http://stellarengine.nongnu.org",
+      license="CC0",
+      packages=["sge"],
+      package_dir={"sge": "sge"},
+      package_data={"sge": ["COPYING"]},
+      requires=[],
      )
