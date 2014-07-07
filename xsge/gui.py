@@ -2114,17 +2114,19 @@ def init():
     sge.font_directories = orig_font_directories
 
 
-def show_message(parent, message, buttons=("Ok",), width=320, height=120,
+def show_message(message, buttons=("Ok",), parent=None, width=320, height=120,
                  title="Message"):
     """Show a message and return the button pressed.
 
     Arguments:
 
-    - ``parent`` -- The parent handler of the
-      :class:`xsge.gui.MessageDialog` object created.
     - ``message`` -- The message shown to the user.
     - ``buttons`` -- A list of strings to put inside the buttons, from
       left to right.
+    - ``parent`` -- The parent handler of the
+      :class:`xsge.gui.MessageDialog` object created.  Set to
+      :const:`None` to create a new handler and then destroy it after
+      the dialog is shown.
     - ``width`` -- The width of the :class:`xsge.gui.MessageDialog`
       object created.
     - ``height`` -- The height of the :class:`xsge.gui.MessageDialog`
@@ -2140,27 +2142,39 @@ def show_message(parent, message, buttons=("Ok",), width=320, height=120,
     information.
 
     """
+    if parent is None:
+        parent = Handler.create()
+        destroy_parent = True
+    else:
+        destroy_parent = False
+
     w = MessageDialog(parent, message, buttons=buttons, width=width,
                       height=height, title=title)
     w.show()
     w.destroy()
+
+    if destroy_parent:
+        parent.destroy()
+
     return w.choice
 
 
-def get_text_entry(parent, message="", width=320, height=152, text="",
+def get_text_entry(message="", text="", parent=None, width=320, height=152,
                    title="Text Entry"):
     """Return text entered by the user.
 
     Arguments:
 
-    - ``parent`` -- The parent handler of the
-      :class:`xsge.gui.TextEntryDialog` object created.
     - ``message`` -- The message shown to the user.
+    - ``text`` -- The text in the text box by default.
+    - ``parent`` -- The parent handler of the
+      :class:`xsge.gui.MessageDialog` object created.  Set to
+      :const:`None` to create a new handler and then destroy it after
+      the dialog is shown.
     - ``width`` -- The width of the :class:`xsge.gui.TextEntryDialog`
       object created.
     - ``height`` -- The height of the :class:`xsge.gui.TextEntryDialog`
       object created.
-    - ``text`` -- The text in the text box by default.
     - ``title`` -- The window title of the
       :class:`xsge.gui.TextEntryDialog` object created.
 
@@ -2171,8 +2185,18 @@ def get_text_entry(parent, message="", width=320, height=152, text="",
     information.
 
     """
+    if parent is None:
+        parent = Handler.create()
+        destroy_parent = True
+    else:
+        destroy_parent = False
+
     w = TextEntryDialog(parent, message=message, width=width, height=height,
                         text=text, title=title)
     w.show()
     w.destroy()
+
+    if destroy_parent:
+        parent.destroy()
+
     return w.text
