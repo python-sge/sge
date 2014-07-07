@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import random
 
 import sge
@@ -42,7 +47,8 @@ class Game(sge.Game):
 class Circle(sge.StellarClass):
 
     def __init__(self, x, y):
-        super().__init__(x, y, 5, sprite='circle', collision_precise=True)
+        super(Circle, self).__init__(x, y, 5, sprite='circle',
+                                     collision_precise=True)
 
     def event_create(self):
         self.image_alpha = 200
@@ -73,7 +79,8 @@ class Circle(sge.StellarClass):
 class CirclePop(sge.StellarClass):
 
     def __init__(self, x, y):
-        super().__init__(x, y, 5, sprite='circle_pop', tangible=False)
+        super(CirclePop, self).__init__(x, y, 5, sprite='circle_pop',
+                                        tangible=False)
 
     def event_animation_end(self):
         self.destroy()
@@ -88,10 +95,10 @@ class Room(transition.Room):
 
     def __init__(self, text, objects=(), views=None, background=None):
         self.text = text
-        super().__init__(objects, views=views, background=background)
+        super(Room, self).__init__(objects, views=views, background=background)
 
     def event_room_start(self):
-        super().event_room_start()
+        super(Room, self).event_room_start()
         self.event_room_resume()
 
     def event_room_resume(self):

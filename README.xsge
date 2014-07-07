@@ -1,0 +1,36 @@
+Copyright (C) 2014 Julian Marchant <onpon4@riseup.net>
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This file is offered as-is,
+without any warranty.
+
+========================================================================
+
+xSGE is a collection of extra modules for the Stellar Game Engine (SGE).
+
+xSGE is under the GNU General Public License, so only software under the
+GNU General Public License (or GNU Affero General Public License) is
+permitted to use it.
+
+INSTALLATION
+
+First, make sure you have an appropriate Python version.  This version
+of xSGE needs Python 3, version 3.1 or later.  Python 2 and Python 3 are
+incompatible, so make sure you use the right one.
+
+xSGE needs a copy of the SGE to work.  If you don't have the SGE
+installed already, you can obtain it here:
+
+http://stellarengine.nongnu.org
+
+This version of xSGE needs version 0.10 of the SGE.
+
+Once the SGE is installed, you can install xSGE with the included
+setup.py script, e.g.:
+
+    ./setup.py install
+
+USAGE
+
+The documentation for xSGE can be found in the "doc" folder.

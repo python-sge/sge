@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Multiple Rooms Example
-# Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>
+# Written in 2014 by Julian Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,6 +15,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import sge
 from xsge import gui

@@ -1,4 +1,4 @@
-Copyright (C) 2013 Julian Marchant <onpon4@riseup.net>
+Copyright (C) 2013, 2014 Julian Marchant <onpon4@riseup.net>
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -16,7 +16,7 @@ other dependencies are needed from "sge/README".
 Once you have all the dependencies, install the SGE with the included
 setup.py script, e.g.:
 
-    python setup.py install
+    ./setup.py install
 
 USAGE
 

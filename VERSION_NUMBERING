@@ -16,8 +16,9 @@ May 10, 2013.  The purpose of this version numbering system is to
 prevent confusion, in particular making it obvious what version of any
 given implementation is compatible with a given SGE game.
 
-Note: The specification of the SGE is defined in the SGE Template, so
-the version number of the specification is indicated there.
+This version numbering system is also used for xSGE.  However, the
+version number of an xSGE release is not connected to the version number
+of any SGE release.
 
 
 Components
