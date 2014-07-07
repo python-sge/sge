@@ -1879,6 +1879,12 @@ class MessageDialog(Dialog):
         self.choice = x
         self.destroy()
 
+    def event_key_press(self, key, char):
+        if key == "escape":
+            self.destroy()
+        else:
+            super(MessageDialog, self).event_key_press(key, char)
+
 
 class TextEntryDialog(Dialog):
 
@@ -1960,6 +1966,12 @@ class TextEntryDialog(Dialog):
         # Return ``s`` as this dialog's text.
         self.text = s
         self.destroy()
+
+    def event_key_press(self, key, char):
+        if key == "escape":
+            self.destroy()
+        else:
+            super(MessageDialog, self).event_key_press(key, char)
 
 
 def init():
