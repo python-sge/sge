@@ -253,8 +253,8 @@ class StellarClass(object):
 
     .. attribute:: image_blend
 
-       The color to blend with the sprite.  Set to :const:`None` for no
-       color blending.
+       A :class:`sge.Color` object representing the color to blend with
+       the sprite.  Set to :const:`None` for no color blending.
 
     .. attribute:: id
 

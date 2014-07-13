@@ -26,8 +26,8 @@ class Background(object):
 
     .. attribute:: color
 
-       The color used in parts of the background where no layer is
-       shown.
+       A :class:`sge.Color` object representing the color used in parts
+       of the background where no layer is shown.
 
     .. attribute:: id
 

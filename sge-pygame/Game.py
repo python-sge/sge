@@ -1216,8 +1216,6 @@ class Game(object):
           position the imaginary rectangle containing the ellipse.
         - ``width`` -- The width of the ellipse.
         - ``height`` -- The height of the ellipse.
-        - ``fill`` -- The color of the fill of the ellipse.
-        - ``outline`` -- The color of the outline of the ellipse.
         - ``outline_thickness`` -- The thickness of the outline of the
           ellipse.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
@@ -1277,8 +1275,8 @@ class Game(object):
         self._window_projections.append((img, x, y, blend_mode))
 
     def project_text(self, font, text, x, y, width=None, height=None,
-                    color="black", halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP,
-                    anti_alias=True):
+                    color=sge.Color("black"), halign=sge.ALIGN_LEFT,
+                    valign=sge.ALIGN_TOP, anti_alias=True):
         """Project text onto the game window.
 
         Arguments:
@@ -1753,7 +1751,7 @@ class Game(object):
 
     def _get_dot_sprite(self, color):
         # Return a sprite for the given dot.
-        i = (color,)
+        i = (tuple(color),)
         if i in self._dot_cache:
             sprite = self._dot_cache[i]
         else:
@@ -1768,7 +1766,7 @@ class Game(object):
         # Return a sprite for the given line.
         w = int(round(abs(x2 - x1) + thickness))
         h = int(round(abs(y2 - y1) + thickness))
-        i = (x1, y1, x2, y2, color, thickness, anti_alias)
+        i = (x1, y1, x2, y2, tuple(color), thickness, anti_alias)
         if i in self._line_cache:
             sprite = self._line_cache[i]
         else:
@@ -1782,7 +1780,7 @@ class Game(object):
     def _get_rectangle_sprite(self, width, height, fill, outline,
                               outline_thickness):
         # Return a sprite for the given rectangle.
-        i = (width, height, fill, outline, outline_thickness)
+        i = (width, height, tuple(fill), tuple(outline), outline_thickness)
         if i in self._rectangle_cache:
             sprite = self._rectangle_cache[i]
         else:
@@ -1802,7 +1800,8 @@ class Game(object):
     def _get_ellipse_sprite(self, width, height, fill, outline,
                             outline_thickness, anti_alias):
         # Return a sprite for the given ellipse.
-        i = (width, height, fill, outline, outline_thickness, anti_alias)
+        i = (width, height, tuple(fill), tuple(outline), outline_thickness,
+             anti_alias)
         if i in self._ellipse_cache:
             sprite = self._ellipse_cache[i]
         else:
@@ -1822,7 +1821,8 @@ class Game(object):
     def _get_circle_sprite(self, radius, fill, outline, outline_thickness,
                            anti_alias):
         # Return a sprite for the given circle.
-        i = (radius, fill, outline, outline_thickness, anti_alias)
+        i = (radius, tuple(fill), tuple(outline), outline_thickness,
+             anti_alias)
         if i in self._circle_cache:
             sprite = self._circle_cache[i]
         else:
@@ -1840,7 +1840,8 @@ class Game(object):
     def _get_text_sprite(self, font, text, width, height, color, halign,
                          valign, anti_alias):
         # Return a sprite for the given text.
-        i = (font, text, width, height, color, halign, valign, anti_alias)
+        i = (font, text, width, height, tuple(color), halign, valign,
+             anti_alias)
         if i in sge.game._text_cache:
             sprite = sge.game._text_cache[i]
         else:

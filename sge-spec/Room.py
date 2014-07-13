@@ -89,7 +89,7 @@ class Room(object):
           unspecified, which will become the first view of the room.
         - ``background`` -- The :class:`sge.Background` object used.  If
           set to :const:`None`, a new background will be created with no
-          layers and the color set to ``"black"``.
+          layers and the color set to black.
         - ``room_number`` -- The position in :data:`sge.game.rooms` to
           insert this room into.  If set to :const:`None`, it will be
           appended to the end of the list.
@@ -240,8 +240,6 @@ class Room(object):
         - ``z`` -- The Z-axis position of the projection in the room.
         - ``width`` -- The width of the ellipse.
         - ``height`` -- The height of the ellipse.
-        - ``fill`` -- The color of the fill of the ellipse.
-        - ``outline`` -- The color of the outline of the ellipse.
         - ``outline_thickness`` -- The thickness of the outline of the
           ellipse.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
@@ -288,8 +286,8 @@ class Room(object):
         # TODO
 
     def project_text(self, font, text, x, y, z, width=None, height=None,
-                    color="black", halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP,
-                    anti_alias=True):
+                    color=sge.Color("black"), halign=sge.ALIGN_LEFT,
+                    valign=sge.ALIGN_TOP, anti_alias=True):
         """Project text onto the room.
 
         Arguments:

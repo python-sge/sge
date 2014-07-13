@@ -399,8 +399,6 @@ class Game(object):
           position the imaginary rectangle containing the ellipse.
         - ``width`` -- The width of the ellipse.
         - ``height`` -- The height of the ellipse.
-        - ``fill`` -- The color of the fill of the ellipse.
-        - ``outline`` -- The color of the outline of the ellipse.
         - ``outline_thickness`` -- The thickness of the outline of the
           ellipse.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
@@ -445,8 +443,8 @@ class Game(object):
         # TODO
 
     def project_text(self, font, text, x, y, width=None, height=None,
-                    color="black", halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP,
-                    anti_alias=True):
+                    color=sge.Color("black"), halign=sge.ALIGN_LEFT,
+                    valign=sge.ALIGN_TOP, anti_alias=True):
         """Project text onto the game window.
 
         Arguments:

@@ -200,7 +200,8 @@ class Sprite(object):
           draw the dot.
         - ``y`` -- The vertical location relative to the sprite to draw
           the dot.
-        - ``color`` -- The color of the dot.
+        - ``color`` -- A :class:`sge.Color` object representing the
+          color of the dot.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
@@ -222,7 +223,8 @@ class Sprite(object):
           the second end point of the line segment.
         - ``y2`` -- The vertical location relative to the sprite of the
           second end point of the line segment.
-        - ``color`` -- The color of the line segment.
+        - ``color`` -- A :class:`sge.Color` object representing the
+          color of the line segment.
         - ``thickness`` -- The thickness of the line segment.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
@@ -244,8 +246,10 @@ class Sprite(object):
           the rectangle.
         - ``width`` -- The width of the rectangle.
         - ``height`` -- The height of the rectangle.
-        - ``fill`` -- The color of the fill of the rectangle.
-        - ``outline`` -- The color of the outline of the rectangle.
+        - ``fill`` -- A :class:`sge.Color` object representing the color
+          of the fill of the rectangle.
+        - ``outline`` -- A :class:`sge.Color` object representing the
+          color of the outline of the rectangle.
         - ``outline_thickness`` -- The thickness of the outline of the
           rectangle.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
@@ -267,8 +271,10 @@ class Sprite(object):
           position the imaginary rectangle containing the ellipse.
         - ``width`` -- The width of the ellipse.
         - ``height`` -- The height of the ellipse.
-        - ``fill`` -- The color of the fill of the ellipse.
-        - ``outline`` -- The color of the outline of the ellipse.
+        - ``fill`` -- A :class:`sge.Color` object representing the color
+          of the fill of the ellipse.
+        - ``outline`` -- A :class:`sge.Color` object representing the
+          color of the outline of the ellipse.
         - ``outline_thickness`` -- The thickness of the outline of the
           ellipse.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
@@ -290,8 +296,10 @@ class Sprite(object):
         - ``y`` -- The vertical location relative to the sprite to
           position the center of the circle.
         - ``radius`` -- The radius of the circle.
-        - ``fill`` -- The color of the fill of the circle.
-        - ``outline`` -- The color of the outline of the circle.
+        - ``fill`` -- A :class:`sge.Color` object representing the color
+          of the fill of the circle.
+        - ``outline`` -- A :class:`sge.Color` object representing the
+          color of the outline of the circle.
         - ``outline_thickness`` -- The thickness of the outline of the
           circle.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
@@ -340,8 +348,8 @@ class Sprite(object):
         # TODO
 
     def draw_text(self, font, text, x, y, width=None, height=None,
-                  color="black", halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP,
-                  anti_alias=True, frame=None):
+                  color=sge.Color("black"), halign=sge.ALIGN_LEFT,
+                  valign=sge.ALIGN_TOP, anti_alias=True, frame=None):
         """Draw text on the sprite.
 
         Arguments:
@@ -361,7 +369,8 @@ class Sprite(object):
         - ``height`` -- The height of the imaginary rectangle the text
           is drawn in; set to :const:`None` to make the rectangle as
           tall as needed to contain the text.
-        - ``color`` -- The color of the text.
+        - ``color`` -- A :class:`sge.Color` object representing the
+          color of the text.
         - ``halign`` -- The horizontal alignment of the text and the
           horizontal location of the origin of the imaginary rectangle
           the text is drawn in.  Can be set to one of the following:

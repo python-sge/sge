@@ -69,61 +69,6 @@ recommended, however, unless you are running your own loop for some
 reason (in which case it is necessary to do this in order to get input
 from the user).
 
-Colors
-------
-
-The SGE accepts a few different formats for defining colors.
-
-The sixteen basic HTML colors, provided as strings, are accepted.  These
-are case-insensitive, so ``"red"`` is interpreted the same as ``"Red"``
-or ``"rEd"``.  The colors are:
-
-- ``"white"``
-- ``"silver"``
-- ``"gray"``
-- ``"black"``
-- ``"red"``
-- ``"maroon"``
-- ``"yellow"``
-- ``"olive"``
-- ``"lime"``
-- ``"green"``
-- ``"aqua"``
-- ``"teal"``
-- ``"blue"``
-- ``"navy"``
-- ``"fuchsia"``
-- ``"purple"``
-
-Tuples containing three or four integers are accepted.  Each index
-represents a component of a color: first red, then green, then blue,
-with the values being integers from ``0`` to ``255``.  For example,
-``(255, 128, 0)`` indicates a color with full red intensity, 50% green
-intensity, and no blue intensity, which is a shade of orange.  Note that
-the components are colors of light, not colors of pigment.
-
-The fourth value of the tuple, if specified, indicates the alpha
-transparency of the color, with the possible values again being integers
-from ``0`` to ``255``.  ``255`` is fully opaque, ``0`` is fully
-transparent, and any value in between indicates the amount of opacity;
-for example, 128 is 50% transparent.  If the fourth value is
-unspecified, it is assumed that the color is fully opaque.
-
-RGBA tuples are the only way to specify alpha transparency of colors in
-SGE.  All other methods for indicating color assume full opacity.
-
-HTML hex strings and integers are accepted.  HTML hex strings are in the
-format ``"#RRGGBB"``, where ``RR``, ``GG``, and ``BB`` are replaced with
-the red, green, and blue components of the color, respectively, in
-hexadecimal form.  ``FF`` (equivalent to 255 in decimal form) is full
-intensity of the respective color, and ``00`` (equivalent to 0 in
-decimal form) is no intensity of the respective color.  For example,
-``"#FF8000"`` is the same as ``(255, 128, 0)``, or orange.
-
-Integers, treated as hexadecimals, are accepted in the same form as HTML
-hex strings, but integral.  For example, ``0xFF8000`` is the same as
-``"#FF8000"``.
-
 Position
 --------
 
@@ -363,7 +308,7 @@ Dependencies
 
 """
 
-__version__ = "0.10.1"
+__version__ = "0.10.1.1"
 
 import sys
 import os
@@ -460,6 +405,7 @@ MOUSE_BUTTON_NAMES = {}
 for pair in MOUSE_BUTTONS.items():
     MOUSE_BUTTON_NAMES[pair[1]] = pair[0]
 
+from sge.Color import Color
 from sge.Game import Game
 from sge.Sprite import Sprite
 from sge.BackgroundLayer import BackgroundLayer
@@ -486,11 +432,11 @@ __all__ = [
     'BLEND_RGB_MAXIMUM',
 
     # Classes
-    'Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font', 'Sound',
-    'Music', 'StellarClass', 'Room', 'View',
+    'Color', 'Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font',
+    'Sound', 'Music', 'StellarClass', 'Room', 'View',
 
     # Functions
-    'show_message', 'get_text_entry'
+    'show_message', 'get_text_entry',
     ]
 
 # Global variables

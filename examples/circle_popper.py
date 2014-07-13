@@ -64,15 +64,15 @@ class Circle(sge.StellarClass):
     def event_create(self):
         self.image_alpha = 200
         if self.collision(sge.game.mouse):
-            self.image_blend = '#ff0000'
+            self.image_blend = sge.Color('#ff0000')
         else:
-            self.image_blend = 'blue'
+            self.image_blend = sge.Color('blue')
 
     def event_mouse_move(self, x, y):
         if self.collision(sge.game.mouse):
-            self.image_blend = "red"
+            self.image_blend = sge.Color("red")
         else:
-            self.image_blend = (0, 0, 255)
+            self.image_blend = sge.Color((0, 0, 255))
 
     def event_mouse_button_press(self, button):
         if button == 'left':
@@ -112,23 +112,23 @@ class Room(sge.Room):
         glob.music.play(loops=None)
 
     def event_step(self, time_passed, delta_mult):
-        self.project_rectangle(5, 5, 3, 32, 32, fill="red", outline="green",
-                               outline_thickness=3)
-        self.project_ellipse(16, 100, 3, 64, 64, fill="yellow",
-                             outline="fuchsia", outline_thickness=4)
-        self.project_line(64, 64, 78, 100, 3, "black", thickness=2)
-        self.project_dot(90, 32, 3, "maroon")
-        self.project_dot(91, 32, 3, "maroon")
-        self.project_dot(92, 32, 3, "maroon")
-        self.project_dot(93, 32, 3, "maroon")
-        self.project_dot(90, 33, 3, "maroon")
-        self.project_dot(91, 33, 3, "maroon")
-        self.project_dot(92, 33, 3, "maroon")
-        self.project_dot(90, 34, 3, "maroon")
-        self.project_dot(91, 34, 3, "maroon")
-        self.project_dot(90, 35, 3, "maroon")
+        self.project_rectangle(5, 5, 3, 32, 32, fill=sge.Color("red"),
+                               outline=sge.Color("green"), outline_thickness=3)
+        self.project_ellipse(16, 100, 3, 64, 64, fill=sge.Color("yellow"),
+                             outline=sge.Color("fuchsia"), outline_thickness=4)
+        self.project_line(64, 64, 78, 100, 3, sge.Color("black"), thickness=2)
+        self.project_dot(90, 32, 3, sge.Color("maroon"))
+        self.project_dot(91, 32, 3, sge.Color("maroon"))
+        self.project_dot(92, 32, 3, sge.Color("maroon"))
+        self.project_dot(93, 32, 3, sge.Color("maroon"))
+        self.project_dot(90, 33, 3, sge.Color("maroon"))
+        self.project_dot(91, 33, 3, sge.Color("maroon"))
+        self.project_dot(92, 33, 3, sge.Color("maroon"))
+        self.project_dot(90, 34, 3, sge.Color("maroon"))
+        self.project_dot(91, 34, 3, sge.Color("maroon"))
+        self.project_dot(90, 35, 3, sge.Color("maroon"))
         text = "I am amazing text!\n\nYaaaaaaaaaaay~!"
-        self.project_text(glob.font, text, 320, 0, 3, color="black",
+        self.project_text(glob.font, text, 320, 0, 3, color=sge.Color("black"),
                           halign=sge.ALIGN_CENTER)
 
         if sge.keyboard.get_pressed("left"):
@@ -181,7 +181,7 @@ def main():
 
     # Load backgrounds
     layers = (sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False),)
-    background = sge.Background(layers, 0xffffff)
+    background = sge.Background(layers, sge.Color(0xffffff))
 
     # Load fonts
     glob.font = sge.Font('Liberation Serif', 20)
