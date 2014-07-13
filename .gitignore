@@ -12,7 +12,6 @@ var
 sdist
 develop-eggs
 .installed.cfg
-__pycache__
 doc/sge-pygame/_build
 doc/xsge/_build
 
