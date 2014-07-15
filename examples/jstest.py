@@ -71,8 +71,8 @@ class Room(sge.Room):
         x = glob.js_selection_sprite.width / 2
         y = glob.js_selection_sprite.height / 2
         glob.js_selection_sprite.draw_text(
-            "name", title_text, x, y, color="white", halign=sge.ALIGN_CENTER,
-            valign=sge.ALIGN_MIDDLE)
+            "name", title_text, x, y, color=sge.Color("white"),
+            halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
 
         self.print_state()
 
@@ -98,10 +98,11 @@ class Room(sge.Room):
         right_text = '\n'.join([lines[i] for i in range(1, len(lines), 2)])
 
         glob.js_state_sprite.draw_clear()
-        glob.js_state_sprite.draw_text("state", left_text, 0, 0, color="white")
+        glob.js_state_sprite.draw_text("state", left_text, 0, 0,
+                                       color=sge.Color("white"))
         x = glob.js_state_sprite.width / 2
         glob.js_state_sprite.draw_text("state", right_text, x, 0,
-                                       color="white")
+                                       color=sge.Color("white"))
 
     def event_room_start(self):
         self.current_joystick = 0

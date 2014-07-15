@@ -58,7 +58,7 @@ class Game(sge.Game):
             self.fps_time = 0
             self.fps_frames = 0
 
-        self.project_text("hud", self.fps_text, 8, 8, color="gray")
+        self.project_text("hud", self.fps_text, 8, 8, color=sge.Color("gray"))
 
     def event_key_press(self, key, char):
         global game_in_progress
@@ -228,11 +228,11 @@ def refresh_hud():
     hud_sprite.draw_clear()
     x = hud_sprite.width / 2
     hud_sprite.draw_text("hud", str(player1.score), x - TEXT_OFFSET,
-                         TEXT_OFFSET, color="white", halign=sge.ALIGN_RIGHT,
-                         valign=sge.ALIGN_TOP)
+                         TEXT_OFFSET, color=sge.Color("white"),
+                         halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
     hud_sprite.draw_text("hud", str(player2.score), x + TEXT_OFFSET,
-                         TEXT_OFFSET, color="white", halign=sge.ALIGN_LEFT,
-                         valign=sge.ALIGN_TOP)
+                         TEXT_OFFSET, color=sge.Color("white"),
+                         halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
 
 
 def main():
@@ -252,15 +252,15 @@ def main():
     ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
                              origin_y=4)
     paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
-                                 paddle_sprite.height, fill="white")
+                                 paddle_sprite.height, fill=sge.Color("white"))
     ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
-                               fill="white")
+                               fill=sge.Color("white"))
     hud_sprite = sge.Sprite(width=320, height=120, origin_x=160, origin_y=0)
 
     # Load backgrounds
     layers = [sge.BackgroundLayer("paddle", sge.game.width / 2, 0, -10000,
                                   xrepeat=False)]
-    background = sge.Background(layers, "black")
+    background = sge.Background(layers, sge.Color("black"))
 
     # Load fonts
     sge.Font("Droid Sans Mono", ID="hud", size=48)

@@ -52,6 +52,18 @@ class Background(object):
 
     """
 
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, value):
+        if isinstance(value, sge.Color):
+            self._color = value
+        else:
+            e = "`{}` is not a sge.Color object.".format(repr(value))
+            raise TypeError(e)
+
     def __init__(self, layers, color, ID=None):
         """Constructor method.
 
@@ -109,7 +121,7 @@ class Background(object):
         # Return the static background this frame.
         background = pygame.Surface((round(sge.game.width * sge.game._xscale),
                                      round(sge.game.height * sge.game._yscale)))
-        background.fill(sge._get_pygame_color(self.color))
+        background.fill(pygame.Color(*self.color))
 
         for view in sge.game.current_room.views:
             view_x = int(round(view.x * sge.game._xscale))

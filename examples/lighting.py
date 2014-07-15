@@ -42,7 +42,7 @@ class Circle(sge.StellarClass):
 
     def event_create(self):
         self.image_alpha = 200
-        self.image_blend = 'blue'
+        self.image_blend = sge.Color('blue')
 
         self.darkness = sge.StellarClass(0, 0, 10000, sprite='darkness',
                                          tangible=False)
@@ -71,7 +71,8 @@ class Circle(sge.StellarClass):
 
         # Light up part of the room
         glob.darkness_sprite.draw_rectangle(0, 0, sge.game.width,
-                                            sge.game.height, fill="black")
+                                            sge.game.height,
+                                            fill=sge.Color("black"))
         glob.darkness_sprite.draw_sprite('light', 0, self.x, self.y,
                                          blend_mode=sge.BLEND_RGBA_SUBTRACT)
 
@@ -89,11 +90,11 @@ def main():
     glob.darkness_sprite = sge.Sprite(ID='darkness', width=sge.game.width,
                                       height=sge.game.height)
     glob.darkness_sprite.draw_rectangle(0, 0, sge.game.width, sge.game.height,
-                                        fill="black")
+                                        fill=sge.Color("black"))
 
     # Load backgrounds
     layers = (sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False),)
-    background = sge.Background(layers, 0xffffff)
+    background = sge.Background(layers, sge.Color(0xffffff))
 
     # Create objects
     circle = Circle(game.width // 2, game.height // 2)

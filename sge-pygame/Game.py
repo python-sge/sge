@@ -1146,6 +1146,10 @@ class Game(object):
         information.
 
         """
+        if not isinstance(color, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(color))
+            raise TypeError(e)
+
         sprite = self._get_dot_sprite(color)
         self.project_sprite(sprite, 0, x, y)
 
@@ -1168,6 +1172,10 @@ class Game(object):
         information.
 
         """
+        if not isinstance(color, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(color))
+            raise TypeError(e)
+
         thickness = abs(thickness)
         x = min(x1, x2) - thickness // 2
         y = min(y1, y2) - thickness // 2
@@ -1195,6 +1203,13 @@ class Game(object):
         more information.
 
         """
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
         outline_thickness = abs(outline_thickness)
         draw_x = outline_thickness // 2
         draw_y = outline_thickness // 2
@@ -1224,6 +1239,13 @@ class Game(object):
         more information.
 
         """
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
         outline_thickness = abs(outline_thickness)
         draw_x = outline_thickness // 2
         draw_y = outline_thickness // 2
@@ -1248,6 +1270,13 @@ class Game(object):
         more information.
 
         """
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
         sprite = self._get_circle_sprite(radius, fill, outline,
                                          outline_thickness, anti_alias)
         self.project_sprite(sprite, 0, x - radius, y - radius)
@@ -1290,6 +1319,10 @@ class Game(object):
         information.
 
         """
+        if not isinstance(color, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(color))
+            raise TypeError(e)
+
         sprite = self._get_text_sprite(font, text, width, height, color,
                                        halign, valign, anti_alias)
         if halign == sge.ALIGN_RIGHT:
@@ -1751,7 +1784,7 @@ class Game(object):
 
     def _get_dot_sprite(self, color):
         # Return a sprite for the given dot.
-        i = (tuple(color),)
+        i = (tuple(color))
         if i in self._dot_cache:
             sprite = self._dot_cache[i]
         else:

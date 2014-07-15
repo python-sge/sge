@@ -430,16 +430,6 @@ BLEND_RGB_MAXIMUM = BLEND_RGB | BLEND_MAXIMUM
 
 MUSIC_END_EVENT = pygame.USEREVENT + 1
 
-COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
-          'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
-          'yellow': '#ffff00', 'olive': '#808000', 'lime': '#00ff00',
-          'green': '#008000', 'aqua': '#00ffff', 'teal': '#008080',
-          'blue': '#0000ff', 'navy': '#000080', 'fuchsia': '#ff00ff',
-          'purple': '#800080'}
-COLOR_NAMES = {}
-for pair in COLORS.items():
-    COLOR_NAMES[pair[1]] = pair[0]
-
 KEYS = {"0": pygame.K_0, "1": pygame.K_1, "2": pygame.K_2, "3": pygame.K_3,
         "4": pygame.K_4, "5": pygame.K_5, "6": pygame.K_6, "7": pygame.K_7,
         "8": pygame.K_8, "9": pygame.K_9, "a": pygame.K_a, "b": pygame.K_b,
@@ -577,8 +567,3 @@ def _scale(surface, width, height):
         new_surf = pygame.transform.scale(surface, (width, height))
 
     return new_surf
-
-
-def _get_pygame_color(color):
-    # Return the proper Pygame color.
-    return pygame.Color(color.red, color.green, color.blue, color.alpha)

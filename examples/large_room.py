@@ -31,29 +31,16 @@ class Game(sge.Game):
 
 
 class Circle(sge.StellarClass):
-    def __init__(self, x, y, player=0):
+    def __init__(self, x, y):
         super(Circle, self).__init__(x, y, 1, sprite='circle',
-              collision_precise=True)
-        self.player = player
-        self.normal_image_blend = ['red', 'blue', 'yellow', 'green'][self.player]
-        self.image_alpha = 128
-
-    def set_color(self):
-        self.image_blend = self.normal_image_blend
-        for obj in sge.game.current_room.objects:
-            if (obj is not self and isinstance(obj, Circle) and
-                    self.collision(obj)):
-                self.image_blend = 'olive'
-                break
-
-    def event_create(self):
-        self.set_color()
+              collision_precise=True, image_blend=sge.Color("red"),
+              image_alpha=128)
 
     def event_step(self, time_passed, delta_mult):
-        left_key = ['left', 'a', 'j', 'kp_4'][self.player]
-        right_key = ['right', 'd', 'l', 'kp_6'][self.player]
-        up_key = ['up', 'w', 'i', 'kp_8'][self.player]
-        down_key = ['down', 's', 'k', 'kp_5'][self.player]
+        left_key = 'left'
+        right_key = 'right'
+        up_key = 'up'
+        down_key = 'down'
         self.xvelocity = (sge.keyboard.get_pressed(right_key) -
                           sge.keyboard.get_pressed(left_key))
         self.yvelocity = (sge.keyboard.get_pressed(down_key) -
@@ -69,10 +56,8 @@ class Circle(sge.StellarClass):
         elif self.bbox_bottom >= sge.game.current_room.height:
             self.bbox_bottom = sge.game.current_room.height - 1
 
-        self.set_color()
-
         # Set view
-        my_view = sge.game.current_room.views[self.player]
+        my_view = sge.game.current_room.views[0]
         my_view.x = self.x - (my_view.width // 2)
         my_view.y = self.y - (my_view.height // 2)
 
@@ -88,23 +73,17 @@ def main():
 
     # Load backgrounds
     layers = (sge.BackgroundLayer(fence, 0, 0, 0),)
-    background = sge.Background(layers, 'white')
+    background = sge.Background(layers, sge.Color('white'))
 
     # Create objects
-    objects = []
-    for i in range(1):
-        circle = Circle(random.randrange(0, 640), random.randrange(0, 480),
-                        i)
-        objects.append(circle)
+    circle = Circle(random.randrange(0, 640), random.randrange(0, 480))
+    objects =  [circle]
 
     # Create views
-    views = []
-    for x in range(1):
-        for y in range(1):
-            views.append(sge.View(0, 0, 320 * x, 240 * y, 320, 240))
+    views = [sge.View(0, 0, 0, 0, 320, 240)]
 
     # Create rooms
-    sge.Room(tuple(objects), 640, 480, views=tuple(views), background=background)
+    sge.Room(objects, 640, 480, views=views, background=background)
 
     sge.game.start()
 

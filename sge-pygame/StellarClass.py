@@ -586,6 +586,18 @@ class StellarClass(object):
         self.image_fps = value * sge.game.fps
 
     @property
+    def image_blend(self):
+        return self._image_blend
+
+    @image_blend.setter
+    def image_blend(self, value):
+        if value is None or isinstance(value, sge.Color):
+            self._image_blend = value
+        else:
+            e = "`{}` is not a sge.Color object.".format(repr(value))
+            raise TypeError(e)
+
+    @property
     def mask(self):
         if self.collision_precise:
             id_ = ("precise", self.sprite.id, self.sprite.width,

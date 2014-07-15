@@ -383,7 +383,7 @@ class _PygameSpriteFont(pygame.font.Font):
         surf = pygame.Surface((w, h), pygame.SRCALPHA)
         surf.fill(pygame.Color(0, 0, 0, 0))
         pg_color = pygame.Color(color)
-        sge_color = (pg_color.r, pg_color.g, pg_color.b, pg_color.a)
+        sge_color = sge.Color((pg_color.r, pg_color.g, pg_color.b, pg_color.a))
 
         for i in range(len(text)):
             if text[i] in self.chars:

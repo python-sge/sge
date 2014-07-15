@@ -44,15 +44,15 @@ class Circle(sge.StellarClass):
     def event_create(self):
         self.image_alpha = 200
         if self.collision(sge.game.mouse):
-            self.image_blend = '#ff0000'
+            self.image_blend = sge.Color('#ff0000')
         else:
-            self.image_blend = 'blue'
+            self.image_blend = sge.Color('blue')
 
     def event_mouse_move(self, x, y):
         if self.collision(sge.game.mouse):
-            self.image_blend = "red"
+            self.image_blend = sge.Color("red")
         else:
-            self.image_blend = (0, 0, 255)
+            self.image_blend = sge.Color((0, 0, 255))
 
     def event_mouse_button_press(self, button):
         if button == 'left':
@@ -107,8 +107,8 @@ def main():
     # Load backgrounds
     layers = (sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False),)
     layers2 = (sge.BackgroundLayer(fence_sprite, 0, 0, 0),)
-    background = sge.Background(layers, 0xffffff)
-    background2 = sge.Background(layers2, 'white')
+    background = sge.Background(layers, sge.Color(0xffffff))
+    background2 = sge.Background(layers2, sge.Color('white'))
 
     # Load fonts
     glob.font = sge.Font('Liberation Serif', 20)

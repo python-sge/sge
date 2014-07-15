@@ -443,16 +443,20 @@ class Sprite(object):
           frames.
 
         """
+        if not isinstance(color, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(color))
+            raise TypeError(e)
+
         x = int(round(x))
         y = int(round(y))
-        color = sge._get_pygame_color(color)
-        if color.a == 255:
+        pg_color = pygame.Color(*color)
+        if color.alpha == 255:
             for i in range(self.frames):
                 if frame is None or frame % self.frames == i:
-                    self._baseimages[i].set_at((x, y), color)
+                    self._baseimages[i].set_at((x, y), pg_color)
         else:
             stamp = pygame.Surface((1, 1), pygame.SRCALPHA)
-            stamp.fill(color)
+            stamp.fill(pg_color)
             for i in range(self.frames):
                 if frame is None or frame % self.frames == i:
                     self._baseimages[i].blit(stamp, (x, y))
@@ -482,30 +486,35 @@ class Sprite(object):
           frames.
 
         """
+        if not isinstance(color, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(color))
+            raise TypeError(e)
+
         x1 = int(round(x1))
         y1 = int(round(y1))
         x2 = int(round(x2))
         y2 = int(round(y2))
         thickness = int(round(thickness))
-        color = sge._get_pygame_color(color)
+        pg_color = pygame.Color(*color)
         thickness = abs(thickness)
 
-        if color.a == 255:
+        if color.alpha == 255:
             for i in range(self.frames):
                 if frame is None or frame % self.frames == i:
                     if anti_alias and thickness == 1:
-                        pygame.draw.aaline(self._baseimages[i], color,
+                        pygame.draw.aaline(self._baseimages[i], pg_color,
                                            (x1, y1), (x2, y2))
                     else:
-                        pygame.draw.line(self._baseimages[i], color, (x1, y1),
-                                         (x2, y2), thickness)
+                        pygame.draw.line(self._baseimages[i], pg_color,
+                                         (x1, y1), (x2, y2), thickness)
         else:
             stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             stamp.fill(pygame.Color(0, 0, 0, 0))
             if anti_alias and thickness == 1:
-                pygame.draw.aaline(stamp, color, (x1, y1), (x2, y2))
+                pygame.draw.aaline(stamp, pg_color, (x1, y1), (x2, y2))
             else:
-                pygame.draw.line(stamp, color, (x1, y1), (x2, y2), thickness)
+                pygame.draw.line(stamp, pg_color, (x1, y1), (x2, y2),
+                                 thickness)
 
             for i in range(self.frames):
                 if frame is None or frame % self.frames == i:
@@ -536,6 +545,13 @@ class Sprite(object):
           frames.
 
         """
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
         x = int(round(x))
         y = int(round(y))
         width = int(round(width))
@@ -550,9 +566,9 @@ class Sprite(object):
 
         rect = pygame.Rect(x, y, width, height)
         if fill is not None:
-            pg_fill = sge._get_pygame_color(fill)
+            pg_fill = pygame.Color(*fill)
         if outline is not None:
-            pg_outl = sge._get_pygame_color(outline)
+            pg_outl = pygame.Color(*outline)
 
         if ((fill is None or fill.alpha == 255) and
                 (outline is None or outline.alpha == 255)):
@@ -602,6 +618,13 @@ class Sprite(object):
           frames.
 
         """
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
         x = int(round(x))
         y = int(round(y))
         width = int(round(width))
@@ -616,9 +639,9 @@ class Sprite(object):
 
         rect = pygame.Rect(x, y, width, height)
         if fill is not None:
-            pg_fill = sge._get_pygame_color(fill)
+            pg_fill = pygame.Color(*fill)
         if outline is not None:
-            pg_outl = sge._get_pygame_color(outline)
+            pg_outl = pygame.Color(*outline)
 
         if ((fill is None or fill.alpha == 255) and
                 (outline is None or outline.alpha == 255)):
@@ -667,6 +690,13 @@ class Sprite(object):
           frames.
 
         """
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
         x = int(round(x))
         y = int(round(y))
         radius = int(round(radius))
@@ -679,9 +709,9 @@ class Sprite(object):
             return
 
         if fill is not None:
-            pg_fill = sge._get_pygame_color(fill)
+            pg_fill = pygame.Color(*fill)
         if outline is not None:
-            pg_outl = sge._get_pygame_color(outline)
+            pg_outl = pygame.Color(*outline)
 
         if ((fill is None or fill.alpha == 255) and
                 (outline is None or outline.alpha == 255)):
@@ -843,6 +873,10 @@ class Sprite(object):
         """
         if not isinstance(font, sge.Font):
             font = sge.game.fonts[font]
+        if not isinstance(color, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(color))
+            raise TypeError(e)
+
         x = int(round(x))
         y = int(round(y))
 
@@ -850,7 +884,6 @@ class Sprite(object):
         width = font.get_width(text, width, height)
         height = font.get_height(text, width, height)
         fake_height = font.get_height(text, width)
-        color = sge._get_pygame_color(color)
 
         text_surf = pygame.Surface((width, fake_height), pygame.SRCALPHA)
         box_surf = pygame.Surface((width, height), pygame.SRCALPHA)
@@ -858,7 +891,8 @@ class Sprite(object):
         box_rect = box_surf.get_rect()
 
         for i in range(len(lines)):
-            rendered_text = font._font.render(lines[i], anti_alias, color)
+            rendered_text = font._font.render(lines[i], anti_alias,
+                                              pygame.Color(*color))
             rect = rendered_text.get_rect()
             rect.top = i * font._font.get_linesize()
 
@@ -1205,7 +1239,7 @@ class Sprite(object):
                         img.set_alpha(alpha, pygame.RLEACCEL)
 
                 if blend is not None:
-                    img.fill(sge._get_pygame_color(blend), None,
+                    img.fill(pygame.Color(*blend), None,
                              pygame.BLEND_RGB_MULT)
             else:
                 img = pygame.Surface((1, 1))
