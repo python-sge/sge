@@ -7,6 +7,17 @@ without any warranty.
 
 ========================================================================
 
+0.10.1-dev
+------------------------------------------------------------------------
+
+Specification additions:
++ sge.Color
+
+Specification misc changes:
+* Colors are specified by objects of the new sge.Color class rather than
+  arbitrary kinds of values.
+
+
 0.10.1
 ------------------------------------------------------------------------
 
