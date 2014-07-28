@@ -73,7 +73,7 @@ class Room(sge.Room):
         h = self.transition_sprite.height
         if complete < 0.5:
             diff = (complete - self.transition_complete_last) * 2
-            c = [int(round(diff * 255))] * 3
+            c = sge.Color([int(round(diff * 255))] * 3)
             darkener = sge.Sprite(width=self.transition_sprite.width,
                                   height=self.transition_sprite.height)
             darkener.draw_rectangle(0, 0, w, h, c)
@@ -82,7 +82,7 @@ class Room(sge.Room):
             darkener.destroy()
         else:
             complete = (complete - 0.5) * 2
-            c = (0, 0, 0, int(round(255 - complete * 255)))
+            c = sge.Color((0, 0, 0, int(round(255 - complete * 255))))
             self.transition_sprite.draw_clear()
             self.transition_sprite.draw_rectangle(0, 0, w, h, fill=c)
 
@@ -90,7 +90,7 @@ class Room(sge.Room):
         w = self.transition_sprite.width
         h = self.transition_sprite.height
         diff = complete - self.transition_complete_last
-        c = (0, 0, 0, int(round(diff * 255)))
+        c = sge.Color((0, 0, 0, int(round(diff * 255))))
         eraser = sge.Sprite(width=self.transition_sprite.width,
                             height=self.transition_sprite.height)
         eraser.draw_rectangle(0, 0, w, h, c)
@@ -111,7 +111,7 @@ class Room(sge.Room):
             self.transition_sprite.height = h
         else:
             diff = (complete - self.transition_complete_last) * 2
-            c = (0, 0, 0, int(round(diff * 255)))
+            c = sge.Color((0, 0, 0, int(round(diff * 255))))
             eraser = sge.Sprite(width=self.transition_sprite.width,
                                 height=self.transition_sprite.height)
             eraser.draw_rectangle(0, 0, w, h, c)
@@ -148,7 +148,7 @@ class Room(sge.Room):
         lw = int(round(2 * dw * complete))
         eraser = sge.Sprite(width=self.transition_sprite.width,
                             height=self.transition_sprite.height)
-        eraser.draw_line(-w, h, w, -h, (0, 0, 0, 255), thickness=lw,
+        eraser.draw_line(-w, h, w, -h, sge.Color((0, 0, 0, 255)), thickness=lw,
                          anti_alias=True)
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
@@ -161,8 +161,8 @@ class Room(sge.Room):
         lw = int(round(2 * dw * complete))
         eraser = sge.Sprite(width=self.transition_sprite.width,
                             height=self.transition_sprite.height)
-        eraser.draw_line(0, -h, w + w, h, (0, 0, 0, 255), thickness=lw,
-                         anti_alias=True)
+        eraser.draw_line(0, -h, w + w, h, sge.Color((0, 0, 0, 255)),
+                         thickness=lw, anti_alias=True)
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.destroy()
@@ -174,8 +174,8 @@ class Room(sge.Room):
         lw = int(round(2 * dw * complete))
         eraser = sge.Sprite(width=self.transition_sprite.width,
                             height=self.transition_sprite.height)
-        eraser.draw_line(-w, 0, w, h + h, (0, 0, 0, 255), thickness=lw,
-                         anti_alias=True)
+        eraser.draw_line(-w, 0, w, h + h, sge.Color((0, 0, 0, 255)),
+                         thickness=lw, anti_alias=True)
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.destroy()
@@ -187,8 +187,8 @@ class Room(sge.Room):
         lw = int(round(2 * dw * complete))
         eraser = sge.Sprite(width=self.transition_sprite.width,
                             height=self.transition_sprite.height)
-        eraser.draw_line(0, h + h, w + w, 0, (0, 0, 0, 255), thickness=lw,
-                         anti_alias=True)
+        eraser.draw_line(0, h + h, w + w, 0, sge.Color((0, 0, 0, 255)),
+                         thickness=lw, anti_alias=True)
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.destroy()
@@ -228,11 +228,11 @@ class Room(sge.Room):
                             height=self.transition_sprite.height)
         eraser_eraser = sge.Sprite(width=self.transition_sprite.width,
                                    height=self.transition_sprite.height)
-        eraser_eraser.draw_circle(x, y, r, fill=(0, 0, 0, 255))
+        eraser_eraser.draw_circle(x, y, r, fill=sge.Color((0, 0, 0, 255)))
 
         eraser.draw_lock()
         eraser.draw_rectangle(0, 0, eraser.width, eraser.height,
-                              fill=(0, 0, 0, 255))
+                              fill=sge.Color((0, 0, 0, 255)))
         eraser.draw_sprite(eraser_eraser, 0, 0, 0,
                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.draw_unlock()
@@ -248,7 +248,7 @@ class Room(sge.Room):
         r = int(round(math.hypot(x, y) * complete))
         eraser = sge.Sprite(width=self.transition_sprite.width,
                             height=self.transition_sprite.height)
-        eraser.draw_circle(x, y, r, fill=(0, 0, 0, 255))
+        eraser.draw_circle(x, y, r, fill=sge.Color((0, 0, 0, 255)))
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.destroy()

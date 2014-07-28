@@ -53,15 +53,15 @@ class Circle(sge.StellarClass):
     def event_create(self):
         self.image_alpha = 200
         if self.collision(sge.game.mouse):
-            self.image_blend = '#ff0000'
+            self.image_blend = sge.Color('#ff0000')
         else:
-            self.image_blend = 'blue'
+            self.image_blend = sge.Color('blue')
 
     def event_mouse_move(self, x, y):
         if self.collision(sge.game.mouse):
-            self.image_blend = "red"
+            self.image_blend = sge.Color("red")
         else:
-            self.image_blend = (0, 0, 255)
+            self.image_blend = sge.Color((0, 0, 255))
 
     def event_mouse_button_press(self, button):
         if button == 'left':
@@ -147,10 +147,10 @@ def main():
     fence_sprite = sge.Sprite('fence')
 
     # Load backgrounds
-    layers = (sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False),)
-    layers2 = (sge.BackgroundLayer(fence_sprite, 0, 0, 0),)
-    background = sge.Background(layers, 0xffffff)
-    background2 = sge.Background(layers2, 'white')
+    layers = [sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False)]
+    layers2 = [sge.BackgroundLayer(fence_sprite, 0, 0, 0)]
+    background = sge.Background(layers, sge.Color(0xffffff))
+    background2 = sge.Background(layers2, sge.Color('white'))
 
     # Load fonts
     glob.font = sge.Font('Liberation Serif', 20)
@@ -168,11 +168,11 @@ def main():
     circle4 = Circle(50, 400)
     circle5 = Circle(game.width // 2, game.height // 2)
     circle6 = Circle(52, 120)
-    objects = (circle, circle2, circle3, circle4)
-    objects2 = (circle5, circle6)
+    objects = [circle, circle2, circle3, circle4]
+    objects2 = [circle5, circle6]
 
     # Create view
-    views = (sge.View(0, 0),)
+    views = [sge.View(0, 0)]
 
     # Create rooms
     room1 = Room('I am the first room!', objects, views=views, background=background)
