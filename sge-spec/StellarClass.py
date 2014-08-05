@@ -19,13 +19,13 @@
 import sge
 
 
-class StellarClass(object):
+class Object(object):
 
     """Class for game objects.
 
     This class is used for game objects, such as the player, enemies,
     bullets, and the HUD.  Generally, each type of object has its own
-    subclass of :class:`sge.StellarClass`.
+    subclass of :class:`sge.Object`.
 
     .. attribute:: x
 
@@ -63,7 +63,7 @@ class StellarClass(object):
 
        .. note::
 
-          Inactive :class:`sge.StellarClass` objects are still visible
+          Inactive :class:`sge.Object` objects are still visible
           by default and continue to be involved in collisions.  In
           addition, collision events and destroy events still occur even
           if the object is inactive.  If you wish for the object to not
@@ -314,7 +314,7 @@ class StellarClass(object):
           another music object.
 
         All other arugments set the respective initial attributes of the
-        object.  See the documentation for :class:`sge.StellarClass` for
+        object.  See the documentation for :class:`sge.Object` for
         more information.
 
         """
@@ -328,11 +328,11 @@ class StellarClass(object):
         - ``other`` -- What to check for collisions with.  Can be one of
           the following:
 
-          - A :class:`sge.StellarClass` object.
-          - The unique identifier of a :class:`sge.StellarClass` object.
-          - A list of :class:`sge.StellarClass` objects and/or unique
-            identifiers of :class:`sge.StellarClass` objects.
-          - A class derived from :class:`sge.StellarClass`.
+          - A :class:`sge.Object` object.
+          - The unique identifier of a :class:`sge.Object` object.
+          - A list of :class:`sge.Object` objects and/or unique
+            identifiers of :class:`sge.Object` objects.
+          - A class derived from :class:`sge.Object`.
           - :const:`None`: Check for collisions with all objects.
 
         - ``x`` -- The horizontal position to pretend this object is at
@@ -350,7 +350,7 @@ class StellarClass(object):
 
         After this method is called, ``value`` will reduce by 1 each
         frame (adjusted for delta timing if it is enabled) until it
-        reaches 0, at which point :meth:`sge.StellarClass.event_alarm`
+        reaches 0, at which point :meth:`sge.Object.event_alarm`
         will be executed with ``alarm_id``.
 
         See the documentation for :meth:`sge.Game.set_alarm` for more
@@ -397,9 +397,9 @@ class StellarClass(object):
         .. note::
 
            Automatic updates, the only occurances between this event and
-           :meth:`sge.StellarClass.event_step`, do not occur, so there
+           :meth:`sge.Object.event_step`, do not occur, so there
            is no need for an "inactive" variant of this event.  Use
-           :meth:`sge.StellarClass.event_inactive_step` instead.
+           :meth:`sge.Object.event_inactive_step` instead.
 
         """
         pass
@@ -584,7 +584,7 @@ class StellarClass(object):
         - ``other`` -- The other object which was collided with.
 
         By default, this method simply calls
-        :meth:`sge.StellarClass.event_collision`.
+        :meth:`sge.Object.event_collision`.
 
         """
         self.event_collision(other)
@@ -600,7 +600,7 @@ class StellarClass(object):
         - ``other`` -- The other object which was collided with.
 
         By default, this method simply calls
-        :meth:`sge.StellarClass.event_collision`.
+        :meth:`sge.Object.event_collision`.
 
         """
         self.event_collision(other)
@@ -615,7 +615,7 @@ class StellarClass(object):
         - ``other`` -- The other object which was collided with.
 
         By default, this method simply calls
-        :meth:`sge.StellarClass.event_collision`.
+        :meth:`sge.Object.event_collision`.
 
         """
         self.event_collision(other)
@@ -631,7 +631,7 @@ class StellarClass(object):
         - ``other`` -- The other object which was collided with.
 
         By default, this method simply calls
-        :meth:`sge.StellarClass.event_collision`.
+        :meth:`sge.Object.event_collision`.
 
         """
         self.event_collision(other)
@@ -639,7 +639,7 @@ class StellarClass(object):
     def event_inactive_step(self, time_passed, delta_mult):
         """Step event when this object is inactive.
 
-        See the documentation for :meth:`sge.StellarClass.event_step`
+        See the documentation for :meth:`sge.Object.event_step`
         for more information.  The object is considered to be inactive
         when :attr:`active` is :const:`False`.
 
@@ -650,7 +650,7 @@ class StellarClass(object):
         """End step event when this object is inactive.
 
         See the documentation for
-        :meth:`sge.StellarClass.event_end_step` for more information.
+        :meth:`sge.Object.event_end_step` for more information.
         The object is considered to be inactive when :attr:`active` is
         :const:`False`.
 
@@ -884,7 +884,7 @@ class StellarClass(object):
         return obj
 
 
-class Mouse(StellarClass):
+class Mouse(Object):
 
     # TODO: This class is not technically required, but it's easier to
     # implement the Game.mouse attribute this way.  Because users are

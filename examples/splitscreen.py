@@ -47,7 +47,7 @@ class Game(sge.Game):
         self.event_close()
 
 
-class Circle(sge.StellarClass):
+class Circle(sge.Object):
     def __init__(self, x, y, player=0):
         super(Circle, self).__init__(x, y, 1, sprite='circle',
                                      collision_precise=True)

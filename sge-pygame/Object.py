@@ -31,16 +31,16 @@ import pygame
 import sge
 
 
-__all__ = ['StellarClass', 'Mouse', '_PygameProjectionSprite']
+__all__ = ['Object', 'Mouse', '_PygameProjectionSprite']
 
 
-class StellarClass(object):
+class Object(object):
 
     """Class for game objects.
 
     This class is used for game objects, such as the player, enemies,
     bullets, and the HUD.  Generally, each type of object has its own
-    subclass of :class:`sge.StellarClass`.
+    subclass of :class:`sge.Object`.
 
     .. attribute:: x
 
@@ -78,7 +78,7 @@ class StellarClass(object):
 
        .. note::
 
-          Inactive :class:`sge.StellarClass` objects are still visible
+          Inactive :class:`sge.Object` objects are still visible
           by default and continue to be involved in collisions.  In
           addition, collision events and destroy events still occur even
           if the object is inactive.  If you wish for the object to not
@@ -695,7 +695,7 @@ class StellarClass(object):
           another music object.
 
         All other arugments set the respective initial attributes of the
-        object.  See the documentation for :class:`sge.StellarClass` for
+        object.  See the documentation for :class:`sge.Object` for
         more information.
 
         """
@@ -800,11 +800,11 @@ class StellarClass(object):
         - ``other`` -- What to check for collisions with.  Can be one of
           the following:
 
-          - A :class:`sge.StellarClass` object.
-          - The unique identifier of a :class:`sge.StellarClass` object.
-          - A list of :class:`sge.StellarClass` objects and/or unique
-            identifiers of :class:`sge.StellarClass` objects.
-          - A class derived from :class:`sge.StellarClass`.
+          - A :class:`sge.Object` object.
+          - The unique identifier of a :class:`sge.Object` object.
+          - A list of :class:`sge.Object` objects and/or unique
+            identifiers of :class:`sge.Object` objects.
+          - A class derived from :class:`sge.Object`.
           - :const:`None`: Check for collisions with all objects.
 
         - ``x`` -- The horizontal position to pretend this object is at
@@ -832,7 +832,7 @@ class StellarClass(object):
                     if obj is not None and obj is not self:
                         if other is None:
                             others.append(obj)
-                        elif isinstance(other, StellarClass):
+                        elif isinstance(other, Object):
                             if obj is other:
                                 others.append(obj)
                         elif isinstance(other, (list, tuple)):
@@ -885,7 +885,7 @@ class StellarClass(object):
 
         After this method is called, ``value`` will reduce by 1 each
         frame (adjusted for delta timing if it is enabled) until it
-        reaches 0, at which point :meth:`sge.StellarClass.event_alarm`
+        reaches 0, at which point :meth:`sge.Object.event_alarm`
         will be executed with ``alarm_id``.
 
         See the documentation for :meth:`sge.Game.set_alarm` for more
@@ -959,9 +959,9 @@ class StellarClass(object):
         .. note::
 
            Automatic updates, the only occurances between this event and
-           :meth:`sge.StellarClass.event_step`, do not occur unless the
+           :meth:`sge.Object.event_step`, do not occur unless the
            object is active, so there is no "inactive" variant of this
-           event.  Use :meth:`sge.StellarClass.event_inactive_step`
+           event.  Use :meth:`sge.Object.event_inactive_step`
            instead.
 
         """
@@ -1147,7 +1147,7 @@ class StellarClass(object):
         - ``other`` -- The other object which was collided with.
 
         By default, this method simply calls
-        :meth:`sge.StellarClass.event_collision`.
+        :meth:`sge.Object.event_collision`.
 
         """
         self.event_collision(other)
@@ -1163,7 +1163,7 @@ class StellarClass(object):
         - ``other`` -- The other object which was collided with.
 
         By default, this method simply calls
-        :meth:`sge.StellarClass.event_collision`.
+        :meth:`sge.Object.event_collision`.
 
         """
         self.event_collision(other)
@@ -1178,7 +1178,7 @@ class StellarClass(object):
         - ``other`` -- The other object which was collided with.
 
         By default, this method simply calls
-        :meth:`sge.StellarClass.event_collision`.
+        :meth:`sge.Object.event_collision`.
 
         """
         self.event_collision(other)
@@ -1194,7 +1194,7 @@ class StellarClass(object):
         - ``other`` -- The other object which was collided with.
 
         By default, this method simply calls
-        :meth:`sge.StellarClass.event_collision`.
+        :meth:`sge.Object.event_collision`.
 
         """
         self.event_collision(other)
@@ -1202,7 +1202,7 @@ class StellarClass(object):
     def event_inactive_step(self, time_passed, delta_mult):
         """Step event when this object is inactive.
 
-        See the documentation for :meth:`sge.StellarClass.event_step`
+        See the documentation for :meth:`sge.Object.event_step`
         for more information.  The object is considered to be inactive
         when :attr:`active` is :const:`False`.
 
@@ -1213,7 +1213,7 @@ class StellarClass(object):
         """End step event when this object is inactive.
 
         See the documentation for
-        :meth:`sge.StellarClass.event_end_step` for more information.
+        :meth:`sge.Object.event_end_step` for more information.
         The object is considered to be inactive when :attr:`active` is
         :const:`False`.
 
@@ -1667,7 +1667,7 @@ class StellarClass(object):
         self.collision_precise = self._start_collision_precise
 
 
-class Mouse(StellarClass):
+class Mouse(Object):
 
     @property
     def x(self):
@@ -1854,12 +1854,12 @@ class _PygameSprite(pygame.sprite.DirtySprite):
     #
     # Scaling is handled transparently in the update method, which is
     # always called before drawing.  Everything else is the
-    # responsibility of StellarClass, including animation (the current
+    # responsibility of Object, including animation (the current
     # frame is grabbed from the _image attribute of the parent object).
 
     def __init__(self, parent, *groups):
         # See pygame.sprite.DirtySprite.__init__.__doc__.  ``parent``
-        # is a StellarClass object that this object belongs to.
+        # is a Object object that this object belongs to.
         super(_PygameSprite, self).__init__(*groups)
         self.parent = weakref.ref(parent)
         self.image = pygame.Surface((1, 1))

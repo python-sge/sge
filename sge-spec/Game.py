@@ -160,8 +160,8 @@ class Game(object):
 
     .. attribute:: objects
 
-       A dictionary containing all :class:`sge.StellarClass` objects in
-       the game, indexed by the objects' :attr:`sge.StellarClass.id`
+       A dictionary containing all :class:`sge.Object` objects in
+       the game, indexed by the objects' :attr:`sge.Object.id`
        attributes.  (Read-only)
 
     .. attribute:: rooms
@@ -175,12 +175,12 @@ class Game(object):
 
     .. attribute:: mouse
 
-       A :class:`sge.StellarClass` object which represents the mouse
-       cursor.  Its :attr:`sge.StellarClass.id` attribute is ``"mouse"``
+       A :class:`sge.Object` object which represents the mouse
+       cursor.  Its :attr:`sge.Object.id` attribute is ``"mouse"``
        and its bounding box is a one-pixel square.  Speed variables are
        determined by averaging all mouse movement during the last
        quarter of a second.  Assigning to its
-       :attr:`sge.StellarClass.visible` attribute controls whether or
+       :attr:`sge.Object.visible` attribute controls whether or
        not the mouse cursor is shown.  Setting its sprite sets the mouse
        cursor to that sprite.
 
@@ -650,7 +650,7 @@ class Game(object):
         """Default mouse collision event.
 
         Proxy for :meth:`sge.game.mouse.event_collision`.  See the
-        documentation for :meth:`sge.StellarClass.event_collision` for
+        documentation for :meth:`sge.Object.event_collision` for
         more information.
 
         """
@@ -660,7 +660,7 @@ class Game(object):
         """Left mouse collision event.
 
         Proxy for :meth:`sge.game.mouse.event_collision_left`.  See the
-        documentation for :meth:`sge.StellarClass.event_collision_left`
+        documentation for :meth:`sge.Object.event_collision_left`
         for more information.
 
         """
@@ -670,7 +670,7 @@ class Game(object):
         """Right mouse collision event.
 
         Proxy for :meth:`sge.game.mouse.event_collision_right`.  See the
-        documentation for :meth:`sge.StellarClass.event_collision_right`
+        documentation for :meth:`sge.Object.event_collision_right`
         for more information.
 
         """
@@ -680,7 +680,7 @@ class Game(object):
         """Top mouse collision event.
 
         Proxy for :meth:`sge.game.mouse.event_collision_top`.  See the
-        documentation for :meth:`sge.StellarClass.event_collision_top`
+        documentation for :meth:`sge.Object.event_collision_top`
         for more information.
 
         """
@@ -691,7 +691,7 @@ class Game(object):
 
         Proxy for :meth:`sge.game.mouse.event_collision_bottom`.  See
         the documentation for
-        :meth:`sge.StellarClass.event_collision_bottom` for more
+        :meth:`sge.Object.event_collision_bottom` for more
         information.
 
         """

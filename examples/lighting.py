@@ -34,7 +34,7 @@ class Game(sge.Game):
         self.end()
 
 
-class Circle(sge.StellarClass):
+class Circle(sge.Object):
     def __init__(self, x, y, player=0):
         super(Circle, self).__init__(x, y, 5, sprite='circle',
               collision_precise=True)
@@ -44,7 +44,7 @@ class Circle(sge.StellarClass):
         self.image_alpha = 200
         self.image_blend = sge.Color('blue')
 
-        self.darkness = sge.StellarClass(0, 0, 10000, sprite='darkness',
+        self.darkness = sge.Object(0, 0, 10000, sprite='darkness',
                                          tangible=False)
         sge.game.current_room.add(self.darkness)
 

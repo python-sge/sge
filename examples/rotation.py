@@ -30,7 +30,7 @@ class Game(sge.Game):
         self.end()
 
 
-class Circle(sge.StellarClass):
+class Circle(sge.Object):
     def __init__(self, x, y):
         super(Circle, self).__init__(x, y, 5, sprite='rotator',
                                      regulate_origin=True,

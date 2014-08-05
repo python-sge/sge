@@ -188,9 +188,9 @@ def main():
     sge.Font('Liberation Sans', ID="state", size=14)
 
     # Create objects
-    selection_object = sge.StellarClass(0, 0, sprite=glob.js_selection_sprite,
+    selection_object = sge.Object(0, 0, sprite=glob.js_selection_sprite,
                                         tangible=False)
-    state_object = sge.StellarClass(0, TITLE_HEIGHT,
+    state_object = sge.Object(0, TITLE_HEIGHT,
                                     sprite=glob.js_state_sprite,
                                     tangible=False)
     objects = (selection_object, state_object)

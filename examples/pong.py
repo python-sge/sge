@@ -93,7 +93,7 @@ class Game(sge.Game):
         self.event_close()
 
 
-class Player(sge.StellarClass):
+class Player(sge.Object):
 
     score = 0
 
@@ -147,7 +147,7 @@ class Player(sge.StellarClass):
             self.trackball_motion += y
 
 
-class Ball(sge.StellarClass):
+class Ball(sge.Object):
 
     def __init__(self):
         x = sge.game.width / 2

@@ -385,7 +385,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.10.1.2"
+__version__ = "0.10.1.3"
 
 import sys
 import os
@@ -509,7 +509,7 @@ from sge.Background import Background
 from sge.Font import Font
 from sge.Sound import Sound
 from sge.Music import Music
-from sge.StellarClass import StellarClass, Mouse, _PygameProjectionSprite
+from sge.Object import Object, Mouse, _PygameProjectionSprite
 from sge.Room import Room
 from sge.View import View
 from sge import collision, input, joystick, keyboard, mouse
@@ -529,7 +529,7 @@ __all__ = [
 
     # Classes
     'Color', 'Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font',
-    'Sound', 'Music', 'StellarClass', 'Room', 'View',
+    'Sound', 'Music', 'Object', 'Room', 'View',
 
     # Functions
     'show_message', 'get_text_entry',

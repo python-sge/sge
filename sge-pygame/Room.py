@@ -66,12 +66,12 @@ class Room(object):
 
     .. attribute:: objects
 
-       A list containing all :class:`sge.StellarClass` objects in the
+       A list containing all :class:`sge.Object` objects in the
        room.  (Read-only)
 
     .. attribute:: objects_by_class
 
-       A dictionary of lists containing all :class:`sge.StellarClass`
+       A dictionary of lists containing all :class:`sge.Object`
        objects in the room, separated by class.  The dictionary keys are
        classes that have been registered with
        :meth:`sge.Game.register_class`, and the lists contain only
@@ -193,14 +193,14 @@ class Room(object):
         self._collision_area_void = []
 
     def add(self, obj):
-        """Add a StellarClass object to the room.
+        """Add a Object object to the room.
 
         Arguments:
 
-        - ``obj`` -- The :class:`sge.StellarClass` object to add.
+        - ``obj`` -- The :class:`sge.Object` object to add.
 
         """
-        if not isinstance(obj, sge.StellarClass):
+        if not isinstance(obj, sge.Object):
             obj = sge.game.objects[obj]
 
         if obj not in self.objects:

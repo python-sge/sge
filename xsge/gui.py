@@ -150,7 +150,7 @@ window_border_topleft_sprite = None
 window_border_topright_sprite = None
 
 
-class Handler(sge.StellarClass):
+class Handler(sge.Object):
 
     """GUI handler class.
 

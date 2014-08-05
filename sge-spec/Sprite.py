@@ -41,7 +41,7 @@ class Sprite(object):
           can result in loss of pixel information, especially if it is
           done repeatedly.  Because of this, it is advised that you do
           not adjust this value for routine scaling.  Use the
-          :attr:`image_xscale` attribute of a :class:`sge.StellarClass`
+          :attr:`image_xscale` attribute of a :class:`sge.Object`
           object instead.
 
     .. attribute:: height
@@ -54,7 +54,7 @@ class Sprite(object):
           can result in loss of pixel information, especially if it is
           done repeatedly.  Because of this, it is advised that you do
           not adjust this value for routine scaling.  Use the
-          :attr:`image_yscale` attribute of a :class:`sge.StellarClass`
+          :attr:`image_yscale` attribute of a :class:`sge.Object`
           object instead.
 
     .. attribute:: transparent
@@ -499,7 +499,7 @@ class Sprite(object):
         .. note::
 
            If the sprite is being used, for example, by a
-           :class:`sge.StellarClass` object, it will not be completely
+           :class:`sge.Object` object, it will not be completely
            destroyed until this use stops.
 
         """

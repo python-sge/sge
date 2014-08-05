@@ -94,7 +94,7 @@ def rectangle(x, y, w, h, other=None):
     - ``w`` -- The width of the rectangle.
     - ``h`` -- The height of the rectangle.
     - ``other`` -- What to check for collisions with.  See the
-      documentation for :meth:`sge.StellarClass.collision` for more
+      documentation for :meth:`sge.Object.collision` for more
       information.
 
     """
@@ -113,7 +113,7 @@ def ellipse(x, y, w, h, other=None):
     - ``w`` -- The width of the ellipse.
     - ``h`` -- The height of the ellipse.
     - ``other`` -- What to check for collisions with.  See the
-      documentation for :meth:`sge.StellarClass.collision` for more
+      documentation for :meth:`sge.Object.collision` for more
       information.
 
     """
@@ -129,7 +129,7 @@ def circle(x, y, radius, other=None):
     - ``y`` -- The vertical position of the center of the circle.
     - ``radius`` -- The radius of the circle.
     - ``other`` -- What to check for collisions with.  See the
-      documentation for :meth:`sge.StellarClass.collision` for more
+      documentation for :meth:`sge.Object.collision` for more
       information.
 
     """
@@ -150,7 +150,7 @@ def line(x1, y1, x2, y2, other=None):
     - ``y2`` -- The vertical position of the second endpoint of the line
       segment.
     - ``other`` -- What to check for collisions with.  See the
-      documentation for :meth:`sge.StellarClass.collision` for more
+      documentation for :meth:`sge.Object.collision` for more
       information.
 
     """

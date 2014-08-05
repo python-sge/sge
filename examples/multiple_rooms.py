@@ -36,7 +36,7 @@ class Game(sge.Game):
         self.end()
 
 
-class Circle(sge.StellarClass):
+class Circle(sge.Object):
     def __init__(self, x, y):
         super(Circle, self).__init__(x, y, 5, sprite='circle',
               collision_precise=True)
@@ -67,7 +67,7 @@ class Circle(sge.StellarClass):
         glob.pop_sound.play()
 
 
-class CirclePop(sge.StellarClass):
+class CirclePop(sge.Object):
     def __init__(self, x, y):
         super(CirclePop, self).__init__(x, y, 5, sprite='circle_pop')
 

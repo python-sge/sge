@@ -16,6 +16,7 @@ Specification additions:
 Specification misc changes:
 * Colors are specified by objects of the new sge.Color class rather than
   arbitrary kinds of values.
+* sge.StellarClass renamed to sge.Object.
 
 
 0.10.1
