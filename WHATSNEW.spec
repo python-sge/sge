@@ -17,6 +17,7 @@ Specification misc changes:
 * Colors are specified by objects of the new sge.Color class rather than
   arbitrary kinds of values.
 * sge.StellarClass renamed to sge.Object.
+* Name changed from "Stellar Game Engine" to "SGE Game Engine".
 
 
 0.10.1

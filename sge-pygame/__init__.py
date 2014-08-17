@@ -16,17 +16,16 @@
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-The Stellar Game Engine (abbreviated "SGE", pronounced as "Sage") is a
-free 2-D game engine.  The purpose of the SGE is to make game
-development easier, which allows more rapid development by experienced
-game developers and also helps less experienced game developers learn
-how to develop games.
+The SGE Game Engine ("SGE", pronounced like "Sage") is a general-purpose
+2-D game engine.  It takes care of several details for you so you can
+focus on the game itself.  This makes more rapid game development
+possible, and it also makes the SGE easy to learn.
 
 Official implementations of the SGE are `free/libre software
 <http://gnu.org/philosophy/free-sw.html>`_, and the SGE documentation is
 free/libre as well.
 
-Even if it isn't required, you are encouraged to release your games'
+Although it isn't required, you are encouraged to release your games'
 code under a free/libre software license, such as the GNU General Public
 License, the Expat License, or the Apache License.  Doing so is easy,
 does not negatively affect you, and is highly appreciated as a
@@ -377,7 +376,6 @@ performance in some cases.  It is not enabled by default.  To enable it,
 set :data:`sge.hardware_rendering` to :const:`True`.  The benefit of
 hardware acceleration is usually negligible, which is why it is disabled
 by default.
-
 """
 
 from __future__ import division
@@ -385,7 +383,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.10.1.3"
+__version__ = "0.10.1.4"
 
 import sys
 import os

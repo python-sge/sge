@@ -26,11 +26,10 @@ import sys
 from distutils.core import setup
 
 long_description = """
-The Stellar Game Engine (abbreviated "SGE", pronounced as "Sage") is a
-free 2-D game engine. The purpose of the SGE is to make game development
-easier, which allows more rapid development by experienced game
-developers and also helps less experienced game developers learn how to
-develop games.
+The SGE Game Engine ("SGE", pronounced like "Sage") is a general-purpose
+2-D game engine.  It takes care of several details for you so you can
+focus on the game itself.  This makes more rapid game development
+possible, and it also makes the SGE easy to learn.
 """.strip()
 
 setup(name="sge",

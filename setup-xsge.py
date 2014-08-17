@@ -28,7 +28,7 @@ from distutils.core import setup
 long_description = """
 xSGE is a collection of extensions for the SGE licensed under the GNU
 General Public License.  They are designed to give additional features
-to games which are released under the GNU GPL without any extra work.
+to libre software games without any extra work.
 
 xSGE extensions are not dependent on any particular SGE implementation.
 They should would with any implementation that follows the
