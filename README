@@ -14,7 +14,6 @@ To develop an implementation of SGE:
 
 * Edit setup.py to include the name of the implementation and proper
   information about it.
-* Replace this README with README.dist
 * Define the values of the constants in sge/__init__.py.
 * Replace the license text on top of all source code files in the "sge"
   directory with appropriate license text for the license you intend to
@@ -28,11 +27,11 @@ To develop an implementation of SGE:
   implementation in this section.
 * Other than the implementation-specific information section, please do
   NOT modify the docstrings.
-* Replace sge/README with a file containing all important
-  implementation-specific information.  You can just copy the
-  appropriate section from the docstring of __init__.py.
 * Use the files in the "doc" directory to generate Sphinx
   documentation (e.g. with sphinx-quickstart).
+* Replace this README with a file indicating the license of the
+  implementation, dependencies, how to install, and a pointer to the doc
+  folder for information on how to use the SGE.
 
 To test the implementation, use the examples found in the examples
 directory.
