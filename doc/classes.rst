@@ -241,6 +241,11 @@ sge.Music Methods
 
 .. automethod:: sge.Music.clear_queue
 
+sge.Color
+=========
+
+.. autoclass:: sge.Color
+
 sge.Font
 ========
 
