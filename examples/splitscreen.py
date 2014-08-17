@@ -27,9 +27,9 @@ class Game(sge.Game):
 
     def event_step(self, time_passed, delta_mult):
         self.project_line(self.width / 2, 0, self.width / 2, self.height,
-                          "black", thickness=3)
+                          sge.Color("black"), thickness=3)
         self.project_line(0, self.height / 2, self.width, self.height / 2,
-                          "black", thickness=3)
+                          sge.Color("black"), thickness=3)
 
     def event_key_press(self, key, char):
         if key == 'escape':
@@ -52,12 +52,14 @@ class Circle(sge.Object):
         super(Circle, self).__init__(x, y, 1, sprite='circle',
                                      collision_precise=True)
         self.player = player
-        self.normal_image_blend = ['red', 'blue', 'yellow', 'green'][self.player]
+        self.normal_image_blend = [sge.Color('red'), sge.Color('blue'),
+                                   sge.Color('yellow'),
+                                   sge.Color('green')][self.player]
         self.image_alpha = 128
 
     def set_color(self):
         if self.collision(Circle):
-            self.image_blend = 'olive'
+            self.image_blend = sge.Color('olive')
         else:
             self.image_blend = self.normal_image_blend
 
@@ -104,7 +106,7 @@ def main():
 
     # Load backgrounds
     layers = (sge.BackgroundLayer(fence, 0, 0, 0),)
-    background = sge.Background(layers, 'white')
+    background = sge.Background(layers, sge.Color('white'))
 
     # Create objects
     objects = []
@@ -119,7 +121,7 @@ def main():
             views.append(sge.View(0, 0, 320 * x, 240 * y, 320, 240))
 
     # Create rooms
-    sge.Room(tuple(objects), 1280, 1024, tuple(views), background)
+    sge.Room(objects, 1280, 1024, views, background)
 
     sge.game.start()
 
