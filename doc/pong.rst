@@ -406,9 +406,9 @@ entirety of the sprites, which can be done with
 :meth:`sge.Sprite.draw_rectangle`::
 
     paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
-                                 paddle_sprite.height, fill="white")
+                                 paddle_sprite.height, fill=sge.Color("white"))
     ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
-                               fill="white")
+                               fill=sge.Color("white"))
 
 Loading Backgrounds
 -------------------
@@ -423,7 +423,7 @@ that list onto :meth:`sge.Background.__init__`'s ``layers`` argument::
 
     layers = [sge.BackgroundLayer("paddle", sge.game.width / 2, 0, -10000,
                                   xrepeat=False)]
-    background = sge.Background(layers, "black")
+    background = sge.Background(layers, sge.Color("black"))
 
 The fourth argument of :meth:`sge.BackgroudLayer.__init__` is the
 layer's Z-axis value.  The Z-axis is used to determine what objects are
@@ -615,14 +615,14 @@ You should now have a script that looks something like this::
         ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
                                  origin_y=4)
         paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
-                                     paddle_sprite.height, fill="white")
+                                     paddle_sprite.height, fill=sge.Color("white"))
         ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
-                                   fill="white")
+                                   fill=sge.Color("white"))
 
         # Load backgrounds
         layers = [sge.BackgroundLayer("paddle", sge.game.width / 2, 0, -10000,
                                       xrepeat=False)]
-        background = sge.Background(layers, "black")
+        background = sge.Background(layers, sge.Color("black"))
 
         # Create objects
         player1 = Player(1)

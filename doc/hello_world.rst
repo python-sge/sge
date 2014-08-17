@@ -129,7 +129,7 @@ world!" in the center of the screen.  This will be our room class::
 
         def event_step(self, time_passed, delta_mult):
             sge.game.project_text("my_font", "Hello, world!", sge.game.width / 2,
-                                  sge.game.height / 2, color="black",
+                                  sge.game.height / 2, color=sge.Color("black"),
                                   halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
 
 You can see that the room class is defined very similarly to the game
@@ -196,7 +196,7 @@ will be::
         Game()
 
         # Create backgrounds
-        background = sge.Background([], "white")
+        background = sge.Background([], sge.Color("white"))
 
         # Load fonts
         sge.Font(ID="my_font")
@@ -281,7 +281,7 @@ This is the completed Hello World program::
 
         def event_step(self, time_passed, delta_mult):
             sge.game.project_text("my_font", "Hello, world!", sge.game.width / 2,
-                                  sge.game.height / 2, color="black",
+                                  sge.game.height / 2, color=sge.Color("black"),
                                   halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
 
 
@@ -290,7 +290,7 @@ This is the completed Hello World program::
         Game()
 
         # Create backgrounds
-        background = sge.Background([], "white")
+        background = sge.Background([], sge.Color("white"))
 
         # Load fonts
         sge.Font(ID="my_font")

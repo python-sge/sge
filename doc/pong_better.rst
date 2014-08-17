@@ -109,8 +109,8 @@ We clear the HUD sprite with :meth:`sge.Sprite.draw_clear`.
 
 To draw the text, we use :meth:`sge.Sprite.draw_text`.  Both calls have
 a few arguments in common: ``font`` is set to ``"hud"``, ``y`` is set to
-``TEXT_OFFSET``, ``color`` is set to ``"white"``, and ``valign`` is set
-to ``sge.ALIGN_TOP``.
+``TEXT_OFFSET``, ``color`` is set to white, and ``valign`` is set to
+``sge.ALIGN_TOP``.
 
 The rest of the arguments are different between the two.  ``text`` is
 set to the respective player's score, converted to a string.  ``x`` is
@@ -126,11 +126,11 @@ is set to ``sge.ALIGN_RIGHT`` for player 1's score, and
         hud_sprite.draw_clear()
         x = hud_sprite.width / 2
         hud_sprite.draw_text("hud", str(player1.score), x - TEXT_OFFSET,
-                             TEXT_OFFSET, color="white", halign=sge.ALIGN_RIGHT,
-                             valign=sge.ALIGN_TOP)
+                             TEXT_OFFSET, color=sge.Color("white"),
+                             halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
         hud_sprite.draw_text("hud", str(player2.score), x + TEXT_OFFSET,
-                             TEXT_OFFSET, color="white", halign=sge.ALIGN_LEFT,
-                             valign=sge.ALIGN_TOP)
+                             TEXT_OFFSET, color=sge.Color("white"),
+                             halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
 
 Add calls to :func:`refresh_hud` in the three places where a
 :attr:`Player.score` value changes, right after the change.  These
@@ -224,11 +224,11 @@ The new :meth:`Ball.serve` looks something like this::
             p1text = "WIN" if player1.score > player2.score else "LOSE"
             p2text = "WIN" if player2.score > player1.score else "LOSE"
             hud_sprite.draw_text("hud", p1text, x - TEXT_OFFSET, TEXT_OFFSET,
-                                 color="white", halign=sge.ALIGN_RIGHT,
-                                 valign=sge.ALIGN_TOP)
+                                 color=sge.Color("white"),
+                                 halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
             hud_sprite.draw_text("hud", p2text, x + TEXT_OFFSET, TEXT_OFFSET,
-                                 color="white", halign=sge.ALIGN_LEFT,
-                                 valign=sge.ALIGN_TOP)
+                                 color=sge.Color("white"),
+                                 halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
             game_in_progress = False
 
 Adding Sounds
@@ -547,11 +547,11 @@ Our final Pong game now has scores, sounds, and even joystick support::
                 p1text = "WIN" if player1.score > player2.score else "LOSE"
                 p2text = "WIN" if player2.score > player1.score else "LOSE"
                 hud_sprite.draw_text("hud", p1text, x - TEXT_OFFSET, TEXT_OFFSET,
-                                     color="white", halign=sge.ALIGN_RIGHT,
-                                     valign=sge.ALIGN_TOP)
+                                     color=sge.Color("white"),
+                                     halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
                 hud_sprite.draw_text("hud", p2text, x + TEXT_OFFSET, TEXT_OFFSET,
-                                     color="white", halign=sge.ALIGN_LEFT,
-                                     valign=sge.ALIGN_TOP)
+                                     color=sge.Color("white"),
+                                     halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
                 game_in_progress = False
 
 
@@ -560,11 +560,11 @@ Our final Pong game now has scores, sounds, and even joystick support::
         hud_sprite.draw_clear()
         x = hud_sprite.width / 2
         hud_sprite.draw_text("hud", str(player1.score), x - TEXT_OFFSET,
-                             TEXT_OFFSET, color="white", halign=sge.ALIGN_RIGHT,
-                             valign=sge.ALIGN_TOP)
+                             TEXT_OFFSET, color=sge.Color("white"),
+                             halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
         hud_sprite.draw_text("hud", str(player2.score), x + TEXT_OFFSET,
-                             TEXT_OFFSET, color="white", halign=sge.ALIGN_LEFT,
-                             valign=sge.ALIGN_TOP)
+                             TEXT_OFFSET, color=sge.Color("white"),
+                             halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
 
 
     def main():
@@ -584,15 +584,15 @@ Our final Pong game now has scores, sounds, and even joystick support::
         ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
                                  origin_y=4)
         paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
-                                     paddle_sprite.height, fill="white")
+                                     paddle_sprite.height, fill=sge.Color("white"))
         ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
-                                   fill="white")
+                                   fill=sge.Color("white"))
         hud_sprite = sge.Sprite(width=320, height=120, origin_x=160, origin_y=0)
 
         # Load backgrounds
         layers = [sge.BackgroundLayer("paddle", sge.game.width / 2, 0, -10000,
                                       xrepeat=False)]
-        background = sge.Background(layers, "black")
+        background = sge.Background(layers, sge.Color("black"))
 
         # Load fonts
         sge.Font("Droid Sans Mono", ID="hud", size=48)
