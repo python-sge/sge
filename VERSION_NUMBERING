@@ -11,14 +11,15 @@ without any warranty.
 Introduction
 ------------------------------------------------------------------------
 
-This document describes how version numbering works for SGE, starting on
+This document describes how version numbering works for the SGE as of
 May 10, 2013.  The purpose of this version numbering system is to
 prevent confusion, in particular making it obvious what version of any
 given implementation is compatible with a given SGE game.
 
 This version numbering system is also used for xSGE.  However, the
 version number of an xSGE release is not connected to the version number
-of any SGE release.
+of any SGE release.  xSGE documentation should indicate what version(s)
+of the SGE it is compatible with.
 
 
 Components
@@ -67,15 +68,9 @@ The components have the following meanings:
   experimentation, untested code, and compatibility breakage.  If this
   component is 0, it should not be specified (see above).
 
-Implementations are expected to have the same major and minor version
-numbers as the SGE specification they follow.  The bugfix version number
-and revision number may differ from the specification. 
-
-The special major version number "0" indicates an alpha or beta version.
-This is for stable releases of the SGE specification which don't yet
-have well-tested implementations as well as SGE implementations which
-are either incomplete or not well-tested. While the major version number
-is 0, the minor version number doubles as the major version number; for
+The special major version number "0" indicates a version of the
+specification which is not finalized.  While the major version number is
+0, the minor version number doubles as the major version number; for
 example, version 0.3.0 of the specification is permitted to break
 backward compatibility with version 0.2.0.  All other version number
 components remain the same.
@@ -84,13 +79,18 @@ Releases of the SGE specification with a major version number of other
 than "0" must be identical to a previous release which has "0" as its
 major version number.
 
+Implementations are expected to have the same major and minor version
+numbers as the SGE specification they follow.  The bugfix version number
+should be adjusted to reflect improvements specific to the
+implementation, such as bugfixes.
+
 
 Incrementing Version Numbers
 ------------------------------------------------------------------------
 
 Within the source repository, any time a change is made to a SGE
-implementation (the template is also treated as an implementation for
-this purpose), the revision number for that implementation (found in
+implementation (the specification is also treated as an implementation
+for this purpose), the revision number for that implementation (found in
 the implementation's __version__ variable in __init__.py) MUST be
 incremented.  This includes even minor changes, such as adding,
 changing, or removing comments or docstrings, in addition to major
