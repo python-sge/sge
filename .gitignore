@@ -12,8 +12,7 @@ var
 sdist
 develop-eggs
 .installed.cfg
-doc/sge-pygame/_build
-doc/xsge/_build
+_build
 
 # Installer logs
 pip-log.txt
@@ -27,6 +26,3 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
-
-# Backups (Gedit, etc)
-*~
