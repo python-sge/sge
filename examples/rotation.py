@@ -39,9 +39,9 @@ class Circle(sge.Object):
     def event_create(self):
         self.image_alpha = 200
         if self.collision(sge.game.mouse):
-            self.image_blend = '#ff0000'
+            self.image_blend = sge.Color('#ff0000')
         else:
-            self.image_blend = 'blue'
+            self.image_blend = sge.Color('blue')
 
         if random.random() < 0.5:
             self.image_xscale = 2
@@ -50,12 +50,12 @@ class Circle(sge.Object):
     def event_step(self, time_passed, delta_mult):
         self.image_rotation += 2 * delta_mult
         sge.game.current_room.project_circle(self.x, self.y, self.z + 1, 8,
-                                             outline="green")
+                                             outline=sge.Color("green"))
 
         if self.collision(sge.game.mouse):
-            self.image_blend = "red"
+            self.image_blend = sge.Color("red")
         else:
-            self.image_blend = (0, 0, 255)
+            self.image_blend = sge.Color((0, 0, 255))
 
 
 def main():
@@ -68,7 +68,7 @@ def main():
 
     # Load backgrounds
     layers = (sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False),)
-    background = sge.Background(layers, 0xffffff)
+    background = sge.Background(layers, sge.Color(0xffffff))
 
     # Create objects
     circle = Circle(game.width // 2, game.height // 2)
