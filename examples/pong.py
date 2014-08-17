@@ -215,11 +215,11 @@ class Ball(sge.Object):
             p1text = "WIN" if player1.score > player2.score else "LOSE"
             p2text = "WIN" if player2.score > player1.score else "LOSE"
             hud_sprite.draw_text("hud", p1text, x - TEXT_OFFSET, TEXT_OFFSET,
-                                 color="white", halign=sge.ALIGN_RIGHT,
-                                 valign=sge.ALIGN_TOP)
+                                 color=sge.Color("white"),
+                                 halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
             hud_sprite.draw_text("hud", p2text, x + TEXT_OFFSET, TEXT_OFFSET,
-                                 color="white", halign=sge.ALIGN_LEFT,
-                                 valign=sge.ALIGN_TOP)
+                                 color=sge.Color("white"),
+                                 halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
             game_in_progress = False
 
 
