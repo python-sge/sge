@@ -7,7 +7,7 @@ without any warranty.
 
 ========================================================================
 
-0.10.1-dev
+0.11
 ------------------------------------------------------------------------
 
 Specification additions:
@@ -20,14 +20,7 @@ Specification misc changes:
 * Name changed from "Stellar Game Engine" to "SGE Game Engine".
 
 
-0.10.1
-------------------------------------------------------------------------
-
-Specification misc changes:
-* Added FPS counters to the examples.
-
-
-0.10.0
+0.10
 ------------------------------------------------------------------------
 
 Specification additions:
@@ -109,21 +102,7 @@ Specification misc changes:
 * IMPLEMENTATION set to "SGE Specification" instead of "SGE Template".
 
 
-0.9.2
-------------------------------------------------------------------------
-
-Specification bugfixes:
-- Some deviation from PEP 8
-
-
-0.9.1
-------------------------------------------------------------------------
-
-Specification bugfixes:
-- Minor typo in a docstring
-
-
-0.9.0
+0.9
 ------------------------------------------------------------------------
 
 Specification additions:
@@ -153,7 +132,7 @@ Specification misc changes:
 * Step events now have a "delta_mult" argument.
 
 
-0.8.0
+0.8
 ------------------------------------------------------------------------
 
 Specification additions:
@@ -181,7 +160,7 @@ Specification misc changes:
 * room_number argument added to sge.Room.__init__
 
 
-0.7.0
+0.7
 ------------------------------------------------------------------------
 
 Specification additions:
@@ -208,7 +187,7 @@ Specification misc changes:
 * Changing sge.Sprite.width and sge.Sprite.height is now officially destructive.
 
 
-0.6.0
+0.6
 ------------------------------------------------------------------------
 
 Specification additions:
@@ -224,7 +203,7 @@ Specification bugfixes:
 - Small problems with the documentation
 
 
-0.5.0
+0.5
 ------------------------------------------------------------------------
 
 Specification additions:
@@ -250,7 +229,7 @@ Specification misc changes:
 * "id"/"id_" argument in many constructor methods changed to "ID".
 
 
-0.4.0
+0.4
 ------------------------------------------------------------------------
 
 Specification additions:
@@ -292,7 +271,7 @@ Specification misc changes:
 * Released to the public domain via CC0.
 
 
-0.3.0
+0.3
 ------------------------------------------------------------------------
 
 Specification additions:
