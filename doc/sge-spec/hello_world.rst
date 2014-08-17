@@ -1,1 +1,0 @@
-../common/hello_world.rst
