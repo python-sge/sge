@@ -257,112 +257,112 @@ sge.Font Methods
 
 .. automethod:: sge.Font.from_sprite
 
-sge.StellarClass
-================
+sge.Object
+==========
 
-.. autoclass:: sge.StellarClass
+.. autoclass:: sge.Object
 
-sge.StellarClass Methods
+sge.Object Methods
+------------------
+
+.. automethod:: sge.Object.__init__
+
+.. automethod:: sge.Object.collision
+
+.. automethod:: sge.Object.set_alarm
+
+.. automethod:: sge.Object.get_alarm
+
+.. automethod:: sge.Object.destroy
+
+.. automethod:: sge.Object.create
+
+sge.Object Event Methods
 ------------------------
 
-.. automethod:: sge.StellarClass.__init__
+.. automethod:: sge.Object.event_create
 
-.. automethod:: sge.StellarClass.collision
+.. automethod:: sge.Object.event_destroy
 
-.. automethod:: sge.StellarClass.set_alarm
+.. automethod:: sge.Object.event_step
 
-.. automethod:: sge.StellarClass.get_alarm
+.. automethod:: sge.Object.event_alarm
 
-.. automethod:: sge.StellarClass.destroy
+.. automethod:: sge.Object.event_animation_end
 
-.. automethod:: sge.StellarClass.create
+.. automethod:: sge.Object.event_key_press
 
-sge.StellarClass Event Methods
-------------------------------
+.. automethod:: sge.Object.event_key_release
 
-.. automethod:: sge.StellarClass.event_create
+.. automethod:: sge.Object.event_mouse_move
 
-.. automethod:: sge.StellarClass.event_destroy
+.. automethod:: sge.Object.event_mouse_button_press
 
-.. automethod:: sge.StellarClass.event_step
+.. automethod:: sge.Object.event_mouse_button_release
 
-.. automethod:: sge.StellarClass.event_alarm
+.. automethod:: sge.Object.event_joystick_axis_move
 
-.. automethod:: sge.StellarClass.event_animation_end
+.. automethod:: sge.Object.event_joystick_hat_move
 
-.. automethod:: sge.StellarClass.event_key_press
+.. automethod:: sge.Object.event_joystick_trackball_move
 
-.. automethod:: sge.StellarClass.event_key_release
+.. automethod:: sge.Object.event_joystick_button_press
 
-.. automethod:: sge.StellarClass.event_mouse_move
+.. automethod:: sge.Object.event_joystick_button_release
 
-.. automethod:: sge.StellarClass.event_mouse_button_press
+.. automethod:: sge.Object.event_update_position
 
-.. automethod:: sge.StellarClass.event_mouse_button_release
+.. automethod:: sge.Object.event_collision
 
-.. automethod:: sge.StellarClass.event_joystick_axis_move
+.. automethod:: sge.Object.event_collision_left
 
-.. automethod:: sge.StellarClass.event_joystick_hat_move
+.. automethod:: sge.Object.event_collision_right
 
-.. automethod:: sge.StellarClass.event_joystick_trackball_move
+.. automethod:: sge.Object.event_collision_top
 
-.. automethod:: sge.StellarClass.event_joystick_button_press
+.. automethod:: sge.Object.event_collision_bottom
 
-.. automethod:: sge.StellarClass.event_joystick_button_release
+.. automethod:: sge.Object.event_inactive_step
 
-.. automethod:: sge.StellarClass.event_update_position
+.. automethod:: sge.Object.event_inactive_key_press
 
-.. automethod:: sge.StellarClass.event_collision
+.. automethod:: sge.Object.event_inactive_key_release
 
-.. automethod:: sge.StellarClass.event_collision_left
+.. automethod:: sge.Object.event_inactive_mouse_move
 
-.. automethod:: sge.StellarClass.event_collision_right
+.. automethod:: sge.Object.event_inactive_mouse_button_press
 
-.. automethod:: sge.StellarClass.event_collision_top
+.. automethod:: sge.Object.event_inactive_mouse_button_release
 
-.. automethod:: sge.StellarClass.event_collision_bottom
+.. automethod:: sge.Object.event_inactive_joystick_axis_move
 
-.. automethod:: sge.StellarClass.event_inactive_step
+.. automethod:: sge.Object.event_inactive_joystick_hat_move
 
-.. automethod:: sge.StellarClass.event_inactive_key_press
+.. automethod:: sge.Object.event_inactive_joystick_trackball_move
 
-.. automethod:: sge.StellarClass.event_inactive_key_release
+.. automethod:: sge.Object.event_inactive_joystick_button_press
 
-.. automethod:: sge.StellarClass.event_inactive_mouse_move
+.. automethod:: sge.Object.event_inactive_joystick_button_release
 
-.. automethod:: sge.StellarClass.event_inactive_mouse_button_press
+.. automethod:: sge.Object.event_paused_key_press
 
-.. automethod:: sge.StellarClass.event_inactive_mouse_button_release
+.. automethod:: sge.Object.event_paused_key_release
 
-.. automethod:: sge.StellarClass.event_inactive_joystick_axis_move
+.. automethod:: sge.Object.event_paused_mouse_move
 
-.. automethod:: sge.StellarClass.event_inactive_joystick_hat_move
+.. automethod:: sge.Object.event_paused_mouse_button_press
 
-.. automethod:: sge.StellarClass.event_inactive_joystick_trackball_move
+.. automethod:: sge.Object.event_paused_mouse_button_release
 
-.. automethod:: sge.StellarClass.event_inactive_joystick_button_press
+.. automethod:: sge.Object.event_paused_joystick_axis_move
 
-.. automethod:: sge.StellarClass.event_inactive_joystick_button_release
+.. automethod:: sge.Object.event_paused_joystick_hat_move
 
-.. automethod:: sge.StellarClass.event_paused_key_press
+.. automethod:: sge.Object.event_paused_joystick_trackball_move
 
-.. automethod:: sge.StellarClass.event_paused_key_release
+.. automethod:: sge.Object.event_paused_joystick_button_press
 
-.. automethod:: sge.StellarClass.event_paused_mouse_move
-
-.. automethod:: sge.StellarClass.event_paused_mouse_button_press
-
-.. automethod:: sge.StellarClass.event_paused_mouse_button_release
-
-.. automethod:: sge.StellarClass.event_paused_joystick_axis_move
-
-.. automethod:: sge.StellarClass.event_paused_joystick_hat_move
-
-.. automethod:: sge.StellarClass.event_paused_joystick_trackball_move
-
-.. automethod:: sge.StellarClass.event_paused_joystick_button_press
-
-.. automethod:: sge.StellarClass.event_paused_joystick_button_release
+.. automethod:: sge.Object.event_paused_joystick_button_release
 
 sge.Room
 ========

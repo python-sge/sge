@@ -160,7 +160,7 @@ relative to the screen.  Additionally, these projections are always on
 top of everything else on the screen.  This is usually how we want a HUD
 to be displayed, which is why we are using a :class:`sge.Game`
 projection instead of a :class:`sge.Room` projection or
-:class:`sge.StellarClass` object.
+:class:`sge.Object` object.
 
 .. note::
 
@@ -319,11 +319,10 @@ attribute called :attr:`trackball_motion` for that; initialize it as
 ``0`` in the create event.
 
 We now need to define the trackball move event, which is defined by
-:meth:`sge.StellarClass.event_joystick_trackball_move`.  Within this
-event, if the ``joystick`` argument is the same as ``self.joystick``,
-add ``y`` to ``self.trackball_motion``.  We are adding to it, rather
-than replacing it, because the trackball might move multiple times in
-the same frame.
+:meth:`sge.Object.event_joystick_trackball_move`.  Within this event, if
+the ``joystick`` argument is the same as ``self.joystick``, add ``y`` to
+``self.trackball_motion``.  We are adding to it, rather than replacing
+it, because the trackball might move multiple times in the same frame.
 
 Applying the Joystick Controls
 ------------------------------
@@ -427,7 +426,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
             self.event_close()
 
 
-    class Player(sge.StellarClass):
+    class Player(sge.Object):
 
         score = 0
 
@@ -480,7 +479,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
                 self.trackball_motion += y
 
 
-    class Ball(sge.StellarClass):
+    class Ball(sge.Object):
 
         def __init__(self):
             x = sge.game.width / 2

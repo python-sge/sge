@@ -74,16 +74,15 @@ paused.  To achieve these goals, we add the special events,
 In this case, we are defining the paused key press event to unpause the
 game when any key except for the Esc key is pressed.
 
-The StellarClass Classes
-------------------------
+The Object Classes
+------------------
 
-:class:`sge.StellarClass` objects are things in a game that we want to
-be displayed in a room.  These objects tend to represent players,
-enemies, tiles, decorations, and pretty much anything else you can think
-of.
+:class:`sge.Object` objects are things in a game that we want to be
+displayed in a room.  These objects tend to represent players, enemies,
+tiles, decorations, and pretty much anything else you can think of.
 
 For Pong, we need three objects: the two players, and the ball.  We will
-define two sub-classes of :class:`sge.StellarClass` for this purpose:
+define two sub-classes of :class:`sge.Object` for this purpose:
 :class:`Player` and :class:`Ball`.
 
 Player
@@ -107,11 +106,11 @@ argument will indicate which player the object is for: ``1`` for player
 - :attr:`down_key` will indicate the key that moves the paddle down.  We
   will set it to ``"s"`` for player 1, or ``"down"`` for player 2.
 
-- :attr:`x` is an attribute inherited from :class:`sge.StellarClass`
-  which indicates the horizontal position of the object.  We will set
-  this based on a constant we will define (technically just a variable,
-  since Python doesn't support constants) called
-  :const:`PADDLE_XOFFSET`: ``PADDLE_XOFFSET`` for player 1, or
+- :attr:`x` is an attribute inherited from :class:`sge.Object` which
+  indicates the horizontal position of the object.  We will set this
+  based on a constant we will define (technically just a variable, since
+  Python doesn't support constants) called :const:`PADDLE_XOFFSET`:
+  ``PADDLE_XOFFSET`` for player 1, or
   ``sge.game.width - PADDLE_XOFFSET`` for player 2.  We will define
   :const:`PADDLE_XOFFSET` near the top of our code file, beneath
   imports, as ``32``.
@@ -119,20 +118,20 @@ argument will indicate which player the object is for: ``1`` for player
 - :attr:`hit_direction` will indicate the direction the paddle hits the
   ball.  We will set it to ``1`` for player 1, and ``-1`` for player 2.
 
-Additionally, certain attributes inherited from
-:class:`sge.StellarClass` will be the same for both :class:`Player`
-objects.  :attr:`y` will always be ``sge.game.height / 2`` (vertically
-centered).  :attr:`sprite` will always be ``"paddle"`` (a sprite we will
-create later).  :attr:`checks_collisions` will always be :const:`False`,
-since player objects don't need to check for collisions with each other;
-we can therefore leave all collision checking to the ball object.
+Additionally, certain attributes inherited from :class:`sge.Object` will
+be the same for both :class:`Player` objects.  :attr:`y` will always be
+``sge.game.height / 2`` (vertically centered).  :attr:`sprite` will
+always be ``"paddle"`` (a sprite we will create later).
+:attr:`checks_collisions` will always be :const:`False`, since player
+objects don't need to check for collisions with each other; we can
+therefore leave all collision checking to the ball object.
 
-All attributes inherited from :class:`sge.StellarClass` will be defined
-by passing their values to :meth:`sge.StellarClass.__init__`, which we
-will call with ``super().__init__(*args, **kwargs)``.  This makes our
+All attributes inherited from :class:`sge.Object` will be defined by
+passing their values to :meth:`sge.Object.__init__`, which we will call
+with ``super().__init__(*args, **kwargs)``.  This makes our
 :meth:`Player.__init__` defintion an extension, rather than an override,
-of :meth:`sge.StellarClass.__init__`, which is important; overriding
-this method would be likely to break something.
+of :meth:`sge.Object.__init__`, which is important; overriding this
+method would be likely to break something.
 
 Our definition of :meth:`Player.__init__`` ends up looking something
 like this::
@@ -163,8 +162,8 @@ accordingly.
 :func:`sge.keyboard.get_pressed` returns the state of a key on the
 keyboard.  We will check this in the step event to decide how the paddle
 should move on any given frame.  The step event, defined by
-:meth:`sge.StellarClass.event_step`, is an event which always executes
-every frame.
+:meth:`sge.Object.event_step`, is an event which always executes every
+frame.
 
 What we will do is subtract the state of :attr:`up_key` from the state
 of :attr:`down_key`.  This will give us ``-1`` if only :attr:`up_key` is
@@ -172,9 +171,9 @@ pressed, ``1`` if only :attr:`down_key` is pressed, and ``0`` if neither
 or both keys are pressed.  We can multiply this result by a constant,
 which we will call :const:`PADDLE_SPEED`, to get the amount that the
 paddle should move this frame, and assign this value to the player's
-:attr:`sge.StellarClass.yvelocity`, an attribute which indicates the
-number of pixels an object will move vertically each frame.  We will
-define :const:`PADDLE_SPEED` as ``4``.
+:attr:`sge.Object.yvelocity`, an attribute which indicates the number of
+pixels an object will move vertically each frame.  We will define
+:const:`PADDLE_SPEED` as ``4``.
 
 This isn't quite enough, though.  With just this, the paddle can be
 moved off-screen!  To prevent this from happening, we will check the
@@ -217,7 +216,7 @@ with :class:`Player`, we are going to define a custom
 In this case, it's much simpler: :attr:`x` and :attr:`y` are going to
 start at the center of the screen, and :attr:`sprite` is going to be
 ``"ball"``.  these are attributes inherited from
-:class:`sge.StellarClass`, so we indicate them in a call to
+:class:`sge.Object`, so we indicate them in a call to
 ``super().__init__``.  :meth:`Ball.__init__` ends up as::
 
     def __init__(self):
@@ -233,8 +232,8 @@ set the speed so that it moves either straight to the left or straight
 to the right.  If a direction isn't specified, it needs to choose a
 direction at random.
 
-For the first task, we can use :attr:`sge.StellarClass.xstart` and
-:attr:`sge.StellarClass.ystart`.  These attributes indicate the original
+For the first task, we can use :attr:`sge.Object.xstart` and
+:attr:`sge.Object.ystart`.  These attributes indicate the original
 position of an object when it was first created, which in the case of
 :class:`Ball` objects is in the center of the screen.
 
@@ -242,8 +241,8 @@ For the second task, we have an argument called ``direction``.  If it is
 :const:`None`, it randomly becomes either ``1`` or ``-1``.  The
 value is then multiplied by a constant called :const:`BALL_START_SPEED`,
 which we will set to ``2``, and this becomes the ball's
-:attr:`sge.StellarClass.xvelocity` value.  The ball's
-:attr:`sge.StellarClass.yvelocity` value is then set to ``0``.
+:attr:`sge.Object.xvelocity` value.  The ball's
+:attr:`sge.Object.yvelocity` value is then set to ``0``.
 
 The result looks like this::
 
@@ -265,9 +264,9 @@ The result looks like this::
 
 When the ball is created, we want to serve it immediately.  we will put
 this in the create event, which is defined by
-:meth:`sge.StellarClass.event_create`.  The create event happens
-whenever the object is created in the room.  This is the create event
-of :class:`Ball`::
+:meth:`sge.Object.event_create`.  The create event happens whenever the
+object is created in the room.  This is the create event of
+:class:`Ball`::
 
     def event_create(self):
         self.serve()
@@ -308,8 +307,8 @@ Our step event for :class:`Ball` ends up looking something like this::
 
 Now, we need to allow the players to repel the ball.  We will do this
 with a collision event.  Collision events, controlled by
-:meth:`sge.StellarClass.event_collision`, occur when two objects touch
-each other.
+:meth:`sge.Object.event_collision`, occur when two objects touch each
+other.
 
 We first need to verify what type of object we're colliding with.  The
 most straightforward way is to use :func:`isinstance` to check whether
@@ -524,7 +523,7 @@ You should now have a script that looks something like this::
             self.event_close()
 
 
-    class Player(sge.StellarClass):
+    class Player(sge.Object):
 
         def __init__(self, player):
             if player == 1:
@@ -555,7 +554,7 @@ You should now have a script that looks something like this::
                 self.bbox_bottom = sge.game.current_room.height
 
 
-    class Ball(sge.StellarClass):
+    class Ball(sge.Object):
 
         def __init__(self):
             x = sge.game.width / 2
