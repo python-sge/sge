@@ -105,7 +105,7 @@ class Object(object):
 
        Depending on the game, a useful strategy to boost performance can
        be to exclude an object from collision detection while it is
-       outside the view.  If you do this, you likely also to set
+       outside the view.  If you do this, you likely want to set
        :attr:`active` to :const:`False` as well so that the object
        doesn't move in undesireable ways (e.g. through walls).
 
