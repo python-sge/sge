@@ -306,8 +306,6 @@ Dependencies
 [insert other info here]
 """
 
-__version__ = "0.11.0.1"
-
 import sys
 import os
 

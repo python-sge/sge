@@ -12,9 +12,7 @@ Introduction
 ------------------------------------------------------------------------
 
 This document describes how version numbering works for the SGE as of
-May 10, 2013.  The purpose of this version numbering system is to
-prevent confusion, in particular making it obvious what version of any
-given implementation is compatible with a given SGE game.
+May 10, 2013.
 
 This version numbering system is also used for xSGE.  However, the
 version number of an xSGE release is not connected to the version number
@@ -26,95 +24,42 @@ Components
 ------------------------------------------------------------------------
 
 The version number is divided into three main components: the major
-version number, the minor version number, and the bugfix number.  In
-addition, files within the SGE's source repository may have an
-additional component, the revision number. The components are separated
-by a dot (".") in the form: "major.minor.bugfix.revision".  If the
-revision number is 0, it should not be specified, and the resulting form
-should be: "major.minor.bugfix".
+version number, the minor version number, and the bugfix number.  The
+components are separated by a dot (".") in the form:
+"major.minor.bugfix".
 
 Note: The dot which separates the version number components is not a
 decimal point.  Any of the components can increase to any amount.  For
-example, the version after "1.3.0.9" is "1.3.0.10", not "1.3.1.0", in
-most circumstances.
+example, the version after "1.3.9" might be "1.3.10".
 
-The components have the following meanings:
+The major and minor version numbers indicate features and compatibility.
+All variations of the major and minor version numbers are expected to
+originate in the SGE specification, and SGE implementations are expected
+to inheret the major and minor version numbers of the specificaiton
+version they follow.  There are two kinds of releases: unstable
+releases, and stable releases.
 
-* Major version number: This number indicates significant changes to the
-  specification which are in most cases likely to break backward
-  compatibility.  When this component is increased, all other components
-  are reset to 0.
+Unstable releases have the major version number 0 and only increment the
+minor version and bugfix numbers. Unstable releases have no guarantee of
+compatibility with each other; for example, version 0.13 might be
+incompatible with version 0.12.
 
-* Minor version number: This number indicates less significant changes
-  to the specification, such as feature additions.  In general, minor
-  versions are expected to not break backward compatibility; if a game
-  works with version 1.2.0 of the SGE, it should also work with version
-  1.3.0 in most cases.  When this component is increased, the bugfix
-  number and revision number are reset to 0.
+Stable releases increment both the major and minor version numbers.
+Changes in the major version number indicate compatibility breakage; for
+example, a program designed for version 1.0 of the SGE can be expected
+to not work with version 2.0 of the SGE.  Changes in the minor version
+number indicate feature additions and other changes which are not likely
+to affect compatibility, meaning that a program designed for version 1.0
+of the SGE can be expected to also work with version 1.3.
 
-* Bugfix version number: This number indicates only fixes to bugs in SGE
-  implementations and minor changes to the documentation in the
-  specification.  Bugfix releases must never break compatibility except
-  in the case where a game's behavior was dependent on a bug in a SGE
-  implementation.  When this component is increased, the revision number
-  is reset to 0.
+The bugfix version number indicates only bug fixes.  In the case of the
+SGE specification, this includes typo corrections to docstrings and
+comments as well as fixes to code supplied by the template.  For SGE
+implementations, this includes any bug introduced by the implementation.
+Unlike the major and minor version numbers, this number is not the same
+between implementations and the specifications they follow.
 
-* Revision number: This number is only to be used in the source
-  repository, specified only in the SGE implementation's __version__
-  variable.  This is changed any time the respective SGE implementation
-  changes in any way.  A revision number of 0 indicates a version which
-  is a stable release, while any other number indicates that the version
-  is unstable.  Changes to this version number are allowed to include
-  experimentation, untested code, and compatibility breakage.  If this
-  component is 0, it should not be specified (see above).
-
-The special major version number "0" indicates a version of the
-specification which is not finalized.  While the major version number is
-0, the minor version number doubles as the major version number; for
-example, version 0.3.0 of the specification is permitted to break
-backward compatibility with version 0.2.0.  All other version number
-components remain the same.
-
-Releases of the SGE specification with a major version number of other
-than "0" must be identical to a previous release which has "0" as its
-major version number.
-
-Implementations are expected to have the same major and minor version
-numbers as the SGE specification they follow.  The bugfix version number
-should be adjusted to reflect improvements specific to the
-implementation, such as bugfixes.
-
-
-Incrementing Version Numbers
-------------------------------------------------------------------------
-
-Within the source repository, any time a change is made to a SGE
-implementation (the specification is also treated as an implementation
-for this purpose), the revision number for that implementation (found in
-the implementation's __version__ variable in __init__.py) MUST be
-incremented.  This includes even minor changes, such as adding,
-changing, or removing comments or docstrings, in addition to major
-changes.  If a change is reverted, bringing the code back to the way it
-was in a previous revision, the revision number is still increased; if
-version 1.0.0.25 was undesired and the state is reverted to the way it
-was in 1.0.0.24, the version number will be set to 1.0.0.26.
-
-All other version number components must remain static during
-development.  They are only to be increased, following the respective
-rules of each component, when the code is tested and ready for a
-release; at this time, the version number components are adjusted
-according to their respective rules and how the source has changed since
-the last time this occurred.  The release will be made once all files
-which are to be included in the release are ready.
-
-If a blocking bug is detected in an implementation after its version
-number has been set for a new release, but before it is released, the
-blocking bug may be fixed with the revision number incremented.  In that
-case, the implementation's __version__ variable will retain the revision
-number, but the release will still be specified without a revision
-number.  This situation should be avoided by testing all software
-thoroughly before incrementing the version number for a release.  If a
-bug is detected during this time, but it is not blocking, the release
-will be made anyway.  A blocking bug is defined as one which either has
-a potential to cause users harm (e.g. by deleting or corrupting files)
-or unintentionally breaks compatibility with previous releases.
+Within the source repository, the SGE specification and all SGE
+implementations should be given the special version number
+"bleeding-edge", unless they are identical to a release, in which case
+they should have the same version number as that release.
