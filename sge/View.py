@@ -41,11 +41,11 @@ class View(object):
 
     .. attribute:: xport
 
-       The horizontal position of the view port on the screen.
+       The horizontal position of the view port on the window.
 
     .. attribute:: yport
 
-       The vertical position of the view port on the screen.
+       The vertical position of the view port on the window.
 
     .. attribute:: width
 
@@ -59,21 +59,31 @@ class View(object):
        being outside the room it is in, :attr:`y` will be adjusted so
        that the view is completely inside the room.
 
+    .. attribute:: wport
+
+       The width of the view port.  Set to :const:`None` to make it the
+       same as :attr:`width`.  If this value differs from :attr:`width`,
+       the image will be horizontally scaled so that it fills the port.
+
+    .. attribute:: hport
+
+       The height of the view port.  Set to :const:`None` to make it the
+       same as :attr:`height`.  If this value differs from
+       :attr:`height`, the image will be vertically scaled so that it
+       fills the port.
+
     """
 
-    def __init__(self, x, y, xport=0, yport=0, width=None, height=None):
+    def __init__(self, x, y, xport=0, yport=0, width=None, height=None,
+                 wport=None, hport=None):
         """Constructor method.
 
         Arguments:
 
         - ``width`` -- The width of the view.  If set to :const:`None`,
-          it will be set such that the view port takes up all of the
-          space that it can horizontally (i.e.
-          ``sge.game.width - xport``).
+          it will become ``sge.game.width - xport``.
         - ``height`` -- The height of the view.  If set to
-          :const:`None`, it will be set such that the view port takes up
-          all of the space that it can vertically (i.e.
-          ``sge.game.height - yport``).
+          :const:`None`, it will become ``sge.game.height - yport``.
 
         All other arugments set the respective initial attributes of the
         view.  See the documentation for :class:`sge.View` for more
