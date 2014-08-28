@@ -33,7 +33,7 @@ Which mode the mouse is in depends on the values of
    If the mouse is in absolute mode and within a view port, these
    attributes indicate the
    position of the mouse in the room, based on its proximity to the view
-   it is in.  Otherwise, they will return :const:`None`.
+   it is in.  Otherwise, they will return ``-1``.
 
    This attribute can be assigned to safely, but doing so will not have
    any effect.
