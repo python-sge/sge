@@ -89,8 +89,9 @@ class Game(object):
     .. attribute:: grab_input
 
        Whether or not all input should be forcibly grabbed by the game.
-       If this is :const:`True` and the mouse cursor is invisible, the
-       mouse will enter relative mode.
+       If this is :const:`True` and :attr:`sge.mouse.visible` is
+       :const:`False`, the mouse will be in relative mode.  Otherwise,
+       the mouse will be in absolute mode.
 
     .. attribute:: window_text
 
@@ -177,12 +178,10 @@ class Game(object):
 
        A :class:`sge.Object` object which represents the mouse
        cursor.  Its :attr:`sge.Object.id` attribute is ``"mouse"``
-       and its bounding box is a one-pixel square.  Speed variables are
-       determined by averaging all mouse movement during the last
-       quarter of a second.  Assigning to its
-       :attr:`sge.Object.visible` attribute controls whether or
-       not the mouse cursor is shown.  Setting its sprite sets the mouse
-       cursor to that sprite.
+       and its bounding box is a one-pixel square.
+
+       Some of this object's attributes control properties of the mouse.
+       See the documentation for :mod:`sge.mouse` for more information.
 
     """
 

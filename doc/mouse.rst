@@ -12,3 +12,7 @@ sge.mouse Functions
 .. autofunction:: sge.mouse.get_x
 
 .. autofunction:: sge.mouse.get_y
+
+.. autofunction:: sge.mouse.set_x
+
+.. autofunction:: sge.mouse.set_y

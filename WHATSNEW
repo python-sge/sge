@@ -13,6 +13,12 @@ bleeding-edge
 Specification additions:
 + sge.View.wport
 + sge.View.hport
++ sge.mouse.set_x
++ sge.mouse.set_y
+
+Specification misc changes:
+* sge.game.mouse is not used for as many jobs as it was previously.
+* Mouse positions are None if the mouse is in relative mode.
 
 
 0.11

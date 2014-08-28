@@ -19,21 +19,36 @@
 """
 This module provides functions related to the mouse input.
 
-Many other mouse functionalities are provided through attributes of
-:attr:`sge.game.mouse`:
+Some other mouse functionalities are provided through attributes of
+:attr:`sge.game.mouse`.  These attributes are listed below.
 
-- :attr:`sge.game.mouse.x` and :attr:`sge.game.mouse.y` indicate the
-  position of the mouse relative to the room.  Set these attributes to
-  change the position of the mouse.
-- :attr:`sge.game.mouse.xvelocity`, :attr:`sge.game.mouse.yvelocity`,
-  :attr:`sge.game.mouse.speed`, and
-  :attr:`sge.game.mouse.move_direction` indicate the average movement of
-  the mouse during the last 250 milliseconds.  They cannot be manually
-  set.
-- :attr:`sge.game.mouse.sprite` controls what the mouse cursor looks
-  like.  Set to :const:`None` for the default mouse cursor.
-- :attr:`sge.game.mouse.visible` controls whether or not the mouse
-  cursor is visible.
+The mouse can be in either absolute or relative mode.  In absolute mode,
+the mouse has a position.  In relative mode, the mouse only moves.
+Which mode the mouse is in depends on the values of
+:attr:`sge.game.grab_input` and :attr:`sge.game.mouse.visible`.
+
+.. attribute:: sge.game.mouse.x
+               sge.game.mouse.y
+
+   If the mouse is in absolute mode and within a view port, these
+   attributes indicate the
+   position of the mouse in the room, based on its proximity to the view
+   it is in.  Otherwise, they will return :const:`None`.
+
+   This attribute can be assigned to safely, but doing so will not have
+   any effect.
+
+.. attribute:: sge.game.mouse.sprite
+
+   Determines what sprite will be used to represent the mouse cursor.
+   Set to :const:`None` for the default mouse cursor.
+
+.. attribute:: sge.game.mouse.visible
+
+   Controls whether or not the mouse cursor is visible.  If this is
+   :const:`False` and :attr:`sge.game.grab_input` is :const:`True`, the
+   mouse will be in relative mode.  Otherwise, the mouse will be in
+   absolute mode.
 """
 
 import sge
@@ -55,8 +70,9 @@ def get_pressed(button):
 def get_x():
     """Return the horizontal location of the mouse cursor.
 
-    This function differs from :attr:`sge.game.mouse.x` in that the
-    location returned is relative to the window, not the room.
+    The location returned is relative to the window, excluding any
+    scaling, pillarboxes, and letterboxes.  If the mouse is in
+    relative mode, this function returns :const:`None`.
 
     """
     # TODO
@@ -65,8 +81,31 @@ def get_x():
 def get_y():
     """Return the vertical location of the mouse cursor.
 
-    This function differs from :attr:`sge.game.mouse.y` in that the
-    location returned is relative to the window, not the room.
+    The location returned is relative to the window, excluding any
+    scaling, pillarboxes, and letterboxes.  If the mouse is in
+    relative mode, this function returns :const:`None`.
+
+    """
+    # TODO
+
+
+def set_x(value):
+    """Set the horizontal location of the mouse cursor.
+
+    The location returned is relative to the window, excluding any
+    scaling, pillarboxes, and letterboxes.  If the mouse is in
+    relative mode, this function has no effect.
+
+    """
+    # TODO
+
+
+def set_y(value):
+    """Set the vertical location of the mouse cursor.
+
+    The location returned is relative to the window, excluding any
+    scaling, pillarboxes, and letterboxes.  If the mouse is in
+    relative mode, this function has no effect.
 
     """
     # TODO
