@@ -58,13 +58,18 @@ class Circle(sge.Object):
 
         # Set view
         my_view = sge.game.current_room.views[0]
+        zoom_add = (sge.keyboard.get_pressed("hyphen") -
+                    sge.keyboard.get_pressed("equals"))
+        my_view.width += zoom_add
+        my_view.width = max(48, min(my_view.width, sge.game.current_room.width))
+        my_view.height = my_view.width
         my_view.x = self.x - (my_view.width // 2)
         my_view.y = self.y - (my_view.height // 2)
 
 
 def main():
     # Create Game object
-    Game(width=320, height=240, scale_smooth=True,
+    Game(width=240, height=240, scale_smooth=True,
          collision_events_enabled=False)
 
     # Load sprites
@@ -80,7 +85,7 @@ def main():
     objects =  [circle]
 
     # Create views
-    views = [sge.View(0, 0, 0, 0, 320, 240)]
+    views = [sge.View(0, 0, 0, 0, 240, 240, 240, 240)]
 
     # Create rooms
     sge.Room(objects, 640, 480, views=views, background=background)
