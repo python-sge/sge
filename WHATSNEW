@@ -18,7 +18,7 @@ Specification additions:
 
 Specification misc changes:
 * sge.game.mouse is not used for as many jobs as it was previously.
-* Mouse positions are None if the mouse is in relative mode.
+* Mouse position attributes are -1 if the mouse is in relative mode.
 
 
 0.11
