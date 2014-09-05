@@ -1,4 +1,4 @@
-include WHATSNEW WHATSNEW.* MANIFEST.in
+include WHATSNEW WHATSNEW.* VERSION_NUMBERING MANIFEST.in
 recursive-include doc *
 recursive-include examples *
 global-include COPYING COPYING.* LICENSE LICENSES
