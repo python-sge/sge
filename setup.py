@@ -32,7 +32,7 @@ focus on the game itself.  This makes more rapid game development
 possible, and it also makes the SGE easy to learn.
 """.strip()
 
-setup(name="sge",
+setup(name="sge-spec",
       version="0.12a0",
       description="A 2-D game engine for Python",
       long_description=long_description,
