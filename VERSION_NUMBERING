@@ -1,0 +1,42 @@
+Copyright (C) 2014 Julian Marchant <onpon4@riseup.net>
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty.  This file is offered
+as-is, without any warranty.
+
+========================================================================
+
+This is an explanation of the SGE's version numbering, in particular how
+it indicates compatibility between various SGE releases.
+
+The SGE specification has only two components to its version number: the
+major version, and the minor version.
+
+Two versions of the SGE specification with different major version
+numbers can be expected to be incompatible.  For example, there is no
+guarantee that a program designed for version 1.0 of the SGE will work
+with version 2.0 of the SGE.
+
+A version of the SGE specification with the same major version number,
+but a higher minor version number, than another version of the SGE
+specification can be assumed to be backward-compatible.  This number is
+used to indicate things like unintrusive feature additions.  For
+example, it can be expected that a program designed for version 1.0 of
+the SGE will work with version 1.1 of the SGE.
+
+As a special exception, two versions of the SGE with the major version
+number 0, but a different minor version number, can be expected to be
+incompatible (i.e. the minor version number is treated as the major
+version number).  The major version number 0 is to be used until the
+specification has been properly tested (by developing a full,
+non-trivial game with it), so that it can be sure that version 1.0 of
+the specification is reasonably complete.
+
+SGE implementations, like the Pygame SGE, have either two or three
+components to their version numbers.  The first two components should
+match the specification version they are implementing; for example,
+version 0.12 of the Pygame SGE implements version 0.12 of the SGE
+specification.
+
+The optional third component should be used to indicate any
+implementation-specific changes, such as bugfixes.
