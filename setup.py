@@ -50,4 +50,5 @@ setup(name="sge-spec",
       package_dir={"sge": "sge"},
       package_data={"sge": ["COPYING"]},
       requires=[],
+      provides=["sge"],
      )
