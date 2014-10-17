@@ -260,6 +260,12 @@ class Object(object):
 
        The unique identifier for this object.  (Read-only)
 
+    .. attribute:: alive
+
+       Whether or not the object is alive.  An object is considered to
+       be "alive" from the time it is first added to a room to the time
+       it is destroyed.  (Read-only)
+
     .. attribute:: mask
 
        The current mask used for non-rectangular collision detection.
@@ -369,7 +375,12 @@ class Object(object):
         # TODO
 
     def destroy(self):
-        """Destroy the object."""
+        """Destroy the object.
+
+        This removes the object from all rooms in the game, deletes its
+        reference in :attr:`sge.game.objects`, and marks it as "dead".
+
+        """
         # TODO
 
     def event_create(self):

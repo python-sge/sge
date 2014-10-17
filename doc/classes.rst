@@ -381,6 +381,8 @@ sge.Room Methods
 
 .. automethod:: sge.Room.add
 
+.. automethod:: sge.Room.remove
+
 .. automethod:: sge.Room.start
 
 .. automethod:: sge.Room.resume

@@ -102,11 +102,24 @@ class Room(object):
         # TODO
 
     def add(self, obj):
-        """Add a Object object to the room.
+        """Add an object to the room.
 
         Arguments:
 
         - ``obj`` -- The :class:`sge.Object` object to add.
+
+        It is safe to add objects that have been destroyed to the room.
+        This will make them alive again.
+
+        """
+        # TODO
+
+    def remove(self, obj):
+        """Remove an object from the room.
+
+        Arguments:
+
+        - ``obj`` -- The :class:`sge.Object` object to remove.
 
         """
         # TODO

@@ -10,6 +10,10 @@ without any warranty.
 0.13
 ------------------------------------------------------------------------
 
+Specification additions:
++ sge.Object.alive
++ sge.Room.remove
+
 Specification misc changes:
 * Clarified that the create and destroy events occur right after
   creation and destruction of the object.
