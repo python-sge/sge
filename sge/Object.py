@@ -375,14 +375,18 @@ class Object(object):
     def event_create(self):
         """Create event.
 
-        Called when the object is created.  It is always called after
-        any room start events occurring at the same time.
+        Called right after the object is created.  It is always called
+        after any room start events occurring at the same time.
 
         """
         pass
 
     def event_destroy(self):
-        """Destroy event."""
+        """Destroy event.
+
+        Called right after the object is destroyed.
+
+        """
         pass
 
     def event_begin_step(self, time_passed, delta_mult):

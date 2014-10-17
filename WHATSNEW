@@ -7,6 +7,14 @@ without any warranty.
 
 ========================================================================
 
+0.12.1
+------------------------------------------------------------------------
+
+Specification misc changes:
+* Clarified that the create and destroy events occur right after
+  creation and destruction of the object.
+
+
 0.12
 ------------------------------------------------------------------------
 
