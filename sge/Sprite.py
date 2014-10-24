@@ -310,6 +310,30 @@ class Sprite(object):
         """
         # TODO
 
+    def draw_polygon(self, points, fill=None, outline=None,
+                     outline_thickness=1, anti_alias=False, frame=None):
+        """Draw a polygon on the sprite.
+
+        Arguments:
+
+        - ``points`` -- A list of points relative to the sprite to
+          position each of the polygon's angles.  Each point should be a
+          tuple in the form ``(x, y)``, where x is the horizontal
+          location and y is the vertical location.
+        - ``fill`` -- A :class:`sge.Color` object representing the color
+          of the fill of the polygon.
+        - ``outline`` -- A :class:`sge.Color` object representing the
+          color of the outline of the polygon.
+        - ``outline_thickness`` -- The thickness of the outline of the
+          polygon.
+        - ``anti_alias`` -- Whether or not anti-aliasing should be used.
+        - ``frame`` -- The frame of the sprite to draw on, where ``0``
+          is the first frame; set to :const:`None` to draw on all
+          frames.
+
+        """
+        # TODO
+
     def draw_sprite(self, sprite, image, x, y, frame=None, blend_mode=None):
         """Draw another sprite on the sprite.
 

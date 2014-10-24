@@ -425,6 +425,23 @@ class Game(object):
         """
         # TODO
 
+    def project_polygon(self, points, fill=None, outline=None,
+                        outline_thickness=1, anti_alias=False):
+        """Draw a polygon on the sprite.
+
+        Arguments:
+
+        - ``points`` -- A list of points relative to the room to
+          position each of the polygon's angles.  Each point should be a
+          tuple in the form ``(x, y)``, where x is the horizontal
+          location and y is the vertical location.
+
+        See the documentation for :meth:`sge.Sprite.draw_polygon` for
+        more information.
+
+        """
+        # TODO
+
     def project_sprite(self, sprite, image, x, y, blend_mode=None):
         """Project a sprite onto the game window.
 
