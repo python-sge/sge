@@ -42,6 +42,8 @@ sge.Game Methods
 
 .. automethod:: sge.Game.project_circle
 
+.. automethod:: sge.Game.project_polygon
+
 .. automethod:: sge.Game.project_sprite
 
 .. automethod:: sge.Game.project_text
@@ -152,6 +154,8 @@ sge.Sprite Methods
 .. automethod:: sge.Sprite.draw_ellipse
 
 .. automethod:: sge.Sprite.draw_circle
+
+.. automethod:: sge.Sprite.draw_polygon
 
 .. automethod:: sge.Sprite.draw_sprite
 
@@ -402,6 +406,8 @@ sge.Room Methods
 .. automethod:: sge.Room.project_ellipse
 
 .. automethod:: sge.Room.project_circle
+
+.. automethod:: sge.Room.project_polygon
 
 .. automethod:: sge.Room.project_sprite
 
