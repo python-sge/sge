@@ -1,6 +1,6 @@
-*********************************
-Stellar Game Engine documentation
-*********************************
+*****************************
+SGE Game Engine documentation
+*****************************
 
 Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>
 
