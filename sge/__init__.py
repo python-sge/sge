@@ -270,22 +270,26 @@ Global Variables and Constants
 
    A list of directories where images can be found.  Default is
    ``./data/images``, ``./data/sprites``, or ``./data/backgrounds``,
-   where ``.`` is the program directory.
+   where ``.`` is the program directory.  Directories within the
+   listed directories are not included.
 
 .. data:: sge.font_directories
 
    A list of directories where font files can be found.  Default is
-   ``./data/fonts``, where ``.`` is the program directory.
+   ``./data/fonts``, where ``.`` is the program directory.  Directories
+   within the listed directories are not included.
 
 .. data:: sge.sound_directories
 
    A list of directories where sounds can be found.  Default is
-   ``./data/sounds``, where ``.`` is the program directory.
+   ``./data/sounds``, where ``.`` is the program directory.  Directories
+   within the listed directories are not included.
 
 .. data:: sge.music_directories
 
    A list of directories where music files can be found.  Default is
-   ``./data/music``, where ``.`` is the program directory.
+   ``./data/music``, where ``.`` is the program directory.  Directories
+   within the listed directories are not included.
 
 Information specific to [insert implementation name here]
 =========================================================
@@ -306,7 +310,7 @@ Dependencies
 [insert other info here]
 """
 
-__version__ = "0.14a0"
+__version__ = "0.14a1"
 
 import sys
 import os
