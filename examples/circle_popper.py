@@ -23,6 +23,8 @@ import random
 
 class glob(object):
 
+    circle_sprite = None
+    circle_pop_sprite = None
     font = None
     pop_sound = None
     music = None
@@ -58,7 +60,7 @@ class Game(sge.Game):
 class Circle(sge.Object):
 
     def __init__(self, x, y):
-        super(Circle, self).__init__(x, y, 5, sprite='circle',
+        super(Circle, self).__init__(x, y, 5, sprite=glob.circle_sprite,
                                      collision_precise=True)
 
     def event_create(self):
@@ -90,7 +92,7 @@ class Circle(sge.Object):
 class CirclePop(sge.Object):
 
     def __init__(self, x, y):
-        super(CirclePop, self).__init__(x, y, 5, sprite='circle_pop',
+        super(CirclePop, self).__init__(x, y, 5, sprite=glob.circle_pop_sprite,
                                         tangible=False)
 
     def event_animation_end(self):
@@ -173,10 +175,10 @@ def main():
     game = Game(delta=True, collision_events_enabled=False)
 
     # Load sprites
-    circle_sprite = sge.Sprite('circle', width=64, height=64, origin_x=32,
-                               origin_y=32)
-    circle_pop_sprite = sge.Sprite('circle_pop', width=64, height=64,
-                                   origin_x=32, origin_y=32, fps=60)
+    glob.circle_sprite = sge.Sprite('circle', width=64, height=64, origin_x=32,
+                                    origin_y=32)
+    glob.circle_pop_sprite = sge.Sprite('circle_pop', width=64, height=64,
+                                        origin_x=32, origin_y=32, fps=60)
     fence_sprite = sge.Sprite('fence')
 
     # Load backgrounds

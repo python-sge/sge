@@ -256,10 +256,6 @@ class Object(object):
        A :class:`sge.Color` object representing the color to blend with
        the sprite.  Set to :const:`None` for no color blending.
 
-    .. attribute:: id
-
-       The unique identifier for this object.  (Read-only)
-
     .. attribute:: alive
 
        Whether or not the object is alive.  An object is considered to
@@ -302,9 +298,9 @@ class Object(object):
 
     """
 
-    def __init__(self, x, y, z=0, ID=None, sprite=None, visible=True,
-                 active=True, checks_collisions=True, tangible=True,
-                 bbox_x=None, bbox_y=None, bbox_width=None, bbox_height=None,
+    def __init__(self, x, y, z=0, sprite=None, visible=True, active=True,
+                 checks_collisions=True, tangible=True, bbox_x=None,
+                 bbox_y=None, bbox_width=None, bbox_height=None,
                  regulate_origin=False, collision_ellipse=False,
                  collision_precise=False, xvelocity=0, yvelocity=0,
                  image_index=0, image_origin_x=None, image_origin_y=None,
@@ -312,16 +308,9 @@ class Object(object):
                  image_rotation=0, image_alpha=255, image_blend=None):
         """Constructor method.
 
-        Arguments:
-
-        - ``ID`` -- The value to set :attr:`id` to.  If set to
-          :const:`None`, ``fname`` minus the extension will be used,
-          modified by the SGE if it is already the unique identifier of
-          another music object.
-
-        All other arugments set the respective initial attributes of the
-        object.  See the documentation for :class:`sge.Object` for
-        more information.
+        Arugments set the respective initial attributes of the object.
+        See the documentation for :class:`sge.Object` for more
+        information.
 
         """
         # TODO
@@ -335,9 +324,7 @@ class Object(object):
           the following:
 
           - A :class:`sge.Object` object.
-          - The unique identifier of a :class:`sge.Object` object.
-          - A list of :class:`sge.Object` objects and/or unique
-            identifiers of :class:`sge.Object` objects.
+          - A list of :class:`sge.Object` objects.
           - A class derived from :class:`sge.Object`.
           - :const:`None`: Check for collisions with all objects.
 

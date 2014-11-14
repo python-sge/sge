@@ -63,30 +63,15 @@ class BackgroundLayer(object):
 
        Whether or not the layer should be repeated (tiled) vertically.
 
-    .. attribute:: id
-
-       The unique identifier of the layer.  (Read-only)
-
     """
 
-    def __init__(self, sprite, x, y, z, ID=None, xscroll_rate=1,
-                 yscroll_rate=1, xrepeat=True, yrepeat=True):
+    def __init__(self, sprite, x, y, z, xscroll_rate=1, yscroll_rate=1,
+                 xrepeat=True, yrepeat=True):
         """Constructor method.
 
-        Arguments:
-
-        - ``ID`` -- The value to set :attr:`id` to.  If set to
-          :const:`None`, :attr:`sprite.id` will be used, modified by the
-          SGE if it is already the unique identifier of another
-          background layer.
-
-        All other arguments set the respective initial attributes of the
-        layer.  See the documentation for :class:`sge.BackgroundLayer`
-        for more information.
+        Arguments set the respective initial attributes of the layer.
+        See the documentation for :class:`sge.BackgroundLayer` for more
+        information.
 
         """
-        # TODO
-
-    def destroy(self):
-        """Destroy the background layer."""
         # TODO

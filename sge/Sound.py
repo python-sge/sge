@@ -126,10 +126,6 @@ class Sound(object):
         """Resume playback of the sound if paused."""
         # TODO
 
-    def destroy(self):
-        """Destroy the sound."""
-        # TODO
-
     @staticmethod
     def stop_all():
         """Stop playback of all sounds."""

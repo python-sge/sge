@@ -58,14 +58,10 @@ class Font(object):
        The name of the font as specified when it was created.
        (Read-only)
 
-    .. attribute:: id
-
-       The unique identifier of the font.  (Read-only)
-
     """
 
-    def __init__(self, name=None, ID=None, size=12, underline=False,
-                 bold=False, italic=False):
+    def __init__(self, name=None, size=12, underline=False, bold=False,
+                 italic=False):
         """Constructor method.
 
         Arguments:
@@ -83,10 +79,6 @@ class Font(object):
 
           If none of the above methods return a valid font, the SGE will
           choose the font.
-
-        - ``ID`` -- The value to set :attr:`id` to.  If set to
-          :const:`None`, ``name`` will be used, modified by the SGE if
-          it is already the unique identifier of another font.
 
         All other arguments set the respective initial attributes of the
         font.  See the documentation for :class:`sge.Font` for more
@@ -127,12 +119,8 @@ class Font(object):
         """
         # TODO
 
-    def destroy(self):
-        """Destroy the font."""
-        # TODO
-
     @classmethod
-    def from_sprite(cls, sprite, chars, ID=None, hsep=0, vsep=0, size=12,
+    def from_sprite(cls, sprite, chars, hsep=0, vsep=0, size=12,
                     underline=False, bold=False, italic=False):
         """Return a font derived from a sprite.
 
@@ -147,10 +135,6 @@ class Font(object):
           listed here will be rendered as its differently-cased
           counterpart if possible (e.g. "A" as "a") or as a blank space
           otherwise.
-        - ``ID`` -- The value to set :attr:`id` to.  If set to
-          :const:`None`, the name of the sprite will be used, modified
-          by the SGE if it is already the unique identifier of another
-          font.
         - ``hsep`` -- The amount of horizontal space to place between
           characters when text is rendered.
         - ``vsep`` -- The amount of vertical space to place between

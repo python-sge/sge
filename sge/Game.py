@@ -128,47 +128,9 @@ class Game(object):
        A list containing all classes which have been registered with
        :meth:`sge.Game.register_class`.  (Read-only)
 
-    .. attribute:: sprites
-
-       A dictionary containing all loaded sprites, indexed by the
-       sprites' :attr:`sge.Sprite.id` attributes.  (Read-only)
-
-    .. attribute:: background_layers
-
-       A dictionary containing all loaded background layers, indexed by
-       the layers' :attr:`sge.BackgroundLayer.id` attributes.
-       (Read-only)
-
-    .. attribute:: backgrounds
-
-       A dictionary containing all loaded backgrounds, indexed by the
-       backgrounds' :attr:`sge.Background.id` attributes.  (Read-only)
-
-    .. attribute:: fonts
-
-       A dictionary containing all loaded fonts, indexed by the fonts'
-       :attr:`sge.Font.id` attributes.  (Read-only)
-
-    .. attribute:: sounds
-
-       A dictionary containing all loaded sounds, indexed by the sounds'
-       :attr:`sge.Sound.id` attributes.  (Read-only)
-
-    .. attribute:: music
-
-       A dictionary containing all loaded music, indexed by the music
-       objects' :attr:`sge.Music.id` attributes.  (Read-only)
-
-    .. attribute:: objects
-
-       A dictionary containing all :class:`sge.Object` objects in
-       the game, indexed by the objects' :attr:`sge.Object.id`
-       attributes.  (Read-only)
-
     .. attribute:: rooms
 
-       A list containing all rooms in order of their creation.
-       (Read-only)
+       A list containing all rooms in the game.  (Read-only)
 
     .. attribute:: current_room
 
@@ -177,8 +139,7 @@ class Game(object):
     .. attribute:: mouse
 
        A :class:`sge.Object` object which represents the mouse
-       cursor.  Its :attr:`sge.Object.id` attribute is ``"mouse"``
-       and its bounding box is a one-pixel square.
+       cursor.  Its bounding box is a one-pixel square.
 
        Some of this object's attributes control properties of the mouse.
        See the documentation for :mod:`sge.mouse` for more information.

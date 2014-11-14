@@ -27,6 +27,8 @@ class glob(object):
 
     js_selection_sprite = None
     js_state_sprite = None
+    name_font = None
+    state_font = None
 
 
 class Game(sge.Game):
@@ -71,7 +73,7 @@ class Room(sge.Room):
         x = glob.js_selection_sprite.width / 2
         y = glob.js_selection_sprite.height / 2
         glob.js_selection_sprite.draw_text(
-            "name", title_text, x, y, color=sge.Color("white"),
+            glob.name_font, title_text, x, y, color=sge.Color("white"),
             halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
 
         self.print_state()
@@ -98,10 +100,10 @@ class Room(sge.Room):
         right_text = '\n'.join([lines[i] for i in range(1, len(lines), 2)])
 
         glob.js_state_sprite.draw_clear()
-        glob.js_state_sprite.draw_text("state", left_text, 0, 0,
+        glob.js_state_sprite.draw_text(glob.state_font, left_text, 0, 0,
                                        color=sge.Color("white"))
         x = glob.js_state_sprite.width / 2
-        glob.js_state_sprite.draw_text("state", right_text, x, 0,
+        glob.js_state_sprite.draw_text(glob.state_font, right_text, x, 0,
                                        color=sge.Color("white"))
 
     def event_room_start(self):
@@ -178,14 +180,14 @@ def main():
     Game(640, 480)
 
     # Load sprites
-    glob.js_selection_sprite = sge.Sprite(ID="selection", width=sge.game.width,
+    glob.js_selection_sprite = sge.Sprite(width=sge.game.width,
                                           height=TITLE_HEIGHT)
-    glob.js_state_sprite = sge.Sprite(ID="state", width=sge.game.width,
+    glob.js_state_sprite = sge.Sprite(width=sge.game.width,
                                       height=(sge.game.height - TITLE_HEIGHT))
 
     # Load fonts
-    sge.Font('Liberation Sans', ID="name", size=18)
-    sge.Font('Liberation Sans', ID="state", size=14)
+    glob.name_font = sge.Font('Liberation Sans', size=18)
+    glob.state_font = sge.Font('Liberation Sans', size=14)
 
     # Create objects
     selection_object = sge.Object(0, 0, sprite=glob.js_selection_sprite,

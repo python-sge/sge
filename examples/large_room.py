@@ -36,9 +36,10 @@ class Game(sge.Game):
 
 class Circle(sge.Object):
     def __init__(self, x, y):
-        super(Circle, self).__init__(x, y, 1, sprite='circle',
-              collision_precise=True, image_blend=sge.Color("red"),
-              image_alpha=128)
+        super(Circle, self).__init__(x, y, 1, sprite=circle_sprite,
+                                     collision_precise=True,
+                                     image_blend=sge.Color("red"),
+                                     image_alpha=128)
 
     def event_step(self, time_passed, delta_mult):
         left_key = 'left'
@@ -72,12 +73,16 @@ class Circle(sge.Object):
 
 
 def main():
+    global circle_sprite
+    
+
     # Create Game object
     Game(width=240, height=240, scale_smooth=True,
          collision_events_enabled=False)
 
     # Load sprites
-    sge.Sprite('circle', width=32, height=32, origin_x=16, origin_y=16)
+    circle_sprite = sge.Sprite('circle', width=32, height=32, origin_x=16,
+                               origin_y=16)
     fence = sge.Sprite('fence')
 
     # Load backgrounds

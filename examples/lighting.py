@@ -22,7 +22,9 @@ import sge
 
 class glob(object):
 
+    circle_sprite = None
     darkness_sprite = None
+    light_sprite = None
 
 
 class Game(sge.Game):
@@ -36,7 +38,7 @@ class Game(sge.Game):
 
 class Circle(sge.Object):
     def __init__(self, x, y, player=0):
-        super(Circle, self).__init__(x, y, 5, sprite='circle',
+        super(Circle, self).__init__(x, y, 5, sprite=glob.circle_sprite,
               collision_precise=True)
         self.player = player
 
@@ -44,8 +46,8 @@ class Circle(sge.Object):
         self.image_alpha = 200
         self.image_blend = sge.Color('blue')
 
-        self.darkness = sge.Object(0, 0, 10000, sprite='darkness',
-                                         tangible=False)
+        self.darkness = sge.Object(0, 0, 10000, sprite=glob.darkness_sprite,
+                                   tangible=False)
         sge.game.current_room.add(self.darkness)
 
     def event_step(self, time_passed, delta_mult):
@@ -73,7 +75,7 @@ class Circle(sge.Object):
         glob.darkness_sprite.draw_rectangle(0, 0, sge.game.width,
                                             sge.game.height,
                                             fill=sge.Color("black"))
-        glob.darkness_sprite.draw_sprite('light', 0, self.x, self.y,
+        glob.darkness_sprite.draw_sprite(glob.light_sprite, 0, self.x, self.y,
                                          blend_mode=sge.BLEND_RGBA_SUBTRACT)
 
 def main():
@@ -81,13 +83,13 @@ def main():
     game = Game(collision_events_enabled=False)
 
     # Load sprites
-    circle_sprite = sge.Sprite('circle', width=32, height=32, origin_x=16,
-                               origin_y=16)
+    glob.circle_sprite = sge.Sprite('circle', width=32, height=32, origin_x=16,
+                                    origin_y=16)
     fence_sprite = sge.Sprite('fence')
-    light_sprite = sge.Sprite('light', width=128, height=128, origin_x=64,
-                              origin_y=64)
+    glob.light_sprite = sge.Sprite('light', width=128, height=128, origin_x=64,
+                                   origin_y=64)
 
-    glob.darkness_sprite = sge.Sprite(ID='darkness', width=sge.game.width,
+    glob.darkness_sprite = sge.Sprite(width=sge.game.width,
                                       height=sge.game.height)
     glob.darkness_sprite.draw_rectangle(0, 0, sge.game.width, sge.game.height,
                                         fill=sge.Color("black"))

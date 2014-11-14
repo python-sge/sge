@@ -24,37 +24,24 @@ class Background(object):
     contain the information about what images to use and where) as well
     as the color to use where no image is shown.
 
-    .. attribute:: color
-
-       A :class:`sge.Color` object representing the color used in parts
-       of the background where no layer is shown.
-
-    .. attribute:: id
-
-       The unique identifier for this background.  (Read-only)
-
     .. attribute:: layers
 
        A list containing all :class:`sge.BackgroundLayer` objects used
        in this background.  (Read-only)
 
+    .. attribute:: color
+
+       A :class:`sge.Color` object representing the color used in parts
+       of the background where no layer is shown.
+
     """
 
-    def __init__(self, layers, color, ID=None):
+    def __init__(self, layers, color):
         """Constructor method.
 
-        Arguments:
-
-        - ``ID`` -- The value to set :attr:`id` to.  If set to
-          :const:`None`, the SGE chooses the value.
-
-        All other arguments set the respective initial attributes of the
+        Arguments set the respective initial attributes of the
         background.  See the documentation for :class:`sge.Background`
         for more information.
 
         """
-        # TODO
-
-    def destroy(self):
-        """Destroy the background."""
         # TODO

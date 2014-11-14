@@ -13,6 +13,28 @@ without any warranty.
 Specification additions:
 + pygame.Sprite.draw_polygon
 
+Specification removals:
+- sge.Game.sprites
+- sge.Game.background_layers
+- sge.Game.backgrounds
+- sge.Game.fonts
+- sge.Game.sounds
+- sge.Game.music
+- sge.Game.objects
+- sge.Sprite.id
+- sge.BackgroundLayer.id
+- sge.Background.id
+- sge.Font.id
+- sge.Sound.id
+- sge.Music.id
+- sge.Object.id
+- sge.Sprite.destroy
+- sge.BackgroundLayer.destroy
+- sge.Background.destroy
+- sge.Font.destroy
+- sge.Sound.destroy
+- sge.Music.destroy
+
 
 0.13
 ------------------------------------------------------------------------

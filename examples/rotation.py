@@ -32,7 +32,7 @@ class Game(sge.Game):
 
 class Circle(sge.Object):
     def __init__(self, x, y):
-        super(Circle, self).__init__(x, y, 5, sprite='rotator',
+        super(Circle, self).__init__(x, y, 5, sprite=rotator_sprite,
                                      regulate_origin=True,
                                      collision_precise=True)
 
@@ -59,11 +59,13 @@ class Circle(sge.Object):
 
 
 def main():
+    global rotator_sprite
+
     # Create Game object
     game = Game(delta=True, collision_events_enabled=False)
 
     # Load sprites
-    sge.Sprite('rotator')
+    rotator_sprite = sge.Sprite('rotator')
     fence_sprite = sge.Sprite('fence')
 
     # Load backgrounds

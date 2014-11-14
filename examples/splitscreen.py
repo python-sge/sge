@@ -23,7 +23,7 @@ import random
 
 class Game(sge.Game):
     def event_game_start(self):
-        self.mouse.sprite = "circle"
+        self.mouse.sprite = circle_sprite
 
     def event_step(self, time_passed, delta_mult):
         self.project_line(self.width / 2, 0, self.width / 2, self.height,
@@ -49,7 +49,7 @@ class Game(sge.Game):
 
 class Circle(sge.Object):
     def __init__(self, x, y, player=0):
-        super(Circle, self).__init__(x, y, 1, sprite='circle',
+        super(Circle, self).__init__(x, y, 1, sprite=circle_sprite,
                                      collision_precise=True)
         self.player = player
         self.normal_image_blend = [sge.Color('red'), sge.Color('blue'),
@@ -95,13 +95,16 @@ class Circle(sge.Object):
 
 
 def main():
+    global circle_sprite
+
     # Create Game object
     Game(width=640, height=480, collision_events_enabled=False)
 
     sge.game.register_class(Circle)
 
     # Load sprites
-    sge.Sprite('circle', width=32, height=32, origin_x=16, origin_y=16)
+    circle_sprite = sge.Sprite('circle', width=32, height=32, origin_x=16,
+                               origin_y=16)
     fence = sge.Sprite('fence')
 
     # Load backgrounds

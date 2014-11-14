@@ -50,10 +50,6 @@ class Music(object):
        The file name of the music given when it was created.
        (Read-only)
 
-    .. attribute:: id
-
-       The unique identifier of the music.  (Read-only)
-
     .. attribute:: length
 
        The length of the music in milliseconds.  (Read-only)
@@ -69,7 +65,7 @@ class Music(object):
 
     """
 
-    def __init__(self, fname, ID=None, volume=100):
+    def __init__(self, fname, volume=100):
         """Constructor method.
 
         Arguments:
@@ -79,10 +75,6 @@ class Music(object):
           :const:`None`, this object will not actually play any music.
           If this is neither a valid sound file nor :const:`None`,
           :exc:`IOError` is raised.
-        - ``ID`` -- The value to set :attr:`id` to.  If set to
-          :const:`None`, ``fname`` minus the extension will be used,
-          modified by the SGE if it is already the unique idenfifier of
-          another music object.
 
         All other arguments set the respective initial attributes of the
         music.  See the documentation for :class:`sge.Music` for more
@@ -115,10 +107,6 @@ class Music(object):
         information.
 
         """
-        # TODO
-
-    def destroy(self):
-        """Destroy the music."""
         # TODO
 
     @staticmethod
