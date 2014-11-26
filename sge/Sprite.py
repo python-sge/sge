@@ -109,20 +109,15 @@ class Sprite(object):
 
        The name of the sprite given when it was created.  (Read-only)
 
-    .. attribute:: id
-
-       The unique identifier of the sprite.  (Read-only)
-
     .. attribute:: frames
 
        The number of animation frames in the sprite.  (Read-only)
 
     """
 
-    def __init__(self, name=None, ID=None, width=None, height=None,
-                 transparent=True, origin_x=0, origin_y=0, fps=60,
-                 bbox_x=None, bbox_y=None, bbox_width=None,
-                 bbox_height=None):
+    def __init__(self, name=None, width=None, height=None, transparent=True,
+                 origin_x=0, origin_y=0, fps=60, bbox_x=None, bbox_y=None,
+                 bbox_width=None, bbox_height=None):
         """Constructor method.
 
         Arguments:
@@ -153,10 +148,6 @@ class Sprite(object):
 
           If none of the above rules can be used, :exc:`IOError` is
           raised.
-
-        - ``ID`` -- The value to assign :attr:`id` to.  If set to
-          :const:`None`, ``name`` will be used, modified by the SGE if
-          it is already the unique identifier of another sprite.
 
         All other arguments set the respective initial attributes of the
         sprite.  See the documentation for :class:`Sprite` for more
@@ -518,8 +509,8 @@ class Sprite(object):
         # TODO
 
     @classmethod
-    def from_tileset(cls, name, ID=None, x=0, y=0, columns=1, rows=1, xsep=0,
-                     ysep=0, width=1, height=1, origin_x=0, origin_y=0,
+    def from_tileset(cls, name, x=0, y=0, columns=1, rows=1, xsep=0, ysep=0,
+                     width=1, height=1, origin_x=0, origin_y=0,
                      transparent=True, fps=0, bbox_x=None, bbox_y=None,
                      bbox_width=None, bbox_height=None):
         """Return a sprite based on the tiles in a tileset.

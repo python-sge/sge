@@ -60,7 +60,7 @@ class Sound(object):
 
     """
 
-    def __init__(self, fname, ID=None, volume=100, max_play=1):
+    def __init__(self, fname, volume=100, max_play=1):
         """Constructor method.
 
         Arguments:
@@ -70,10 +70,6 @@ class Sound(object):
           :const:`None`, this object will not actually play any sound.
           If this is neither a valid sound file nor :const:`None`,
           :exc:`IOError` is raised.
-        - ``ID`` -- The value to set :attr:`id` to.  If set to
-          :const:`None`, ``fname`` minus the extension will be used,
-          modified by the SGE if it is already the unique identifier of
-          another sound object.
 
         All other arguments set the respective initial attributes of the
         sound.  See the documentation for :class:`sge.Sound` for more
