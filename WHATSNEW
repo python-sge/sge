@@ -34,6 +34,13 @@ Specification removals:
 - sge.Font.destroy
 - sge.Sound.destroy
 - sge.Music.destroy
+- sge.Object.alive
+
+Specification misc changes:
+* sge.Object.destroy now simply removes the object from the current room.
+* Definition of sge.Object.event_create made more explicit.
+* sge.Object.event_destroy is now only called when the object is removed
+  from the current room.
 
 
 0.13

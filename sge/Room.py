@@ -108,9 +108,6 @@ class Room(object):
 
         - ``obj`` -- The :class:`sge.Object` object to add.
 
-        It is safe to add objects that have been destroyed to the room.
-        This will make them alive again.
-
         """
         # TODO
 

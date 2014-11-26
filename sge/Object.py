@@ -256,12 +256,6 @@ class Object(object):
        A :class:`sge.Color` object representing the color to blend with
        the sprite.  Set to :const:`None` for no color blending.
 
-    .. attribute:: alive
-
-       Whether or not the object is alive.  An object is considered to
-       be "alive" from the time it is first added to a room to the time
-       it is destroyed.  (Read-only)
-
     .. attribute:: mask
 
        The current mask used for non-rectangular collision detection.
@@ -362,28 +356,32 @@ class Object(object):
         # TODO
 
     def destroy(self):
-        """Destroy the object.
-
-        This removes the object from all rooms in the game, deletes its
-        reference in :attr:`sge.game.objects`, and marks it as "dead".
-
         """
-        # TODO
+        Remove the object from the current room.  ``foo.destroy()`` is
+        identical to ``sge.game.current_room.remove(foo)``.
+        """
+        sge.game.current_room.remove(self)
 
     def event_create(self):
-        """Create event.
+        """
+        Called in the following cases:
 
-        Called right after the object is created.  It is always called
-        after any room start events occurring at the same time.
-
+        - Right after the object is added to the current room.
+        - Right after a room starts for the first time after the object
+          was added to it, if and only if the object was added to the
+          room while it was not the current room.  In this case, this
+          event is called after the respective room start event.
         """
         pass
 
     def event_destroy(self):
-        """Destroy event.
+        """
+        Called right after the object is removed from the current room.
 
-        Called right after the object is destroyed.
+        .. note::
 
+           If the object is removed from a room while it is not the
+           current room, this method will not be called.
         """
         pass
 
@@ -871,7 +869,8 @@ class Object(object):
 
     @classmethod
     def create(cls, *args, **kwargs):
-        """Create an object of this class in the current room it.
+        """
+        Create an object of this class and add it to the current room.
 
         ``args`` and ``kwargs`` are passed to the constructor method of
         ``cls`` as arguments.  Calling
@@ -879,7 +878,6 @@ class Object(object):
 
             obj = cls(*args, **kwargs)
             sge.game.current_room.add(obj)
-
         """
         obj = cls(*args, **kwargs)
         sge.game.current_room.add(obj)
