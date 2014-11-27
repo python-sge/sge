@@ -34,6 +34,10 @@ class Background(object):
        A :class:`sge.Color` object representing the color used in parts
        of the background where no layer is shown.
 
+    .. attribute:: rd
+
+       Reserved dictionary for internal use by the SGE.  (Read-only)
+
     """
 
     def __init__(self, layers, color):

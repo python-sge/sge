@@ -113,6 +113,10 @@ class Sprite(object):
 
        The number of animation frames in the sprite.  (Read-only)
 
+    .. attribute:: rd
+
+       Reserved dictionary for internal use by the SGE.  (Read-only)
+
     """
 
     def __init__(self, name=None, width=None, height=None, transparent=True,

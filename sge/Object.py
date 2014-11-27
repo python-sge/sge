@@ -290,6 +290,10 @@ class Object(object):
 
        The vertical location of the mask in the room.  (Read-only)
 
+    .. attribute:: rd
+
+       Reserved dictionary for internal use by the SGE.  (Read-only)
+
     """
 
     def __init__(self, x, y, z=0, sprite=None, visible=True, active=True,

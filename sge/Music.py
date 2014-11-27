@@ -63,6 +63,10 @@ class Music(object):
        The current position (time) playback of the music is at in
        milliseconds.  (Read-only)
 
+    .. attribute:: rd
+
+       Reserved dictionary for internal use by the SGE.  (Read-only)
+
     """
 
     def __init__(self, fname, volume=100):

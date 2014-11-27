@@ -35,24 +35,6 @@ contribution to a free society.
 SGE Concepts
 ============
 
-Naming Conventions
-------------------
-
-There are many cases where you will want to derive a class from a SGE
-class.  Since there can be multiple implementations of the SGE, it can
-be easy when doing so to overwrite a special variable used by some
-implementations internally, which can be disastrous.  To avoid such
-occasions, implementations are expected to never introduce any attribute
-names which are not explicitly mentioned in the documentation for a
-class unless the new attribute names are preceded by an underscore, as
-in the hypothetical attribute name ``_foo``.  This naming convention
-will protect users of the SGE from unexpected errors provided that they
-do not use such names themselves.
-
-A suggested convention for users of the SGE to use for "private"
-attributes in place of the usual leading underscore  is to precede these
-attributes with ``v_`` or ``p_``.
-
 Events
 ------
 

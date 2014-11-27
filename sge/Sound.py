@@ -58,6 +58,10 @@ class Sound(object):
 
        The number of instances of this sound playing.  (Read-only)
 
+    .. attribute:: rd
+
+       Reserved dictionary for internal use by the SGE.  (Read-only)
+
     """
 
     def __init__(self, fname, volume=100, max_play=1):

@@ -72,6 +72,10 @@ class View(object):
        :attr:`height`, the image will be vertically scaled so that it
        fills the port.
 
+    .. attribute:: rd
+
+       Reserved dictionary for internal use by the SGE.  (Read-only)
+
     """
 
     def __init__(self, x, y, xport=0, yport=0, width=None, height=None,

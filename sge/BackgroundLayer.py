@@ -63,6 +63,10 @@ class BackgroundLayer(object):
 
        Whether or not the layer should be repeated (tiled) vertically.
 
+    .. attribute:: rd
+
+       Reserved dictionary for internal use by the SGE.  (Read-only)
+
     """
 
     def __init__(self, sprite, x, y, z, xscroll_rate=1, yscroll_rate=1,

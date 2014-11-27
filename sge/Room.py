@@ -74,6 +74,10 @@ class Room(object):
        The index of this room in the game, where ``0`` is the first
        room.  (Read-only)
 
+    .. attribute:: rd
+
+       Reserved dictionary for internal use by the SGE.  (Read-only)
+
     """
 
     def __init__(self, objects=(), width=None, height=None, views=None,

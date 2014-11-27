@@ -58,6 +58,10 @@ class Font(object):
        The name of the font as specified when it was created.
        (Read-only)
 
+    .. attribute:: rd
+
+       Reserved dictionary for internal use by the SGE.  (Read-only)
+
     """
 
     def __init__(self, name=None, size=12, underline=False, bold=False,
