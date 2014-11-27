@@ -400,7 +400,7 @@ from sge.Music import Music
 from sge.Object import Object, Mouse
 from sge.Room import Room
 from sge.View import View
-from sge import collision, input, joystick, keyboard, mouse
+from sge import collision, input, joystick, keyboard, mouse, r
 
 
 __all__ = [
