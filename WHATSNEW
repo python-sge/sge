@@ -21,6 +21,7 @@ Specification additions:
 + sge.Sound.rd
 + sge.Sprite.rd
 + sge.View.rd
++ sge.Game.start_room
 
 Specification removals:
 - sge.Game.sprites
@@ -44,6 +45,9 @@ Specification removals:
 - sge.Sound.destroy
 - sge.Music.destroy
 - sge.Object.alive
+- sge.Game.rooms
+- sge.Room.room_number
+- sge.Room.end
 
 Specification misc changes:
 * sge.Object.destroy now simply removes the object from the current room.
@@ -51,6 +55,9 @@ Specification misc changes:
 * sge.Object.event_destroy is now only called when the object is removed
   from the current room.
 * "Naming Conventions" from "SGE Concepts" removed; it is now obsolete.
+* The starting room is no longer implicitly the first one which was
+  created.  Instead, you must assign the starting room explicitly to
+  sge.game.start_room.
 
 
 0.13

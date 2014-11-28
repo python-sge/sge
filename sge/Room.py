@@ -21,13 +21,10 @@ import sge
 
 class Room(object):
 
-    """Class for rooms.
-
+    """
     This class stores the settings and objects found in a room.  Rooms
     are used to create separate parts of the game, such as levels and
     menu screens.
-
-    Every game must have at least one room.
 
     .. attribute:: width
 
@@ -69,22 +66,14 @@ class Room(object):
        those objects which are instances of the class indicated by the
        respective key.  (Read-only)
 
-    .. attribute:: room_number
-
-       The index of this room in the game, where ``0`` is the first
-       room.  (Read-only)
-
     .. attribute:: rd
 
        Reserved dictionary for internal use by the SGE.  (Read-only)
-
     """
 
     def __init__(self, objects=(), width=None, height=None, views=None,
-                 background=None, background_x=0, background_y=0,
-                 room_number=None):
-        """Constructor method.
-
+                 background=None, background_x=0, background_y=0):
+        """
         Arguments:
 
         - ``views`` -- A list containing all :class:`sge.View` objects
@@ -94,19 +83,16 @@ class Room(object):
         - ``background`` -- The :class:`sge.Background` object used.  If
           set to :const:`None`, a new background will be created with no
           layers and the color set to black.
-        - ``room_number`` -- The position in :data:`sge.game.rooms` to
-          insert this room into.  If set to :const:`None`, it will be
-          appended to the end of the list.
 
         All other arguments set the respective initial attributes of the
         room.  See the documentation for :class:`sge.Room` for more
         information.
-
         """
         # TODO
 
     def add(self, obj):
-        """Add an object to the room.
+        """
+        Add an object to the room.
 
         Arguments:
 
@@ -116,29 +102,26 @@ class Room(object):
         # TODO
 
     def remove(self, obj):
-        """Remove an object from the room.
+        """
+        Remove an object from the room.
 
         Arguments:
 
         - ``obj`` -- The :class:`sge.Object` object to remove.
-
         """
         # TODO
 
     def start(self):
-        """Start the room.
-
-        If the room has been changed, reset it to its original state.
-
+        """
+        Start the room, resetting to its original state if it has been
+        started previously.
         """
         # TODO
 
     def resume(self):
-        """Continue the room from where it left off.
-
-        If the room is unchanged (e.g. has not been started yet), this
-        method behaves in the same way that :meth:`sge.Room.start` does.
-
+        """
+        Start the room without resetting to its original state if it has
+        been started previously.
         """
         # TODO
 
@@ -161,25 +144,6 @@ class Room(object):
 
         See the documentation for :meth:`sge.Game.get_alarm` for more
         information.
-
-        """
-        # TODO
-
-    def end(self, next_room=None, resume=True):
-        """End the current room.
-
-        Arguments:
-
-        - ``next_room`` -- The room number of the room to go to next.
-          If set to :const:`None`, the room after this one is chosen.
-        - ``resume`` -- Whether or not to resume the next room instead
-          of restarting it.
-
-        If the room chosen as the next room does not exist, the game is
-        ended.
-
-        This triggers this room's :meth:`sge.Room.event_room_end` and
-        resets the state of this room.
 
         """
         # TODO
@@ -336,53 +300,29 @@ class Room(object):
         """
         # TODO
 
-    def move(self, room_number):
-        """Move the room.
-
-        Arguments:
-
-        - ``room_number`` -- The new position in :data:`sge.game.rooms` to
-          insert this room into.
-
-        """
-        # TODO
-
-    def destroy(self):
-        """Destroy the room.
-
-        .. note::
-
-           If the room is being used, it will not be completely
-           destroyed until this use stops.
-
-        """
-        # TODO
-
     def event_room_start(self):
-        """Room start event.
-
-        Called when the room starts.  It is always called after any game
-        start events and before any object create events occurring at
-        the same time.
-
+        """
+        Called when the room starts for the first time, and when it is
+        restarted with :meth:`sge.Room.start`.  It is always called
+        after any :meth:`sge.Game.event_game_start` and before any
+        :class:`sge.Object.event_create` occurring at the same time.
         """
         pass
 
     def event_room_resume(self):
-        """Room resume event.
-
-        Called when the room resumes without being reset to its original
-        state (i.e. via :meth:`sge.Room.resume`).
-
+        """
+        Called when the room is resumed with :meth:`sge.Room.resume`
+        after it has already previously been started.  It is always
+        called before any :meth:`sge.Object.event_create` occurring at
+        the same time.
         """
         pass
 
     def event_room_end(self):
-        """Room end event.
-
-        Called when the room ends.  It is always called before any game
-        end events occurring at the same time.
-
+        """
+        Called when another room is started or the game ends while this
+        room is the current room.  It is always called before any
+        :meth:`sge.Game.event_game_end` occurring at the same time.
         """
         pass
 

@@ -31,8 +31,10 @@ class Game(object):
     When an object of this class is created, it is automatically
     assigned to :data:`sge.game`.
 
-    Note: Do not create multiple :class:`sge.Game` objects.  Doing so
-    may cause errors.
+    .. note::
+
+       Do not create multiple :class:`sge.Game` objects.  Doing so is
+       unsupported and may cause errors.
 
     .. attribute:: width
 
@@ -123,14 +125,16 @@ class Game(object):
           :meth:`list.pop`.  Otherwise, the event will be handled more
           than once, which is usually not what you want.
 
+    .. attribute:: start_room
+
+       The room which becomes active when the game first starts and when
+       it restarts.  Must be set exactly once, before the game first
+       starts, and should not be set again afterwards.
+
     .. attribute:: registered_classes
 
        A list containing all classes which have been registered with
        :meth:`sge.Game.register_class`.  (Read-only)
-
-    .. attribute:: rooms
-
-       A list containing all rooms in the game.  (Read-only)
 
     .. attribute:: current_room
 
