@@ -198,7 +198,7 @@ def main():
     objects = (selection_object, state_object)
 
     # Create rooms
-    Room(objects)
+    sge.game.start_room = Room(objects)
 
     sge.game.start()
 

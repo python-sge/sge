@@ -205,7 +205,7 @@ def main():
     views = [sge.View(0, 0)]
 
     # Create rooms
-    room1 = Room(objects, views=views, background=background)
+    game.start_room = Room(objects, views=views, background=background)
 
     game.start()
 

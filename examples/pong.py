@@ -261,7 +261,7 @@ player2 = Player(2)
 ball = Ball()
 
 # Create rooms
-sge.Room([player1, player2, ball], background=background)
+sge.game.start_room = sge.Room([player1, player2, ball], background=background)
 
 
 if __name__ == '__main__':

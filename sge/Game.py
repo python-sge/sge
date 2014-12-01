@@ -131,11 +131,6 @@ class Game(object):
        it restarts.  Must be set exactly once, before the game first
        starts, and should not be set again afterwards.
 
-    .. attribute:: registered_classes
-
-       A list containing all classes which have been registered with
-       :meth:`sge.Game.register_class`.  (Read-only)
-
     .. attribute:: current_room
 
        The room which is currently active.  (Read-only)
@@ -253,16 +248,6 @@ class Game(object):
         called automatically in each frame of the SGE's main loop.  You
         only need to use this function directly if you take control away
         from the SGE's main loop, e.g. to create your own loop.
-
-        """
-        # TODO
-
-    def register_class(self, cls):
-        """Register a class with the SGE.
-
-        Registered classes can be used to index objects by, e.g. for
-        :attr:`sge.Room.objects_by_class`.  A list of all currently
-        registered classes can be found in :attr:`registered_classes`.
 
         """
         # TODO

@@ -74,7 +74,6 @@ class Circle(sge.Object):
 
 def main():
     global circle_sprite
-    
 
     # Create Game object
     Game(width=240, height=240, scale_smooth=True,
@@ -97,7 +96,8 @@ def main():
     views = [sge.View(0, 0, 0, 0, 240, 240, 240, 240)]
 
     # Create rooms
-    sge.Room(objects, 640, 640, views=views, background=background)
+    sge.game.start_room = sge.Room(objects, 640, 640, views=views,
+                                   background=background)
 
     sge.game.start()
 

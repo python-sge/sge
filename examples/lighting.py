@@ -106,7 +106,8 @@ def main():
     views = (sge.View(0, 0),)
 
     # Create rooms
-    room1 = sge.Room(tuple(objects), views=views, background=background)
+    sge.game.start_room = sge.Room(tuple(objects), views=views,
+                                   background=background)
 
     game.start()
 
