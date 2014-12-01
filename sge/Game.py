@@ -138,7 +138,8 @@ class Game(object):
     .. attribute:: mouse
 
        A :class:`sge.Object` object which represents the mouse
-       cursor.  Its bounding box is a one-pixel square.
+       cursor.  Its bounding box is a one-pixel square.  It is
+       automatically added to every room's default list of objects.
 
        Some of this object's attributes control properties of the mouse.
        See the documentation for :mod:`sge.mouse` for more information.
