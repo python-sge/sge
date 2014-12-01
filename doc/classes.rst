@@ -26,8 +26,6 @@ sge.Game Methods
 
 .. automethod:: sge.Game.refresh
 
-.. automethod:: sge.Game.register_class
-
 .. automethod:: sge.Game.set_alarm
 
 .. automethod:: sge.Game.get_alarm
@@ -171,8 +169,6 @@ sge.Sprite Methods
 
 .. automethod:: sge.Sprite.save
 
-.. automethod:: sge.Sprite.destroy
-
 .. automethod:: sge.Sprite.from_tileset
 
 .. automethod:: sge.Sprite.from_screenshot
@@ -186,8 +182,6 @@ sge.BackgroundLayer Methods
 ---------------------------
 
 .. automethod:: sge.BackgroundLayer.__init__
-
-.. automethod:: sge.BackgroundLayer.destroy
 
 sge.Background
 ==============
@@ -217,8 +211,6 @@ sge.Sound Methods
 
 .. automethod:: sge.Sound.unpause
 
-.. automethod:: sge.Sound.destroy
-
 .. automethod:: sge.Sound.stop_all
 
 sge.Music
@@ -234,8 +226,6 @@ sge.Music Methods
 .. automethod:: sge.Music.play
 
 .. automethod:: sge.Music.queue
-
-.. automethod:: sge.Music.destroy
 
 .. automethod:: sge.Music.stop
 
@@ -395,8 +385,6 @@ sge.Room Methods
 
 .. automethod:: sge.Room.get_alarm
 
-.. automethod:: sge.Room.end
-
 .. automethod:: sge.Room.project_dot
 
 .. automethod:: sge.Room.project_line
@@ -412,10 +400,6 @@ sge.Room Methods
 .. automethod:: sge.Room.project_sprite
 
 .. automethod:: sge.Room.project_text
-
-.. automethod:: sge.Room.move
-
-.. automethod:: sge.Room.destroy
 
 sge.Room Event Methods
 ----------------------

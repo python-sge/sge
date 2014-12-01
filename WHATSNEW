@@ -50,6 +50,7 @@ Specification removals:
 - sge.Room.end
 - sge.Game.registered_classes
 - sge.Game.register_class
+- sge.Room.objects_by_class
 
 Specification misc changes:
 * sge.Object.destroy now simply removes the object from the current room.

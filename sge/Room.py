@@ -57,15 +57,6 @@ class Room(object):
        A list containing all :class:`sge.Object` objects in the
        room.  (Read-only)
 
-    .. attribute:: objects_by_class
-
-       A dictionary of lists containing all :class:`sge.Object`
-       objects in the room, separated by class.  The dictionary keys are
-       classes that have been registered with
-       :meth:`sge.Game.register_class`, and the lists contain only
-       those objects which are instances of the class indicated by the
-       respective key.  (Read-only)
-
     .. attribute:: rd
 
        Reserved dictionary for internal use by the SGE.  (Read-only)
