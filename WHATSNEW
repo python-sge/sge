@@ -22,6 +22,9 @@ Specification additions:
 + sge.Sprite.rd
 + sge.View.rd
 + sge.Game.start_room
++ sge.Game.alarm
++ sge.Room.alarm
++ sge.Object.alarm
 
 Specification removals:
 - sge.Game.sprites
@@ -51,6 +54,12 @@ Specification removals:
 - sge.Game.registered_classes
 - sge.Game.register_class
 - sge.Room.objects_by_class
+- sge.Game.set_alarm
+- sge.Game.get_alarm
+- sge.Room.set_alarm
+- sge.Room.get_alarm
+- sge.Object.set_alarm
+- sge.Object.get_alarm
 
 Specification misc changes:
 * sge.Object.destroy now simply removes the object from the current room.

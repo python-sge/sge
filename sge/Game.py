@@ -113,6 +113,14 @@ class Game(object):
        to :const:`False` will improve performence if collision events
        are not needed.
 
+    .. attribute:: alarms
+
+       A dictionary containing the global alarms of the game.  Each
+       value decreases by 1 each frame (adjusted for delta timing if it
+       is enabled).  When a value is at or below 0,
+       :meth:`sge.Game.event_alarm` is executed with ``alarm_id`` set to
+       the respective key, and the item is deleted from this dictionary.
+
     .. attribute:: input_events
 
        A list containing all input event objects which have not yet been
@@ -143,6 +151,8 @@ class Game(object):
 
        Some of this object's attributes control properties of the mouse.
        See the documentation for :mod:`sge.mouse` for more information.
+
+       (Read-only)
 
     """
 
@@ -249,36 +259,6 @@ class Game(object):
         called automatically in each frame of the SGE's main loop.  You
         only need to use this function directly if you take control away
         from the SGE's main loop, e.g. to create your own loop.
-
-        """
-        # TODO
-
-    def set_alarm(self, alarm_id, value):
-        """Set an alarm.
-
-        Arguments:
-
-        - ``alarm_id`` -- The unique identifier of the alarm to set.
-          Any value can be used as a unique identifier for an alarm.
-        - ``value`` -- The value to set the alarm to.  Set to
-          :const:`None` to disable the alarm.
-
-        After this method is called, ``value`` will reduce by 1 each
-        frame (adjusted for delta timing if it is enabled) until it
-        reaches 0, at which point :meth:`sge.Game.event_alarm` will be
-        executed with ``alarm_id``.
-
-        """
-        # TODO
-
-    def get_alarm(self, alarm_id):
-        """Return the value of an alarm.
-
-        Arguments:
-
-        - ``alarm_id`` -- The unique identifier of the alarm to check.
-
-        If the alarm has not been set, :const:`None` will be returned.
 
         """
         # TODO
@@ -467,10 +447,8 @@ class Game(object):
 
         Called when the value of an alarm reaches 0.
 
-        Arguments:
-
-        - ``alarm_id`` -- The unique identifier of the alarm which was
-          set off.
+        See the documentation for :meth:`sge.Game.alarms` for more
+        information.
 
         """
         pass

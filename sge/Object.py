@@ -256,6 +256,15 @@ class Object(object):
        A :class:`sge.Color` object representing the color to blend with
        the sprite.  Set to :const:`None` for no color blending.
 
+    .. attribute:: alarms
+
+       A dictionary containing the alarms of the object.  Each value
+       decreases by 1 each frame (adjusted for delta timing if it is
+       enabled).  When a value is at or below 0,
+       :meth:`sge.Object.event_alarm` is executed with ``alarm_id`` set
+       to the respective key, and the item is deleted from this
+       dictionary.
+
     .. attribute:: mask
 
        The current mask used for non-rectangular collision detection.
@@ -332,29 +341,6 @@ class Object(object):
         - ``y`` -- The vertical position to pretend this object is at
           for the purpose of the collision detection.  If set to
           :const:`None`, :attr:`y` will be used.
-
-        """
-        # TODO
-
-    def set_alarm(self, alarm_id, value):
-        """Set an alarm.
-
-        After this method is called, ``value`` will reduce by 1 each
-        frame (adjusted for delta timing if it is enabled) until it
-        reaches 0, at which point :meth:`sge.Object.event_alarm`
-        will be executed with ``alarm_id``.
-
-        See the documentation for :meth:`sge.Game.set_alarm` for more
-        information.
-
-        """
-        # TODO
-
-    def get_alarm(self, alarm_id):
-        """Return the value of an alarm.
-
-        See the documentation for :meth:`sge.Game.get_alarm` for more
-        information.
 
         """
         # TODO
@@ -437,7 +423,7 @@ class Object(object):
     def event_alarm(self, alarm_id):
         """Alarm event.
 
-        See the documentation for :meth:`sge.Game.event_alarm` for more
+        See the documentation for :meth:`sge.Object.alarms` for more
         information.
 
         """
