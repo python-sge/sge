@@ -54,7 +54,7 @@ Which mode the mouse is in depends on the values of
 import sge
 
 
-__all__ = ["get_pressed", "get_x", "get_y"]
+__all__ = ["get_pressed", "get_x", "get_y", "set_x", "set_y"]
 
 
 def get_pressed(button):

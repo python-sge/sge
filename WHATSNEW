@@ -70,6 +70,7 @@ Specification misc changes:
 * The starting room is no longer implicitly the first one which was
   created.  Instead, you must assign the starting room explicitly to
   sge.game.start_room.
+* sge.Room.start and sge.Room.resume now support transitions.
 
 
 0.13

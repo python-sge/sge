@@ -110,17 +110,45 @@ class Room(object):
         """
         # TODO
 
-    def start(self):
+    def start(self, transition=None, transition_time=1500):
         """
         Start the room, resetting to its original state if it has been
         started previously.
+
+        Arguments:
+
+        - ``transition`` -- The type of transition to use.  Should be
+          one of the following:
+
+          - :const:`None` (no transition)
+          - ``"fade"`` (fade to black)
+          - ``"dissolve"``
+          - ``"pixelate"``
+          - ``"wipe_left"`` (wipe right to left)
+          - ``"wipe_right"`` (wipe left to right)
+          - ``"wipe_up"`` (wipe bottom to top)
+          - ``"wipe_down"`` (wipe top to bottom)
+          - ``"wipe_upleft"`` (wipe bottom-right to top-left)
+          - ``"wipe_upright"`` (wipe bottom-left to top-right)
+          - ``"wipe_downleft"`` (wipe top-right to bottom-left)
+          - ``"wipe_downright"`` (wipe top-left to bottom-right)
+          - ``"wipe_matrix"``
+          - ``"iris_in"``
+          - ``"iris_out"``
+
+          If an unsupported value is given, default to :const:`None`.
+
+        - ``transition_time`` -- The time the transition should take in
+          milliseconds.  Has no effect if ``transition`` is
+          :const:`None`.
         """
         # TODO
 
-    def resume(self):
+    def resume(self, transition=None, transition_time=1500):
         """
         Start the room without resetting to its original state if it has
-        been started previously.
+        been started previously.  See the documentation for
+        :meth:`sge.Room.start` for more information.
         """
         # TODO
 
