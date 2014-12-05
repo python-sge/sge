@@ -20,6 +20,8 @@ from __future__ import unicode_literals
 import sge
 import random
 
+circles = []
+
 
 class Game(sge.Game):
     def event_game_start(self):
@@ -99,8 +101,6 @@ def main():
 
     # Create Game object
     Game(width=640, height=480, collision_events_enabled=False)
-
-    sge.game.register_class(Circle)
 
     # Load sprites
     circle_sprite = sge.Sprite('circle', width=32, height=32, origin_x=16,
