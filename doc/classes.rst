@@ -26,10 +26,6 @@ sge.Game Methods
 
 .. automethod:: sge.Game.refresh
 
-.. automethod:: sge.Game.set_alarm
-
-.. automethod:: sge.Game.get_alarm
-
 .. automethod:: sge.Game.project_dot
 
 .. automethod:: sge.Game.project_line
@@ -268,10 +264,6 @@ sge.Object Methods
 
 .. automethod:: sge.Object.collision
 
-.. automethod:: sge.Object.set_alarm
-
-.. automethod:: sge.Object.get_alarm
-
 .. automethod:: sge.Object.destroy
 
 .. automethod:: sge.Object.create
@@ -380,10 +372,6 @@ sge.Room Methods
 .. automethod:: sge.Room.start
 
 .. automethod:: sge.Room.resume
-
-.. automethod:: sge.Room.set_alarm
-
-.. automethod:: sge.Room.get_alarm
 
 .. automethod:: sge.Room.project_dot
 
