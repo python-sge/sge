@@ -21,8 +21,7 @@ __all__ = ['BackgroundLayer']
 
 class BackgroundLayer(object):
 
-    """Special class used for background layers.
-
+    """
     This class stores a sprite and certain information for a layer of a
     background.  In particular, it stores the location of the layer,
     whether the layer tiles horizontally, vertically, or both, and the
@@ -66,16 +65,13 @@ class BackgroundLayer(object):
     .. attribute:: rd
 
        Reserved dictionary for internal use by the SGE.  (Read-only)
-
     """
 
     def __init__(self, sprite, x, y, z, xscroll_rate=1, yscroll_rate=1,
                  xrepeat=True, yrepeat=True):
-        """Constructor method.
-
+        """
         Arguments set the respective initial attributes of the layer.
         See the documentation for :class:`sge.BackgroundLayer` for more
         information.
-
         """
         # TODO

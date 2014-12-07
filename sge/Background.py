@@ -18,8 +18,7 @@
 
 class Background(object):
 
-    """Background class.
-
+    """
     This class stores the layers that make up the background (which
     contain the information about what images to use and where) as well
     as the color to use where no image is shown.
@@ -37,15 +36,12 @@ class Background(object):
     .. attribute:: rd
 
        Reserved dictionary for internal use by the SGE.  (Read-only)
-
     """
 
     def __init__(self, layers, color):
-        """Constructor method.
-
+        """
         Arguments set the respective initial attributes of the
         background.  See the documentation for :class:`sge.Background`
         for more information.
-
         """
         # TODO

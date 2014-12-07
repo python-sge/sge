@@ -39,9 +39,8 @@ def _check_input(value):
 
 class Color(object):
 
-    """Class for colors.
-
-    This class stores colors.
+    """
+    This class stores color information.
 
     Objects of this class can be converted to iterables indicating the
     object's :attr:`red`, :attr:`green`, :attr:`blue`, and :attr:`alpha`
@@ -78,10 +77,28 @@ class Color(object):
 
        An HTML hex string representation of the color, excluding alpha
        transparency.  (Read-only)
-
     """
 
     def __init__(self, value):
+        """
+        Arguments:
+
+        - ``value`` -- The value indicating the color represented by
+          this object.  Should be one of the following:
+
+          - One of the 16 HTML color names (case-insensitive).
+          - An HTML-style hex string containing 3 or 6 digits which
+            indicate the red, green, and blue components of the color,
+            respectively.  If the string contains 3 digits, each digit
+            is duplicated; for example, ``"#F80"`` is equivalent to
+            ``"#FF8800"``.
+          - An integer which, when written as a hexadecimal number,
+            specifies the components of the color in the same way as an
+            HTML-stype hex string containing 6 digits.
+          - A list or tuple indicating the red, green, and blue
+            components, and optionally the alpha component, in that
+            order.
+        """
         self.alpha = 255
         if isinstance(value, str):
             value = COLORS.get(value, value)[1:]

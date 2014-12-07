@@ -313,12 +313,10 @@ class Object(object):
                  image_index=0, image_origin_x=None, image_origin_y=None,
                  image_fps=None, image_xscale=1, image_yscale=1,
                  image_rotation=0, image_alpha=255, image_blend=None):
-        """Constructor method.
-
+        """
         Arugments set the respective initial attributes of the object.
         See the documentation for :class:`sge.Object` for more
         information.
-
         """
         # TODO
 

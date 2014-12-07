@@ -27,7 +27,8 @@ __all__ = ["rectangles_collide", "masks_collide", "rectangle", "ellipse",
 
 
 def rectangles_collide(x1, y1, w1, h1, x2, y2, w2, h2):
-    """Return whether or not two rectangles collide.
+    """
+    Return whether or not two rectangles collide.
 
     Arguments:
 
@@ -39,13 +40,13 @@ def rectangles_collide(x1, y1, w1, h1, x2, y2, w2, h2):
     - ``y2`` -- The vertical position of the second rectangle.
     - ``w2`` -- The width of the second rectangle.
     - ``h2`` -- The height of the second rectangle.
-
     """
     return (x1 < x2 + w2 and x1 + w1 > x2 and y1 < y2 + h2 and y1 + h1 > y2)
 
 
 def masks_collide(x1, y1, mask1, x2, y2, mask2):
-    """Return whether or not two masks collide.
+    """
+    Return whether or not two masks collide.
 
     Arguments:
 
@@ -63,7 +64,6 @@ def masks_collide(x1, y1, mask1, x2, y2, mask2):
 
     Masks are indexed as ``mask[x][y]``, where ``x`` is the column and
     ``y`` is the row.
-
     """
     if mask1 and mask2 and mask1[0] and mask2[0]:
         x1 = int(round(x1))
@@ -85,7 +85,8 @@ def masks_collide(x1, y1, mask1, x2, y2, mask2):
 
 
 def rectangle(x, y, w, h, other=None):
-    """Return a list of objects colliding with a rectangle.
+    """
+    Return a list of objects colliding with a rectangle.
 
     Arguments:
 
@@ -96,13 +97,13 @@ def rectangle(x, y, w, h, other=None):
     - ``other`` -- What to check for collisions with.  See the
       documentation for :meth:`sge.Object.collision` for more
       information.
-
     """
     # TODO
 
 
 def ellipse(x, y, w, h, other=None):
-    """Return a list of objects colliding with an ellipse.
+    """
+    Return a list of objects colliding with an ellipse.
 
     Arguments:
 
@@ -115,13 +116,13 @@ def ellipse(x, y, w, h, other=None):
     - ``other`` -- What to check for collisions with.  See the
       documentation for :meth:`sge.Object.collision` for more
       information.
-
     """
     # TODO
 
 
 def circle(x, y, radius, other=None):
-    """Return a list of objects colliding with a circle.
+    """
+    Return a list of objects colliding with a circle.
 
     Arguments:
 
@@ -131,13 +132,13 @@ def circle(x, y, radius, other=None):
     - ``other`` -- What to check for collisions with.  See the
       documentation for :meth:`sge.Object.collision` for more
       information.
-
     """
     # TODO
 
 
 def line(x1, y1, x2, y2, other=None):
-    """Return a list of objects colliding with a line segment.
+    """
+    Return a list of objects colliding with a line segment.
 
     Arguments:
 
@@ -152,6 +153,5 @@ def line(x1, y1, x2, y2, other=None):
     - ``other`` -- What to check for collisions with.  See the
       documentation for :meth:`sge.Object.collision` for more
       information.
-
     """
     # TODO
