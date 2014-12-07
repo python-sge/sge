@@ -21,10 +21,8 @@ import sge
 
 class Font(object):
 
-    """Font handling class.
-
-    This class stores a font for use by :meth:`sge.Sprite.draw_text` and
-    :meth:`sge.Room.project_text`.
+    """
+    This class stores a font for use by text drawing methods.
 
     .. attribute:: size
 
@@ -61,13 +59,11 @@ class Font(object):
     .. attribute:: rd
 
        Reserved dictionary for internal use by the SGE.  (Read-only)
-
     """
 
     def __init__(self, name=None, size=12, underline=False, bold=False,
                  italic=False):
-        """Constructor method.
-
+        """
         Arguments:
 
         - ``name`` -- The name of the font.  Can be one of the
@@ -101,24 +97,25 @@ class Font(object):
            the GNU General Public License or the SIL Open Font License)
            and distribute it with your game; this will ensure that
            everyone sees text rendered the same way you do.
-
         """
         # TODO
 
     def get_width(self, text, width=None, height=None):
-        """Return the width of a certain string of text when rendered.
+        """
+        Return the width of a certain string of text when rendered.
 
         See the documentation for :meth:`sge.Sprite.draw_text` for
-        information about the arguments.
+        more information.
 
         """
         # TODO
 
     def get_height(self, text, width=None, height=None):
-        """Return the height of a certain string of text when rendered.
+        """
+        Return the height of a certain string of text when rendered.
 
         See the documentation for :meth:`sge.Sprite.draw_text` for
-        information about the arguments.
+        more information.
 
         """
         # TODO
@@ -126,7 +123,8 @@ class Font(object):
     @classmethod
     def from_sprite(cls, sprite, chars, hsep=0, vsep=0, size=12,
                     underline=False, bold=False, italic=False):
-        """Return a font derived from a sprite.
+        """
+        Return a font derived from a sprite.
 
         Arguments:
 
@@ -154,6 +152,5 @@ class Font(object):
         The font's :attr:`size` attribute will indicate the height of
         the characters in pixels.  The width of the characters will be
         adjusted proportionally.
-
         """
         # TODO

@@ -36,8 +36,7 @@ __all__ = ["KeyPress", "KeyRelease", "MouseMove", "MouseButtonPress",
 
 class KeyPress:
 
-    """Key press input event class.
-
+    """
     This input event represents a key on the keyboard being pressed.
 
     .. attribute:: key
@@ -182,7 +181,6 @@ class KeyPress:
     F11                  ``"f11"``               ``""``
     F12                  ``"f12"``               ``""``
     ==================== ======================= =================
-
     """
 
     def __init__(self, key, char):
@@ -192,15 +190,13 @@ class KeyPress:
 
 class KeyRelease:
 
-    """Key release input event class.
-
+    """
     This input event represents a key on the keyboard being released.
 
     .. attribute:: key
 
        The identifier string of the key that was released.  See the
        table in the documentation for :class:`sge.input.KeyPress`.
-
     """
 
     def __init__(self, key):
@@ -209,8 +205,7 @@ class KeyRelease:
 
 class MouseMove:
 
-    """Mouse move input event class.
-
+    """
     This input event represents the mouse being moved.
 
     .. attribute:: x
@@ -220,7 +215,6 @@ class MouseMove:
     .. attribute:: y
 
        The vertical relative movement of the mouse.
-
     """
 
     def __init__(self, x, y):
@@ -230,8 +224,7 @@ class MouseMove:
 
 class MouseButtonPress:
 
-    """Mouse button press input event class.
-
+    """
     This input event represents a mouse button being pressed.
 
     .. attribute:: button
@@ -250,7 +243,6 @@ class MouseButtonPress:
     Mouse wheel tilt left  ``"wheel_left"``
     Mouse wheel tilt right ``"wheel_right"``
     ====================== =================
-
     """
 
     def __init__(self, button):
@@ -259,8 +251,7 @@ class MouseButtonPress:
 
 class MouseButtonRelease:
 
-    """Mouse button release input event class.
-
+    """
     This input event represents a mouse button being released.
 
     .. attribute:: button
@@ -268,7 +259,6 @@ class MouseButtonRelease:
        The identifier string of the mouse button that was released.  See
        the table in the documentation for
        :class:`sge.input.MouseButtonPress`.
-
     """
 
     def __init__(self, button):
@@ -277,8 +267,7 @@ class MouseButtonRelease:
 
 class JoystickAxisMove:
 
-    """Joystick axis move input event class.
-
+    """
     This input event represents a joystick axis moving.
 
     .. attribute:: js_name
@@ -299,7 +288,6 @@ class JoystickAxisMove:
        The tilt of the axis as a float from ``-1`` to ``1``, where ``0``
        is centered, ``-1`` is all the way to the left or up, and ``1``
        is all the way to the right or down.
-
     """
 
     def __init__(self, js_name, js_id, axis, value):
@@ -311,8 +299,7 @@ class JoystickAxisMove:
 
 class JoystickHatMove:
 
-    """Joystick hat move input event class.
-
+    """
     This input event represents a joystick hat moving.
 
     .. attribute:: js_name
@@ -337,7 +324,6 @@ class JoystickHatMove:
 
        The vertical position of the hat, where ``0`` is centered, ``-1``
        is up, and ``1`` is down.
-
     """
 
     def __init__(self, js_name, js_id, hat, x, y):
@@ -350,8 +336,7 @@ class JoystickHatMove:
 
 class JoystickTrackballMove:
 
-    """Joystick trackball move input event class.
-
+    """
     This input event represents a joystick trackball moving.
 
     .. attribute:: js_name
@@ -374,7 +359,6 @@ class JoystickTrackballMove:
     .. attribute:: y
 
        The vertical relative movement of the trackball.
-
     """
 
     def __init__(self, js_name, js_id, ball, x, y):
@@ -387,8 +371,7 @@ class JoystickTrackballMove:
 
 class JoystickButtonPress:
 
-    """Joystick button press input event class.
-
+    """
     This input event represents a joystick button being pressed.
 
     .. attribute:: js_name
@@ -403,7 +386,6 @@ class JoystickButtonPress:
 
        The number of the button that was pressed, where ``0`` is the
        first button on the joystick.
-
     """
 
     def __init__(self, js_name, js_id, button):
@@ -414,8 +396,7 @@ class JoystickButtonPress:
 
 class JoystickButtonRelease:
 
-    """Joystick button release input event class.
-
+    """
     This input event represents a joystick button being released.
 
     .. attribute:: js_name
@@ -430,7 +411,6 @@ class JoystickButtonRelease:
 
        The number of the button that was released, where ``0`` is the
        first button on the joystick.
-
     """
 
     def __init__(self, js_name, js_id, button):
@@ -441,8 +421,7 @@ class JoystickButtonRelease:
 
 class KeyboardFocusGain:
 
-    """Keyboard focus gain input event class.
-
+    """
     This input event represents the game window gaining keyboard focus.
     Keyboard focus is normally needed for keyboard input to be received.
 
@@ -456,14 +435,12 @@ class KeyboardFocusGain:
        difference; failing to do so may result in annoying bugs,
        and you won't notice these bugs if you are testing on a
        window manager that doesn't recognize the difference.
-
     """
 
 
 class KeyboardFocusLose:
 
-    """Keyboard focus lose input event class.
-
+    """
     This input event represents the game window losing keyboard focus.
     Keyboard focus is normally needed for keyboard input to be received.
 
@@ -471,14 +448,12 @@ class KeyboardFocusLose:
 
        See the note in the documentation for
        :class:`sge.input.KeyboardFocusGain`.
-
     """
 
 
 class MouseFocusGain:
 
-    """Mouse focus gain input event class.
-
+    """
     This input event represents the game window gaining mouse focus.
     Mouse focus is normally needed for mouse input to be received.
 
@@ -486,14 +461,12 @@ class MouseFocusGain:
 
        See the note in the documentation for
        :class:`sge.input.KeyboardFocusGain`.
-
     """
 
 
 class MouseFocusLose:
 
-    """Mouse focus lose input event class.
-
+    """
     This input event represents the game window losing mouse focus.
     Mouse focus is normally needed for mouse input to be received.
 
@@ -501,16 +474,13 @@ class MouseFocusLose:
 
        See the note in the documentation for
        :class:`sge.input.KeyboardFocusGain`.
-
     """
 
 
 class QuitRequest:
 
-    """Quit request input event class.
-
+    """
     This input event represents the OS requesting for the program to
     close (e.g. when the user presses a "close" button on the window
     border).
-
     """

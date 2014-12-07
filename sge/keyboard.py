@@ -25,17 +25,18 @@ __all__ = ["get_pressed", "get_modifier", "get_focused", "set_repeat",
 
 
 def get_pressed(key):
-    """Return whether or not a key is pressed.
+    """
+    Return whether or not a key is pressed.
 
     See the documentation for :class:`sge.input.KeyPress` for more
     information.
-
     """
     # TODO
 
 
 def get_modifier(key):
-    """Return whether or not a modifier key is being held.
+    """
+    Return whether or not a modifier key is being held.
 
     Arguments:
 
@@ -61,7 +62,6 @@ def get_modifier(key):
     Caps Lock         ``"caps_lock"``
     Num Lock          ``"num_lock"``
     ================= =================
-
     """
     # TODO
 
@@ -72,7 +72,8 @@ def get_focused():
 
 
 def set_repeat(enabled=True, interval=0, delay=0):
-    """Set repetition of key press events.
+    """
+    Set repetition of key press events.
 
     Arguments:
 
@@ -86,36 +87,35 @@ def set_repeat(enabled=True, interval=0, delay=0):
     If ``enabled`` is set to true, this causes a key being held down to
     generate additional key press events as long as it remains held
     down.
-
     """
     # TODO
 
 
 def get_repeat_enabled():
-    """Return whether or not repetition of key press events is enabled.
+    """
+    Return whether or not repetition of key press events is enabled.
 
     See the documentation for :func:`sge.keyboard.set_repeat` for more
     information.
-
     """
     # TODO
 
 
 def get_repeat_interval():
-    """Return the interval in between each repeated key press event.
+    """
+    Return the interval in between each repeated key press event.
 
     See the documentation for :func:`sge.keyboard.set_repeat` for more
     information.
-
     """
     # TODO
 
 
 def get_repeat_delay():
-    """Return the delay before repeating key press events.
+    """
+    Return the delay before repeating key press events.
 
     See the documentation for :func:`sge.keyboard.set_repeat` for more
     information.
-
     """
     # TODO

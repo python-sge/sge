@@ -58,54 +58,54 @@ __all__ = ["get_pressed", "get_x", "get_y", "set_x", "set_y"]
 
 
 def get_pressed(button):
-    """Return whether or not a mouse button is pressed.
+    """
+    Return whether or not a mouse button is pressed.
 
     See the documentation for :class:`sge.input.MouseButtonPress` for
     more information.
-
     """
     # TODO
 
 
 def get_x():
-    """Return the horizontal location of the mouse cursor.
+    """
+    Return the horizontal location of the mouse cursor.
 
     The location returned is relative to the window, excluding any
     scaling, pillarboxes, and letterboxes.  If the mouse is in
     relative mode, this function returns :const:`None`.
-
     """
     # TODO
 
 
 def get_y():
-    """Return the vertical location of the mouse cursor.
+    """
+    Return the vertical location of the mouse cursor.
 
     The location returned is relative to the window, excluding any
     scaling, pillarboxes, and letterboxes.  If the mouse is in
     relative mode, this function returns :const:`None`.
-
     """
     # TODO
 
 
 def set_x(value):
-    """Set the horizontal location of the mouse cursor.
+    """
+    Set the horizontal location of the mouse cursor.
 
     The location returned is relative to the window, excluding any
     scaling, pillarboxes, and letterboxes.  If the mouse is in
     relative mode, this function has no effect.
-
     """
     # TODO
 
 
 def set_y(value):
-    """Set the vertical location of the mouse cursor.
+    """
+    Set the vertical location of the mouse cursor.
 
     The location returned is relative to the window, excluding any
     scaling, pillarboxes, and letterboxes.  If the mouse is in
     relative mode, this function has no effect.
-
     """
     # TODO
