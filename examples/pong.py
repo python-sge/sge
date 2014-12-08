@@ -236,15 +236,15 @@ Game(width=640, height=480, fps=120, window_text="Pong")
 # Load sprites
 paddle_sprite = sge.Sprite(width=8, height=48, origin_x=4, origin_y=24)
 ball_sprite = sge.Sprite(width=8, height=8, origin_x=4, origin_y=4)
-paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
-                                paddle_sprite.height, fill=sge.Color("white"))
+paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width, paddle_sprite.height,
+                             fill=sge.Color("white"))
 ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
-                            fill=sge.Color("white"))
+                           fill=sge.Color("white"))
 hud_sprite = sge.Sprite(width=320, height=120, origin_x=160, origin_y=0)
 
 # Load backgrounds
 layers = [sge.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
-                                xrepeat=False)]
+                              xrepeat=False)]
 background = sge.Background(layers, sge.Color("black"))
 
 # Load fonts

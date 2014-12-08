@@ -121,7 +121,7 @@ argument will indicate which player the object is for: ``1`` for player
 Additionally, certain attributes inherited from :class:`sge.Object` will
 be the same for both :class:`Player` objects.  :attr:`y` will always be
 ``sge.game.height / 2`` (vertically centered).  :attr:`sprite` will
-always be ``"paddle"`` (a sprite we will create later).
+always be ``paddle_sprite`` (a sprite we will create later).
 :attr:`checks_collisions` will always be :const:`False`, since player
 objects don't need to check for collisions with each other; we can
 therefore leave all collision checking to the ball object.
@@ -151,7 +151,7 @@ like this::
             self.hit_direction = -1
 
         y = sge.game.height / 2
-        super().__init__(x, y, sprite="paddle", checks_collisions=False)
+        super().__init__(x, y, sprite=paddle_sprite, checks_collisions=False)
 
 We need to allow the players to move the paddles.  We could do this by
 using key press events, but since we would like the players to be able
@@ -215,14 +215,14 @@ with :class:`Player`, we are going to define a custom
 
 In this case, it's much simpler: :attr:`x` and :attr:`y` are going to
 start at the center of the screen, and :attr:`sprite` is going to be
-``"ball"``.  these are attributes inherited from
+``ball_sprite``.  These are attributes inherited from
 :class:`sge.Object`, so we indicate them in a call to
 ``super().__init__``.  :meth:`Ball.__init__` ends up as::
 
     def __init__(self):
         x = sge.game.width / 2
         y = sge.game.height / 2
-        super().__init__(x, y, sprite="ball")
+        super().__init__(x, y, sprite=ball_sprite)
 
 Since we want to serve the ball both at the start of the game and every
 time the ball passes a player, we should define a :meth:`Ball.serve`
@@ -365,13 +365,7 @@ Our collision event ends up looking something like this::
 Starting the Game
 =================
 
-It's time to define our :func:`main` function.
-
-We are going to define some global variables, so at the top of
-:func:`main`, we must declare them with ``global``.  These global
-variables will be :data:`player` and :data:`player2`.  As the names
-suggest, these variables will indicate the player 1 and player 2
-objects, respectively.
+It's time to get our game started.
 
 We are going to pass some arguments to the creation of our :class:`Game`
 object: we are going to define ``width`` as ``640``, ``height`` as
@@ -389,10 +383,8 @@ to generate them dynamically instead.
 Sprites are stored as :class:`sge.Sprite` objects, so we are going to
 create two of them::
 
-    paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,
-                               origin_y=24)
-    ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
-                             origin_y=4)
+    paddle_sprite = sge.Sprite(width=8, height=48, origin_x=4, origin_y=24)
+    ball_sprite = sge.Sprite(width=8, height=8, origin_x=4, origin_y=4)
 
 :attr:`sge.Sprite.origin_x` and :attr:`sge.Sprite.origin_y` indicate
 the origin of the sprite.  In this case, we are setting the origins to
@@ -421,7 +413,7 @@ Background layers are special objects that indicate sprites that are
 used in a background.  We create the layer, put it in a list, and pass
 that list onto :meth:`sge.Background.__init__`'s ``layers`` argument::
 
-    layers = [sge.BackgroundLayer("paddle", sge.game.width / 2, 0, -10000,
+    layers = [sge.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
                                   xrepeat=False)]
     background = sge.Background(layers, sge.Color("black"))
 
@@ -438,22 +430,23 @@ Creating Objects
 Don't forget to create our objects!  In :data:`player1`, store a
 :class:`Player` object with the ``player`` argument specified as ``1``.
 In :data:`player2`, store a :class:`Player` object with the ``player``
-argument specified as ``2``.  Finally, create a :class:`Ball` object.
-Put all of these objects in a list and assign this list to a variable
-called ``objects``.
+argument specified as ``2``.  Finally, create a :class:`Ball` object and
+store it in :data:`ball`.  Put all of these objects in a list and assign
+this list to a variable called ``objects``.
 
 Creating Rooms
 --------------
 
 Create a :class:`Room` object.  Specify the first argument as
 ``objects``, and specify the keyword argument ``background`` as
-``background``.
+``background``.  Don't forget to assign it to
+:attr:`sge.game.start_room`!
 
 Starting the Game
 -----------------
 
-Add a call to :meth:`sge.game.start` at the end of :func:`main`, and add
-the code to execute :func:`main` when the script is executed.
+Add a call to :meth:`sge.game.start` at the end, under a check for the
+value of :data:`__name__`.
 
 The Final Result
 ================
@@ -484,9 +477,6 @@ You should now have a script that looks something like this::
     BALL_START_SPEED = 2
     BALL_ACCELERATION = 0.2
     BALL_MAX_SPEED = 15
-
-    player1 = None
-    player2 = None
 
 
     class Game(sge.Game):
@@ -538,7 +528,7 @@ You should now have a script that looks something like this::
                 self.hit_direction = -1
 
             y = sge.game.height / 2
-            super().__init__(x, y, sprite="paddle", checks_collisions=False)
+            super().__init__(x, y, sprite=paddle_sprite, checks_collisions=False)
 
         def event_step(self, time_passed, delta_mult):
             # Movement
@@ -559,7 +549,7 @@ You should now have a script that looks something like this::
         def __init__(self):
             x = sge.game.width / 2
             y = sge.game.height / 2
-            super().__init__(x, y, sprite="ball")
+            super().__init__(x, y, sprite=ball_sprite)
 
         def event_create(self):
             self.serve()
@@ -602,42 +592,34 @@ You should now have a script that looks something like this::
             self.yvelocity = 0
 
 
-    def main():
-        global player1
-        global player2
+    # Create Game object
+    Game(width=640, height=480, fps=120, window_text="Pong")
 
-        # Create Game object
-        Game(width=640, height=480, fps=120, window_text="Pong")
+    # Load sprites
+    paddle_sprite = sge.Sprite(width=8, height=48, origin_x=4, origin_y=24)
+    ball_sprite = sge.Sprite(width=8, height=8, origin_x=4, origin_y=4)
+    paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width, paddle_sprite.height,
+                                 fill=sge.Color("white"))
+    ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
+                               fill=sge.Color("white"))
 
-        # Load sprites
-        paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,
-                                   origin_y=24)
-        ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
-                                 origin_y=4)
-        paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
-                                     paddle_sprite.height, fill=sge.Color("white"))
-        ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
-                                   fill=sge.Color("white"))
+    # Load backgrounds
+    layers = [sge.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
+                                  xrepeat=False)]
+    background = sge.Background(layers, sge.Color("black"))
 
-        # Load backgrounds
-        layers = [sge.BackgroundLayer("paddle", sge.game.width / 2, 0, -10000,
-                                      xrepeat=False)]
-        background = sge.Background(layers, sge.Color("black"))
+    # Create objects
+    player1 = Player(1)
+    player2 = Player(2)
+    ball = Ball()
+    objects = [player1, player2, ball]
 
-        # Create objects
-        player1 = Player(1)
-        player2 = Player(2)
-        ball = Ball()
-        objects = [player1, player2, ball]
-
-        # Create rooms
-        sge.Room(objects, background=background)
-
-        sge.game.start()
+    # Create rooms
+    sge.game.start_room = sge.Room(objects, background=background)
 
 
     if __name__ == '__main__':
-        main()
+        sge.game.start()
 
 This is a basically complete Pong game, but it lacks some features.
 First, this game doesn't keep track of the score.  It is left up to the

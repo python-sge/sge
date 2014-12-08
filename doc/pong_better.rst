@@ -78,12 +78,11 @@ a new sprite to this variable with a :attr:`width` of ``320``, a
 :attr:`height` of ``120``, an :attr:`origin_x` of ``160``, and an
 :attr:`origin_y` of ``0``.
 
-To draw text, we need a font.  Create a new :class:`sge.Font` object.
-For now, we will use a system font.  I am choosing
-``"Droid Sans Mono"``, but you can choose whatever font you prefer.
-Pass your choice as the first argument to :meth:`sge.Font.__init__`.
-Set the ``ID`` keyword argument to ``"hud"``, and the ``size`` keyword
-argument to ``48``.
+To draw text, we need a font.  Create a new :class:`sge.Font` object and
+assign it to :data:`hud_font`.  For now, we will use a system font.  I
+am choosing ``"Droid Sans Mono"``, but you can choose whatever font you
+prefer.  Pass your choice as the first argument to
+:meth:`sge.Font.__init__`.  Set the ``size`` keyword argument to ``48``.
 
 .. note::
 
@@ -108,7 +107,7 @@ as ``16``.
 We clear the HUD sprite with :meth:`sge.Sprite.draw_clear`.
 
 To draw the text, we use :meth:`sge.Sprite.draw_text`.  Both calls have
-a few arguments in common: ``font`` is set to ``"hud"``, ``y`` is set to
+a few arguments in common: ``font`` is set to ``hud_font``, ``y`` is set to
 ``TEXT_OFFSET``, ``color`` is set to white, and ``valign`` is set to
 ``sge.ALIGN_TOP``.
 
@@ -125,10 +124,10 @@ is set to ``sge.ALIGN_RIGHT`` for player 1's score, and
         # This fixes the HUD sprite so that it displays the correct score.
         hud_sprite.draw_clear()
         x = hud_sprite.width / 2
-        hud_sprite.draw_text("hud", str(player1.score), x - TEXT_OFFSET,
+        hud_sprite.draw_text(hud_font, str(player1.score), x - TEXT_OFFSET,
                              TEXT_OFFSET, color=sge.Color("white"),
                              halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
-        hud_sprite.draw_text("hud", str(player2.score), x + TEXT_OFFSET,
+        hud_sprite.draw_text(hud_font, str(player2.score), x + TEXT_OFFSET,
                              TEXT_OFFSET, color=sge.Color("white"),
                              halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
 
@@ -223,10 +222,10 @@ The new :meth:`Ball.serve` looks something like this::
             x = hud_sprite.width / 2
             p1text = "WIN" if player1.score > player2.score else "LOSE"
             p2text = "WIN" if player2.score > player1.score else "LOSE"
-            hud_sprite.draw_text("hud", p1text, x - TEXT_OFFSET, TEXT_OFFSET,
+            hud_sprite.draw_text(hud_font, p1text, x - TEXT_OFFSET, TEXT_OFFSET,
                                  color=sge.Color("white"),
                                  halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
-            hud_sprite.draw_text("hud", p2text, x + TEXT_OFFSET, TEXT_OFFSET,
+            hud_sprite.draw_text(hud_font, p2text, x + TEXT_OFFSET, TEXT_OFFSET,
                                  color=sge.Color("white"),
                                  halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
             game_in_progress = False
@@ -267,14 +266,11 @@ the name "data", create a folder within the data folder with the name
 Loading the Sounds
 ------------------
 
-We will now create three new global variables: :data:`bounce_sound`,
-:data:`bounce_wall_sound`, and :data:`score_sound`.  Initialize them as
-:const:`None` at the top of the script.
-
-In :func:`main`, assign each of these global variables to its
-corresponding sound.  Sounds in the SGE are stored in :class:`sge.Sound`
-objects.  As the only argument, indicate the name of the file (including
-the ".wav" extension).
+Sounds in the SGE are stored in :class:`sge.Sound` objects.  As the only
+argument, indicate the name of the file (including the ".wav"
+extension).  Assign the appropriate :class:`sge.Sound` objects to
+:data:`bounce_sound`, :data:`bounce_wall_sound`, and
+:data:`score_sound`.
 
 Playing the Sounds
 ------------------
@@ -376,12 +372,6 @@ Our final Pong game now has scores, sounds, and even joystick support::
     POINTS_TO_WIN = 10
     TEXT_OFFSET = 16
 
-    player1 = None
-    player2 = None
-    hud_sprite = None
-    bounce_sound = None
-    bounce_wall_sound = None
-    score_sound = None
     game_in_progress = True
 
 
@@ -445,7 +435,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
                 self.hit_direction = -1
 
             y = sge.game.height / 2
-            super().__init__(x, y, sprite="paddle", checks_collisions=False)
+            super().__init__(x, y, sprite=paddle_sprite, checks_collisions=False)
 
         def event_create(self):
             self.score = 0
@@ -484,7 +474,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
         def __init__(self):
             x = sge.game.width / 2
             y = sge.game.height / 2
-            super().__init__(x, y, sprite="ball")
+            super().__init__(x, y, sprite=ball_sprite)
 
         def event_create(self):
             self.serve()
@@ -546,11 +536,11 @@ Our final Pong game now has scores, sounds, and even joystick support::
                 x = hud_sprite.width / 2
                 p1text = "WIN" if player1.score > player2.score else "LOSE"
                 p2text = "WIN" if player2.score > player1.score else "LOSE"
-                hud_sprite.draw_text("hud", p1text, x - TEXT_OFFSET, TEXT_OFFSET,
-                                     color=sge.Color("white"),
+                hud_sprite.draw_text(hud_font, p1text, x - TEXT_OFFSET,
+                                     TEXT_OFFSET, color=sge.Color("white"),
                                      halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
-                hud_sprite.draw_text("hud", p2text, x + TEXT_OFFSET, TEXT_OFFSET,
-                                     color=sge.Color("white"),
+                hud_sprite.draw_text(hud_font, p2text, x + TEXT_OFFSET,
+                                     TEXT_OFFSET, color=sge.Color("white"),
                                      halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
                 game_in_progress = False
 
@@ -559,60 +549,48 @@ Our final Pong game now has scores, sounds, and even joystick support::
         # This fixes the HUD sprite so that it displays the correct score.
         hud_sprite.draw_clear()
         x = hud_sprite.width / 2
-        hud_sprite.draw_text("hud", str(player1.score), x - TEXT_OFFSET,
+        hud_sprite.draw_text(hud_font, str(player1.score), x - TEXT_OFFSET,
                              TEXT_OFFSET, color=sge.Color("white"),
                              halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
-        hud_sprite.draw_text("hud", str(player2.score), x + TEXT_OFFSET,
+        hud_sprite.draw_text(hud_font, str(player2.score), x + TEXT_OFFSET,
                              TEXT_OFFSET, color=sge.Color("white"),
                              halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
 
 
-    def main():
-        global hud_sprite
-        global bounce_sound
-        global bounce_wall_sound
-        global score_sound
-        global player1
-        global player2
+    # Create Game object
+    Game(width=640, height=480, fps=120, window_text="Pong")
 
-        # Create Game object
-        Game(width=640, height=480, fps=120, window_text="Pong")
+    # Load sprites
+    paddle_sprite = sge.Sprite(width=8, height=48, origin_x=4, origin_y=24)
+    ball_sprite = sge.Sprite(width=8, height=8, origin_x=4, origin_y=4)
+    paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width, paddle_sprite.height,
+                                 fill=sge.Color("white"))
+    ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
+                               fill=sge.Color("white"))
+    hud_sprite = sge.Sprite(width=320, height=120, origin_x=160, origin_y=0)
 
-        # Load sprites
-        paddle_sprite = sge.Sprite(ID="paddle", width=8, height=48, origin_x=4,
-                                   origin_y=24)
-        ball_sprite = sge.Sprite(ID="ball", width=8, height=8, origin_x=4,
-                                 origin_y=4)
-        paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
-                                     paddle_sprite.height, fill=sge.Color("white"))
-        ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
-                                   fill=sge.Color("white"))
-        hud_sprite = sge.Sprite(width=320, height=120, origin_x=160, origin_y=0)
+    # Load backgrounds
+    layers = [sge.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
+                                  xrepeat=False)]
+    background = sge.Background(layers, sge.Color("black"))
 
-        # Load backgrounds
-        layers = [sge.BackgroundLayer("paddle", sge.game.width / 2, 0, -10000,
-                                      xrepeat=False)]
-        background = sge.Background(layers, sge.Color("black"))
+    # Load fonts
+    hud_font = sge.Font("Droid Sans Mono", size=48)
 
-        # Load fonts
-        sge.Font("Droid Sans Mono", ID="hud", size=48)
+    # Load sounds
+    bounce_sound = sge.Sound('bounce.wav')
+    bounce_wall_sound = sge.Sound('bounce_wall.wav')
+    score_sound = sge.Sound('score.wav')
 
-        # Load sounds
-        bounce_sound = sge.Sound('bounce.wav')
-        bounce_wall_sound = sge.Sound('bounce_wall.wav')
-        score_sound = sge.Sound('score.wav')
+    # Create objects
+    player1 = Player(1)
+    player2 = Player(2)
+    ball = Ball()
+    objects = [player1, player2, ball]
 
-        # Create objects
-        player1 = Player(1)
-        player2 = Player(2)
-        ball = Ball()
-        objects = [player1, player2, ball]
-
-        # Create rooms
-        sge.Room(objects, background=background)
-
-        sge.game.start()
+    # Create rooms
+    sge.Room(objects, background=background)
 
 
     if __name__ == '__main__':
-        main()
+        sge.game.start()
