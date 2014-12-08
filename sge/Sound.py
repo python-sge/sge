@@ -21,8 +21,7 @@ import sge
 
 class Sound(object):
 
-    """Sound handling class.
-
+    """
     This class stores and plays sound effects.  Note that this is
     inefficient for large music files; for those, use :class:`sge.Music`
     instead.
@@ -43,7 +42,7 @@ class Sound(object):
        If a sound is played while this number of the instances of the
        same sound are already playing, one of the already playing sounds
        will be stopped before playing the new instance.  Set to
-       :const:`None` or ``0`` for no limit.
+       :const:`None` for no limit.
 
     .. attribute:: fname
 
@@ -61,12 +60,10 @@ class Sound(object):
     .. attribute:: rd
 
        Reserved dictionary for internal use by the SGE.  (Read-only)
-
     """
 
     def __init__(self, fname, volume=100, max_play=1):
-        """Constructor method.
-
+        """
         Arguments:
 
         - ``fname`` -- The name of the sound file in one of the paths
@@ -78,13 +75,13 @@ class Sound(object):
         All other arguments set the respective initial attributes of the
         sound.  See the documentation for :class:`sge.Sound` for more
         information.
-
         """
         # TODO
 
     def play(self, loops=1, volume=100, balance=0, maxtime=None,
              fade_time=None):
-        """Play the sound.
+        """
+        Play the sound.
 
         Arguments:
 
@@ -98,23 +95,22 @@ class Sound(object):
           centered (full volume in both speakers), ``1`` is entirely in
           the right speaker, and ``-1`` is entirely in the left speaker.
         - ``maxtime`` -- The maximum amount of time to play the sound in
-          milliseconds; set to :const:`None` or ``0`` for no limit.
+          milliseconds; set to :const:`None` for no limit.
         - ``fade_time`` -- The time in milliseconds over which to fade
           the sound in; set to :const:`None` or ``0`` to immediately
           play the sound at full volume.
-
         """
         # TODO
 
     def stop(self, fade_time=None):
-        """Stop the sound.
+        """
+        Stop the sound.
 
         Arguments:
 
         - ``fade_time`` -- The time in milliseconds over which to fade
           the sound out before stopping; set to :const:`None` or ``0``
           to immediately stop the sound.
-
         """
         # TODO
 

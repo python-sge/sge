@@ -21,8 +21,7 @@ import sge
 
 class Sprite(object):
 
-    """Class which holds information for images and animations.
-
+    """
     This class stores images and information about how the SGE is to use
     those images.
 
@@ -116,14 +115,12 @@ class Sprite(object):
     .. attribute:: rd
 
        Reserved dictionary for internal use by the SGE.  (Read-only)
-
     """
 
     def __init__(self, name=None, width=None, height=None, transparent=True,
                  origin_x=0, origin_y=0, fps=60, bbox_x=None, bbox_y=None,
                  bbox_width=None, bbox_height=None):
-        """Constructor method.
-
+        """
         Arguments:
 
         - ``name`` -- The base name of the image files, used to find all
@@ -156,7 +153,6 @@ class Sprite(object):
         All other arguments set the respective initial attributes of the
         sprite.  See the documentation for :class:`Sprite` for more
         information.
-
         """
         # TODO
 
@@ -165,29 +161,30 @@ class Sprite(object):
         # TODO
 
     def insert_frame(self, frame):
-        """Insert a new blank frame into the sprite.
+        """
+        Insert a new blank frame into the sprite.
 
         Arguments:
 
         - ``frame`` -- The frame of the sprite to insert the new frame
           in front of, where ``0`` is the first frame.
-
         """
         # TODO
 
     def delete_frame(self, frame):
-        """Delete a frame from the sprite.
+        """
+        Delete a frame from the sprite.
 
         Arguments:
 
         - ``frame`` -- The frame of the sprite to delete, where ``0`` is
           the first frame.
-
         """
         # TODO
 
     def draw_dot(self, x, y, color, frame=None):
-        """Draw a single-pixel dot on the sprite.
+        """
+        Draw a single-pixel dot on the sprite.
 
         Arguments:
 
@@ -200,13 +197,13 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
-
         """
         # TODO
 
     def draw_line(self, x1, y1, x2, y2, color, thickness=1, anti_alias=False,
                   frame=None):
-        """Draw a line segment on the sprite.
+        """
+        Draw a line segment on the sprite.
 
         Arguments:
 
@@ -225,13 +222,13 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
-
         """
         # TODO
 
     def draw_rectangle(self, x, y, width, height, fill=None, outline=None,
                        outline_thickness=1, frame=None):
-        """Draw a rectangle on the sprite.
+        """
+        Draw a rectangle on the sprite.
 
         Arguments:
 
@@ -250,13 +247,13 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
-
         """
         # TODO
 
     def draw_ellipse(self, x, y, width, height, fill=None, outline=None,
                      outline_thickness=1, anti_alias=False, frame=None):
-        """Draw an ellipse on the sprite.
+        """
+        Draw an ellipse on the sprite.
 
         Arguments:
 
@@ -276,13 +273,13 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
-
         """
         # TODO
 
     def draw_circle(self, x, y, radius, fill=None, outline=None,
                     outline_thickness=1, anti_alias=False, frame=None):
-        """Draw a circle on the sprite.
+        """
+        Draw a circle on the sprite.
 
         Arguments:
 
@@ -301,13 +298,13 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
-
         """
         # TODO
 
     def draw_polygon(self, points, fill=None, outline=None,
                      outline_thickness=1, anti_alias=False, frame=None):
-        """Draw a polygon on the sprite.
+        """
+        Draw a polygon on the sprite.
 
         Arguments:
 
@@ -325,12 +322,12 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
-
         """
         # TODO
 
     def draw_sprite(self, sprite, image, x, y, frame=None, blend_mode=None):
-        """Draw another sprite on the sprite.
+        """
+        Draw another sprite on the sprite.
 
         Arguments:
 
@@ -362,14 +359,14 @@ class Sprite(object):
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
           :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
-
         """
         # TODO
 
     def draw_text(self, font, text, x, y, width=None, height=None,
                   color=sge.Color("black"), halign=sge.ALIGN_LEFT,
                   valign=sge.ALIGN_TOP, anti_alias=True, frame=None):
-        """Draw text on the sprite.
+        """
+        Draw text on the sprite.
 
         Arguments:
 
@@ -428,12 +425,12 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
-
         """
         # TODO
 
     def draw_erase(self, x, y, width, height, frame=None):
-        """Erase part of the sprite.
+        """
+        Erase part of the sprite.
 
         Arguments:
 
@@ -446,23 +443,23 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to erase from, where
           ``0`` is the first frame; set to :const:`None` to erase from
           all frames.
-
         """
         # TODO
 
     def draw_clear(self, frame=None):
-        """Erase everything from the sprite.
+        """
+        Erase everything from the sprite.
 
         Arguments:
 
         - ``frame`` -- The frame of the sprite to clear, where ``0`` is
           the first frame; set to :const:`None` to clear all frames.
-
         """
         self.draw_erase(0, 0, self.width, self.height, frame)
 
     def draw_lock(self):
-        """Lock the sprite for continuous drawing.
+        """
+        Lock the sprite for continuous drawing.
 
         Use this method to "lock" the sprite for being drawn on several
         times in a row.  What exactly this does depends on the
@@ -483,21 +480,21 @@ class Sprite(object):
            and as severe as crashing the program, depending on the SGE
            implementation.  Always call :meth:`sge.Sprite.draw_unlock`
            immediately after you're done drawing for a while.
-
         """
         # TODO
 
     def draw_unlock(self):
-        """Unlock the sprite.
+        """
+        Unlock the sprite.
 
         Use this method to "unlock" the sprite after it has been
         "locked" for continuous drawing by :meth:`sge.Sprite.draw_lock`.
-
         """
         # TODO
 
     def save(self, fname):
-        """Save the sprite to an image file.
+        """
+        Save the sprite to an image file.
 
         Arguments:
 
@@ -508,7 +505,6 @@ class Sprite(object):
         If the sprite has multiple frames, the image file saved will be
         a horizontal reel of each of the frames from left to right with
         no space in between the frames.
-
         """
         # TODO
 
@@ -517,7 +513,8 @@ class Sprite(object):
                      width=1, height=1, origin_x=0, origin_y=0,
                      transparent=True, fps=0, bbox_x=None, bbox_y=None,
                      bbox_width=None, bbox_height=None):
-        """Return a sprite based on the tiles in a tileset.
+        """
+        Return a sprite based on the tiles in a tileset.
 
         Arguments:
 
@@ -540,14 +537,14 @@ class Sprite(object):
 
         Each tile in the tileset becomes a subimage of the returned
         sprite, ordered first from left to right and then from top to
-        bottom.  The sprite's :attr:`fps` attribute is set to ``0``.
-
+        bottom.
         """
         # TODO
 
     @classmethod
     def from_screenshot(cls, x=0, y=0, width=None, height=None):
-        """Return the current display on the screen as a sprite.
+        """
+        Return the current display on the screen as a sprite.
 
         Arguments:
 
@@ -566,6 +563,5 @@ class Sprite(object):
         a file, the easiest way to do that is::
 
             sge.Sprite.from_screenshot().save("foo.png")
-
         """
         # TODO

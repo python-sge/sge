@@ -21,8 +21,7 @@ __all__ = ['View']
 
 class View(object):
 
-    """Class for room views.
-
+    """
     This class controls what the player sees in a room at any given
     time.  Multiple views can exist in a room, and this can be used to
     create a split-screen effect.
@@ -75,13 +74,11 @@ class View(object):
     .. attribute:: rd
 
        Reserved dictionary for internal use by the SGE.  (Read-only)
-
     """
 
     def __init__(self, x, y, xport=0, yport=0, width=None, height=None,
                  wport=None, hport=None):
-        """Constructor method.
-
+        """
         Arguments:
 
         - ``width`` -- The width of the view.  If set to :const:`None`,
@@ -92,6 +89,5 @@ class View(object):
         All other arugments set the respective initial attributes of the
         view.  See the documentation for :class:`sge.View` for more
         information.
-
         """
         # TODO

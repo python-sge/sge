@@ -21,8 +21,7 @@ import sge
 
 class Music(object):
 
-    """Music handling class.
-
+    """
     This class stores and plays music.  Music is very similar to sound
     effects, but only one music file can be played at a time, and it is
     more efficient for larger files than :class:`sge.Sound`.
@@ -66,12 +65,10 @@ class Music(object):
     .. attribute:: rd
 
        Reserved dictionary for internal use by the SGE.  (Read-only)
-
     """
 
     def __init__(self, fname, volume=100):
-        """Constructor method.
-
+        """
         Arguments:
 
         - ``fname`` -- The name of the sound file in one of the paths
@@ -83,12 +80,12 @@ class Music(object):
         All other arguments set the respective initial attributes of the
         music.  See the documentation for :class:`sge.Music` for more
         information.
-
         """
         # TODO
 
     def play(self, start=0, loops=1, maxtime=None, fade_time=None):
-        """Play the music.
+        """
+        Play the music.
 
         Arguments:
 
@@ -97,29 +94,28 @@ class Music(object):
 
         See the documentation for :meth:`sge.Sound.play` for more
         information.
-
         """
         # TODO
 
     def queue(self, start=0, loops=1, maxtime=None, fade_time=None):
-        """Queue the music for playback.
+        """
+        Queue the music for playback.
 
         This will cause the music to be added to a list of music to play
         in order, after the previous music has finished playing.
 
         See the documentation for :meth:`sge.Music.play` for more
         information.
-
         """
         # TODO
 
     @staticmethod
     def stop(fade_time=None):
-        """Stop the currently playing music.
+        """
+        Stop the currently playing music.
 
         See the documentation for :meth:`sge.Sound.stop` for more
         information.
-
         """
         # TODO
 
