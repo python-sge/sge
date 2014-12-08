@@ -21,8 +21,7 @@ import sge
 
 class Object(object):
 
-    """Class for game objects.
-
+    """
     This class is used for game objects, such as the player, enemies,
     bullets, and the HUD.  Generally, each type of object has its own
     subclass of :class:`sge.Object`.
@@ -302,7 +301,6 @@ class Object(object):
     .. attribute:: rd
 
        Reserved dictionary for internal use by the SGE.  (Read-only)
-
     """
 
     def __init__(self, x, y, z=0, sprite=None, visible=True, active=True,
@@ -321,7 +319,8 @@ class Object(object):
         # TODO
 
     def collision(self, other=None, x=None, y=None):
-        """Return a list of objects colliding with this object.
+        """
+        Return a list of objects colliding with this object.
 
         Arguments:
 
@@ -339,7 +338,6 @@ class Object(object):
         - ``y`` -- The vertical position to pretend this object is at
           for the purpose of the collision detection.  If set to
           :const:`None`, :attr:`y` will be used.
-
         """
         # TODO
 
@@ -374,10 +372,9 @@ class Object(object):
         pass
 
     def event_begin_step(self, time_passed, delta_mult):
-        """Begin step event.
-
-        This event is executed each frame before automatic updates to
-        objects (such as the effects of the speed variables).
+        """
+        Called each frame before automatic updates to objects (such as
+        the effects of the speed variables).
 
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
@@ -385,149 +382,118 @@ class Object(object):
         .. note::
 
            Automatic updates, the only occurances between this event and
-           :meth:`sge.Object.event_step`, do not occur, so there
-           is no need for an "inactive" variant of this event.  Use
-           :meth:`sge.Object.event_inactive_step` instead.
-
+           :meth:`sge.Object.event_step`, do not occur when the object
+           is inactive, so there is no need for an "inactive" variant of
+           this event.  Use :meth:`sge.Object.event_inactive_step`
+           instead.
         """
         pass
 
     def event_step(self, time_passed, delta_mult):
-        """Step event.
-
-        This event is executed each frame after automatic updates to
-        objects (such as the effects of the speed variables), but before
-        collision events.
+        """
+        Called each frame after automatic updates to objects (such as
+        the effects of the speed variables), but before collision
+        events.
 
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
-
         """
         pass
 
     def event_end_step(self, time_passed, delta_mult):
-        """Step event.
-
-        This event is executed each frame after automatic updates to
-        objects (such as the effects of the speed variables), but before
-        collision events.
+        """
+        Called each frame after automatic updates to objects (such as
+        the effects of the speed variables), but before collision
+        events.
 
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
-
         """
         pass
 
     def event_alarm(self, alarm_id):
-        """Alarm event.
-
+        """
         See the documentation for :meth:`sge.Object.alarms` for more
         information.
-
         """
         pass
 
     def event_animation_end(self):
-        """Animation End event.
-
-        Called when an animation cycle ends.
-
-        """
+        """Called when an animation cycle ends."""
         pass
 
     def event_key_press(self, key, char):
-        """Key press event.
-
+        """
         See the documentation for :class:`sge.input.KeyPress` for more
         information.
-
         """
         pass
 
     def event_key_release(self, key):
-        """Key release event.
-
+        """
         See the documentation for :class:`sge.input.KeyRelease` for more
         information.
-
         """
         pass
 
     def event_mouse_move(self, x, y):
-        """Mouse move event.
-
+        """
         See the documentation for :class:`sge.input.MouseMove` for more
         information.
-
         """
         pass
 
     def event_mouse_button_press(self, button):
-        """Mouse button press event.
-
+        """
         See the documentation for :class:`sge.input.MouseButtonPress`
         for more information.
-
         """
         pass
 
     def event_mouse_button_release(self, button):
-        """Mouse button release event.
-
+        """
         See the documentation for :class:`sge.input.MouseButtonRelease`
         for more information.
-
         """
         pass
 
     def event_joystick_axis_move(self, js_name, js_id, axis, value):
-        """Joystick axis move event.
-
+        """
         See the documentation for :class:`sge.input.JoystickAxisMove`
         for more information.
-
         """
         pass
 
     def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        """Joystick hat move event.
-
+        """
         See the documentation for :class:`sge.input.JoystickHatMove` for
         more information.
-
         """
         pass
 
     def event_joystick_trackball_move(self, js_name, js_id, ball, x, y):
-        """Joystick trackball move event.
-
+        """
         See the documentation for
         :class:`sge.input.JoystickTrackballMove` for more information.
-
         """
         pass
 
     def event_joystick_button_press(self, js_name, js_id, button):
-        """Joystick button press event.
-
+        """
         See the documentation for :class:`sge.input.JoystickButtonPress`
         for more information.
-
         """
         pass
 
     def event_joystick_button_release(self, js_name, js_id, button):
-        """Joystick button release event.
-
+        """
         See the documentation for
         :class:`sge.input.JoystickButtonRelease` for more information.
-
         """
         pass
 
     def event_update_position(self, delta_mult):
-        """Update position event.
-
+        """
         Called when it's time to update the position of the object.
         This method handles this functionality, so defining this will
         override the default behavior and allow you to handle the speed
@@ -540,14 +506,12 @@ class Object(object):
 
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
-
         """
         self.x += self.xvelocity * delta_mult
         self.y += self.yvelocity * delta_mult
 
     def event_collision(self, other):
-        """Default collision event.
-
+        """
         Called when another object collides with this object and none of
         the directional collision events are appropriate.  In
         particular, this is called if the collision was already
@@ -557,13 +521,11 @@ class Object(object):
         Arguments:
 
         - ``other`` -- The other object which was collided with.
-
         """
         pass
 
     def event_collision_left(self, other):
-        """Left collision event.
-
+        """
         Called when another object collides with this object's left
         side.
 
@@ -573,13 +535,11 @@ class Object(object):
 
         By default, this method simply calls
         :meth:`sge.Object.event_collision`.
-
         """
         self.event_collision(other)
 
     def event_collision_right(self, other):
-        """Right collision event.
-
+        """
         Called when another object collides with this object's right
         side.
 
@@ -589,13 +549,11 @@ class Object(object):
 
         By default, this method simply calls
         :meth:`sge.Object.event_collision`.
-
         """
         self.event_collision(other)
 
     def event_collision_top(self, other):
-        """Top collision event.
-
+        """
         Called when another object collides with this object's top side.
 
         Arguments:
@@ -604,13 +562,11 @@ class Object(object):
 
         By default, this method simply calls
         :meth:`sge.Object.event_collision`.
-
         """
         self.event_collision(other)
 
     def event_collision_bottom(self, other):
-        """Bottom collision event.
-
+        """
         Called when another object collides with this object's bottom
         side.
 
@@ -620,94 +576,78 @@ class Object(object):
 
         By default, this method simply calls
         :meth:`sge.Object.event_collision`.
-
         """
         self.event_collision(other)
 
     def event_inactive_step(self, time_passed, delta_mult):
-        """Step event when this object is inactive.
-
+        """
         See the documentation for :meth:`sge.Object.event_step`
         for more information.  The object is considered to be inactive
         when :attr:`active` is :const:`False`.
-
         """
         pass
 
     def event_inactive_end_step(self, time_passed, delta_mult):
-        """End step event when this object is inactive.
-
+        """
         See the documentation for
         :meth:`sge.Object.event_end_step` for more information.
         The object is considered to be inactive when :attr:`active` is
         :const:`False`.
-
         """
         pass
 
     def event_inactive_key_press(self, key, char):
-        """Key press event when this object is inactive.
-
+        """
         The object is considered to be inactive when :attr:`active` is
         :const:`False`.
 
         See the documentation for :class:`sge.input.KeyPress` for more
         information.
-
         """
         pass
 
     def event_inactive_key_release(self, key):
-        """Key release event when this object is inactive.
-
+        """
         The object is considered to be inactive when :attr:`active` is
         :const:`False`.
 
         See the documentation for :class:`sge.input.KeyRelease` for more
         information.
-
         """
         pass
 
     def event_inactive_mouse_move(self, x, y):
-        """Mouse move event when this object is inactive.
-
+        """
         The object is considered to be inactive when :attr:`active` is
         :const:`False`.
 
         See the documentation for :class:`sge.input.MouseMove` for more
         information.
-
         """
         pass
 
     def event_inactive_mouse_button_press(self, button):
-        """Mouse button press event when this object is inactive.
-
+        """
         The object is considered to be inactive when :attr:`active` is
         :const:`False`.
 
         See the documentation for :class:`sge.input.MouseButtonPress`
         for more information.
-
         """
         pass
 
     def event_inactive_mouse_button_release(self, button):
-        """Mouse button release event when this object is inactive.
-
+        """
         The object is considered to be inactive when :attr:`active` is
         :const:`False`.
 
         See the documentation for :class:`sge.input.MouseButtonRelease`
         for more information.
-
         """
         pass
 
     def event_inactive_joystick_axis_move(self, js_name, js_id, axis, value):
-        """Joystick axis move event when this object is inactive.
-
+        """
         The object is considered to be inactive when :attr:`active` is
         :const:`False`.
 
@@ -718,65 +658,54 @@ class Object(object):
         pass
 
     def event_inactive_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        """Joystick hat move event when this object is inactive.
-
+        """
         The object is considered to be inactive when :attr:`active` is
         :const:`False`.
 
         See the documentation for :class:`sge.input.JoystickHatMove` for
         more information.
-
         """
         pass
 
     def event_inactive_joystick_trackball_move(self, js_name, js_id, ball, x, y):
-        """Joystick trackball move event when this object is inactive.
-
+        """
         The object is considered to be inactive when :attr:`active` is
         :const:`False`.
 
         See the documentation for
         :class:`sge.input.JoystickTrackballMove` for more information.
-
         """
         pass
 
     def event_inactive_joystick_button_press(self, js_name, js_id, button):
-        """Joystick button press event when this object is inactive.
-
+        """
         The object is considered to be inactive when :attr:`active` is
         :const:`False`.
 
         See the documentation for :class:`sge.input.JoystickButtonPress`
         for more information.
-
         """
         pass
 
     def event_inactive_joystick_button_release(self, js_name, js_id, button):
-        """Joystick button release event when this object is inactive.
-
+        """
         The object is considered to be inactive when :attr:`active` is
         :const:`False`.
 
         See the documentation for
         :class:`sge.input.JoystickButtonRelease` for more information.
-
         """
         pass
 
     def event_paused_key_press(self, key, char):
-        """Key press event when paused.
-
+        """
         See the documentation for :class:`sge.input.KeyPress` for more
         information.
-
         """
         pass
 
     def event_paused_key_release(self, key):
-        """Key release event when paused.
-
+        """
         See the documentation for :class:`sge.input.KeyRelease` for more
         information.
 
@@ -784,74 +713,58 @@ class Object(object):
         pass
 
     def event_paused_mouse_move(self, x, y):
-        """Mouse move event when paused.
-
+        """
         See the documentation for :class:`sge.input.MouseMove` for more
         information.
-
         """
         pass
 
     def event_paused_mouse_button_press(self, button):
-        """Mouse button press event when paused.
-
+        """
         See the documentation for :class:`sge.input.MouseButtonPress`
         for more information.
-
         """
         pass
 
     def event_paused_mouse_button_release(self, button):
-        """Mouse button release event when paused.
-
+        """
         See the documentation for :class:`sge.input.MouseButtonRelease`
         for more information.
-
         """
         pass
 
     def event_paused_joystick_axis_move(self, js_name, js_id, axis, value):
-        """Joystick axis move event when paused.
-
+        """
         See the documentation for :class:`sge.input.JoystickAxisMove`
         for more information.
-
         """
         pass
 
     def event_paused_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        """Joystick hat move event when paused.
-
+        """
         See the documentation for :class:`sge.input.JoystickHatMove` for
         more information.
-
         """
         pass
 
     def event_paused_joystick_trackball_move(self, js_name, js_id, ball, x, y):
-        """Joystick trackball move event when paused.
-
+        """
         See the documentation for
         :class:`sge.input.JoystickTrackballMove` for more information.
-
         """
         pass
 
     def event_paused_joystick_button_press(self, js_name, js_id, button):
-        """Joystick button press event when paused.
-
+        """
         See the documentation for :class:`sge.input.JoystickButtonPress`
         for more information.
-
         """
         pass
 
     def event_paused_joystick_button_release(self, js_name, js_id, button):
-        """Joystick button release event when paused.
-
+        """
         See the documentation for
         :class:`sge.input.JoystickButtonRelease` for more information.
-
         """
         pass
 

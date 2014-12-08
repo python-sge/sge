@@ -153,7 +153,8 @@ class Room(object):
         # TODO
 
     def project_dot(self, x, y, z, color):
-        """Project a single-pixel dot onto the room.
+        """
+        Project a single-pixel dot onto the room.
 
         Arguments:
 
@@ -165,13 +166,13 @@ class Room(object):
 
         See the documentation for :meth:`sge.Sprite.draw_dot` for more
         information.
-
         """
         # TODO
 
     def project_line(self, x1, y1, x2, y2, z, color, thickness=1,
                      anti_alias=False):
-        """Project a line segment onto the room.
+        """
+        Project a line segment onto the room.
 
         Arguments:
 
@@ -187,13 +188,13 @@ class Room(object):
 
         See the documentation for :meth:`sge.Sprite.draw_line` for more
         information.
-
         """
         # TODO
 
     def project_rectangle(self, x, y, z, width, height, fill=None,
                           outline=None, outline_thickness=1):
-        """Project a rectangle onto the room.
+        """
+        Project a rectangle onto the room.
 
         Arguments:
 
@@ -205,13 +206,13 @@ class Room(object):
 
         See the documentation for :meth:`sge.Sprite.draw_rectangle` for
         more information.
-
         """
         # TODO
 
     def project_ellipse(self, x, y, z, width, height, fill=None,
                         outline=None, outline_thickness=1, anti_alias=False):
-        """Project an ellipse onto the room.
+        """
+        Project an ellipse onto the room.
 
         Arguments:
 
@@ -228,13 +229,13 @@ class Room(object):
 
         See the documentation for :meth:`sge.Sprite.draw_ellipse` for
         more information.
-
         """
         # TODO
 
     def project_circle(self, x, y, z, radius, fill=None, outline=None,
                        outline_thickness=1, anti_alias=False):
-        """Project a circle onto the room.
+        """
+        Project a circle onto the room.
 
         Arguments:
 
@@ -246,13 +247,13 @@ class Room(object):
 
         See the documentation for :meth:`sge.Sprite.draw_circle` for
         more information.
-
         """
         # TODO
 
     def project_polygon(self, points, z, fill=None, outline=None,
                         outline_thickness=1, anti_alias=False):
-        """Draw a polygon on the sprite.
+        """
+        Draw a polygon on the sprite.
 
         Arguments:
 
@@ -264,12 +265,12 @@ class Room(object):
 
         See the documentation for :meth:`sge.Sprite.draw_polygon` for
         more information.
-
         """
         # TODO
 
     def project_sprite(self, sprite, image, x, y, z, blend_mode=None):
-        """Project a sprite onto the room.
+        """
+        Project a sprite onto the room.
 
         Arguments:
 
@@ -281,14 +282,14 @@ class Room(object):
 
         See the documentation for :meth:`sge.Sprite.draw_sprite` for
         more information.
-
         """
         # TODO
 
     def project_text(self, font, text, x, y, z, width=None, height=None,
                     color=sge.Color("black"), halign=sge.ALIGN_LEFT,
                     valign=sge.ALIGN_TOP, anti_alias=True):
-        """Project text onto the room.
+        """
+        Project text onto the room.
 
         Arguments:
 
@@ -300,7 +301,6 @@ class Room(object):
 
         See the documentation for :meth:`sge.Sprite.draw_text` for more
         information.
-
         """
         # TODO
 
@@ -331,47 +331,37 @@ class Room(object):
         pass
 
     def event_step(self, time_passed, delta_mult):
-        """Room step event.
-
+        """
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
-
         """
         pass
 
     def event_alarm(self, alarm_id):
-        """Alarm event.
-
+        """
         See the documentation for :meth:`sge.Room.alarms` for more
         information.
-
         """
         pass
 
     def event_key_press(self, key, char):
-        """Key press event.
-
+        """
         See the documentation for :class:`sge.input.KeyPress` for more
         information.
-
         """
         pass
 
     def event_key_release(self, key):
-        """Key release event.
-
+        """
         See the documentation for :class:`sge.input.KeyRelease` for more
         information.
-
         """
         pass
 
     def event_mouse_move(self, x, y):
-        """Mouse move event.
-
+        """
         See the documentation for :class:`sge.input.MouseMove` for more
         information.
-
         """
         pass
 
@@ -385,238 +375,186 @@ class Room(object):
         pass
 
     def event_mouse_button_release(self, button):
-        """Mouse button release event.
-
+        """
         See the documentation for :class:`sge.input.MouseButtonRelease`
         for more information.
-
         """
         pass
 
     def event_joystick_axis_move(self, js_name, js_id, axis, value):
-        """Joystick axis move event.
-
+        """
         See the documentation for :class:`sge.input.JoystickAxisMove`
         for more information.
-
         """
         pass
 
     def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        """Joystick hat move event.
-
+        """
         See the documentation for :class:`sge.input.JoystickHatMove` for
         more information.
-
         """
         pass
 
     def event_joystick_trackball_move(self, js_name, js_id, ball, x, y):
-        """Joystick trackball move event.
-
+        """
         See the documentation for
         :class:`sge.input.JoystickTrackballMove` for more information.
-
         """
         pass
 
     def event_joystick_button_press(self, js_name, js_id, button):
-        """Joystick button press event.
-
+        """
         See the documentation for :class:`sge.input.JoystickButtonPress`
         for more information.
-
         """
         pass
 
     def event_joystick_button_release(self, js_name, js_id, button):
-        """Joystick button release event.
-
+        """
         See the documentation for
         :class:`sge.input.JoystickButtonRelease` for more information.
-
         """
         pass
 
     def event_gain_keyboard_focus(self):
-        """Gain keyboard focus event.
-
+        """
         See the documentation for :class:`sge.input.KeyboardFocusGain`
         for more information.
-
         """
         pass
 
     def event_lose_keyboard_focus(self):
-        """Lose keyboard focus event.
-
+        """
         See the documentation for :class:`sge.input.KeyboardFocusLose`
         for more information.
-
         """
         pass
 
     def event_gain_mouse_focus(self):
-        """Gain mouse focus event.
-
+        """
         See the documentation for :class:`sge.input.MouseFocusGain` for
         more information.
-
         """
         pass
 
     def event_lose_mouse_focus(self):
-        """Lose mouse focus event.
-
+        """
         See the documentation for :class:`sge.input.MouseFocusLose` for
         more information.
-
         """
         pass
 
     def event_close(self):
-        """Close event.
-
+        """
         This is always called before any :meth:`sge.Game.event_close`
         occurring at the same time.
 
         See the documentation for :class:`sge.input.QuitRequest` for
         more information.
-
         """
         pass
 
     def event_paused_key_press(self, key, char):
-        """Key press event when paused.
-
+        """
         See the documentation for :class:`sge.input.KeyPress` for more
         information.
-
         """
         pass
 
     def event_paused_key_release(self, key):
-        """Key release event when paused.
-
+        """
         See the documentation for :class:`sge.input.KeyRelease` for more
         information.
-
         """
         pass
 
     def event_paused_mouse_move(self, x, y):
-        """Mouse move event when paused.
-
+        """
         See the documentation for :class:`sge.input.MouseMove` for more
         information.
-
         """
         pass
 
     def event_paused_mouse_button_press(self, button):
-        """Mouse button press event when paused.
-
+        """
         See the documentation for :class:`sge.input.MouseButtonPress`
         for more information.
-
         """
         pass
 
     def event_paused_mouse_button_release(self, button):
-        """Mouse button release event when paused.
-
+        """
         See the documentation for :class:`sge.input.MouseButtonRelease`
         for more information.
-
         """
         pass
 
     def event_paused_joystick_axis_move(self, js_name, js_id, axis, value):
-        """Joystick axis move event when paused.
-
+        """
         See the documentation for :class:`sge.input.JoystickAxisMove`
         for more information.
-
         """
         pass
 
     def event_paused_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        """Joystick hat move event when paused.
-
+        """
         See the documentation for :class:`sge.input.JoystickHatMove` for
         more information.
-
         """
         pass
 
     def event_paused_joystick_trackball_move(self, js_name, js_id, ball, x, y):
-        """Joystick trackball move event when paused.
-
+        """
         See the documentation for
         :class:`sge.input.JoystickTrackballMove` for more information.
-
         """
         pass
 
     def event_paused_joystick_button_press(self, js_name, js_id, button):
-        """Joystick button press event when paused.
-
+        """
         See the documentation for :class:`sge.input.JoystickButtonPress`
         for more information.
-
         """
         pass
 
     def event_paused_joystick_button_release(self, js_name, js_id, button):
-        """Joystick button release event when paused.
-
+        """
         See the documentation for
         :class:`sge.input.JoystickButtonRelease` for more information.
-
         """
         pass
 
     def event_paused_gain_keyboard_focus(self):
-        """Gain keyboard focus event when paused.
-
+        """
         See the documentation for :class:`sge.input.KeyboardFocusGain`
         for more information.
-
         """
         pass
 
     def event_paused_lose_keyboard_focus(self):
-        """Lose keyboard focus event when paused.
-
+        """
         See the documentation for :class:`sge.input.KeyboardFocusLose`
         for more information.
-
         """
         pass
 
     def event_paused_gain_mouse_focus(self):
-        """Gain mouse focus event when paused.
-
+        """
         See the documentation for :class:`sge.input.MouseFocusGain` for
         more information.
-
         """
         pass
 
     def event_paused_lose_mouse_focus(self):
-        """Lose mouse focus event when paused.
-
+        """
         See the documentation for :class:`sge.input.MouseFocusLose` for
         more information.
-
         """
         pass
 
     def event_paused_close(self):
-        """Close event when paused.
-
+        """
         See the documentation for :meth:`sge.Room.event_close` for more
         information.
-
         """
         pass
