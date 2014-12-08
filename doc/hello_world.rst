@@ -128,7 +128,7 @@ world!" in the center of the screen.  This will be our room class::
     class Room(sge.Room):
 
         def event_step(self, time_passed, delta_mult):
-            sge.game.project_text("my_font", "Hello, world!", sge.game.width / 2,
+            sge.game.project_text(font, "Hello, world!", sge.game.width / 2,
                                   sge.game.height / 2, color=sge.Color("black"),
                                   halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
 
@@ -146,8 +146,8 @@ onto the screen.  :data:`sge.game` is a variable that always points to
 the :class:`sge.Game` object currently in use.
 
 The first argument of this method is the font to use; we don't have a
-font yet, but we are going to define one later and give it the unique
-idetifier, ``"my_font"``.  Next is the text to display, which for us is
+font yet, but we are going to define one later and assign it to
+``font``.  Next is the text to display, which for us is
 ``"Hello, world!"``.
 
 The next arguments are the horizontal and vertical location of the text
@@ -180,30 +180,22 @@ execute it.
 Additionally, we are still missing a resource: the font object we want
 to use to project text onto the screen.  We need to load this resource.
 
-We are going to fix both of these problems by defining and then calling
-a :func:`main` function.
+We are going to fix both of these problems by adding some code after our
+class definitions::
 
-The main Function
------------------
+    # Create Game object
+    Game()
 
-Technically, Python doesn't require this to be a function, much less a
-function called :func:`main`, but using a main function makes the code
-cleaner and more well-defined.  This is what our :func:`main` definition
-will be::
+    # Create backgrounds
+    background = sge.Background([], sge.Color("white"))
 
-    def main():
-        # Create Game object
-        Game()
+    # Load fonts
+    font = sge.Font()
 
-        # Create backgrounds
-        background = sge.Background([], sge.Color("white"))
+    # Create rooms
+    sge.game.start_room = Room(background=background)
 
-        # Load fonts
-        sge.Font(ID="my_font")
-
-        # Create rooms
-        Room(background=background)
-
+    if __name__ == '__main__':
         sge.game.start()
 
 First, we create a :class:`sge.Game` object; we don't need to store it
@@ -217,28 +209,21 @@ which we don't need.)
 Third, we create our font. We don't really care what this font looks
 like, so we allow the SGE to pick a font.  If you do care what font is
 used, you can pass the name of a font onto the ``name`` keyword
-argument.  Since we are referencing the font by ID, there is no need for
-us to assign the font to a variable.
+argument.
 
-Fourth, we create a room. Again, we don't need to assign it to a
-variable. The only argument we pass is the background argument; we set
-this to the background we created earlier.
+Fourth, we create a room.  The only argument we pass is the background
+argument; we set this to the background we created earlier.  Since it is
+the room that we are going to start the game with, we need to assign
+this room to the special attribute, :attr:`sge.game.start_room`, which
+indicates the room that the game starts with.
 
 Finally, with everything in place, we call the :meth:`sge.Game.start`
 method of our game object.  This executes all the game logic we defined
-earlier.
-
-To actually call :func:`main`, add this to the bottom of the file, after
-the definition of :func:`main`::
-
-    if __name__ == '__main__':
-        main()
-
-:data:`__name__` is a special Python variable: if it is set to
-``"__main__"``, that means that the current module is the main module,
-i.e. this file was executed rather than imported.  It is a good practice
-to include this distinction between being executed and being imported in
-all of your Python scripts.
+earlier.  However, we only do this if the special Python variable,
+:data:`__name__`, is set to ``"__main__"``, which means that the current
+module is the main module, i.e. was executed rather than imported.  It
+is a good practice to include this distinction between being executed
+and being imported in all of your Python scripts.
 
 The Final Result
 ================
@@ -285,21 +270,17 @@ This is the completed Hello World program::
                                   halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
 
 
-    def main():
-        # Create Game object
-        Game()
+    # Create Game object
+    Game()
 
-        # Create backgrounds
-        background = sge.Background([], sge.Color("white"))
+    # Create backgrounds
+    background = sge.Background([], sge.Color("white"))
 
-        # Load fonts
-        sge.Font(ID="my_font")
+    # Load fonts
+    font = sge.Font(ID="my_font")
 
-        # Create rooms
-        Room(background=background)
-
-        sge.game.start()
-
+    # Create rooms
+    sge.game.start_room = Room(background=background)
 
     if __name__ == '__main__':
-        main()
+        sge.game.start()
