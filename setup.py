@@ -33,7 +33,7 @@ possible, and it also makes the SGE easy to learn.
 """.strip()
 
 setup(name="sge-spec",
-      version="0.14a1",
+      version="0.14",
       description="A 2-D game engine for Python",
       long_description=long_description,
       author="Julian Marchant",

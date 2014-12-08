@@ -292,7 +292,7 @@ Dependencies
 [insert other info here]
 """
 
-__version__ = "0.14a1"
+__version__ = "0.14"
 
 import sys
 import os
