@@ -12,6 +12,8 @@ without any warranty.
 
 Specification additions:
 + sge.Sprite.draw_polygon
++ sge.Game.project_polygon
++ sge.Room.project_polygon
 + sge.Background.rd
 + sge.BackgroundLayer.rd
 + sge.Font.rd
