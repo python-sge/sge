@@ -17,8 +17,13 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import sge
+import os
 import random
+
+import sge
+
+
+DATA = os.path.join(os.path.dirname(__file__), "data")
 
 
 class Game(sge.Game):
@@ -65,8 +70,8 @@ def main():
     game = Game(delta=True, collision_events_enabled=False)
 
     # Load sprites
-    rotator_sprite = sge.Sprite('rotator')
-    fence_sprite = sge.Sprite('fence')
+    rotator_sprite = sge.Sprite('rotator', DATA)
+    fence_sprite = sge.Sprite('fence', DATA)
 
     # Load backgrounds
     layers = (sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False),)

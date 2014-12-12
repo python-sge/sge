@@ -7,6 +7,22 @@ without any warranty.
 
 ========================================================================
 
+0.15
+------------------------------------------------------------------------
+
+Specification removals:
+- sge.image_directories
+- sge.font_directories
+- sge.sound_directories
+- sge.music_directories
+
+Specification misc changes:
+* Images loaded for sge.Sprite objects are now loaded from a directory
+  specified by the new "directory" argument.
+* Fonts, sounds, and music now have their exact path names specified,
+  rather than implicitly searching a certain set of directories.
+
+
 0.14
 ------------------------------------------------------------------------
 

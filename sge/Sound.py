@@ -66,8 +66,7 @@ class Sound(object):
         """
         Arguments:
 
-        - ``fname`` -- The name of the sound file in one of the paths
-          specified in :data:`sge.sound_directories`.  If set to
+        - ``fname`` -- The path to the sound file.  If set to
           :const:`None`, this object will not actually play any sound.
           If this is neither a valid sound file nor :const:`None`,
           :exc:`IOError` is raised.

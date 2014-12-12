@@ -69,9 +69,7 @@ class Font(object):
         - ``name`` -- The name of the font.  Can be one of the
           following:
 
-          - A string indicating the name of a font file located in one
-            of the paths specified in :data:`sge.font_directories`, e.g.
-            ``"MyFont.ttf"``.
+          - A string indicating the path to the font file.
           - A string indicating the case-insensitive name of a system
             font, e.g. ``"Liberation Serif"``.
           - A list or tuple of strings indicating either a font file or
@@ -87,16 +85,13 @@ class Font(object):
         .. note::
 
            It is generally not a good practice to rely on system fonts.
-           A font which you have on your system is probably not on
-           everyone's system.  For example, most Windows systems have a
-           font called Times New Roman, but this font is not normally
-           found on Debian systems.  On the other hand, Debian has the
-           Liberation fonts installed by default, but these fonts are
-           uncommon on Windows systems.  Rather than relying on system
-           fonts, choose a font which is under a free license (such as
-           the GNU General Public License or the SIL Open Font License)
-           and distribute it with your game; this will ensure that
-           everyone sees text rendered the same way you do.
+           There are no standard fonts; a font which you have on your
+           system is probably not on everyone's system.  Rather than
+           relying on system fonts, choose a font which is under a libre
+           license (such as the GNU General Public License or the SIL
+           Open Font License) and distribute it with your game; this
+           will ensure that everyone sees text rendered the same way you
+           do.
         """
         # TODO
 

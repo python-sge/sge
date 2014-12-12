@@ -17,7 +17,12 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import os
+
 import sge
+
+
+DATA = os.path.join(os.path.dirname(__file__), "data")
 
 
 class glob(object):
@@ -83,11 +88,11 @@ def main():
     game = Game(collision_events_enabled=False)
 
     # Load sprites
-    glob.circle_sprite = sge.Sprite('circle', width=32, height=32, origin_x=16,
-                                    origin_y=16)
-    fence_sprite = sge.Sprite('fence')
-    glob.light_sprite = sge.Sprite('light', width=128, height=128, origin_x=64,
-                                   origin_y=64)
+    glob.circle_sprite = sge.Sprite('circle', DATA, width=32, height=32,
+                                    origin_x=16, origin_y=16)
+    fence_sprite = sge.Sprite('fence', DATA)
+    glob.light_sprite = sge.Sprite('light', DATA, width=128, height=128,
+                                   origin_x=64, origin_y=64)
 
     glob.darkness_sprite = sge.Sprite(width=sge.game.width,
                                       height=sge.game.height)

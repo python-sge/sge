@@ -17,10 +17,13 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import os
 import random
 
 import sge
 
+
+DATA = os.path.join(os.path.dirname(__file__), "data")
 PADDLE_XOFFSET = 32
 PADDLE_SPEED = 4
 PADDLE_VERTICAL_FORCE = 1 / 12
@@ -251,9 +254,9 @@ background = sge.Background(layers, sge.Color("black"))
 hud_font = sge.Font("Droid Sans Mono", size=48)
 
 # Load sounds
-bounce_sound = sge.Sound('bounce.wav')
-bounce_wall_sound = sge.Sound('bounce_wall.wav')
-score_sound = sge.Sound('score.wav')
+bounce_sound = sge.Sound(os.path.join(DATA, 'bounce.wav'))
+bounce_wall_sound = sge.Sound(os.path.join(DATA, 'bounce_wall.wav'))
+score_sound = sge.Sound(os.path.join(DATA, 'score.wav'))
 
 # Create objects
 player1 = Player(1)

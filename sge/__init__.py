@@ -248,31 +248,6 @@ Global Variables and Constants
    :class:`sge.Game` object currently, this variable is set to
    :const:`None`.
 
-.. data:: sge.image_directories
-
-   A list of directories where images can be found.  Default is
-   ``./data/images``, ``./data/sprites``, or ``./data/backgrounds``,
-   where ``.`` is the program directory.  Directories within the
-   listed directories are not included.
-
-.. data:: sge.font_directories
-
-   A list of directories where font files can be found.  Default is
-   ``./data/fonts``, where ``.`` is the program directory.  Directories
-   within the listed directories are not included.
-
-.. data:: sge.sound_directories
-
-   A list of directories where sounds can be found.  Default is
-   ``./data/sounds``, where ``.`` is the program directory.  Directories
-   within the listed directories are not included.
-
-.. data:: sge.music_directories
-
-   A list of directories where music files can be found.  Default is
-   ``./data/music``, where ``.`` is the program directory.  Directories
-   within the listed directories are not included.
-
 Information specific to [insert implementation name here]
 =========================================================
 
@@ -292,7 +267,7 @@ Dependencies
 [insert other info here]
 """
 
-__version__ = "0.14"
+__version__ = "0.15a0"
 
 import sys
 import os
@@ -300,7 +275,6 @@ import os
 # Import implementation-specific libraries like Pygame here
 
 # Constants
-PROGRAM_DIR = os.path.dirname(sys.argv[0])
 IMPLEMENTATION = "SGE Specification"
 
 ALIGN_LEFT = 2
@@ -418,16 +392,7 @@ __all__ = [
     # Classes
     'Color', 'Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font',
     'Sound', 'Music', 'Object', 'Room', 'View',
-
-    # Functions
-    'show_message', 'get_text_entry',
     ]
 
 # Global variables
 game = None
-image_directories = [os.path.join(PROGRAM_DIR, 'data', 'images'),
-                     os.path.join(PROGRAM_DIR, 'data', 'sprites'),
-                     os.path.join(PROGRAM_DIR, 'data', 'backgrounds')]
-font_directories = [os.path.join(PROGRAM_DIR, 'data', 'fonts')]
-sound_directories = [os.path.join(PROGRAM_DIR, 'data', 'sounds')]
-music_directories = [os.path.join(PROGRAM_DIR, 'data', 'music')]

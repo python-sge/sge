@@ -117,16 +117,15 @@ class Sprite(object):
        Reserved dictionary for internal use by the SGE.  (Read-only)
     """
 
-    def __init__(self, name=None, width=None, height=None, transparent=True,
-                 origin_x=0, origin_y=0, fps=60, bbox_x=None, bbox_y=None,
-                 bbox_width=None, bbox_height=None):
+    def __init__(self, name=None, directory="", width=None, height=None,
+                 transparent=True, origin_x=0, origin_y=0, fps=60, bbox_x=None,
+                 bbox_y=None, bbox_width=None, bbox_height=None):
         """
         Arguments:
 
         - ``name`` -- The base name of the image files, used to find all
-          individual image files that make up the sprite's animation in
-          the paths specified in :data:`sge.image_directories`.  One of
-          the following rules will be used to find the images:
+          individual image files that make up the sprite's animation`.
+          One of the following rules will be used to find the images:
 
           - The base name plus a valid image extension.  If this rule is
             used, the image will be loaded as a single-frame sprite.
@@ -149,6 +148,8 @@ class Sprite(object):
 
           If none of the above rules can be used, :exc:`IOError` is
           raised.
+
+        - ``directory`` -- The directory to search for image files in.
 
         All other arguments set the respective initial attributes of the
         sprite.  See the documentation for :class:`Sprite` for more

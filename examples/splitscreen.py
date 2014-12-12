@@ -17,8 +17,13 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import sge
+import os
 import random
+
+import sge
+
+
+DATA = os.path.join(os.path.dirname(__file__), "data")
 
 circles = []
 
@@ -103,9 +108,9 @@ def main():
     Game(width=640, height=480, collision_events_enabled=False)
 
     # Load sprites
-    circle_sprite = sge.Sprite('circle', width=32, height=32, origin_x=16,
-                               origin_y=16)
-    fence = sge.Sprite('fence')
+    circle_sprite = sge.Sprite('circle', DATA, width=32, height=32,
+                               origin_x=16, origin_y=16)
+    fence = sge.Sprite('fence', DATA)
 
     # Load backgrounds
     layers = (sge.BackgroundLayer(fence, 0, 0, 0),)

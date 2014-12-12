@@ -17,9 +17,13 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import os
 import random
 
 import sge
+
+
+DATA = os.path.join(os.path.dirname(__file__), "data")
 
 
 class glob(object):
@@ -139,11 +143,12 @@ def main():
     game = Game(collision_events_enabled=False)
 
     # Load sprites
-    glob.circle_sprite = sge.Sprite('circle', width=64, height=64, origin_x=32,
-                                    origin_y=32)
-    glob.circle_pop_sprite = sge.Sprite('circle_pop', width=64, height=64,
-                                        origin_x=32, origin_y=32, fps=60)
-    fence_sprite = sge.Sprite('fence')
+    glob.circle_sprite = sge.Sprite('circle', DATA, width=64, height=64,
+                                    origin_x=32, origin_y=32)
+    glob.circle_pop_sprite = sge.Sprite('circle_pop', DATA, width=64,
+                                        height=64, origin_x=32, origin_y=32,
+                                        fps=60)
+    fence_sprite = sge.Sprite('fence', DATA)
 
     # Load backgrounds
     layers = [sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False)]
@@ -155,10 +160,10 @@ def main():
     glob.font = sge.Font('Liberation Serif', 20)
 
     # Load sounds
-    glob.pop_sound = sge.Sound('pop.ogg')
+    glob.pop_sound = sge.Sound(os.path.join(DATA, 'pop.ogg'))
     
     # Load music
-    glob.music = sge.Music('WhereWasI.ogg')
+    glob.music = sge.Music(os.path.join(DATA, 'WhereWasI.ogg'))
 
     # Create objects
     circle = Circle(game.width // 2, game.height // 2)
