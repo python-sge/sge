@@ -102,9 +102,8 @@ class Game(object):
 
     .. attribute:: window_icon
 
-       The name of the image file located in one of the directories
-       specified in :data:`sge.image_directories` to use as the window
-       icon.  If set to :const:`None`, the SGE chooses the icon.
+       The path to the image file to use as the window icon.  If set
+       to :const:`None`, the SGE chooses the icon.
 
     .. attribute:: collision_events_enabled
 
