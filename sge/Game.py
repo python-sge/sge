@@ -103,7 +103,8 @@ class Game(object):
     .. attribute:: window_icon
 
        The path to the image file to use as the window icon.  If set
-       to :const:`None`, the SGE chooses the icon.
+       to :const:`None`, the SGE chooses the icon.  If the file
+       specified does not exist, :exc:`IOError` is raised.
 
     .. attribute:: collision_events_enabled
 
