@@ -510,7 +510,7 @@ class Sprite(object):
         # TODO
 
     @classmethod
-    def from_tileset(cls, name, x=0, y=0, columns=1, rows=1, xsep=0, ysep=0,
+    def from_tileset(cls, fname, x=0, y=0, columns=1, rows=1, xsep=0, ysep=0,
                      width=1, height=1, origin_x=0, origin_y=0,
                      transparent=True, fps=0, bbox_x=None, bbox_y=None,
                      bbox_width=None, bbox_height=None):
@@ -519,9 +519,8 @@ class Sprite(object):
 
         Arguments:
 
-        - ``name`` -- The base name of the image file containing the
-          tileset, not including the file extension, to be found in one
-          of the paths specified in :data:`sge.image_directories`.
+        - ``fname`` -- The path to the image file containing the
+          tileset.
         - ``x`` -- The horizontal location relative to the image of the
           top-leftmost tile in the tileset.
         - ``y`` -- The vertical location relative to the image of the
