@@ -2,6 +2,8 @@
 sge.joystick
 ************
 
+.. contents::
+
 .. automodule:: sge.joystick
 
 sge.joystick Functions

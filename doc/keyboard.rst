@@ -2,6 +2,8 @@
 sge.keyboard
 ************
 
+.. contents::
+
 .. automodule:: sge.keyboard
 
 sge.keyboard Functions

@@ -2,6 +2,8 @@
 sge.input
 *********
 
+.. contents::
+
 .. automodule:: sge.input
 
 Input Event Classes

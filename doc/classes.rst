@@ -2,6 +2,8 @@
 Classes
 *******
 
+.. contents::
+
 sge.Game
 ========
 

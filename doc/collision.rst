@@ -2,6 +2,8 @@
 sge.collision
 *************
 
+.. contents::
+
 .. automodule:: sge.collision
 
 sge.collision Functions

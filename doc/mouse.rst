@@ -2,6 +2,8 @@
 sge.mouse
 *********
 
+.. contents::
+
 .. automodule:: sge.mouse
 
 sge.mouse Functions
