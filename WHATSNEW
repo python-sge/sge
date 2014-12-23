@@ -21,6 +21,8 @@ Specification misc changes:
   specified by the new "directory" argument.
 * Fonts, sounds, and music now have their exact path names specified,
   rather than implicitly searching a certain set of directories.
+* sge.Color now supports indicating alpha values in HTML-style hex
+  strings.
 
 
 0.14

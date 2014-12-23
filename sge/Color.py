@@ -75,8 +75,7 @@ class Color(object):
 
     .. attribute:: hex_string
 
-       An HTML hex string representation of the color, excluding alpha
-       transparency.  (Read-only)
+       An HTML hex string representation of the color.  (Read-only)
     """
 
     def __init__(self, value):
@@ -87,14 +86,14 @@ class Color(object):
           this object.  Should be one of the following:
 
           - One of the 16 HTML color names (case-insensitive).
-          - An HTML-style hex string containing 3 or 6 digits which
-            indicate the red, green, and blue components of the color,
-            respectively.  If the string contains 3 digits, each digit
-            is duplicated; for example, ``"#F80"`` is equivalent to
-            ``"#FF8800"``.
+          - An HTML-style hex string containing 3, 4, 6, or 8 digits
+            which indicate the red, green, blue, and alpha components of
+            the color, respectively, as pairs of hexadecimal digits.  If
+            the string contains 3 or 4 digits, each digit is duplicated;
+            for example, ``"#F80"`` is equivalent to ``"#FF8800"``.
           - An integer which, when written as a hexadecimal number,
             specifies the components of the color in the same way as an
-            HTML-stype hex string containing 6 digits.
+            HTML-style hex string containing 6 digits.
           - A list or tuple indicating the red, green, and blue
             components, and optionally the alpha component, in that
             order.
@@ -105,9 +104,15 @@ class Color(object):
             if len(value) == 3:
                 r, g, b = [int(value[i] * 2, 16) for i in range(3)]
                 self.red, self.green, self.blue = r, g, b
+            elif len(value) == 4:
+                r, g, b, a = [int(value[i] * 2, 16) for i in range(4)]
+                self.red, self.green, self.blue, self.alpha = r, g, b, a
             elif len(value) == 6:
                 r, g, b = [int(value[i:(i + 2)], 16) for i in range(0, 6, 2)]
                 self.red, self.green, self.blue = r, g, b
+            elif len(value) == 8:
+                r, g, b, a = [int(value[i:(i + 2)], 16) for i in range(0, 8, 2)]
+                self.red, self.green, self.blue, self.alpha = r, g, b, a
             else:
                 raise ValueError("Invalid color string.")
         elif isinstance(value, int):
@@ -158,8 +163,12 @@ class Color(object):
 
     @property
     def hex_string(self):
-        r, g, b = [hex(c)[2:].zfill(2) for c in self[:3]]
-        return "#{}{}{}".format(r, g, b)
+        if self.alpha == 255:
+            r, g, b = [hex(c)[2:].zfill(2) for c in self[:3]]
+            return "#{}{}{}".format(r, g, b)
+        else:
+            r, g, b, a = [hex(c)[2:].zfill(2) for c in self]
+            return "#{}{}{}{}".format(r, g, b, a)
 
     def __iter__(self):
         return iter([self.red, self.green, self.blue, self.alpha])
