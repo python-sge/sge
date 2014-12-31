@@ -248,16 +248,15 @@ sounds.  Generate three sounds: one for the ball bouncing off a paddle
 ("bounce.wav"), one for the ball bouncing off a wall
 ("bounce_wall.wav"), and one for the ball passing by a player
 ("score.wav").  Alternatively, you can copy the sounds I generated from
-examples/data/sounds.  Create a folder in your project directory with
-the name "data", create a folder within the data folder with the name
-"sounds", and put your sounds in the "sounds" folder.
+examples/data.  Create a folder in your project directory with the name
+"data" and put your sounds in this folder.
 
 .. note::
 
-   Some file systems, like FAT and NTFS, are case-insensitive and will
+   Some file systems, like FAT32 and NTFS, are case-insensitive and will
    allow you to treat "bounce.wav" and "Bounce.wav" as if they are the
-   same file name, but some, such as pretty much every file system used
-   by POSIX systems, are case-sensitive, meaning that "bounce.wav" and
+   same file name, but some, such as pretty much every Linux file
+   system, are case-sensitive, meaning that "bounce.wav" and
    "Bounce.wav" are two completely different names; requesting one will
    never give you the other.  If you have a case-insensitive file
    system, be careful to not get the case wrong, or some people who play
@@ -267,8 +266,38 @@ Loading the Sounds
 ------------------
 
 Sounds in the SGE are stored in :class:`sge.Sound` objects.  As the only
-argument, indicate the name of the file (including the ".wav"
-extension).  Assign the appropriate :class:`sge.Sound` objects to
+argument, indicate the full path to the file.  There are two ways to
+indicate the path: using the current working directory as a base, and
+using the directory of pong.py as a base.  Both of methods require the
+:mod:`os` module, so be sure to add this to your list of imports.
+
+The easiest way to get the path of the file is to use the current
+working directory as a base, on the assumption that the current working
+directory is also the directory that the "data" folder is located in.
+This method is very simple; assuming we want the file called "spam.wav",
+we would use this code::
+
+    os.path.join("data", "spam.wav")
+
+However, it is not always the case that the current working directory is
+the appropriate location to search for the "data" folder.  It could be
+that the current working directory is the user's home directory, for
+instance.  To prevent the game from crashing in this case, define a
+constant called :const:`DATA`, indicating the "data" directory relative
+to the location of pong.py::
+
+    DATA = os.path.join(os.path.dirname(__file__), "data")
+
+:data:`__file__` is a special variable indicating the full path to the
+current file, i.e. pong.py in this case.  By getting the directory name
+of the current file, we can be certain of where to look for the "data"
+folder.  :const:`DATA` now indicates the appropriate path to the "data"
+folder, so from now on, if we want a file called "spam.wav" located in
+this directory, we use this code::
+
+    os.path.join(DATA, "spam.wav")
+
+Assign the appropriate :class:`sge.Sound` objects to
 :data:`bounce_sound`, :data:`bounce_wall_sound`, and
 :data:`score_sound`.
 
@@ -363,6 +392,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
 
     import sge
 
+    DATA = os.path.join(os.path.dirname(__file__), "data")
     PADDLE_XOFFSET = 32
     PADDLE_SPEED = 4
     PADDLE_VERTICAL_FORCE = 1 / 12
@@ -578,9 +608,9 @@ Our final Pong game now has scores, sounds, and even joystick support::
     hud_font = sge.Font("Droid Sans Mono", size=48)
 
     # Load sounds
-    bounce_sound = sge.Sound('bounce.wav')
-    bounce_wall_sound = sge.Sound('bounce_wall.wav')
-    score_sound = sge.Sound('score.wav')
+    bounce_sound = sge.Sound(os.path.join(DATA, 'bounce.wav'))
+    bounce_wall_sound = sge.Sound(os.path.join(DATA, 'bounce_wall.wav'))
+    score_sound = sge.Sound(os.path.join(DATA, 'score.wav'))
 
     # Create objects
     player1 = Player(1)
