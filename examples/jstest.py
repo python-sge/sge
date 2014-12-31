@@ -127,13 +127,17 @@ class Room(sge.Room):
 
     def event_key_press(self, key, char):
         if key == "left":
-            self.current_joystick -= 1
-            self.current_joystick %= sge.joystick.get_joysticks()
-            self.set_joystick()
+            num = sge.joystick.get_joysticks()
+            if num:
+                self.current_joystick -= 1
+                self.current_joystick %= num
+                self.set_joystick()
         elif key == "right":
-            self.current_joystick += 1
-            self.current_joystick %= sge.joystick.get_joysticks()
-            self.set_joystick()
+            num = sge.joystick.get_joysticks()
+            if num:
+                self.current_joystick += 1
+                self.current_joystick %= num
+                self.set_joystick()
         elif key == "space":
             sge.joystick.refresh()
             self.set_joystick()
