@@ -62,7 +62,7 @@ numbers are to the left of the origin.  However, in the vertical
 direction, normally called ``y``, ``0`` is the origin, positive numbers
 are below the origin, and negative numbers are above the origin.  While
 slightly jarring if you are used to normal graphs, this is in fact
-common in 2-D game development and is so how pixels in most image
+common in 2-D game development and is also how pixels in most image
 formats are indexed.
 
 Except where otherwise specified, the origin is always located at the
