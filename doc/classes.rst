@@ -170,6 +170,8 @@ sge.Sprite Methods
 
 .. automethod:: sge.Sprite.draw_unlock
 
+.. automethod:: sge.Sprite.copy
+
 .. automethod:: sge.Sprite.save
 
 .. automethod:: sge.Sprite.from_tileset

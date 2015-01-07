@@ -493,6 +493,21 @@ class Sprite(object):
         """
         # TODO
 
+    def copy(self):
+        """Return a copy of the sprite."""
+        new_copy = Sprite(width=self.width, height=self.height,
+                          transparent=self.transparent, origin_x=self.origin_x,
+                          origin_y=self.origin_y, fps=self.fps,
+                          bbox_x=self.bbox_x, bbox_y=self.bbox_y,
+                          bbox_width=self.bbox_width,
+                          bbox_height=self.bbox_height)
+        for i in range(1, self.frames):
+            new_copy.append_frame()
+        for i in range(self.frames):
+            new_copy.draw_sprite(self, i, 0, 0, i)
+
+        return new_copy
+
     def save(self, fname):
         """
         Save the sprite to an image file.
@@ -565,3 +580,9 @@ class Sprite(object):
             sge.Sprite.from_screenshot().save("foo.png")
         """
         # TODO
+
+    def __copy__(self):
+        return self.copy()
+
+    def __deepcopy__(self, memo):
+        return self.copy()
