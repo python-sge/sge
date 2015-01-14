@@ -12,6 +12,7 @@ without any warranty.
 
 Specification additions:
 + sge.Sprite.copy
++ sge.Sprite.from_text
 
 
 0.15

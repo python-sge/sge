@@ -525,6 +525,27 @@ class Sprite(object):
         # TODO
 
     @classmethod
+    def from_text(cls, font, text, width=None, height=None,
+                  color=sge.Color("black"), halign=sge.ALIGN_LEFT,
+                  valign=sge.ALIGN_TOP, anti_alias=True):
+        """
+        Create a sprite, draw the given text on it, and return the
+        sprite.  See the documentation for :meth:`sge.Sprite.draw_text`
+        for more information.
+
+        The sprite's origin is set based on ``halign`` and ``valign``.
+        """
+        x = {sge.ALIGN_LEFT: 0, sge.ALIGN_RIGHT: s.width,
+             sge.ALIGN_CENTER: s.width / 2}.get(halign, 0)
+        y = {sge.ALIGN_TOP: 0, sge.ALIGN_BOTTOM: s.height,
+             sge.ALIGN_MIDDLE: s.height / 2}.get(valign, 0)
+        s = cls(width=font.get_width(text, width, height),
+                height=font.get_height(text, width, height), origin_x=x,
+                origin_y=y)
+        s.draw_text(font, text, 0, 0, width, height, color, halign, valign)
+        return s
+
+    @classmethod
     def from_tileset(cls, fname, x=0, y=0, columns=1, rows=1, xsep=0, ysep=0,
                      width=1, height=1, origin_x=0, origin_y=0,
                      transparent=True, fps=0, bbox_x=None, bbox_y=None,

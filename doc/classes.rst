@@ -174,6 +174,8 @@ sge.Sprite Methods
 
 .. automethod:: sge.Sprite.save
 
+.. automethod:: sge.Sprite.from_text
+
 .. automethod:: sge.Sprite.from_tileset
 
 .. automethod:: sge.Sprite.from_screenshot
