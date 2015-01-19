@@ -176,6 +176,9 @@ class Color(object):
     def __int__(self):
         return self.red * 256 ** 2 | self.green * 256 | self.blue
 
+    def __repr__(self):
+        return 'sge.Color("{}")'.format(str(self))
+
     def __str__(self):
         return COLOR_NAMES.get(self.hex_string, self.hex_string)
 
