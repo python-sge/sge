@@ -135,30 +135,6 @@ Global Variables and Constants
 
    A string indicating the name of the SGE implementation.
 
-.. data:: sge.ALIGN_LEFT
-
-   Flag indicating horizontal alignment to the left.
-
-.. data:: sge.ALIGN_CENTER
-
-   Flag indicating horizontal alignment to the center.
-
-.. data:: sge.ALIGN_RIGHT
-
-   Flag indicating horizontal alignment to the right.
-
-.. data:: sge.ALIGN_TOP
-
-   Flag indicating vertical alignment to the top
-
-.. data:: sge.ALIGN_MIDDLE
-
-   Flag indicating vertical alignment to the middle.
-
-.. data:: sge.ALIGN_BOTTOM
-
-   Flag indicating vertical alignment to the bottom.
-
 .. data:: sge.BLEND_NORMAL
 
    Flag indicating normal blending.
@@ -277,13 +253,6 @@ import os
 # Constants
 IMPLEMENTATION = "SGE Specification"
 
-ALIGN_LEFT = 2
-ALIGN_CENTER = 3
-ALIGN_RIGHT = 1
-ALIGN_TOP = 8
-ALIGN_MIDDLE = 12
-ALIGN_BOTTOM = 4
-
 BLEND_NORMAL = 0
 BLEND_RGB = 1
 BLEND_ALPHA = 2
@@ -382,8 +351,7 @@ __all__ = [
     "collision", "input", "joystick", "keyboard", "mouse",
 
     # Constants
-    'IMPLEMENTATION', 'ALIGN_LEFT', 'ALIGN_CENTER', 'ALIGN_RIGHT', 'ALIGN_TOP',
-    'ALIGN_MIDDLE', 'ALIGN_BOTTOM', 'BLEND_RGBA_ADD', 'BLEND_RGBA_SUBTRACT',
+    'IMPLEMENTATION', 'BLEND_RGBA_ADD', 'BLEND_RGBA_SUBTRACT',
     'BLEND_RGBA_MULTIPLY', 'BLEND_RGBA_SCREEN', 'BLEND_RGBA_MINIMUM',
     'BLEND_RGBA_MAXIMUM', 'BLEND_RGB_ADD', 'BLEND_RGB_SUBTRACT',
     'BLEND_RGB_MULTIPLY', 'BLEND_RGB_SCREEN', 'BLEND_RGB_MINIMUM',

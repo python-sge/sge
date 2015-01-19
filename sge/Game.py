@@ -385,8 +385,8 @@ class Game(object):
         # TODO
 
     def project_text(self, font, text, x, y, width=None, height=None,
-                    color=sge.Color("black"), halign=sge.ALIGN_LEFT,
-                    valign=sge.ALIGN_TOP, anti_alias=True):
+                    color=sge.Color("black"), halign="left",
+                    valign="top", anti_alias=True):
         """
         Project text onto the game window.
 

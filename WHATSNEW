@@ -14,6 +14,19 @@ Specification additions:
 + sge.Sprite.copy
 + sge.Sprite.from_text
 
+Specification removals:
+- sge.ALIGN_LEFT
+- sge.ALIGN_RIGHT
+- sge.ALIGN_CENTER
+- sge.ALIGN_TOP
+- sge.ALIGN_BOTTOM
+- sge.ALIGN_MIDDLE
+
+Specification misc changes:
+* Methods that previously uses the "ALIGN" constants now use simple
+  string representations ("left", "right", "center", "up", "down",
+  "middle").
+
 
 0.15
 ------------------------------------------------------------------------

@@ -364,8 +364,8 @@ class Sprite(object):
         # TODO
 
     def draw_text(self, font, text, x, y, width=None, height=None,
-                  color=sge.Color("black"), halign=sge.ALIGN_LEFT,
-                  valign=sge.ALIGN_TOP, anti_alias=True, frame=None):
+                  color=sge.Color("black"), halign="left", valign="top",
+                  anti_alias=True, frame=None):
         """
         Draw text on the sprite.
 
@@ -392,35 +392,35 @@ class Sprite(object):
           horizontal location of the origin of the imaginary rectangle
           the text is drawn in.  Can be set to one of the following:
 
-          - :data:`sge.ALIGN_LEFT` -- Align the text to the left of the
+          - ``"left"`` -- Align the text to the left of the imaginary
+            rectangle the text is drawn in.  Set the origin of the
+            imaginary rectangle to its left edge.
+          - ``"center"`` -- Align the text to the center of the
             imaginary rectangle the text is drawn in.  Set the origin of
-            the imaginary rectangle to its left edge.
-          - :data:`sge.ALIGN_CENTER` -- Align the text to the center of
-            the imaginary rectangle the text is drawn in.  Set the
-            origin of the imaginary rectangle to its center.
-          - :data:`sge.ALIGN_RIGHT` -- Align the text to the right of
-            the imaginary rectangle the text is drawn in.  Set the
-            origin of the imaginary rectangle to its right edge.
+            the imaginary rectangle to its center.
+          - ``"right"`` -- Align the text to the right of the imaginary
+            rectangle the text is drawn in.  Set the origin of the
+            imaginary rectangle to its right edge.
 
         - ``valign`` -- The vertical alignment of the text and the
           vertical location of the origin of the imaginary rectangle the
           text is drawn in.  Can be set to one of the following:
 
-          - :data:`sge.ALIGN_TOP` -- Align the text to the top of the
+          - ``"top"`` -- Align the text to the top of the imaginary
+            rectangle the text is drawn in.  Set the origin of the
+            imaginary rectangle to its top edge.  If the imaginary
+            rectangle is not tall enough to contain all of the text, cut
+            text off from the bottom.
+          - ``"middle"`` -- Align the the text to the middle of the
+            imaginary rectangle the text is drawn in.  Set the origin of
+            the imaginary rectangle to its middle.  If the imaginary
+            rectangle is not tall enough to contain all of the text, cut
+            text off equally from the top and bottom.
+          - ``"bottom"`` -- Align the text  to the bottom of the
             imaginary rectangle the text is drawn in.  Set the origin of
             the imaginary rectangle to its top edge.  If the imaginary
             rectangle is not tall enough to contain all of the text, cut
-            text off from the bottom.
-          - :data:`sge.ALIGN_MIDDLE` -- Align the the text to the middle
-            of the imaginary rectangle the text is drawn in.  Set the
-            origin of the imaginary rectangle to its middle.  If the
-            imaginary rectangle is not tall enough to contain all of the
-            text, cut text off equally from the top and bottom.
-          - :data:`sge.ALIGN_BOTTOM` -- Align the text  to the bottom of
-            the imaginary rectangle the text is drawn in.  Set the
-            origin of the imaginary rectangle to its top edge.  If the
-            imaginary rectangle is not tall enough to contain all of the
-            text, cut text off from the top.
+            text off from the top.
 
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
@@ -526,8 +526,8 @@ class Sprite(object):
 
     @classmethod
     def from_text(cls, font, text, width=None, height=None,
-                  color=sge.Color("black"), halign=sge.ALIGN_LEFT,
-                  valign=sge.ALIGN_TOP, anti_alias=True):
+                  color=sge.Color("black"), halign="left", valign="top",
+                  anti_alias=True):
         """
         Create a sprite, draw the given text on it, and return the
         sprite.  See the documentation for :meth:`sge.Sprite.draw_text`
@@ -535,14 +535,14 @@ class Sprite(object):
 
         The sprite's origin is set based on ``halign`` and ``valign``.
         """
-        x = {sge.ALIGN_LEFT: 0, sge.ALIGN_RIGHT: s.width,
-             sge.ALIGN_CENTER: s.width / 2}.get(halign, 0)
-        y = {sge.ALIGN_TOP: 0, sge.ALIGN_BOTTOM: s.height,
-             sge.ALIGN_MIDDLE: s.height / 2}.get(valign, 0)
+        x = {"left": 0, "right": s.width,
+             "center": s.width / 2}.get(halign.lower(), 0)
+        y = {"top": 0, "bottom": s.height,
+             "middle": s.height / 2}.get(valign.lower(), 0)
         s = cls(width=font.get_width(text, width, height),
                 height=font.get_height(text, width, height), origin_x=x,
                 origin_y=y)
-        s.draw_text(font, text, 0, 0, width, height, color, halign, valign)
+        s.draw_text(font, text, x, y, width, height, color, halign, valign)
         return s
 
     @classmethod
