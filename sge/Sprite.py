@@ -535,13 +535,11 @@ class Sprite(object):
 
         The sprite's origin is set based on ``halign`` and ``valign``.
         """
-        x = {"left": 0, "right": s.width,
-             "center": s.width / 2}.get(halign.lower(), 0)
-        y = {"top": 0, "bottom": s.height,
-             "middle": s.height / 2}.get(valign.lower(), 0)
-        s = cls(width=font.get_width(text, width, height),
-                height=font.get_height(text, width, height), origin_x=x,
-                origin_y=y)
+        w = font.get_width(text, width, height)
+        h = font.get_height(text, width, height)
+        x = {"left": 0, "right": w, "center": w / 2}.get(halign.lower(), 0)
+        y = {"top": 0, "bottom": h, "middle": h / 2}.get(valign.lower(), 0)
+        s = cls(width=w, height=h, origin_x=x, origin_y=y)
         s.draw_text(font, text, x, y, width, height, color, halign, valign)
         return s
 
