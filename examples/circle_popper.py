@@ -52,7 +52,7 @@ class Game(sge.Game):
             self.fps_frames = 0
 
         self.project_text(glob.font, self.fps_text, self.width - 8, 8,
-                          halign=sge.ALIGN_RIGHT)
+                          halign="right")
 
     def event_key_press(self, key, char):
         if key == 'escape':
@@ -136,7 +136,7 @@ class Room(sge.Room):
         self.project_dot(90, 35, 3, sge.Color("maroon"))
         text = "I am amazing text!\n\nYaaaaaaaaaaay~!"
         self.project_text(glob.font, text, 320, 0, 3, color=sge.Color("black"),
-                          halign=sge.ALIGN_CENTER)
+                          halign="center")
 
         if sge.keyboard.get_pressed("left"):
             self.views[0].xport -= 1

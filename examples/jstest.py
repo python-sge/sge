@@ -74,7 +74,7 @@ class Room(sge.Room):
         y = glob.js_selection_sprite.height / 2
         glob.js_selection_sprite.draw_text(
             glob.name_font, title_text, x, y, color=sge.Color("white"),
-            halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
+            halign="center", valign="middle")
 
         self.print_state()
 

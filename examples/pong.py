@@ -214,10 +214,10 @@ class Ball(sge.Object):
             p2text = "WIN" if player2.score > player1.score else "LOSE"
             hud_sprite.draw_text(hud_font, p1text, x - TEXT_OFFSET,
                                  TEXT_OFFSET, color=sge.Color("white"),
-                                 halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
+                                 halign="right", valign="top")
             hud_sprite.draw_text(hud_font, p2text, x + TEXT_OFFSET,
                                  TEXT_OFFSET, color=sge.Color("white"),
-                                 halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
+                                 halign="left", valign="top")
             game_in_progress = False
 
 
@@ -227,10 +227,10 @@ def refresh_hud():
     x = hud_sprite.width / 2
     hud_sprite.draw_text(hud_font, str(player1.score), x - TEXT_OFFSET,
                          TEXT_OFFSET, color=sge.Color("white"),
-                         halign=sge.ALIGN_RIGHT, valign=sge.ALIGN_TOP)
+                         halign="right", valign="top")
     hud_sprite.draw_text(hud_font, str(player2.score), x + TEXT_OFFSET,
                          TEXT_OFFSET, color=sge.Color("white"),
-                         halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP)
+                         halign="left", valign="top")
 
 
 # Create Game object
