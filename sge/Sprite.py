@@ -36,10 +36,11 @@ class Sprite(object):
 
        .. note::
 
-          Changing this attribute is a destructive transformation: it
-          can result in loss of pixel information, especially if it is
-          done repeatedly.  Because of this, it is advised that you do
-          not adjust this value for routine scaling.  Use the
+          Changing this attribute will cause the sprite to be scaled
+          horizontally.  This is a destructive transformation: it can
+          result in loss of pixel information, especially if it is done
+          repeatedly.  Because of this, it is advised that you do not
+          adjust this value for routine scaling.  Use the
           :attr:`image_xscale` attribute of a :class:`sge.Object`
           object instead.
 
@@ -49,10 +50,11 @@ class Sprite(object):
 
        .. note::
 
-          Changing this attribute is a destructive transformation: it
-          can result in loss of pixel information, especially if it is
-          done repeatedly.  Because of this, it is advised that you do
-          not adjust this value for routine scaling.  Use the
+          Changing this attribute will cause the sprite to be scaled
+          vertically.  This is a destructive transformation: it can
+          result in loss of pixel information, especially if it is done
+          repeatedly.  Because of this, it is advised that you do not
+          adjust this value for routine scaling.  Use the
           :attr:`image_yscale` attribute of a :class:`sge.Object`
           object instead.
 
@@ -490,6 +492,38 @@ class Sprite(object):
 
         Use this method to "unlock" the sprite after it has been
         "locked" for continuous drawing by :meth:`sge.Sprite.draw_lock`.
+        """
+        # TODO
+
+    def mirror(self):
+        """Mirror the sprite horizontally."""
+        # TODO
+
+    def flip(self):
+        """Flip the sprite vertically."""
+        # TODO
+
+    def rotate(self, x, adaptive_resize=True):
+        """
+        Rotate the sprite about the center.
+
+        Arguments:
+
+        - ``x`` -- The rotation amount in degrees, with rotation in a
+          positive direction being counter-clockwise.
+        - ``adaptive_resize`` -- Whether or not the sprite should be
+          resized to accomodate rotation.  If this is :const:`True`,
+          rotation amounts other than multiples of 180 will result in
+          the size of the sprite being adapted to fit the whole rotated
+          image.
+
+        .. note::
+
+           This is a destructive transformation: it can result in loss
+           of pixel information, especially if it is done repeatedly.
+           Because of this, it is advised that you do not adjust this
+           value for routine rotation.  Use the :attr:`image_rotation`
+           attribute of a :class:`sge.Object` object instead.
         """
         # TODO
 
