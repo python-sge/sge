@@ -504,7 +504,7 @@ class Sprite(object):
         for i in range(1, self.frames):
             new_copy.append_frame()
         for i in range(self.frames):
-            new_copy.draw_sprite(self, i, 0, 0, i)
+            new_copy.draw_sprite(self, i, self.origin_x, self.origin_y, i)
 
         return new_copy
 
