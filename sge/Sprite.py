@@ -515,7 +515,8 @@ class Sprite(object):
           resized to accomodate rotation.  If this is :const:`True`,
           rotation amounts other than multiples of 180 will result in
           the size of the sprite being adapted to fit the whole rotated
-          image.
+          image.  The origin will also be adjusted so that the rotation
+          is about the center.
 
         .. note::
 
