@@ -188,7 +188,8 @@ def main():
     fence_sprite = sge.Sprite('fence', DATA)
 
     # Load backgrounds
-    layers = (sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False),)
+    layers = (sge.BackgroundLayer(fence_sprite, 0, 380, 0, repeat_up=False,
+                                  repeat_down=False),)
     background = sge.Background(layers, sge.Color(0xffffff))
 
     # Load fonts

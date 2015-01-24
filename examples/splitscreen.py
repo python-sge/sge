@@ -113,7 +113,9 @@ def main():
     fence = sge.Sprite('fence', DATA)
 
     # Load backgrounds
-    layers = (sge.BackgroundLayer(fence, 0, 0, 0),)
+    layers = [sge.BackgroundLayer(fence, 0, 0, 0, repeat_left=True,
+                                  repeat_right=True, repeat_up=True,
+                                  repeat_down=True)]
     background = sge.Background(layers, sge.Color('white'))
 
     # Create objects

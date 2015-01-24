@@ -100,7 +100,8 @@ def main():
                                         fill=sge.Color("black"))
 
     # Load backgrounds
-    layers = (sge.BackgroundLayer(fence_sprite, 0, 380, 0, yrepeat=False),)
+    layers = [sge.BackgroundLayer(fence_sprite, 0, 380, 0, repeat_left=True,
+                                  repeat_right=True)]
     background = sge.Background(layers, sge.Color(0xffffff))
 
     # Create objects

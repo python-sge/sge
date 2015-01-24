@@ -247,7 +247,7 @@ hud_sprite = sge.Sprite(width=320, height=120, origin_x=160, origin_y=0)
 
 # Load backgrounds
 layers = [sge.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
-                              xrepeat=False)]
+                              repeat_up=True, repeat_down=True)]
 background = sge.Background(layers, sge.Color("black"))
 
 # Load fonts

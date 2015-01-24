@@ -54,21 +54,30 @@ class BackgroundLayer(object):
        The vertical rate that the layer scrolls as a factor of the
        additive inverse of the vertical movement of the view.
 
-    .. attribute:: xrepeat
+    .. attribute:: repeat_left
 
-       Whether or not the layer should be repeated (tiled) horizontally.
+       Whether or not the layer should be repeated (tiled) to the left.
 
-    .. attribute:: yrepeat
+    .. attribute:: repeat_right
 
-       Whether or not the layer should be repeated (tiled) vertically.
+       Whether or not the layer should be repeated (tiled) to the right.
+
+    .. attribute:: repeat_up
+
+       Whether or not the layer should be repeated (tiled) upwards.
+
+    .. attribute:: repeat_down
+
+       Whether or not the layer should be repeated (tiled) downwards.
 
     .. attribute:: rd
 
        Reserved dictionary for internal use by the SGE.  (Read-only)
     """
 
-    def __init__(self, sprite, x, y, z, xscroll_rate=1, yscroll_rate=1,
-                 xrepeat=True, yrepeat=True):
+    def __init__(self, sprite, x, y, z=0, xscroll_rate=1, yscroll_rate=1,
+                 repeat_left=False, repeat_right=False, repeat_up=False,
+                 repeat_down=False):
         """
         Arguments set the respective initial attributes of the layer.
         See the documentation for :class:`sge.BackgroundLayer` for more

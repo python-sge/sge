@@ -26,9 +26,12 @@ Specification removals:
 - sge.ALIGN_MIDDLE
 
 Specification misc changes:
-* Methods that previously uses the "ALIGN" constants now use simple
+* Methods that previously used the "ALIGN" constants now use simple
   string representations ("left", "right", "center", "up", "down",
   "middle").
+* xrepeat and yrepeat of sge.BackgroundLayer changed to repeat_left,
+  repeat_right, repeat_up, and repeat_down.
+* Backgrounds do not repeat by default.
 
 
 0.15
