@@ -419,7 +419,7 @@ used in a background.  We create the layer, put it in a list, and pass
 that list onto :meth:`sge.Background.__init__`'s ``layers`` argument::
 
     layers = [sge.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
-                                  xrepeat=False)]
+                                  repeat_up=True, repeat_down=True)]
     background = sge.Background(layers, sge.Color("black"))
 
 The fourth argument of :meth:`sge.BackgroudLayer.__init__` is the
@@ -610,7 +610,7 @@ You should now have a script that looks something like this::
 
     # Load backgrounds
     layers = [sge.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
-                                  xrepeat=False)]
+                                  repeat_up=True, repeat_down=True)]
     background = sge.Background(layers, sge.Color("black"))
 
     # Create objects

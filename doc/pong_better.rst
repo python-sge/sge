@@ -606,7 +606,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
 
     # Load backgrounds
     layers = [sge.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
-                                  xrepeat=False)]
+                                  repeat_up=True, repeat_down=True)]
     background = sge.Background(layers, sge.Color("black"))
 
     # Load fonts
