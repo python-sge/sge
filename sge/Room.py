@@ -339,7 +339,7 @@ class Room(object):
 
     def event_alarm(self, alarm_id):
         """
-        See the documentation for :meth:`sge.Room.alarms` for more
+        See the documentation for :attr:`sge.Room.alarms` for more
         information.
         """
         pass

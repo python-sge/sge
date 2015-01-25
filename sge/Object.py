@@ -413,7 +413,7 @@ class Object(object):
 
     def event_alarm(self, alarm_id):
         """
-        See the documentation for :meth:`sge.Object.alarms` for more
+        See the documentation for :attr:`sge.Object.alarms` for more
         information.
         """
         pass

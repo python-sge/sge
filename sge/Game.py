@@ -435,7 +435,7 @@ class Game(object):
         """
         Called when the value of an alarm reaches 0.
 
-        See the documentation for :meth:`sge.Game.alarms` for more
+        See the documentation for :attr:`sge.Game.alarms` for more
         information.
         """
         pass
