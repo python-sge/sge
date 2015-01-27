@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Splitscreen Example
-# Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>
+# Written in 2012, 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -29,8 +29,6 @@ circles = []
 
 
 class Game(sge.Game):
-    def event_game_start(self):
-        self.mouse.sprite = circle_sprite
 
     def event_step(self, time_passed, delta_mult):
         self.project_line(self.width / 2, 0, self.width / 2, self.height,
@@ -111,6 +109,7 @@ def main():
     circle_sprite = sge.Sprite('circle', DATA, width=32, height=32,
                                origin_x=16, origin_y=16)
     fence = sge.Sprite('fence', DATA)
+    sge.game.mouse_sprite = circle_sprite
 
     # Load backgrounds
     layers = [sge.BackgroundLayer(fence, 0, 0, 0, repeat_left=True,

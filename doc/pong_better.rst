@@ -32,9 +32,17 @@ Enter key is pressed.  Set it to :const:`True` by default.
 To make pressing Enter start a new game, we will check
 :data:`game_in_progress`.  If a game is in progress, we will pause the
 game, as we had it do previously.  Otherwise, we will set
-:data:`game_in_progress` to :const:`True` and restart the room with
-:meth:`sge.Room.start`, called on :attr:`sge.game.current_room`.  With
-those changes, our definition of :meth:`Game.event_key_press` becomes::
+:data:`game_in_progress` to :const:`True` and restart the room.
+
+If you look through the documentation for :class:`sge.Room`, you may
+notice that no "restart" method exists. In fact, this is a design
+choice; earlier versions of the SGE did have a method to restart rooms,
+but it was removed because this feature is overly difficult to maintain
+properly.  But how do we restart the room, then? Well, we technically
+don't.  Instead, we create a new room which is exactly like the one we
+wanted to restart, and immediately.  We will put the creation of the
+room into a new function, :func:`create_room`.  Our definition of
+:meth:`Game.event_key_press` becomes::
 
     def event_key_press(self, key, char):
         global game_in_progress
@@ -50,7 +58,23 @@ those changes, our definition of :meth:`Game.event_key_press` becomes::
                 self.pause()
             else:
                 game_in_progress = True
-                self.current_room.start()
+                create_room().start()
+
+Now, we need to define :func:`create_room`.  This is very simple; we
+just copy and paste the code we used at the bottom to create the room
+into it, but specify that :data:`player` and :data:`player2` are global.
+Our function is as follows::
+
+    def create_room():
+        global player1
+        global player2
+        player1 = Player(1)
+        player2 = Player(2)
+        ball = Ball()
+        return sge.Room([player1, player2, ball], background=background)
+
+Of course, this makes the identical code at the bottom redundant, so we
+will replace it with a call to :func:`create_room`.
 
 Giving Points to the Players
 ----------------------------
@@ -382,7 +406,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
     #!/usr/bin/env python3
 
     # Pong Example
-    # Written in 2013, 2014 by Julian Marchant <onpon4@riseup.net>
+    # Written in 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net>
     #
     # To the extent possible under law, the author(s) have dedicated all
     # copyright and related and neighboring rights to this software to the
@@ -580,6 +604,15 @@ Our final Pong game now has scores, sounds, and even joystick support::
                 game_in_progress = False
 
 
+    def create_room():
+        global player1
+        global player2
+        player1 = Player(1)
+        player2 = Player(2)
+        ball = Ball()
+        return sge.Room([player1, player2, ball], background=background)
+
+
     def refresh_hud():
         # This fixes the HUD sprite so that it displays the correct score.
         hud_sprite.draw_clear()
@@ -617,14 +650,8 @@ Our final Pong game now has scores, sounds, and even joystick support::
     bounce_wall_sound = sge.Sound(os.path.join(DATA, 'bounce_wall.wav'))
     score_sound = sge.Sound(os.path.join(DATA, 'score.wav'))
 
-    # Create objects
-    player1 = Player(1)
-    player2 = Player(2)
-    ball = Ball()
-    objects = [player1, player2, ball]
-
     # Create rooms
-    sge.Room(objects, background=background)
+    sge.game.start_room = create_room()
 
 
     if __name__ == '__main__':

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Pong Example
-# Written in 2013, 2014 by Julian Marchant <onpon4@riseup.net>
+# Written in 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -72,7 +72,7 @@ class Game(sge.Game):
                 self.pause()
             else:
                 game_in_progress = True
-                self.current_room.start()
+                create_room().start()
 
     def event_close(self):
         self.end()
@@ -221,6 +221,15 @@ class Ball(sge.Object):
             game_in_progress = False
 
 
+def create_room():
+    global player1
+    global player2
+    player1 = Player(1)
+    player2 = Player(2)
+    ball = Ball()
+    return sge.Room([player1, player2, ball], background=background)
+
+
 def refresh_hud():
     # This fixes the HUD sprite so that it displays the correct score.
     hud_sprite.draw_clear()
@@ -258,13 +267,8 @@ bounce_sound = sge.Sound(os.path.join(DATA, 'bounce.wav'))
 bounce_wall_sound = sge.Sound(os.path.join(DATA, 'bounce_wall.wav'))
 score_sound = sge.Sound(os.path.join(DATA, 'score.wav'))
 
-# Create objects
-player1 = Player(1)
-player2 = Player(2)
-ball = Ball()
-
 # Create rooms
-sge.game.start_room = sge.Room([player1, player2, ball], background=background)
+sge.game.start_room = create_room()
 
 
 if __name__ == '__main__':

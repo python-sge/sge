@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Circle Popper
-# Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>
+# Written in 2012, 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -36,11 +36,6 @@ class glob(object):
 
 
 class Game(sge.Game):
-
-    def event_game_start(self):
-        self.fps_time = 0
-        self.fps_frames = 0
-        self.fps_text = ""
 
     def event_step(self, time_passed, delta_mult):
         self.fps_time += time_passed
@@ -213,6 +208,10 @@ def main():
 
     # Create rooms
     game.start_room = Room(objects, views=views, background=background)
+
+    game.fps_time = 0
+    game.fps_frames = 0
+    game.fps_text = ""
 
     game.start()
 
