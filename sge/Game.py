@@ -171,9 +171,8 @@ class Game(object):
 
     def start(self):
         """
-        Start the game at the first room.  Can be called in the middle
-        of a game to start the game over.  If you do this, everything
-        will be reset to its original state.
+        Start the game.  Should only be called once; the effect of any
+        further calls is undefined.
         """
         # TODO
 
@@ -401,21 +400,6 @@ class Game(object):
         information.
         """
         # TODO
-
-    def event_game_start(self):
-        """
-        Called when the game starts.  This is only called once (it is
-        not called again when the game restarts), and it is always the
-        very first event method called.
-        """
-        pass
-
-    def event_game_end(self):
-        """
-        Called when the game ends.  This is only called once, and it is
-        always the very last event method called.
-        """
-        pass
 
     def event_step(self, time_passed, delta_mult):
         """
