@@ -38,12 +38,6 @@ game_in_progress = True
 
 class Game(sge.Game):
 
-    def event_game_start(self):
-        self.mouse.visible = False
-        self.fps_time = 0
-        self.fps_frames = 0
-        self.fps_text = ""
-
     def event_step(self, time_passed, delta_mult):
         self.project_sprite(hud_sprite, 0, self.width / 2, 0)
 
@@ -269,6 +263,11 @@ score_sound = sge.Sound(os.path.join(DATA, 'score.wav'))
 
 # Create rooms
 sge.game.start_room = create_room()
+
+sge.game.mouse.visible = False
+sge.game.fps_time = 0
+sge.game.fps_frames = 0
+sge.game.fps_text = ""
 
 
 if __name__ == '__main__':

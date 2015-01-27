@@ -40,8 +40,8 @@ choice; earlier versions of the SGE did have a method to restart rooms,
 but it was removed because this feature is overly difficult to maintain
 properly.  But how do we restart the room, then? Well, we technically
 don't.  Instead, we create a new room which is exactly like the one we
-wanted to restart, and immediately.  We will put the creation of the
-room into a new function, :func:`create_room`.  Our definition of
+wanted to restart, and immediately start it.  We will put the creation
+of the room into a new function, :func:`create_room`.  Our definition of
 :meth:`Game.event_key_press` becomes::
 
     def event_key_press(self, key, char):
@@ -436,9 +436,6 @@ Our final Pong game now has scores, sounds, and even joystick support::
 
     class Game(sge.Game):
 
-        def event_game_start(self):
-            self.mouse.visible = False
-
         def event_step(self, time_passed, delta_mult):
             self.project_sprite(hud_sprite, 0, self.width / 2, 0)
 
@@ -652,6 +649,8 @@ Our final Pong game now has scores, sounds, and even joystick support::
 
     # Create rooms
     sge.game.start_room = create_room()
+
+    sge.game.mouse.visible = False
 
 
     if __name__ == '__main__':

@@ -26,18 +26,11 @@ For our :class:`sge.Game` class, we want to of course provide a way to
 exit the game, and in this case, we are also going to provide a way to
 pause the game.  Just for the heck of it, let's also allow the player to
 take a screenshot by pressing F8 and toggle fullscreen by pressing F11.
-We will also hide the mouse cursor when the game starts, since we don't
-need it.
 
 Let's take it one event at a time. Our close event is simple enough::
 
     def event_close(self):
         self.end()
-
-Hiding the mouse cursor is similarly simple::
-
-    def event_game_start(self):
-        self.mouse.visible = False
 
 Our key press event is slightly more involved.  To take a screenshot, we
 simply use a combination of :meth:`sge.Sprite.from_screenshot` and
@@ -447,6 +440,12 @@ Create a :class:`Room` object.  Specify the first argument as
 ``background``.  Don't forget to assign it to
 :attr:`sge.game.start_room`!
 
+Making the Mouse Invisible
+--------------------------
+
+Since we don't need to see the mouse cursor, we will hide it.  To do
+this, set :attr:`sge.game.mouse.visible` to :const:`False`.
+
 Starting the Game
 -----------------
 
@@ -485,9 +484,6 @@ You should now have a script that looks something like this::
 
 
     class Game(sge.Game):
-
-        def event_game_start(self):
-            self.mouse.visible = False
 
         def event_key_press(self, key, char):
             global game_in_progress
@@ -621,6 +617,8 @@ You should now have a script that looks something like this::
 
     # Create rooms
     sge.game.start_room = sge.Room(objects, background=background)
+
+    sge.game.mouse.visible = False
 
 
     if __name__ == '__main__':
