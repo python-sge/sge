@@ -112,8 +112,7 @@ class Room(object):
 
     def start(self, transition=None, transition_time=1500):
         """
-        Start the room, resetting to its original state if it has been
-        started previously.
+        Start the room.
 
         Arguments:
 
@@ -145,12 +144,8 @@ class Room(object):
         # TODO
 
     def resume(self, transition=None, transition_time=1500):
-        """
-        Start the room without resetting to its original state if it has
-        been started previously.  See the documentation for
-        :meth:`sge.Room.start` for more information.
-        """
-        # TODO
+        """An alias for :meth:`sge.Room.start`."""
+        self.start(transition, transition_time)
 
     def project_dot(self, x, y, z, color):
         """
@@ -306,19 +301,18 @@ class Room(object):
 
     def event_room_start(self):
         """
-        Called when the room starts for the first time, and when it is
-        restarted with :meth:`sge.Room.start`.  It is always called
-        after any :meth:`sge.Game.event_game_start` and before any
-        :class:`sge.Object.event_create` occurring at the same time.
+        Called when the room is started for the first time.  It is
+        always called after any :meth:`sge.Game.event_game_start` and
+        before any :class:`sge.Object.event_create` occurring at the
+        same time.
         """
         pass
 
     def event_room_resume(self):
         """
-        Called when the room is resumed with :meth:`sge.Room.resume`
-        after it has already previously been started.  It is always
-        called before any :meth:`sge.Object.event_create` occurring at
-        the same time.
+        Called when the room is started after it has already previously
+        been started.  It is always called before any
+        :meth:`sge.Object.event_create` occurring at the same time.
         """
         pass
 
