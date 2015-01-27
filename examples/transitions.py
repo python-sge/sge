@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Transitions example
-# Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>
+# Written in 2012, 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
