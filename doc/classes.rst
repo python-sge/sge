@@ -100,6 +100,8 @@ sge.Game Event Methods
 
 .. automethod:: sge.Game.event_mouse_collision_bottom
 
+.. automethod:: sge.Game.event_paused_step
+
 .. automethod:: sge.Game.event_paused_key_press
 
 .. automethod:: sge.Game.event_paused_key_release
@@ -346,6 +348,8 @@ sge.Object Event Methods
 
 .. automethod:: sge.Object.event_inactive_joystick_button_release
 
+.. automethod:: sge.Object.event_paused_step
+
 .. automethod:: sge.Object.event_paused_key_press
 
 .. automethod:: sge.Object.event_paused_key_release
@@ -442,6 +446,8 @@ sge.Room Event Methods
 .. automethod:: sge.Room.event_lose_mouse_focus
 
 .. automethod:: sge.Room.event_close
+
+.. automethod:: sge.Room.event_paused_step
 
 .. automethod:: sge.Room.event_paused_key_press
 
