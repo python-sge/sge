@@ -402,9 +402,7 @@ class Object(object):
 
     def event_end_step(self, time_passed, delta_mult):
         """
-        Called each frame after automatic updates to objects (such as
-        the effects of the speed variables), but before collision
-        events.
+        Called each frame after collision events.
 
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
@@ -694,6 +692,13 @@ class Object(object):
 
         See the documentation for
         :class:`sge.input.JoystickButtonRelease` for more information.
+        """
+        pass
+
+    def event_paused_step(self, time_passed, delta_mult):
+        """
+        See the documentation for :meth:`sge.Game.event_step` for more
+        information.
         """
         pass
 

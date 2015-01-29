@@ -448,6 +448,13 @@ class Room(object):
         """
         pass
 
+    def event_paused_step(self, time_passed, delta_mult):
+        """
+        See the documentation for :meth:`sge.Game.event_step` for more
+        information.
+        """
+        pass
+
     def event_paused_key_press(self, key, char):
         """
         See the documentation for :class:`sge.input.KeyPress` for more

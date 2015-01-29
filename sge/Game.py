@@ -535,43 +535,49 @@ class Game(object):
     def event_mouse_collision(self, other):
         """
         Proxy for :meth:`sge.game.mouse.event_collision`.  See the
-        documentation for :meth:`sge.Object.event_collision` for
-        more information.
+        documentation for :meth:`sge.Object.event_collision` for more
+        information.
         """
         pass
 
     def event_mouse_collision_left(self, other):
         """
         Proxy for :meth:`sge.game.mouse.event_collision_left`.  See the
-        documentation for :meth:`sge.Object.event_collision_left`
-        for more information.
+        documentation for :meth:`sge.Object.event_collision_left` for
+        more information.
         """
         self.event_mouse_collision(other)
 
     def event_mouse_collision_right(self, other):
         """
         Proxy for :meth:`sge.game.mouse.event_collision_right`.  See the
-        documentation for :meth:`sge.Object.event_collision_right`
-        for more information.
+        documentation for :meth:`sge.Object.event_collision_right` for
+        more information.
         """
         self.event_mouse_collision(other)
 
     def event_mouse_collision_top(self, other):
         """
         Proxy for :meth:`sge.game.mouse.event_collision_top`.  See the
-        documentation for :meth:`sge.Object.event_collision_top`
-        for more information.
+        documentation for :meth:`sge.Object.event_collision_top` for
+        more information.
         """
         self.event_mouse_collision(other)
 
     def event_mouse_collision_bottom(self, other):
         """
         Proxy for :meth:`sge.game.mouse.event_collision_bottom`.  See
-        the documentation for
-        :meth:`sge.Object.event_collision_bottom` for more
-        information.
+        the documentation for :meth:`sge.Object.event_collision_bottom`
+        for more information.
         """
         self.event_mouse_collision(other)
+
+    def event_paused_step(self, time_passed, delta_mult):
+        """
+        See the documentation for :meth:`sge.Game.event_step` for more
+        information.
+        """
+        pass
 
     def event_paused_key_press(self, key, char):
         """
