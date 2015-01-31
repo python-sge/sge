@@ -107,35 +107,35 @@ class Room(sge.Room):
     def event_key_press(self, key, char):
         next_room = glob.rooms[(glob.rooms.index(self) + 1) % len(glob.rooms)]
         if key == "space":
-            next_room.resume()
+            next_room.start()
         elif key == "1":
-            next_room.resume(transition="fade")
+            next_room.start(transition="fade")
         elif key == "2":
-            next_room.resume(transition="dissolve")
+            next_room.start(transition="dissolve")
         elif key == "3":
-            next_room.resume(transition="pixelate")
+            next_room.start(transition="pixelate")
         elif key == "4":
-            next_room.resume(transition="wipe_left")
+            next_room.start(transition="wipe_left")
         elif key == "5":
-            next_room.resume(transition="wipe_right")
+            next_room.start(transition="wipe_right")
         elif key == "6":
-            next_room.resume(transition="wipe_up")
+            next_room.start(transition="wipe_up")
         elif key == "7":
-            next_room.resume(transition="wipe_down")
+            next_room.start(transition="wipe_down")
         elif key == "8":
-            next_room.resume(transition="wipe_upleft")
+            next_room.start(transition="wipe_upleft")
         elif key == "9":
-            next_room.resume(transition="wipe_upright")
+            next_room.start(transition="wipe_upright")
         elif key == "0":
-            next_room.resume(transition="wipe_downleft")
+            next_room.start(transition="wipe_downleft")
         elif key == "q":
-            next_room.resume(transition="wipe_downright")
+            next_room.start(transition="wipe_downright")
         elif key == "w":
-            next_room.resume(transition="wipe_matrix")
+            next_room.start(transition="wipe_matrix")
         elif key == "e":
-            next_room.resume(transition="iris_in")
+            next_room.start(transition="iris_in")
         elif key == "r":
-            next_room.resume(transition="iris_out")
+            next_room.start(transition="iris_out")
 
 
 def main():
