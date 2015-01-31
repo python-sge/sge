@@ -26,6 +26,7 @@ Specification removals:
 - sge.ALIGN_MIDDLE
 - sge.Game.event_game_start
 - sge.Game.event_game_end
+- sge.Room.resume
 
 Specification misc changes:
 * Methods that previously used the "ALIGN" constants now use simple
@@ -37,8 +38,6 @@ Specification misc changes:
 * sge.Room.start no longer restarts the room.  This behavior was very
   difficult to maintain, and considering it can be achieved by just
   creating a new room, it isn't worth it.
-* sge.Room.resume remains as an alias to sge.Room.start.  It may be
-  removed in the future.
 * sge.Game.start no longer has a secondary function of restarting the
   game.  This effect can be achieved easily enough just by starting the
   first room.

@@ -386,8 +386,6 @@ sge.Room Methods
 
 .. automethod:: sge.Room.start
 
-.. automethod:: sge.Room.resume
-
 .. automethod:: sge.Room.project_dot
 
 .. automethod:: sge.Room.project_line

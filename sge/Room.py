@@ -143,10 +143,6 @@ class Room(object):
         """
         # TODO
 
-    def resume(self, transition=None, transition_time=1500):
-        """An alias for :meth:`sge.Room.start`."""
-        self.start(transition, transition_time)
-
     def project_dot(self, x, y, z, color):
         """
         Project a single-pixel dot onto the room.
