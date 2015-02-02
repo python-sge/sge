@@ -1,5 +1,5 @@
 # The SGE Specification
-# Written in 2014 by Julian Marchant <onpon4@riseup.net> 
+# Written in 2014, 2015 by Julian Marchant <onpon4@riseup.net> 
 # 
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -294,7 +294,7 @@ class JoystickAxisMove:
         self.js_name = js_name
         self.js_id = js_id
         self.axis = axis
-        self.value = value
+        self.value = max(-1.0, min(value, 1.0))
 
 
 class JoystickHatMove:
