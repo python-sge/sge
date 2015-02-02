@@ -269,16 +269,6 @@ BLEND_RGBA_SCREEN = BLEND_ALPHA | BLEND_RGB_SCREEN
 BLEND_RGBA_MINIMUM = BLEND_ALPHA | BLEND_RGB_MINIMUM
 BLEND_RGBA_MAXIMUM = BLEND_ALPHA | BLEND_RGB_MAXIMUM
 
-COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
-          'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
-          'yellow': '#ffff00', 'olive': '#808000', 'lime': '#00ff00',
-          'green': '#008000', 'aqua': '#00ffff', 'teal': '#008080',
-          'blue': '#0000ff', 'navy': '#000080', 'fuchsia': '#ff00ff',
-          'purple': '#800080'}
-COLOR_NAMES = {}
-for pair in COLORS.items():
-    COLOR_NAMES[pair[1]] = pair[0]
-
 KEYS = {"0": None, "1": None, "2": None, "3": None, "4": None, "5": None,
         "6": None, "7": None, "8": None, "9": None, "a": None, "b": None,
         "c": None, "d": None, "e": None, "f": None, "g": None, "h": None,
