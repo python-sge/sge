@@ -34,7 +34,7 @@ Specification misc changes:
   "middle").
 * xrepeat and yrepeat of sge.BackgroundLayer changed to repeat_left,
   repeat_right, repeat_up, and repeat_down.
-* Backgrounds do not repeat by default.
+* Background layers do not repeat by default.
 * sge.Room.start no longer restarts the room.  This behavior was very
   difficult to maintain, and considering it can be achieved by just
   creating a new room, it isn't worth it.
