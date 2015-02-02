@@ -52,10 +52,6 @@ sge.Game Methods
 sge.Game Event Methods
 ----------------------
 
-.. automethod:: sge.Game.event_game_start
-
-.. automethod:: sge.Game.event_game_end
-
 .. automethod:: sge.Game.event_step
 
 .. automethod:: sge.Game.event_alarm
@@ -171,6 +167,12 @@ sge.Sprite Methods
 .. automethod:: sge.Sprite.draw_lock
 
 .. automethod:: sge.Sprite.draw_unlock
+
+.. automethod:: sge.Sprite.mirror
+
+.. automethod:: sge.Sprite.flip
+
+.. automethod:: sge.Sprite.rotate
 
 .. automethod:: sge.Sprite.copy
 
