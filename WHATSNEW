@@ -7,6 +7,24 @@ without any warranty.
 
 ========================================================================
 
+0.17
+------------------------------------------------------------------------
+
+Specification removals:
+- sge.Object.event_collision_left
+- sge.Object.event_collision_right
+- sge.Object.event_collision_top
+- sge.Object.event_collision_bottom
+- sge.Game.event_mouse_collision_left
+- sge.Game.event_mouse_collision_right
+- sge.Game.event_mouse_collision_top
+- sge.Game.event_mouse_collision_bottom
+
+Specification misc changes:
+* sge.Object.event_collision now has arguments indicating direction, to
+  replace the old directional collision events.
+
+
 0.16
 ------------------------------------------------------------------------
 

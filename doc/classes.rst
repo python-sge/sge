@@ -88,14 +88,6 @@ sge.Game Event Methods
 
 .. automethod:: sge.Game.event_mouse_collision
 
-.. automethod:: sge.Game.event_mouse_collision_left
-
-.. automethod:: sge.Game.event_mouse_collision_right
-
-.. automethod:: sge.Game.event_mouse_collision_top
-
-.. automethod:: sge.Game.event_mouse_collision_bottom
-
 .. automethod:: sge.Game.event_paused_step
 
 .. automethod:: sge.Game.event_paused_key_press
@@ -319,14 +311,6 @@ sge.Object Event Methods
 .. automethod:: sge.Object.event_update_position
 
 .. automethod:: sge.Object.event_collision
-
-.. automethod:: sge.Object.event_collision_left
-
-.. automethod:: sge.Object.event_collision_right
-
-.. automethod:: sge.Object.event_collision_top
-
-.. automethod:: sge.Object.event_collision_bottom
 
 .. automethod:: sge.Object.event_inactive_step
 

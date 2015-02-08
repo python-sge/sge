@@ -508,74 +508,26 @@ class Object(object):
         self.x += self.xvelocity * delta_mult
         self.y += self.yvelocity * delta_mult
 
-    def event_collision(self, other):
+    def event_collision(self, other, xdirection, ydirection):
         """
-        Called when another object collides with this object and none of
-        the directional collision events are appropriate.  In
-        particular, this is called if the collision was already
-        happening in the previous frame.  This is also the event method
-        called by the directional collision event methods by default.
+        Called when this object collides with another object.
 
         Arguments:
 
         - ``other`` -- The other object which was collided with.
+        - ``xdirection`` -- The horizontal direction of the collision
+          from the perspective of this object.  Can be ``-1`` (left),
+          ``1`` (right), or ``0`` (no horizontal direction).
+        - ``ydirection`` -- The vertical direction of the collision from
+          the perspective of this object.  Can be ``-1`` (up), ``1``
+          (down), or ``0`` (no vertical direction).
+
+        Directionless "collisions" (ones with both an xdirection and
+        ydirection of ``0``) are possible.  These are typically
+        collisions which were already occurring in the previous frame
+        (continuous collisions).
         """
         pass
-
-    def event_collision_left(self, other):
-        """
-        Called when another object collides with this object's left
-        side.
-
-        Arguments:
-
-        - ``other`` -- The other object which was collided with.
-
-        By default, this method simply calls
-        :meth:`sge.Object.event_collision`.
-        """
-        self.event_collision(other)
-
-    def event_collision_right(self, other):
-        """
-        Called when another object collides with this object's right
-        side.
-
-        Arguments:
-        
-        - ``other`` -- The other object which was collided with.
-
-        By default, this method simply calls
-        :meth:`sge.Object.event_collision`.
-        """
-        self.event_collision(other)
-
-    def event_collision_top(self, other):
-        """
-        Called when another object collides with this object's top side.
-
-        Arguments:
-
-        - ``other`` -- The other object which was collided with.
-
-        By default, this method simply calls
-        :meth:`sge.Object.event_collision`.
-        """
-        self.event_collision(other)
-
-    def event_collision_bottom(self, other):
-        """
-        Called when another object collides with this object's bottom
-        side.
-
-        Arguments:
-
-        - ``other`` -- The other object which was collided with.
-
-        By default, this method simply calls
-        :meth:`sge.Object.event_collision`.
-        """
-        self.event_collision(other)
 
     def event_inactive_step(self, time_passed, delta_mult):
         """
@@ -799,17 +751,5 @@ class Mouse(Object):
     # way.  See Game.__doc__ for more information about how the
     # Game.mouse attribute should behave.
 
-    def event_collision(self, other):
-        game.event_mouse_collision(other)
-
-    def event_collision_left(self, other):
-        game.event_mouse_collision_left(other)
-
-    def event_collision_right(self, other):
-        game.event_mouse_collision_right(other)
-
-    def event_collision_top(self, other):
-        game.event_mouse_collision_top(other)
-
-    def event_collision_bottom(self, other):
-        game.event_mouse_collision_bottom(other)
+    def event_collision(self, other, xdirection, ydirection):
+        game.event_mouse_collision(other, xdirection, ydirection)
