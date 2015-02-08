@@ -172,7 +172,7 @@ class Ball(sge.Object):
             self.yvelocity = abs(self.yvelocity)
             bounce_wall_sound.play()
 
-    def event_collision(self, other):
+    def event_collision(self, other, xdirection, ydirection):
         if isinstance(other, Player):
             if other.hit_direction == 1:
                 self.bbox_left = other.bbox_right + 1

@@ -558,7 +558,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
                 self.yvelocity = abs(self.yvelocity)
                 bounce_wall_sound.play()
 
-        def event_collision(self, other):
+        def event_collision(self, other, xdirection, ydirection):
             if isinstance(other, Player):
                 if other.hit_direction == 1:
                     self.bbox_left = other.bbox_right + 1

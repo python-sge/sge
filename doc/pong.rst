@@ -315,9 +315,9 @@ or not the object being collided with, which is passed on to the
 collision code for these two objects under this check.
 
 The most straightforward way to do this is with directional collision
-events, but we are going to instead use :attr:`Player.hit_direction` to
-determine what to do.  If the :attr:`other.hit_direction` is ``1``, we
-bounce the ball to the right.  Otherwise, we bounce the ball to the
+detection, but we are going to instead use :attr:`Player.hit_direction`
+to determine what to do.  If the :attr:`other.hit_direction` is ``1``,
+we bounce the ball to the right.  Otherwise, we bounce the ball to the
 left.
 
 We need to make the ball accelerate each time the ball hits a paddle, so
@@ -349,7 +349,7 @@ new constant called :const:`BALL_MAX_SPEED`, by
 
 Our collision event ends up looking something like this::
 
-    def event_collision(self, other):
+    def event_collision(self, other, xdirection, ydirection):
         if isinstance(other, Player):
             if other.hit_direction == 1:
                 self.bbox_left = other.bbox_right + 1
@@ -570,7 +570,7 @@ You should now have a script that looks something like this::
                 self.bbox_top = 0
                 self.yvelocity = abs(self.yvelocity)
 
-        def event_collision(self, other):
+        def event_collision(self, other, xdirection, ydirection):
             if isinstance(other, Player):
                 if other.hit_direction == 1:
                     self.bbox_left = other.bbox_right + 1
