@@ -10,6 +10,12 @@ without any warranty.
 0.17
 ------------------------------------------------------------------------
 
+Specification additions:
++ sge.Object.xacceleration
++ sge.Object.yacceleration
++ sge.Object.xdeceleration
++ sge.Object.ydeceleration
+
 Specification removals:
 - sge.Object.event_collision_left
 - sge.Object.event_collision_right
@@ -23,6 +29,8 @@ Specification removals:
 Specification misc changes:
 * sge.Object.event_collision now has arguments indicating direction, to
   replace the old directional collision events.
+* Default implementation of sge.Object.event_update_position now includes
+  handling of acceleration and deceleration, when applicable.
 
 
 0.16

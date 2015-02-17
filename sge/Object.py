@@ -16,6 +16,8 @@
 # Public License, GNU Lesser General Public License, Expat License, or
 # Apache License.
 
+import math
+
 import sge
 
 
@@ -184,21 +186,45 @@ class Object(object):
 
     .. attribute:: xvelocity
 
-       The velocity of the object toward the right.
+       The velocity of the object toward the right in pixels per frame.
 
     .. attribute:: yvelocity
 
-       The velocity of the object toward the bottom.
+       The velocity of the object toward the bottom in pixels per frame.
 
     .. attribute:: speed
 
-       The total (directional) speed of the object.
+       The total (directional) speed of the object in pixels per frame.
 
     .. attribute:: move_direction
 
        The direction of the object's movement in degrees, with ``0``
        being directly to the right and rotation in a positive direction
        being counter-clockwise.
+
+    .. attribute:: xacceleration
+
+       The acceleration of the object to the right in pixels per frame.
+       If non-zero, movement as a result of :attr:`xvelocity` will be
+       adjusted based on the kinematic equation,
+       ``v[f]^2 = v[i]^2 + 2*a*d``.
+
+    .. attribute:: yacceleration
+
+       The acceleration of the object downward in pixels per frame.  If
+       non-zero, movement as a result of :attr:`yvelocity` will be
+       adjusted based on the kinematic equation,
+       ``v[f]^2 = v[i]^2 + 2*a*d``.
+
+    .. attribute:: xdeceleration
+
+       Like :attr:`xacceleration`, but only causes the absolute value of
+       :attr:`xvelocity` to decrease.
+
+    .. attribute:: ydeceleration
+
+       Like :attr:`yacceleration`, but only causes the absolute value of
+       :attr:`yvelocity` to decrease.
 
     .. attribute:: image_index
 
@@ -497,16 +523,86 @@ class Object(object):
         override the default behavior and allow you to handle the speed
         variables in a special way.
 
-        The default behavior of this method is::
+        The default behavior of this method is as follows::
 
-            self.x += self.xvelocity * delta_mult
-            self.y += self.yvelocity * delta_mult
+            if self.xacceleration + self.xdeceleration:
+                vi = self.xvelocity
+                a = self.xacceleration * delta_mult
+                self.xvelocity += a
+
+                if (self.xdeceleration and
+                        (self.xdeceleration < 0) != (self.xvelocity < 0)):
+                    if abs(self.xvelocity) > abs(self.xdeceleration):
+                        a += self.xdeceleration * delta_mult
+                        self.xvelocity += self.xdeceleration * delta_mult
+                    else:
+                        a -= self.xvelocity
+                        self.xvelocity = 0
+
+                d = ((self.xvelocity ** 2) - (vi ** 2)) / (2 * a)
+                self.x += math.copysign(d, self.xvelocity) * delta_mult
+            else:
+                self.x += self.xvelocity * delta_mult
+
+            if self.yacceleration + self.ydeceleration:
+                vi = self.yvelocity
+                a = self.yacceleration * delta_mult
+                self.yvelocity += a
+
+                if (self.ydeceleration and
+                        (self.ydeceleration < 0) != (self.yvelocity < 0)):
+                    if abs(self.yvelocity) > abs(self.ydeceleration):
+                        a += self.ydeceleration * delta_mult
+                        self.yvelocity += self.ydeceleration * delta_mult
+                    else:
+                        a -= self.yvelocity
+                        self.yvelocity = 0
+
+                d = ((self.yvelocity ** 2) - (vi ** 2)) / (2 * a)
+                self.y += math.copysign(d, self.yvelocity) * delta_mult
+            else:
+                self.y += self.yvelocity * delta_mult
 
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
         """
-        self.x += self.xvelocity * delta_mult
-        self.y += self.yvelocity * delta_mult
+        if self.xacceleration + self.xdeceleration:
+            vi = self.xvelocity
+            a = self.xacceleration * delta_mult
+            self.xvelocity += a
+
+            if (self.xdeceleration and
+                    (self.xdeceleration < 0) != (self.xvelocity < 0)):
+                if abs(self.xvelocity) > abs(self.xdeceleration):
+                    a += self.xdeceleration * delta_mult
+                    self.xvelocity += self.xdeceleration * delta_mult
+                else:
+                    a -= self.xvelocity
+                    self.xvelocity = 0
+
+            d = ((self.xvelocity ** 2) - (vi ** 2)) / (2 * a)
+            self.x += math.copysign(d, self.xvelocity) * delta_mult
+        else:
+            self.x += self.xvelocity * delta_mult
+
+        if self.yacceleration + self.ydeceleration:
+            vi = self.yvelocity
+            a = self.yacceleration * delta_mult
+            self.yvelocity += a
+
+            if (self.ydeceleration and
+                    (self.ydeceleration < 0) != (self.yvelocity < 0)):
+                if abs(self.yvelocity) > abs(self.ydeceleration):
+                    a += self.ydeceleration * delta_mult
+                    self.yvelocity += self.ydeceleration * delta_mult
+                else:
+                    a -= self.yvelocity
+                    self.yvelocity = 0
+
+            d = ((self.yvelocity ** 2) - (vi ** 2)) / (2 * a)
+            self.y += math.copysign(d, self.yvelocity) * delta_mult
+        else:
+            self.y += self.yvelocity * delta_mult
 
     def event_collision(self, other, xdirection, ydirection):
         """
