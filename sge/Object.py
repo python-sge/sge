@@ -334,9 +334,11 @@ class Object(object):
                  bbox_y=None, bbox_width=None, bbox_height=None,
                  regulate_origin=False, collision_ellipse=False,
                  collision_precise=False, xvelocity=0, yvelocity=0,
-                 image_index=0, image_origin_x=None, image_origin_y=None,
-                 image_fps=None, image_xscale=1, image_yscale=1,
-                 image_rotation=0, image_alpha=255, image_blend=None):
+                 xacceleration=0, yacceleration=0, xdeceleration=0,
+                 ydeceleration=0, image_index=0, image_origin_x=None,
+                 image_origin_y=None, image_fps=None, image_xscale=1,
+                 image_yscale=1, image_rotation=0, image_alpha=255,
+                 image_blend=None):
         """
         Arugments set the respective initial attributes of the object.
         See the documentation for :class:`sge.Object` for more
