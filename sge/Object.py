@@ -527,13 +527,18 @@ class Object(object):
 
         The default behavior of this method is as follows::
 
-            if self.xacceleration + self.xdeceleration:
+            xdecel = (self.xdeceleration and
+                      (self.xdeceleration < 0) != (self.xvelocity < 0))
+            ydecel = (self.ydeceleration and
+                      (self.ydeceleration < 0) != (self.yvelocity < 0))
+
+            if (self.xacceleration + self.xdeceleration and
+                    (self.xacceleration or xdecel)):
                 vi = self.xvelocity
                 a = self.xacceleration * delta_mult
                 self.xvelocity += a
 
-                if (self.xdeceleration and
-                        (self.xdeceleration < 0) != (self.xvelocity < 0)):
+                if xdecel:
                     if abs(self.xvelocity) > abs(self.xdeceleration):
                         a += self.xdeceleration * delta_mult
                         self.xvelocity += self.xdeceleration * delta_mult
@@ -546,13 +551,13 @@ class Object(object):
             else:
                 self.x += self.xvelocity * delta_mult
 
-            if self.yacceleration + self.ydeceleration:
+            if (self.yacceleration + self.ydeceleration and
+                    (self.yacceleration or ydecel)):
                 vi = self.yvelocity
                 a = self.yacceleration * delta_mult
                 self.yvelocity += a
 
-                if (self.ydeceleration and
-                        (self.ydeceleration < 0) != (self.yvelocity < 0)):
+                if ydecel:
                     if abs(self.yvelocity) > abs(self.ydeceleration):
                         a += self.ydeceleration * delta_mult
                         self.yvelocity += self.ydeceleration * delta_mult
@@ -568,13 +573,18 @@ class Object(object):
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
         """
-        if self.xacceleration + self.xdeceleration:
+        xdecel = (self.xdeceleration and
+                  (self.xdeceleration < 0) != (self.xvelocity < 0))
+        ydecel = (self.ydeceleration and
+                  (self.ydeceleration < 0) != (self.yvelocity < 0))
+
+        if (self.xacceleration + self.xdeceleration and
+                (self.xacceleration or xdecel)):
             vi = self.xvelocity
             a = self.xacceleration * delta_mult
             self.xvelocity += a
 
-            if (self.xdeceleration and
-                    (self.xdeceleration < 0) != (self.xvelocity < 0)):
+            if xdecel:
                 if abs(self.xvelocity) > abs(self.xdeceleration):
                     a += self.xdeceleration * delta_mult
                     self.xvelocity += self.xdeceleration * delta_mult
@@ -587,13 +597,13 @@ class Object(object):
         else:
             self.x += self.xvelocity * delta_mult
 
-        if self.yacceleration + self.ydeceleration:
+        if (self.yacceleration + self.ydeceleration and
+                (self.yacceleration or ydecel)):
             vi = self.yvelocity
             a = self.yacceleration * delta_mult
             self.yvelocity += a
 
-            if (self.ydeceleration and
-                    (self.ydeceleration < 0) != (self.yvelocity < 0)):
+            if ydecel:
                 if abs(self.yvelocity) > abs(self.ydeceleration):
                     a += self.ydeceleration * delta_mult
                     self.yvelocity += self.ydeceleration * delta_mult
