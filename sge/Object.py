@@ -542,7 +542,7 @@ class Object(object):
                         self.xvelocity = 0
 
                 d = ((self.xvelocity ** 2) - (vi ** 2)) / (2 * a)
-                self.x += math.copysign(d, self.xvelocity) * delta_mult
+                self.x += math.copysign(d, self.xvelocity)
             else:
                 self.x += self.xvelocity * delta_mult
 
@@ -561,7 +561,7 @@ class Object(object):
                         self.yvelocity = 0
 
                 d = ((self.yvelocity ** 2) - (vi ** 2)) / (2 * a)
-                self.y += math.copysign(d, self.yvelocity) * delta_mult
+                self.y += math.copysign(d, self.yvelocity)
             else:
                 self.y += self.yvelocity * delta_mult
 
@@ -583,7 +583,7 @@ class Object(object):
                     self.xvelocity = 0
 
             d = ((self.xvelocity ** 2) - (vi ** 2)) / (2 * a)
-            self.x += math.copysign(d, self.xvelocity) * delta_mult
+            self.x += math.copysign(d, self.xvelocity)
         else:
             self.x += self.xvelocity * delta_mult
 
@@ -602,7 +602,7 @@ class Object(object):
                     self.yvelocity = 0
 
             d = ((self.yvelocity ** 2) - (vi ** 2)) / (2 * a)
-            self.y += math.copysign(d, self.yvelocity) * delta_mult
+            self.y += math.copysign(d, self.yvelocity)
         else:
             self.y += self.yvelocity * delta_mult
 
