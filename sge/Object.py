@@ -525,15 +525,53 @@ class Object(object):
         override the default behavior and allow you to handle the speed
         variables in a special way.
 
-        The default behavior of this method is as follows::
+        The default behavior of this method is the following code::
 
+            if delta_mult:
+                vi = self.xvelocity
+                a = self.xacceleration
+                self.xvelocity += a * delta_mult
+                if (self.xdeceleration and
+                        (self.xvelocity < 0) != (self.xdeceleration < 0)):
+                    dc = self.xdeceleration * delta_mult
+                    if abs(self.xvelocity) > abs(dc):
+                        a += self.xdeceleration
+                        self.xvelocity += dc
+                    else:
+                        a -= self.xvelocity / delta_mult
+                        self.xvelocity = 0
+                self.x += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
+
+                vi = self.yvelocity
+                a = self.yacceleration
+                self.yvelocity += a * delta_mult
+                if (self.ydeceleration and
+                        (self.yvelocity < 0) != (self.ydeceleration < 0)):
+                    dc = self.ydeceleration * delta_mult
+                    if abs(self.yvelocity) > abs(dc):
+                        a += self.ydeceleration
+                        self.yvelocity += dc
+                    else:
+                        a -= self.yvelocity / delta_mult
+                        self.yvelocity = 0
+                self.y += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
+
+        See the documentation for :meth:`sge.Game.event_step` for more
+        information.
+        """
+        if delta_mult:
             vi = self.xvelocity
             a = self.xacceleration
             self.xvelocity += a * delta_mult
             if (self.xdeceleration and
                     (self.xvelocity < 0) != (self.xdeceleration < 0)):
-                a += self.xdeceleration
-                self.xvelocity += self.xdeceleration * delta_mult
+                dc = self.xdeceleration * delta_mult
+                if abs(self.xvelocity) > abs(dc):
+                    a += self.xdeceleration
+                    self.xvelocity += dc
+                else:
+                    a -= self.xvelocity / delta_mult
+                    self.xvelocity = 0
             self.x += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
 
             vi = self.yvelocity
@@ -541,30 +579,14 @@ class Object(object):
             self.yvelocity += a * delta_mult
             if (self.ydeceleration and
                     (self.yvelocity < 0) != (self.ydeceleration < 0)):
-                a += self.ydeceleration
-                self.yvelocity += self.ydeceleration * delta_mult
+                dc = self.ydeceleration * delta_mult
+                if abs(self.yvelocity) > abs(dc):
+                    a += self.ydeceleration
+                    self.yvelocity += dc
+                else:
+                    a -= self.yvelocity / delta_mult
+                    self.yvelocity = 0
             self.y += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
-
-        See the documentation for :meth:`sge.Game.event_step` for more
-        information.
-        """
-        vi = self.xvelocity
-        a = self.xacceleration
-        self.xvelocity += a * delta_mult
-        if (self.xdeceleration and
-                (self.xvelocity < 0) != (self.xdeceleration < 0)):
-            a += self.xdeceleration
-            self.xvelocity += self.xdeceleration * delta_mult
-        self.x += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
-
-        vi = self.yvelocity
-        a = self.yacceleration
-        self.yvelocity += a * delta_mult
-        if (self.ydeceleration and
-                (self.yvelocity < 0) != (self.ydeceleration < 0)):
-            a += self.ydeceleration
-            self.yvelocity += self.ydeceleration * delta_mult
-        self.y += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
 
     def event_collision(self, other, xdirection, ydirection):
         """
