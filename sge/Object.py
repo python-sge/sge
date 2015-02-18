@@ -527,9 +527,9 @@ class Object(object):
 
         The default behavior of this method is as follows::
 
-            xdecel = (self.xdeceleration and
+            xdecel = (self.xdeceleration and self.xvelocity and
                       (self.xdeceleration < 0) != (self.xvelocity < 0))
-            ydecel = (self.ydeceleration and
+            ydecel = (self.ydeceleration and self.yvelocity and
                       (self.ydeceleration < 0) != (self.yvelocity < 0))
 
             if (self.xacceleration + self.xdeceleration and
@@ -573,9 +573,9 @@ class Object(object):
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
         """
-        xdecel = (self.xdeceleration and
+        xdecel = (self.xdeceleration and self.xvelocity and
                   (self.xdeceleration < 0) != (self.xvelocity < 0))
-        ydecel = (self.ydeceleration and
+        ydecel = (self.ydeceleration and self.yvelocity and
                   (self.ydeceleration < 0) != (self.yvelocity < 0))
 
         if (self.xacceleration + self.xdeceleration and
