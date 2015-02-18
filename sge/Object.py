@@ -527,22 +527,44 @@ class Object(object):
 
         The default behavior of this method is as follows::
 
-            self.x += (self.xvelocity * delta_mult +
-                       0.5 * self.xacceleration * (delta_mult ** 2))
-            self.y += (self.yvelocity * delta_mult +
-                       0.5 * self.yacceleration * (delta_mult ** 2))
-            self.xvelocity += self.xacceleration * delta_mult
-            self.yvelocity += self.yacceleration * delta_mult
+            vi = self.xvelocity
+            a = self.xacceleration
+            self.xvelocity += a * delta_mult
+            if (self.xdeceleration and
+                    (self.xvelocity < 0) != (self.xdeceleration < 0)):
+                a += self.xdeceleration
+                self.xvelocity += self.xdeceleration * delta_mult
+            self.x += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
+
+            vi = self.yvelocity
+            a = self.yacceleration
+            self.yvelocity += a * delta_mult
+            if (self.ydeceleration and
+                    (self.yvelocity < 0) != (self.ydeceleration < 0)):
+                a += self.ydeceleration
+                self.yvelocity += self.ydeceleration * delta_mult
+            self.y += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
 
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
         """
-        self.x += (self.xvelocity * delta_mult +
-                   0.5 * self.xacceleration * (delta_mult ** 2))
-        self.y += (self.yvelocity * delta_mult +
-                   0.5 * self.yacceleration * (delta_mult ** 2))
-        self.xvelocity += self.xacceleration * delta_mult
-        self.yvelocity += self.yacceleration * delta_mult
+        vi = self.xvelocity
+        a = self.xacceleration
+        self.xvelocity += a * delta_mult
+        if (self.xdeceleration and
+                (self.xvelocity < 0) != (self.xdeceleration < 0)):
+            a += self.xdeceleration
+            self.xvelocity += self.xdeceleration * delta_mult
+        self.x += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
+
+        vi = self.yvelocity
+        a = self.yacceleration
+        self.yvelocity += a * delta_mult
+        if (self.ydeceleration and
+                (self.yvelocity < 0) != (self.ydeceleration < 0)):
+            a += self.ydeceleration
+            self.yvelocity += self.ydeceleration * delta_mult
+        self.y += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
 
     def event_collision(self, other, xdirection, ydirection):
         """
