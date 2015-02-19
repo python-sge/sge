@@ -269,6 +269,10 @@ sge.Object Methods
 
 .. automethod:: sge.Object.__init__
 
+.. automethod:: sge.Object.move_x
+
+.. automethod:: sge.Object.move_y
+
 .. automethod:: sge.Object.collision
 
 .. automethod:: sge.Object.destroy

@@ -15,6 +15,8 @@ Specification additions:
 + sge.Object.yacceleration
 + sge.Object.xdeceleration
 + sge.Object.ydeceleration
++ sge.Object.move_x
++ sge.Object.move_y
 
 Specification removals:
 - sge.Object.event_collision_left

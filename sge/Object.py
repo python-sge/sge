@@ -346,6 +346,40 @@ class Object(object):
         """
         # TODO
 
+    def move_x(self, move):
+        """
+        Move the object horizontally.  This method can be overridden to
+        conveniently define a particular way movement should be handled.
+        Currently, it is used in the default implementation of
+        :meth:`event_update_position`.
+
+        Arguments:
+
+        - ``move`` -- The amount to add to :attr:`x`.
+
+        The default behavior of this method is the following code::
+
+            self.x += move
+        """
+        self.x += move
+
+    def move_y(self, move):
+        """
+        Move the object vertically.  This method can be overridden to
+        conveniently define a particular way movement should be handled.
+        Currently, it is used in the default implementation of
+        :meth:`event_update_position`.
+
+        Arguments:
+
+        - ``move`` -- The amount to add to :attr:`y`.
+
+        The default behavior of this method is the following code::
+
+            self.y += move
+        """
+        self.y += move
+
     def collision(self, other=None, x=None, y=None):
         """
         Return a list of objects colliding with this object.
@@ -540,7 +574,7 @@ class Object(object):
                     else:
                         a -= self.xvelocity / delta_mult
                         self.xvelocity = 0
-                self.x += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
+                self.move_x(vi * delta_mult + 0.5 * a * (delta_mult ** 2))
 
                 vi = self.yvelocity
                 a = self.yacceleration
@@ -554,7 +588,7 @@ class Object(object):
                     else:
                         a -= self.yvelocity / delta_mult
                         self.yvelocity = 0
-                self.y += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
+                self.move_y(vi * delta_mult + 0.5 * a * (delta_mult ** 2))
 
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
@@ -572,7 +606,7 @@ class Object(object):
                 else:
                     a -= self.xvelocity / delta_mult
                     self.xvelocity = 0
-            self.x += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
+            self.move_x(vi * delta_mult + 0.5 * a * (delta_mult ** 2))
 
             vi = self.yvelocity
             a = self.yacceleration
@@ -586,7 +620,7 @@ class Object(object):
                 else:
                     a -= self.yvelocity / delta_mult
                     self.yvelocity = 0
-            self.y += vi * delta_mult + 0.5 * a * (delta_mult ** 2)
+            self.move_y(vi * delta_mult + 0.5 * a * (delta_mult ** 2))
 
     def event_collision(self, other, xdirection, ydirection):
         """
