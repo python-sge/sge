@@ -218,13 +218,13 @@ class Object(object):
 
     .. attribute:: xdeceleration
 
-       Like :attr:`xacceleration`, but only causes the absolute value of
-       :attr:`xvelocity` to decrease.
+       Like :attr:`xacceleration`, but its sign is ignored and it always
+       causes the absolute value of :attr:`xvelocity` to decrease.
 
     .. attribute:: ydeceleration
 
-       Like :attr:`yacceleration`, but only causes the absolute value of
-       :attr:`yvelocity` to decrease.
+       Like :attr:`yacceleration`, but its sign is ignored and it always
+       causes the absolute value of :attr:`yvelocity` to decrease.
 
     .. attribute:: image_index
 
@@ -563,64 +563,40 @@ class Object(object):
 
             if delta_mult:
                 vi = self.xvelocity
-                a = self.xacceleration
+                vf = self.xvelocity + self.xacceleration * delta_mult
+                dc = min(abs(vf), abs(self.xdeceleration))
+                a = self.xacceleration - math.copysign(dc, vf)
+                self.move_x(self.xvelocity * delta_mult +
+                            0.5 * a * (delta_mult ** 2))
                 self.xvelocity += a * delta_mult
-                if (self.xdeceleration and
-                        (self.xvelocity < 0) != (self.xdeceleration < 0)):
-                    dc = self.xdeceleration * delta_mult
-                    if abs(self.xvelocity) > abs(dc):
-                        a += self.xdeceleration
-                        self.xvelocity += dc
-                    else:
-                        a -= self.xvelocity / delta_mult
-                        self.xvelocity = 0
-                self.move_x(vi * delta_mult + 0.5 * a * (delta_mult ** 2))
 
                 vi = self.yvelocity
-                a = self.yacceleration
+                vf = self.yvelocity + self.yacceleration * delta_mult
+                dc = min(abs(vf), abs(self.ydeceleration))
+                a = self.yacceleration - math.copysign(dc, vf)
+                self.move_y(self.yvelocity * delta_mult +
+                            0.5 * a * (delta_mult ** 2))
                 self.yvelocity += a * delta_mult
-                if (self.ydeceleration and
-                        (self.yvelocity < 0) != (self.ydeceleration < 0)):
-                    dc = self.ydeceleration * delta_mult
-                    if abs(self.yvelocity) > abs(dc):
-                        a += self.ydeceleration
-                        self.yvelocity += dc
-                    else:
-                        a -= self.yvelocity / delta_mult
-                        self.yvelocity = 0
-                self.move_y(vi * delta_mult + 0.5 * a * (delta_mult ** 2))
 
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
         """
         if delta_mult:
             vi = self.xvelocity
-            a = self.xacceleration
+            vf = self.xvelocity + self.xacceleration * delta_mult
+            dc = min(abs(vf), abs(self.xdeceleration))
+            a = self.xacceleration - math.copysign(dc, vf)
+            self.move_x(self.xvelocity * delta_mult +
+                        0.5 * a * (delta_mult ** 2))
             self.xvelocity += a * delta_mult
-            if (self.xdeceleration and
-                    (self.xvelocity < 0) != (self.xdeceleration < 0)):
-                dc = self.xdeceleration * delta_mult
-                if abs(self.xvelocity) > abs(dc):
-                    a += self.xdeceleration
-                    self.xvelocity += dc
-                else:
-                    a -= self.xvelocity / delta_mult
-                    self.xvelocity = 0
-            self.move_x(vi * delta_mult + 0.5 * a * (delta_mult ** 2))
 
             vi = self.yvelocity
-            a = self.yacceleration
+            vf = self.yvelocity + self.yacceleration * delta_mult
+            dc = min(abs(vf), abs(self.ydeceleration))
+            a = self.yacceleration - math.copysign(dc, vf)
+            self.move_y(self.yvelocity * delta_mult +
+                        0.5 * a * (delta_mult ** 2))
             self.yvelocity += a * delta_mult
-            if (self.ydeceleration and
-                    (self.yvelocity < 0) != (self.ydeceleration < 0)):
-                dc = self.ydeceleration * delta_mult
-                if abs(self.yvelocity) > abs(dc):
-                    a += self.ydeceleration
-                    self.yvelocity += dc
-                else:
-                    a -= self.yvelocity / delta_mult
-                    self.yvelocity = 0
-            self.move_y(vi * delta_mult + 0.5 * a * (delta_mult ** 2))
 
     def event_collision(self, other, xdirection, ydirection):
         """
