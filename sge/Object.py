@@ -562,7 +562,6 @@ class Object(object):
         The default behavior of this method is the following code::
 
             if delta_mult:
-                vi = self.xvelocity
                 vf = self.xvelocity + self.xacceleration * delta_mult
                 dc = min(abs(vf), abs(self.xdeceleration))
                 a = self.xacceleration - math.copysign(dc, vf)
@@ -570,7 +569,6 @@ class Object(object):
                             0.5 * a * (delta_mult ** 2))
                 self.xvelocity += a * delta_mult
 
-                vi = self.yvelocity
                 vf = self.yvelocity + self.yacceleration * delta_mult
                 dc = min(abs(vf), abs(self.ydeceleration))
                 a = self.yacceleration - math.copysign(dc, vf)
@@ -582,7 +580,6 @@ class Object(object):
         information.
         """
         if delta_mult:
-            vi = self.xvelocity
             vf = self.xvelocity + self.xacceleration * delta_mult
             dc = min(abs(vf), abs(self.xdeceleration))
             a = self.xacceleration - math.copysign(dc, vf)
@@ -590,7 +587,6 @@ class Object(object):
                         0.5 * a * (delta_mult ** 2))
             self.xvelocity += a * delta_mult
 
-            vi = self.yvelocity
             vf = self.yvelocity + self.yacceleration * delta_mult
             dc = min(abs(vf), abs(self.ydeceleration))
             a = self.yacceleration - math.copysign(dc, vf)
