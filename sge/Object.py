@@ -562,45 +562,49 @@ class Object(object):
         The default behavior of this method is the following code::
 
             if delta_mult:
-                vf = self.xvelocity + self.xacceleration * delta_mult
+                vi = self.xvelocity
+                vf = vi + self.xacceleration * delta_mult
                 dc = abs(self.xdeceleration) * delta_mult
                 if abs(vf) > dc:
                     vf -= math.copysign(dc, vf)
                 else:
                     vf = 0
-                self.move_x(((self.xvelocity + vf) / 2) * delta_mult)
                 self.xvelocity = vf
+                self.move_x(((vi + vf) / 2) * delta_mult)
 
-                vf = self.yvelocity + self.yacceleration * delta_mult
+                vi = self.yvelocity
+                vf = vi + self.yacceleration * delta_mult
                 dc = abs(self.ydeceleration) * delta_mult
                 if abs(vf) > dc:
                     vf -= math.copysign(dc, vf)
                 else:
                     vf = 0
-                self.move_y(((self.yvelocity + vf) / 2) * delta_mult)
                 self.yvelocity = vf
+                self.move_y(((vi + vf) / 2) * delta_mult)
 
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
         """
         if delta_mult:
-            vf = self.xvelocity + self.xacceleration * delta_mult
+            vi = self.xvelocity
+            vf = vi + self.xacceleration * delta_mult
             dc = abs(self.xdeceleration) * delta_mult
             if abs(vf) > dc:
                 vf -= math.copysign(dc, vf)
             else:
                 vf = 0
-            self.move_x(((self.xvelocity + vf) / 2) * delta_mult)
             self.xvelocity = vf
+            self.move_x(((vi + vf) / 2) * delta_mult)
 
-            vf = self.yvelocity + self.yacceleration * delta_mult
+            vi = self.yvelocity
+            vf = vi + self.yacceleration * delta_mult
             dc = abs(self.ydeceleration) * delta_mult
             if abs(vf) > dc:
                 vf -= math.copysign(dc, vf)
             else:
                 vf = 0
-            self.move_y(((self.yvelocity + vf) / 2) * delta_mult)
             self.yvelocity = vf
+            self.move_y(((vi + vf) / 2) * delta_mult)
 
     def event_collision(self, other, xdirection, ydirection):
         """
