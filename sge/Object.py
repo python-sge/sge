@@ -418,7 +418,9 @@ class Object(object):
         - Right after a room starts for the first time after the object
           was added to it, if and only if the object was added to the
           room while it was not the current room.  In this case, this
-          event is called after the respective room start event.
+          event is called for each appropriate object after the
+          respective room start event or room resume event, in the same
+          order that the objects were added to the room.
         """
         pass
 

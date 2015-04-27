@@ -12,6 +12,9 @@ without any warranty.
 
 Specification misc changes:
 * Improved the method of deceleration (the old one was quite buggy).
+* The order of event_create calls is now defined to be the same as the
+  order in which the objects were added to the room. (It was previously
+  undefined.)
 
 0.17
 ------------------------------------------------------------------------
