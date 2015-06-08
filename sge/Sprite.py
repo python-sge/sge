@@ -78,11 +78,13 @@ class Sprite(object):
     .. attribute:: fps
 
        The suggested rate in frames per second to animate the image at.
+       Can be negative, in which case animation will be reversed.
 
     .. attribute:: speed
 
        The suggested rate to animate the image at as a factor of
-       :attr:`sge.game.fps`.
+       :attr:`sge.game.fps`.  Can be negative, in which case animation
+       will be reversed.
 
     .. attribute:: bbox_x
 

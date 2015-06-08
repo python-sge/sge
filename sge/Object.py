@@ -245,13 +245,15 @@ class Object(object):
 
     .. attribute:: image_fps
 
-       The animation rate in frames per second.  If set to
-       :const:`None`, the value recommended by the sprite is used.
+       The animation rate in frames per second.  Can be negative, in
+       which case animation will be reversed.  If set to :const:`None`,
+       the value recommended by the sprite is used.
 
     .. attribute:: image_speed
 
-       The animation rate as a factor of :attr:`sge.game.fps`.  If set
-       to :const:`None`, the value recommended by the sprite is used.
+       The animation rate as a factor of :attr:`sge.game.fps`.  Can be
+       negative, in which case animation will be reversed.  If set to
+       :const:`None`, the value recommended by the sprite is used.
 
     .. attribute:: image_xscale
 
