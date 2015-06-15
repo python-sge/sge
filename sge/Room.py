@@ -145,8 +145,6 @@ class Room(object):
         - ``transition_arg`` -- An arbitrary argument that can be used
           by the following transitions:
 
-          - ``"fade"`` -- A :class:`sge.Color` object indicating the
-            color to fade to.  Default is black.
           - ``"wipe_matrix"`` -- The size of each square in the matrix
             transition as a tuple in the form ``(w, h)``, where ``w`` is
             the width and ``h`` is the height.  Default is ``(4, 4)``.
