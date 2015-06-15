@@ -110,7 +110,8 @@ class Room(object):
         """
         # TODO
 
-    def start(self, transition=None, transition_time=1500):
+    def start(self, transition=None, transition_time=1500,
+              transition_arg=None):
         """
         Start the room.
 
@@ -140,6 +141,20 @@ class Room(object):
         - ``transition_time`` -- The time the transition should take in
           milliseconds.  Has no effect if ``transition`` is
           :const:`None`.
+
+        - ``transition_arg`` -- An arbitrary argument that can be used
+          by the following transitions:
+
+          - ``"fade"`` -- A :class:`sge.Color` object indicating the
+            color to fade to.  Default is black.
+          - ``"wipe_matrix"`` -- The size of each square in the matrix
+            transition as a tuple in the form ``(w, h)``, where ``w`` is
+            the width and ``h`` is the height.  Default is ``(4, 4)``.
+          - ``"iris_in"`` and ``"iris_out"`` -- The position of the
+            center of the iris as a tuple in the form ``(x, y)``, where
+            ``x`` is the horizontal location relative to the window and
+            ``y`` is the vertical location relative to the window.
+            Default is the center of the window.
         """
         # TODO
 

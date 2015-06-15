@@ -13,6 +13,8 @@ without any warranty.
 Specification misc changes:
 
 * Negative frame rates now indicate reversed animation.
+* Added "transition_arg" argument to sge.Room.start, for special
+  transition variations.
 
 
 0.18
