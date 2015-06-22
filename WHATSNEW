@@ -14,7 +14,9 @@ Specification misc changes:
 
 * Negative frame rates now indicate reversed animation.
 * Added "transition_arg" argument to sge.Room.start, for special
-  transition variations.
+  transition variations.  Currently, this allows control over the
+  position of iris in and iris out transitions, and the size of the
+  rectangles in the matrix wipe transition.
 
 
 0.18
