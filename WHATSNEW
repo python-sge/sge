@@ -10,6 +10,14 @@ without any warranty.
 0.20
 ------------------------------------------------------------------------
 
+Specification additions:
+
++ sge.Room.object_area_width
++ sge.Room.object_area_height
++ sge.Room.object_areas
++ sge.Room.object_area_void
++ sge.Room.get_objects_at
+
 Specification misc changes:
 
 * Objects with the same Z-axis value are now positioned based on
