@@ -243,10 +243,10 @@ class Room(object):
            check the object manually, or use
            :func:`sge.collision.rectangle` instead.
         """
-        xis = int(x / self.object_area_width)
-        yis = int(y / self.object_area_height)
-        xie = int((x + width) / self.object_area_width)
-        yie = int((y + height) / self.object_area_height)
+        xis = int(math.floor(x / self.object_area_width))
+        yis = int(math.floor(y / self.object_area_height))
+        xie = int(math.ceil((x + width) / self.object_area_width))
+        yie = int(math.ceil((y + height) / self.object_area_height))
 
         if (self.object_areas and xis < len(self.object_areas) and
                 yis < len(self.object_areas[0]) and xie > 0 and yie > 0):
