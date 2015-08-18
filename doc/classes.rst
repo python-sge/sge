@@ -376,8 +376,6 @@ sge.Room Methods
 
 .. automethod:: sge.Room.start
 
-.. automethod:: sge.Room.get_objects_at
-
 .. automethod:: sge.Room.project_dot
 
 .. automethod:: sge.Room.project_line
