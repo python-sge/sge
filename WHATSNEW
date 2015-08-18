@@ -18,6 +18,20 @@ Specification additions:
 + sge.Room.object_area_void
 + sge.Room.get_objects_at
 
+Specification removals:
+
+- sge.Object.event_inactive_step
+- sge.Object.event_inactive_key_press
+- sge.Object.event_inactive_key_release
+- sge.Object.event_inactive_mouse_move
+- sge.Object.event_inactive_mouse_button_press
+- sge.Object.event_inactive_mouse_button_release
+- sge.Object.event_inactive_joystick_axis_move
+- sge.Object.event_inactive_joystick_hat_move
+- sge.Object.event_inactive_joystick_trackball_move
+- sge.Object.event_inactive_joystick_button_press
+- sge.Object.event_inactive_joystick_button_release
+
 Specification misc changes:
 
 * Objects with the same Z-axis value are now positioned based on
