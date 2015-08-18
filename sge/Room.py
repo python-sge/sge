@@ -97,9 +97,7 @@ class Room(object):
        location of 64 and a y location of 192.
 
        Each object area is a set containing :class:`sge.Object` objects
-       whose collision boundaries (sprite if the object's
-       :attr:`sge.Object.collision_precise` value is :const:`True`,
-       bounding box otherwise) reside within the object area.
+       whose sprites or bounding boxes reside within the object area.
 
        Object areas are only created within the room, i.e. the
        horizontal location of an object area will always be less than
