@@ -23,6 +23,10 @@ Specification misc changes:
 * Objects with the same Z-axis value are now positioned based on
   creation time (like the Pygame SGE).
 
+Specification bugfixes:
+
+- Remaining references to "sge.StellarClass" in docstrings
+
 
 0.19
 ------------------------------------------------------------------------
