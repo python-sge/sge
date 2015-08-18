@@ -316,6 +316,28 @@ sge.Object Event Methods
 
 .. automethod:: sge.Object.event_collision
 
+.. automethod:: sge.Object.event_inactive_step
+
+.. automethod:: sge.Object.event_inactive_key_press
+
+.. automethod:: sge.Object.event_inactive_key_release
+
+.. automethod:: sge.Object.event_inactive_mouse_move
+
+.. automethod:: sge.Object.event_inactive_mouse_button_press
+
+.. automethod:: sge.Object.event_inactive_mouse_button_release
+
+.. automethod:: sge.Object.event_inactive_joystick_axis_move
+
+.. automethod:: sge.Object.event_inactive_joystick_hat_move
+
+.. automethod:: sge.Object.event_inactive_joystick_trackball_move
+
+.. automethod:: sge.Object.event_inactive_joystick_button_press
+
+.. automethod:: sge.Object.event_inactive_joystick_button_release
+
 .. automethod:: sge.Object.event_paused_step
 
 .. automethod:: sge.Object.event_paused_key_press
