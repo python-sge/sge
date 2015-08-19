@@ -52,6 +52,20 @@ class Room(object):
 
        The vertical position of the background in the room.
 
+    .. attribute:: object_area_width
+
+       The width of this room's object areas in pixels.  If set to
+       :const:`None`, :attr:`sge.game.width` is used.  For optimum
+       performance, this should generally be about the average width of
+       objects in the room which check for collisions.
+
+    .. attrubute:: object_area_height
+
+       The height of this room's object areas in pixels.  If set to
+       :const:`None`, :attr:`sge.game.height` is used.  For optimum
+       performance, this should generally be about the average height of
+       objects in the room which check for collisions.
+
     .. attribute:: alarms
 
        A dictionary containing the alarms of the room.  Each value
@@ -65,13 +79,64 @@ class Room(object):
        A list containing all :class:`sge.Object` objects in the
        room.  (Read-only)
 
+    .. attribute:: object_areas
+
+       A 2-dimensional list of object areas, indexed in the following
+       way::
+
+           object_areas[x][y]
+
+       Where ``x`` is the horizontal location of the left edge of the
+       area in the room divided by :attr:`object_area_width`, and ``y``
+       is the vertical location of the top edge of the area in the room
+       divided by :attr:`object_area_height`.
+
+       For example, if :attr:`object_area_width` is ``32`` and
+       :attr:`object_area_height` is ``48``, then
+       ``object_areas[2][4]`` indicates the object area with an x
+       location of 64 and a y location of 192.
+
+       Each object area is a set containing :class:`sge.Object` objects
+       whose collision boundaries (sprite if the object's
+       :attr:`sge.Object.collision_precise` value is :const:`True`,
+       bounding box otherwise) reside within the object area.
+
+       Object areas are only created within the room, i.e. the
+       horizontal location of an object area will always be less than
+       :attr:`width`, and the vertical location of an object area will
+       always be less than :attr:`height`.  Depending on the size of
+       collision areas and the size of the room, however, the last row
+       and/or the last column of collision areas may partially reside
+       outside of the room.
+
+       .. note::
+
+          It is generally easier to use :meth:`sge.Room.get_objects_at`
+          than to access this list directly.
+
+    .. attrubute:: object_area_void
+
+       A set containing :class:`sge.Object` objects whose collision
+       boundaries (sprite if the object's
+       :attr:`sge.Object.collision_precise` value is :const:`True`,
+       bounding box otherwise) reside within the area outside of the
+       room's object areas.
+
+       .. note::
+
+          Depending on the size of object areas and the size of the
+          room, the "void" area may not include the entirety of the
+          outside of the room.  There may be some space to the right of
+          and/or below the room which is covered by collision areas.
+
     .. attribute:: rd
 
        Reserved dictionary for internal use by the SGE.  (Read-only)
     """
 
     def __init__(self, objects=(), width=None, height=None, views=None,
-                 background=None, background_x=0, background_y=0):
+                 background=None, background_x=0, background_y=0,
+                 object_area_width=None, object_area_height=None):
         """
         Arguments:
 
@@ -155,6 +220,64 @@ class Room(object):
             Default is the center of the window.
         """
         # TODO
+
+    def get_objects_at(self, x, y, width, height):
+        """
+        Return a set of objects near a particular area.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the room of the
+          left edge of the area.
+        - ``y`` -- The vertical location relative to the room of the
+          top edge of the area.
+        - ``width`` -- The width of the area in pixels.
+        - ``height`` -- The height of the area in pixels.
+
+        .. note::
+
+           This function does not ensure that objects returned are
+           actually *within* the given area.  It simply combines all
+           object areas that need to be checked into a single set.  To
+           ensure that an object is actually within the area, you must
+           check the object manually, or use
+           :func:`sge.collision.rectangle` instead.
+        """
+        xis = int(x / self.object_area_width)
+        yis = int(y / self.object_area_height)
+        xie = int((x + width) / self.object_area_width)
+        yie = int((y + height) / self.object_area_height)
+
+        if (self.object_areas and xis < len(self.object_areas) and
+                yis < len(self.object_areas[0]) and xie > 0 and yie > 0):
+            use_void = False
+
+            if xis < 0:
+                xis = 0
+                use_void = True
+            if yis < 0:
+                yis = 0
+                use_void = True
+            if xie > len(self.object_areas):
+                xie = len(self.object_areas)
+                use_void = True
+            if yie > len(self.object_areas[0]):
+                yie = len(self.object_areas[0])
+                use_void = True
+
+            if use_void:
+                area = self.object_area_void.copy()
+            else:
+                area = set()
+
+            for xi in six.moves.range(xis, xie):
+                for yi in six.moves.range(yis, yie):
+                    area |= self.object_areas[xi][yi]
+
+            return area
+        else:
+            return self.object_area_void.copy()
+            
 
     def project_dot(self, x, y, z, color):
         """
