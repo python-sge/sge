@@ -58,9 +58,7 @@ class Object(object):
        any other automatic functionality, such as adding
        :attr:`xvelocity` and :attr:`yvelocity`
        to :attr:`x` and :attr:`y`.  If :attr:`active` is :const:`False`,
-       automatic functionality and normal events will be disabled and
-       events which have names starting with ``event_inactive_`` will be
-       executed instead of the corresponding normal events.
+       automatic functionality and normal events will be disabled.
 
        .. note::
 
@@ -71,17 +69,6 @@ class Object(object):
           be visible, set :attr:`visible` to :const:`False`.  If you
           wish for the object to not perform collision events, set
           :attr:`checks_collisions` to :const:`False`.
-
-       .. note::
-
-          Making an object inactive will not likely have a significant
-          effect on performance.  For performance enhancement, it is far
-          more effective to exclude objects from collision detection.
-          Object deactivation is meant to be used to easily maintain
-          control over objects that are currently being excluded from
-          collision detection (e.g. to prevent a gravity effect that
-          would otherwise occur, or to prevent the object from moving
-          through walls).
 
     .. attribute:: checks_collisions
 
@@ -444,14 +431,6 @@ class Object(object):
 
         See the documentation for :meth:`sge.Game.event_step` for more
         information.
-
-        .. note::
-
-           Automatic updates, the only occurances between this event and
-           :meth:`sge.Object.event_step`, do not occur when the object
-           is inactive, so there is no need for an "inactive" variant of
-           this event.  Use :meth:`sge.Object.event_inactive_step`
-           instead.
         """
         pass
 
@@ -628,124 +607,6 @@ class Object(object):
         ydirection of ``0``) are possible.  These are typically
         collisions which were already occurring in the previous frame
         (continuous collisions).
-        """
-        pass
-
-    def event_inactive_step(self, time_passed, delta_mult):
-        """
-        See the documentation for :meth:`sge.Object.event_step`
-        for more information.  The object is considered to be inactive
-        when :attr:`active` is :const:`False`.
-        """
-        pass
-
-    def event_inactive_end_step(self, time_passed, delta_mult):
-        """
-        See the documentation for
-        :meth:`sge.Object.event_end_step` for more information.
-        The object is considered to be inactive when :attr:`active` is
-        :const:`False`.
-        """
-        pass
-
-    def event_inactive_key_press(self, key, char):
-        """
-        The object is considered to be inactive when :attr:`active` is
-        :const:`False`.
-
-        See the documentation for :class:`sge.input.KeyPress` for more
-        information.
-        """
-        pass
-
-    def event_inactive_key_release(self, key):
-        """
-        The object is considered to be inactive when :attr:`active` is
-        :const:`False`.
-
-        See the documentation for :class:`sge.input.KeyRelease` for more
-        information.
-        """
-        pass
-
-    def event_inactive_mouse_move(self, x, y):
-        """
-        The object is considered to be inactive when :attr:`active` is
-        :const:`False`.
-
-        See the documentation for :class:`sge.input.MouseMove` for more
-        information.
-        """
-        pass
-
-    def event_inactive_mouse_button_press(self, button):
-        """
-        The object is considered to be inactive when :attr:`active` is
-        :const:`False`.
-
-        See the documentation for :class:`sge.input.MouseButtonPress`
-        for more information.
-        """
-        pass
-
-    def event_inactive_mouse_button_release(self, button):
-        """
-        The object is considered to be inactive when :attr:`active` is
-        :const:`False`.
-
-        See the documentation for :class:`sge.input.MouseButtonRelease`
-        for more information.
-        """
-        pass
-
-    def event_inactive_joystick_axis_move(self, js_name, js_id, axis, value):
-        """
-        The object is considered to be inactive when :attr:`active` is
-        :const:`False`.
-
-        See the documentation for :class:`sge.input.JoystickAxisMove`
-        for more information.
-
-        """
-        pass
-
-    def event_inactive_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        """
-        The object is considered to be inactive when :attr:`active` is
-        :const:`False`.
-
-        See the documentation for :class:`sge.input.JoystickHatMove` for
-        more information.
-        """
-        pass
-
-    def event_inactive_joystick_trackball_move(self, js_name, js_id, ball, x, y):
-        """
-        The object is considered to be inactive when :attr:`active` is
-        :const:`False`.
-
-        See the documentation for
-        :class:`sge.input.JoystickTrackballMove` for more information.
-        """
-        pass
-
-    def event_inactive_joystick_button_press(self, js_name, js_id, button):
-        """
-        The object is considered to be inactive when :attr:`active` is
-        :const:`False`.
-
-        See the documentation for :class:`sge.input.JoystickButtonPress`
-        for more information.
-        """
-        pass
-
-    def event_inactive_joystick_button_release(self, js_name, js_id, button):
-        """
-        The object is considered to be inactive when :attr:`active` is
-        :const:`False`.
-
-        See the documentation for
-        :class:`sge.input.JoystickButtonRelease` for more information.
         """
         pass
 
