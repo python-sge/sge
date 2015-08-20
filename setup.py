@@ -1,7 +1,5 @@
-#!/usr/bin/env python3
-
 # setup.py
-# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -30,9 +28,11 @@ The SGE Game Engine ("SGE", pronounced like "Sage") is a general-purpose
 2-D game engine.  It takes care of several details for you so you can
 focus on the game itself.  This makes more rapid game development
 possible, and it also makes the SGE easy to learn.
+
+This implementation of the SGE uses Pygame as a backend.
 """.strip()
 
-setup(name="sge-spec",
+setup(name="sge-pygame",
       version="0.20a0",
       description="A 2-D game engine for Python",
       long_description=long_description,
@@ -41,14 +41,18 @@ setup(name="sge-spec",
       url="http://stellarengine.nongnu.org",
       classifiers=["Development Status :: 4 - Beta",
                    "Intended Audience :: Developers",
+                   "License :: DFSG approved",
+                   "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+                   "Natural Language :: English",
                    "Operating System :: OS Independent",
-                   "Programming Language :: Python",
+                   "Programming Language :: Python :: 2",
+                   "Programming Language :: Python :: 3",
                    "Topic :: Games/Entertainment",
                    "Topic :: Software Development"],
-      license="CC0",
+      license="GNU Lesser General Public License",
       packages=["sge"],
       package_dir={"sge": "sge"},
-      package_data={"sge": ["COPYING"]},
-      requires=[],
+      package_data={"sge": ["*.png", "COPYING", "COPYING.LESSER", "LICENSES"]},
+      requires=["pygame (>=1.9.1)", "six (>=1.4.0)"],
       provides=["sge"],
-     )
+      )

@@ -1,26 +1,38 @@
-# The SGE Specification
-# Written in 2014 by Julian Marchant <onpon4@riseup.net> 
+# Copyright (C) 2014 Julian Marchant <onpon4@riseup.net>
 # 
-# To the extent possible under law, the author(s) have dedicated all
-# copyright and related and neighboring rights to this software to the
-# public domain worldwide. This software is distributed without any
-# warranty. 
+# This file is part of the Pygame SGE.
 # 
-# You should have received a copy of the CC0 Public Domain Dedication
-# along with this software. If not, see
-# <http://creativecommons.org/publicdomain/zero/1.0/>.
-
-# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace  the notice
-# above as well as the notices contained in other source files with your
-# own copyright notice.  Recommended free  licenses are  the GNU General
-# Public License, GNU Lesser General Public License, Expat License, or
-# Apache License.
+# The Pygame SGE is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The Pygame SGE is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public License
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 This module provides easy-to-use collision detection functions, from
 basic rectangle-based collision detection to shape-based collision
 detection.
 """
+
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import math
+
+import six
+
+import sge
+from sge import r
+
 
 __all__ = ["rectangles_collide", "masks_collide", "rectangle", "ellipse",
            "circle", "line"]
@@ -76,8 +88,8 @@ def masks_collide(x1, y1, mask1, x2, y2, mask2):
         h2 = len(mask2[0])
 
         if rectangles_collide(x1, y1, w1, h1, x2, y2, w2, h2):
-            for i in range(max(x1, x2), min(x1 + w1, x2 + w2)):
-                for j in range(max(y1, y2), min(y1 + h1, y2 + h2)):
+            for i in six.moves.range(max(x1, x2), min(x1 + w1, x2 + w2)):
+                for j in six.moves.range(max(y1, y2), min(y1 + h1, y2 + h2)):
                     if (mask1[i - x1][j - y1] and mask2[i - x2][j - y2]):
                         return True
 
@@ -98,7 +110,28 @@ def rectangle(x, y, w, h, other=None):
       documentation for :meth:`sge.Object.collision` for more
       information.
     """
-    # TODO
+    room = sge.game.current_room
+    others = room.get_objects_at(x, y, w, h)
+    collisions = []
+    mask_id = ("rectangle_masks", x, y, w, h)
+
+    mask = r.cache.get(mask_id)
+    if mask is None:
+        mask = [[True for j in six.moves.range(h)] for i in six.moves.range(w)]
+
+    r.cache.add(mask_id, mask)
+
+    for obj in others:
+        if r.o_is_other(obj, other):
+            if obj.collision_precise or obj.collision_ellipse:
+                if masks_collide(x, y, mask, obj.mask_x, obj.mask_y, obj.mask):
+                    collisions.append(obj)
+            else:
+                if rectangles_collide(x, y, w, h, obj.bbox_left, obj.bbox_top,
+                                      obj.bbox_width, obj.bbox_height):
+                    collisions.append(obj)
+
+    return collisions
 
 
 def ellipse(x, y, w, h, other=None):
@@ -117,7 +150,32 @@ def ellipse(x, y, w, h, other=None):
       documentation for :meth:`sge.Object.collision` for more
       information.
     """
-    # TODO
+    room = sge.game.current_room
+    others = room.get_objects_at(x, y, w, h)
+    collisions = []
+    mask_id = ("ellipse_masks", x, y, w, h)
+
+    mask = r.cache.get(mask_id)
+
+    if mask is None:
+        mask = [[False for j in six.moves.range(h)]
+                for i in six.moves.range(w)]
+        a = len(mask) / 2
+        b = len(mask[0]) / 2 if mask else 0
+
+        for i in six.moves.range(len(mask)):
+            for j in six.moves.range(len(mask[i])):
+                if ((i - a) / a) ** 2 + ((j - b) / b) ** 2 <= 1:
+                    mask[i][j] = True
+
+    r.cache.add(mask_id, mask)
+
+    for obj in others:
+        if (r.o_is_other(obj, other) and
+                masks_collide(x, y, mask, obj.mask_x, obj.mask_y, obj.mask)):
+            collisions.append(obj)
+
+    return collisions
 
 
 def circle(x, y, radius, other=None):
@@ -133,7 +191,32 @@ def circle(x, y, radius, other=None):
       documentation for :meth:`sge.Object.collision` for more
       information.
     """
-    # TODO
+    room = sge.game.current_room
+    diameter = radius * 2
+    others = room.get_objects_at(x - radius, y - radius, diameter, diameter)
+    collisions = []
+    mask_id = ("circle_masks", x, y, radius)
+
+    mask = r.cache.get(mask_id)
+
+    if mask is None:
+        mask = [[False for j in six.moves.range(diameter)]
+                for i in six.moves.range(diameter)]
+
+        for i in six.moves.range(len(mask)):
+            for j in six.moves.range(len(mask[i])):
+                if (i - x) ** 2 + (j - y) ** 2 <= radius ** 2:
+                    mask[i][j] = True
+
+    r.cache.add(mask_id, mask)
+
+    for obj in others:
+        if (r.o_is_other(obj, other) and
+                masks_collide(x - radius, y - radius, mask, obj.mask_x,
+                              obj.mask_y, obj.mask)):
+            collisions.append(obj)
+
+    return collisions
 
 
 def line(x1, y1, x2, y2, other=None):
@@ -154,4 +237,33 @@ def line(x1, y1, x2, y2, other=None):
       documentation for :meth:`sge.Object.collision` for more
       information.
     """
-    # TODO
+    room = sge.game.current_room
+    x = min(x1, x2)
+    y = min(y1, y2)
+    w = abs(x2 - x1)
+    h = abs(y2 - y1)
+    others = room.get_objects_at(x , y, w, h)
+    collisions = []
+    mask_id = ("line_masks", w, h)
+
+    mask = r.cache.get(mask_id)
+
+    if mask is None:
+        mask = [[False for j in six.moves.range(h)]
+                for i in six.moves.range(w)]
+        m = h / w
+        b = y1 - m * x1
+
+        for i in six.moves.range(len(mask)):
+            j = int(round(m * i + b))
+            if 0 <= j < len(mask[i]):
+                mask[i][j] = True
+
+    r.cache.add(mask_id, mask)
+
+    for obj in others:
+        if (r.o_is_other(obj, other) and
+                masks_collide(x, y, mask, obj.mask_x, obj.mask_y, obj.mask)):
+            collisions.append(obj)
+
+    return collisions

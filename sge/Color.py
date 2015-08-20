@@ -19,6 +19,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import six
+
 COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
           'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
           'yellow': '#ffff00', 'olive': '#808000', 'lime': '#00ff00',
@@ -31,7 +33,7 @@ for pair in COLORS.items():
 
 
 def _check_input(value):
-    if value in range(256):
+    if value in six.moves.range(256):
         return value
     else:
         raise ValueError("Color values must be between 0 and 255.")
@@ -99,25 +101,26 @@ class Color(object):
             order.
         """
         self.alpha = 255
-        if isinstance(value, str):
+        if isinstance(value, six.string_types):
             value = COLORS.get(value, value)[1:]
             if len(value) == 3:
-                r, g, b = [int(value[i] * 2, 16) for i in range(3)]
+                r, g, b = [int(value[i] * 2, 16) for i in six.moves.range(3)]
                 self.red, self.green, self.blue = r, g, b
             elif len(value) == 4:
                 r, g, b, a = [int(value[i] * 2, 16) for i in range(4)]
                 self.red, self.green, self.blue, self.alpha = r, g, b, a
             elif len(value) == 6:
-                r, g, b = [int(value[i:(i + 2)], 16) for i in range(0, 6, 2)]
+                r, g, b = [int(value[i:(i + 2)], 16)
+                           for i in six.moves.range(0, 6, 2)]
                 self.red, self.green, self.blue = r, g, b
             elif len(value) == 8:
                 r, g, b, a = [int(value[i:(i + 2)], 16) for i in range(0, 8, 2)]
                 self.red, self.green, self.blue, self.alpha = r, g, b, a
             else:
                 raise ValueError("Invalid color string.")
-        elif isinstance(value, int):
+        elif isinstance(value, six.integer_types):
             b, g, r = [(value & 256 ** (i + 1) - 1) // 256 ** i
-                       for i in range(3)]
+                       for i in six.moves.range(3)]
             self.red, self.green, self.blue = r, g, b
         elif isinstance(value, (list, tuple)):
             if len(value) >= 3:

@@ -129,6 +129,9 @@ class Room(sge.Room):
         self.project_dot(90, 34, 3, sge.Color("maroon"))
         self.project_dot(91, 34, 3, sge.Color("maroon"))
         self.project_dot(90, 35, 3, sge.Color("maroon"))
+        self.project_polygon([(128, 128), (124, 160), (160, 140)], 3,
+                             fill=sge.Color("gray"), outline=sge.Color("red"),
+                             outline_thickness=3)
         text = "I am amazing text!\n\nYaaaaaaaaaaay~!"
         self.project_text(glob.font, text, 320, 0, 3, color=sge.Color("black"),
                           halign="center")

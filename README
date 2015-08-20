@@ -6,34 +6,34 @@ as-is, without any warranty.
 
 ========================================================================
 
-This is the specification for the SGE, written as a template.  For a
-reference implementation, see the Pygame SGE.
+LICENSE
 
-To develop an implementation of SGE:
+The Pygame SGE is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-* Edit setup.py to include the name of the implementation and proper
-  information about it.
-* Define the values of the constants in sge/__init__.py.
-* Replace the license text on top of all source code files in the "sge"
-  directory with appropriate license text for the license you intend to
-  use for your implementation.  Suggested license choices are the GNU
-  GPL, the GNU LGPL, the Apache License, or the Expat License.
-* Replace the "TODO" comments found throughout the Python files with
-  actual functionality.
-* Insert the name of your implementation into the
-  implementation-specific information section of sge/__init__.py and
-  insert all important information that is specific to your
-  implementation in this section.
-* Other than the implementation-specific information section, please do
-  NOT modify the docstrings.
-* Use the files in the "doc" directory to generate Sphinx
-  documentation (e.g. with sphinx-quickstart).
-* Replace this README with a file indicating the license of the
-  implementation, dependencies, how to install, and a pointer to the doc
-  folder for information on how to use the SGE.
+The Pygame SGE is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
 
-To test the implementation, use the examples found in the examples
-directory.
+You should have received a copy of the GNU Lesser General Public License
+along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
-Please see also VERSION_NUMBERING, which explains how the SGE's version
-numbering works.
+INSTALLATION
+
+First, install the dependencies:
+
+- Python 2 (2.7 or later) or 3 (3.1 or later) <http://www.python.org>
+- Pygame 1.9.1 or later <http://pygame.org>
+- Six 1.4.0 or later <https://pypi.python.org/pypi/six>
+
+Once you have all the dependencies, install the SGE with the included
+setup.py script, e.g.:
+
+    python setup.py install
+
+USAGE
+
+See the "doc" folder for detailed documentation on how to use the SGE.

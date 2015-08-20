@@ -1,22 +1,43 @@
-# The SGE Specification
-# Written in 2012, 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net> 
+# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
 # 
-# To the extent possible under law, the author(s) have dedicated all
-# copyright and related and neighboring rights to this software to the
-# public domain worldwide. This software is distributed without any
-# warranty. 
+# This file is part of the Pygame SGE.
 # 
-# You should have received a copy of the CC0 Public Domain Dedication
-# along with this software. If not, see
-# <http://creativecommons.org/publicdomain/zero/1.0/>.
+# The Pygame SGE is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The Pygame SGE is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public License
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
-# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace  the notice
-# above as well as the notices contained in other source files with your
-# own copyright notice.  Recommended free  licenses are  the GNU General
-# Public License, GNU Lesser General Public License, Expat License, or
-# Apache License.
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import pygame
+import six
 
 import sge
+from sge import r
+from sge.r import (_get_dot_sprite, _get_line_sprite, _get_rectangle_sprite,
+                   _get_ellipse_sprite, _get_circle_sprite,
+                   _get_polygon_sprite, o_update_object_areas,
+                   o_update_collision_lists, r_get_rectangle_object_areas,
+                   r_set_object_areas, r_update_fade, r_update_dissolve,
+                   r_update_pixelate, r_update_wipe_left, r_update_wipe_right,
+                   r_update_wipe_up, r_update_wipe_down, r_update_wipe_upleft,
+                   r_update_wipe_upright, r_update_wipe_downleft,
+                   r_update_wipe_downright, r_update_wipe_matrix,
+                   r_update_iris_in, r_update_iris_out, s_get_image)
+
+
+__all__ = ['Room']
 
 
 class Room(object):
@@ -132,6 +153,30 @@ class Room(object):
        Reserved dictionary for internal use by the SGE.  (Read-only)
     """
 
+    @property
+    def object_area_width(self):
+        return self.__object_area_width
+
+    @object_area_width.setter
+    def object_area_width(self, value):
+        if value is None:
+            value = sge.game.width
+
+        self.__object_area_width = value
+        r_set_object_areas(self)
+
+    @property
+    def object_area_height(self):
+        return self.__object_area_height
+
+    @object_area_height.setter
+    def object_area_height(self, value):
+        if value is None:
+            value = sge.game.height
+
+        self.__object_area_height = value
+        r_set_object_areas(self)
+
     def __init__(self, objects=(), width=None, height=None, views=None,
                  background=None, background_x=0, background_y=0,
                  object_area_width=None, object_area_height=None):
@@ -150,7 +195,43 @@ class Room(object):
         room.  See the documentation for :class:`sge.Room` for more
         information.
         """
-        # TODO
+        self.rd = {}
+        self.width = width if width is not None else sge.game.width
+        self.height = height if height is not None else sge.game.height
+        self.rd["swidth"] = self.width
+        self.rd["sheight"] = self.height
+
+        if object_area_width is None:
+            object_area_width = sge.game.width
+        if object_area_height is None:
+            object_area_height = sge.game.height
+
+        self.__object_area_width = object_area_width
+        self.__object_area_height = object_area_height
+        self.background_x = background_x
+        self.background_y = background_y
+        self.alarms = {}
+        self.__new_objects = []
+        self.rd["projections"] = []
+
+        if views is not None:
+            self.views = list(views)
+        else:
+            self.views = [sge.View(0, 0)]
+
+        if background is not None:
+            self.background = background
+        else:
+            self.background = sge.Background((), sge.Color("black"))
+
+        self.rd["started"] = False
+
+        self.objects = []
+        r_set_object_areas(self)
+
+        self.add(sge.game.mouse)
+        for obj in objects:
+            self.add(obj)
 
     def add(self, obj):
         """
@@ -161,7 +242,19 @@ class Room(object):
         - ``obj`` -- The :class:`sge.Object` object to add.
 
         """
-        # TODO
+        obj.alive = True
+        if obj not in self.objects:
+            self.objects.append(obj)
+
+            if self is sge.game.current_room and self.rd["started"]:
+                obj.event_create()
+                obj.rd["object_areas"] = set()
+                o_update_object_areas(obj)
+                o_update_collision_lists(obj)
+                if obj.active:
+                    r._active_objects.add(obj)
+            else:
+                self.__new_objects.append(obj)
 
     def remove(self, obj):
         """
@@ -171,7 +264,17 @@ class Room(object):
 
         - ``obj`` -- The :class:`sge.Object` object to remove.
         """
-        # TODO
+        while obj in self.objects:
+            self.objects.remove(obj)
+
+        while obj in self.__new_objects:
+            self.__new_objects.remove(obj)
+
+        if self is sge.game.current_room:
+            o_update_object_areas(obj)
+            o_update_collision_lists(obj)
+            r._active_objects.discard(obj)
+            obj.event_destroy()
 
     def start(self, transition=None, transition_time=1500,
               transition_arg=None):
@@ -217,7 +320,59 @@ class Room(object):
             ``y`` is the vertical location relative to the window.
             Default is the center of the window.
         """
-        # TODO
+        transitions = {
+            "fade": r_update_fade, "dissolve": r_update_dissolve,
+            "pixelate": r_update_pixelate, "wipe_left": r_update_wipe_left,
+            "wipe_right": r_update_wipe_right, "wipe_up": r_update_wipe_up,
+            "wipe_down": r_update_wipe_down,
+            "wipe_upleft": r_update_wipe_upleft,
+            "wipe_upright": r_update_wipe_upright,
+            "wipe_downleft": r_update_wipe_downleft,
+            "wipe_downright": r_update_wipe_downright,
+            "wipe_matrix": r_update_wipe_matrix,
+            "iris_in": r_update_iris_in, "iris_out": r_update_iris_out}
+
+        if transition in transitions and transition_time > 0:
+            self.rd["t_update"] = transitions[transition]
+            self.rd["t_sprite"] = sge.Sprite.from_screenshot()
+            self.rd["t_duration"] = transition_time
+            self.rd["t_arg"] = transition_arg
+            self.rd["t_time_passed"] = 0
+            self.rd["t_complete_last"] = 0
+            self.rd["t_matrix_remaining"] = None
+        else:
+            self.rd["t_update"] = None
+
+        sge.game.unpause()
+        sge.game.current_room = self
+
+        r._colliders = []
+        r._collision_checkers = []
+        r._active_objects = set()
+
+        r_set_object_areas(self)
+        for obj in self.objects:
+            obj.rd["object_areas"] = set()
+            o_update_object_areas(obj)
+            o_update_collision_lists(obj)
+            if obj.active:
+                r._active_objects.add(obj)
+
+        # This is stored in a variable to prevent problems with
+        # rd["started"] being False during the start/create events.
+        started = self.rd["started"]
+        self.rd["started"] = True
+        if not started:
+            self.event_room_start()
+        else:
+            self.event_room_resume()
+
+        while self.__new_objects:
+            self.__new_objects.pop(0).event_create()
+
+        # Prevent sudden movements from happening at the start of a room
+        # due to delta timing, and make sure transitions happen fully.
+        r.game_clock.tick()
 
     def get_objects_at(self, x, y, width, height):
         """
@@ -241,40 +396,14 @@ class Room(object):
            check the object manually, or use
            :func:`sge.collision.rectangle` instead.
         """
-        xis = int(math.floor(x / self.object_area_width))
-        yis = int(math.floor(y / self.object_area_height))
-        xie = int(math.ceil((x + width) / self.object_area_width))
-        yie = int(math.ceil((y + height) / self.object_area_height))
-
-        if (self.object_areas and xis < len(self.object_areas) and
-                yis < len(self.object_areas[0]) and xie > 0 and yie > 0):
-            use_void = False
-
-            if xis < 0:
-                xis = 0
-                use_void = True
-            if yis < 0:
-                yis = 0
-                use_void = True
-            if xie > len(self.object_areas):
-                xie = len(self.object_areas)
-                use_void = True
-            if yie > len(self.object_areas[0]):
-                yie = len(self.object_areas[0])
-                use_void = True
-
-            if use_void:
-                area = self.object_area_void.copy()
+        area = set()
+        for a in r_get_rectangle_object_areas(self, x, y, width, height):
+            if a is None:
+                area |= self.object_area_void
             else:
-                area = set()
+                area |= self.object_areas[a[0]][a[1]]
 
-            for xi in six.moves.range(xis, xie):
-                for yi in six.moves.range(yis, yie):
-                    area |= self.object_areas[xi][yi]
-
-            return area
-        else:
-            return self.object_area_void.copy()
+        return area
             
 
     def project_dot(self, x, y, z, color):
@@ -292,7 +421,12 @@ class Room(object):
         See the documentation for :meth:`sge.Sprite.draw_dot` for more
         information.
         """
-        # TODO
+        if not isinstance(color, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(color))
+            raise TypeError(e)
+
+        sprite = _get_dot_sprite(color)
+        self.project_sprite(sprite, 0, x, y, z)
 
     def project_line(self, x1, y1, x2, y2, z, color, thickness=1,
                      anti_alias=False):
@@ -314,7 +448,20 @@ class Room(object):
         See the documentation for :meth:`sge.Sprite.draw_line` for more
         information.
         """
-        # TODO
+        if not isinstance(color, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(color))
+            raise TypeError(e)
+
+        thickness = abs(thickness)
+        x = min(x1, x2) - thickness // 2
+        y = min(y1, y2) - thickness // 2
+        x1 -= x
+        y1 -= y
+        x2 -= x
+        y2 -= y
+
+        sprite = _get_line_sprite(x1, y1, x2, y2, color, thickness, anti_alias)
+        self.project_sprite(sprite, 0, x, y, z)
 
     def project_rectangle(self, x, y, z, width, height, fill=None,
                           outline=None, outline_thickness=1):
@@ -332,7 +479,21 @@ class Room(object):
         See the documentation for :meth:`sge.Sprite.draw_rectangle` for
         more information.
         """
-        # TODO
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
+        outline_thickness = abs(outline_thickness)
+        draw_x = outline_thickness // 2
+        draw_y = outline_thickness // 2
+        x -= draw_x
+        y -= draw_y
+        sprite = _get_rectangle_sprite(width, height, fill, outline,
+                                       outline_thickness)
+        self.project_sprite(sprite, 0, x, y, z)
 
     def project_ellipse(self, x, y, z, width, height, fill=None,
                         outline=None, outline_thickness=1, anti_alias=False):
@@ -355,7 +516,21 @@ class Room(object):
         See the documentation for :meth:`sge.Sprite.draw_ellipse` for
         more information.
         """
-        # TODO
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
+        outline_thickness = abs(outline_thickness)
+        draw_x = outline_thickness // 2
+        draw_y = outline_thickness // 2
+        x -= draw_x
+        y -= draw_y
+        sprite = _get_ellipse_sprite(width, height, fill, outline,
+                                     outline_thickness, anti_alias)
+        self.project_sprite(sprite, 0, x, y, z)
 
     def project_circle(self, x, y, z, radius, fill=None, outline=None,
                        outline_thickness=1, anti_alias=False):
@@ -373,7 +548,16 @@ class Room(object):
         See the documentation for :meth:`sge.Sprite.draw_circle` for
         more information.
         """
-        # TODO
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
+        sprite = _get_circle_sprite(radius, fill, outline, outline_thickness,
+                                    anti_alias)
+        self.project_sprite(sprite, 0, x - radius, y - radius, z)
 
     def project_polygon(self, points, z, fill=None, outline=None,
                         outline_thickness=1, anti_alias=False):
@@ -391,7 +575,24 @@ class Room(object):
         See the documentation for :meth:`sge.Sprite.draw_polygon` for
         more information.
         """
-        # TODO
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
+        xlist = []
+        ylist = []
+        for point in points:
+            xlist.append(point[0])
+            ylist.append(point[1])
+        x = min(xlist)
+        y = min(ylist)
+
+        sprite = _get_polygon_sprite(points, fill, outline, outline_thickness,
+                                     anti_alias)
+        self.project_sprite(sprite, 0, x, y, z)
 
     def project_sprite(self, sprite, image, x, y, z, blend_mode=None):
         """
@@ -408,7 +609,10 @@ class Room(object):
         See the documentation for :meth:`sge.Sprite.draw_sprite` for
         more information.
         """
-        # TODO
+        img = s_get_image(sprite, image)
+        x -= sprite.origin_x
+        y -= sprite.origin_y
+        self.rd["projections"].append((img, x, y, z, blend_mode))
 
     def project_text(self, font, text, x, y, z, width=None, height=None,
                     color=sge.Color("black"), halign="left",
@@ -427,7 +631,13 @@ class Room(object):
         See the documentation for :meth:`sge.Sprite.draw_text` for more
         information.
         """
-        # TODO
+        if not isinstance(color, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(color))
+            raise TypeError(e)
+
+        sprite = sge.Sprite.from_text(font, text, width, height, color, halign,
+                                      valign, anti_alias)
+        self.project_sprite(sprite, 0, x, y, z)
 
     def event_room_start(self):
         """

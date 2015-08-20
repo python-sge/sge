@@ -1,20 +1,28 @@
-# The SGE Specification
-# Written in 2012, 2013 by Julian Marchant <onpon4@riseup.net> 
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
-# To the extent possible under law, the author(s) have dedicated all
-# copyright and related and neighboring rights to this software to the
-# public domain worldwide. This software is distributed without any
-# warranty. 
+# This file is part of the Pygame SGE.
 # 
-# You should have received a copy of the CC0 Public Domain Dedication
-# along with this software. If not, see
-# <http://creativecommons.org/publicdomain/zero/1.0/>.
+# The Pygame SGE is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The Pygame SGE is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public License
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
-# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace  the notice
-# above as well as the notices contained in other source files with your
-# own copyright notice.  Recommended free  licenses are  the GNU General
-# Public License, GNU Lesser General Public License, Expat License, or
-# Apache License.
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import sge
+from sge.r import v_limit
+
 
 __all__ = ['View']
 
@@ -76,6 +84,58 @@ class View(object):
        Reserved dictionary for internal use by the SGE.  (Read-only)
     """
 
+    @property
+    def x(self):
+        return self.rd["x"]
+
+    @x.setter
+    def x(self, value):
+        self.rd["x"] = value
+        v_limit(self)
+
+    @property
+    def y(self):
+        return self.rd["y"]
+
+    @y.setter
+    def y(self, value):
+        self.rd["y"] = value
+        v_limit(self)
+
+    @property
+    def width(self):
+        return self.__width
+
+    @width.setter
+    def width(self, value):
+        self.__width = value
+        v_limit(self)
+
+    @property
+    def height(self):
+        return self.__height
+
+    @height.setter
+    def height(self, value):
+        self.__height = value
+        v_limit(self)
+
+    @property
+    def wport(self):
+        return self.__wport if self.__wport is not None else self.width
+
+    @wport.setter
+    def wport(self, value):
+        self.__wport = value
+
+    @property
+    def hport(self):
+        return self.__hport if self.__hport is not None else self.height
+
+    @hport.setter
+    def hport(self, value):
+        self.__hport = value
+
     def __init__(self, x, y, xport=0, yport=0, width=None, height=None,
                  wport=None, hport=None):
         """
@@ -90,4 +150,13 @@ class View(object):
         view.  See the documentation for :class:`sge.View` for more
         information.
         """
-        # TODO
+        self.rd = {}
+        self.rd["x"] = x
+        self.rd["y"] = y
+        self.xport = xport
+        self.yport = yport
+        self.__width = width if width else sge.game.width - xport
+        self.__height = height if height else sge.game.height - yport
+        v_limit(self)
+        self.wport = wport
+        self.hport = hport

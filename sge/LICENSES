@@ -1,0 +1,22 @@
+This file lists the licenses, authors, and sources for all the
+non-functional data files found in this directory.
+
+========================================================================
+
+pause.png
+
+Authors:
+  Francisco Cifuentes <https://facebook.com/metarupx>
+  Gareth Noyce
+  onpon4 <https://onpon4.github.io>
+License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
+Source: http://www.pygame.org/docs/logos.html
+Details:
+  The SGE logo is by Francisco Cifuentes, and its shadow has been
+  changed slightly by onpon4.  It is under CC BY.
+
+  The Pygame logo is by Gareth Noyce and in the public domain.
+
+  The works were combined with the "PAUSED" text in between them by
+  onpon4.  This contribution is released to the public domain via the
+  CC0 license <http://creativecommons.org/publicdomain/zero/1.0/>.

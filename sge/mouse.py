@@ -1,20 +1,19 @@
-# The SGE Specification
-# Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net> 
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
-# To the extent possible under law, the author(s) have dedicated all
-# copyright and related and neighboring rights to this software to the
-# public domain worldwide. This software is distributed without any
-# warranty. 
+# This file is part of the Pygame SGE.
 # 
-# You should have received a copy of the CC0 Public Domain Dedication
-# along with this software. If not, see
-# <http://creativecommons.org/publicdomain/zero/1.0/>.
-
-# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace  the notice
-# above as well as the notices contained in other source files with your
-# own copyright notice.  Recommended free  licenses are  the GNU General
-# Public License, GNU Lesser General Public License, Expat License, or
-# Apache License.
+# The Pygame SGE is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The Pygame SGE is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public License
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 This module provides functions related to the mouse input.
@@ -51,7 +50,15 @@ Which mode the mouse is in depends on the values of
    absolute mode.
 """
 
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import pygame
+
 import sge
+from sge import r
 
 
 __all__ = ["get_pressed", "get_x", "get_y", "set_x", "set_y"]
@@ -64,7 +71,11 @@ def get_pressed(button):
     See the documentation for :class:`sge.input.MouseButtonPress` for
     more information.
     """
-    # TODO
+    b = {"left": 0, "middle": 1, "right": 2}.setdefault(button.lower())
+    if b is not None:
+        return pygame.mouse.get_pressed()[b]
+    else:
+        return False
 
 
 def get_x():
@@ -75,7 +86,10 @@ def get_x():
     scaling, pillarboxes, and letterboxes.  If the mouse is in
     relative mode, this function returns :const:`None`.
     """
-    # TODO
+    if sge.game.grab_input and not sge.game.mouse.visible:
+        return None
+    else:
+        return (pygame.mouse.get_pos()[0] - r.game_x) / r.game_xscale
 
 
 def get_y():
@@ -86,7 +100,10 @@ def get_y():
     scaling, pillarboxes, and letterboxes.  If the mouse is in
     relative mode, this function returns :const:`None`.
     """
-    # TODO
+    if sge.game.grab_input and not sge.game.mouse.visible:
+        return None
+    else:
+        return (pygame.mouse.get_pos()[1] - r.game_y) / r.game_yscale
 
 
 def set_x(value):
@@ -97,7 +114,9 @@ def set_x(value):
     scaling, pillarboxes, and letterboxes.  If the mouse is in
     relative mode, this function has no effect.
     """
-    # TODO
+    if not sge.game.grab_input or sge.game.mouse.visible:
+        pygame.mouse.set_pos(value * r.game_xscale + r.game_x,
+                             pygame.mouse.get_pos()[1])
 
 
 def set_y(value):
@@ -108,4 +127,6 @@ def set_y(value):
     scaling, pillarboxes, and letterboxes.  If the mouse is in
     relative mode, this function has no effect.
     """
-    # TODO
+    if not sge.game.grab_input or sge.game.mouse.visible:
+        pygame.mouse.set_pos(pygame.mouse.get_pos()[0],
+                             value * r.game_yscale + r.game_y)

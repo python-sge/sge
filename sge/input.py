@@ -1,20 +1,19 @@
-# The SGE Specification
-# Written in 2014, 2015 by Julian Marchant <onpon4@riseup.net> 
+# Copyright (C) 2014, 2015 Julian Marchant <onpon4@riseup.net>
 # 
-# To the extent possible under law, the author(s) have dedicated all
-# copyright and related and neighboring rights to this software to the
-# public domain worldwide. This software is distributed without any
-# warranty. 
+# This file is part of the Pygame SGE.
 # 
-# You should have received a copy of the CC0 Public Domain Dedication
-# along with this software. If not, see
-# <http://creativecommons.org/publicdomain/zero/1.0/>.
-
-# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace  the notice
-# above as well as the notices contained in other source files with your
-# own copyright notice.  Recommended free  licenses are  the GNU General
-# Public License, GNU Lesser General Public License, Expat License, or
-# Apache License.
+# The Pygame SGE is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The Pygame SGE is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public License
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 This module provides input event classes.  Input event objects are used
@@ -27,6 +26,12 @@ You only need to use input event objects directly if you take control
 away from the SGE's main loop, e.g. to create your own loop.
 """
 
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+
 __all__ = ["KeyPress", "KeyRelease", "MouseMove", "MouseButtonPress",
            "MouseButtonRelease", "JoystickAxisMove", "JoystickHatMove",
            "JoystickTrackballMove", "JoystickButtonPress",
@@ -34,7 +39,7 @@ __all__ = ["KeyPress", "KeyRelease", "MouseMove", "MouseButtonPress",
            "MouseFocusGain", "MouseFocusLose", "QuitRequest"]
 
 
-class KeyPress:
+class KeyPress(object):
 
     """
     This input event represents a key on the keyboard being pressed.
@@ -188,7 +193,7 @@ class KeyPress:
         self.char = char
 
 
-class KeyRelease:
+class KeyRelease(object):
 
     """
     This input event represents a key on the keyboard being released.
@@ -203,7 +208,7 @@ class KeyRelease:
         self.key = key
 
 
-class MouseMove:
+class MouseMove(object):
 
     """
     This input event represents the mouse being moved.
@@ -222,7 +227,7 @@ class MouseMove:
         self.y = y
 
 
-class MouseButtonPress:
+class MouseButtonPress(object):
 
     """
     This input event represents a mouse button being pressed.
@@ -249,7 +254,7 @@ class MouseButtonPress:
         self.button = button
 
 
-class MouseButtonRelease:
+class MouseButtonRelease(object):
 
     """
     This input event represents a mouse button being released.
@@ -265,7 +270,7 @@ class MouseButtonRelease:
         self.button = button
 
 
-class JoystickAxisMove:
+class JoystickAxisMove(object):
 
     """
     This input event represents a joystick axis moving.
@@ -297,7 +302,7 @@ class JoystickAxisMove:
         self.value = max(-1.0, min(value, 1.0))
 
 
-class JoystickHatMove:
+class JoystickHatMove(object):
 
     """
     This input event represents a joystick hat moving.
@@ -334,7 +339,7 @@ class JoystickHatMove:
         self.y = y
 
 
-class JoystickTrackballMove:
+class JoystickTrackballMove(object):
 
     """
     This input event represents a joystick trackball moving.
@@ -369,7 +374,7 @@ class JoystickTrackballMove:
         self.y = y
 
 
-class JoystickButtonPress:
+class JoystickButtonPress(object):
 
     """
     This input event represents a joystick button being pressed.
@@ -394,7 +399,7 @@ class JoystickButtonPress:
         self.button = button
 
 
-class JoystickButtonRelease:
+class JoystickButtonRelease(object):
 
     """
     This input event represents a joystick button being released.
@@ -419,7 +424,7 @@ class JoystickButtonRelease:
         self.button = button
 
 
-class KeyboardFocusGain:
+class KeyboardFocusGain(object):
 
     """
     This input event represents the game window gaining keyboard focus.
@@ -438,7 +443,7 @@ class KeyboardFocusGain:
     """
 
 
-class KeyboardFocusLose:
+class KeyboardFocusLose(object):
 
     """
     This input event represents the game window losing keyboard focus.
@@ -451,7 +456,7 @@ class KeyboardFocusLose:
     """
 
 
-class MouseFocusGain:
+class MouseFocusGain(object):
 
     """
     This input event represents the game window gaining mouse focus.
@@ -464,7 +469,7 @@ class MouseFocusGain:
     """
 
 
-class MouseFocusLose:
+class MouseFocusLose(object):
 
     """
     This input event represents the game window losing mouse focus.
@@ -477,7 +482,7 @@ class MouseFocusLose:
     """
 
 
-class QuitRequest:
+class QuitRequest(object):
 
     """
     This input event represents the OS requesting for the program to

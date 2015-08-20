@@ -1,20 +1,19 @@
-# The SGE Specification
-# Written in 2012, 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net> 
-# 
-# To the extent possible under law, the author(s) have dedicated all
-# copyright and related and neighboring rights to this software to the
-# public domain worldwide. This software is distributed without any
-# warranty. 
-# 
-# You should have received a copy of the CC0 Public Domain Dedication
-# along with this software. If not, see
-# <http://creativecommons.org/publicdomain/zero/1.0/>.
-
-# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace the notice
-# above as well as the notices contained in other source files with your
-# own copyright notice.  Recommended free  licenses are the GNU General
-# Public License, GNU Lesser General Public License, Expat License, or
-# Apache License.
+# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+#
+# This file is part of the Pygame SGE.
+#
+# The Pygame SGE is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# The Pygame SGE is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 The SGE Game Engine ("SGE", pronounced like "Sage") is a general-purpose
@@ -221,23 +220,116 @@ Global Variables and Constants
    :class:`sge.Game` object currently, this variable is set to
    :const:`None`.
 
-Information specific to [insert implementation name here]
-=========================================================
+Information specific to the Pygame SGE
+======================================
 
 License
 -------
 
-[insert license info here]
+The Pygame SGE is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+The Pygame SGE is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 Dependencies
 ------------
 
-- Python [insert Python version here] <http://www.python.org>
-- [insert additional dependency here] <[insert dependency link here]>
-- [insert additional dependency here] <[insert dependency link here]>
-- [...]
+- Python 2 (2.7 or later) or 3 (3.1 or later) <http://www.python.org>
+- Pygame 1.9.1 or later <http://pygame.org>
 
-[insert other info here]
+Formats Support
+---------------
+
+:class:`sge.Sprite` supports the following image formats:
+
+- PNG
+- JPEG
+- Non-animated GIF
+- BMP
+- PCX
+- Uncompressed Truevision TGA
+- TIFF
+- ILBM
+- Netpbm
+- X Pixmap
+
+:class:`sge.Sound` supports the following audio formats:
+
+- Uncompressed WAV
+- Ogg Vorbis
+
+:class:`sge.Music` supports the following audio formats:
+
+- Ogg Vorbis
+- MP3 (support limited; use not recommended)
+- MOD
+- XM
+- MIDI
+
+For starting position in MOD files, the pattern order number is used
+instead of the number of milliseconds.
+
+If Pygame is built without full image support, :class:`sge.Sprite` will
+only be able to load uncompressed BMP images.
+
+The pygame.mixer module, which is used for all audio playback, is
+optional and depends on SDL_mixer; if pygame.mixer is unavailable,
+sounds and music will not play.
+
+On some systems, :class:`sge.Music` attempting to load an unsupported
+format can crash the game.  Since MP3 support is limited, it is best to
+avoid using it; consider using Ogg Vorbis instead.
+
+Missing Features
+----------------
+
+:meth:`sge.Sprite.draw_line`, :meth:`sge.Room.project_line`, and
+:meth:`sge.Game.project_line` support anti-aliasing for lines with a
+thickness of 1 only.  :meth:`sge.Sprite.draw_polygon`,
+:meth:`sge.Room.project_polygon`, and :meth:`sge.Game.project_polygon`
+support anti-aliasing for outlines of polygons with a thickness of 1
+only.  :meth:`sge.Sprite.draw_text`, :meth:`sge.Room.project_text`,
+and :meth:`sge.Game.project_text` support anti-aliasing in all cases.
+No other drawing or projecting methods support anti-aliasing.
+
+Known Problems
+--------------
+
+There is a bug in either Pygame or SDL, most likely SDL, which sometimes
+causes keyboard input to stop working.  In Pygame programs such as this
+one, this occurs when pygame.display.set_mode is called multiple times,
+which in the Pygame SGE occurs any time either the size of the window or
+the video mode (windowed or fullscreen) changes.  See this post from the
+SGE blog for more information:
+
+https://savannah.nongnu.org/forum/forum.php?forum_id=8113
+
+You may also be interested in this report on the Pygame issue tracker:
+
+https://bitbucket.org/pygame/pygame/issue/212/
+
+As mentioned in the post on the SGE blog, this is a particularly serious
+problem for anyone using the X Window System (e.g. pretty much any
+GNU/Linux user), or any other window system that gives complete control
+to fullscreen SDL applications.  On these systems, if the game requires
+keyboard input to either leave fullscreen or exit, the system will
+become unresponsive to everything that isn't sent directly to the kernel
+(such as the magic SysRq key in Linux systems).
+
+Luckily, the bug doesn't seem to affect mouse input, so if you allow the
+player to enter fullscreen mode in-game, it is highly recommended for
+you to provide some method of either exiting the game or exiting
+fullscreen with the mouse.  This can be a button somewhere on the screen
+if the game uses the mouse cursor, or it can be a simple mouse button
+click otherwise.
 """
 
 from __future__ import division
@@ -250,10 +342,10 @@ __version__ = "0.20a0"
 import sys
 import os
 
-# Import implementation-specific libraries like Pygame here
+import pygame
 
 # Constants
-IMPLEMENTATION = "SGE Specification"
+IMPLEMENTATION = "Pygame SGE"
 
 BLEND_NORMAL = None
 BLEND_ALPHA = 1
@@ -271,47 +363,75 @@ BLEND_RGBA_SCREEN = BLEND_ALPHA | BLEND_RGB_SCREEN
 BLEND_RGBA_MINIMUM = BLEND_ALPHA | BLEND_RGB_MINIMUM
 BLEND_RGBA_MAXIMUM = BLEND_ALPHA | BLEND_RGB_MAXIMUM
 
-KEYS = {"0": None, "1": None, "2": None, "3": None, "4": None, "5": None,
-        "6": None, "7": None, "8": None, "9": None, "a": None, "b": None,
-        "c": None, "d": None, "e": None, "f": None, "g": None, "h": None,
-        "i": None, "j": None, "k": None, "l": None, "m": None, "n": None,
-        "o": None, "p": None, "q": None, "r": None, "s": None, "t": None,
-        "u": None, "v": None, "w": None, "x": None, "y": None, "z": None,
-        "alt_left": None, "alt_right": None, "ampersand": None,
-        "apostrophe": None, "asterisk": None, "at": None, "backslash": None,
-        "backspace": None, "backtick": None, "bracket_left": None,
-        "bracket_right": None, "break": None, "caps_lock": None, "caret": None,
-        "clear": None, "colon": None, "comma": None, "ctrl_left": None,
-        "ctrl_right": None, "delete": None, "dollar": None, "down": None,
-        "end": None, "enter": None, "equals": None, "escape": None,
-        "euro": None, "exclamation": None, "f1": None, "f2": None, "f3": None,
-        "f4": None, "f5": None, "f6": None, "f7": None, "f8": None, "f9": None,
-        "f10": None, "f11": None, "f12": None, "greater_than": None,
-        "hash": None, "help": None, "home": None, "hyphen": None,
-        "insert": None, "kp_0": None, "kp_1": None, "kp_2": None, "kp_3": None,
-        "kp_4": None, "kp_5": None, "kp_6": None, "kp_7": None, "kp_8": None,
-        "kp_9": None, "kp_divide": None, "kp_enter": None, "kp_equals": None,
-        "kp_minus": None, "kp_multiply": None, "kp_plus": None,
-        "kp_point": None, "left": None, "less_than": None, "menu": None,
-        "meta_left": None, "meta_right": None, "mode": None, "num_lock": None,
-        "pagedown": None, "pageup": None, "parenthesis_left": None,
-        "parenthesis_right": None, "pause": None, "period": None, "plus": None,
-        "power": None, "print_screen": None, "question": None, "quote": None,
-        "right": None, "scroll_lock": None, "semicolon": None,
-        "shift_left": None, "shift_right": None, "slash": None, "space": None,
-        "super_left": None, "super_right": None, "sysrq": None, "tab": None,
-        "underscore": None, "up":None}
+MUSIC_END_EVENT = pygame.USEREVENT + 1
+
+KEYS = {"0": pygame.K_0, "1": pygame.K_1, "2": pygame.K_2, "3": pygame.K_3,
+        "4": pygame.K_4, "5": pygame.K_5, "6": pygame.K_6, "7": pygame.K_7,
+        "8": pygame.K_8, "9": pygame.K_9, "a": pygame.K_a, "b": pygame.K_b,
+        "c": pygame.K_c, "d": pygame.K_d, "e": pygame.K_e, "f": pygame.K_f,
+        "g": pygame.K_g, "h": pygame.K_h, "i": pygame.K_i, "j": pygame.K_j,
+        "k": pygame.K_k, "l": pygame.K_l, "m": pygame.K_m, "n": pygame.K_n,
+        "o": pygame.K_o, "p": pygame.K_p, "q": pygame.K_q, "r": pygame.K_r,
+        "s": pygame.K_s, "t": pygame.K_t, "u": pygame.K_u, "v": pygame.K_v,
+        "w": pygame.K_w, "x": pygame.K_x, "y": pygame.K_y, "z": pygame.K_z,
+        "alt_left": pygame.K_LALT, "alt_right": pygame.K_RALT,
+        "ampersand": pygame.K_AMPERSAND, "apostrophe": pygame.K_QUOTE,
+        "asterisk": pygame.K_ASTERISK, "at": pygame.K_AT,
+        "backslash": pygame.K_BACKSLASH, "backspace": pygame.K_BACKSPACE,
+        "backtick": pygame.K_BACKQUOTE, "bracket_left": pygame.K_LEFTBRACKET,
+        "bracket_right": pygame.K_RIGHTBRACKET, "break": pygame.K_BREAK,
+        "caps_lock": pygame.K_CAPSLOCK, "caret": pygame.K_CARET,
+        "clear": pygame.K_CLEAR, "colon": pygame.K_COLON,
+        "comma": pygame.K_COMMA, "ctrl_left": pygame.K_LCTRL,
+        "ctrl_right": pygame.K_RCTRL, "delete": pygame.K_DELETE,
+        "dollar": pygame.K_DOLLAR, "down": pygame.K_DOWN, "end": pygame.K_END,
+        "enter": pygame.K_RETURN, "equals": pygame.K_EQUALS,
+        "escape": pygame.K_ESCAPE, "euro": pygame.K_EURO,
+        "exclamation": pygame.K_EXCLAIM, "f1": pygame.K_F1, "f2": pygame.K_F2,
+        "f3": pygame.K_F3, "f4": pygame.K_F4, "f5": pygame.K_F5,
+        "f6": pygame.K_F6, "f7": pygame.K_F7, "f8": pygame.K_F8,
+        "f9": pygame.K_F9, "f10": pygame.K_F10, "f11": pygame.K_F11,
+        "f12": pygame.K_F12, "greater_than": pygame.K_GREATER,
+        "hash": pygame.K_HASH, "help": pygame.K_HELP, "home": pygame.K_HOME,
+        "hyphen": pygame.K_MINUS, "insert": pygame.K_INSERT,
+        "kp_0": pygame.K_KP0, "kp_1": pygame.K_KP1, "kp_2": pygame.K_KP2,
+        "kp_3": pygame.K_KP3, "kp_4": pygame.K_KP4, "kp_5": pygame.K_KP5,
+        "kp_6": pygame.K_KP6, "kp_7": pygame.K_KP7, "kp_8": pygame.K_KP8,
+        "kp_9": pygame.K_KP9, "kp_divide": pygame.K_KP_DIVIDE,
+        "kp_enter": pygame.K_KP_ENTER, "kp_equals": pygame.K_KP_EQUALS,
+        "kp_minus": pygame.K_KP_MINUS, "kp_multiply": pygame.K_KP_MULTIPLY,
+        "kp_plus": pygame.K_KP_PLUS, "kp_point": pygame.K_KP_PERIOD,
+        "left": pygame.K_LEFT, "less_than": pygame.K_LESS,
+        "menu": pygame.K_MENU, "meta_left": pygame.K_LMETA,
+        "meta_right": pygame.K_RMETA, "mode": pygame.K_MODE,
+        "num_lock": pygame.K_NUMLOCK, "pagedown": pygame.K_PAGEDOWN,
+        "pageup": pygame.K_PAGEUP, "parenthesis_left": pygame.K_LEFTPAREN,
+        "parenthesis_right": pygame.K_RIGHTPAREN, "pause": pygame.K_PAUSE,
+        "period": pygame.K_PERIOD, "plus": pygame.K_PLUS,
+        "power": pygame.K_POWER, "print_screen": pygame.K_PRINT,
+        "question": pygame.K_QUESTION, "quote": pygame.K_QUOTEDBL,
+        "right": pygame.K_RIGHT, "scroll_lock": pygame.K_SCROLLOCK,
+        "semicolon": pygame.K_SEMICOLON, "shift_left": pygame.K_LSHIFT,
+        "shift_right": pygame.K_RSHIFT, "slash": pygame.K_SLASH,
+        "space": pygame.K_SPACE, "super_left": pygame.K_LSUPER,
+        "super_right": pygame.K_RSUPER, "sysrq": pygame.K_SYSREQ,
+        "tab": pygame.K_TAB, "underscore": pygame.K_UNDERSCORE,
+        "up": pygame.K_UP}
 KEY_NAMES = {}
 for pair in KEYS.items():
     KEY_NAMES[pair[1]] = pair[0]
 
-MODS = {"alt": None, "alt_left": None, "alt_right": None, "caps_lock": None,
-        "ctrl": None, "ctrl_left": None, "ctrl_right": None, "meta": None,
-        "meta_left": None, "meta_right": None, "mode": None, "num_lock": None,
-        "shift": None, "shift_left": None, "shift_right": None}
+MODS = {"alt": pygame.KMOD_ALT, "alt_left": pygame.KMOD_LALT,
+        "alt_right": pygame.KMOD_RALT, "caps_lock": pygame.KMOD_CAPS,
+        "ctrl": pygame.KMOD_CTRL, "ctrl_left": pygame.KMOD_LCTRL,
+        "ctrl_right": pygame.KMOD_RCTRL, "meta": pygame.KMOD_META,
+        "meta_left": pygame.KMOD_LMETA, "meta_right": pygame.KMOD_RMETA,
+        "mode": pygame.KMOD_MODE, "num_lock": pygame.KMOD_NUM,
+        "shift": pygame.KMOD_SHIFT, "shift_left": pygame.KMOD_LSHIFT,
+        "shift_right": pygame.KMOD_RSHIFT}
 
-MOUSE_BUTTONS = {"left": 0, "right": 1, "middle": 2, "wheel_up": 3,
-                 "wheel_down": 4, "wheel_left": 5, "wheel_right": 6}
+MOUSE_BUTTONS = {"left": 1, "right": 3, "middle": 2, "wheel_up": 4,
+                 "wheel_down": 5, "wheel_left": 6, "wheel_right": 7}
 MOUSE_BUTTON_NAMES = {}
 for pair in MOUSE_BUTTONS.items():
     MOUSE_BUTTON_NAMES[pair[1]] = pair[0]
@@ -348,3 +468,8 @@ __all__ = [
 
 # Global variables
 game = None
+
+# Uncomment this line to tell SDL to center the window.  Disabled by
+# default because it seems to cause some weird behavior with window
+# resizing on at least some systems.
+#os.environ['SDL_VIDEO_CENTERED'] = '1'

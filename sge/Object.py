@@ -1,24 +1,42 @@
-# The SGE Specification
-# Written in 2012, 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net> 
+# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
 # 
-# To the extent possible under law, the author(s) have dedicated all
-# copyright and related and neighboring rights to this software to the
-# public domain worldwide. This software is distributed without any
-# warranty. 
+# This file is part of the Pygame SGE.
 # 
-# You should have received a copy of the CC0 Public Domain Dedication
-# along with this software. If not, see
-# <http://creativecommons.org/publicdomain/zero/1.0/>.
+# The Pygame SGE is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The Pygame SGE is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public License
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
-# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace  the notice
-# above as well as the notices contained in other source files with your
-# own copyright notice.  Recommended free  licenses are  the GNU General
-# Public License, GNU Lesser General Public License, Expat License, or
-# Apache License.
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
 
+import os
+import sys
+import traceback
 import math
+import warnings
+
+import pygame
+import six
 
 import sge
+from sge import r
+from sge.r import (o_update_object_areas, o_update_collision_lists,
+                   o_is_other, o_get_origin_offset, o_set_speed, s_get_image,
+                   s_get_precise_mask)
+
+
+__all__ = ['Object', 'Mouse']
 
 
 class Object(object):
@@ -318,6 +336,389 @@ class Object(object):
        Reserved dictionary for internal use by the SGE.  (Read-only)
     """
 
+    @property
+    def x(self):
+        return self.__x
+
+    @x.setter
+    def x(self, value):
+        if self.__x != value:
+            self.__x = value
+            o_update_object_areas(self)
+
+    @property
+    def y(self):
+        return self.__y
+
+    @y.setter
+    def y(self, value):
+        if self.__y != value:
+            self.__y = value
+            o_update_object_areas(self)
+
+    @property
+    def sprite(self):
+        return self.rd["sprite"]
+
+    @sprite.setter
+    def sprite(self, value):
+        if self.rd["sprite"] != value:
+            self.rd["sprite"] = value
+            if value is not None:
+                self.image_index = self.image_index % value.frames
+            o_update_object_areas(self)
+
+    @property
+    def active(self):
+        return self.__active
+
+    @active.setter
+    def active(self, value):
+        if self.__active != value:
+            self.__active = value
+            if value:
+                r._active_objects.add(self)
+            else:
+                r._active_objects.discard(self)
+
+    @property
+    def checks_collisions(self):
+        return self.__checks_collisions
+
+    @checks_collisions.setter
+    def checks_collisions(self, value):
+        if self.__checks_collisions != value:
+            self.__checks_collisions = value
+            o_update_collision_lists(self)
+
+    @property
+    def tangible(self):
+        return self.rd["tangible"]
+
+    @tangible.setter
+    def tangible(self, value):
+        if self.rd["tangible"] != value:
+            self.rd["tangible"] = value
+            o_update_collision_lists(self)
+
+    @property
+    def bbox_x(self):
+        return self.__bbox_x
+
+    @bbox_x.setter
+    def bbox_x(self, value):
+        if self.__bbox_x != value:
+            if value is not None:
+                self.__bbox_x = value
+            else:
+                if self.sprite is not None:
+                    self.__bbox_x = self.sprite.bbox_x
+                else:
+                    self.__bbox_x = 0
+            o_update_object_areas(self)
+
+    @property
+    def bbox_y(self):
+        return self.__bbox_y
+
+    @bbox_y.setter
+    def bbox_y(self, value):
+        if self.__bbox_y != value:
+            if value is not None:
+                self.__bbox_y = value
+            else:
+                if self.sprite is not None:
+                    self.__bbox_y = self.sprite.bbox_y
+                else:
+                    self.__bbox_y = 0
+            o_update_object_areas(self)
+
+    @property
+    def bbox_width(self):
+        return self.__bbox_width
+
+    @bbox_width.setter
+    def bbox_width(self, value):
+        if self.__bbox_width != value:
+            if value is not None:
+                self.__bbox_width = value
+            else:
+                if self.sprite is not None:
+                    self.__bbox_width = self.sprite.bbox_width
+                else:
+                    self.__bbox_width = 1
+            o_update_object_areas(self)
+
+    @property
+    def bbox_height(self):
+        return self.__bbox_height
+
+    @bbox_height.setter
+    def bbox_height(self, value):
+        if self.__bbox_height != value:
+            if value is not None:
+                self.__bbox_height = value
+            else:
+                if self.sprite is not None:
+                    self.__bbox_height = self.sprite.bbox_height
+                else:
+                    self.__bbox_height = 1
+            o_update_object_areas(self)
+
+    @property
+    def bbox_left(self):
+        return self.x + self.bbox_x
+
+    @bbox_left.setter
+    def bbox_left(self, value):
+        self.x = value - self.bbox_x
+
+    @property
+    def bbox_right(self):
+        return self.x + self.bbox_x + self.bbox_width
+
+    @bbox_right.setter
+    def bbox_right(self, value):
+        self.x = value - self.bbox_width - self.bbox_x
+
+    @property
+    def bbox_top(self):
+        return self.y + self.bbox_y
+
+    @bbox_top.setter
+    def bbox_top(self, value):
+        self.y = value - self.bbox_y
+
+    @property
+    def bbox_bottom(self):
+        return self.y + self.bbox_y + self.bbox_height
+
+    @bbox_bottom.setter
+    def bbox_bottom(self, value):
+        self.y = value - self.bbox_height - self.bbox_y
+
+    @property
+    def xvelocity(self):
+        return self.rd["xv"]
+
+    @xvelocity.setter
+    def xvelocity(self, value):
+        if self.rd["xv"] != value:
+            self.rd["xv"] = value
+            o_set_speed(self)
+
+    @property
+    def yvelocity(self):
+        return self.rd["yv"]
+
+    @yvelocity.setter
+    def yvelocity(self, value):
+        if self.rd["yv"] != value:
+            self.rd["yv"] = value
+            o_set_speed(self)
+
+    @property
+    def speed(self):
+        return self.rd["speed"]
+
+    @speed.setter
+    def speed(self, value):
+        if self.rd["speed"] != value:
+            self.rd["speed"] = value
+            self.rd["xv"] = math.cos(math.radians(self.rd["mv_dir"])) * value
+            self.rd["yv"] = -math.sin(math.radians(self.rd["mv_dir"])) * value
+
+    @property
+    def move_direction(self):
+        return self.rd["mv_dir"]
+
+    @move_direction.setter
+    def move_direction(self, value):
+        if self.rd["mv_dir"] != value:
+            self.rd["mv_dir"] = value
+            self.rd["xv"] = math.cos(math.radians(value)) * self.rd["speed"]
+            self.rd["yv"] = -math.sin(math.radians(value)) * self.rd["speed"]
+
+    @property
+    def image_origin_x(self):
+        if self.regulate_origin and self.sprite is not None:
+            id_ = (self.sprite.width, self.sprite.height, self.sprite.origin_x,
+                   self.sprite.origin_y, self.image_xscale, self.image_yscale,
+                   self.image_rotation)
+
+            if id_ not in self.__origins_x:
+                x_offset, y_offset = o_get_origin_offset(self)
+                self.__origins_x[id_] = self.sprite.origin_x + x_offset
+                self.__origins_y[id_] = self.sprite.origin_y + y_offset
+
+            self.__image_origin_x = self.__origins_x[id_]
+
+        if self.__image_origin_x is None:
+            return self.sprite.origin_x if self.sprite is not None else 0
+        else:
+            return self.__image_origin_x
+
+    @image_origin_x.setter
+    def image_origin_x(self, value):
+        self.__image_origin_x = value
+
+    @property
+    def image_origin_y(self):
+        if self.regulate_origin and self.sprite is not None:
+            id_ = (self.sprite.width, self.sprite.height, self.sprite.origin_x,
+                   self.sprite.origin_y, self.image_xscale, self.image_yscale,
+                   self.image_rotation)
+
+            if id_ not in self.__origins_y:
+                x_offset, y_offset = o_get_origin_offset(self)
+                self.__origins_x[id_] = self.sprite.origin_x + x_offset
+                self.__origins_y[id_] = self.sprite.origin_y + y_offset
+
+            self.__image_origin_y = self.__origins_y[id_]
+
+        if self.__image_origin_y is None:
+            return self.sprite.origin_y if self.sprite is not None else 0
+        else:
+            return self.__image_origin_y
+
+    @image_origin_y.setter
+    def image_origin_y(self, value):
+        self.__image_origin_y = value
+
+    @property
+    def image_fps(self):
+        return self.__fps
+
+    @image_fps.setter
+    def image_fps(self, value):
+        if value is None:
+            value = self.sprite.fps if self.sprite is not None else 0
+
+        self.__fps = value
+        if value:
+            self.rd["frame_time"] = 1000 / value
+            if not self.rd["frame_time"]:
+                # This would be caused by a round-off to 0 resulting
+                # from a much too high frame rate.  It would cause a
+                # division by 0 later, so this is meant to prevent that.
+                self.rd["frame_time"] = 0.000001
+                w = "Could not calculate timing for {:.2e} FPS.".format(
+                    value)
+                warnings.warn(w)
+        else:
+            self.rd["frame_time"] = None
+
+    @property
+    def image_speed(self):
+        return self.image_fps / sge.game.fps
+
+    @image_speed.setter
+    def image_speed(self, value):
+        if value is None:
+            value = self.sprite.speed if self.sprite is not None else 0
+
+        self.image_fps = value * sge.game.fps
+
+    @property
+    def image_blend(self):
+        return self.__image_blend
+
+    @image_blend.setter
+    def image_blend(self, value):
+        if value is None or isinstance(value, sge.Color):
+            self.__image_blend = value
+        else:
+            e = "`{}` is not a sge.Color object.".format(repr(value))
+            raise TypeError(e)
+
+    @property
+    def mask(self):
+        if self.collision_precise:
+            return s_get_precise_mask(
+                self.sprite, self.image_index, self.image_xscale,
+                self.image_yscale, self.image_rotation)
+        else:
+            id_ = (self.collision_ellipse, self.bbox_x, self.bbox_y,
+                   self.bbox_width, self.bbox_height, self.image_xscale,
+                   self.image_yscale)
+
+            if id_ in self.__masks:
+                return self.__masks[id_]
+            else:
+                if self.collision_precise:
+                    # Mask based on opacity of the current image.
+                    mask = s_get_precise_mask(
+                        self.sprite, self.image_index, self.image_xscale,
+                        self.image_yscale, self.image_rotation)
+                elif self.collision_ellipse:
+                    # Elliptical mask based on bounding box.
+                    mask = [[False for y in six.moves.range(self.bbox_height)]
+                            for x in six.moves.range(self.bbox_width)]
+                    a = len(mask) / 2
+                    b = len(mask[0]) / 2 if mask else 0
+
+                    for x in six.moves.range(len(mask)):
+                        for y in six.moves.range(len(mask[x])):
+                            if ((x - a) / a) ** 2 + ((y - b) / b) ** 2 <= 1:
+                                mask[x][y] = True
+                else:
+                    # Mask is all pixels in the bounding box.
+                    mask = [[True for y in six.moves.range(self.bbox_height)]
+                            for x in six.moves.range(self.bbox_width)]
+
+                self.__masks[id_] = mask
+                return mask
+
+    @property
+    def mask_x(self):
+        if self.collision_precise:
+            if self.image_rotation % 180:
+                origin_x = self.image_origin_x
+                i = ("o_mask_x_offset", self, self.sprite, origin_x,
+                     self.image_origin_y, self.image_xscale, self.image_yscale,
+                     self.image_rotation)
+                offset = r.cache.get(i)
+                if offset is None:
+                    width = s_get_image(self.sprite, self.image_index,
+                                        self.image_xscale, self.image_yscale,
+                                        self.image_rotation).get_width()
+                    normal_width = s_get_image(self.sprite, self.image_index,
+                                               self.image_xscale,
+                                               self.image_yscale).get_width()
+                    offset = (width - normal_width) / 2
+
+                r.cache.add(i, offset)
+                return self.x - (origin_x + offset)
+            else:
+                return self.x - self.image_origin_x
+        else:
+            return self.bbox_left
+
+    @property
+    def mask_y(self):
+        if self.collision_precise:
+            if self.image_rotation % 180:
+                origin_y = self.image_origin_y
+                i = ("o_mask_y_offset", self, self.sprite, self.image_origin_x,
+                     origin_y, self.image_xscale, self.image_yscale,
+                     self.image_rotation)
+                offset = r.cache.get(i)
+                if offset is None:
+                    height = s_get_image(self.sprite, self.image_index,
+                                         self.image_xscale, self.image_yscale,
+                                         self.image_rotation).get_height()
+                    normal_height = s_get_image(self.sprite, self.image_index,
+                                                self.image_xscale,
+                                                self.image_yscale).get_height()
+                    offset = (height - normal_height) / 2
+
+                r.cache.add(i, offset)
+                return self.y - (origin_y + offset)
+            else:
+                return self.y - self.image_origin_y
+        else:
+            return self.bbox_top
+
     def __init__(self, x, y, z=0, sprite=None, visible=True, active=True,
                  checks_collisions=True, tangible=True, bbox_x=None,
                  bbox_y=None, bbox_width=None, bbox_height=None,
@@ -333,7 +734,67 @@ class Object(object):
         See the documentation for :class:`sge.Object` for more
         information.
         """
-        # TODO
+        self.rd = {}
+        self.__x = x
+        self.__y = y
+        self.z = z
+        self.__active = active
+        self.__checks_collisions = checks_collisions
+        self.rd["tangible"] = tangible
+        self.regulate_origin = regulate_origin
+        self.collision_ellipse = collision_ellipse
+        self.collision_precise = collision_precise
+        self.rd["xv"] = xvelocity
+        self.rd["yv"] = yvelocity
+        self.rd["mv_dir"] = 0
+        self.rd["speed"] = 0
+        self.xacceleration = xacceleration
+        self.yacceleration = yacceleration
+        self.xdeceleration = xdeceleration
+        self.ydeceleration = ydeceleration
+        self.image_index = image_index
+        self.image_origin_x = image_origin_x
+        self.image_origin_y = image_origin_y
+        self.image_xscale = image_xscale
+        self.image_yscale = image_yscale
+        self.image_rotation = image_rotation
+        self.image_alpha = image_alpha
+        self.image_blend = image_blend
+        self.alarms = {}
+        self.xstart = x
+        self.ystart = y
+        self.xprevious = x
+        self.yprevious = y
+        self.rd["anim_count"] = 0
+        self.__origins_x = {}
+        self.__origins_y = {}
+        self.rd["object_areas"] = set()
+        self.rd["colliders"] = []
+        self.__masks = {}
+
+        self.rd["sprite"] = sprite
+        if sprite is not None:
+            self.image_index = self.image_index % sprite.frames
+            sprite_bbox_x = self.sprite.bbox_x
+            sprite_bbox_y = self.sprite.bbox_y
+            sprite_bbox_width = self.sprite.bbox_width
+            sprite_bbox_height = self.sprite.bbox_height
+        else:
+            sprite_bbox_x = 0
+            sprite_bbox_y = 0
+            sprite_bbox_width = 1
+            sprite_bbox_height = 1
+        self.__bbox_x = bbox_x if bbox_x is not None else sprite_bbox_x
+        self.__bbox_y = bbox_y if bbox_y is not None else sprite_bbox_y
+        self.__bbox_width = (bbox_width if bbox_width is not None else
+                             sprite_bbox_width)
+        self.__bbox_height = (bbox_height if bbox_height is not None else
+                              sprite_bbox_height)
+
+        self.visible = visible
+        self.image_fps = image_fps
+
+        o_set_speed(self)
 
     def move_x(self, move):
         """
@@ -390,7 +851,55 @@ class Object(object):
           for the purpose of the collision detection.  If set to
           :const:`None`, :attr:`y` will be used.
         """
-        # TODO
+        room = sge.game.current_room
+        if self.tangible and self in room.objects:
+            collisions = []
+
+            # Change x and y to be offset values; these are easier to use.
+            if x is not None:
+                x -= self.x
+            else:
+                x = 0
+
+            if y is not None:
+                y -= self.y
+            else:
+                y = 0
+
+            if self.collision_precise:
+                ax = self.mask_x + x
+                ay = self.mask_y + y
+                w = len(self.mask)
+                h = len(self.mask[0]) if self.mask else 0
+            else:
+                ax = self.bbox_left + x
+                ay = self.bbox_top + y
+                w = self.bbox_width
+                h = self.bbox_height
+
+            others = room.get_objects_at(ax, ay, w, h)
+
+            for obj in others:
+                if obj.tangible and o_is_other(obj, other):
+                    if (self.collision_precise or self.collision_ellipse or
+                            obj.collision_precise or obj.collision_ellipse):
+                        # Use masks.
+                        if sge.collision.masks_collide(
+                                self.mask_x + x, self.mask_y + y, self.mask,
+                                obj.mask_x, obj.mask_y, obj.mask):
+                            collisions.append(obj)
+                    else:
+                        # Use bounding boxes.
+                        if sge.collision.rectangles_collide(
+                                self.bbox_left + x, self.bbox_top + y,
+                                self.bbox_width, self.bbox_height,
+                                obj.bbox_left, obj.bbox_top, obj.bbox_width,
+                                obj.bbox_height):
+                            collisions.append(obj)
+
+            return collisions
+        else:
+            return []
 
     def destroy(self):
         """
@@ -707,12 +1216,99 @@ class Object(object):
 
 class Mouse(Object):
 
-    # TODO: This class is not technically required, but it's easier to
-    # implement the Game.mouse attribute this way.  Because users are
-    # not supposed to use this class (it is only to be used internally),
-    # there are no docs for it and it doesn't have to behave a certain
-    # way.  See Game.__doc__ for more information about how the
-    # Game.mouse attribute should behave.
+    @property
+    def x(self):
+        if (sge.game.current_room is not None and
+                (not sge.game.grab_input or sge.game.mouse.visible)):
+            mouse_x = sge.mouse.get_x()
+            mouse_y = sge.mouse.get_y()
+            for view in sge.game.current_room.views:
+                if (view.xport <= mouse_x < view.xport + view.wport and
+                        view.yport <= mouse_y < view.yport + view.hport):
+                    return ((mouse_x - view.xport) *
+                            (view.width / view.wport) + view.x)
+
+        return -1
+
+    @x.setter
+    def x(self, value):
+        pass
+
+    @property
+    def y(self):
+        if (sge.game.current_room is not None and
+                (not sge.game.grab_input or sge.game.mouse.visible)):
+            mouse_x = sge.mouse.get_x()
+            mouse_y = sge.mouse.get_y()
+            for view in sge.game.current_room.views:
+                if (view.xport <= mouse_x <= view.xport + view.wport and
+                        view.yport <= mouse_y <= view.yport + view.hport):
+                    return ((mouse_y - view.yport) *
+                            (view.height / view.hport) + view.y)
+
+        return -1
+
+    @y.setter
+    def y(self, value):
+        pass
+
+    @property
+    def sprite(self):
+        return self.rd["sprite"]
+
+    @sprite.setter
+    def sprite(self, value):
+        self.rd["sprite"] = value
+        self.set_cursor()
+
+    @property
+    def visible(self):
+        return self.__visible
+
+    @visible.setter
+    def visible(self, value):
+        self.__visible = value
+        self.set_cursor()
+
+    @property
+    def tangible(self):
+        if self.x != -1 and self.y != -1:
+            return self.rd["tangible"]
+        else:
+            return False
+
+    @tangible.setter
+    def tangible(self, value):
+        self.rd["tangible"] = value
+
+    def __init__(self):
+        self.__visible = True
+        super(Mouse, self).__init__(0, 0, 0)
+
+    def event_step(self, time_passed, delta_mult):
+        o_update_object_areas(self)
+        o_update_collision_lists(self)
 
     def event_collision(self, other, xdirection, ydirection):
-        game.event_mouse_collision(other, xdirection, ydirection)
+        sge.game.event_mouse_collision(other, xdirection, ydirection)
+
+    def set_cursor(self):
+        # Set the mouse cursor and visibility state.
+        if not sge.game.grab_input:
+            pygame.mouse.set_visible(self.visible and self.sprite is None)
+        else:
+            pygame.mouse.set_visible(False)
+
+    def project_cursor(self):
+        if (not sge.game.grab_input and self.visible and
+                self.sprite is not None):
+            img = s_get_image(self.sprite, self.image_index, self.image_xscale,
+                              self.image_yscale, self.image_rotation,
+                              self.image_alpha, self.image_blend)
+            x = sge.mouse.get_x()
+            y = sge.mouse.get_y()
+
+            if x is not None and y is not None:
+                x -= self.image_origin_x
+                y -= self.image_origin_y
+                r.game_window_projections.append((img, x, y, None))

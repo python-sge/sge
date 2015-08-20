@@ -1,22 +1,34 @@
-# The SGE Specification
-# Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net> 
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
-# To the extent possible under law, the author(s) have dedicated all
-# copyright and related and neighboring rights to this software to the
-# public domain worldwide. This software is distributed without any
-# warranty. 
+# This file is part of the Pygame SGE.
 # 
-# You should have received a copy of the CC0 Public Domain Dedication
-# along with this software. If not, see
-# <http://creativecommons.org/publicdomain/zero/1.0/>.
+# The Pygame SGE is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The Pygame SGE is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public License
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
-# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace  the notice
-# above as well as the notices contained in other source files with your
-# own copyright notice.  Recommended free  licenses are  the GNU General
-# Public License, GNU Lesser General Public License, Expat License, or
-# Apache License.
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import os
+
+import pygame
 
 import sge
+from sge import r
+
+
+__all__ = ['Music']
 
 
 class Music(object):
@@ -67,6 +79,39 @@ class Music(object):
        Reserved dictionary for internal use by the SGE.  (Read-only)
     """
 
+    @property
+    def volume(self):
+        return self.__volume
+
+    @volume.setter
+    def volume(self, value):
+        self.__volume = min(value, 100)
+
+        if self.playing:
+            pygame.mixer.music.set_volume(value / 100)
+
+    @property
+    def length(self):
+        if self.__length is None:
+            if self.fname is not None:
+                snd = pygame.mixer.Sound(self.fname)
+                self.__length = snd.get_length() * 1000
+            else:
+                self.__length = 0
+
+        return self.__length
+
+    @property
+    def playing(self):
+        return r.music is self and pygame.mixer.music.get_busy()
+
+    @property
+    def position(self):
+        if self.playing:
+            return self.__start + pygame.mixer.music.get_pos()
+        else:
+            return 0
+
     def __init__(self, fname, volume=100):
         """
         Arguments:
@@ -80,7 +125,16 @@ class Music(object):
         music.  See the documentation for :class:`sge.Music` for more
         information.
         """
-        # TODO
+        self.rd = {}
+        if fname is None or os.path.isfile(fname):
+            self.fname = fname
+        else:
+            raise IOError('File "{}" not found.'.format(fname))
+        self.volume = volume
+        self.rd["timeout"] = None
+        self.rd["fade_time"] = None
+        self.__start = 0
+        self.__length = None
 
     def play(self, start=0, loops=1, maxtime=None, fade_time=None):
         """
@@ -94,7 +148,34 @@ class Music(object):
         See the documentation for :meth:`sge.Sound.play` for more
         information.
         """
-        # TODO
+        if self.fname is not None:
+            if not self.playing:
+                pygame.mixer.music.load(self.fname)
+
+            if not loops:
+                loops = -1
+
+            r.music = self
+            self.rd["timeout"] = maxtime
+            self.rd["fade_time"] = fade_time
+
+            if fade_time is not None and fade_time > 0:
+                pygame.mixer.music.set_volume(0)
+            else:
+                pygame.mixer.music.set_volume(self.volume / 100)
+
+            if self.fname.lower().endswith(".mod"):
+                # MOD music is handled differently in Pygame: it uses
+                # the pattern order number rather than the time to
+                # indicate the start time.
+                self._start = 0
+                pygame.mixer.music.play(loops, start)
+            else:
+                self.__start = start
+                try:
+                    pygame.mixer.music.play(loops, start / 1000)
+                except NotImplementedError:
+                    pygame.mixer.music.play(loops)
 
     def queue(self, start=0, loops=1, maxtime=None, fade_time=None):
         """
@@ -106,7 +187,7 @@ class Music(object):
         See the documentation for :meth:`sge.Music.play` for more
         information.
         """
-        # TODO
+        r.music_queue.append((self, start, loops, maxtime, fade_time))
 
     @staticmethod
     def stop(fade_time=None):
@@ -116,19 +197,22 @@ class Music(object):
         See the documentation for :meth:`sge.Sound.stop` for more
         information.
         """
-        # TODO
+        if fade_time:
+            pygame.mixer.music.fadeout(fade_time)
+        else:
+            pygame.mixer.music.stop()
 
     @staticmethod
     def pause():
         """Pause playback of the currently playing music."""
-        # TODO
+        pygame.mixer.music.pause()
 
     @staticmethod
     def unpause():
         """Resume playback of the currently playing music if paused."""
-        # TODO
+        pygame.mixer.music.unpause()
 
     @staticmethod
     def clear_queue():
         """Clear the music queue."""
-        # TODO
+        r.music_queue = []

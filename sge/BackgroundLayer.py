@@ -1,20 +1,27 @@
-# The SGE Specification
-# Written in 2012, 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net> 
+# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
 # 
-# To the extent possible under law, the author(s) have dedicated all
-# copyright and related and neighboring rights to this software to the
-# public domain worldwide. This software is distributed without any
-# warranty. 
+# This file is part of the Pygame SGE.
 # 
-# You should have received a copy of the CC0 Public Domain Dedication
-# along with this software. If not, see
-# <http://creativecommons.org/publicdomain/zero/1.0/>.
+# The Pygame SGE is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The Pygame SGE is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public License
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
-# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace  the notice
-# above as well as the notices contained in other source files with your
-# own copyright notice.  Recommended free  licenses are  the GNU General
-# Public License, GNU Lesser General Public License, Expat License, or
-# Apache License 2.0.
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import sge
+
 
 __all__ = ['BackgroundLayer']
 
@@ -83,4 +90,19 @@ class BackgroundLayer(object):
         See the documentation for :class:`sge.BackgroundLayer` for more
         information.
         """
-        # TODO
+        self.rd = {}
+        self.sprite = sprite
+        self.x = x
+        self.y = y
+        self.z = z
+        self.xscroll_rate = xscroll_rate
+        self.yscroll_rate = yscroll_rate
+        self.repeat_left = repeat_left
+        self.repeat_right = repeat_right
+        self.repeat_up = repeat_up
+        self.repeat_down = repeat_down
+
+        self.rd["fps"] = 0
+        self.rd["image_index"] = 0
+        self.rd["count"] = 0
+        self.rd["frame_time"] = None

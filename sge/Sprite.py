@@ -1,22 +1,38 @@
-# The SGE Specification
-# Written in 2012, 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net> 
-# 
-# To the extent possible under law, the author(s) have dedicated all
-# copyright and related and neighboring rights to this software to the
-# public domain worldwide. This software is distributed without any
-# warranty. 
-# 
-# You should have received a copy of the CC0 Public Domain Dedication
-# along with this software. If not, see
-# <http://creativecommons.org/publicdomain/zero/1.0/>.
+# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+#
+# This file is part of the Pygame SGE.
+#
+# The Pygame SGE is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# The Pygame SGE is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
-# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace  the notice
-# above as well as the notices contained in other source files with your
-# own copyright notice.  Recommended free  licenses are  the GNU General
-# Public License, GNU Lesser General Public License, Expat License, or
-# Apache License.
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import os
+import warnings
+
+import pygame
+import six
 
 import sge
+from sge import r
+from sge.r import (_get_blend_flags, _screen_blend, f_split_text, s_set_size,
+                   s_refresh, s_set_transparency)
+
+
+__all__ = ['Sprite']
 
 
 class Sprite(object):
@@ -121,6 +137,72 @@ class Sprite(object):
        Reserved dictionary for internal use by the SGE.  (Read-only)
     """
 
+    @property
+    def width(self):
+        return self.__w
+
+    @width.setter
+    def width(self, value):
+        if self.__w != value:
+            self.__w = int(round(value))
+            s_set_size(self)
+            s_refresh(self)
+
+    @property
+    def height(self):
+        return self.__h
+
+    @height.setter
+    def height(self, value):
+        if self.__h != value:
+            self.__h = int(round(value))
+            s_set_size(self)
+            s_refresh(self)
+
+    @property
+    def transparent(self):
+        return self.__transparent
+
+    @transparent.setter
+    def transparent(self, value):
+        if self.__transparent != value:
+            self.__transparent = value
+            s_refresh(self)
+
+    @property
+    def speed(self):
+        return self.fps / sge.game.fps
+
+    @speed.setter
+    def speed(self, value):
+        self.fps = value * sge.game.fps
+
+    @property
+    def bbox_x(self):
+        return self.__bbox_x
+
+    @bbox_x.setter
+    def bbox_x(self, value):
+        if value is not None:
+            self.__bbox_x = value
+        else:
+            self.__bbox_x = -self.origin_x
+
+    @property
+    def bbox_y(self):
+        return self.__bbox_y
+
+    @bbox_y.setter
+    def bbox_y(self, value):
+        if value is not None:
+            self.__bbox_y = value
+        else:
+            self.__bbox_y = -self.origin_y
+
+    @property
+    def frames(self):
+        return len(self.rd["baseimages"])
+
     def __init__(self, name=None, directory="", width=None, height=None,
                  transparent=True, origin_x=0, origin_y=0, fps=60, bbox_x=None,
                  bbox_y=None, bbox_width=None, bbox_height=None):
@@ -159,11 +241,151 @@ class Sprite(object):
         sprite.  See the documentation for :class:`Sprite` for more
         information.
         """
-        # TODO
+        self.rd = {}
+        self.name = name
+        self.__transparent = None
+        self.rd["baseimages"] = []
+        self.rd["drawcycle"] = 0
+
+        fname_single = []
+        fname_frames = []
+        fname_strip = []
+        errlist = []
+
+        if name is not None:
+            directory = os.path.abspath(directory)
+            for fname in os.listdir(directory):
+                full_fname = os.path.join(directory, fname)
+                if (fname.startswith(name) and
+                        os.path.isfile(full_fname)):
+                    root, ext = os.path.splitext(fname)
+                    if root == name:
+                        split = [name, '']
+                    elif root.rsplit('-', 1)[0] == name:
+                        split = root.rsplit('-', 1)
+                    elif root.rsplit('_', 1)[0] == name:
+                        split = root.rsplit('_', 1)
+                    else:
+                        continue
+
+                    if root == name:
+                        fname_single.append(full_fname)
+                    elif split[1].isdigit():
+                        n = int(split[1])
+                        while len(fname_frames) - 1 < n:
+                            fname_frames.append(None)
+                        fname_frames[n] = full_fname
+                    elif (split[1].startswith('strip') and
+                          split[1][5:].isdigit()):
+                        fname_strip.append(full_fname)
+
+            if any(fname_single):
+                # Load the single image
+                for fname in fname_single:
+                    try:
+                        img = pygame.image.load(fname)
+                    except pygame.error as e:
+                        errlist.append(e)
+                    else:
+                        self.rd["baseimages"].append(img)
+
+            if not self.rd["baseimages"] and any(fname_frames):
+                # Load the multiple images
+                for fname in fname_frames:
+                    if fname:
+                        try:
+                            img = pygame.image.load(fname)
+                        except pygame.error as e:
+                            errlist.append(e)
+                        else:
+                            self.rd["baseimages"].append(img)
+
+            if not self.rd["baseimages"] and any(fname_strip):
+                # Load the strip (sprite sheet)
+                for fname in fname_strip:
+                    root, ext = os.path.splitext(os.path.basename(fname))
+                    assert '-' in root or '_' in root
+                    assert (root.rsplit('-', 1)[0] == name or
+                            root.rsplit('_', 1)[0] == name)
+                    if root.rsplit('-', 1)[0] == name:
+                        split = root.rsplit('-', 1)
+                    else:
+                        split = root.rsplit('_', 1)
+
+                    try:
+                        sheet = pygame.image.load(fname)
+                    except pygame.error as e:
+                        errlist.append(e)
+                    else:
+                        assert split[1][5:].isdigit()
+                        n = int(split[1][5:])
+
+                        img_w = max(1, sheet.get_width()) // n
+                        img_h = max(1, sheet.get_height())
+                        for x in six.moves.range(0, img_w * n, img_w):
+                            rect = pygame.Rect(x, 0, img_w, img_h)
+                            img = sheet.subsurface(rect)
+                            self.rd["baseimages"].append(img)
+
+            if not self.rd["baseimages"]:
+                print("Pygame errors during search:")
+                if errlist:
+                    for e in errlist:
+                        print(e)
+                else:
+                    print("None")
+                msg = 'Supported file(s) for sprite name "{}" not found in {}'.format(name, directory)
+                raise IOError(msg)
+        else:
+            # Name is None; default to a blank rectangle.
+            if width is None:
+                width = 32
+            if height is None:
+                height = 32
+
+            self.__w = width
+            self.__h = height
+
+            # Choose name
+            self.name = "sge-pygame-dynamicsprite"
+
+            self.append_frame()
+
+        if width is None:
+            width = 1
+            for image in self.rd["baseimages"]:
+                width = max(width, image.get_width())
+
+        if height is None:
+            height = 1
+            for image in self.rd["baseimages"]:
+                height = max(height, image.get_height())
+
+        if bbox_width is None:
+            bbox_width = width
+
+        if bbox_height is None:
+            bbox_height = height
+
+        self.__w = width
+        self.__h = height
+        s_set_size(self)
+        self.origin_x = origin_x
+        self.origin_y = origin_y
+        self.__transparent = transparent
+        self.fps = fps
+        self.bbox_x = bbox_x
+        self.bbox_y = bbox_y
+        self.bbox_width = bbox_width
+        self.bbox_height = bbox_height
+        self.rd["locked"] = False
+        s_refresh(self)
 
     def append_frame(self):
         """Append a new blank frame to the end of the sprite."""
-        # TODO
+        img = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        img.fill(pygame.Color(0, 0, 0, 0))
+        self.rd["baseimages"].append(img)
 
     def insert_frame(self, frame):
         """
@@ -174,7 +396,9 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to insert the new frame
           in front of, where ``0`` is the first frame.
         """
-        # TODO
+        img = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        img.fill(pygame.Color(0, 0, 0, 0))
+        self.rd["baseimages"].insert(frame, img)
 
     def delete_frame(self, frame):
         """
@@ -185,7 +409,7 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to delete, where ``0`` is
           the first frame.
         """
-        # TODO
+        del self.rd["baseimages"][frame]
 
     def draw_dot(self, x, y, color, frame=None):
         """
@@ -203,7 +427,25 @@ class Sprite(object):
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        # TODO
+        if not isinstance(color, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(color))
+            raise TypeError(e)
+
+        x = int(round(x))
+        y = int(round(y))
+        pg_color = pygame.Color(*color)
+        if color.alpha == 255:
+            for i in six.moves.range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    self.rd["baseimages"][i].set_at((x, y), pg_color)
+        else:
+            stamp = pygame.Surface((1, 1), pygame.SRCALPHA)
+            stamp.fill(pg_color)
+            for i in six.moves.range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    self.rd["baseimages"][i].blit(stamp, (x, y))
+
+        s_refresh(self)
 
     def draw_line(self, x1, y1, x2, y2, color, thickness=1, anti_alias=False,
                   frame=None):
@@ -228,7 +470,41 @@ class Sprite(object):
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        # TODO
+        if not isinstance(color, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(color))
+            raise TypeError(e)
+
+        x1 = int(round(x1))
+        y1 = int(round(y1))
+        x2 = int(round(x2))
+        y2 = int(round(y2))
+        thickness = int(round(thickness))
+        pg_color = pygame.Color(*color)
+        thickness = abs(thickness)
+
+        if color.alpha == 255:
+            for i in six.moves.range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    if anti_alias and thickness == 1:
+                        pygame.draw.aaline(self.rd["baseimages"][i], pg_color,
+                                           (x1, y1), (x2, y2))
+                    else:
+                        pygame.draw.line(self.rd["baseimages"][i], pg_color,
+                                         (x1, y1), (x2, y2), thickness)
+        else:
+            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            stamp.fill(pygame.Color(0, 0, 0, 0))
+            if anti_alias and thickness == 1:
+                pygame.draw.aaline(stamp, pg_color, (x1, y1), (x2, y2))
+            else:
+                pygame.draw.line(stamp, pg_color, (x1, y1), (x2, y2),
+                                 thickness)
+
+            for i in six.moves.range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    self.rd["baseimages"][i].blit(stamp, (0, 0))
+
+        s_refresh(self)
 
     def draw_rectangle(self, x, y, width, height, fill=None, outline=None,
                        outline_thickness=1, frame=None):
@@ -253,7 +529,54 @@ class Sprite(object):
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        # TODO
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
+        x = int(round(x))
+        y = int(round(y))
+        width = int(round(width))
+        height = int(round(height))
+        outline_thickness = abs(outline_thickness)
+        if outline_thickness == 0:
+            outline = None
+
+        if fill is None and outline is None:
+            # There's no point in trying in this case.
+            return
+
+        rect = pygame.Rect(x, y, width, height)
+        if fill is not None:
+            pg_fill = pygame.Color(*fill)
+        if outline is not None:
+            pg_outl = pygame.Color(*outline)
+
+        if ((fill is None or fill.alpha == 255) and
+                (outline is None or outline.alpha == 255)):
+            for i in six.moves.range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    if fill is not None:
+                        self.rd["baseimages"][i].fill(pg_fill, rect)
+
+                    if outline is not None:
+                        pygame.draw.rect(self.rd["baseimages"][i], pg_outl,
+                                         rect, outline_thickness)
+        else:
+            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            stamp.fill(pygame.Color(0, 0, 0, 0))
+            if fill is not None:
+                stamp.fill(pg_fill, rect)
+            if outline is not None:
+                pygame.draw.rect(stamp, pg_outl, rect, outline_thickness)
+
+            for i in six.moves.range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    self.rd["baseimages"][i].blit(stamp, (0, 0))
+
+        s_refresh(self)
 
     def draw_ellipse(self, x, y, width, height, fill=None, outline=None,
                      outline_thickness=1, anti_alias=False, frame=None):
@@ -279,7 +602,55 @@ class Sprite(object):
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        # TODO
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
+        x = int(round(x))
+        y = int(round(y))
+        width = int(round(width))
+        height = int(round(height))
+        outline_thickness = abs(outline_thickness)
+        if outline_thickness == 0:
+            outline = None
+
+        if fill is None and outline is None:
+            # There's no point in trying in this case.
+            return
+
+        rect = pygame.Rect(x, y, width, height)
+        if fill is not None:
+            pg_fill = pygame.Color(*fill)
+        if outline is not None:
+            pg_outl = pygame.Color(*outline)
+
+        if ((fill is None or fill.alpha == 255) and
+                (outline is None or outline.alpha == 255)):
+            for i in six.moves.range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    if fill is not None:
+                        pygame.draw.ellipse(self.rd["baseimages"][i], pg_fill,
+                                            rect)
+
+                    if outline is not None:
+                        pygame.draw.ellipse(self.rd["baseimages"][i], pg_outl,
+                                            rect, outline_thickness)
+        else:
+            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            stamp.fill(pygame.Color(0, 0, 0, 0))
+            if fill is not None:
+                pygame.draw.ellipse(stamp, pg_fill, rect)
+            if outline is not None:
+                pygame.draw.ellipse(stamp, pg_outl, rect, outline_thickness)
+
+            for i in six.moves.range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    self.rd["baseimages"][i].blit(stamp, (0, 0))
+
+        s_refresh(self)
 
     def draw_circle(self, x, y, radius, fill=None, outline=None,
                     outline_thickness=1, anti_alias=False, frame=None):
@@ -304,7 +675,54 @@ class Sprite(object):
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        # TODO
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
+        x = int(round(x))
+        y = int(round(y))
+        radius = int(round(radius))
+        outline_thickness = abs(outline_thickness)
+        if outline_thickness == 0:
+            outline = None
+
+        if fill is None and outline is None:
+            # There's no point in trying in this case.
+            return
+
+        if fill is not None:
+            pg_fill = pygame.Color(*fill)
+        if outline is not None:
+            pg_outl = pygame.Color(*outline)
+
+        if ((fill is None or fill.alpha == 255) and
+                (outline is None or outline.alpha == 255)):
+            for i in six.moves.range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    if fill is not None:
+                        pygame.draw.circle(self.rd["baseimages"][i], pg_fill,
+                                           (x, y), radius)
+
+                    if outline is not None:
+                        pygame.draw.circle(self.rd["baseimages"][i], pg_outl,
+                                           (x, y), radius, outline_thickness)
+        else:
+            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            stamp.fill(pygame.Color(0, 0, 0, 0))
+            if fill is not None:
+                pygame.draw.circle(stamp, pg_fill, (x, y), radius)
+            if outline is not None:
+                pygame.draw.circle(stamp, pg_outl, (x, y), radius,
+                                   outline_thickness)
+
+            for i in six.moves.range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    self.rd["baseimages"][i].blit(stamp, (0, 0))
+
+        s_refresh(self)
 
     def draw_polygon(self, points, fill=None, outline=None,
                      outline_thickness=1, anti_alias=False, frame=None):
@@ -328,7 +746,60 @@ class Sprite(object):
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        # TODO
+        if fill is not None and not isinstance(fill, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(fill))
+            raise TypeError(e)
+        if outline is not None and not isinstance(outline, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(outline))
+            raise TypeError(e)
+
+        points = [(int(round(x)), int(round(y))) for (x, y) in points]
+        outline_thickness = abs(outline_thickness)
+        if outline_thickness == 0:
+            outline = None
+
+        if fill is None and outline is None:
+            # There's no point in trying in this case.
+            return
+
+        if fill is not None:
+            pg_fill = pygame.Color(*fill)
+        if outline is not None:
+            pg_outl = pygame.Color(*outline)
+
+        if ((fill is None or fill.alpha == 255) and
+                (outline is None or outline.alpha == 255)):
+            for i in six.moves.range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    if fill is not None:
+                        pygame.draw.polygon(self.rd["baseimages"][i], pg_fill,
+                                            points, 0)
+
+                    if outline is not None:
+                        if anti_alias and outline_thickness == 1:
+                            pygame.draw.aalines(self.rd["baseimages"][i],
+                                                pg_outl, True, points)
+                        else:
+                            pygame.draw.polygon(self.rd["baseimages"][i],
+                                                pg_outl, points,
+                                                outline_thickness)
+        else:
+            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            stamp.fill(pygame.Color(0, 0, 0, 0))
+            if fill is not None:
+                pygame.draw.polygon(stamp, pg_fill, points, 0)
+            if outline is not None:
+                if anti_alias and outline_thickness == 1:
+                    pygame.draw.aalines(stamp, pg_outl, True, points)
+                else:
+                    pygame.draw.polygon(stamp, pg_outl, points,
+                                        outline_thickness)
+
+            for i in six.moves.range(self.frames):
+                if frame is None or frame % self.frames == i:
+                    self.rd["baseimages"][i].blit(stamp, (0, 0))
+
+        s_refresh(self)
 
     def draw_sprite(self, sprite, image, x, y, frame=None, blend_mode=None):
         """
@@ -365,7 +836,26 @@ class Sprite(object):
 
           :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
         """
-        # TODO
+        x = int(round(x - sprite.origin_x))
+        y = int(round(y - sprite.origin_y))
+
+        image %= sprite.frames
+
+        pygame_flags = _get_blend_flags(blend_mode)
+
+        for i in six.moves.range(self.frames):
+            if frame is None or frame % self.frames == i:
+                dsurf = self.rd["baseimages"][i]
+                ssurf = s_set_transparency(sprite,
+                                           sprite.rd["baseimages"][image])
+                if blend_mode == sge.BLEND_RGB_SCREEN:
+                    _screen_blend(dsurf, ssurf, x, y, False)
+                elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                    _screen_blend(dsurf, ssurf, x, y, True)
+                else:
+                    dsurf.blit(ssurf, (x, y), None, pygame_flags)
+
+        s_refresh(self)
 
     def draw_text(self, font, text, x, y, width=None, height=None,
                   color=sge.Color("black"), halign="left", valign="top",
@@ -431,7 +921,70 @@ class Sprite(object):
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        # TODO
+        if not isinstance(color, sge.Color):
+            e = "`{}` is not a sge.Color object.".format(repr(color))
+            raise TypeError(e)
+
+        x = int(round(x))
+        y = int(round(y))
+
+        lines = f_split_text(font, text, width)
+        width = font.get_width(text, width, height)
+        height = font.get_height(text, width, height)
+        fake_height = font.get_height(text, width)
+
+        text_surf = pygame.Surface((width, fake_height), pygame.SRCALPHA)
+        box_surf = pygame.Surface((width, height), pygame.SRCALPHA)
+        text_rect = text_surf.get_rect()
+        box_rect = box_surf.get_rect()
+
+        for i in six.moves.range(len(lines)):
+            rendered_text = font.rd["font"].render(lines[i], anti_alias,
+                                                   pygame.Color(*color))
+            rect = rendered_text.get_rect()
+            rect.top = i * font.rd["font"].get_linesize()
+
+            if halign.lower() == "left":
+                rect.left = text_rect.left
+            elif halign.lower() == "right":
+                rect.right = text_rect.right
+            elif halign.lower() == "center":
+                rect.centerx = text_rect.centerx
+
+            text_surf.blit(rendered_text, rect)
+
+        if valign.lower() == "top":
+            text_rect.top = box_rect.top
+        elif valign.lower() == "bottom":
+            text_rect.bottom = box_rect.bottom
+        elif valign.lower() == "middle":
+            text_rect.centery = box_rect.centery
+
+        box_surf.blit(text_surf, text_rect)
+
+        if halign.lower() == "left":
+            box_rect.left = x
+        elif halign.lower() == "right":
+            box_rect.right = x
+        elif halign.lower() == "center":
+            box_rect.centerx = x
+        else:
+            box_rect.left = x
+
+        if valign.lower() == "top":
+            box_rect.top = y
+        elif valign.lower() == "bottom":
+            box_rect.bottom = y
+        elif valign.lower() == "middle":
+            box_rect.centery = y
+        else:
+            box_rect.top = y
+
+        for i in six.moves.range(self.frames):
+            if frame is None or frame % self.frames == i:
+                self.rd["baseimages"][i].blit(box_surf, box_rect)
+
+        s_refresh(self)
 
     def draw_erase(self, x, y, width, height, frame=None):
         """
@@ -449,7 +1002,17 @@ class Sprite(object):
           ``0`` is the first frame; set to :const:`None` to erase from
           all frames.
         """
-        # TODO
+        for i in six.moves.range(self.frames):
+            if frame is None or frame % self.frames == i:
+                if self.rd["baseimages"][i].get_flags() & pygame.SRCALPHA:
+                    color = pygame.Color(0, 0, 0, 0)
+                else:
+                    color = self.rd["baseimages"][i].get_colorkey()
+
+                rect = pygame.Rect(x, y, width, height)
+                self.rd["baseimages"][i].fill(color, rect)
+
+        s_refresh(self)
 
     def draw_clear(self, frame=None):
         """
@@ -486,7 +1049,8 @@ class Sprite(object):
            implementation.  Always call :meth:`sge.Sprite.draw_unlock`
            immediately after you're done drawing for a while.
         """
-        # TODO
+        if not self.rd["locked"]:
+            self.rd["locked"] = True
 
     def draw_unlock(self):
         """
@@ -495,15 +1059,25 @@ class Sprite(object):
         Use this method to "unlock" the sprite after it has been
         "locked" for continuous drawing by :meth:`sge.Sprite.draw_lock`.
         """
-        # TODO
+        if self.rd["locked"]:
+            self.rd["locked"] = False
+            s_refresh(self)
 
     def mirror(self):
         """Mirror the sprite horizontally."""
-        # TODO
+        for i in six.moves.range(self.frames):
+            img = self.rd["baseimages"][i]
+            self.rd["baseimages"][i] = pygame.transform.flip(img, True, False)
+
+        s_refresh(self)
 
     def flip(self):
         """Flip the sprite vertically."""
-        # TODO
+        for i in six.moves.range(self.frames):
+            img = self.rd["baseimages"][i]
+            self.rd["baseimages"][i] = pygame.transform.flip(img, False, True)
+
+        s_refresh(self)
 
     def rotate(self, x, adaptive_resize=True):
         """
@@ -528,7 +1102,27 @@ class Sprite(object):
            value for routine rotation.  Use the :attr:`image_rotation`
            attribute of a :class:`sge.Object` object instead.
         """
-        # TODO
+        new_w = self.width
+        new_h = self.height
+        for i in six.moves.range(self.frames):
+            img = pygame.transform.rotate(self.rd["baseimages"][i], x)
+            new_w = img.get_width()
+            new_h = img.get_height()
+            if adaptive_resize:
+                self.rd["baseimages"][i] = img
+            else:
+                x = -(new_w - self.__w) / 2
+                y = -(new_h - self.__h) / 2
+                self.rd["baseimages"][i].fill(pygame.Color(0, 0, 0, 0))
+                self.rd["baseimages"][i].blit(img, (x, y))
+
+        if adaptive_resize:
+            self.origin_x += (new_w - self.__w) / 2
+            self.origin_y += (new_h - self.__h) / 2
+            self.__w = new_w
+            self.__h = new_h
+
+        s_refresh(self)
 
     def copy(self):
         """Return a copy of the sprite."""
@@ -559,7 +1153,22 @@ class Sprite(object):
         a horizontal reel of each of the frames from left to right with
         no space in between the frames.
         """
-        # TODO
+        # Assuming self.width and self.height are the size of all
+        # surfaces in _baseimages (this should be the case).
+        w = self.width * self.frames
+        h = self.height
+        reel = pygame.Surface((w, h), pygame.SRCALPHA)
+        reel.fill(pygame.Color(0, 0, 0, 0))
+
+        for i in six.moves.range(self.frames):
+            reel.blit(self.rd["baseimages"][i], (self.width * i, 0))
+
+        try:
+            pygame.image.save(reel, fname)
+        except pygame.error:
+            m = 'Couldn\'t save to "{}"'.format(
+                os.path.normpath(os.path.realpath(fname)))
+            raise IOError(m)
 
     @classmethod
     def from_text(cls, font, text, width=None, height=None,
@@ -572,13 +1181,20 @@ class Sprite(object):
 
         The sprite's origin is set based on ``halign`` and ``valign``.
         """
-        w = font.get_width(text, width, height)
-        h = font.get_height(text, width, height)
-        x = {"left": 0, "right": w, "center": w / 2}.get(halign.lower(), 0)
-        y = {"top": 0, "bottom": h, "middle": h / 2}.get(valign.lower(), 0)
-        s = cls(width=w, height=h, origin_x=x, origin_y=y)
-        s.draw_text(font, text, x, y, width, height, color, halign, valign)
-        return s
+        i = ("text_sprite", cls, tuple(font.name), font.size, font.underline,
+             font.bold, font.italic, text, width, height, str(color), halign,
+             valign, anti_alias)
+        s = r.cache.get(i)
+        if s is None:
+            w = font.get_width(text, width, height)
+            h = font.get_height(text, width, height)
+            x = {"left": 0, "right": w, "center": w / 2}.get(halign.lower(), 0)
+            y = {"top": 0, "bottom": h, "middle": h / 2}.get(valign.lower(), 0)
+            s = cls(width=w, height=h, origin_x=x, origin_y=y)
+            s.draw_text(font, text, x, y, width, height, color, halign, valign)
+
+        r.cache.add(i, s)
+        return s.copy()
 
     @classmethod
     def from_tileset(cls, fname, x=0, y=0, columns=1, rows=1, xsep=0, ysep=0,
@@ -610,7 +1226,29 @@ class Sprite(object):
         sprite, ordered first from left to right and then from top to
         bottom.
         """
-        # TODO
+        self = cls(width=width, height=height, origin_x=origin_x,
+                   origin_y=origin_y, transparent=transparent, fps=fps,
+                   bbox_x=bbox_x, bbox_y=bbox_y, bbox_width=bbox_width,
+                   bbox_height=bbox_height)
+
+        try:
+            tileset = pygame.image.load(fname)
+        except pygame.error as e:
+            raise IOError(e)
+
+        for i in six.moves.range(1, rows * columns):
+            self.append_frame()
+
+        for i in six.moves.range(rows):
+            for j in six.moves.range(columns):
+                frame = i * columns + j
+                x_ = x + self.origin_x + (width + xsep) * j
+                y_ = y + self.origin_y + (height + ysep) * i
+                self.rd["baseimages"][frame].blit(
+                    s_set_transparency(self, tileset), (-x_, -y_))
+
+        s_refresh(self)
+        return self
 
     @classmethod
     def from_screenshot(cls, x=0, y=0, width=None, height=None):
@@ -624,8 +1262,8 @@ class Sprite(object):
         - ``y`` -- The vertical location of the rectangular area to take
           a screenshot of.
         - ``width`` -- The width of the area to take a screenshot of;
-          set to :const:`None` for all of the area to the right of ``x``
-          to be included.
+          set to None for all of the area to the right of ``x`` to be
+          included.
         - ``height`` -- The height of the area to take a screenshot of;
           set to :const:`None` for all of the area below ``y`` to be
           included.
@@ -635,7 +1273,15 @@ class Sprite(object):
 
             sge.Sprite.from_screenshot().save("foo.png")
         """
-        # TODO
+        if width is None:
+            width = sge.game.width - x
+        if height is None:
+            height = sge.game.height - y
+
+        sprite = cls(width=width, height=height)
+        sprite.rd["baseimages"][0].blit(r.game_display_surface, (-x, -y))
+        s_refresh(sprite)
+        return sprite
 
     def __copy__(self):
         return self.copy()

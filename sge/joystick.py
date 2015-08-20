@@ -1,24 +1,35 @@
-# The SGE Specification
-# Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net> 
+# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
 # 
-# To the extent possible under law, the author(s) have dedicated all
-# copyright and related and neighboring rights to this software to the
-# public domain worldwide. This software is distributed without any
-# warranty. 
+# This file is part of the Pygame SGE.
 # 
-# You should have received a copy of the CC0 Public Domain Dedication
-# along with this software. If not, see
-# <http://creativecommons.org/publicdomain/zero/1.0/>.
-
-# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace  the notice
-# above as well as the notices contained in other source files with your
-# own copyright notice.  Recommended free  licenses are  the GNU General
-# Public License, GNU Lesser General Public License, Expat License, or
-# Apache License.
+# The Pygame SGE is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The Pygame SGE is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public License
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 This module provides functions related to joystick input.
 """
+
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import pygame
+import six
+
+import sge
+from sge import r
+
 
 __all__ = ["refresh", "get_axis", "get_hat_x", "get_hat_y",
            "get_button_pressed", "get_joysticks", "get_name", "get_id",
@@ -32,7 +43,21 @@ def refresh():
     Call this method to allow the SGE to use joysticks that were plugged
     in while the game was running.
     """
-    # TODO
+    r.game_joysticks = []
+    r.game_js_names = {}
+    r.game_js_ids = {}
+    pygame.joystick.quit()
+    pygame.joystick.init()
+
+    if pygame.joystick.get_init():
+        for i in six.moves.range(pygame.joystick.get_count()):
+            joy = pygame.joystick.Joystick(i)
+            joy.init()
+            n = joy.get_name()
+            r.game_joysticks.append(joy)
+            r.game_js_names[i] = n
+            if n not in r.game_js_ids:
+                r.game_js_ids[n] = i
 
 
 def get_axis(joystick, axis):
@@ -49,7 +74,13 @@ def get_axis(joystick, axis):
     - ``axis`` -- The number of the axis to check, where ``0`` is the
       first axis of the joystick.
     """
-    # TODO
+    joystick = get_id(joystick)
+
+    if (joystick is not None and joystick < len(r.game_joysticks) and
+            axis < r.game_joysticks[joystick].get_numaxes()):
+        return max(-1.0, min(r.game_joysticks[joystick].get_axis(axis), 1.0))
+    else:
+        return 0
 
 
 def get_hat_x(joystick, hat):
@@ -65,7 +96,7 @@ def get_hat_x(joystick, hat):
     - ``hat`` -- The number of the hat to check, where ``0`` is the
       first hat of the joystick.
     """
-    # TODO
+    return r._get_hat(get_id(joystick), hat)[0]
 
 
 def get_hat_y(joystick, hat):
@@ -81,7 +112,7 @@ def get_hat_y(joystick, hat):
     - ``hat`` -- The number of the hat to check, where ``0`` is the
       first hat of the joystick.
     """
-    # TODO
+    return -r._get_hat(get_id(joystick), hat)[1]
 
 
 def get_pressed(joystick, button):
@@ -96,12 +127,18 @@ def get_pressed(joystick, button):
     - ``button`` -- The number of the button to check, where ``0`` is
       the first button of the joystick.
     """
-    # TODO
+    joystick = get_id(joystick)
+
+    if (joystick is not None and joystick < len(r.game_joysticks) and
+            button < r.game_joysticks[joystick].get_numbuttons()):
+        return r.game_joysticks[joystick].get_button(button)
+    else:
+        return False
 
 
 def get_joysticks():
     """Return the number of joysticks available."""
-    # TODO
+    return len(r.game_joysticks)
 
 
 def get_name(joystick):
@@ -114,7 +151,12 @@ def get_name(joystick):
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
     """
-    # TODO
+    if isinstance(joystick, six.integer_types):
+        return r.game_js_names.setdefault(joystick)
+    elif joystick in r.game_js_names.values():
+        return joystick
+    else:
+        return None
 
 
 def get_id(joystick):
@@ -127,7 +169,12 @@ def get_id(joystick):
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
     """
-    # TODO
+    if not isinstance(joystick, six.integer_types):
+        return r.game_js_ids.setdefault(joystick)
+    elif joystick in r.game_js_names:
+        return joystick
+    else:
+        return None
 
 
 def get_axes(joystick):
@@ -140,7 +187,12 @@ def get_axes(joystick):
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
     """
-    # TODO
+    joystick = get_id(joystick)
+
+    if joystick is not None and joystick < len(r.game_joysticks):
+        return r.game_joysticks[joystick].get_numaxes()
+    else:
+        return 0
 
 
 def get_hats(joystick):
@@ -153,7 +205,12 @@ def get_hats(joystick):
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
     """
-    # TODO
+    joystick = get_id(joystick)
+
+    if joystick is not None and joystick < len(r.game_joysticks):
+        return r.game_joysticks[joystick].get_numhats()
+    else:
+        return 0
 
 
 def get_trackballs(joystick):
@@ -166,7 +223,12 @@ def get_trackballs(joystick):
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
     """
-    # TODO
+    joystick = get_id(joystick)
+
+    if joystick is not None and joystick < len(r.game_joysticks):
+        return r.game_joysticks[joystick].get_numballs()
+    else:
+        return 0
 
 
 def get_buttons(joystick):
@@ -179,4 +241,9 @@ def get_buttons(joystick):
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
     """
-    # TODO
+    joystick = get_id(joystick)
+
+    if joystick is not None and joystick < len(r.game_joysticks):
+        return r.game_joysticks[joystick].get_numbuttons()
+    else:
+        return 0

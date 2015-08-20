@@ -1,27 +1,38 @@
-# The SGE Specification
-# Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net> 
+# Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 # 
-# To the extent possible under law, the author(s) have dedicated all
-# copyright and related and neighboring rights to this software to the
-# public domain worldwide. This software is distributed without any
-# warranty. 
+# This file is part of the Pygame SGE.
 # 
-# You should have received a copy of the CC0 Public Domain Dedication
-# along with this software. If not, see
-# <http://creativecommons.org/publicdomain/zero/1.0/>.
-
-# INSTRUCTIONS FOR DEVELOPING AN IMPLEMENTATION: Replace  the notice
-# above as well as the notices contained in other source files with your
-# own copyright notice.  Recommended free  licenses are  the GNU General
-# Public License, GNU Lesser General Public License, Expat License, or
-# Apache License.
+# The Pygame SGE is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The Pygame SGE is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public License
+# along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 This module provides functions related to keyboard input.
 """
 
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import pygame
+
+import sge
+
+
 __all__ = ["get_pressed", "get_modifier", "get_focused", "set_repeat",
            "get_repeat_enabled", "get_repeat_interval", "get_repeat_delay"]
+
+_repeat_enabled = False
 
 
 def get_pressed(key):
@@ -31,7 +42,11 @@ def get_pressed(key):
     See the documentation for :class:`sge.input.KeyPress` for more
     information.
     """
-    # TODO
+    key = key.lower()
+    if key in sge.KEYS:
+        return pygame.key.get_pressed()[sge.KEYS[key]]
+    else:
+        return False
 
 
 def get_modifier(key):
@@ -63,12 +78,16 @@ def get_modifier(key):
     Num Lock          ``"num_lock"``
     ================= =================
     """
-    # TODO
+    key = key.lower()
+    if key in sge.MODS:
+        return pygame.key.get_mods() & sge.MODS[key]
+    else:
+        return False
 
 
 def get_focused():
     """Return whether or not the game has keyboard focus."""
-    # TODO
+    return pygame.key.get_focused()
 
 
 def set_repeat(enabled=True, interval=0, delay=0):
@@ -88,7 +107,12 @@ def set_repeat(enabled=True, interval=0, delay=0):
     generate additional key press events as long as it remains held
     down.
     """
-    # TODO
+    global _repeat_enabled
+    _repeat_enabled = enabled
+    if enabled:
+        pygame.key.set_repeat(delay, interval)
+    else:
+        pygame.key.set_repeat()
 
 
 def get_repeat_enabled():
@@ -98,7 +122,7 @@ def get_repeat_enabled():
     See the documentation for :func:`sge.keyboard.set_repeat` for more
     information.
     """
-    # TODO
+    return _repeat_enabled
 
 
 def get_repeat_interval():
@@ -108,7 +132,7 @@ def get_repeat_interval():
     See the documentation for :func:`sge.keyboard.set_repeat` for more
     information.
     """
-    # TODO
+    return pygame.key.get_repeat()[1]
 
 
 def get_repeat_delay():
@@ -118,4 +142,4 @@ def get_repeat_delay():
     See the documentation for :func:`sge.keyboard.set_repeat` for more
     information.
     """
-    # TODO
+    return pygame.key.get_repeat()[0]
