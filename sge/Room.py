@@ -80,7 +80,7 @@ class Room(object):
        performance, this should generally be about the average width of
        objects in the room which check for collisions.
 
-    .. attrubute:: object_area_height
+    .. attribute:: object_area_height
 
        The height of this room's object areas in pixels.  If set to
        :const:`None`, :attr:`sge.game.height` is used.  For optimum
@@ -133,7 +133,7 @@ class Room(object):
           It is generally easier to use :meth:`sge.Room.get_objects_at`
           than to access this list directly.
 
-    .. attrubute:: object_area_void
+    .. attribute:: object_area_void
 
        A set containing :class:`sge.Object` objects whose collision
        boundaries (sprite if the object's
