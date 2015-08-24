@@ -21,7 +21,7 @@ The SGE Game Engine ("SGE", pronounced like "Sage") is a general-purpose
 focus on the game itself.  This makes more rapid game development
 possible, and it also makes the SGE easy to learn.
 
-Official implementations of the SGE are `free/libre software
+The SGE is `free/libre software
 <http://gnu.org/philosophy/free-sw.html>`_, and the SGE documentation is
 free/libre as well.
 

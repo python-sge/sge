@@ -7,8 +7,6 @@ SGE Game Engine documentation
    http://creativecommons.org/publicdomain/zero/1.0/ for more
    information. This file is offered as-is, without any warranty.
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
 
