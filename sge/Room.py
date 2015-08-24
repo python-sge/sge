@@ -135,11 +135,9 @@ class Room(object):
 
     .. attribute:: object_area_void
 
-       A set containing :class:`sge.Object` objects whose collision
-       boundaries (sprite if the object's
-       :attr:`sge.Object.collision_precise` value is :const:`True`,
-       bounding box otherwise) reside within the area outside of the
-       room's object areas.
+       A set containing :class:`sge.Object` objects whose sprites or
+       bounding boxes reside within any area not covered by the room's
+       object area.
 
        .. note::
 
