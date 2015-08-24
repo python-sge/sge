@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM Command file for Sphinx documentation
-REM Copyright (C) 2014 Julian Marchant <onpon4@riseup.net>
+REM Copyright (C) 2014, 2015 Julian Marchant <onpon4@riseup.net>
 REM
 REM Permission is hereby granted, free of charge, to any person obtaining
 REM a copy of this software and associated documentation files (the
@@ -25,7 +25,7 @@ REM SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
 )
-set BUILDDIR=_build
+set BUILDDIR=../doc
 set ALLSPHINXOPTS=-d %BUILDDIR%/doctrees %SPHINXOPTS% .
 set I18NSPHINXOPTS=%SPHINXOPTS% .
 if NOT "%PAPER%" == "" (
