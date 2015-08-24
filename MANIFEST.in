@@ -1,5 +1,6 @@
 include WHATSNEW WHATSNEW.* VERSION_NUMBERING MANIFEST.in
 recursive-include doc *
+recursive-include doc-src *
 recursive-include examples *
 global-include COPYING COPYING.* LICENSE LICENSES
 global-exclude *~ *.pyc *.pyo
