@@ -880,7 +880,7 @@ class Object(object):
             others = room.get_objects_at(ax, ay, w, h)
 
             for obj in others:
-                if obj.tangible and o_is_other(obj, other):
+                if obj is not self and obj.tangible and o_is_other(obj, other):
                     if (self.collision_precise or self.collision_ellipse or
                             obj.collision_precise or obj.collision_ellipse):
                         # Use masks.
