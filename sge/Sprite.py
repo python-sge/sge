@@ -253,7 +253,8 @@ class Sprite(object):
         errlist = []
 
         if name is not None:
-            directory = os.path.abspath(directory)
+            if not directory:
+                directory = os.curdir
             for fname in os.listdir(directory):
                 full_fname = os.path.join(directory, fname)
                 if (fname.startswith(name) and

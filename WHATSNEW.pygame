@@ -7,6 +7,15 @@ without any warranty.
 
 ========================================================================
 
+0.20.1
+------------------------------------------------------------------------
+
+Pygame SGE misc changes:
+* Removed code that converted sge.Sprite.__init__'s ``directory``
+  argument to an absolute path. Absolute paths can exacerbate a problem
+  Pygame has dealing with non-ASCII directories.
+
+
 0.20
 ------------------------------------------------------------------------
 
