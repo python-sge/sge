@@ -7,11 +7,21 @@ without any warranty.
 
 ========================================================================
 
+0.21
+------------------------------------------------------------------------
+
+Specification misc changes:
+* Window projections now have Z-axis values.  These Z-axis values are
+  independent of all others.
+* As a consequence of the Z-axis value introduction to window
+  projections, it's possible to make window projections obscure the
+  mouse cursor.
+
+
 0.20
 ------------------------------------------------------------------------
 
 Specification additions:
-
 + sge.Room.object_area_width
 + sge.Room.object_area_height
 + sge.Room.object_areas
@@ -19,7 +29,6 @@ Specification additions:
 + sge.Room.get_objects_at
 
 Specification removals:
-
 - sge.Object.event_inactive_step
 - sge.Object.event_inactive_key_press
 - sge.Object.event_inactive_key_release
@@ -33,12 +42,10 @@ Specification removals:
 - sge.Object.event_inactive_joystick_button_release
 
 Specification misc changes:
-
 * Objects with the same Z-axis value are now positioned based on
   creation time (like the Pygame SGE).
 
 Specification bugfixes:
-
 - Remaining references to "sge.StellarClass" in docstrings
 
 
@@ -46,7 +53,6 @@ Specification bugfixes:
 ------------------------------------------------------------------------
 
 Specification misc changes:
-
 * Negative frame rates now indicate reversed animation.
 * Added "transition_arg" argument to sge.Room.start, for special
   transition variations.  Currently, this allows control over the

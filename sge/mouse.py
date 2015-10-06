@@ -37,6 +37,11 @@ Which mode the mouse is in depends on the values of
    This attribute can be assigned to safely, but doing so will not have
    any effect.
 
+.. attribute:: sge.game.mouse.z
+
+   The Z-axis position of the mouse cursor's projection in relation to
+   other window projections.
+
 .. attribute:: sge.game.mouse.sprite
 
    Determines what sprite will be used to represent the mouse cursor.

@@ -171,6 +171,8 @@ class Game(object):
        Some of this object's attributes control properties of the mouse.
        See the documentation for :mod:`sge.mouse` for more information.
 
+       The default value of :attr:`sge.mouse.z` is 10000, rather than 0.
+
        (Read-only)
     """
 
@@ -318,7 +320,6 @@ class Game(object):
         r.music_queue = []
         r.game_running = False
         r.game_clock = pygame.time.Clock()
-        r.game_room_projections = []
         r.game_window_projections = []
         self.mouse = sge.Mouse()
 
@@ -961,8 +962,9 @@ class Game(object):
 
         # Window projections
         self.mouse.project_cursor()
+        r.game_window_projections.sort(key=lambda img: img[3])
         for projection in r.game_window_projections:
-            (image, x, y, blend_mode) = projection
+            (image, x, y, z, blend_mode) = projection
             if blend_mode == sge.BLEND_RGB_SCREEN:
                 _screen_blend(r.game_display_surface, image, x, y, False)
             elif blend_mode == sge.BLEND_RGBA_SCREEN:
@@ -980,7 +982,7 @@ class Game(object):
 
         pygame.display.flip()
 
-    def project_dot(self, x, y, color):
+    def project_dot(self, x, y, color, z=0):
         """
         Project a single-pixel dot onto the game window.
 
@@ -990,6 +992,17 @@ class Game(object):
           project the dot.
         - ``y`` -- The vertical location relative to the window to
           project the dot.
+        - ``z`` -- The Z-axis position of the projection in relation to
+          other window projections.
+
+        Window projections are projections made directly onto the game
+        window, independent of the room or any views.
+
+        .. note:: The Z-axis position of a window projection does not
+           correlate with the Z-axis position of anything positioned
+           within the room, such as room projections and
+           :class:`sge.Object` objects.  Window projections are always
+           positioned in front of such things.
 
         See the documentation for :meth:`sge.Sprite.draw_dot` for more
         information.
@@ -999,9 +1012,9 @@ class Game(object):
             raise TypeError(e)
 
         sprite = _get_dot_sprite(color)
-        self.project_sprite(sprite, 0, x, y)
+        self.project_sprite(sprite, 0, x, y, z)
 
-    def project_line(self, x1, y1, x2, y2, color, thickness=1,
+    def project_line(self, x1, y1, x2, y2, color, z=0, thickness=1,
                      anti_alias=False):
         """
         Project a line segment onto the game window.
@@ -1016,9 +1029,11 @@ class Game(object):
           the second endpoint of the projected line segment.
         - ``y2`` -- The vertical location relative to the window of the
           second endpoint of the projected line segment.
+        - ``z`` -- The Z-axis position of the projection in relation to
+          other window projections.
 
-        See the documentation for :meth:`sge.Sprite.draw_line` for more
-        information.
+        See the documentation for :meth:`sge.Sprite.draw_line` and
+        :meth:`sge.Game.project_dot` for more information.
         """
         if not isinstance(color, sge.Color):
             e = "`{}` is not a sge.Color object.".format(repr(color))
@@ -1033,10 +1048,10 @@ class Game(object):
         y2 -= y
 
         sprite = _get_line_sprite(x1, y1, x2, y2, color, thickness, anti_alias)
-        self.project_sprite(sprite, 0, x, y)
+        self.project_sprite(sprite, 0, x, y, z)
 
-    def project_rectangle(self, x, y, width, height, fill=None, outline=None,
-                          outline_thickness=1):
+    def project_rectangle(self, x, y, width, height, z=0, fill=None,
+                          outline=None, outline_thickness=1):
         """
         Project a rectangle onto the game window.
 
@@ -1046,9 +1061,11 @@ class Game(object):
           project the rectangle.
         - ``y`` -- The vertical location relative to the window to
           project the rectangle.
+        - ``z`` -- The Z-axis position of the projection in relation to
+          other window projections.
 
-        See the documentation for :meth:`sge.Sprite.draw_rectangle` for
-        more information.
+        See the documentation for :meth:`sge.Sprite.draw_rectangle` and
+        :meth:`sge.Game.project_dot` for more information.
         """
         if fill is not None and not isinstance(fill, sge.Color):
             e = "`{}` is not a sge.Color object.".format(repr(fill))
@@ -1064,10 +1081,10 @@ class Game(object):
         y -= draw_y
         sprite = _get_rectangle_sprite(width, height, fill, outline,
                                        outline_thickness)
-        self.project_sprite(sprite, 0, x, y)
+        self.project_sprite(sprite, 0, x, y, z)
 
-    def project_ellipse(self, x, y, width, height, fill=None, outline=None,
-                        outline_thickness=1, anti_alias=False):
+    def project_ellipse(self, x, y, width, height, z=0, fill=None,
+                        outline=None, outline_thickness=1, anti_alias=False):
         """
         Project an ellipse onto the game window.
 
@@ -1077,14 +1094,16 @@ class Game(object):
           position the imaginary rectangle containing the ellipse.
         - ``y`` -- The vertical location relative to the window to
           position the imaginary rectangle containing the ellipse.
+        - ``z`` -- The Z-axis position of the projection in relation to
+          other window projections.
         - ``width`` -- The width of the ellipse.
         - ``height`` -- The height of the ellipse.
         - ``outline_thickness`` -- The thickness of the outline of the
           ellipse.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
 
-        See the documentation for :meth:`sge.Sprite.draw_ellipse` for
-        more information.
+        See the documentation for :meth:`sge.Sprite.draw_ellipse` and
+        :meth:`sge.Game.project_dot` for more information.
         """
         if fill is not None and not isinstance(fill, sge.Color):
             e = "`{}` is not a sge.Color object.".format(repr(fill))
@@ -1100,9 +1119,9 @@ class Game(object):
         y -= draw_y
         sprite = _get_ellipse_sprite(width, height, fill, outline,
                                      outline_thickness, anti_alias)
-        self.project_sprite(sprite, 0, x, y)
+        self.project_sprite(sprite, 0, x, y, z)
 
-    def project_circle(self, x, y, radius, fill=None, outline=None,
+    def project_circle(self, x, y, radius, z=0, fill=None, outline=None,
                        outline_thickness=1, anti_alias=False):
         """
         Project a circle onto the game window.
@@ -1113,9 +1132,11 @@ class Game(object):
           position the center of the circle.
         - ``y`` -- The vertical location relative to the window to
           position the center of the circle.
+        - ``z`` -- The Z-axis position of the projection in relation to
+          other window projections.
 
-        See the documentation for :meth:`sge.Sprite.draw_circle` for
-        more information.
+        See the documentation for :meth:`sge.Sprite.draw_circle` and
+        :meth:`sge.Game.project_dot` for more information.
         """
         if fill is not None and not isinstance(fill, sge.Color):
             e = "`{}` is not a sge.Color object.".format(repr(fill))
@@ -1126,9 +1147,9 @@ class Game(object):
 
         sprite = _get_circle_sprite(radius, fill, outline, outline_thickness,
                                     anti_alias)
-        self.project_sprite(sprite, 0, x - radius, y - radius)
+        self.project_sprite(sprite, 0, x - radius, y - radius, z)
 
-    def project_polygon(self, points, fill=None, outline=None,
+    def project_polygon(self, points, z=0, fill=None, outline=None,
                         outline_thickness=1, anti_alias=False):
         """
         Draw a polygon on the sprite.
@@ -1139,9 +1160,11 @@ class Game(object):
           position each of the polygon's angles.  Each point should be a
           tuple in the form ``(x, y)``, where x is the horizontal
           location and y is the vertical location.
+        - ``z`` -- The Z-axis position of the projection in relation to
+          other window projections.
 
-        See the documentation for :meth:`sge.Sprite.draw_polygon` for
-        more information.
+        See the documentation for :meth:`sge.Sprite.draw_polygon` and
+        :meth:`sge.Game.project_dot` for more information.
         """
         if fill is not None and not isinstance(fill, sge.Color):
             e = "`{}` is not a sge.Color object.".format(repr(fill))
@@ -1160,9 +1183,9 @@ class Game(object):
 
         sprite = _get_polygon_sprite(points, fill, outline, outline_thickness,
                                      anti_alias)
-        self.project_sprite(sprite, 0, x, y)
+        self.project_sprite(sprite, 0, x, y, z)
 
-    def project_sprite(self, sprite, image, x, y, blend_mode=None):
+    def project_sprite(self, sprite, image, x, y, z=0, blend_mode=None):
         """
         Project a sprite onto the game window.
 
@@ -1172,16 +1195,18 @@ class Game(object):
           project ``sprite``.
         - ``y`` -- The vertical location relative to the window to
           project ``sprite``.
+        - ``z`` -- The Z-axis position of the projection in relation to
+          other window projections.
 
-        See the documentation for :meth:`sge.Sprite.draw_sprite` for
-        more information.
+        See the documentation for :meth:`sge.Sprite.draw_sprite` and
+        :meth:`sge.Game.project_dot` for more information.
         """
         img = s_get_image(sprite, image)
         x -= sprite.origin_x
         y -= sprite.origin_y
-        r.game_window_projections.append((img, x, y, blend_mode))
+        r.game_window_projections.append((img, x, y, z, blend_mode))
 
-    def project_text(self, font, text, x, y, width=None, height=None,
+    def project_text(self, font, text, x, y, z=0, width=None, height=None,
                     color=sge.Color("black"), halign="left",
                     valign="top", anti_alias=True):
         """
@@ -1193,9 +1218,11 @@ class Game(object):
           project the text.
         - ``y`` -- The vertical location relative to the window to
           project the text.
+        - ``z`` -- The Z-axis position of the projection in relation to
+          other window projections.
 
-        See the documentation for :meth:`sge.Sprite.draw_text` for more
-        information.
+        See the documentation for :meth:`sge.Sprite.draw_text` and
+        :meth:`sge.Game.project_dot` for more information.
         """
         if not isinstance(color, sge.Color):
             e = "`{}` is not a sge.Color object.".format(repr(color))

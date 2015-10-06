@@ -1283,7 +1283,7 @@ class Mouse(Object):
 
     def __init__(self):
         self.__visible = True
-        super(Mouse, self).__init__(0, 0, 0)
+        super(Mouse, self).__init__(0, 0, 10000)
 
     def event_step(self, time_passed, delta_mult):
         o_update_object_areas(self)
@@ -1311,4 +1311,4 @@ class Mouse(Object):
             if x is not None and y is not None:
                 x -= self.image_origin_x
                 y -= self.image_origin_y
-                r.game_window_projections.append((img, x, y, None))
+                r.game_window_projections.append((img, x, y, self.z, None))
