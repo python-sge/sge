@@ -107,6 +107,17 @@ class Game(object):
        this amount, resulting in the game slowing down like normal if it
        is.
 
+    .. attribute:: delta_max
+
+       Indicates a higher frame rate cap than :attr:`fps` to allow the
+       game to reach by using delta timing to slow object speeds,
+       animation rates, and alarms down.  If set to :const:`None`, this
+       feature is disabled and the game will not be permitted to run
+       faster than :attr:`fps`.
+
+       This attribute has no effect unless :attr:`delta` is
+       :const:`True`.
+
     .. attribute:: grab_input
 
        Whether or not all input should be forcibly grabbed by the game.
@@ -274,7 +285,7 @@ class Game(object):
 
     def __init__(self, width=640, height=480, fullscreen=False, scale=None,
                  scale_proportional=True, scale_smooth=False, fps=60,
-                 delta=False, delta_min=15, grab_input=False,
+                 delta=False, delta_min=15, delta_max=None, grab_input=False,
                  window_text=None, window_icon=None,
                  collision_events_enabled=True):
         """
@@ -304,6 +315,7 @@ class Game(object):
         self.fps = fps
         self.delta = delta
         self.delta_min = delta_min
+        self.delta_max = delta_max
         self.window_text = window_text
         self.window_icon = window_icon
         self.collision_events_enabled = collision_events_enabled
@@ -831,7 +843,7 @@ class Game(object):
         your own loop.
         """
         if fps is None:
-            fps = self.fps
+            fps = self.delta_max if self.delta_max is not None else self.fps
 
         tp = r.game_clock.tick(fps)
 

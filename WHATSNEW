@@ -10,6 +10,9 @@ without any warranty.
 0.21
 ------------------------------------------------------------------------
 
+Specification additions:
++ sge.Game.delta_max
+
 Specification misc changes:
 * Window projections now have Z-axis values.  These Z-axis values are
   independent of all others.
