@@ -843,7 +843,10 @@ class Game(object):
         your own loop.
         """
         if fps is None:
-            fps = self.delta_max if self.delta_max is not None else self.fps
+            if self.delta and self.delta_max is not None:
+                fps = self.delta_max
+            else:
+                fps = self.fps
 
         tp = r.game_clock.tick(fps)
 
