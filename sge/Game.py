@@ -182,8 +182,6 @@ class Game(object):
        Some of this object's attributes control properties of the mouse.
        See the documentation for :mod:`sge.mouse` for more information.
 
-       The default value of :attr:`sge.mouse.z` is 10000, rather than 0.
-
        (Read-only)
     """
 

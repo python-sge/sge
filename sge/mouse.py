@@ -40,7 +40,7 @@ Which mode the mouse is in depends on the values of
 .. attribute:: sge.game.mouse.z
 
    The Z-axis position of the mouse cursor's projection in relation to
-   other window projections.
+   other window projections.  The default value is ``10000``.
 
 .. attribute:: sge.game.mouse.sprite
 

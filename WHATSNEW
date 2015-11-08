@@ -16,6 +16,8 @@ Specification additions:
 Specification misc changes:
 * Window projections now have Z-axis values.  These Z-axis values are
   independent of all others.
+* sge.game.mouse.z is now used to determine the Z-axis value of the
+  mouse projection.
 * As a consequence of the Z-axis value introduction to window
   projections, it's possible to make window projections obscure the
   mouse cursor.
