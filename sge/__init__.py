@@ -337,7 +337,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.21a0"
+__version__ = "0.21"
 
 import sys
 import os
