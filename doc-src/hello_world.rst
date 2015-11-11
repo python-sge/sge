@@ -135,7 +135,7 @@ world!" in the center of the screen.  This will be our room class::
         def event_step(self, time_passed, delta_mult):
             sge.game.project_text(font, "Hello, world!", sge.game.width / 2,
                                   sge.game.height / 2, color=sge.Color("black"),
-                                  halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
+                                  halign="center", valign="middle")
 
 You can see that the room class is defined very similarly to the game
 class.  We subclass :class:`sge.Room` and add a method to override
@@ -270,9 +270,9 @@ This is the completed Hello World program::
     class Room(sge.Room):
 
         def event_step(self, time_passed, delta_mult):
-            sge.game.project_text("my_font", "Hello, world!", sge.game.width / 2,
+            sge.game.project_text(font, "Hello, world!", sge.game.width / 2,
                                   sge.game.height / 2, color=sge.Color("black"),
-                                  halign=sge.ALIGN_CENTER, valign=sge.ALIGN_MIDDLE)
+                                  halign="center", valign="middle")
 
 
     # Create Game object
@@ -282,7 +282,7 @@ This is the completed Hello World program::
     background = sge.Background([], sge.Color("white"))
 
     # Load fonts
-    font = sge.Font(ID="my_font")
+    font = sge.Font()
 
     # Create rooms
     sge.game.start_room = Room(background=background)
