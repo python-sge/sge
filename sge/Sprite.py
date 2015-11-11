@@ -1182,9 +1182,10 @@ class Sprite(object):
 
         The sprite's origin is set based on ``halign`` and ``valign``.
         """
-        i = ("text_sprite", cls, tuple(font.name), font.size, font.underline,
-             font.bold, font.italic, text, width, height, str(color), halign,
-             valign, anti_alias)
+        f_name = tuple(font.name) if font.name is not None else None
+        i = ("text_sprite", cls, f_name, font.size, font.underline, font.bold,
+             font.italic, text, width, height, str(color), halign, valign,
+             anti_alias)
         s = r.cache.get(i)
         if s is None:
             w = font.get_width(text, width, height)
