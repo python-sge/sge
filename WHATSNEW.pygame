@@ -12,6 +12,7 @@ without any warranty.
 
 Pygame SGE bugfixes:
 - Incorrect assumption made by sge.Sprite.from_text
+- Switching sge.game.current_room immediately causing problems
 
 
 0.21

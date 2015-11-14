@@ -209,7 +209,7 @@ class Room(object):
         self.background_x = background_x
         self.background_y = background_y
         self.alarms = {}
-        self.__new_objects = []
+        self.rd["new_objects"] = []
         self.rd["projections"] = []
 
         if views is not None:
@@ -252,7 +252,7 @@ class Room(object):
                 if obj.active:
                     r._active_objects.add(obj)
             else:
-                self.__new_objects.append(obj)
+                self.rd["new_objects"].append(obj)
 
     def remove(self, obj):
         """
@@ -265,8 +265,8 @@ class Room(object):
         while obj in self.objects:
             self.objects.remove(obj)
 
-        while obj in self.__new_objects:
-            self.__new_objects.remove(obj)
+        while obj in self.rd["new_objects"]:
+            self.rd["new_objects"].remove(obj)
 
         if self is sge.game.current_room:
             o_update_object_areas(obj)
@@ -341,36 +341,7 @@ class Room(object):
         else:
             self.rd["t_update"] = None
 
-        sge.game.unpause()
-        sge.game.current_room = self
-
-        r._colliders = []
-        r._collision_checkers = []
-        r._active_objects = set()
-
-        r_set_object_areas(self)
-        for obj in self.objects:
-            obj.rd["object_areas"] = set()
-            o_update_object_areas(obj)
-            o_update_collision_lists(obj)
-            if obj.active:
-                r._active_objects.add(obj)
-
-        # This is stored in a variable to prevent problems with
-        # rd["started"] being False during the start/create events.
-        started = self.rd["started"]
-        self.rd["started"] = True
-        if not started:
-            self.event_room_start()
-        else:
-            self.event_room_resume()
-
-        while self.__new_objects:
-            self.__new_objects.pop(0).event_create()
-
-        # Prevent sudden movements from happening at the start of a room
-        # due to delta timing, and make sure transitions happen fully.
-        r.game_clock.tick()
+        r.game_new_room = self
 
     def get_objects_at(self, x, y, width, height):
         """

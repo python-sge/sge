@@ -33,7 +33,9 @@ from sge.r import (_scale, _get_blend_flags, _screen_blend, _set_mode,
                    _handle_music, _get_dot_sprite, _get_line_sprite,
                    _get_rectangle_sprite, _get_ellipse_sprite,
                    _get_circle_sprite, _get_polygon_sprite, bl_update,
-                   bl_get_image, o_update, o_detect_collisions, s_get_image)
+                   bl_get_image, o_update, o_detect_collisions,
+                   o_update_collision_lists, o_update_object_areas,
+                   s_get_image, r_set_object_areas)
 
 
 __all__ = ['Game']
@@ -310,6 +312,7 @@ class Game(object):
         r.game_scale = scale
         r.game_scale_proportional = scale_proportional
         r.game_scale_smooth = scale_smooth
+        r.game_new_room = None
         self.fps = fps
         self.delta = delta
         self.delta_min = delta_min
@@ -359,6 +362,43 @@ class Game(object):
             r.game_clock.tick()
 
             while r.game_running:
+                # Switch to new room (if one has been started)
+                new_room = r.game_new_room
+                if new_room is not None:
+                    r.game_new_room = None
+                    self.unpause()
+                    self.current_room = new_room
+
+                    r._colliders = []
+                    r._collision_checkers = []
+                    r._active_objects = set()
+
+                    r_set_object_areas(new_room)
+                    for obj in new_room.objects:
+                        obj.rd["object_areas"] = set()
+                        o_update_object_areas(obj)
+                        o_update_collision_lists(obj)
+                        if obj.active:
+                            r._active_objects.add(obj)
+
+                    # This is stored in a variable to prevent problems
+                    # with rd["started"] being False during the
+                    # start/create events.
+                    started = new_room.rd["started"]
+                    new_room.rd["started"] = True
+                    if not started:
+                        new_room.event_room_start()
+                    else:
+                        new_room.event_room_resume()
+
+                    while new_room.rd["new_objects"]:
+                        new_room.rd["new_objects"].pop(0).event_create()
+
+                    # Prevent sudden movements from happening at the
+                    # start of a room due to delta timing, and make sure
+                    # transitions happen fully.
+                    r.game_clock.tick()
+
                 # Input events
                 self.pump_input()
                 while self.input_events:
