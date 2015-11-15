@@ -1283,7 +1283,7 @@ class Game(object):
 
         sprite = sge.Sprite.from_text(font, text, width, height, color, halign,
                                       valign, anti_alias)
-        self.project_sprite(sprite, 0, x, y)
+        self.project_sprite(sprite, 0, x, y, z)
 
     def event_step(self, time_passed, delta_mult):
         """
