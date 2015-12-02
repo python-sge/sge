@@ -732,7 +732,7 @@ class Game(object):
 
             self.event_paused_step(time_passed, delta_mult)
             self.current_room.event_paused_step(time_passed, delta_mult)
-            for obj in self.current_room.objects:
+            for obj in self.current_room.objects[:]:
                 obj.event_paused_step(time_passed, delta_mult)
 
             # Project sprite

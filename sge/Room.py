@@ -239,6 +239,17 @@ class Room(object):
 
         - ``obj`` -- The :class:`sge.Object` object to add.
 
+        .. warning::
+
+           This method modifies the contents of :attr:`objects`.  Do not
+           call this method during a loop through :attr:`objects`; doing
+           so may cause problems with the loop. To get around this, you
+           can create a shallow copy of :attr:`objects` to iterate
+           through instead, e.g.::
+
+               for obj in self.objects[:]:
+                   self.add(obj.friend)
+
         """
         obj.alive = True
         if obj not in self.objects:
@@ -261,6 +272,17 @@ class Room(object):
         Arguments:
 
         - ``obj`` -- The :class:`sge.Object` object to remove.
+
+        .. warning::
+
+           This method modifies the contents of :attr:`objects`.  Do not
+           call this method during a loop through :attr:`objects`; doing
+           so may cause problems with the loop. To get around this, you
+           can create a shallow copy of :attr:`objects` to iterate
+           through instead, e.g.::
+
+               for obj in self.objects[:]:
+                   self.remove(obj)
         """
         while obj in self.objects:
             self.objects.remove(obj)
