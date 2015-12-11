@@ -12,6 +12,7 @@ without any warranty.
 
 Specification misc changes:
 * Added a warning about certain methods' interaction with certain lists.
+* Clarified how colorkeys are chosen in the documentation.
 
 Specification bugfixes:
 - "Hello world" tutorial being outdated

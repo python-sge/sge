@@ -79,7 +79,7 @@ class Sprite(object):
        Whether or not the image should be partially transparent.  If an
        image does not have an alpha channel, a colorkey will be used,
        with the transparent color being the color of the top-rightmost
-       pixel.
+       pixel of the respective frame.
 
     .. attribute:: origin_x
 
