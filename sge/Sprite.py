@@ -1244,8 +1244,8 @@ class Sprite(object):
         for i in six.moves.range(rows):
             for j in six.moves.range(columns):
                 frame = i * columns + j
-                x_ = x + self.origin_x + (width + xsep) * j
-                y_ = y + self.origin_y + (height + ysep) * i
+                x_ = x + (width + xsep) * j
+                y_ = y + (height + ysep) * i
                 self.rd["baseimages"][frame].blit(
                     s_set_transparency(self, tileset), (-x_, -y_))
 

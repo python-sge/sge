@@ -14,6 +14,7 @@ Pygame SGE bugfixes:
 - Incorrect assumption made by sge.Sprite.from_text
 - Switching sge.game.current_room immediately causing problems
 - "z" argument of sge.Game.project_text not having an effect
+- Incorrectly taking origin into account in Sprite.from_tileset
 
 
 0.21
