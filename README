@@ -1,4 +1,4 @@
-Copyright (C) 2013, 2014 Julian Marchant <onpon4@riseup.net>
+Copyright (C) 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -27,13 +27,16 @@ INSTALLATION
 First, install the dependencies:
 
 - Python 2 (2.7 or later) or 3 (3.1 or later) <http://www.python.org>
-- Pygame 1.9.1 or later <http://pygame.org>
+- Pygame 1.9.1 or later <http://pygame.org/download.shtml>
 - Six 1.4.0 or later <https://pypi.python.org/pypi/six>
 
 Once you have all the dependencies, install the SGE with the included
-setup.py script, e.g.:
+setup.py script, e.g. with "python setup.py install".
 
-    python setup.py install
+Alternatively, you can just place the "sge" folder into the same
+directory as the Python program that uses it. This can be a good idea
+for the distribution of a game, since it reduces the number of
+dependencies the user needs to install.
 
 USAGE
 
