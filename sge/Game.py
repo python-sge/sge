@@ -297,7 +297,7 @@ class Game(object):
         to :data:`sge.game`.
         """
         # Settings use a smaller buffer size for less lag.
-        pygame.mixer.pre_init(channels=2, buffer=1024)
+        pygame.mixer.pre_init(22050, -16, 2, 1024)
         pygame.init()
 
         pygame.mixer.music.set_endevent(sge.MUSIC_END_EVENT)
