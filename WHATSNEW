@@ -7,6 +7,20 @@ without any warranty.
 
 ========================================================================
 
+0.23
+------------------------------------------------------------------------
+
+Specification additions:
++ sge.joystick.get_value
++ sge.input.JoystickEvent
++ sge.Game.event_joystick
++ sge.Game.event_paused_joystick
++ sge.Room.event_joystick
++ sge.Room.event_paused_joystick
++ sge.Object.event_joystick
++ sge.Object.event_paused_joystick
+
+
 0.22
 ------------------------------------------------------------------------
 

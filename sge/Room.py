@@ -741,6 +741,13 @@ class Room(object):
         """
         pass
 
+    def event_joystick(self, js_name, js_id, input_type, input_id, value):
+        """
+        See the documentation for :class:`sge.input.JoystickEvent` for
+        more information.
+        """
+        pass
+
     def event_gain_keyboard_focus(self):
         """
         See the documentation for :class:`sge.input.KeyboardFocusGain`
@@ -853,6 +860,14 @@ class Room(object):
         """
         See the documentation for
         :class:`sge.input.JoystickButtonRelease` for more information.
+        """
+        pass
+
+    def event_paused_joystick(self, js_name, js_id, input_type, input_id,
+                              value):
+        """
+        See the documentation for :class:`sge.input.JoystickEvent` for
+        more information.
         """
         pass
 

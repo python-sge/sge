@@ -481,6 +481,17 @@ class Game(object):
                         for obj in r._active_objects.copy():
                             obj.event_joystick_button_release(
                                 event.js_name, event.js_id, event.button)
+                    elif isinstance(event, sge.input.JoystickEvent):
+                        self.event_joystick(
+                            event.js_name, event.js_id, event.input_type,
+                            event.input_id, event.value)
+                        self.current_room.event_joystick(
+                            event.js_name, event.js_id, event.input_type,
+                            event.input_id, event.value)
+                        for obj in r._active_objects.copy():
+                            obj.event_joystick(
+                                event.js_name, event.js_id, event.input_type,
+                                event.input_id, event.value)
                     elif isinstance(event, sge.input.KeyboardFocusGain):
                         self.event_gain_keyboard_focus()
                         self.current_room.event_gain_keyboard_focus()
@@ -705,6 +716,17 @@ class Game(object):
                     for obj in self.current_room.objects:
                         obj.event_paused_joystick_button_release(
                             event.js_name, event.js_id, event.button)
+                elif isinstance(event, sge.input.JoystickEvent):
+                    self.event_paused_joystick(
+                        event.js_name, event.js_id, event.input_type,
+                        event.input_id, event.value)
+                    self.current_room.event_paused_joystick(
+                        event.js_name, event.js_id, event.input_type,
+                        event.input_id, event.value)
+                    for obj in r._active_objects.copy():
+                        obj.event_paused_joystick(
+                            event.js_name, event.js_id, event.input_type,
+                            event.input_id, event.value)
                 elif isinstance(event, sge.input.KeyboardFocusGain):
                     self.event_paused_gain_keyboard_focus()
                     self.current_room.event_paused_gain_keyboard_focus()
@@ -811,29 +833,129 @@ class Game(object):
                     self.input_events.append(input_event)
             elif event.type == pygame.JOYAXISMOTION:
                 jsname = r.game_js_names[event.joy]
+                a = abs(min(0, event.value))
+                b = max(0, event.value)
+                z = 1 - abs(event.value)
+
+                axis_id = (event.joy, event.axis)
+                valuep = r._prev_axes.get(axis_id, 0)
+                r._prev_axes[axis_id] = event.value
+                ap = abs(min(0, valuep))
+                bp = max(0, valuep)
+                zp = 1 - abs(valuep)
+
                 input_event = sge.input.JoystickAxisMove(
                     jsname, event.joy, event.axis, event.value)
                 self.input_events.append(input_event)
+
+                if a != ap:
+                    input_event = sge.input.JoystickEvent(
+                        jsname, event.joy, "axis-", event.axis, a)
+                    self.input_events.append(input_event)
+                if b != bp:
+                    input_event = sge.input.JoystickEvent(
+                        jsname, event.joy, "axis+", event.axis, b)
+                    self.input_events.append(input_event)
+                if z != zp:
+                    input_event = sge.input.JoystickEvent(
+                        jsname, event.joy, "axis0", event.axis, z)
+                    self.input_events.append(input_event)
             elif event.type == pygame.JOYHATMOTION:
                 jsname = r.game_js_names[event.joy]
+                x, y = event.value
+                y *= -1
+                left = abs(min(0, x))
+                right = max(0, x)
+                center_x = 1 - abs(x)
+                up = abs(min(0, y))
+                down = max(0, y)
+                center_y = 1 - abs(y)
+
+                hat_id = (event.joy, event.hat)
+                xp, yp = r._prev_hats.get(hat_id, (0, 0))
+                r._prev_hats[hat_id] = (x, y)
+                leftp = abs(min(0, xp))
+                rightp = max(0, xp)
+                center_xp = 1 - abs(xp)
+                upp = abs(min(0, yp))
+                downp = max(0, yp)
+                center_yp = 1 - abs(yp)
+
                 input_event = sge.input.JoystickHatMove(
-                    jsname, event.joy, event.hat, event.value[0],
-                    -event.value[1])
+                    jsname, event.joy, event.hat, x, y)
                 self.input_events.append(input_event)
+
+                if left != leftp:
+                    input_event = sge.input.JoystickEvent(
+                        jsname, event.joy, "hat_left", event.hat, left)
+                    self.input_events.append(input_event)
+                if right != rightp:
+                    input_event = sge.input.JoystickEvent(
+                        jsname, event.joy, "hat_right", event.hat, right)
+                    self.input_events.append(input_event)
+                if center_x != center_xp:
+                    input_event = sge.input.JoystickEvent(
+                        jsname, event.joy, "hat_center_x", event.hat, center_x)
+                    self.input_events.append(input_event)
+                if up != upp:
+                    input_event = sge.input.JoystickEvent(
+                        jsname, event.joy, "hat_up", event.hat, up)
+                    self.input_events.append(input_event)
+                if down != downp:
+                    input_event = sge.input.JoystickEvent(
+                        jsname, event.joy, "hat_down", event.hat, down)
+                    self.input_events.append(input_event)
+                if center_y != center_yp:
+                    input_event = sge.input.JoystickEvent(
+                        jsname, event.joy, "hat_center_y", event.hat, center_y)
+                    self.input_events.append(input_event)
             elif event.type == pygame.JOYBALLMOTION:
                 jsname = r.game_js_names[event.joy]
+                x, y = event.rel
+
                 input_event = sge.input.JoystickTrackballMove(
-                    jsname, event.joy, event.ball, *event.rel)
+                    jsname, event.joy, event.ball, x, y)
                 self.input_events.append(input_event)
+
+                if x < 0:
+                    input_event = sge.input.JoystickEvent(
+                        jsname, event.joy, "trackball_left", event.ball,
+                        abs(x))
+                    self.input_events.append(input_event)
+                elif x > 0:
+                    input_event = sge.input.JoystickEvent(
+                        jsname, event.joy, "trackball_right", event.ball,
+                        abs(x))
+                    self.input_events.append(input_event)
+                if y < 0:
+                    input_event = sge.input.JoystickEvent(
+                        jsname, event.joy, "trackball_up", event.ball,
+                        abs(y))
+                    self.input_events.append(input_event)
+                elif y > 0:
+                    input_event = sge.input.JoystickEvent(
+                        jsname, event.joy, "trackball_down", event.ball,
+                        abs(y))
+                    self.input_events.append(input_event)
             elif event.type == pygame.JOYBUTTONDOWN:
                 jsname = r.game_js_names[event.joy]
+
                 input_event = sge.input.JoystickButtonPress(jsname, event.joy,
                                                             event.button)
                 self.input_events.append(input_event)
+
+                input_event = sge.input.JoystickEvent(
+                    jsname, event.joy, "button", event.button, True)
+                self.input_events.append(input_event)
             elif event.type == pygame.JOYBUTTONUP:
                 jsname = r.game_js_names[event.joy]
+
                 input_event = sge.input.JoystickButtonRelease(
                     jsname, event.joy, event.button)
+                self.input_events.append(input_event)
+
+                input_event = sge.input.JoystickEvent(
+                    jsname, event.joy, "button", event.button, False)
                 self.input_events.append(input_event)
             elif event.type == pygame.ACTIVEEVENT:
                 if event.gain:
@@ -1378,6 +1500,13 @@ class Game(object):
         """
         pass
 
+    def event_joystick(self, js_name, js_id, input_type, input_id, value):
+        """
+        See the documentation for :class:`sge.input.JoystickEvent` for
+        more information.
+        """
+        pass
+
     def event_gain_keyboard_focus(self):
         """
         See the documentation for :class:`sge.input.KeyboardFocusGain`
@@ -1498,6 +1627,14 @@ class Game(object):
         """
         See the documentation for
         :class:`sge.input.JoystickButtonRelease` for more information.
+        """
+        pass
+
+    def event_paused_joystick(self, js_name, js_id, input_type, input_id,
+                              value):
+        """
+        See the documentation for :class:`sge.input.JoystickEvent` for
+        more information.
         """
         pass
 

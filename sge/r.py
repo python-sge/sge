@@ -50,6 +50,10 @@ _collision_checkers = []
 # objects needlessly.
 _active_objects = set()
 
+# Previous joystick states
+_prev_axes = {}
+_prev_hats = {}
+
 
 class cache(object):
 

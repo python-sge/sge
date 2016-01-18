@@ -1044,6 +1044,13 @@ class Object(object):
         """
         pass
 
+    def event_joystick(self, js_name, js_id, input_type, input_id, value):
+        """
+        See the documentation for :class:`sge.input.JoystickEvent` for
+        more information.
+        """
+        pass
+
     def event_update_position(self, delta_mult):
         """
         Called when it's time to update the position of the object.
@@ -1194,6 +1201,14 @@ class Object(object):
         """
         See the documentation for
         :class:`sge.input.JoystickButtonRelease` for more information.
+        """
+        pass
+
+    def event_paused_joystick(self, js_name, js_id, input_type, input_id,
+                              value):
+        """
+        See the documentation for :class:`sge.input.JoystickEvent` for
+        more information.
         """
         pass
 

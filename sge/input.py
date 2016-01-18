@@ -35,8 +35,9 @@ from __future__ import unicode_literals
 __all__ = ["KeyPress", "KeyRelease", "MouseMove", "MouseButtonPress",
            "MouseButtonRelease", "JoystickAxisMove", "JoystickHatMove",
            "JoystickTrackballMove", "JoystickButtonPress",
-           "JoystickButtonRelease", "KeyboardFocusGain", "KeyboardFocusLose",
-           "MouseFocusGain", "MouseFocusLose", "QuitRequest"]
+           "JoystickButtonRelease", "JoystickEvent", "KeyboardFocusGain",
+           "KeyboardFocusLose", "MouseFocusGain", "MouseFocusLose",
+           "QuitRequest"]
 
 
 class KeyPress(object):
@@ -422,6 +423,74 @@ class JoystickButtonRelease(object):
         self.js_name = js_name
         self.js_id = js_id
         self.button = button
+
+
+class JoystickEvent(object):
+
+    """
+    This input event represents the movement of any joystick input.
+    This makes it possible to treat all joystick inputs the same way,
+    which can be used to simplify things like control customization.
+
+    .. attribute:: js_name
+
+       The name of the joystick.
+
+    .. attribute:: js_id
+
+       The number of the joystick, where ``0`` is the first joystick.
+
+    .. attribute:: input_type
+
+       The type of joystick control that was moved.  Can be one of the
+       following:
+
+       - ``"axis-"`` -- The tilt of a joystick axis to the left or up
+         changes.
+       - ``"axis+"`` -- The tilt of a joystick axis to the right or down
+         changes.
+       - ``"axis0"`` -- The tilt of a joystick axis changes.
+       - ``"hat_left"`` -- Whether or not a joystick hat's position is
+         to the left changes.
+       - ``"hat_right"`` -- Whether or not a joystick hat's position is
+         to the right changes.
+       - ``"hat_center_x"`` -- Whether or not a joystick hat is
+         horizontally centered changes.
+       - ``"hat_up"`` -- Whether or not a joystick hat's position is up
+         changes.
+       - ``"hat_down"`` -- Whether or not a joystick hat's position is
+         down changes.
+       - ``"hat_center_y"`` -- Whether or not a joystick hat is
+         vertically centered changes.
+       - ``"trackball_left"`` -- A joystick trackball is moved left.
+       - ``"trackball_right"`` -- A joystick trackball is moved right.
+       - ``"trackball_up"`` -- A joystick trackball is moved up.
+       - ``"trackball_down"`` -- A joystick trackball is moved down.
+       - ``"button"`` -- Whether or not a joystick button is pressed
+         changes.
+
+    .. attribute:: input_id
+
+       The number of the joystick control that was moved, where ``0`` is
+       the first control of its type on the joystick.
+
+    .. attribute:: value
+
+       The value of the event, which is different depending on the value
+       of :attr:`input_type`.  If :attr:`input_type` is
+       ``"trackball_left"``, ``"trackball_right"``, ``"trackball_up"``,
+       or ``"trackball_down"``, this is the relative movement of the
+       trackball in the respective direction.  Otherwise, this is the
+       new value of the respective control.  See the documentation for
+       :func:`sge.joystick.get_value` for more information.
+    """
+
+    def __init__(self, js_name, js_id, input_type, input_id, value):
+        self.js_name = js_name
+        self.js_id = js_id
+        self.input_type = input_type
+        self.input_id = input_id
+        self.value = value
 
 
 class KeyboardFocusGain(object):

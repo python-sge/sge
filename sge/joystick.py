@@ -32,8 +32,8 @@ from sge import r
 
 
 __all__ = ["refresh", "get_axis", "get_hat_x", "get_hat_y",
-           "get_button_pressed", "get_joysticks", "get_name", "get_id",
-           "get_axes", "get_hats", "get_trackballs", "get_buttons"]
+           "get_button_pressed", "get_value", "get_joysticks", "get_name",
+           "get_id", "get_axes", "get_hats", "get_trackballs", "get_buttons"]
 
 
 def refresh():
@@ -134,6 +134,71 @@ def get_pressed(joystick, button):
         return r.game_joysticks[joystick].get_button(button)
     else:
         return False
+
+
+def get_value(joystick, input_type, input_id):
+    """
+    Return the value of any joystick control.  This function makes it
+    possible to treat all joystick inputs the same way, which can be
+    used to simplify things like control customization.
+
+    Arguments:
+
+    - ``joystick`` -- The number of the joystick to check, where ``0``
+      is the first joystick, or the name of the joystick to check.
+    - ``input_type`` -- The type of joystick control to check.  Can be
+      one of the following:
+
+      - ``"axis-"`` -- The tilt of an axis to the left or up as a float,
+        where ``0`` is not tilted in this direction at all and ``1`` is
+        tilted entirely in this direction.
+      - ``"axis+"`` -- The tilt of an axis to the right or down as a
+        float, where ``0`` is not tilted in this direction at all and
+        ``1`` is tilted entirely in this direction.
+      - ``"axis0"`` -- The distance of the tilt of an axis from the
+        nearest extreme edge, where ``0`` is tilted entirely in a
+        direction and ``1`` is completely centered.
+      - ``"hat_left"`` -- Whether or not the left direction of a
+        joystick hat (d-pad) is pressed.
+      - ``"hat_right"`` -- Whether or not the right direction of a
+        joystick hat (d-pad) is pressed.
+      - ``"hat_center_x" -- Whether or not a joystick hat (d-pad) is
+        horizontally centered.
+      - ``"hat_up"`` -- Whether or not the up direction of a joystick
+        hat (d-pad) is pressed.
+      - ``"hat_down"`` -- Whether or not the down direction of a
+        joystick hat (d-pad) is pressed.
+      - ``"hat_center_y" -- Whether or not a joystick hat (d-pad) is
+        vertically centered.
+      - ``"button"`` -- Whether or not a joystick button is pressed.
+
+      If an invalid type is specified, :const:`None` is returned.
+
+    - ``input_id`` -- The number of the control to check, where ``0`` is
+      the first control of its type on the joystick.
+    """
+    if input_type == "axis-":
+        return abs(min(0, get_axis(joystick, input_id)))
+    elif input_type == "axis+":
+        return abs(max(0, get_axis(joystick, input_id)))
+    elif input_type == "axis0":
+        return 1 - abs(get_axis(joystick, input_id))
+    elif input_type == "hat_left":
+        return get_hat_x(joystick, input_id) == -1
+    elif input_type == "hat_right":
+        return get_hat_x(joystick, input_id) == 1
+    elif input_type == "hat_center_x":
+        return get_hat_x(joystick, input_id) == 0
+    elif input_type == "hat_up":
+        return get_hat_y(joystick, input_id) == -1
+    elif input_type == "hat_down":
+        return get_hat_y(joystick, input_id) == 1
+    elif input_type == "hat_center_y":
+        return get_hat_y(joystick, input_id) == 0
+    elif input_type == "button":
+        return get_pressed(joystick, input_id)
+    else:
+        return None
 
 
 def get_joysticks():
