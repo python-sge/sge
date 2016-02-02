@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012-2016 onpon4 <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -24,14 +24,15 @@ import pygame
 import six
 
 import sge
-from sge import r
-from sge.r import (_get_dot_sprite, _get_line_sprite, _get_rectangle_sprite,
-                   _get_ellipse_sprite, _get_circle_sprite,
-                   _get_polygon_sprite, o_update_object_areas,
-                   o_update_collision_lists, r_get_rectangle_object_areas,
-                   r_set_object_areas, r_update_fade, r_update_dissolve,
-                   r_update_pixelate, r_update_wipe_left, r_update_wipe_right,
-                   r_update_wipe_up, r_update_wipe_down, r_update_wipe_upleft,
+from sge import gfx, r
+from sge.r import (_check_color, _get_dot_sprite, _get_line_sprite,
+                   _get_rectangle_sprite, _get_ellipse_sprite,
+                   _get_circle_sprite, _get_polygon_sprite,
+                   o_update_object_areas, o_update_collision_lists,
+                   r_get_rectangle_object_areas, r_set_object_areas,
+                   r_update_fade, r_update_dissolve, r_update_pixelate,
+                   r_update_wipe_left, r_update_wipe_right, r_update_wipe_up,
+                   r_update_wipe_down, r_update_wipe_upleft,
                    r_update_wipe_upright, r_update_wipe_downleft,
                    r_update_wipe_downright, r_update_wipe_matrix,
                    r_update_iris_in, r_update_iris_out, s_get_image)
@@ -63,7 +64,7 @@ class Room(object):
 
     .. attribute:: background
 
-       The :class:`sge.Background` object used.
+       The :class:`sge.gfx.Background` object used.
 
     .. attribute:: background_x
 
@@ -185,9 +186,9 @@ class Room(object):
           in the room.  If set to :const:`None`, a new view will be
           created with ``x=0``, ``y=0``, and all other arguments
           unspecified, which will become the first view of the room.
-        - ``background`` -- The :class:`sge.Background` object used.  If
-          set to :const:`None`, a new background will be created with no
-          layers and the color set to black.
+        - ``background`` -- The :class:`sge.gfx.Background` object used.
+          If set to :const:`None`, a new background will be created with
+          no layers and the color set to black.
 
         All other arguments set the respective initial attributes of the
         room.  See the documentation for :class:`sge.Room` for more
@@ -220,7 +221,7 @@ class Room(object):
         if background is not None:
             self.background = background
         else:
-            self.background = sge.Background((), sge.Color("black"))
+            self.background = gfx.Background([], gfx.Color("black"))
 
         self.rd["started"] = False
 
@@ -354,7 +355,7 @@ class Room(object):
 
         if transition in transitions and transition_time > 0:
             self.rd["t_update"] = transitions[transition]
-            self.rd["t_sprite"] = sge.Sprite.from_screenshot()
+            self.rd["t_sprite"] = gfx.Sprite.from_screenshot()
             self.rd["t_duration"] = transition_time
             self.rd["t_arg"] = transition_arg
             self.rd["t_time_passed"] = 0
@@ -409,13 +410,10 @@ class Room(object):
           the dot.
         - ``z`` -- The Z-axis position of the projection in the room.
 
-        See the documentation for :meth:`sge.Sprite.draw_dot` for more
-        information.
+        See the documentation for :meth:`sge.gfx.Sprite.draw_dot` for
+        more information.
         """
-        if not isinstance(color, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(color))
-            raise TypeError(e)
-
+        _check_color(color)
         sprite = _get_dot_sprite(color)
         self.project_sprite(sprite, 0, x, y, z)
 
@@ -436,12 +434,10 @@ class Room(object):
           second endpoint of the projected line segment.
         - ``z`` -- The Z-axis position of the projection in the room.
 
-        See the documentation for :meth:`sge.Sprite.draw_line` for more
-        information.
+        See the documentation for :meth:`sge.gfx.Sprite.draw_line` for
+        more information.
         """
-        if not isinstance(color, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(color))
-            raise TypeError(e)
+        _check_color(color)
 
         thickness = abs(thickness)
         x = min(x1, x2) - thickness // 2
@@ -467,16 +463,11 @@ class Room(object):
           the rectangle.
         - ``z`` -- The Z-axis position of the projection in the room.
 
-        See the documentation for :meth:`sge.Sprite.draw_rectangle` for
-        more information.
+        See the documentation for :meth:`sge.gfx.Sprite.draw_rectangle`
+        for more information.
         """
-        if fill is not None and not isinstance(fill, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(fill))
-            raise TypeError(e)
-        if outline is not None and not isinstance(outline, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(outline))
-            raise TypeError(e)
-
+        _check_color(fill)
+        _check_color(outline)
         outline_thickness = abs(outline_thickness)
         draw_x = outline_thickness // 2
         draw_y = outline_thickness // 2
@@ -504,16 +495,11 @@ class Room(object):
           ellipse.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
 
-        See the documentation for :meth:`sge.Sprite.draw_ellipse` for
-        more information.
+        See the documentation for :meth:`sge.gfx.Sprite.draw_ellipse`
+        for more information.
         """
-        if fill is not None and not isinstance(fill, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(fill))
-            raise TypeError(e)
-        if outline is not None and not isinstance(outline, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(outline))
-            raise TypeError(e)
-
+        _check_color(fill)
+        _check_color(outline)
         outline_thickness = abs(outline_thickness)
         draw_x = outline_thickness // 2
         draw_y = outline_thickness // 2
@@ -536,16 +522,11 @@ class Room(object):
           position the center of the circle.
         - ``z`` -- The Z-axis position of the projection in the room.
 
-        See the documentation for :meth:`sge.Sprite.draw_circle` for
+        See the documentation for :meth:`sge.gfx.Sprite.draw_circle` for
         more information.
         """
-        if fill is not None and not isinstance(fill, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(fill))
-            raise TypeError(e)
-        if outline is not None and not isinstance(outline, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(outline))
-            raise TypeError(e)
-
+        _check_color(fill)
+        _check_color(outline)
         sprite = _get_circle_sprite(radius, fill, outline, outline_thickness,
                                     anti_alias)
         self.project_sprite(sprite, 0, x - radius, y - radius, z)
@@ -563,15 +544,11 @@ class Room(object):
           location and y is the vertical location.
         - ``z`` -- The Z-axis position of the projection in the room.
 
-        See the documentation for :meth:`sge.Sprite.draw_polygon` for
-        more information.
+        See the documentation for :meth:`sge.gfx.Sprite.draw_polygon`
+        for more information.
         """
-        if fill is not None and not isinstance(fill, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(fill))
-            raise TypeError(e)
-        if outline is not None and not isinstance(outline, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(outline))
-            raise TypeError(e)
+        _check_color(fill)
+        _check_color(outline)
 
         xlist = []
         ylist = []
@@ -597,7 +574,7 @@ class Room(object):
           ``sprite``.
         - ``z`` -- The Z-axis position of the projection in the room.
 
-        See the documentation for :meth:`sge.Sprite.draw_sprite` for
+        See the documentation for :meth:`sge.gfx.Sprite.draw_sprite` for
         more information.
         """
         img = s_get_image(sprite, image)
@@ -606,7 +583,7 @@ class Room(object):
         self.rd["projections"].append((img, x, y, z, blend_mode))
 
     def project_text(self, font, text, x, y, z, width=None, height=None,
-                    color=sge.Color("black"), halign="left",
+                    color=sge.gfx.Color("white"), halign="left",
                     valign="top", anti_alias=True):
         """
         Project text onto the room.
@@ -619,15 +596,12 @@ class Room(object):
           the text.
         - ``z`` -- The Z-axis position of the projection in the room.
 
-        See the documentation for :meth:`sge.Sprite.draw_text` for more
-        information.
+        See the documentation for :meth:`sge.gfx.Sprite.draw_text` for
+        more information.
         """
-        if not isinstance(color, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(color))
-            raise TypeError(e)
-
-        sprite = sge.Sprite.from_text(font, text, width, height, color, halign,
-                                      valign, anti_alias)
+        _check_color(color)
+        sprite = sge.gfx.Sprite.from_text(font, text, width, height, color,
+                                          halign, valign, anti_alias)
         self.project_sprite(sprite, 0, x, y, z)
 
     def event_room_start(self):

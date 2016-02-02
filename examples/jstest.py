@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Joystick Tester
-# Written in 2014, 2015 by Julian Marchant <onpon4@riseup.net>
+# Written in 2014-2016 by onpon4 <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -73,7 +73,7 @@ class Room(sge.Room):
         x = glob.js_selection_sprite.width / 2
         y = glob.js_selection_sprite.height / 2
         glob.js_selection_sprite.draw_text(
-            glob.name_font, title_text, x, y, color=sge.Color("white"),
+            glob.name_font, title_text, x, y, color=sge.gfx.Color("white"),
             halign="center", valign="middle")
 
         self.print_state()
@@ -101,10 +101,10 @@ class Room(sge.Room):
 
         glob.js_state_sprite.draw_clear()
         glob.js_state_sprite.draw_text(glob.state_font, left_text, 0, 0,
-                                       color=sge.Color("white"))
+                                       color=sge.gfx.Color("white"))
         x = glob.js_state_sprite.width / 2
         glob.js_state_sprite.draw_text(glob.state_font, right_text, x, 0,
-                                       color=sge.Color("white"))
+                                       color=sge.gfx.Color("white"))
 
     def event_room_start(self):
         self.current_joystick = 0
@@ -184,14 +184,14 @@ def main():
     Game(640, 480)
 
     # Load sprites
-    glob.js_selection_sprite = sge.Sprite(width=sge.game.width,
-                                          height=TITLE_HEIGHT)
-    glob.js_state_sprite = sge.Sprite(width=sge.game.width,
-                                      height=(sge.game.height - TITLE_HEIGHT))
+    glob.js_selection_sprite = sge.gfx.Sprite(width=sge.game.width,
+                                              height=TITLE_HEIGHT)
+    glob.js_state_sprite = sge.gfx.Sprite(
+        width=sge.game.width, height=(sge.game.height - TITLE_HEIGHT))
 
     # Load fonts
-    glob.name_font = sge.Font('Liberation Sans', size=18)
-    glob.state_font = sge.Font('Liberation Sans', size=14)
+    glob.name_font = sge.gfx.Font('Liberation Sans', size=18)
+    glob.state_font = sge.gfx.Font('Liberation Sans', size=14)
 
     # Create objects
     selection_object = sge.Object(0, 0, sprite=glob.js_selection_sprite,

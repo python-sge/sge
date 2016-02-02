@@ -48,7 +48,7 @@ of the room into a new function, :func:`create_room`.  Our definition of
         global game_in_progress
 
         if key == 'f8':
-            sge.Sprite.from_screenshot().save('screenshot.jpg')
+            sge.gfx.Sprite.from_screenshot().save('screenshot.jpg')
         elif key == 'f11':
             self.fullscreen = not self.fullscreen
         elif key == 'escape':
@@ -107,11 +107,12 @@ a new sprite to this variable with a :attr:`width` of ``320``, a
 :attr:`height` of ``120``, an :attr:`origin_x` of ``160``, and an
 :attr:`origin_y` of ``0``.
 
-To draw text, we need a font.  Create a new :class:`sge.Font` object and
-assign it to :data:`hud_font`.  For now, we will use a system font.  I
-am choosing ``"Droid Sans Mono"``, but you can choose whatever font you
-prefer.  Pass your choice as the first argument to
-:meth:`sge.Font.__init__`.  Set the ``size`` keyword argument to ``48``.
+To draw text, we need a font.  Create a new :class:`sge.gfx.Font` object
+and assign it to :data:`hud_font`.  For now, we will use a system font.
+I am choosing ``"Droid Sans Mono"``, but you can choose whatever font
+you prefer.  Pass your choice as the first argument to
+:meth:`sge.gfx.Font.__init__`.  Set the ``size`` keyword argument to
+``48``.
 
 .. note::
 
@@ -133,12 +134,12 @@ Player 2's score.
 Another constant is needed: :const:`TEXT_OFFSET`, which we will define
 as ``16``.
 
-We clear the HUD sprite with :meth:`sge.Sprite.draw_clear`.
+We clear the HUD sprite with :meth:`sge.gfx.Sprite.draw_clear`.
 
-To draw the text, we use :meth:`sge.Sprite.draw_text`.  Both calls have
-a few arguments in common: ``font`` is set to ``hud_font``, ``y`` is set
-to ``TEXT_OFFSET``, ``color`` is set to white, and ``valign`` is set to
-``"top"``.
+To draw the text, we use :meth:`sge.gfx.Sprite.draw_text`.  Both calls
+have a few arguments in common: ``font`` is set to ``hud_font``, ``y``
+is set to ``TEXT_OFFSET``, ``color`` is set to white, and ``valign`` is
+set to ``"top"``.
 
 The rest of the arguments are different between the two.  ``text`` is
 set to the respective player's score, converted to a string.  ``x`` is
@@ -154,10 +155,10 @@ player 2's score.
         hud_sprite.draw_clear()
         x = hud_sprite.width / 2
         hud_sprite.draw_text(hud_font, str(player1.score), x - TEXT_OFFSET,
-                             TEXT_OFFSET, color=sge.Color("white"),
+                             TEXT_OFFSET, color=sge.gfx.Color("white"),
                              halign="right", valign="top")
         hud_sprite.draw_text(hud_font, str(player2.score), x + TEXT_OFFSET,
-                             TEXT_OFFSET, color=sge.Color("white"),
+                             TEXT_OFFSET, color=sge.gfx.Color("white"),
                              halign="left", valign="top")
 
 Add calls to :func:`refresh_hud` in the three places where a
@@ -219,7 +220,7 @@ Since the game is over, stop the movement of the ball by setting
 more scoring to happen.
 
 Now, draw the new text onto the HUD.  We do this using the same call to
-:meth:`sge.Sprite.draw_text` we used in :func:`refresh_hud`, except
+:meth:`sge.gfx.Sprite.draw_text` we used in :func:`refresh_hud`, except
 instead of drawing the scores converted to strings, we draw ``"WIN"`` or
 ``"LOSE"`` depending on whether or not the respective player's score is
 greater than the other player's score.
@@ -252,10 +253,10 @@ The new :meth:`Ball.serve` looks something like this::
             p1text = "WIN" if player1.score > player2.score else "LOSE"
             p2text = "WIN" if player2.score > player1.score else "LOSE"
             hud_sprite.draw_text(hud_font, p1text, x - TEXT_OFFSET,
-                                 TEXT_OFFSET, color=sge.Color("white"),
+                                 TEXT_OFFSET, color=sge.gfx.Color("white"),
                                  halign="right", valign="top")
             hud_sprite.draw_text(hud_font, p2text, x + TEXT_OFFSET,
-                                 TEXT_OFFSET, color=sge.Color("white"),
+                                 TEXT_OFFSET, color=sge.gfx.Color("white"),
                                  halign="left", valign="top")
             game_in_progress = False
 
@@ -443,7 +444,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
             global game_in_progress
 
             if key == 'f8':
-                sge.Sprite.from_screenshot().save('screenshot.jpg')
+                sge.gfx.Sprite.from_screenshot().save('screenshot.jpg')
             elif key == 'f11':
                 self.fullscreen = not self.fullscreen
             elif key == 'escape':
@@ -593,10 +594,10 @@ Our final Pong game now has scores, sounds, and even joystick support::
                 p1text = "WIN" if player1.score > player2.score else "LOSE"
                 p2text = "WIN" if player2.score > player1.score else "LOSE"
                 hud_sprite.draw_text(hud_font, p1text, x - TEXT_OFFSET,
-                                     TEXT_OFFSET, color=sge.Color("white"),
+                                     TEXT_OFFSET, color=sge.gfx.Color("white"),
                                      halign="right", valign="top")
                 hud_sprite.draw_text(hud_font, p2text, x + TEXT_OFFSET,
-                                     TEXT_OFFSET, color=sge.Color("white"),
+                                     TEXT_OFFSET, color=sge.gfx.Color("white"),
                                      halign="left", valign="top")
                 game_in_progress = False
 
@@ -615,10 +616,10 @@ Our final Pong game now has scores, sounds, and even joystick support::
         hud_sprite.draw_clear()
         x = hud_sprite.width / 2
         hud_sprite.draw_text(hud_font, str(player1.score), x - TEXT_OFFSET,
-                             TEXT_OFFSET, color=sge.Color("white"),
+                             TEXT_OFFSET, color=sge.gfx.Color("white"),
                              halign="right", valign="top")
         hud_sprite.draw_text(hud_font, str(player2.score), x + TEXT_OFFSET,
-                             TEXT_OFFSET, color=sge.Color("white"),
+                             TEXT_OFFSET, color=sge.gfx.Color("white"),
                              halign="left", valign="top")
 
 
@@ -626,21 +627,21 @@ Our final Pong game now has scores, sounds, and even joystick support::
     Game(width=640, height=480, fps=120, window_text="Pong")
 
     # Load sprites
-    paddle_sprite = sge.Sprite(width=8, height=48, origin_x=4, origin_y=24)
-    ball_sprite = sge.Sprite(width=8, height=8, origin_x=4, origin_y=4)
+    paddle_sprite = sge.gfx.Sprite(width=8, height=48, origin_x=4, origin_y=24)
+    ball_sprite = sge.gfx.Sprite(width=8, height=8, origin_x=4, origin_y=4)
     paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width, paddle_sprite.height,
-                                 fill=sge.Color("white"))
+                                 fill=sge.gfx.Color("white"))
     ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
-                               fill=sge.Color("white"))
-    hud_sprite = sge.Sprite(width=320, height=120, origin_x=160, origin_y=0)
+                               fill=sge.gfx.Color("white"))
+    hud_sprite = sge.gfx.Sprite(width=320, height=120, origin_x=160, origin_y=0)
 
     # Load backgrounds
-    layers = [sge.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
-                                  repeat_up=True, repeat_down=True)]
-    background = sge.Background(layers, sge.Color("black"))
+    layers = [sge.gfx.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
+                                      repeat_up=True, repeat_down=True)]
+    background = sge.gfx.Background(layers, sge.gfx.Color("black"))
 
     # Load fonts
-    hud_font = sge.Font("Droid Sans Mono", size=48)
+    hud_font = sge.gfx.Font("Droid Sans Mono", size=48)
 
     # Load sounds
     bounce_sound = sge.Sound(os.path.join(DATA, 'bounce.wav'))

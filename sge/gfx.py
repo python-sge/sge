@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012-2016 onpon4 <onpon4@riseup.net>
 #
 # This file is part of the Pygame SGE.
 #
@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+This module provides classes related to rendering graphics.
+"""
+
 from __future__ import division
 from __future__ import absolute_import
 from __future__ import print_function
@@ -28,11 +32,177 @@ import six
 
 import sge
 from sge import r
-from sge.r import (_get_blend_flags, _screen_blend, f_split_text, s_set_size,
+from sge.r import (_check_color_input, _check_color, _get_blend_flags,
+                   _screen_blend, f_split_text, s_get_image, s_set_size,
                    s_refresh, s_set_transparency)
 
+COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
+          'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
+          'yellow': '#ffff00', 'olive': '#808000', 'lime': '#00ff00',
+          'green': '#008000', 'aqua': '#00ffff', 'teal': '#008080',
+          'blue': '#0000ff', 'navy': '#000080', 'fuchsia': '#ff00ff',
+          'purple': '#800080'}
+COLOR_NAMES = {}
+for pair in COLORS.items():
+    COLOR_NAMES[pair[1]] = pair[0]
 
-__all__ = ['Sprite']
+
+__all__ = ["Color", "Sprite", "Font", "BackgroundLayer", "Background"]
+
+
+class Color(object):
+
+    """
+    This class stores color information.
+
+    Objects of this class can be converted to iterables indicating the
+    object's :attr:`red`, :attr:`green`, :attr:`blue`, and :attr:`alpha`
+    values, respectively; to integers which can be interpreted as a
+    hexadecimal representation of the color, excluding alpha
+    transparency; and to strings which indicate the English name of the
+    color (in all lowercase) if possible, and :attr:`hex_string`
+    otherwise.
+
+    .. attribute:: red
+
+       The red component of the color as an integer, where ``0``
+       indicates no red intensity and ``255`` indicates full red
+       intensity.
+
+    .. attribute:: green
+
+       The green component of the color as an integer, where ``0``
+       indicates no green intensity and ``255`` indicates full green
+       intensity.
+
+    .. attribute:: blue
+
+       The blue component of the color as an integer, where ``0``
+       indicates no blue intensity and ``255`` indicates full blue
+       intensity.
+
+    .. attribute:: alpha
+
+       The alpha transparency of the color as an integer, where ``0``
+       indicates full transparency and ``255`` indicates full opacity.
+
+    .. attribute:: hex_string
+
+       An HTML hex string representation of the color.  (Read-only)
+    """
+
+    def __init__(self, value):
+        """
+        Arguments:
+
+        - ``value`` -- The value indicating the color represented by
+          this object.  Should be one of the following:
+
+          - One of the 16 HTML color names (case-insensitive).
+          - An HTML-style hex string containing 3, 4, 6, or 8 digits
+            which indicate the red, green, blue, and alpha components of
+            the color, respectively, as pairs of hexadecimal digits.  If
+            the string contains 3 or 4 digits, each digit is duplicated;
+            for example, ``"#F80"`` is equivalent to ``"#FF8800"``.
+          - An integer which, when written as a hexadecimal number,
+            specifies the components of the color in the same way as an
+            HTML-style hex string containing 6 digits.
+          - A list or tuple indicating the red, green, and blue
+            components, and optionally the alpha component, in that
+            order.
+        """
+        self.alpha = 255
+        if isinstance(value, six.string_types):
+            value = COLORS.get(value, value)[1:]
+            if len(value) == 3:
+                r, g, b = [int(value[i] * 2, 16) for i in six.moves.range(3)]
+                self.red, self.green, self.blue = r, g, b
+            elif len(value) == 4:
+                r, g, b, a = [int(value[i] * 2, 16) for i in range(4)]
+                self.red, self.green, self.blue, self.alpha = r, g, b, a
+            elif len(value) == 6:
+                r, g, b = [int(value[i:(i + 2)], 16)
+                           for i in six.moves.range(0, 6, 2)]
+                self.red, self.green, self.blue = r, g, b
+            elif len(value) == 8:
+                r, g, b, a = [int(value[i:(i + 2)], 16) for i in range(0, 8, 2)]
+                self.red, self.green, self.blue, self.alpha = r, g, b, a
+            else:
+                raise ValueError("Invalid color string.")
+        elif isinstance(value, six.integer_types):
+            b, g, r = [(value & 256 ** (i + 1) - 1) // 256 ** i
+                       for i in six.moves.range(3)]
+            self.red, self.green, self.blue = r, g, b
+        elif isinstance(value, (list, tuple)):
+            if len(value) >= 3:
+                self.red, self.green, self.blue = value[:3]
+                if len(value) >= 4:
+                    self.alpha = value[3]
+            else:
+                raise ValueError("Invalid color tuple.")
+        else:
+            raise ValueError("Invalid color value.")
+
+    @property
+    def red(self):
+        return self._r
+
+    @red.setter
+    def red(self, value):
+        self._r = _check_color_input(value)
+
+    @property
+    def green(self):
+        return self._g
+
+    @green.setter
+    def green(self, value):
+        self._g = _check_color_input(value)
+
+    @property
+    def blue(self):
+        return self._b
+
+    @blue.setter
+    def blue(self, value):
+        self._b = _check_color_input(value)
+
+    @property
+    def alpha(self):
+        return self._a
+
+    @alpha.setter
+    def alpha(self, value):
+        self._a = _check_color_input(value)
+
+    @property
+    def hex_string(self):
+        if self.alpha == 255:
+            r, g, b = [hex(c)[2:].zfill(2) for c in self[:3]]
+            return "#{}{}{}".format(r, g, b)
+        else:
+            r, g, b, a = [hex(c)[2:].zfill(2) for c in self]
+            return "#{}{}{}{}".format(r, g, b, a)
+
+    def __iter__(self):
+        return iter([self.red, self.green, self.blue, self.alpha])
+
+    def __int__(self):
+        return self.red * 256 ** 2 | self.green * 256 | self.blue
+
+    def __repr__(self):
+        return 'sge.gfx.Color("{}")'.format(str(self))
+
+    def __str__(self):
+        return COLOR_NAMES.get(self.hex_string, self.hex_string)
+
+    def __getitem__(self, index):
+        return tuple(self)[index]
+
+    def __setitem__(self, index, value):
+        c = list(self)
+        c[index] = value
+        self.red, self.green, self.blue, self.alpha = c
 
 
 class Sprite(object):
@@ -422,15 +592,13 @@ class Sprite(object):
           draw the dot.
         - ``y`` -- The vertical location relative to the sprite to draw
           the dot.
-        - ``color`` -- A :class:`sge.Color` object representing the
+        - ``color`` -- A :class:`sge.gfx.Color` object representing the
           color of the dot.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        if not isinstance(color, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(color))
-            raise TypeError(e)
+        _check_color(color)
 
         x = int(round(x))
         y = int(round(y))
@@ -463,7 +631,7 @@ class Sprite(object):
           the second end point of the line segment.
         - ``y2`` -- The vertical location relative to the sprite of the
           second end point of the line segment.
-        - ``color`` -- A :class:`sge.Color` object representing the
+        - ``color`` -- A :class:`sge.gfx.Color` object representing the
           color of the line segment.
         - ``thickness`` -- The thickness of the line segment.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
@@ -471,9 +639,7 @@ class Sprite(object):
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        if not isinstance(color, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(color))
-            raise TypeError(e)
+        _check_color(color)
 
         x1 = int(round(x1))
         y1 = int(round(y1))
@@ -520,22 +686,18 @@ class Sprite(object):
           the rectangle.
         - ``width`` -- The width of the rectangle.
         - ``height`` -- The height of the rectangle.
-        - ``fill`` -- A :class:`sge.Color` object representing the color
-          of the fill of the rectangle.
-        - ``outline`` -- A :class:`sge.Color` object representing the
-          color of the outline of the rectangle.
+        - ``fill`` -- A :class:`sge.gfx.Color` object representing the
+          color of the fill of the rectangle.
+        - ``outline`` -- A :class:`sge.gfx.Color` object representing
+          the color of the outline of the rectangle.
         - ``outline_thickness`` -- The thickness of the outline of the
           rectangle.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        if fill is not None and not isinstance(fill, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(fill))
-            raise TypeError(e)
-        if outline is not None and not isinstance(outline, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(outline))
-            raise TypeError(e)
+        _check_color(fill)
+        _check_color(outline)
 
         x = int(round(x))
         y = int(round(y))
@@ -592,10 +754,10 @@ class Sprite(object):
           position the imaginary rectangle containing the ellipse.
         - ``width`` -- The width of the ellipse.
         - ``height`` -- The height of the ellipse.
-        - ``fill`` -- A :class:`sge.Color` object representing the color
-          of the fill of the ellipse.
-        - ``outline`` -- A :class:`sge.Color` object representing the
-          color of the outline of the ellipse.
+        - ``fill`` -- A :class:`sge.gfx.Color` object representing the
+          color of the fill of the ellipse.
+        - ``outline`` -- A :class:`sge.gfx.Color` object representing
+          the color of the outline of the ellipse.
         - ``outline_thickness`` -- The thickness of the outline of the
           ellipse.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
@@ -603,12 +765,8 @@ class Sprite(object):
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        if fill is not None and not isinstance(fill, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(fill))
-            raise TypeError(e)
-        if outline is not None and not isinstance(outline, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(outline))
-            raise TypeError(e)
+        _check_color(fill)
+        _check_color(outline)
 
         x = int(round(x))
         y = int(round(y))
@@ -665,10 +823,10 @@ class Sprite(object):
         - ``y`` -- The vertical location relative to the sprite to
           position the center of the circle.
         - ``radius`` -- The radius of the circle.
-        - ``fill`` -- A :class:`sge.Color` object representing the color
-          of the fill of the circle.
-        - ``outline`` -- A :class:`sge.Color` object representing the
-          color of the outline of the circle.
+        - ``fill`` -- A :class:`sge.gfx.Color` object representing the
+          color of the fill of the circle.
+        - ``outline`` -- A :class:`sge.gfx.Color` object representing
+          the color of the outline of the circle.
         - ``outline_thickness`` -- The thickness of the outline of the
           circle.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
@@ -676,12 +834,8 @@ class Sprite(object):
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        if fill is not None and not isinstance(fill, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(fill))
-            raise TypeError(e)
-        if outline is not None and not isinstance(outline, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(outline))
-            raise TypeError(e)
+        _check_color(fill)
+        _check_color(outline)
 
         x = int(round(x))
         y = int(round(y))
@@ -736,10 +890,10 @@ class Sprite(object):
           position each of the polygon's angles.  Each point should be a
           tuple in the form ``(x, y)``, where x is the horizontal
           location and y is the vertical location.
-        - ``fill`` -- A :class:`sge.Color` object representing the color
-          of the fill of the polygon.
-        - ``outline`` -- A :class:`sge.Color` object representing the
-          color of the outline of the polygon.
+        - ``fill`` -- A :class:`sge.gfx.Color` object representing the
+          color of the fill of the polygon.
+        - ``outline`` -- A :class:`sge.gfx.Color` object representing
+          the color of the outline of the polygon.
         - ``outline_thickness`` -- The thickness of the outline of the
           polygon.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
@@ -747,12 +901,8 @@ class Sprite(object):
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        if fill is not None and not isinstance(fill, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(fill))
-            raise TypeError(e)
-        if outline is not None and not isinstance(outline, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(outline))
-            raise TypeError(e)
+        _check_color(fill)
+        _check_color(outline)
 
         points = [(int(round(x)), int(round(y))) for (x, y) in points]
         outline_thickness = abs(outline_thickness)
@@ -859,7 +1009,7 @@ class Sprite(object):
         s_refresh(self)
 
     def draw_text(self, font, text, x, y, width=None, height=None,
-                  color=sge.Color("black"), halign="left", valign="top",
+                  color=Color("white"), halign="left", valign="top",
                   anti_alias=True, frame=None):
         """
         Draw text on the sprite.
@@ -881,7 +1031,7 @@ class Sprite(object):
         - ``height`` -- The height of the imaginary rectangle the text
           is drawn in; set to :const:`None` to make the rectangle as
           tall as needed to contain the text.
-        - ``color`` -- A :class:`sge.Color` object representing the
+        - ``color`` -- A :class:`sge.gfx.Color` object representing the
           color of the text.
         - ``halign`` -- The horizontal alignment of the text and the
           horizontal location of the origin of the imaginary rectangle
@@ -922,9 +1072,7 @@ class Sprite(object):
           is the first frame; set to :const:`None` to draw on all
           frames.
         """
-        if not isinstance(color, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(color))
-            raise TypeError(e)
+        _check_color(color)
 
         x = int(round(x))
         y = int(round(y))
@@ -1037,8 +1185,8 @@ class Sprite(object):
         row gives the SGE a chance to make the drawing more efficient.
 
         After you are done with continuous drawing, call
-        :meth:`sge.Sprite.draw_unlock` to let the SGE know that you are
-        done drawing.
+        :meth:`draw_unlock` to let the SGE know that you are done
+        drawing.
 
         .. warning::
 
@@ -1047,8 +1195,8 @@ class Sprite(object):
            and don't draw it or project it on anything.  The effect of
            using a locked sprite could be as minor as graphical errors
            and as severe as crashing the program, depending on the SGE
-           implementation.  Always call :meth:`sge.Sprite.draw_unlock`
-           immediately after you're done drawing for a while.
+           implementation.  Always call :meth:`draw_unlock` immediately
+           after you're done drawing for a while.
         """
         if not self.rd["locked"]:
             self.rd["locked"] = True
@@ -1058,7 +1206,7 @@ class Sprite(object):
         Unlock the sprite.
 
         Use this method to "unlock" the sprite after it has been
-        "locked" for continuous drawing by :meth:`sge.Sprite.draw_lock`.
+        "locked" for continuous drawing by :meth:`draw_lock`.
         """
         if self.rd["locked"]:
             self.rd["locked"] = False
@@ -1173,12 +1321,12 @@ class Sprite(object):
 
     @classmethod
     def from_text(cls, font, text, width=None, height=None,
-                  color=sge.Color("black"), halign="left", valign="top",
+                  color=Color("white"), halign="left", valign="top",
                   anti_alias=True):
         """
         Create a sprite, draw the given text on it, and return the
-        sprite.  See the documentation for :meth:`sge.Sprite.draw_text`
-        for more information.
+        sprite.  See the documentation for
+        :meth:`sge.gfx.Sprite.draw_text` for more information.
 
         The sprite's origin is set based on ``halign`` and ``valign``.
         """
@@ -1273,7 +1421,7 @@ class Sprite(object):
         If you only wish to save a screenshot (of the entire screen) to
         a file, the easiest way to do that is::
 
-            sge.Sprite.from_screenshot().save("foo.png")
+            sge.gfx.Sprite.from_screenshot().save("foo.png")
         """
         if width is None:
             width = sge.game.width - x
@@ -1290,3 +1438,513 @@ class Sprite(object):
 
     def __deepcopy__(self, memo):
         return self.copy()
+
+
+class Font(object):
+
+    """
+    This class stores a font for use by text drawing methods.
+
+    Note that bold and italic rendering could be ugly.  It is better to
+    choose a bold or italic font rather than enabling bold or italic
+    rendering, if possible.
+
+    .. attribute:: size
+
+       The height of the font in pixels.
+
+    .. attribute:: underline
+
+       Whether or not underlined rendering is enabled.
+
+    .. attribute:: bold
+
+       Whether or not bold rendering is enabled.
+
+       .. note::
+
+          Using this option can be ugly.  It is better to choose a bold
+          font rather than enabling bold rendering, if possible.
+
+    .. attribute:: italic
+
+       Whether or not italic rendering is enabled.
+
+       .. note::
+
+          Using this option can be ugly.  It is better to choose an
+          italic font rather than enabling italic rendering, if
+          possible.
+
+    .. attribute:: name
+
+       The name of the font as specified when it was created.
+       (Read-only)
+
+    .. attribute:: rd
+
+       Reserved dictionary for internal use by the SGE.  (Read-only)
+    """
+
+    @property
+    def size(self):
+        return self.__size
+
+    @size.setter
+    def size(self, value):
+        if self.rd.get("font") is not None:
+            # Preserve underline, bold, and italic settings.
+            underline = self.underline
+            bold = self.bold
+            italic = self.italic
+        else:
+            underline = False
+            bold = False
+            italic = False
+
+        self.__size = value
+        self.rd["font"] = None
+
+        name = self.name
+        if isinstance(name, six.string_types):
+            name = [name]
+
+        names = []
+        compatible_fonts = [
+            ["liberation serif", "tinos", "nimbus roman no9 l", "nimbus roman",
+             "freeserif", "dejavu serif", "droid serif", "bitstream charter",
+             "times new roman"],
+            ["droid sans", "liberation sans", "arimo", "nimbus sans l",
+             "freesans", "dejavu sans", "droid sans fallback", "arial"],
+            ["liberation sans narrow", "freecondensed",
+             "sans condensed uralic", "arial narrow"],
+            ["liberation mono", "cousine", "nimbus mono l", "freemono",
+             "texgyrecursor", "courier prime", "dejavu sans mono",
+             "droid sans mono", "courier new", "courier"]]
+
+        try:
+            for n in name:
+                names.append(n)
+                for fonts in compatible_fonts:
+                    if n.lower() in fonts:
+                        for font in fonts:
+                            if font not in names:
+                                names.append(font)
+                        break
+        except TypeError:
+            # Most likely a non-iterable value, such as None, so we
+            # assume the default font is to be used.
+            names = ['']
+
+        for name in names:
+            if os.path.isfile(name):
+                self.rd["font"] = pygame.font.Font(name, self.__size)
+                break
+
+        if self.rd.get("font") is None:
+            self.rd["font"] = pygame.font.SysFont(','.join(names), self.__size)
+
+        # Restore underline, bold, and italic settings.
+        self.underline = underline
+        self.bold = bold
+        self.italic = italic
+
+    @property
+    def underline(self):
+        return self.rd["font"].get_underline()
+
+    @underline.setter
+    def underline(self, value):
+        self.rd["font"].set_underline(bool(value))
+
+    @property
+    def bold(self):
+        return self.rd["font"].get_bold()
+
+    @bold.setter
+    def bold(self, value):
+        self.rd["font"].set_bold(bool(value))
+
+    @property
+    def italic(self):
+        return self.rd["font"].get_italic()
+
+    @italic.setter
+    def italic(self, value):
+        self.rd["font"].set_italic(bool(value))
+
+    def __init__(self, name=None, size=12, underline=False, bold=False,
+                 italic=False):
+        """
+        Arguments:
+
+        - ``name`` -- The name of the font.  Can be one of the
+          following:
+
+          - A string indicating the path to the font file.
+          - A string indicating the case-insensitive name of a system
+            font, e.g. ``"Liberation Serif"``.
+          - A list or tuple of strings indicating either a font file or
+            a system font to choose from in order of preference.
+
+          If none of the above methods return a valid font, the SGE will
+          choose the font.
+
+        All other arguments set the respective initial attributes of the
+        font.  See the documentation for :class:`sge.gfx.Font` for more
+        information.
+
+        .. note::
+
+           It is generally not a good practice to rely on system fonts.
+           There are no standard fonts; a font which you have on your
+           system is probably not on everyone's system.  Rather than
+           relying on system fonts, choose a font which is under a libre
+           license (such as the GNU General Public License or the SIL
+           Open Font License) and distribute it with your game; this
+           will ensure that everyone sees text rendered the same way you
+           do.
+        """
+        self.rd = {}
+        self.name = name
+        self.size = size
+        self.underline = underline
+        self.bold = bold
+        self.italic = italic
+
+    def get_width(self, text, width=None, height=None):
+        """
+        Return the width of a certain string of text when rendered.
+
+        See the documentation for :meth:`sge.gfx.Sprite.draw_text` for
+        more information.
+
+        """
+        lines = f_split_text(self, text, width)
+        text_width = 0
+        for line in lines:
+            text_width = max(text_width, self.rd["font"].size(line)[0])
+
+        if width is not None:
+            text_width = min(text_width, width)
+
+        return text_width
+
+    def get_height(self, text, width=None, height=None):
+        """
+        Return the height of a certain string of text when rendered.
+
+        See the documentation for :meth:`sge.gfx.Sprite.draw_text` for
+        more information.
+
+        """
+        lines = f_split_text(self, text, width)
+        if lines:
+            text_height = self.rd["font"].get_linesize() * (len(lines) - 1)
+            text_height += self.rd["font"].size(lines[-1])[1]
+        else:
+            text_height = 0
+
+        if height is not None:
+            text_height = min(text_height, height)
+
+        return text_height
+
+    @classmethod
+    def from_sprite(cls, sprite, chars, hsep=0, vsep=0, size=12,
+                    underline=False, bold=False, italic=False):
+        """
+        Return a font derived from a sprite.
+
+        Arguments:
+
+        - ``sprite`` -- The :class:`sge.gfx.Sprite` object to derive the
+          font from.
+        - ``chars`` -- A list of characters to set the sprite's frames
+          to.  For example, ``['A', 'B', 'C']`` would assign the first
+          frame to the letter "A", the second frame to the letter "B",
+          and the third frame to the letter "C".  Any character not
+          listed here will be rendered as its differently-cased
+          counterpart if possible (e.g. "A" as "a") or as a blank space
+          otherwise.
+        - ``hsep`` -- The amount of horizontal space to place between
+          characters when text is rendered.
+        - ``vsep`` -- The amount of vertical space to place between
+          lines when text is rendered.
+
+        All other arguments set the respective initial attributes of the
+        font.  See the documentation for :class:`sge.gfx.Font` for more
+        information.
+
+        The font's :attr:`name` attribute will be set to the name of the
+        sprite the font is derived from.
+
+        The font's :attr:`size` attribute will indicate the height of
+        the characters in pixels.  The width of the characters will be
+        adjusted proportionally.
+        """
+        return _SpriteFont(sprite, chars, hsep, vsep, size, underline, bold,
+                           italic)
+
+
+class _PygameSpriteFont(pygame.font.Font):
+
+    # Special font class that returns good values for a sprite font.
+
+    @property
+    def vsize(self):
+        return self.height
+
+    @vsize.setter
+    def vsize(self, value):
+        if self.height != 0:
+            scale_factor = value / self.height
+            if scale_factor != 1:
+                self.width *= scale_factor
+                self.height *= scale_factor
+        else:
+            # Protection against division by zero.
+            self.width = value
+            self.height = value
+
+    def __init__(self, sprite, chars, hsep, vsep, size):
+        self.sprite = sprite
+        self.chars = {}
+        self.hsep = hsep
+        self.vsep = vsep
+
+        for i in six.moves.range(len(chars)):
+            self.chars[chars[i]] = i
+
+        self.width = self.sprite.width
+        self.height = self.sprite.height
+        self.vsize = size
+        self.underline = False
+        self.bold = False
+        self.italic = False
+
+    def render(self, text, antialias, color, background=None):
+        w = (self.width + self.hsep) * len(text)
+        h = self.height + self.vsep
+        xscale = (self.width / self.sprite.width if self.sprite.width > 0
+                  else 1)
+        yscale = (self.height / self.sprite.height if self.sprite.height > 0
+                  else 1)
+        surf = pygame.Surface((w, h), pygame.SRCALPHA)
+        surf.fill(pygame.Color(0, 0, 0, 0))
+        if not isinstance(color, pygame.Color):
+            color = pygame.Color(color)
+        sge_color = Color((color.r, color.g, color.b, color.a))
+
+        for i in six.moves.range(len(text)):
+            if text[i] in self.chars:
+                cimg = s_get_image(self.sprite, self.chars[text[i]],
+                                   xscale=xscale, yscale=yscale,
+                                   blend=sge_color)
+                surf.blit(cimg, (i * (self.width + self.hsep), 0))
+            elif text[i].swapcase() in self.chars:
+                cimg = s_get_image(self.sprite, self.chars[text[i].swapcase()],
+                                   xscale=xscale, yscale=yscale,
+                                   blend=sge_color)
+                surf.blit(cimg, (i * (self.width + self.hsep), 0))
+
+        if background is None:
+            return surf
+        else:
+            rsurf = pygame.Surface((w, h), pygame.SRCALPHA)
+            rsurf.fill(background)
+            rsurf.blit(surf, (0, 0))
+            return rsurf
+
+    def size(self, text):
+        return ((self.width + self.hsep) * len(text), self.height + self.vsep)
+
+    def set_underline(self, bool_):
+        self.underline = bool_
+
+    def get_underline(self):
+        return self.underline
+
+    def set_bold(self, bool_):
+        self.bold = bool_
+
+    def get_bold(self):
+        return self.bold
+
+    def set_italic(self, bool_):
+        self.italic = bool_
+
+    def get_italic(self):
+        return self.italic
+
+    def metrics(self, text):
+        m = (0, self.width, 0, self.height, self.width)
+        return [m for char in text]
+
+    def get_linesize(self):
+        return self.height + self.vsep
+
+    def get_height(self):
+        return self.height
+
+    def get_ascent(self):
+        return self.height
+
+    def get_descent(self):
+        return 0
+
+
+class _SpriteFont(Font):
+
+    # Special sprite font class for Font.from_sprite.
+
+    @property
+    def size(self):
+        return self.rd["font"].vsize
+
+    @size.setter
+    def size(self, value):
+        self.rd["font"].vsize = value
+
+    def __init__(self, sprite, chars, hsep=0, vsep=0, size=12, underline=False,
+                 bold=False, italic=False):
+        self.rd = {}
+        self.name = sprite.name
+        self.rd["font"] = _PygameSpriteFont(sprite, chars, hsep, vsep, size)
+        self.underline = underline
+        self.bold = bold
+        self.italic = italic
+
+
+class BackgroundLayer(object):
+
+    """
+    This class stores a sprite and certain information for a layer of a
+    background.  In particular, it stores the location of the layer,
+    whether the layer tiles horizontally, vertically, or both, and the
+    rate at which it scrolls.
+
+    .. attribute:: sprite
+
+       The sprite used for this layer.  It will be animated normally if
+       it contains multiple frames.
+
+    .. attribute:: x
+
+       The horizontal location of the layer relative to the background.
+
+    .. attribute:: y
+
+       The vertical location of the layer relative to the background.
+
+    .. attribute:: z
+
+       The Z-axis position of the layer in the room.
+
+    .. attribute:: xscroll_rate
+
+       The horizontal rate that the layer scrolls as a factor of the
+       additive inverse of the horizontal movement of the view.
+
+    .. attribute:: yscroll_rate
+
+       The vertical rate that the layer scrolls as a factor of the
+       additive inverse of the vertical movement of the view.
+
+    .. attribute:: repeat_left
+
+       Whether or not the layer should be repeated (tiled) to the left.
+
+    .. attribute:: repeat_right
+
+       Whether or not the layer should be repeated (tiled) to the right.
+
+    .. attribute:: repeat_up
+
+       Whether or not the layer should be repeated (tiled) upwards.
+
+    .. attribute:: repeat_down
+
+       Whether or not the layer should be repeated (tiled) downwards.
+
+    .. attribute:: rd
+
+       Reserved dictionary for internal use by the SGE.  (Read-only)
+    """
+
+    def __init__(self, sprite, x, y, z=0, xscroll_rate=1, yscroll_rate=1,
+                 repeat_left=False, repeat_right=False, repeat_up=False,
+                 repeat_down=False):
+        """
+        Arguments set the respective initial attributes of the layer.
+        See the documentation for :class:`sge.gfx.BackgroundLayer` for
+        more information.
+        """
+        self.rd = {}
+        self.sprite = sprite
+        self.x = x
+        self.y = y
+        self.z = z
+        self.xscroll_rate = xscroll_rate
+        self.yscroll_rate = yscroll_rate
+        self.repeat_left = repeat_left
+        self.repeat_right = repeat_right
+        self.repeat_up = repeat_up
+        self.repeat_down = repeat_down
+
+        self.rd["fps"] = 0
+        self.rd["image_index"] = 0
+        self.rd["count"] = 0
+        self.rd["frame_time"] = None
+
+
+class Background(object):
+
+    """
+    This class stores the layers that make up the background (which
+    contain the information about what images to use and where) as well
+    as the color to use where no image is shown.
+
+    .. attribute:: layers
+
+       A list containing all :class:`sge.gfx.BackgroundLayer` objects
+       used in this background.  (Read-only)
+
+    .. attribute:: color
+
+       A :class:`sge.gfx.Color` object representing the color used in
+       parts of the background where no layer is shown.
+
+    .. attribute:: rd
+
+       Reserved dictionary for internal use by the SGE.  (Read-only)
+    """
+
+    @property
+    def color(self):
+        return self.__color
+
+    @color.setter
+    def color(self, value):
+        _check_color(value)
+        self.__color = value
+
+    def __init__(self, layers, color):
+        """
+        Arguments set the respective initial attributes of the
+        background.  See the documentation for
+        :class:`sge.gfx.Background` for more information.
+        """
+        self.rd = {}
+        self.color = color
+
+        sorted_layers = []
+
+        for layer in layers:
+            i = 0
+            while i < len(sorted_layers) and layer.z >= sorted_layers[i].z:
+                i += 1
+
+            sorted_layers.insert(i, layer)
+
+        self.layers = sorted_layers

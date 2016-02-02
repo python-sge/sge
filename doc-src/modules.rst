@@ -13,6 +13,7 @@ Contents:
    :maxdepth: 1
 
    collision
+   gfx
    input
    joystick
    keyboard

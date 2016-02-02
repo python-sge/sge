@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Circle Popper
-# Written in 2012, 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net>
+# Written in 2012-2016 by onpon4 <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -66,15 +66,15 @@ class Circle(sge.Object):
     def event_create(self):
         self.image_alpha = 200
         if self.collision(sge.game.mouse):
-            self.image_blend = sge.Color('#ff0000')
+            self.image_blend = sge.gfx.Color('#ff0000')
         else:
-            self.image_blend = sge.Color('blue')
+            self.image_blend = sge.gfx.Color('blue')
 
     def event_mouse_move(self, x, y):
         if self.collision(sge.game.mouse):
-            self.image_blend = sge.Color("red")
+            self.image_blend = sge.gfx.Color("red")
         else:
-            self.image_blend = sge.Color((0, 0, 255))
+            self.image_blend = sge.gfx.Color((0, 0, 255))
 
     def event_mouse_button_press(self, button):
         if button == 'left':
@@ -114,27 +114,30 @@ class Room(sge.Room):
         glob.music.play(loops=None)
 
     def event_step(self, time_passed, delta_mult):
-        self.project_rectangle(5, 5, 3, 32, 32, fill=sge.Color("red"),
-                               outline=sge.Color("green"), outline_thickness=3)
-        self.project_ellipse(16, 100, 3, 64, 64, fill=sge.Color("yellow"),
-                             outline=sge.Color("fuchsia"), outline_thickness=4)
-        self.project_line(64, 64, 78, 100, 3, sge.Color("black"), thickness=2)
-        self.project_dot(90, 32, 3, sge.Color("maroon"))
-        self.project_dot(91, 32, 3, sge.Color("maroon"))
-        self.project_dot(92, 32, 3, sge.Color("maroon"))
-        self.project_dot(93, 32, 3, sge.Color("maroon"))
-        self.project_dot(90, 33, 3, sge.Color("maroon"))
-        self.project_dot(91, 33, 3, sge.Color("maroon"))
-        self.project_dot(92, 33, 3, sge.Color("maroon"))
-        self.project_dot(90, 34, 3, sge.Color("maroon"))
-        self.project_dot(91, 34, 3, sge.Color("maroon"))
-        self.project_dot(90, 35, 3, sge.Color("maroon"))
+        self.project_rectangle(5, 5, 3, 32, 32, fill=sge.gfx.Color("red"),
+                               outline=sge.gfx.Color("green"),
+                               outline_thickness=3)
+        self.project_ellipse(16, 100, 3, 64, 64, fill=sge.gfx.Color("yellow"),
+                             outline=sge.gfx.Color("fuchsia"),
+                             outline_thickness=4)
+        self.project_line(64, 64, 78, 100, 3, sge.gfx.Color("black"),
+                          thickness=2)
+        self.project_dot(90, 32, 3, sge.gfx.Color("maroon"))
+        self.project_dot(91, 32, 3, sge.gfx.Color("maroon"))
+        self.project_dot(92, 32, 3, sge.gfx.Color("maroon"))
+        self.project_dot(93, 32, 3, sge.gfx.Color("maroon"))
+        self.project_dot(90, 33, 3, sge.gfx.Color("maroon"))
+        self.project_dot(91, 33, 3, sge.gfx.Color("maroon"))
+        self.project_dot(92, 33, 3, sge.gfx.Color("maroon"))
+        self.project_dot(90, 34, 3, sge.gfx.Color("maroon"))
+        self.project_dot(91, 34, 3, sge.gfx.Color("maroon"))
+        self.project_dot(90, 35, 3, sge.gfx.Color("maroon"))
         self.project_polygon([(128, 128), (124, 160), (160, 140)], 3,
-                             fill=sge.Color("gray"), outline=sge.Color("red"),
-                             outline_thickness=3)
+                             fill=sge.gfx.Color("gray"),
+                             outline=sge.gfx.Color("red"), outline_thickness=3)
         text = "I am amazing text!\n\nYaaaaaaaaaaay~!"
-        self.project_text(glob.font, text, 320, 0, 3, color=sge.Color("black"),
-                          halign="center")
+        self.project_text(glob.font, text, 320, 0, 3,
+                          color=sge.gfx.Color("black"), halign="center")
 
         if sge.keyboard.get_pressed("left"):
             self.views[0].xport -= 1
@@ -178,20 +181,20 @@ def main():
     game = Game(delta=True, delta_max=4800, collision_events_enabled=False)
 
     # Load sprites
-    glob.circle_sprite = sge.Sprite('circle', DATA, width=64, height=64,
-                                    origin_x=32, origin_y=32)
-    glob.circle_pop_sprite = sge.Sprite('circle_pop', DATA, width=64,
-                                        height=64, origin_x=32, origin_y=32,
-                                        fps=60)
-    fence_sprite = sge.Sprite('fence', DATA)
+    glob.circle_sprite = sge.gfx.Sprite('circle', DATA, width=64, height=64,
+                                        origin_x=32, origin_y=32)
+    glob.circle_pop_sprite = sge.gfx.Sprite('circle_pop', DATA, width=64,
+                                            height=64, origin_x=32,
+                                            origin_y=32, fps=60)
+    fence_sprite = sge.gfx.Sprite('fence', DATA)
 
     # Load backgrounds
-    layers = [sge.BackgroundLayer(fence_sprite, 0, 380, 0, repeat_left=True,
-                                  repeat_right=True)]
-    background = sge.Background(layers, sge.Color(0xffffff))
+    layers = [sge.gfx.BackgroundLayer(fence_sprite, 0, 380, 0,
+                                      repeat_left=True, repeat_right=True)]
+    background = sge.gfx.Background(layers, sge.gfx.Color(0xffffff))
 
     # Load fonts
-    glob.font = sge.Font('Liberation Serif', 20)
+    glob.font = sge.gfx.Font('Liberation Serif', 20)
 
     # Load sounds
     glob.pop_sound = sge.Sound(os.path.join(DATA, 'pop.ogg'))

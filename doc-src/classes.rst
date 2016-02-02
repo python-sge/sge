@@ -120,82 +120,6 @@ sge.Game Event Methods
 
 .. automethod:: sge.Game.event_paused_close
 
-sge.Sprite
-==========
-
-.. autoclass:: sge.Sprite
-
-sge.Sprite Methods
-------------------
-
-.. automethod:: sge.Sprite.__init__
-
-.. automethod:: sge.Sprite.append_frame
-
-.. automethod:: sge.Sprite.insert_frame
-
-.. automethod:: sge.Sprite.delete_frame
-
-.. automethod:: sge.Sprite.draw_dot
-
-.. automethod:: sge.Sprite.draw_line
-
-.. automethod:: sge.Sprite.draw_rectangle
-
-.. automethod:: sge.Sprite.draw_ellipse
-
-.. automethod:: sge.Sprite.draw_circle
-
-.. automethod:: sge.Sprite.draw_polygon
-
-.. automethod:: sge.Sprite.draw_sprite
-
-.. automethod:: sge.Sprite.draw_text
-
-.. automethod:: sge.Sprite.draw_erase
-
-.. automethod:: sge.Sprite.draw_clear
-
-.. automethod:: sge.Sprite.draw_lock
-
-.. automethod:: sge.Sprite.draw_unlock
-
-.. automethod:: sge.Sprite.mirror
-
-.. automethod:: sge.Sprite.flip
-
-.. automethod:: sge.Sprite.rotate
-
-.. automethod:: sge.Sprite.copy
-
-.. automethod:: sge.Sprite.save
-
-.. automethod:: sge.Sprite.from_text
-
-.. automethod:: sge.Sprite.from_tileset
-
-.. automethod:: sge.Sprite.from_screenshot
-
-sge.BackgroundLayer
-===================
-
-.. autoclass:: sge.BackgroundLayer
-
-sge.BackgroundLayer Methods
----------------------------
-
-.. automethod:: sge.BackgroundLayer.__init__
-
-sge.Background
-==============
-
-.. autoclass:: sge.Background
-
-sge.Background Methods
-----------------------
-
-.. automethod:: sge.Background.__init__
-
 sge.Sound
 =========
 
@@ -237,27 +161,6 @@ sge.Music Methods
 .. automethod:: sge.Music.unpause
 
 .. automethod:: sge.Music.clear_queue
-
-sge.Color
-=========
-
-.. autoclass:: sge.Color
-
-sge.Font
-========
-
-.. autoclass:: sge.Font
-
-sge.Font Methods
-----------------
-
-.. automethod:: sge.Font.__init__
-
-.. automethod:: sge.Font.get_width
-
-.. automethod:: sge.Font.get_height
-
-.. automethod:: sge.Font.from_sprite
 
 sge.Object
 ==========

@@ -33,14 +33,14 @@ Let's take it one event at a time. Our close event is simple enough::
         self.end()
 
 Our key press event is slightly more involved.  To take a screenshot, we
-simply use a combination of :meth:`sge.Sprite.from_screenshot` and
-:meth:`sge.Sprite.save`.  To toggle fullscreen, we simply change the
+simply use a combination of :meth:`sge.gfx.Sprite.from_screenshot` and
+:meth:`sge.gfx.Sprite.save`.  To toggle fullscreen, we simply change the
 value of :attr:`sge.Game.fullscreen`.  To pause the game, we use
 :meth:`sge.Game.pause`.  We end up with this::
 
     def event_key_press(self, key, char):
         if key == 'f8':
-            sge.Sprite.from_screenshot().save('screenshot.jpg')
+            sge.gfx.Sprite.from_screenshot().save('screenshot.jpg')
         elif key == 'f11':
             self.fullscreen = not self.fullscreen
         elif key == 'escape':
@@ -378,27 +378,27 @@ black background with a line down the middle.  We could draw these in an
 image editor and load them, but since they are so simple, we are going
 to generate them dynamically instead.
 
-Sprites are stored as :class:`sge.Sprite` objects, so we are going to
-create two of them::
+Sprites are stored as :class:`sge.gfx.Sprite` objects, so we are going
+to create two of them::
 
-    paddle_sprite = sge.Sprite(width=8, height=48, origin_x=4, origin_y=24)
-    ball_sprite = sge.Sprite(width=8, height=8, origin_x=4, origin_y=4)
+    paddle_sprite = sge.gfx.Sprite(width=8, height=48, origin_x=4, origin_y=24)
+    ball_sprite = sge.gfx.Sprite(width=8, height=8, origin_x=4, origin_y=4)
 
-:attr:`sge.Sprite.origin_x` and :attr:`sge.Sprite.origin_y` indicate
-the origin of the sprite.  In this case, we are setting the origins to
-the center of the sprites.  This is necessary for our method of
-determining how the paddles affect vertical speed to work, and it also
-makes symmetry easier.
+:attr:`sge.gfx.Sprite.origin_x` and :attr:`sge.gfx.Sprite.origin_y`
+indicate the origin of the sprite.  In this case, we are setting the
+origins to the center of the sprites.  This is necessary for our method
+of determining how the paddles affect vertical speed to work, and it
+also makes symmetry easier.
 
 Currently, both of these sprites are blank.  We need to draw the images
 on them.  In this case, we will just draw white rectangles that fill the
 entirety of the sprites, which can be done with
-:meth:`sge.Sprite.draw_rectangle`::
+:meth:`sge.gfx.Sprite.draw_rectangle`::
 
     paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width,
-                                 paddle_sprite.height, fill=sge.Color("white"))
+                                 paddle_sprite.height, fill=sge.gfx.Color("white"))
     ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
-                               fill=sge.Color("white"))
+                               fill=sge.gfx.Color("white"))
 
 Loading Backgrounds
 -------------------
@@ -409,11 +409,12 @@ boring, so we are also going to also have a white line in the middle.
 We can do this easily by using the paddle sprite as a background layer.
 Background layers are special objects that indicate sprites that are
 used in a background.  We create the layer, put it in a list, and pass
-that list onto :meth:`sge.Background.__init__`'s ``layers`` argument::
+that list onto :meth:`sge.gfx.Background.__init__`'s ``layers``
+argument::
 
-    layers = [sge.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
-                                  repeat_up=True, repeat_down=True)]
-    background = sge.Background(layers, sge.Color("black"))
+    layers = [sge.gfx.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
+                                      repeat_up=True, repeat_down=True)]
+    background = sge.gfx.Background(layers, sge.gfx.Color("black"))
 
 The fourth argument of :meth:`sge.BackgroudLayer.__init__` is the
 layer's Z-axis value.  The Z-axis is used to determine what objects are
@@ -489,7 +490,7 @@ You should now have a script that looks something like this::
             global game_in_progress
 
             if key == 'f8':
-                sge.Sprite.from_screenshot().save('screenshot.jpg')
+                sge.gfx.Sprite.from_screenshot().save('screenshot.jpg')
             elif key == 'f11':
                 self.fullscreen = not self.fullscreen
             elif key == 'escape':
@@ -597,17 +598,17 @@ You should now have a script that looks something like this::
     Game(width=640, height=480, fps=120, window_text="Pong")
 
     # Load sprites
-    paddle_sprite = sge.Sprite(width=8, height=48, origin_x=4, origin_y=24)
-    ball_sprite = sge.Sprite(width=8, height=8, origin_x=4, origin_y=4)
+    paddle_sprite = sge.gfx.Sprite(width=8, height=48, origin_x=4, origin_y=24)
+    ball_sprite = sge.gfx.Sprite(width=8, height=8, origin_x=4, origin_y=4)
     paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width, paddle_sprite.height,
-                                 fill=sge.Color("white"))
+                                 fill=sge.gfx.Color("white"))
     ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
-                               fill=sge.Color("white"))
+                               fill=sge.gfx.Color("white"))
 
     # Load backgrounds
-    layers = [sge.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
-                                  repeat_up=True, repeat_down=True)]
-    background = sge.Background(layers, sge.Color("black"))
+    layers = [sge.gfx.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
+                                      repeat_up=True, repeat_down=True)]
+    background = sge.gfx.Background(layers, sge.gfx.Color("black"))
 
     # Create objects
     player1 = Player(1)

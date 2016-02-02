@@ -1,4 +1,4 @@
-Copyright (C) 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+Copyright (C) 2013-2016 Julian Marchant <onpon4@riseup.net>
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -19,6 +19,12 @@ Specification additions:
 + sge.Room.event_paused_joystick
 + sge.Object.event_joystick
 + sge.Object.event_paused_joystick
+
+Specification misc changes:
+* Moved sge.Color, sge.Sprite, sge.Font, sge.BackgroundLayer, and
+  sge.Background to the new sge.gfx module.
+* Changed the default text color in text drawing and projection methods
+  to white.
 
 
 0.22

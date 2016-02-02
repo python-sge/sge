@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Splitscreen Example
-# Written in 2012, 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net>
+# Written in 2012-2016 by onpon4 <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -32,9 +32,9 @@ class Game(sge.Game):
 
     def event_step(self, time_passed, delta_mult):
         self.project_line(self.width / 2, 0, self.width / 2, self.height,
-                          sge.Color("black"), thickness=3)
+                          sge.gfx.Color("black"), thickness=3)
         self.project_line(0, self.height / 2, self.width, self.height / 2,
-                          sge.Color("black"), thickness=3)
+                          sge.gfx.Color("black"), thickness=3)
 
     def event_key_press(self, key, char):
         if key == 'escape':
@@ -57,14 +57,14 @@ class Circle(sge.Object):
         super(Circle, self).__init__(x, y, 1, sprite=circle_sprite,
                                      collision_precise=True)
         self.player = player
-        self.normal_image_blend = [sge.Color('red'), sge.Color('blue'),
-                                   sge.Color('yellow'),
-                                   sge.Color('green')][self.player]
+        self.normal_image_blend = [sge.gfx.Color('red'), sge.gfx.Color('blue'),
+                                   sge.gfx.Color('yellow'),
+                                   sge.gfx.Color('green')][self.player]
         self.image_alpha = 128
 
     def set_color(self):
         if self.collision(Circle):
-            self.image_blend = sge.Color('olive')
+            self.image_blend = sge.gfx.Color('olive')
         else:
             self.image_blend = self.normal_image_blend
 
@@ -106,16 +106,16 @@ def main():
     Game(width=640, height=480, collision_events_enabled=False)
 
     # Load sprites
-    circle_sprite = sge.Sprite('circle', DATA, width=32, height=32,
-                               origin_x=16, origin_y=16)
-    fence = sge.Sprite('fence', DATA)
+    circle_sprite = sge.gfx.Sprite('circle', DATA, width=32, height=32,
+                                   origin_x=16, origin_y=16)
+    fence = sge.gfx.Sprite('fence', DATA)
     sge.game.mouse_sprite = circle_sprite
 
     # Load backgrounds
-    layers = [sge.BackgroundLayer(fence, 0, 0, 0, repeat_left=True,
-                                  repeat_right=True, repeat_up=True,
-                                  repeat_down=True)]
-    background = sge.Background(layers, sge.Color('white'))
+    layers = [sge.gfx.BackgroundLayer(fence, 0, 0, 0, repeat_left=True,
+                                      repeat_right=True, repeat_up=True,
+                                      repeat_down=True)]
+    background = sge.gfx.Background(layers, sge.gfx.Color('white'))
 
     # Create objects
     objects = []

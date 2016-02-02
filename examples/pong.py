@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Pong Example
-# Written in 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net>
+# Written in 2013-2016 by onpon4 <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -50,13 +50,13 @@ class Game(sge.Game):
             self.fps_frames = 0
 
         self.project_text(hud_font, self.fps_text, 8, 8,
-                          color=sge.Color("gray"))
+                          color=sge.gfx.Color("gray"))
 
     def event_key_press(self, key, char):
         global game_in_progress
 
         if key == 'f8':
-            sge.Sprite.from_screenshot().save('screenshot.jpg')
+            sge.gfx.Sprite.from_screenshot().save('screenshot.jpg')
         elif key == 'f11':
             self.fullscreen = not self.fullscreen
         elif key == 'escape':
@@ -207,10 +207,10 @@ class Ball(sge.Object):
             p1text = "WIN" if player1.score > player2.score else "LOSE"
             p2text = "WIN" if player2.score > player1.score else "LOSE"
             hud_sprite.draw_text(hud_font, p1text, x - TEXT_OFFSET,
-                                 TEXT_OFFSET, color=sge.Color("white"),
+                                 TEXT_OFFSET, color=sge.gfx.Color("white"),
                                  halign="right", valign="top")
             hud_sprite.draw_text(hud_font, p2text, x + TEXT_OFFSET,
-                                 TEXT_OFFSET, color=sge.Color("white"),
+                                 TEXT_OFFSET, color=sge.gfx.Color("white"),
                                  halign="left", valign="top")
             game_in_progress = False
 
@@ -229,10 +229,10 @@ def refresh_hud():
     hud_sprite.draw_clear()
     x = hud_sprite.width / 2
     hud_sprite.draw_text(hud_font, str(player1.score), x - TEXT_OFFSET,
-                         TEXT_OFFSET, color=sge.Color("white"),
+                         TEXT_OFFSET, color=sge.gfx.Color("white"),
                          halign="right", valign="top")
     hud_sprite.draw_text(hud_font, str(player2.score), x + TEXT_OFFSET,
-                         TEXT_OFFSET, color=sge.Color("white"),
+                         TEXT_OFFSET, color=sge.gfx.Color("white"),
                          halign="left", valign="top")
 
 
@@ -240,21 +240,21 @@ def refresh_hud():
 Game(width=640, height=480, fps=120, window_text="Pong")
 
 # Load sprites
-paddle_sprite = sge.Sprite(width=8, height=48, origin_x=4, origin_y=24)
-ball_sprite = sge.Sprite(width=8, height=8, origin_x=4, origin_y=4)
+paddle_sprite = sge.gfx.Sprite(width=8, height=48, origin_x=4, origin_y=24)
+ball_sprite = sge.gfx.Sprite(width=8, height=8, origin_x=4, origin_y=4)
 paddle_sprite.draw_rectangle(0, 0, paddle_sprite.width, paddle_sprite.height,
-                             fill=sge.Color("white"))
+                             fill=sge.gfx.Color("white"))
 ball_sprite.draw_rectangle(0, 0, ball_sprite.width, ball_sprite.height,
-                           fill=sge.Color("white"))
-hud_sprite = sge.Sprite(width=320, height=120, origin_x=160, origin_y=0)
+                           fill=sge.gfx.Color("white"))
+hud_sprite = sge.gfx.Sprite(width=320, height=120, origin_x=160, origin_y=0)
 
 # Load backgrounds
-layers = [sge.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
-                              repeat_up=True, repeat_down=True)]
-background = sge.Background(layers, sge.Color("black"))
+layers = [sge.gfx.BackgroundLayer(paddle_sprite, sge.game.width / 2, 0, -10000,
+                                  repeat_up=True, repeat_down=True)]
+background = sge.gfx.Background(layers, sge.gfx.Color("black"))
 
 # Load fonts
-hud_font = sge.Font("Droid Sans Mono", size=48)
+hud_font = sge.gfx.Font("Droid Sans Mono", size=48)
 
 # Load sounds
 bounce_sound = sge.Sound(os.path.join(DATA, 'bounce.wav'))

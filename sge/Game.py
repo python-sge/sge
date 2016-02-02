@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012-2016 onpon4 <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -28,9 +28,9 @@ import pygame
 import six
 
 import sge
-from sge import r
-from sge.r import (_scale, _get_blend_flags, _screen_blend, _set_mode,
-                   _handle_music, _get_dot_sprite, _get_line_sprite,
+from sge import gfx, r
+from sge.r import (_check_color, _scale, _get_blend_flags, _screen_blend,
+                   _set_mode, _handle_music, _get_dot_sprite, _get_line_sprite,
                    _get_rectangle_sprite, _get_ellipse_sprite,
                    _get_circle_sprite, _get_polygon_sprite, bl_update,
                    bl_get_image, o_update, o_detect_collisions,
@@ -626,10 +626,10 @@ class Game(object):
         """
         if sprite is None:
             try:
-                sprite = sge.Sprite("pause", os.path.dirname(__file__))
+                sprite = gfx.Sprite("pause", os.path.dirname(__file__))
             except IOError:
-                font = sge.Font("Droid Sans", size=24)
-                sprite = sge.Sprite(width=320, height=240)
+                font = gfx.Font("Droid Sans", size=24)
+                sprite = gfx.Sprite(width=320, height=240)
                 sprite.draw_text(font, "Paused", 160, 120, halign="center",
                                  valign="middle")
 
@@ -1179,13 +1179,10 @@ class Game(object):
            :class:`sge.Object` objects.  Window projections are always
            positioned in front of such things.
 
-        See the documentation for :meth:`sge.Sprite.draw_dot` for more
-        information.
+        See the documentation for :meth:`sge.gfx.Sprite.draw_dot` for
+        more information.
         """
-        if not isinstance(color, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(color))
-            raise TypeError(e)
-
+        _check_color(color)
         sprite = _get_dot_sprite(color)
         self.project_sprite(sprite, 0, x, y, z)
 
@@ -1207,12 +1204,10 @@ class Game(object):
         - ``z`` -- The Z-axis position of the projection in relation to
           other window projections.
 
-        See the documentation for :meth:`sge.Sprite.draw_line` and
+        See the documentation for :meth:`sge.gfx.Sprite.draw_line` and
         :meth:`sge.Game.project_dot` for more information.
         """
-        if not isinstance(color, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(color))
-            raise TypeError(e)
+        _check_color(color)
 
         thickness = abs(thickness)
         x = min(x1, x2) - thickness // 2
@@ -1239,16 +1234,11 @@ class Game(object):
         - ``z`` -- The Z-axis position of the projection in relation to
           other window projections.
 
-        See the documentation for :meth:`sge.Sprite.draw_rectangle` and
-        :meth:`sge.Game.project_dot` for more information.
+        See the documentation for :meth:`sge.gfx.Sprite.draw_rectangle`
+        and :meth:`sge.Game.project_dot` for more information.
         """
-        if fill is not None and not isinstance(fill, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(fill))
-            raise TypeError(e)
-        if outline is not None and not isinstance(outline, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(outline))
-            raise TypeError(e)
-
+        _check_color(fill)
+        _check_color(outline)
         outline_thickness = abs(outline_thickness)
         draw_x = outline_thickness // 2
         draw_y = outline_thickness // 2
@@ -1277,14 +1267,14 @@ class Game(object):
           ellipse.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
 
-        See the documentation for :meth:`sge.Sprite.draw_ellipse` and
-        :meth:`sge.Game.project_dot` for more information.
+        See the documentation for :meth:`sge.gfx.Sprite.draw_ellipse`
+        and :meth:`sge.Game.project_dot` for more information.
         """
-        if fill is not None and not isinstance(fill, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(fill))
+        if fill is not None and not isinstance(fill, gfx.Color):
+            e = "`{}` is not a Color object.".format(repr(fill))
             raise TypeError(e)
-        if outline is not None and not isinstance(outline, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(outline))
+        if outline is not None and not isinstance(outline, gfx.Color):
+            e = "`{}` is not a Color object.".format(repr(outline))
             raise TypeError(e)
 
         outline_thickness = abs(outline_thickness)
@@ -1310,16 +1300,11 @@ class Game(object):
         - ``z`` -- The Z-axis position of the projection in relation to
           other window projections.
 
-        See the documentation for :meth:`sge.Sprite.draw_circle` and
+        See the documentation for :meth:`sge.gfx.Sprite.draw_circle` and
         :meth:`sge.Game.project_dot` for more information.
         """
-        if fill is not None and not isinstance(fill, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(fill))
-            raise TypeError(e)
-        if outline is not None and not isinstance(outline, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(outline))
-            raise TypeError(e)
-
+        _check_color(fill)
+        _check_color(outline)
         sprite = _get_circle_sprite(radius, fill, outline, outline_thickness,
                                     anti_alias)
         self.project_sprite(sprite, 0, x - radius, y - radius, z)
@@ -1338,15 +1323,11 @@ class Game(object):
         - ``z`` -- The Z-axis position of the projection in relation to
           other window projections.
 
-        See the documentation for :meth:`sge.Sprite.draw_polygon` and
-        :meth:`sge.Game.project_dot` for more information.
+        See the documentation for :meth:`sge.gfx.Sprite.draw_polygon`
+        and :meth:`sge.Game.project_dot` for more information.
         """
-        if fill is not None and not isinstance(fill, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(fill))
-            raise TypeError(e)
-        if outline is not None and not isinstance(outline, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(outline))
-            raise TypeError(e)
+        _check_color(fill)
+        _check_color(outline)
 
         xlist = []
         ylist = []
@@ -1373,7 +1354,7 @@ class Game(object):
         - ``z`` -- The Z-axis position of the projection in relation to
           other window projections.
 
-        See the documentation for :meth:`sge.Sprite.draw_sprite` and
+        See the documentation for :meth:`sge.gfx.Sprite.draw_sprite` and
         :meth:`sge.Game.project_dot` for more information.
         """
         img = s_get_image(sprite, image)
@@ -1382,7 +1363,7 @@ class Game(object):
         r.game_window_projections.append((img, x, y, z, blend_mode))
 
     def project_text(self, font, text, x, y, z=0, width=None, height=None,
-                    color=sge.Color("black"), halign="left",
+                    color=gfx.Color("white"), halign="left",
                     valign="top", anti_alias=True):
         """
         Project text onto the game window.
@@ -1396,14 +1377,11 @@ class Game(object):
         - ``z`` -- The Z-axis position of the projection in relation to
           other window projections.
 
-        See the documentation for :meth:`sge.Sprite.draw_text` and
+        See the documentation for :meth:`sge.gfx.Sprite.draw_text` and
         :meth:`sge.Game.project_dot` for more information.
         """
-        if not isinstance(color, sge.Color):
-            e = "`{}` is not a sge.Color object.".format(repr(color))
-            raise TypeError(e)
-
-        sprite = sge.Sprite.from_text(font, text, width, height, color, halign,
+        _check_color(color)
+        sprite = gfx.Sprite.from_text(font, text, width, height, color, halign,
                                       valign, anti_alias)
         self.project_sprite(sprite, 0, x, y, z)
 

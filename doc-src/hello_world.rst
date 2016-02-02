@@ -134,8 +134,9 @@ world!" in the center of the screen.  This will be our room class::
 
         def event_step(self, time_passed, delta_mult):
             sge.game.project_text(font, "Hello, world!", sge.game.width / 2,
-                                  sge.game.height / 2, color=sge.Color("black"),
-                                  halign="center", valign="middle")
+                                  sge.game.height / 2,
+                                  color=sge.gfx.Color("black"), halign="center",
+                                  valign="middle")
 
 You can see that the room class is defined very similarly to the game
 class.  We subclass :class:`sge.Room` and add a method to override
@@ -192,10 +193,10 @@ class definitions::
     Game()
 
     # Create backgrounds
-    background = sge.Background([], sge.Color("white"))
+    background = sge.gfx.Background([], sge.gfx.Color("white"))
 
     # Load fonts
-    font = sge.Font()
+    font = sge.gfx.Font()
 
     # Create rooms
     sge.game.start_room = Room(background=background)
@@ -206,8 +207,8 @@ class definitions::
 First, we create a :class:`sge.Game` object; we don't need to store it
 in anything since it is automatically stored in :data:`sge.game`.
 
-Second, we create a :class:`sge.Background` object to specify what the
-background looks like.  We make our background all white, with no
+Second, we create a :class:`sge.gfx.Background` object to specify what
+the background looks like.  We make our background all white, with no
 layers.  (Layers are used to give backgrounds more than a solid color,
 which we don't need.)
 
@@ -271,18 +272,19 @@ This is the completed Hello World program::
 
         def event_step(self, time_passed, delta_mult):
             sge.game.project_text(font, "Hello, world!", sge.game.width / 2,
-                                  sge.game.height / 2, color=sge.Color("black"),
-                                  halign="center", valign="middle")
+                                  sge.game.height / 2,
+                                  color=sge.gfx.Color("black"), halign="center",
+                                  valign="middle")
 
 
     # Create Game object
     Game()
 
     # Create backgrounds
-    background = sge.Background([], sge.Color("white"))
+    background = sge.gfx.Background([], sge.gfx.Color("white"))
 
     # Load fonts
-    font = sge.Font()
+    font = sge.gfx.Font()
 
     # Create rooms
     sge.game.start_room = Room(background=background)

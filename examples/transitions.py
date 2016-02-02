@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Transitions example
-# Written in 2012, 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net>
+# Written in 2012-2016 by Julian Marchant <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -53,15 +53,15 @@ class Circle(sge.Object):
     def event_create(self):
         self.image_alpha = 200
         if self.collision(sge.game.mouse):
-            self.image_blend = sge.Color('#ff0000')
+            self.image_blend = sge.gfx.Color('#ff0000')
         else:
-            self.image_blend = sge.Color('blue')
+            self.image_blend = sge.gfx.Color('blue')
 
     def event_mouse_move(self, x, y):
         if self.collision(sge.game.mouse):
-            self.image_blend = sge.Color("red")
+            self.image_blend = sge.gfx.Color("red")
         else:
-            self.image_blend = sge.Color((0, 0, 255))
+            self.image_blend = sge.gfx.Color((0, 0, 255))
 
     def event_mouse_button_press(self, button):
         if button == 'left':
@@ -143,24 +143,24 @@ def main():
     game = Game(collision_events_enabled=False)
 
     # Load sprites
-    glob.circle_sprite = sge.Sprite('circle', DATA, width=64, height=64,
-                                    origin_x=32, origin_y=32)
-    glob.circle_pop_sprite = sge.Sprite('circle_pop', DATA, width=64,
-                                        height=64, origin_x=32, origin_y=32,
-                                        fps=60)
-    fence_sprite = sge.Sprite('fence', DATA)
+    glob.circle_sprite = sge.gfx.Sprite('circle', DATA, width=64, height=64,
+                                        origin_x=32, origin_y=32)
+    glob.circle_pop_sprite = sge.gfx.Sprite('circle_pop', DATA, width=64,
+                                            height=64, origin_x=32,
+                                            origin_y=32, fps=60)
+    fence_sprite = sge.gfx.Sprite('fence', DATA)
 
     # Load backgrounds
-    layers = [sge.BackgroundLayer(fence_sprite, 0, 380, repeat_left=True,
-                                  repeat_right=True)]
-    layers2 = [sge.BackgroundLayer(fence_sprite, 0, 0, repeat_left=True,
-                                   repeat_right=True, repeat_up=True,
-                                   repeat_down=True)]
-    background = sge.Background(layers, sge.Color(0xffffff))
-    background2 = sge.Background(layers2, sge.Color('white'))
+    layers = [sge.gfx.BackgroundLayer(fence_sprite, 0, 380, repeat_left=True,
+                                      repeat_right=True)]
+    layers2 = [sge.gfx.BackgroundLayer(fence_sprite, 0, 0, repeat_left=True,
+                                       repeat_right=True, repeat_up=True,
+                                       repeat_down=True)]
+    background = sge.gfx.Background(layers, sge.gfx.Color(0xffffff))
+    background2 = sge.gfx.Background(layers2, sge.gfx.Color('white'))
 
     # Load fonts
-    glob.font = sge.Font('Liberation Serif', 20)
+    glob.font = sge.gfx.Font('Liberation Serif', 20)
 
     # Load sounds
     glob.pop_sound = sge.Sound(os.path.join(DATA, 'pop.ogg'))

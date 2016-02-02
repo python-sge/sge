@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012-2016 onpon4 <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -31,9 +31,9 @@ import six
 
 import sge
 from sge import r
-from sge.r import (o_update_object_areas, o_update_collision_lists,
-                   o_is_other, o_get_origin_offset, o_set_speed, s_get_image,
-                   s_get_precise_mask)
+from sge.r import (_check_color, o_update_object_areas,
+                   o_update_collision_lists, o_is_other, o_get_origin_offset,
+                   o_set_speed, s_get_image, s_get_precise_mask)
 
 
 __all__ = ['Object', 'Mouse']
@@ -285,8 +285,8 @@ class Object(object):
 
     .. attribute:: image_blend
 
-       A :class:`sge.Color` object representing the color to blend with
-       the sprite.  Set to :const:`None` for no color blending.
+       A :class:`sge.gfx.Color` object representing the color to blend
+       with the sprite.  Set to :const:`None` for no color blending.
 
     .. attribute:: alarms
 
@@ -625,11 +625,8 @@ class Object(object):
 
     @image_blend.setter
     def image_blend(self, value):
-        if value is None or isinstance(value, sge.Color):
-            self.__image_blend = value
-        else:
-            e = "`{}` is not a sge.Color object.".format(repr(value))
-            raise TypeError(e)
+        _check_color(value)
+        self.__image_blend = value
 
     @property
     def mask(self):

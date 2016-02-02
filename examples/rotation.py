@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Rotation Example
-# Written in 2012, 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net>
+# Written in 2012-2016 by onpon4 <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -44,9 +44,9 @@ class Circle(sge.Object):
     def event_create(self):
         self.image_alpha = 200
         if self.collision(sge.game.mouse):
-            self.image_blend = sge.Color('#ff0000')
+            self.image_blend = sge.gfx.Color('#ff0000')
         else:
-            self.image_blend = sge.Color('blue')
+            self.image_blend = sge.gfx.Color('blue')
 
         if random.random() < 0.5:
             self.image_xscale = 2
@@ -55,12 +55,12 @@ class Circle(sge.Object):
     def event_step(self, time_passed, delta_mult):
         self.image_rotation += delta_mult
         sge.game.current_room.project_circle(self.x, self.y, self.z + 1, 8,
-                                             outline=sge.Color("green"))
+                                             outline=sge.gfx.Color("green"))
 
         if self.collision(sge.game.mouse):
-            self.image_blend = sge.Color("red")
+            self.image_blend = sge.gfx.Color("red")
         else:
-            self.image_blend = sge.Color((0, 0, 255))
+            self.image_blend = sge.gfx.Color((0, 0, 255))
 
 
 def main():
@@ -70,13 +70,13 @@ def main():
     game = Game(delta=True, collision_events_enabled=False)
 
     # Load sprites
-    rotator_sprite = sge.Sprite('rotator', DATA)
-    fence_sprite = sge.Sprite('fence', DATA)
+    rotator_sprite = sge.gfx.Sprite('rotator', DATA)
+    fence_sprite = sge.gfx.Sprite('fence', DATA)
 
     # Load backgrounds
-    layers = [sge.BackgroundLayer(fence_sprite, 0, 380, 0, repeat_left=True,
-                                  repeat_right=True)]
-    background = sge.Background(layers, sge.Color(0xffffff))
+    layers = [sge.gfx.BackgroundLayer(fence_sprite, 0, 380, 0,
+                                      repeat_left=True, repeat_right=True)]
+    background = sge.gfx.Background(layers, sge.gfx.Color(0xffffff))
 
     # Create objects
     circle = Circle(game.width // 2, game.height // 2)

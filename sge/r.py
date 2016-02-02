@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012-2016 onpon4 <onpon4@riseup.net>
 #
 # This file is part of the Pygame SGE.
 #
@@ -93,6 +93,21 @@ class cache(object):
         for i in p:
             del cls._cache[i]
             del cls._prune[i]
+
+
+def _check_color_input(value):
+    # Make sure a color value is between 0 and 255.
+    if value in six.moves.range(256):
+        return value
+    else:
+        raise ValueError("Color values must be between 0 and 255.")
+
+
+def _check_color(value):
+    # Make sure a value is either None or a color.
+    if value is not None and not isinstance(value, sge.gfx.Color):
+        e = "`{}` is not a Color object.".format(repr(fill))
+        raise TypeError(e)
 
 
 def _scale(surface, width, height):
@@ -282,7 +297,7 @@ def _get_dot_sprite(color):
     i = ("dot_sprite", tuple(color))
     sprite = cache.get(i)
     if sprite is None:
-        sprite = sge.Sprite(None, width=1, height=1)
+        sprite = sge.gfx.Sprite(None, width=1, height=1)
         sprite.draw_dot(0, 0, color)
 
     cache.add(i, sprite)
@@ -296,7 +311,7 @@ def _get_line_sprite(x1, y1, x2, y2, color, thickness, anti_alias):
     i = ("line_sprite", x1, y1, x2, y2, tuple(color), thickness, anti_alias)
     sprite = cache.get(i)
     if sprite is None:
-        sprite = sge.Sprite(None, width=w, height=h)
+        sprite = sge.gfx.Sprite(None, width=w, height=h)
         sprite.draw_line(x1, y1, x2, y2, color, thickness, anti_alias)
 
     cache.add(i, sprite)
@@ -316,7 +331,7 @@ def _get_rectangle_sprite(width, height, fill, outline, outline_thickness):
         draw_y = outline_thickness // 2
         w = width + outline_thickness
         h = height + outline_thickness
-        sprite = sge.Sprite(None, width=w, height=h)
+        sprite = sge.gfx.Sprite(None, width=w, height=h)
         sprite.draw_rectangle(draw_x, draw_y, width, height, fill, outline,
                               outline_thickness)
 
@@ -338,7 +353,7 @@ def _get_ellipse_sprite(width, height, fill, outline, outline_thickness,
         draw_y = outline_thickness // 2
         w = width + outline_thickness
         h = height + outline_thickness
-        sprite = sge.Sprite(None, width=w, height=h)
+        sprite = sge.gfx.Sprite(None, width=w, height=h)
         sprite.draw_ellipse(draw_x, draw_y, width, height, fill, outline,
                             outline_thickness)
 
@@ -356,7 +371,7 @@ def _get_circle_sprite(radius, fill, outline, outline_thickness, anti_alias):
         outline_thickness = abs(outline_thickness)
         xy = radius + outline_thickness // 2
         wh = 2 * radius + outline_thickness
-        sprite = sge.Sprite(None, width=wh, height=wh)
+        sprite = sge.gfx.Sprite(None, width=wh, height=wh)
         sprite.draw_circle(xy, xy, radius, fill, outline, outline_thickness,
                            anti_alias)
 
@@ -388,8 +403,8 @@ def _get_polygon_sprite(points, fill, outline, outline_thickness, anti_alias):
         dpoints = [(a - x + draw_x, b - y + draw_y) for (a, b) in points]
         w = width + outline_thickness
         h = height + outline_thickness
-        sprite = sge.Sprite(None, width=w, height=h, origin_x=draw_x,
-                            origin_y=draw_y)
+        sprite = sge.gfx.Sprite(None, width=w, height=h, origin_x=draw_x,
+                                origin_y=draw_y)
         sprite.draw_polygon(dpoints, fill, outline, outline_thickness,
                             anti_alias)
 
@@ -749,14 +764,14 @@ def r_update_fade(self, complete):
     h = transition_sprite.height
     if complete < 0.5:
         diff = (complete - self.rd["t_complete_last"]) * 2
-        c = sge.Color([int(round(diff * 255))] * 3)
-        darkener = sge.Sprite(width=w, height=h)
+        c = sge.gfx.Color([int(round(diff * 255))] * 3)
+        darkener = sge.gfx.Sprite(width=w, height=h)
         darkener.draw_rectangle(0, 0, w, h, c)
         transition_sprite.draw_sprite(darkener, 0, 0, 0,
                                       blend_mode=sge.BLEND_RGB_SUBTRACT)
     else:
         complete = (complete - 0.5) * 2
-        c = sge.Color((0, 0, 0, int(round(255 - complete * 255))))
+        c = sge.gfx.Color((0, 0, 0, int(round(255 - complete * 255))))
         transition_sprite.draw_clear()
         transition_sprite.draw_rectangle(0, 0, w, h, fill=c)
 
@@ -766,8 +781,8 @@ def r_update_dissolve(self, complete):
     w = transition_sprite.width
     h = transition_sprite.height
     diff = complete - self.rd["t_complete_last"]
-    c = sge.Color((0, 0, 0, int(round(diff * 255))))
-    eraser = sge.Sprite(width=w, height=h)
+    c = sge.gfx.Color((0, 0, 0, int(round(diff * 255))))
+    eraser = sge.gfx.Sprite(width=w, height=h)
     eraser.draw_rectangle(0, 0, w, h, c)
     transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                   blend_mode=sge.BLEND_RGBA_SUBTRACT)
@@ -790,8 +805,8 @@ def r_update_pixelate(self, complete):
         transition_sprite.height = h
     else:
         diff = (complete - self.rd["t_complete_last"]) * 5
-        c = sge.Color((0, 0, 0, int(round(diff * 255))))
-        eraser = sge.Sprite(width=w, height=h)
+        c = sge.gfx.Color((0, 0, 0, int(round(diff * 255))))
+        eraser = sge.gfx.Sprite(width=w, height=h)
         eraser.draw_rectangle(0, 0, w, h, c)
         transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                       blend_mode=sge.BLEND_RGBA_SUBTRACT)
@@ -835,9 +850,9 @@ def r_update_wipe_upleft(self, complete):
     h = transition_sprite.height
     x = w - w * complete * 2
     y = h - h * complete * 2
-    eraser = sge.Sprite(width=w, height=h)
+    eraser = sge.gfx.Sprite(width=w, height=h)
     eraser.draw_polygon([(w, h), (x, h), (w, y)],
-                        fill=sge.Color((0, 0, 0, 255)), anti_alias=True)
+                        fill=sge.gfx.Color((0, 0, 0, 255)), anti_alias=True)
     transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                   blend_mode=sge.BLEND_RGBA_SUBTRACT)
 
@@ -848,9 +863,9 @@ def r_update_wipe_upright(self, complete):
     h = transition_sprite.height
     x = w * complete * 2
     y = h - h * complete * 2
-    eraser = sge.Sprite(width=w, height=h)
+    eraser = sge.gfx.Sprite(width=w, height=h)
     eraser.draw_polygon([(0, h), (x, h), (0, y)],
-                        fill=sge.Color((0, 0, 0, 255)), anti_alias=True)
+                        fill=sge.gfx.Color((0, 0, 0, 255)), anti_alias=True)
     transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                   blend_mode=sge.BLEND_RGBA_SUBTRACT)
 
@@ -861,9 +876,9 @@ def r_update_wipe_downleft(self, complete):
     h = transition_sprite.height
     x = w - w * complete * 2
     y = h * complete * 2
-    eraser = sge.Sprite(width=w, height=h)
+    eraser = sge.gfx.Sprite(width=w, height=h)
     eraser.draw_polygon([(w, 0), (x, 0), (w, y)],
-                        fill=sge.Color((0, 0, 0, 255)), anti_alias=True)
+                        fill=sge.gfx.Color((0, 0, 0, 255)), anti_alias=True)
     transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                   blend_mode=sge.BLEND_RGBA_SUBTRACT)
 
@@ -874,9 +889,9 @@ def r_update_wipe_downright(self, complete):
     h = transition_sprite.height
     x = w * complete * 2
     y = w * complete * 2
-    eraser = sge.Sprite(width=w, height=h)
+    eraser = sge.gfx.Sprite(width=w, height=h)
     eraser.draw_polygon([(0, 0), (x, 0), (0, y)],
-                        fill=sge.Color((0, 0, 0, 255)), anti_alias=True)
+                        fill=sge.gfx.Color((0, 0, 0, 255)), anti_alias=True)
     transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                   blend_mode=sge.BLEND_RGBA_SUBTRACT)
 
@@ -926,12 +941,12 @@ def r_update_iris_in(self, complete):
 
     r = int(math.hypot(max(x, sge.game.width - x),
                        max(y, sge.game.height - y)) * (1 - complete))
-    eraser = sge.Sprite(width=w, height=h)
-    eraser_eraser = sge.Sprite(width=w, height=h)
-    eraser_eraser.draw_circle(x, y, r, fill=sge.Color((0, 0, 0, 255)))
+    eraser = sge.gfx.Sprite(width=w, height=h)
+    eraser_eraser = sge.gfx.Sprite(width=w, height=h)
+    eraser_eraser.draw_circle(x, y, r, fill=sge.gfx.Color((0, 0, 0, 255)))
 
     eraser.draw_lock()
-    eraser.draw_rectangle(0, 0, w, h, fill=sge.Color((0, 0, 0, 255)))
+    eraser.draw_rectangle(0, 0, w, h, fill=sge.gfx.Color((0, 0, 0, 255)))
     eraser.draw_sprite(eraser_eraser, 0, 0, 0,
                        blend_mode=sge.BLEND_RGBA_SUBTRACT)
     eraser.draw_unlock()
@@ -953,8 +968,8 @@ def r_update_iris_out(self, complete):
 
     r = int(math.hypot(max(x, sge.game.width - x),
                        max(y, sge.game.height - y)) * complete)
-    eraser = sge.Sprite(width=w, height=h)
-    eraser.draw_circle(x, y, r, fill=sge.Color((0, 0, 0, 255)))
+    eraser = sge.gfx.Sprite(width=w, height=h)
+    eraser.draw_circle(x, y, r, fill=sge.gfx.Color((0, 0, 0, 255)))
     transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                   blend_mode=sge.BLEND_RGBA_SUBTRACT)
 

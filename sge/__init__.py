@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012-2016 onpon4 <onpon4@riseup.net>
 #
 # This file is part of the Pygame SGE.
 #
@@ -21,12 +21,12 @@ The SGE Game Engine ("SGE", pronounced like "Sage") is a general-purpose
 focus on the game itself.  This makes more rapid game development
 possible, and it also makes the SGE easy to learn.
 
-The SGE is `free/libre software
-<http://gnu.org/philosophy/free-sw.html>`_, and the SGE documentation is
-free/libre as well.
+The SGE is `libre software <http://gnu.org/philosophy/free-sw.html>`_,
+and the SGE documentation (including all docstrings) is released to the
+public domain via CC0.
 
 Although it isn't required, you are encouraged to release your games'
-code under a free/libre software license, such as the GNU General Public
+code under a libre software license, such as the GNU General Public
 License, the Expat License, or the Apache License.  Doing so is easy,
 does not negatively affect you, and is highly appreciated as a
 contribution to a free society.
@@ -248,7 +248,7 @@ Dependencies
 Formats Support
 ---------------
 
-:class:`sge.Sprite` supports the following image formats:
+:class:`sge.gfx.Sprite` supports the following image formats:
 
 - PNG
 - JPEG
@@ -277,8 +277,8 @@ Formats Support
 For starting position in MOD files, the pattern order number is used
 instead of the number of milliseconds.
 
-If Pygame is built without full image support, :class:`sge.Sprite` will
-only be able to load uncompressed BMP images.
+If Pygame is built without full image support, :class:`sge.gfx.Sprite`
+will only be able to load uncompressed BMP images.
 
 The pygame.mixer module, which is used for all audio playback, is
 optional and depends on SDL_mixer; if pygame.mixer is unavailable,
@@ -291,12 +291,12 @@ avoid using it; consider using Ogg Vorbis instead.
 Missing Features
 ----------------
 
-:meth:`sge.Sprite.draw_line`, :meth:`sge.Room.project_line`, and
+:meth:`sge.gfx.Sprite.draw_line`, :meth:`sge.Room.project_line`, and
 :meth:`sge.Game.project_line` support anti-aliasing for lines with a
-thickness of 1 only.  :meth:`sge.Sprite.draw_polygon`,
+thickness of 1 only.  :meth:`sge.gfx.Sprite.draw_polygon`,
 :meth:`sge.Room.project_polygon`, and :meth:`sge.Game.project_polygon`
 support anti-aliasing for outlines of polygons with a thickness of 1
-only.  :meth:`sge.Sprite.draw_text`, :meth:`sge.Room.project_text`,
+only.  :meth:`sge.gfx.Sprite.draw_text`, :meth:`sge.Room.project_text`,
 and :meth:`sge.Game.project_text` support anti-aliasing in all cases.
 No other drawing or projecting methods support anti-aliasing.
 
@@ -436,23 +436,18 @@ MOUSE_BUTTON_NAMES = {}
 for pair in MOUSE_BUTTONS.items():
     MOUSE_BUTTON_NAMES[pair[1]] = pair[0]
 
-from sge.Color import Color
 from sge.Game import Game
-from sge.Sprite import Sprite
-from sge.BackgroundLayer import BackgroundLayer
-from sge.Background import Background
-from sge.Font import Font
 from sge.Sound import Sound
 from sge.Music import Music
 from sge.Object import Object, Mouse
 from sge.Room import Room
 from sge.View import View
-from sge import collision, input, joystick, keyboard, mouse, r
+from sge import collision, gfx, input, joystick, keyboard, mouse, r
 
 
 __all__ = [
     # Modules
-    "collision", "input", "joystick", "keyboard", "mouse",
+    "collision", "gfx", "input", "joystick", "keyboard", "mouse",
 
     # Constants
     'IMPLEMENTATION', 'BLEND_RGBA_ADD', 'BLEND_RGBA_SUBTRACT',
@@ -462,8 +457,7 @@ __all__ = [
     'BLEND_RGB_MAXIMUM',
 
     # Classes
-    'Color', 'Game', 'Sprite', 'BackgroundLayer', 'Background', 'Font',
-    'Sound', 'Music', 'Object', 'Room', 'View',
+    'Game', 'Sound', 'Music', 'Object', 'Room', 'View',
     ]
 
 # Global variables
