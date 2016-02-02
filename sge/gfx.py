@@ -227,7 +227,7 @@ class Sprite(object):
           result in loss of pixel information, especially if it is done
           repeatedly.  Because of this, it is advised that you do not
           adjust this value for routine scaling.  Use the
-          :attr:`image_xscale` attribute of a :class:`sge.Object`
+          :attr:`image_xscale` attribute of a :class:`sge.dsp.Object`
           object instead.
 
     .. attribute:: height
@@ -241,7 +241,7 @@ class Sprite(object):
           result in loss of pixel information, especially if it is done
           repeatedly.  Because of this, it is advised that you do not
           adjust this value for routine scaling.  Use the
-          :attr:`image_yscale` attribute of a :class:`sge.Object`
+          :attr:`image_yscale` attribute of a :class:`sge.dsp.Object`
           object instead.
 
     .. attribute:: transparent
@@ -1249,7 +1249,7 @@ class Sprite(object):
            of pixel information, especially if it is done repeatedly.
            Because of this, it is advised that you do not adjust this
            value for routine rotation.  Use the :attr:`image_rotation`
-           attribute of a :class:`sge.Object` object instead.
+           attribute of a :class:`sge.dsp.Object` object instead.
         """
         new_w = self.width
         new_h = self.height

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2014-2016 onpon4 <onpon4@riseup.net>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'The Pygame SGE'
-copyright = '2012, 2013, 2014, 2015 Julian Marchant'
+copyright = '2012-2016 onpon4'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -195,7 +195,7 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'PygameSGE.tex', 'Pygame SGE Documentation',
-   'Julian Marchant', 'manual'),
+   'onpon4', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -225,7 +225,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'pygamesge', 'Pygame SGE Documentation',
-     ['Julian Marchant'], 1)
+     ['onpon4'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -239,7 +239,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'PygameSGE', 'Pygame SGE Documentation',
-   'Julian Marchant', 'PygameSGE', 'One line description of project.',
+   'onpon4', 'PygameSGE', 'One line description of project.',
    'Miscellaneous'),
 ]
 

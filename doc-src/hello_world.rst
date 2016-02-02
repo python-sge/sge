@@ -84,10 +84,10 @@ The Game Class
 
 In SGE games, everything is controlled by a "game" object.  The game
 object controls everything at the global level, including global events.
-To define global events, we need to subclass :class:`sge.Game` and
+To define global events, we need to subclass :class:`sge.dsp.Game` and
 create our own game class.  We can just call this class ``Game``::
 
-    class Game(sge.Game):
+    class Game(sge.dsp.Game):
 
         def event_key_press(self, key, char):
             if key == 'escape':
@@ -104,11 +104,11 @@ the OS tells it to close or the Esc key is pressed.
 
 As you may have noticed, we define events by defining certain methods;
 in our case, we defined methods to override the
-:meth:`sge.Game.event_key_press` and :meth:`sge.Game.event_close`
-methods.
+:meth:`sge.dsp.Game.event_key_press` and
+:meth:`sge.dsp.Game.event_close` methods.
 
 Our definition of :meth:`event_close` is simple enough: we just call
-:meth:`sge.Game.end`, which ends the game.  Our definition of
+:meth:`sge.dsp.Game.end`, which ends the game.  Our definition of
 :meth:`event_key_press` is slightly more complicated; first we have to
 check what key was pressed, indicated by the ``key`` argument.  If the
 key is the Esc key, we call our :meth:`event_close` method.  The reason
@@ -130,7 +130,7 @@ might be a room.  In this example, we are only going to have one room,
 and this room is going to serve only one function: display "Hello,
 world!" in the center of the screen.  This will be our room class::
 
-    class Room(sge.Room):
+    class Room(sge.dsp.Room):
 
         def event_step(self, time_passed, delta_mult):
             sge.game.project_text(font, "Hello, world!", sge.game.width / 2,
@@ -139,17 +139,18 @@ world!" in the center of the screen.  This will be our room class::
                                   valign="middle")
 
 You can see that the room class is defined very similarly to the game
-class.  We subclass :class:`sge.Room` and add a method to override
-:meth:`sge.Room.event_step`, which defines the step event of our room
-class.  The step event happens over and over again, once every "frame".
-You can think of frames as being like the frames in a video; each frame
-makes small changes to the image on the screen and then gives you the
-new image in a fraction of a second, providing an illusion of movement.
+class.  We subclass :class:`sge.dsp.Room` and add a method to override
+:meth:`sge.dsp.Room.event_step`, which defines the step event of our
+room class.  The step event happens over and over again, once every
+"frame".  You can think of frames as being like the frames in a video;
+each frame makes small changes to the image on the screen and then gives
+you the new image in a fraction of a second, providing an illusion of
+movement.
 
 To display "Hello, world!" onto the screen, we use
-:meth:`sge.Game.project_text`, which instantly displays any text we want
-onto the screen.  :data:`sge.game` is a variable that always points to
-the :class:`sge.Game` object currently in use.
+:meth:`sge.dsp.Game.project_text`, which instantly displays any text we
+want onto the screen.  :data:`sge.game` is a variable that always points
+to the :class:`sge.dsp.Game` object currently in use.
 
 The first argument of this method is the font to use; we don't have a
 font yet, but we are going to define one later and assign it to
@@ -169,12 +170,12 @@ respectively.
 
 You might be wondering: why do we keep doing this every frame? Can't we
 just do it once, since we're not changing the image? In fact, we can't.
-:meth:`sge.Game.project_text` shows our text, but it only does so for
-one frame.  You can think of it as working like a movie projector: if
-you keep the projector on, you will continue to see the image, but as
+:meth:`sge.dsp.Game.project_text` shows our text, but it only does so
+for one frame.  You can think of it as working like a movie projector:
+if you keep the projector on, you will continue to see the image, but as
 soon as the projector stops projecting the image, you can no longer see
-the image from the projector.  :meth:`sge.Game.project_text` and other
-similar projection methods work the same way.
+the image from the projector.  :meth:`sge.dsp.Game.project_text` and
+other similar projection methods work the same way.
 
 Starting the Game
 =================
@@ -204,8 +205,8 @@ class definitions::
     if __name__ == '__main__':
         sge.game.start()
 
-First, we create a :class:`sge.Game` object; we don't need to store it
-in anything since it is automatically stored in :data:`sge.game`.
+First, we create a :class:`sge.dsp.Game` object; we don't need to store
+it in anything since it is automatically stored in :data:`sge.game`.
 
 Second, we create a :class:`sge.gfx.Background` object to specify what
 the background looks like.  We make our background all white, with no
@@ -223,13 +224,14 @@ the room that we are going to start the game with, we need to assign
 this room to the special attribute, :attr:`sge.game.start_room`, which
 indicates the room that the game starts with.
 
-Finally, with everything in place, we call the :meth:`sge.Game.start`
-method of our game object.  This executes all the game logic we defined
-earlier.  However, we only do this if the special Python variable,
-:data:`__name__`, is set to ``"__main__"``, which means that the current
-module is the main module, i.e. was executed rather than imported.  It
-is a good practice to include this distinction between being executed
-and being imported in all of your Python scripts.
+Finally, with everything in place, we call the
+:meth:`sge.dsp.Game.start` method of our game object.  This executes all
+the game logic we defined earlier.  However, we only do this if the
+special Python variable, :data:`__name__`, is set to ``"__main__"``,
+which means that the current module is the main module, i.e. was
+executed rather than imported.  It is a good practice to include this
+distinction between being executed and being imported in all of your
+Python scripts.
 
 The Final Result
 ================
@@ -258,7 +260,7 @@ This is the completed Hello World program::
     import sge
 
 
-    class Game(sge.Game):
+    class Game(sge.dsp.Game):
 
         def event_key_press(self, key, char):
             if key == 'escape':
@@ -268,7 +270,7 @@ This is the completed Hello World program::
             self.end()
 
 
-    class Room(sge.Room):
+    class Room(sge.dsp.Room):
 
         def event_step(self, time_passed, delta_mult):
             sge.game.project_text(font, "Hello, world!", sge.game.width / 2,

@@ -25,6 +25,9 @@ Specification misc changes:
   sge.Background to the new sge.gfx module.
 * Changed the default text color in text drawing and projection methods
   to white.
+* Moved sge.Game, sge.Room, sge.View, and sge.Object to the new sge.dsp
+  module.
+* Moved sge.Sound and sge.Music to the new sge.snd module.
 
 
 0.22

@@ -31,7 +31,7 @@ class glob(object):
     state_font = None
 
 
-class Game(sge.Game):
+class Game(sge.dsp.Game):
 
     def event_key_press(self, key, char):
         if key == 'escape':
@@ -41,7 +41,7 @@ class Game(sge.Game):
         self.end()
 
 
-class Room(sge.Room):
+class Room(sge.dsp.Room):
 
     def set_joystick(self):
         self.joystick_axes = []
@@ -194,11 +194,11 @@ def main():
     glob.state_font = sge.gfx.Font('Liberation Sans', size=14)
 
     # Create objects
-    selection_object = sge.Object(0, 0, sprite=glob.js_selection_sprite,
-                                        tangible=False)
-    state_object = sge.Object(0, TITLE_HEIGHT,
-                                    sprite=glob.js_state_sprite,
-                                    tangible=False)
+    selection_object = sge.dsp.Object(0, 0, sprite=glob.js_selection_sprite,
+                                      tangible=False)
+    state_object = sge.dsp.Object(0, TITLE_HEIGHT,
+                                  sprite=glob.js_state_sprite,
+                                  tangible=False)
     objects = (selection_object, state_object)
 
     # Create rooms

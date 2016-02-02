@@ -36,7 +36,7 @@ TEXT_OFFSET = 16
 game_in_progress = True
 
 
-class Game(sge.Game):
+class Game(sge.dsp.Game):
 
     def event_step(self, time_passed, delta_mult):
         self.project_sprite(hud_sprite, 0, self.width / 2, 0)
@@ -85,7 +85,7 @@ class Game(sge.Game):
         self.event_close()
 
 
-class Player(sge.Object):
+class Player(sge.dsp.Object):
 
     score = 0
 
@@ -139,7 +139,7 @@ class Player(sge.Object):
             self.trackball_motion += y
 
 
-class Ball(sge.Object):
+class Ball(sge.dsp.Object):
 
     def __init__(self):
         x = sge.game.width / 2
@@ -221,7 +221,7 @@ def create_room():
     player1 = Player(1)
     player2 = Player(2)
     ball = Ball()
-    return sge.Room([player1, player2, ball], background=background)
+    return sge.dsp.Room([player1, player2, ball], background=background)
 
 
 def refresh_hud():
@@ -257,9 +257,9 @@ background = sge.gfx.Background(layers, sge.gfx.Color("black"))
 hud_font = sge.gfx.Font("Droid Sans Mono", size=48)
 
 # Load sounds
-bounce_sound = sge.Sound(os.path.join(DATA, 'bounce.wav'))
-bounce_wall_sound = sge.Sound(os.path.join(DATA, 'bounce_wall.wav'))
-score_sound = sge.Sound(os.path.join(DATA, 'score.wav'))
+bounce_sound = sge.snd.Sound(os.path.join(DATA, 'bounce.wav'))
+bounce_wall_sound = sge.snd.Sound(os.path.join(DATA, 'bounce_wall.wav'))
+score_sound = sge.snd.Sound(os.path.join(DATA, 'score.wav'))
 
 # Create rooms
 sge.game.start_room = create_room()

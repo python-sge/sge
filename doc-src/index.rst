@@ -14,8 +14,14 @@ SGE Game Engine documentation
    hello_world
    pong
    pong_better
-   classes
-   modules
+   dsp
+   gfx
+   snd
+   collision
+   input
+   joystick
+   keyboard
+   mouse
 
 Indices and tables
 ==================

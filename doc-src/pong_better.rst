@@ -34,7 +34,7 @@ To make pressing Enter start a new game, we will check
 game, as we had it do previously.  Otherwise, we will set
 :data:`game_in_progress` to :const:`True` and restart the room.
 
-If you look through the documentation for :class:`sge.Room`, you may
+If you look through the documentation for :class:`sge.dsp.Room`, you may
 notice that no "restart" method exists. In fact, this is a design
 choice; earlier versions of the SGE did have a method to restart rooms,
 but it was removed because this feature is overly difficult to maintain
@@ -71,7 +71,7 @@ Our function is as follows::
         player1 = Player(1)
         player2 = Player(2)
         ball = Ball()
-        return sge.Room([player1, player2, ball], background=background)
+        return sge.dsp.Room([player1, player2, ball], background=background)
 
 Of course, this makes the identical code at the bottom redundant, so we
 will replace it with a call to :func:`create_room`.
@@ -94,7 +94,7 @@ The players have points, but can't see the score!  We need to add a HUD
 (heads-up display) to show the score to the players.
 
 There are a couple of ways we can do this.  Most obviously, we can use
-:meth:`sge.Game.project_text` or :meth:`sge.Room.project_text`.
+:meth:`sge.dsp.Game.project_text` or :meth:`sge.dsp.Room.project_text`.
 However, there is a much better way: have a dynamically generated sprite
 that represents the look of the HUD at any given time, and displaying
 that sprite.
@@ -184,12 +184,12 @@ HUD sprite onto the screen::
     def event_step(self, time_passed, delta_mult):
         self.project_sprite(hud_sprite, 0, self.width / 2, 0)
 
-Unlike :class:`sge.Room` projections, :class:`sge.Game` projections are
-relative to the screen.  Additionally, these projections are always on
-top of everything else on the screen.  This is usually how we want a HUD
-to be displayed, which is why we are using a :class:`sge.Game`
-projection instead of a :class:`sge.Room` projection or
-:class:`sge.Object` object.
+Unlike :class:`sge.dsp.Room` projections, :class:`sge.dsp.Game`
+projections are relative to the screen.  Additionally, these projections
+are always on top of everything else on the screen.  This is usually how
+we want a HUD to be displayed, which is why we are using a
+:class:`sge.dsp.Game` projection instead of a :class:`sge.dsp.Room`
+projection or :class:`sge.dsp.Object` object.
 
 .. note::
 
@@ -197,7 +197,7 @@ projection instead of a :class:`sge.Room` projection or
    This is *not* a bug! This happens because the step event doesn't
    occur while the game is paused.  If you want the HUD to show up while
    the game is paused, project it in the paused step event, defined by
-   :meth:`sge.Game.event_paused_step`, as well.
+   :meth:`sge.dsp.Game.event_paused_step`, as well.
 
 Giving Victory
 --------------
@@ -295,9 +295,9 @@ examples/data.  Create a folder in your project directory with the name
 Loading the Sounds
 ------------------
 
-Sounds in the SGE are stored in :class:`sge.Sound` objects.  As the only
-argument, indicate the full path to the file.  There are two ways to
-indicate the path: using the current working directory as a base, and
+Sounds in the SGE are stored in :class:`sge.snd.Sound` objects.  As the
+only argument, indicate the full path to the file.  There are two ways
+to indicate the path: using the current working directory as a base, and
 using the directory of pong.py as a base.  Both of methods require the
 :mod:`os` module, so be sure to add this to your list of imports.
 
@@ -327,16 +327,16 @@ this directory, we use this code::
 
     os.path.join(DATA, "spam.wav")
 
-Assign the appropriate :class:`sge.Sound` objects to
+Assign the appropriate :class:`sge.snd.Sound` objects to
 :data:`bounce_sound`, :data:`bounce_wall_sound`, and
 :data:`score_sound`.
 
 Playing the Sounds
 ------------------
 
-Sounds are played with :meth:`sge.Sound.play`.  Call this method in the
-appropriate places: when a player scores, when the ball bounces off an
-edge of the screen, and when the ball hits a paddle.  There are five
+Sounds are played with :meth:`sge.snd.Sound.play`.  Call this method in
+the appropriate places: when a player scores, when the ball bounces off
+an edge of the screen, and when the ball hits a paddle.  There are five
 places in total.
 
 With that, our Pong game now has sound effects.
@@ -374,10 +374,11 @@ attribute called :attr:`trackball_motion` for that; initialize it as
 ``0`` in the create event.
 
 We now need to define the trackball move event, which is defined by
-:meth:`sge.Object.event_joystick_trackball_move`.  Within this event, if
-the ``joystick`` argument is the same as ``self.joystick``, add ``y`` to
-``self.trackball_motion``.  We are adding to it, rather than replacing
-it, because the trackball might move multiple times in the same frame.
+:meth:`sge.dsp.Object.event_joystick_trackball_move`.  Within this
+event, if the ``joystick`` argument is the same as ``self.joystick``,
+add ``y`` to ``self.trackball_motion``.  We are adding to it, rather
+than replacing it, because the trackball might move multiple times in
+the same frame.
 
 Applying the Joystick Controls
 ------------------------------
@@ -435,7 +436,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
     game_in_progress = True
 
 
-    class Game(sge.Game):
+    class Game(sge.dsp.Game):
 
         def event_step(self, time_passed, delta_mult):
             self.project_sprite(hud_sprite, 0, self.width / 2, 0)
@@ -473,7 +474,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
             self.event_close()
 
 
-    class Player(sge.Object):
+    class Player(sge.dsp.Object):
 
         score = 0
 
@@ -526,7 +527,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
                 self.trackball_motion += y
 
 
-    class Ball(sge.Object):
+    class Ball(sge.dsp.Object):
 
         def __init__(self):
             x = sge.game.width / 2
@@ -608,7 +609,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
         player1 = Player(1)
         player2 = Player(2)
         ball = Ball()
-        return sge.Room([player1, player2, ball], background=background)
+        return sge.dsp.Room([player1, player2, ball], background=background)
 
 
     def refresh_hud():
@@ -644,9 +645,9 @@ Our final Pong game now has scores, sounds, and even joystick support::
     hud_font = sge.gfx.Font("Droid Sans Mono", size=48)
 
     # Load sounds
-    bounce_sound = sge.Sound(os.path.join(DATA, 'bounce.wav'))
-    bounce_wall_sound = sge.Sound(os.path.join(DATA, 'bounce_wall.wav'))
-    score_sound = sge.Sound(os.path.join(DATA, 'score.wav'))
+    bounce_sound = sge.snd.Sound(os.path.join(DATA, 'bounce.wav'))
+    bounce_wall_sound = sge.snd.Sound(os.path.join(DATA, 'bounce_wall.wav'))
+    score_sound = sge.snd.Sound(os.path.join(DATA, 'score.wav'))
 
     # Create rooms
     sge.game.start_room = create_room()

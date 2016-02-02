@@ -605,7 +605,7 @@ def o_is_other(self, other=None):
 
     if other is None:
         r = True
-    elif isinstance(other, sge.Object):
+    elif isinstance(other, sge.dsp.Object):
         r = self is other
     elif isinstance(other, (list, tuple, set)):
         r = self in other

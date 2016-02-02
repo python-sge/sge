@@ -26,7 +26,7 @@ import sge
 DATA = os.path.join(os.path.dirname(__file__), "data")
 
 
-class Game(sge.Game):
+class Game(sge.dsp.Game):
     def event_key_press(self, key, char):
         if key == 'escape':
             self.end()
@@ -39,7 +39,7 @@ class Game(sge.Game):
         self.end()
 
 
-class Circle(sge.Object):
+class Circle(sge.dsp.Object):
     def __init__(self, x, y):
         super(Circle, self).__init__(x, y, 1, sprite=circle_sprite,
                                      collision_precise=True,
@@ -100,11 +100,11 @@ def main():
     objects =  [circle]
 
     # Create views
-    views = [sge.View(0, 0, 0, 0, 240, 240, 240, 240)]
+    views = [sge.dsp.View(0, 0, 0, 0, 240, 240, 240, 240)]
 
     # Create rooms
-    sge.game.start_room = sge.Room(objects, 640, 640, views=views,
-                                   background=background)
+    sge.game.start_room = sge.dsp.Room(objects, 640, 640, views=views,
+                                       background=background)
 
     sge.game.start()
 

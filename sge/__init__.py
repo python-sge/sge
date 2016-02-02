@@ -109,19 +109,19 @@ general game loop structure::
         # Refresh
         sge.game.refresh()
 
-:meth:`sge.Game.pump_input` should be called every frame regardless of
-whether or not user input is needed.  Failing to call it will cause the
-queue to build up, but more importantly, the OS may decide that the
+:meth:`sge.dsp.Game.pump_input` should be called every frame regardless
+of whether or not user input is needed.  Failing to call it will cause
+the queue to build up, but more importantly, the OS may decide that the
 program has locked up if it doesn't get a response for a long time.
 
-:meth:`sge.Game.regulate_speed` limits the frame rate of the game and
-tells you how much time has passed since the last frame.  It is not
+:meth:`sge.dsp.Game.regulate_speed` limits the frame rate of the game
+and tells you how much time has passed since the last frame.  It is not
 technically necessary, but using it is highly recommended; otherwise,
 the CPU will be working harder than it needs to and if things are
 moving, their speed will be irregular.
 
-:meth:`sge.Game.refresh` is necessary for any changes to the screen to
-be seen by the user.  This includes new objects, removed objects, new
+:meth:`sge.dsp.Game.refresh` is necessary for any changes to the screen
+to be seen by the user.  This includes new objects, removed objects, new
 projections, discontinued projections, etc.
 
 Global Variables and Constants
@@ -216,8 +216,8 @@ Global Variables and Constants
 
 .. data:: sge.game
 
-   Stores the current :class:`sge.Game` object.  If there is no
-   :class:`sge.Game` object currently, this variable is set to
+   Stores the current :class:`sge.dsp.Game` object.  If there is no
+   :class:`sge.dsp.Game` object currently, this variable is set to
    :const:`None`.
 
 Information specific to the Pygame SGE
@@ -261,44 +261,46 @@ Formats Support
 - Netpbm
 - X Pixmap
 
-:class:`sge.Sound` supports the following audio formats:
+If Pygame is built without full image support, :class:`sge.gfx.Sprite`
+will only be able to load uncompressed BMP images.
+
+:class:`sge.snd.Sound` supports the following audio formats:
 
 - Uncompressed WAV
 - Ogg Vorbis
 
-:class:`sge.Music` supports the following audio formats:
+:class:`sge.snd.Music` supports the following audio formats:
 
 - Ogg Vorbis
-- MP3 (support limited; use not recommended)
 - MOD
 - XM
 - MIDI
 
+MP3 is also supported on some systems, but not all, due to software idea
+patents which restrict use of this format.  On some systems, attempting
+to load an unsupported format can crash the game.  Since MP3 support is
+not available on all systems, it is best to avoid using it; consider
+using Ogg Vorbis instead.
+
 For starting position in MOD files, the pattern order number is used
 instead of the number of milliseconds.
-
-If Pygame is built without full image support, :class:`sge.gfx.Sprite`
-will only be able to load uncompressed BMP images.
 
 The pygame.mixer module, which is used for all audio playback, is
 optional and depends on SDL_mixer; if pygame.mixer is unavailable,
 sounds and music will not play.
 
-On some systems, :class:`sge.Music` attempting to load an unsupported
-format can crash the game.  Since MP3 support is limited, it is best to
-avoid using it; consider using Ogg Vorbis instead.
-
 Missing Features
 ----------------
 
-:meth:`sge.gfx.Sprite.draw_line`, :meth:`sge.Room.project_line`, and
-:meth:`sge.Game.project_line` support anti-aliasing for lines with a
+:meth:`sge.gfx.Sprite.draw_line`, :meth:`sge.dsp.Room.project_line`, and
+:meth:`sge.dsp.Game.project_line` support anti-aliasing for lines with a
 thickness of 1 only.  :meth:`sge.gfx.Sprite.draw_polygon`,
-:meth:`sge.Room.project_polygon`, and :meth:`sge.Game.project_polygon`
-support anti-aliasing for outlines of polygons with a thickness of 1
-only.  :meth:`sge.gfx.Sprite.draw_text`, :meth:`sge.Room.project_text`,
-and :meth:`sge.Game.project_text` support anti-aliasing in all cases.
-No other drawing or projecting methods support anti-aliasing.
+:meth:`sge.dsp.Room.project_polygon`, and
+:meth:`sge.dsp.Game.project_polygon` support anti-aliasing for outlines
+of polygons with a thickness of 1 only.
+:meth:`sge.gfx.Sprite.draw_text`, :meth:`sge.dsp.Room.project_text`,
+and :meth:`sge.dsp.Game.project_text` support anti-aliasing in all
+cases.  No other drawing or projecting methods support anti-aliasing.
 
 Known Problems
 --------------
@@ -436,13 +438,7 @@ MOUSE_BUTTON_NAMES = {}
 for pair in MOUSE_BUTTONS.items():
     MOUSE_BUTTON_NAMES[pair[1]] = pair[0]
 
-from sge.Game import Game
-from sge.Sound import Sound
-from sge.Music import Music
-from sge.Object import Object, Mouse
-from sge.Room import Room
-from sge.View import View
-from sge import collision, gfx, input, joystick, keyboard, mouse, r
+from sge import collision, dsp, gfx, input, joystick, keyboard, mouse, snd, r
 
 
 __all__ = [

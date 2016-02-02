@@ -35,7 +35,7 @@ class glob(object):
     music = None
 
 
-class Game(sge.Game):
+class Game(sge.dsp.Game):
 
     def event_step(self, time_passed, delta_mult):
         self.fps_time += time_passed
@@ -47,7 +47,7 @@ class Game(sge.Game):
             self.fps_frames = 0
 
         self.project_text(glob.font, self.fps_text, self.width - 8, 8,
-                          halign="right")
+                          color=sge.gfx.Color("#000"), halign="right")
 
     def event_key_press(self, key, char):
         if key == 'escape':
@@ -57,7 +57,7 @@ class Game(sge.Game):
         self.end()
 
 
-class Circle(sge.Object):
+class Circle(sge.dsp.Object):
 
     def __init__(self, x, y):
         super(Circle, self).__init__(x, y, 5, sprite=glob.circle_sprite,
@@ -89,7 +89,7 @@ class Circle(sge.Object):
         glob.pop_sound.play()
 
 
-class CirclePop(sge.Object):
+class CirclePop(sge.dsp.Object):
 
     def __init__(self, x, y):
         super(CirclePop, self).__init__(x, y, 5, sprite=glob.circle_pop_sprite,
@@ -104,7 +104,7 @@ class CirclePop(sge.Object):
         sge.game.current_room.add(circle)
 
 
-class Room(sge.Room):
+class Room(sge.dsp.Room):
 
     def event_room_start(self):
         self.shake = 0
@@ -197,10 +197,10 @@ def main():
     glob.font = sge.gfx.Font('Liberation Serif', 20)
 
     # Load sounds
-    glob.pop_sound = sge.Sound(os.path.join(DATA, 'pop.ogg'))
+    glob.pop_sound = sge.snd.Sound(os.path.join(DATA, 'pop.ogg'))
     
     # Load music
-    glob.music = sge.Music(os.path.join(DATA, 'WhereWasI.ogg'))
+    glob.music = sge.snd.Music(os.path.join(DATA, 'WhereWasI.ogg'))
 
     # Create objects
     circle = Circle(game.width // 2, game.height // 2)
@@ -210,7 +210,7 @@ def main():
     objects = [circle, circle2, circle3, circle4]
 
     # Create view
-    views = [sge.View(0, 0)]
+    views = [sge.dsp.View(0, 0)]
 
     # Create rooms
     game.start_room = Room(objects, views=views, background=background)

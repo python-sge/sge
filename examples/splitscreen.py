@@ -28,7 +28,7 @@ DATA = os.path.join(os.path.dirname(__file__), "data")
 circles = []
 
 
-class Game(sge.Game):
+class Game(sge.dsp.Game):
 
     def event_step(self, time_passed, delta_mult):
         self.project_line(self.width / 2, 0, self.width / 2, self.height,
@@ -52,7 +52,7 @@ class Game(sge.Game):
         self.event_close()
 
 
-class Circle(sge.Object):
+class Circle(sge.dsp.Object):
     def __init__(self, x, y, player=0):
         super(Circle, self).__init__(x, y, 1, sprite=circle_sprite,
                                      collision_precise=True)
@@ -127,10 +127,10 @@ def main():
     views = []
     for x in range(2):
         for y in range(2):
-            views.append(sge.View(0, 0, 320 * x, 240 * y, 320, 240))
+            views.append(sge.dsp.View(0, 0, 320 * x, 240 * y, 320, 240))
 
     # Create rooms
-    sge.game.start_room = sge.Room(objects, 1280, 1024, views, background)
+    sge.game.start_room = sge.dsp.Room(objects, 1280, 1024, views, background)
 
     sge.game.start()
 
