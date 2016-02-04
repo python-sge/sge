@@ -1235,7 +1235,7 @@ class Sprite(object):
         Arguments:
 
         - ``x`` -- The rotation amount in degrees, with rotation in a
-          positive direction being counter-clockwise.
+          positive direction being clockwise.
         - ``adaptive_resize`` -- Whether or not the sprite should be
           resized to accomodate rotation.  If this is :const:`True`,
           rotation amounts other than multiples of 180 will result in
@@ -1254,7 +1254,7 @@ class Sprite(object):
         new_w = self.width
         new_h = self.height
         for i in six.moves.range(self.frames):
-            img = pygame.transform.rotate(self.rd["baseimages"][i], x)
+            img = pygame.transform.rotate(self.rd["baseimages"][i], -x)
             new_w = img.get_width()
             new_h = img.get_height()
             if adaptive_resize:

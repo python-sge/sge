@@ -2810,7 +2810,7 @@ class Object(object):
 
        The direction of the object's movement in degrees, with ``0``
        being directly to the right and rotation in a positive direction
-       being counter-clockwise.
+       being clockwise.
 
     .. attribute:: xacceleration
 
@@ -2876,7 +2876,7 @@ class Object(object):
     .. attribute:: image_rotation
 
        The rotation of the sprite in degrees, with rotation in a
-       positive direction being counter-clockwise.
+       positive direction being clockwise.
 
        If :attr:`regulate_origin` is :const:`True`, the image is rotated
        about the origin.  Otherwise, the image is rotated about its
@@ -3130,7 +3130,7 @@ class Object(object):
         if self.rd["speed"] != value:
             self.rd["speed"] = value
             self.rd["xv"] = math.cos(math.radians(self.rd["mv_dir"])) * value
-            self.rd["yv"] = -math.sin(math.radians(self.rd["mv_dir"])) * value
+            self.rd["yv"] = math.sin(math.radians(self.rd["mv_dir"])) * value
 
     @property
     def move_direction(self):
@@ -3141,7 +3141,7 @@ class Object(object):
         if self.rd["mv_dir"] != value:
             self.rd["mv_dir"] = value
             self.rd["xv"] = math.cos(math.radians(value)) * self.rd["speed"]
-            self.rd["yv"] = -math.sin(math.radians(value)) * self.rd["speed"]
+            self.rd["yv"] = math.sin(math.radians(value)) * self.rd["speed"]
 
     @property
     def image_origin_x(self):

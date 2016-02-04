@@ -677,11 +677,11 @@ def o_get_origin_offset(self):
         center_y = normal_height / 2
         c_origin_x = new_origin_x - center_x
         c_origin_y = new_origin_y - center_y
-        start_angle = math.atan2(-c_origin_y, c_origin_x)
+        start_angle = math.atan2(c_origin_y, c_origin_x)
         radius = math.hypot(c_origin_x, c_origin_y)
         new_angle = start_angle + math.radians(self.image_rotation)
         new_c_origin_x = radius * math.cos(new_angle)
-        new_c_origin_y = -(radius * math.sin(new_angle))
+        new_c_origin_y = radius * math.sin(new_angle)
         new_origin_x = new_c_origin_x + center_x
         new_origin_y = new_c_origin_y + center_y
 
@@ -704,7 +704,7 @@ def o_set_speed(self):
     # Set the speed and move direction based on xvelocity and
     # yvelocity.
     self.rd["speed"] = math.hypot(self.rd["xv"], self.rd["yv"])
-    self.rd["mv_dir"] = math.degrees(math.atan2(-self.rd["yv"], self.rd["xv"]))
+    self.rd["mv_dir"] = math.degrees(math.atan2(self.rd["yv"], self.rd["xv"]))
 
 
 def r_get_rectangle_object_areas(self, x, y, width, height):
@@ -1033,7 +1033,7 @@ def s_get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,
                          self.height * abs(yscale))
 
             if rotation != 0:
-                img = pygame.transform.rotate(img, rotation)
+                img = pygame.transform.rotate(img, -rotation)
 
             if alpha < 255:
                 if img.get_flags() & pygame.SRCALPHA:
@@ -1069,7 +1069,7 @@ def s_get_precise_mask(self, num, xscale, yscale, rotation):
         h = int(round(self.height * abs(yscale)))
         image = pygame.transform.scale(image, (w, h))
         if rotation:
-            image = pygame.transform.rotate(image, rotation)
+            image = pygame.transform.rotate(image, -rotation)
 
         image.lock()
         mask = []

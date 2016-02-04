@@ -28,6 +28,7 @@ Specification misc changes:
 * Moved sge.Game, sge.Room, sge.View, and sge.Object to the new sge.dsp
   module.
 * Moved sge.Sound and sge.Music to the new sge.snd module.
+* Rotation is now clockwise instead of counter-clockwise.
 
 
 0.22
