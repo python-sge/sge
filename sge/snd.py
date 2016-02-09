@@ -50,8 +50,8 @@ class Sound(object):
 
     .. attribute:: volume
 
-       The volume of the sound in percent from ``0`` to ``100`` (``0``
-       for no sound, ``100`` for max sound).
+       The volume of the sound as a value from ``0`` to ``1`` (``0`` for
+       no sound, ``1`` for maximum volume).
 
     .. attribute:: max_play
 
@@ -111,7 +111,7 @@ class Sound(object):
 
         return n
 
-    def __init__(self, fname, volume=100, max_play=1):
+    def __init__(self, fname, volume=1, max_play=1):
         """
         Arguments:
 
@@ -142,7 +142,7 @@ class Sound(object):
         self.volume = volume
         self.max_play = max_play
 
-    def play(self, loops=1, volume=100, balance=0, maxtime=None,
+    def play(self, loops=1, volume=1, balance=0, maxtime=None,
              fade_time=None):
         """
         Play the sound.
@@ -151,9 +151,9 @@ class Sound(object):
 
         - ``loops`` -- The number of times to play the sound; set to
           :const:`None` or ``0`` to loop indefinitely.
-        - ``volume`` -- The volume to play the sound at as a percentage
-          of :attr:`self.volume` from ``0`` to ``100`` (``0`` for no
-          sound, ``100`` for :attr:`self.volume`).
+        - ``volume`` -- The volume to play the sound at as a factor
+          of :attr:`self.volume` (``0`` for no sound, ``1`` for
+          :attr:`self.volume`).
         - ``balance`` -- The balance of the sound effect on stereo
           speakers as a float from ``-1`` to ``1``, where ``0`` is
           centered (full volume in both speakers), ``1`` is entirely in
@@ -176,7 +176,7 @@ class Sound(object):
             loops -= 1
 
             # Calculate volume for each speaker
-            left_volume = (self.volume / 100) * (volume / 100)
+            left_volume = self.volume * volume
             right_volume = left_volume
             if balance < 0:
                 right_volume *= 1 - abs(balance)
@@ -255,8 +255,8 @@ class Music(object):
 
     .. attribute:: volume
 
-       The volume of the music in percent from ``0`` to ``100`` (``0``
-       for no sound, ``100`` for maximum volume).
+       The volume of the music as a value from ``0`` to ``1`` (``0`` for
+       no sound, ``1`` for maximum volume).
 
     .. attribute:: fname
 
@@ -287,10 +287,10 @@ class Music(object):
 
     @volume.setter
     def volume(self, value):
-        self.__volume = min(value, 100)
+        self.__volume = min(value, 1)
 
         if self.playing:
-            pygame.mixer.music.set_volume(value / 100)
+            pygame.mixer.music.set_volume(value)
 
     @property
     def length(self):
@@ -314,7 +314,7 @@ class Music(object):
         else:
             return 0
 
-    def __init__(self, fname, volume=100):
+    def __init__(self, fname, volume=1):
         """
         Arguments:
 
@@ -364,7 +364,7 @@ class Music(object):
             if fade_time is not None and fade_time > 0:
                 pygame.mixer.music.set_volume(0)
             else:
-                pygame.mixer.music.set_volume(self.volume / 100)
+                pygame.mixer.music.set_volume(self.volume)
 
             if self.fname.lower().endswith(".mod"):
                 # MOD music is handled differently in Pygame: it uses

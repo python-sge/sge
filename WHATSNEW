@@ -29,6 +29,7 @@ Specification misc changes:
   module.
 * Moved sge.Sound and sge.Music to the new sge.snd module.
 * Rotation is now clockwise instead of counter-clockwise.
+* Sound and music volumes are now from 0 to 1, not 0 to 100.
 
 
 0.22
