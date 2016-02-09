@@ -8,17 +8,17 @@ SGE Game Engine documentation
    information. This file is offered as-is, without any warranty.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    sge
    hello_world
    pong
    pong_better
+   input
    dsp
    gfx
    snd
    collision
-   input
    joystick
    keyboard
    mouse

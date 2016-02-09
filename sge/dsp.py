@@ -2691,7 +2691,7 @@ class Object(object):
           if the object is inactive.  If you wish for the object to not
           be visible, set :attr:`visible` to :const:`False`.  If you
           wish for the object to not perform collision events, set
-          :attr:`checks_collisions` to :const:`False`.
+          :attr:`tangible` to :const:`False`.
 
     .. attribute:: checks_collisions
 

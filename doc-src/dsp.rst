@@ -55,7 +55,7 @@ sge.dsp.Game Methods
 .. automethod:: sge.dsp.Game.project_text
 
 sge.dsp.Game Event Methods
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automethod:: sge.dsp.Game.event_step
 
