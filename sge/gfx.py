@@ -34,7 +34,7 @@ import sge
 from sge import r
 from sge.r import (_check_color_input, _check_color, _get_blend_flags,
                    _screen_blend, f_split_text, s_get_image, s_set_size,
-                   s_refresh, s_set_transparency)
+                   s_refresh, s_set_transparency, tg_blit)
 
 COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
           'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
@@ -1504,28 +1504,21 @@ class TileGrid(object):
        A string indicating how the tiles should be rendered.  Can be one
        of the following:
 
-       - ``"right-down"`` -- Start in the top-left corner of the grid.
+       - ``"orthogonal"`` -- Start in the top-left corner of the grid.
          Render each tile in a section to the right of the previous tile
          by :attr:`tile_width` pixels.  Render each section downward
          from the previous section by :attr:`tile_height` pixels.
 
-       - ``"right-up"`` -- Start in the bottom-left corner of the grid.
+       - ``"isometric"`` -- Start in the top-left corner of the grid.
          Render each tile in a section to the right of the previous tile
-         by :attr:`tile_width` pixels.  Render each section upward from
-         the previous section by :attr:`tile_height` pixels.
-
-       - ``"left-down"`` -- Start in the top-right corner of the grid.
-         Render each tile in a section to the left of the previous tile
          by :attr:`tile_width` pixels.  Render each section downward
-         from the previous section by :attr:`tile_height` pixels.
-
-       - ``"left-up"`` -- Start in the bottom-right corner of the grid.
-         Render each tile in a section to the left of the previous tile
-         by :attr:`tile_width` pixels.  Render each section upward from
-         the previous section by :attr:`tile_height` pixels.
+         from the previous section by ``tile_height / 2`` pixels.
+         Assuming the first section has an index of ``0``, render each
+         odd-numbered section to the right of the even-numbered sections
+         by ``tile_width / 2`` pixels.
 
        If this is set to an invalid value or :const:`None`, it becomes
-       ``"right-down"``.
+       ``"orthogonal"``.
 
        .. note::
 
@@ -1567,15 +1560,15 @@ class TileGrid(object):
 
     .. attribute:: width
 
-       The total width of the tile grid in pixels.  Changing this value
-       will result in :attr:`tile_width` and/or :attr:`tile_height`
-       being changed so that the grid fits the indicated size.
+       The total width of the tile grid in pixels.  Attempting to change
+       this value has no effect and is only supported for compatibility
+       with :class:`sge.gfx.Sprite`.
 
     .. attribute:: height
 
-       The total height of the tile grid in pixels.  Changing this value
-       will result in :attr:`tile_width` and/or :attr:`tile_height`
-       being changed so that the grid fits the indicated size.
+       The total height of the tile grid in pixels.  Attempting to
+       change this value has no effect and is only supported for
+       compatibility with :class:`sge.gfx.Sprite`.
 
     .. attribute:: origin_x
 
@@ -1646,13 +1639,28 @@ class TileGrid(object):
 
     @property
     def width(self):
-        columns = self.section_length
-        return columns * self.tile_width
+        if self.render_method == "isometric":
+            w = self.tile_width
+            return self.section_length * w + (w / 2)
+        else:
+            return self.section_length * self.tile_width
+
+    @width.setter
+    def width(self, value):
+        pass
 
     @property
     def height(self):
         rows = len(self.tiles) / self.section_length
-        return rows * self.tile_height
+        if self.render_method == "isometric":
+            h = self.tile_height / 2
+            return self.section_length * h + h
+        else:
+            return rows * self.tile_height
+
+    @height.setter
+    def height(self, value):
+        pass
 
     @property
     def bbox_x(self):

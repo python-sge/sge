@@ -39,15 +39,14 @@ from sge.r import (
     _check_color, _scale, _get_blend_flags, _screen_blend, _set_mode,
     _handle_music, _get_dot_sprite, _get_line_sprite, _get_rectangle_sprite,
     _get_ellipse_sprite, _get_circle_sprite, _get_polygon_sprite, bl_update,
-    bl_get_image, tg_blit, o_update, o_detect_collisions,
-    o_update_collision_lists, o_update_object_areas, o_is_other,
-    o_get_origin_offset, o_set_speed, s_get_image, s_get_precise_mask,
-    r_get_rectangle_object_areas, r_set_object_areas, r_update_fade,
-    r_update_dissolve, r_update_pixelate, r_update_wipe_left,
-    r_update_wipe_right, r_update_wipe_up, r_update_wipe_down,
-    r_update_wipe_upleft, r_update_wipe_upright, r_update_wipe_downleft,
-    r_update_wipe_downright, r_update_wipe_matrix, r_update_iris_in,
-    r_update_iris_out, v_limit)
+    bl_get_image, o_update, o_detect_collisions, o_update_collision_lists,
+    o_update_object_areas, o_is_other, o_get_origin_offset, o_set_speed,
+    s_get_image, s_get_precise_mask, tg_blit, r_get_rectangle_object_areas,
+    r_set_object_areas, r_update_fade, r_update_dissolve, r_update_pixelate,
+    r_update_wipe_left, r_update_wipe_right, r_update_wipe_up,
+    r_update_wipe_down, r_update_wipe_upleft, r_update_wipe_upright,
+    r_update_wipe_downleft, r_update_wipe_downright, r_update_wipe_matrix,
+    r_update_iris_in, r_update_iris_out, v_limit)
 
 
 __all__ = ["Game", "Room", "View", "Object"]

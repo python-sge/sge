@@ -1100,37 +1100,33 @@ def s_get_precise_mask(self, num, xscale, yscale, rotation):
 def tg_blit(self, dest, x, y):
     # Blit the tile grid onto a Pygame surface.
     # Note: origin is NOT taken into account here!
-    if self.render_method not in {"right-down", "right-up", "left-down",
-                                  "left-up"}:
-        self.render_method = "right-down"
-
     def get_tile(i, j):
         return self.tiles[i + j * self.section_length]
 
-    if self.render_method.startswith("right"):
-        sx = x
-    else:
-        sx = x + self.width
-    if self.render_method.endswith("down"):
-        sy = y
-    else:
-        sy = y + self.height
+    sx = x
+    sy = y
 
-    if self.render_method.startswith("right"):
+    if self.render_method == "isometric":
         x = -int(sx / self.tile_width)
-    else:
-        x = int(sx / self.tile_width)
-    imin = max(0, x)
-    imax = min(self.section_length,
-               x + int(math.ceil(dest.get_width() / self.tile_width)) + 1)
+        imin = max(0, x)
+        imax = min(self.section_length,
+                   x + int(math.ceil(dest.get_width() / self.tile_width)) + 1)
 
-    if self.render_method.endswith("down"):
-        y = -int(sy / self.tile_height)
+        h = self.tile_height / 2
+        y = -int(sy / h)
+        jmin = max(0, y)
+        jmax = min(int(len(self.tiles) // self.section_length),
+                   y + int(math.ceil(dest.get_height() / h)) + 1)
     else:
-        y = int(sy / self.tile_height)
-    jmin = max(0, y)
-    jmax = min(int(len(self.tiles) // self.section_length),
-               y + int(math.ceil(dest.get_height() / self.tile_height)) + 1)
+        x = -int(sx / self.tile_width)
+        imin = max(0, x)
+        imax = min(self.section_length,
+                   x + int(math.ceil(dest.get_width() / self.tile_width)) + 1)
+
+        y = -int(sy / self.tile_height)
+        jmin = max(0, y)
+        jmax = min(int(len(self.tiles) // self.section_length),
+                   y + int(math.ceil(dest.get_height() / self.tile_height)) + 1)
 
     irng = six.moves.range(imin, imax)
     jrng = six.moves.range(jmin, jmax)
@@ -1139,15 +1135,14 @@ def tg_blit(self, dest, x, y):
         for j in jrng:
             sprite = get_tile(i, j)
             if sprite is not None:
-                if self.render_method.startswith("right"):
+                if self.render_method == "isometric":
                     x = sx + i * self.tile_width
+                    y = sx + j * self.tile_height / 2
+                    if i / 2 != i // 2:
+                        x += i * self.tile_width / 2
                 else:
-                    x = sx - i * self.tile_width
-
-                if self.render_method.endswith("down"):
+                    x = sx + i * self.tile_width
                     y = sy + j * self.tile_height
-                else:
-                    y = sy - j * self.tile_height
 
                 ssurf = s_set_transparency(sprite, sprite.rd["baseimages"][0])
                 dest.blit(ssurf, (x, y))
