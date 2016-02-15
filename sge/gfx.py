@@ -47,7 +47,8 @@ for pair in COLORS.items():
     COLOR_NAMES[pair[1]] = pair[0]
 
 
-__all__ = ["Color", "Sprite", "Font", "BackgroundLayer", "Background"]
+__all__ = ["Color", "Sprite", "TileGrid", "Font", "BackgroundLayer",
+           "Background"]
 
 
 class Color(object):
@@ -958,7 +959,8 @@ class Sprite(object):
 
         Arguments:
 
-        - ``sprite`` -- The sprite to draw with.
+        - ``sprite`` -- The :class:`sge.gfx.Sprite` or
+          :class:`sge.gfx.TileGrid` object to draw with.
         - ``image`` -- The frame of ``sprite`` to draw with, where ``0``
           is the first frame.
         - ``x`` -- The horizontal location relative to ``self`` to
@@ -997,14 +999,17 @@ class Sprite(object):
         for i in six.moves.range(self.frames):
             if frame is None or frame % self.frames == i:
                 dsurf = self.rd["baseimages"][i]
-                ssurf = s_set_transparency(sprite,
-                                           sprite.rd["baseimages"][image])
-                if blend_mode == sge.BLEND_RGB_SCREEN:
-                    _screen_blend(dsurf, ssurf, x, y, False)
-                elif blend_mode == sge.BLEND_RGBA_SCREEN:
-                    _screen_blend(dsurf, ssurf, x, y, True)
-                else:
-                    dsurf.blit(ssurf, (x, y), None, pygame_flags)
+                if isinstance(sprite, sge.gfx.Sprite):
+                    ssurf = s_set_transparency(sprite,
+                                               sprite.rd["baseimages"][image])
+                    if blend_mode == sge.BLEND_RGB_SCREEN:
+                        _screen_blend(dsurf, ssurf, x, y, False)
+                    elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                        _screen_blend(dsurf, ssurf, x, y, True)
+                    else:
+                        dsurf.blit(ssurf, (x, y), None, pygame_flags)
+                elif isinstance(sprite, sge.gfx.TileGrid):
+                    tg_blit(sprite, dsurf, x, y)
 
         s_refresh(self)
 
@@ -1440,6 +1445,404 @@ class Sprite(object):
         return self.copy()
 
 
+class TileGrid(object):
+
+    """
+    This class represents a grid of individual sprites.  This is useful
+    for tiled bckgrounds; it is faster than making each tile as its own
+    object and likely uses less RAM than drawing the tiles onto a single
+    large sprite.
+
+    This class is mostly compatible with :class:`sge.gfx.Sprite`, and
+    where its use is permitted, it is used the same way.  However, an
+    object of this class:
+
+    - Cannot be drawn to.  Drawing methods exist for compatibility only,
+      and have no effect.
+
+    - Cannot be scaled, mirrored, flipped, rotated, or transformed in
+      any way.  Attempting to do so will have no effect.
+
+    - Cannot be colorized in any way, or have its transparency modified.
+      Attempting to do so will have no effect.
+
+    - Cannot be animated in any way.  Only the first frame of each
+      individual sprite is considered.
+
+    - Cannot be used as a basis for precise collision detection.
+
+    .. attribute:: tiles
+
+       A list of :class:`sge.gfx.Sprite` objects to use as tiles.  How
+       exactly they are displayed is dependent on the values of
+       :attr:`render_method` and :attr:`section_length`.
+
+    .. attribute:: render_method
+
+       A string indicating how the tiles should be rendered.  Can be one
+       of the following:
+
+       - ``"right-down"`` -- Start in the top-left corner of the grid.
+         Render each tile in a section to the right of the previous tile
+         by :attr:`tile_width` pixels.  Render each section downward
+         from the previous section by :attr:`tile_height` pixels.
+
+       - ``"right-up"`` -- Start in the bottom-left corner of the grid.
+         Render each tile in a section to the right of the previous tile
+         by :attr:`tile_width` pixels.  Render each section upward from
+         the previous section by :attr:`tile_height` pixels.
+
+       - ``"left-down"`` -- Start in the top-right corner of the grid.
+         Render each tile in a section to the left of the previous tile
+         by :attr:`tile_width` pixels.  Render each section downward
+         from the previous section by :attr:`tile_height` pixels.
+
+       - ``"left-up"`` -- Start in the bottom-right corner of the grid.
+         Render each tile in a section to the left of the previous tile
+         by :attr:`tile_width` pixels.  Render each section upward from
+         the previous section by :attr:`tile_height` pixels.
+
+       If this is set to an invalid value or :const:`None`, it becomes
+       ``"right-down"``.
+
+       .. note::
+
+          If two tiles overlap, the most recently rendered tile will
+          be in front (closer to the viewer).
+
+    .. attribute:: section_length
+
+       The number of tiles in one section of tiles.  What constitutes a
+       section is defined by the value of :attr:`render_method`.
+
+    .. attribute:: tile_width
+
+       The width of each tile.  What exactly this means is defined by
+       the value of :attr:`render_method`.
+
+       .. note::
+
+          For reasons of efficiency, it is assumed that all sprites in
+          :attr:`tiles` have a width exactly corresponding to the width
+          specified here.  Attempting to use sprites which have
+          different widths will not cause an error, but the visual
+          result of this, particularly any portion of a sprite outside
+          of its designated area, is undefined.
+
+    .. attribute:: tile_width
+
+       The height of each tile.  What exactly this means is defined by
+       the value of :attr:`render_method`.
+
+       .. note::
+
+          For reasons of efficiency, it is assumed that all sprites in
+          :attr:`tiles` have a height exactly corresponding to the
+          height specified here.  Attempting to use sprites which have
+          different widths will not cause an error, but the visual
+          result of this, particularly any portion of a sprite outside
+          of its designated area, is undefined.
+
+    .. attribute:: width
+
+       The total width of the tile grid in pixels.  Changing this value
+       will result in :attr:`tile_width` and/or :attr:`tile_height`
+       being changed so that the grid fits the indicated size.
+
+    .. attribute:: height
+
+       The total height of the tile grid in pixels.  Changing this value
+       will result in :attr:`tile_width` and/or :attr:`tile_height`
+       being changed so that the grid fits the indicated size.
+
+    .. attribute:: origin_x
+
+       The suggested horizontal location of the origin relative to the
+       left edge of the grid.
+
+    .. attribute:: origin_y
+
+       The suggested vertical location of the origin relative to the top
+       edge of the grid.
+
+    .. attribute:: bbox_x
+
+       The horizontal location relative to the grid of the suggested
+       bounding box to use with it.  If set to :const:`None`, it will
+       become equal to ``-origin_x`` (which is always the left edge of
+       the grid).
+
+    .. attribute:: bbox_y
+
+       The vertical location relative to the grid of the suggested
+       bounding box to use with it.  If set to :const:`None`, it will
+       become equal to ``-origin_y`` (which is always the top edge of
+       the grid).
+
+    .. attribute:: bbox_width
+
+       The width of the suggested bounding box.
+
+    .. attribute:: bbox_height
+
+       The height of the suggested bounding box.
+
+    .. attribute:: transparent
+
+       Defined as :const:`True`.  Provided for compatibility with
+       :class:`sge.gfx.Sprite`.
+
+    .. attribute:: fps
+
+       Defined as ``0``.  Provided for compatibility with
+       :class:`sge.gfx.Sprite`.
+
+    .. attribute:: speed
+
+       Defined as ``0``.  Provided for compatibility with
+       :class:`sge.gfx.Sprite`.
+
+    .. attribute:: name
+
+       Defined as :const:`None`.  Provided for compatibility with
+       :class:`sge.gfx.Sprite`.  (Read-only)
+
+    .. attribute:: frames
+
+       Defined as ``1``.  Provided for compatibility with
+       :class:`sge.gfx.Sprite`.  (Read-only)
+
+    .. attribute:: rd
+
+       Reserved dictionary for internal use by the SGE.  (Read-only)
+    """
+
+    @property
+    def width(self):
+        columns = self.section_length
+        return columns * self.tile_width
+
+    @property
+    def height(self):
+        rows = len(self.tiles) / self.section_length
+        return rows * self.tile_height
+
+    @property
+    def bbox_x(self):
+        return self.__bbox_x
+
+    @bbox_x.setter
+    def bbox_x(self, value):
+        if value is not None:
+            self.__bbox_x = value
+        else:
+            self.__bbox_x = -self.origin_x
+
+    @property
+    def bbox_y(self):
+        return self.__bbox_y
+
+    @bbox_y.setter
+    def bbox_y(self, value):
+        if value is not None:
+            self.__bbox_y = value
+        else:
+            self.__bbox_y = -self.origin_y
+
+    def __init__(self, tiles, render_method=None, section_length=1,
+                 tile_width=16, tile_height=16, origin_x=0, origin_y=0,
+                 bbox_x=None, bbox_y=None, bbox_width=None, bbox_height=None):
+        """
+        Arguments set the respective initial attributes of the grid.
+        See the documentation for :class:`xsge.gfx.TileGrid` for more
+        information.
+        """
+        self.rd = {}
+        self.tiles = tiles
+        self.render_method = render_method
+        self.section_length = section_length
+        self.tile_width = tile_width
+        self.tile_height = tile_height
+        self.origin_x = origin_x
+        self.origin_y = origin_y
+        self.bbox_x = bbox_x
+        self.bbox_y = bbox_y
+        self.bbox_width = bbox_width
+        self.bbox_height = bbox_height
+        self.transparent = True
+        self.fps = 0
+        self.speed = 0
+        self.name = None
+        self.frames = 1
+
+    def copy(self):
+        """Return a shallow copy of the grid."""
+        return self.__class__(
+            self.tiles, render_method=self.render_method,
+            section_length=self.section_length, tile_width=self.tile_width,
+            tile_height=self.tile_height, origin_x=self.origin_x,
+            origin_y=self.origin_y, fps=self.fps, bbox_x=self.bbox_x,
+            bbox_y=self.bbox_y, bbox_width=self.bbox_width,
+            bbox_height=self.bbox_height)
+
+    def render(self):
+        """
+        Return a sprite with the grid rendered to it as a single image.
+
+        For simplicity, the width of the resulting sprite is exactly
+        :attr:`width`, and the height of the sprite is exactly
+        :attr:`height`, even if this results in parts of some of the
+        sprites being cut off from the resulting image.
+
+        .. warning::
+
+           If the grid is large, the returned sprite may use a large
+           amount of RAM.  Keep this in mind if RAM availability is
+           limited.
+        """
+        rendered_sprite = Sprite(width=self.width, height=self.height)
+        g_blit(self, rendered_sprite, (0, 0))
+        s_refresh(rendered_sprite)
+        return rendered_sprite
+
+    def save(self, fname):
+        """
+        Render the grid and then save it to an image file.
+
+        Calling ``self.save(fname)`` is equivalent to::
+
+            self.render().save(fname)
+
+        See the documentation for :meth:`render` and
+        :meth:`sge.gfx.Sprite.save` for more information.
+        """
+        self.render().save(fname)
+
+    def append_frame(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def insert_frame(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def delete_frame(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def draw_dot(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def draw_line(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def draw_rectangle(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def draw_ellipse(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def draw_circle(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def draw_polygon(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def draw_sprite(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def draw_text(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def draw_erase(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def draw_clear(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def draw_lock(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def draw_unlock(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def mirror(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def flip(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def rotate(self, *args, **kwargs):
+        """
+        Has no effect.  Provided for compatibility with
+        :class:`sge.gfx.Sprite`.
+        """
+
+    def __copy__(self):
+        return self.copy()
+
+    def __deepcopy__(self, memo):
+        tiles_copy = []
+        for tile in self.tiles:
+            tiles_copy.append(tile.copy())
+
+        return self.__class__(
+            tiles_copy, render_method=self.render_method,
+            section_length=self.section_length, tile_width=self.tile_width,
+            tile_height=self.tile_height, origin_x=self.origin_x,
+            origin_y=self.origin_y, fps=self.fps, bbox_x=self.bbox_x,
+            bbox_y=self.bbox_y, bbox_width=self.bbox_width,
+            bbox_height=self.bbox_height)
+
+
 class Font(object):
 
     """
@@ -1683,6 +2086,10 @@ class Font(object):
         the characters in pixels.  The width of the characters will be
         adjusted proportionally.
         """
+        if not isinstance(sprite, Sprite):
+            e = "{} is not a valid Sprite object.".format(repr(sprite))
+            raise TypeError(e)
+
         return _SpriteFont(sprite, chars, hsep, vsep, size, underline, bold,
                            italic)
 

@@ -39,14 +39,15 @@ from sge.r import (
     _check_color, _scale, _get_blend_flags, _screen_blend, _set_mode,
     _handle_music, _get_dot_sprite, _get_line_sprite, _get_rectangle_sprite,
     _get_ellipse_sprite, _get_circle_sprite, _get_polygon_sprite, bl_update,
-    bl_get_image, o_update, o_detect_collisions, o_update_collision_lists,
-    o_update_object_areas, o_is_other, o_get_origin_offset, o_set_speed,
-    s_get_image, s_get_precise_mask, r_get_rectangle_object_areas,
-    r_set_object_areas, r_update_fade, r_update_dissolve, r_update_pixelate,
-    r_update_wipe_left, r_update_wipe_right, r_update_wipe_up,
-    r_update_wipe_down, r_update_wipe_upleft, r_update_wipe_upright,
-    r_update_wipe_downleft, r_update_wipe_downright, r_update_wipe_matrix,
-    r_update_iris_in, r_update_iris_out, v_limit)
+    bl_get_image, tg_blit, o_update, o_detect_collisions,
+    o_update_collision_lists, o_update_object_areas, o_is_other,
+    o_get_origin_offset, o_set_speed, s_get_image, s_get_precise_mask,
+    r_get_rectangle_object_areas, r_set_object_areas, r_update_fade,
+    r_update_dissolve, r_update_pixelate, r_update_wipe_left,
+    r_update_wipe_right, r_update_wipe_up, r_update_wipe_down,
+    r_update_wipe_upleft, r_update_wipe_upright, r_update_wipe_downleft,
+    r_update_wipe_downright, r_update_wipe_matrix, r_update_iris_in,
+    r_update_iris_out, v_limit)
 
 
 __all__ = ["Game", "Room", "View", "Object"]
@@ -1068,8 +1069,12 @@ class Game(object):
                 img = bl_get_image(layer)
                 x = layer.x - (vx * layer.xscroll_rate)
                 y = layer.y - (vy * layer.yscroll_rate)
-                img_w = max(1, img.get_width())
-                img_h = max(1, img.get_height())
+                if isinstance(img, sge.gfx.TileGrid):
+                    img_w = max(1, img.width)
+                    img_h = max(1, img.height)
+                else:
+                    img_w = max(1, img.get_width())
+                    img_h = max(1, img.get_height())
 
                 # Apply the origin so the positions are as expected.
                 x -= layer.sprite.origin_x
@@ -1108,42 +1113,51 @@ class Game(object):
 
             for obj in self.current_room.get_objects_at(
                     view.x, view.y, view.width, view.height):
-                if (obj.visible and obj.sprite is not None and
-                        obj is not self.mouse):
-                    img = s_get_image(obj.sprite, obj.image_index,
-                                      obj.image_xscale, obj.image_yscale,
-                                      obj.image_rotation, obj.image_alpha,
-                                      obj.image_blend)
-                    w = img.get_width()
-                    h = img.get_height()
-                    x = obj.x - obj.image_origin_x
-                    y = obj.y - obj.image_origin_y
-                    if (x + w >= view_x and x <= view_x + view_width and
-                            y + h >= view_y and y <= view_y + view_height):
-                        nimg = s_get_image(obj.sprite, obj.image_index,
-                                           obj.image_xscale, obj.image_yscale)
-                        nw = nimg.get_width()
-                        nh = nimg.get_height()
-                        xoff = (w - nw) / 2
-                        yoff = (h - nh) / 2
-                        images.append((img, x - xoff, y - yoff,
-                                       obj.z, None))
+                if obj.visible and obj is not self.mouse:
+                    if isinstance(obj.sprite, sge.gfx.Sprite):
+                        img = s_get_image(obj.sprite, obj.image_index,
+                                          obj.image_xscale, obj.image_yscale,
+                                          obj.image_rotation, obj.image_alpha,
+                                          obj.image_blend)
+                        w = img.get_width()
+                        h = img.get_height()
+                        x = obj.x - obj.image_origin_x
+                        y = obj.y - obj.image_origin_y
+                        if (x + w >= view_x and x <= view_x + view_width and
+                                y + h >= view_y and y <= view_y + view_height):
+                            nimg = s_get_image(obj.sprite, obj.image_index,
+                                               obj.image_xscale,
+                                               obj.image_yscale)
+                            nw = nimg.get_width()
+                            nh = nimg.get_height()
+                            xoff = (w - nw) / 2
+                            yoff = (h - nh) / 2
+                            images.append((img, x - xoff, y - yoff,
+                                           obj.z, None))
+                    elif isinstance(obj.sprite, sge.gfx.TileGrid):
+                        x = obj.x - obj.image_origin_x
+                        y = obj.y - obj.image_origin_y
+                        images.append((obj.sprite, x, y, obj.z, None))
 
             images.extend(self.current_room.rd["projections"])
 
             images.sort(key=lambda img: img[3])
 
             for img in images:
+                surf = img[0]
                 x = img[1] - view.x
                 y = img[2] - view.y
-                blend_mode = img[4]
-                if blend_mode == sge.BLEND_RGB_SCREEN:
-                    _screen_blend(view_surf, img[0], x, y, False)
-                elif blend_mode == sge.BLEND_RGBA_SCREEN:
-                    _screen_blend(view_surf, img[0], x, y, True)
+                if isinstance(surf, sge.gfx.TileGrid):
+                    tg_blit(surf, view_surf, x, y)
                 else:
-                    flags = _get_blend_flags(blend_mode)
-                    view_surf.blit(img[0], (x, y), None, flags)
+                    blend_mode = img[4]
+                    if blend_mode == sge.BLEND_RGB_SCREEN:
+                        _screen_blend(view_surf, surf, x, y, False)
+                    elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                        _screen_blend(view_surf, surf, x, y, True)
+                    else:
+                        flags = _get_blend_flags(blend_mode)
+                        view_surf.blit(surf, (x, y), None, flags)
 
             r.game_display_surface.blit(
                 _scale(view_surf, view.wport, view.hport),
@@ -1155,14 +1169,17 @@ class Game(object):
         self.mouse.project_cursor()
         r.game_window_projections.sort(key=lambda img: img[3])
         for projection in r.game_window_projections:
-            (image, x, y, z, blend_mode) = projection
-            if blend_mode == sge.BLEND_RGB_SCREEN:
-                _screen_blend(r.game_display_surface, image, x, y, False)
-            elif blend_mode == sge.BLEND_RGBA_SCREEN:
-                _screen_blend(r.game_display_surface, image, x, y, True)
+            image, x, y, z, blend_mode = projection
+            if isinstance(image, sge.gfx.TileGrid):
+                tg_blit(image, r.game_display_surface, x, y)
             else:
-                flags = _get_blend_flags(blend_mode)
-                r.game_display_surface.blit(image, (x, y), None, flags)
+                if blend_mode == sge.BLEND_RGB_SCREEN:
+                    _screen_blend(r.game_display_surface, image, x, y, False)
+                elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                    _screen_blend(r.game_display_surface, image, x, y, True)
+                else:
+                    flags = _get_blend_flags(blend_mode)
+                    r.game_display_surface.blit(image, (x, y), None, flags)
 
         r.game_window_projections = []
 
@@ -2665,8 +2682,9 @@ class Object(object):
 
     .. attribute:: sprite
 
-       The sprite currently in use by this object.  Set to :const:`None`
-       for no sprite.
+       The sprite currently in use by this object.  Can be either a
+       :class:`sge.gfx.Sprite` object or a :class:`sge.gfx.TileGrid`
+       object.  Set to :const:`None` for no sprite.
 
     .. attribute:: visible
 
@@ -3199,7 +3217,7 @@ class Object(object):
             value = self.sprite.fps if self.sprite is not None else 0
 
         self.__fps = value
-        if value:
+        if value and isinstance(self.sprite, sge.gfx.Sprite):
             self.rd["frame_time"] = 1000 / value
             if not self.rd["frame_time"]:
                 # This would be caused by a round-off to 0 resulting
@@ -3234,24 +3252,18 @@ class Object(object):
 
     @property
     def mask(self):
-        if self.collision_precise:
+        if self.collision_precise and isinstance(self.sprite, sge.gfx.Sprite):
             return s_get_precise_mask(
                 self.sprite, self.image_index, self.image_xscale,
                 self.image_yscale, self.image_rotation)
         else:
-            id_ = (self.collision_ellipse, self.bbox_x, self.bbox_y,
-                   self.bbox_width, self.bbox_height, self.image_xscale,
-                   self.image_yscale)
+            i = ("o_mask", self.collision_ellipse, self.bbox_x, self.bbox_y,
+                 self.bbox_width, self.bbox_height, self.image_xscale,
+                 self.image_yscale)
+            mask = r.cache.get(i)
 
-            if id_ in self.__masks:
-                return self.__masks[id_]
-            else:
-                if self.collision_precise:
-                    # Mask based on opacity of the current image.
-                    mask = s_get_precise_mask(
-                        self.sprite, self.image_index, self.image_xscale,
-                        self.image_yscale, self.image_rotation)
-                elif self.collision_ellipse:
+            if mask is None:
+                if self.collision_ellipse:
                     # Elliptical mask based on bounding box.
                     mask = [[False for y in six.moves.range(self.bbox_height)]
                             for x in six.moves.range(self.bbox_width)]
@@ -3267,13 +3279,14 @@ class Object(object):
                     mask = [[True for y in six.moves.range(self.bbox_height)]
                             for x in six.moves.range(self.bbox_width)]
 
-                self.__masks[id_] = mask
-                return mask
+            cache.add(i, mask)
+            return mask
 
     @property
     def mask_x(self):
         if self.collision_precise:
-            if self.image_rotation % 180:
+            if (isinstance(self.sprite, sge.gfx.Sprite) and
+                    self.image_rotation % 180):
                 origin_x = self.image_origin_x
                 i = ("o_mask_x_offset", self, self.sprite, origin_x,
                      self.image_origin_y, self.image_xscale, self.image_yscale,
@@ -3298,7 +3311,8 @@ class Object(object):
     @property
     def mask_y(self):
         if self.collision_precise:
-            if self.image_rotation % 180:
+            if (isinstance(self.sprite, sge.gfx.Sprite) and
+                    self.image_rotation % 180):
                 origin_y = self.image_origin_y
                 i = ("o_mask_y_offset", self, self.sprite, self.image_origin_x,
                      origin_y, self.image_xscale, self.image_yscale,

@@ -477,7 +477,7 @@ def f_split_text(self, text, width=None):
 def o_update(self, time_passed, delta_mult):
     # Update this object (should be called each frame).
     # Update the animation frame.
-    if self.image_fps:
+    if self.image_fps and isinstance(self.sprite, sge.gfx.Sprite):
         self.rd["anim_count"] += time_passed
         self.image_index += int(self.rd["anim_count"] / self.rd["frame_time"])
         self.rd["anim_count"] %= abs(self.rd["frame_time"])
@@ -660,42 +660,46 @@ def o_detect_collisions(self):
 
 def o_get_origin_offset(self):
     # Return the amount to offset the origin as (x, y).
-    new_origin_x = self.sprite.origin_x
-    new_origin_y = self.sprite.origin_y
+    if isinstance(self.sprite, sge.gfx.Sprite):
+        new_origin_x = self.sprite.origin_x
+        new_origin_y = self.sprite.origin_y
 
-    img = s_get_image(self.sprite, self.image_index, self.image_xscale,
-                      self.image_yscale, self.image_rotation)
-    nimg = s_get_image(self.sprite, self.image_index, self.image_xscale,
-                       self.image_yscale)
-    width = img.get_width() / abs(self.image_xscale)
-    height = img.get_height() / abs(self.image_yscale)
-    normal_width = nimg.get_width() / abs(self.image_xscale)
-    normal_height = nimg.get_height() / abs(self.image_yscale)
+        img = s_get_image(self.sprite, self.image_index, self.image_xscale,
+                          self.image_yscale, self.image_rotation)
+        nimg = s_get_image(self.sprite, self.image_index, self.image_xscale,
+                           self.image_yscale)
+        width = img.get_width() / abs(self.image_xscale)
+        height = img.get_height() / abs(self.image_yscale)
+        normal_width = nimg.get_width() / abs(self.image_xscale)
+        normal_height = nimg.get_height() / abs(self.image_yscale)
 
-    if self.image_rotation % 360:
-        center_x = normal_width / 2
-        center_y = normal_height / 2
-        c_origin_x = new_origin_x - center_x
-        c_origin_y = new_origin_y - center_y
-        start_angle = math.atan2(c_origin_y, c_origin_x)
-        radius = math.hypot(c_origin_x, c_origin_y)
-        new_angle = start_angle + math.radians(self.image_rotation)
-        new_c_origin_x = radius * math.cos(new_angle)
-        new_c_origin_y = radius * math.sin(new_angle)
-        new_origin_x = new_c_origin_x + center_x
-        new_origin_y = new_c_origin_y + center_y
+        if self.image_rotation % 360:
+            center_x = normal_width / 2
+            center_y = normal_height / 2
+            c_origin_x = new_origin_x - center_x
+            c_origin_y = new_origin_y - center_y
+            start_angle = math.atan2(c_origin_y, c_origin_x)
+            radius = math.hypot(c_origin_x, c_origin_y)
+            new_angle = start_angle + math.radians(self.image_rotation)
+            new_c_origin_x = radius * math.cos(new_angle)
+            new_c_origin_y = radius * math.sin(new_angle)
+            new_origin_x = new_c_origin_x + center_x
+            new_origin_y = new_c_origin_y + center_y
 
-    if self.image_xscale < 0:
-        new_origin_x = width - new_origin_x
+        if self.image_xscale < 0:
+            new_origin_x = width - new_origin_x
 
-    if self.image_yscale < 0:
-        new_origin_y = height - new_origin_y
+        if self.image_yscale < 0:
+            new_origin_y = height - new_origin_y
 
-    new_origin_x *= abs(self.image_xscale)
-    new_origin_y *= abs(self.image_yscale)
+        new_origin_x *= abs(self.image_xscale)
+        new_origin_y *= abs(self.image_yscale)
 
-    x_offset = new_origin_x - self.sprite.origin_x
-    y_offset = new_origin_y - self.sprite.origin_y
+        x_offset = new_origin_x - self.sprite.origin_x
+        y_offset = new_origin_y - self.sprite.origin_y
+    else:
+        x_offset = 0
+        y_offset = 0
 
     return (x_offset, y_offset)
 
@@ -1018,40 +1022,43 @@ def s_set_transparency(self, image):
 
 def s_get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,
                 blend=None):
-    num %= self.frames
+    if isinstance(self, sge.gfx.Sprite):
+        num %= self.frames
 
-    i = ("s_image", self, self.rd["drawcycle"], num, xscale, yscale, rotation,
-         alpha, tuple(blend) if blend is not None else None)
-    img = cache.get(i)
-    if img is None:
-        if xscale != 0 and yscale != 0:
-            img = s_set_transparency(self, self.rd["baseimages"][num])
-            xflip = xscale < 0
-            yflip = yscale < 0
-            img = pygame.transform.flip(img, xflip, yflip)
-            img = _scale(img, self.width * abs(xscale),
-                         self.height * abs(yscale))
+        i = ("s_image", self, self.rd["drawcycle"], num, xscale, yscale,
+             rotation, alpha, tuple(blend) if blend is not None else None)
+        img = cache.get(i)
+        if img is None:
+            if xscale != 0 and yscale != 0:
+                img = s_set_transparency(self, self.rd["baseimages"][num])
+                xflip = xscale < 0
+                yflip = yscale < 0
+                img = pygame.transform.flip(img, xflip, yflip)
+                img = _scale(img, self.width * abs(xscale),
+                             self.height * abs(yscale))
 
-            if rotation != 0:
-                img = pygame.transform.rotate(img, -rotation)
+                if rotation != 0:
+                    img = pygame.transform.rotate(img, -rotation)
 
-            if alpha < 255:
-                if img.get_flags() & pygame.SRCALPHA:
-                    # Have to do this the more difficult way.
-                    img.fill((0, 0, 0, 255 - alpha), None,
-                             pygame.BLEND_RGBA_SUB)
-                else:
-                    img.set_alpha(alpha, pygame.RLEACCEL)
+                if alpha < 255:
+                    if img.get_flags() & pygame.SRCALPHA:
+                        # Have to do this the more difficult way.
+                        img.fill((0, 0, 0, 255 - alpha), None,
+                                 pygame.BLEND_RGBA_SUB)
+                    else:
+                        img.set_alpha(alpha, pygame.RLEACCEL)
 
-            if blend is not None:
-                img.fill(pygame.Color(*blend), None,
-                         pygame.BLEND_RGB_MULT)
-        else:
-            img = pygame.Surface((1, 1))
-            img.set_colorkey((0, 0, 0), pygame.RLEACCEL)
+                if blend is not None:
+                    img.fill(pygame.Color(*blend), None,
+                             pygame.BLEND_RGB_MULT)
+            else:
+                img = pygame.Surface((1, 1))
+                img.set_colorkey((0, 0, 0), pygame.RLEACCEL)
 
-    cache.add(i, img)
-    return img
+        cache.add(i, img)
+        return img
+    else:
+        return self
 
 
 def s_get_precise_mask(self, num, xscale, yscale, rotation):
@@ -1088,6 +1095,62 @@ def s_get_precise_mask(self, num, xscale, yscale, rotation):
 
     cache.add(i, mask)
     return mask
+
+
+def tg_blit(self, dest, x, y):
+    # Blit the tile grid onto a Pygame surface.
+    # Note: origin is NOT taken into account here!
+    if self.render_method not in {"right-down", "right-up", "left-down",
+                                  "left-up"}:
+        self.render_method = "right-down"
+
+    def get_tile(i, j):
+        return self.tiles[i + j * self.section_length]
+
+    if self.render_method.startswith("right"):
+        sx = x
+    else:
+        sx = x + self.width
+    if self.render_method.endswith("down"):
+        sy = y
+    else:
+        sy = y + self.height
+
+    if self.render_method.startswith("right"):
+        x = -int(sx / self.tile_width)
+    else:
+        x = int(sx / self.tile_width)
+    imin = max(0, x)
+    imax = min(self.section_length,
+               x + int(math.ceil(dest.get_width() / self.tile_width)) + 1)
+
+    if self.render_method.endswith("down"):
+        y = -int(sy / self.tile_height)
+    else:
+        y = int(sy / self.tile_height)
+    jmin = max(0, y)
+    jmax = min(int(len(self.tiles) // self.section_length),
+               y + int(math.ceil(dest.get_height() / self.tile_height)) + 1)
+
+    irng = six.moves.range(imin, imax)
+    jrng = six.moves.range(imin, imax)
+
+    for i in irng:
+        for j in jrng:
+            sprite = get_tile(i, j)
+
+            if self.render_method.startswith("right"):
+                x = sx + i * self.tile_width
+            else:
+                x = sx - i * self.tile_width
+
+            if self.render_method.endswith("down"):
+                y = sy + j * self.tile_height
+            else:
+                y = sy - j * self.tile_height
+
+            ssurf = s_set_transparency(sprite, sprite.rd["baseimages"][image])
+            dest.blit(ssurf, (x, y))
 
 
 def v_limit(self):
