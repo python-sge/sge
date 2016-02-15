@@ -1064,7 +1064,7 @@ def s_get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,
 def s_get_precise_mask(self, num, xscale, yscale, rotation):
     # Return a precise mask (2D list of True/False values) for the
     # given image index.
-    i = ("s_mask", hash(self), self.width, self.height, self.rd["drawcycle"],
+    i = ("s_mask", self, self.width, self.height, self.rd["drawcycle"],
          num, xscale, yscale, rotation)
     mask = cache.get(i)
     if mask is None:
@@ -1133,24 +1133,24 @@ def tg_blit(self, dest, x, y):
                y + int(math.ceil(dest.get_height() / self.tile_height)) + 1)
 
     irng = six.moves.range(imin, imax)
-    jrng = six.moves.range(imin, imax)
+    jrng = six.moves.range(jmin, jmax)
 
     for i in irng:
         for j in jrng:
             sprite = get_tile(i, j)
+            if sprite is not None:
+                if self.render_method.startswith("right"):
+                    x = sx + i * self.tile_width
+                else:
+                    x = sx - i * self.tile_width
 
-            if self.render_method.startswith("right"):
-                x = sx + i * self.tile_width
-            else:
-                x = sx - i * self.tile_width
+                if self.render_method.endswith("down"):
+                    y = sy + j * self.tile_height
+                else:
+                    y = sy - j * self.tile_height
 
-            if self.render_method.endswith("down"):
-                y = sy + j * self.tile_height
-            else:
-                y = sy - j * self.tile_height
-
-            ssurf = s_set_transparency(sprite, sprite.rd["baseimages"][image])
-            dest.blit(ssurf, (x, y))
+                ssurf = s_set_transparency(sprite, sprite.rd["baseimages"][0])
+                dest.blit(ssurf, (x, y))
 
 
 def v_limit(self):

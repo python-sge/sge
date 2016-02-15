@@ -289,11 +289,16 @@ class Sprite(object):
 
     .. attribute:: bbox_width
 
-       The width of the suggested bounding box.
+       The width of the suggested bounding box.  If set to
+       :const:`None`, it will become equal to ``width - origin_x``
+       (which is always everything on the image to the right of
+       :attr:`origin_x`).
 
     .. attribute:: bbox_height
 
-       The height of the suggested bounding box.
+       The height of the suggested bounding box.  If set to
+       :const:`None`, it will become equal to ``height - origin_y``
+       (which is always everything on the image below :attr:`origin_y`).
 
     .. attribute:: name
 
@@ -369,6 +374,28 @@ class Sprite(object):
             self.__bbox_y = value
         else:
             self.__bbox_y = -self.origin_y
+
+    @property
+    def bbox_width(self):
+        return self.__bbox_width
+
+    @bbox_width.setter
+    def bbox_width(self, value):
+        if value is not None:
+            self.__bbox_width = value
+        else:
+            self.__bbox_width = self.width - self.origin_y
+
+    @property
+    def bbox_height(self):
+        return self.__bbox_height
+
+    @bbox_height.setter
+    def bbox_height(self, value):
+        if value is not None:
+            self.__bbox_height = value
+        else:
+            self.__bbox_height = self.height - self.origin_y
 
     @property
     def frames(self):
@@ -532,12 +559,6 @@ class Sprite(object):
             height = 1
             for image in self.rd["baseimages"]:
                 height = max(height, image.get_height())
-
-        if bbox_width is None:
-            bbox_width = width
-
-        if bbox_height is None:
-            bbox_height = height
 
         self.__w = width
         self.__h = height
@@ -1475,7 +1496,8 @@ class TileGrid(object):
 
        A list of :class:`sge.gfx.Sprite` objects to use as tiles.  How
        exactly they are displayed is dependent on the values of
-       :attr:`render_method` and :attr:`section_length`.
+       :attr:`render_method` and :attr:`section_length`.  Use
+       :const:`None` where no tile should be displayed.
 
     .. attribute:: render_method
 
@@ -1581,11 +1603,16 @@ class TileGrid(object):
 
     .. attribute:: bbox_width
 
-       The width of the suggested bounding box.
+       The width of the suggested bounding box.  If set to
+       :const:`None`, it will become equal to ``width - origin_x``
+       (which is always everything on the grid to the right of
+       :attr:`origin_x`).
 
     .. attribute:: bbox_height
 
-       The height of the suggested bounding box.
+       The height of the suggested bounding box.  If set to
+       :const:`None`, it will become equal to ``height - origin_y``
+       (which is always everything on the grid below :attr:`origin_y`).
 
     .. attribute:: transparent
 
@@ -1648,6 +1675,28 @@ class TileGrid(object):
             self.__bbox_y = value
         else:
             self.__bbox_y = -self.origin_y
+
+    @property
+    def bbox_width(self):
+        return self.__bbox_width
+
+    @bbox_width.setter
+    def bbox_width(self, value):
+        if value is not None:
+            self.__bbox_width = value
+        else:
+            self.__bbox_width = self.width - self.origin_y
+
+    @property
+    def bbox_height(self):
+        return self.__bbox_height
+
+    @bbox_height.setter
+    def bbox_height(self, value):
+        if value is not None:
+            self.__bbox_height = value
+        else:
+            self.__bbox_height = self.height - self.origin_y
 
     def __init__(self, tiles, render_method=None, section_length=1,
                  tile_width=16, tile_height=16, origin_x=0, origin_y=0,
