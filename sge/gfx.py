@@ -290,15 +290,15 @@ class Sprite(object):
     .. attribute:: bbox_width
 
        The width of the suggested bounding box.  If set to
-       :const:`None`, it will become equal to ``width - origin_x``
+       :const:`None`, it will become equal to ``width - bbox_x``
        (which is always everything on the image to the right of
-       :attr:`origin_x`).
+       :attr:`bbox_x`).
 
     .. attribute:: bbox_height
 
        The height of the suggested bounding box.  If set to
-       :const:`None`, it will become equal to ``height - origin_y``
-       (which is always everything on the image below :attr:`origin_y`).
+       :const:`None`, it will become equal to ``height - bbox_y``
+       (which is always everything on the image below :attr:`bbox_y`).
 
     .. attribute:: name
 
@@ -384,7 +384,7 @@ class Sprite(object):
         if value is not None:
             self.__bbox_width = value
         else:
-            self.__bbox_width = self.width - self.origin_y
+            self.__bbox_width = self.width - self.bbox_x
 
     @property
     def bbox_height(self):
@@ -395,7 +395,7 @@ class Sprite(object):
         if value is not None:
             self.__bbox_height = value
         else:
-            self.__bbox_height = self.height - self.origin_y
+            self.__bbox_height = self.height - self.bbox_y
 
     @property
     def frames(self):
@@ -1597,15 +1597,15 @@ class TileGrid(object):
     .. attribute:: bbox_width
 
        The width of the suggested bounding box.  If set to
-       :const:`None`, it will become equal to ``width - origin_x``
+       :const:`None`, it will become equal to ``width - bbox_x``
        (which is always everything on the grid to the right of
-       :attr:`origin_x`).
+       :attr:`bbox_x`).
 
     .. attribute:: bbox_height
 
        The height of the suggested bounding box.  If set to
-       :const:`None`, it will become equal to ``height - origin_y``
-       (which is always everything on the grid below :attr:`origin_y`).
+       :const:`None`, it will become equal to ``height - bbox_y``
+       (which is always everything on the grid below :attr:`bbox_y`).
 
     .. attribute:: transparent
 
@@ -1693,7 +1693,7 @@ class TileGrid(object):
         if value is not None:
             self.__bbox_width = value
         else:
-            self.__bbox_width = self.width - self.origin_y
+            self.__bbox_width = self.width - self.bbox_y
 
     @property
     def bbox_height(self):
@@ -1704,7 +1704,7 @@ class TileGrid(object):
         if value is not None:
             self.__bbox_height = value
         else:
-            self.__bbox_height = self.height - self.origin_y
+            self.__bbox_height = self.height - self.bbox_y
 
     def __init__(self, tiles, render_method=None, section_length=1,
                  tile_width=16, tile_height=16, origin_x=0, origin_y=0,
