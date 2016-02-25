@@ -384,7 +384,7 @@ class Sprite(object):
         if value is not None:
             self.__bbox_width = value
         else:
-            self.__bbox_width = self.width - self.bbox_x
+            self.__bbox_width = self.width - self.origin_x - self.bbox_x
 
     @property
     def bbox_height(self):
@@ -395,7 +395,7 @@ class Sprite(object):
         if value is not None:
             self.__bbox_height = value
         else:
-            self.__bbox_height = self.height - self.bbox_y
+            self.__bbox_height = self.height - self.origin_y - self.bbox_y
 
     @property
     def frames(self):
