@@ -1055,8 +1055,8 @@ class Game(object):
         for view in self.current_room.views:
             view_surf = pygame.Surface((view.width, view.height))
             view_surf.fill(pygame.Color(*self.current_room.background.color))
-            view_x = view.x
-            view_y = view.y
+            view_x = round(view.x)
+            view_y = round(view.y)
             view_width = view.width
             view_height = view.height
             vx = view_x - sge.game.current_room.background_x
