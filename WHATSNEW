@@ -13,6 +13,10 @@ without any warranty.
 Specification additions:
 + sge.gfx.TileGrid
 
+Specification misc changes:
+* sge.dsp.Game.scale is now defined to suggest what resolution to use in
+  fullscreen mode.
+
 
 0.23
 ------------------------------------------------------------------------

@@ -185,7 +185,7 @@ def _set_mode():
     game_display_surface = _scale(game_display_surface, game.width, game.height)
     info = pygame.display.Info()
 
-    if sge.game.scale:
+    if game.scale:
         game_xscale = game.scale
         game_yscale = game.scale
 
@@ -193,18 +193,34 @@ def _set_mode():
         flags = pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
 
         modes = pygame.display.list_modes()
-        if modes != -1 and modes:
-            game_window_width, game_window_height = modes[0]
-        else:
+        if modes == -1 or not modes:
             w = "Couldn't find out the maximum resolution! Assuming 1024x768."
             warnings.warn(w)
-            game_window_width = 1024
-            game_window_height = 768
+            modes = [(1024, 768)]
+
+        force_auto_scale = False
+
+        if game.scale:
+            target_width = game.width * game.scale
+            target_height = game.height * game.scale
+            if (target_width, target_height) in modes:
+                game_window_width = target_width
+                game_window_height = target_height
+            else:
+                for mode in reversed(modes):
+                    if mode[0] >= target_width and mode[1] >= target_height:
+                        game_window_width, game_window_height = mode
+                        break
+                else:
+                    game_window_width, game_window_height = modes[0]
+                    force_auto_scale = True
+        else:
+            game_window_width, game_window_height = modes[0]
 
         game_window = pygame.display.set_mode(
             (game_window_width, game_window_height), flags)
 
-        if not game.scale:
+        if not game.scale or force_auto_scale:
             game_xscale = game_window_width / game.width
             game_yscale = game_window_height / game.height
 

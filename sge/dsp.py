@@ -79,7 +79,7 @@ class Game(object):
 
     .. attribute:: fullscreen
 
-       Whether or not the game should be in fullscreen.
+       Whether or not the game should be in fullscreen mode.
 
     .. attribute:: scale
 
@@ -87,6 +87,10 @@ class Game(object):
        scaling, ``2`` for doubled size).  If set to :const:`None` or
        ``0``, scaling is automatic (causes the game to fit the window or
        screen).
+
+       If a fixed scale factor is defined and the game is in fullscreen
+       mode, the scale factor multiplied by :attr:`width` and
+       :attr:`height` is used to suggest what resolution to use.
 
     .. attribute:: scale_proportional
 
