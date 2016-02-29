@@ -12,6 +12,8 @@ without any warranty.
 
 Specification additions:
 + sge.gfx.TileGrid
++ sge.gfx.Sprite.get_pixel
++ sge.gfx.Sprite.get_pixels
 
 Specification misc changes:
 * sge.dsp.Game.scale is now defined to suggest what resolution to use in

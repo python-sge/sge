@@ -604,6 +604,49 @@ class Sprite(object):
         """
         del self.rd["baseimages"][frame]
 
+    def get_pixel(self, x, y, frame=0):
+        """
+        Return a :class:`sge.gfx.Color` object indicating the color of a
+        particular pixel on the sprite.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the sprite of the
+          pixel to check.
+        - ``y`` -- The vertical location relative to the sprite of the
+          pixel to check.
+        - ``frame`` -- The frame of the sprite to check, where ``0`` is
+          the first frame.
+        """
+        x = int(round(x))
+        y = int(round(y))
+        frame %= self.frames
+        pg_color = self.rd["baseimages"][frame].get_at((x, y))
+        return Color(tuple(pg_color))
+
+    def get_pixels(self, frame=0):
+        """
+        Return a two-dimensional list of :class`sge.gfx.Color` objects
+        indicating the colors of a particular frame's pixels.
+
+        A returned list given the name ``pixels`` is indexed as
+        ``pixels[x][y]``, where ``x`` is the horizontal location of the
+        pixel and ``y`` is the vertical location of the pixel.
+
+        Arguments:
+
+        - ``frame`` -- The frame of the sprite to check, where ``0`` is
+          the first frame.
+        """
+        frame %= self.frames
+        surf = self.rd["baseimages"][frame]
+        surf.lock()
+        w, h = surf.get_size()
+        pixels = [[Color(tuple(surf.get_at(x, y))) for y in six.moves.range(h)]
+                  for x in six.moves.range(w)]
+        surf.unlock()
+        return pixels
+
     def draw_dot(self, x, y, color, frame=None):
         """
         Draw a single-pixel dot on the sprite.

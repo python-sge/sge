@@ -35,6 +35,10 @@ sge.gfx.Sprite Methods
 
 .. automethod:: sge.gfx.Sprite.delete_frame
 
+.. automethod:: sge.gfx.Sprite.get_pixel
+
+.. automethod:: sge.gfx.Sprite.get_pixels
+
 .. automethod:: sge.gfx.Sprite.draw_dot
 
 .. automethod:: sge.gfx.Sprite.draw_line
