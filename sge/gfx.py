@@ -24,6 +24,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import math
 import os
 import warnings
 
@@ -1394,9 +1395,8 @@ class Sprite(object):
 
         Unlike changing :attr:`width` and :attr:`height`, this function
         does not result in the actual size of the sprite changing.
-        Instead, any scaled frames are repositioned so that the
-        positions of their top-left corners relative to the origin are
-        multiplied by ``xscale`` and ``yscale``.
+        Instead, any scaled frames are repositioned so that the pixel
+        which was at the origin before scaling remains at the origin.
 
         Arguments:
 
@@ -1424,8 +1424,8 @@ class Sprite(object):
         yscale = abs(yscale)
         scale_w = max(1, int(self.width * xscale))
         scale_h = max(1, int(self.height * yscale))
-        xdiff = self.origin_x * xscale - self.origin_x
-        ydiff = self.origin_y * yscale - self.origin_y
+        xdiff = self.origin_x - self.origin_x * xscale
+        ydiff = self.origin_y - self.origin_y * yscale
 
         if frame is None:
             rng = six.moves.range(self.frames)
@@ -1571,6 +1571,11 @@ class Sprite(object):
         - ``sprite`` -- The sprite to base the tween on.  If the sprite
           includes multiple frames, all frames will be used in sequence
           until the end of the tween.
+
+          The tween's origin is derived from this sprite's origin,
+          adjusted appropriately to accomodate any size changes made.
+          Whether or not the tween is transparent is also determined by
+          whether or not this sprite is transparent.
         - ``frames`` -- The number of frames the to make the tween take
           up.
         - ``fps`` -- The suggested rate of animation for the tween in
@@ -1598,24 +1603,35 @@ class Sprite(object):
         if fps is None:
             fps = sprite.fps
 
-        new_w = max(sprite.width, sprite.width * xscale)
-        new_h = max(sprite.height, sprite.height * yscale)
+        new_w = sprite.width
+        new_h = sprite.height
+        new_origin_x = sprite.origin_x
+        new_origin_y = sprite.origin_y
 
-        if rotation:
-            new_w = math.hypot(new_w, new_h)
-            new_h = new_w
+        if xscale is not None and xscale > 1:
+            new_w *= xscale
+            new_origin_x *= xscale
+        if yscale is not None and yscale > 1:
+            new_h *= yscale
+            new_origin_y *= yscale
+        if rotation is not None:
+            h = math.hypot(new_w, new_h)
+            new_origin_x += (h - new_w) / 2
+            new_origin_y += (h - new_h) / 2
+            new_w = h
+            new_h = h
 
         tween_spr = cls(width=new_w, height=new_h,
-                        transparent=sprite.transparent,
-                        origin_x=(sprite.origin_x * xscale),
-                        origin_y=(sprite.origin_y * yscale), fps=fps,
-                        bbox_x=bbox_x, bbox_y=bbox_y, bbox_width=bbox_width,
+                        transparent=sprite.transparent, origin_x=new_origin_x,
+                        origin_y=new_origin_y, fps=fps, bbox_x=bbox_x,
+                        bbox_y=bbox_y, bbox_width=bbox_width,
                         bbox_height=bbox_height)
         while tween_spr.frames < frames:
             tween_spr.append_frame()
 
         for i in six.moves.range(frames):
-            tween_spr.draw_sprite(sprite, i, 0, 0, frame=i)
+            tween_spr.draw_sprite(sprite, i, new_origin_x, new_origin_y,
+                                  frame=i)
 
             progress = i / (frames - 1)
 
