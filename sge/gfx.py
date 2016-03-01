@@ -32,7 +32,7 @@ import six
 
 import sge
 from sge import r
-from sge.r import (_check_color_input, _check_color, _get_blend_flags,
+from sge.r import (_check_color_input, _check_color, _scale, _get_blend_flags,
                    _screen_blend, f_split_text, s_get_image, s_set_size,
                    s_refresh, s_set_transparency, tg_blit)
 
@@ -668,16 +668,20 @@ class Sprite(object):
         x = int(round(x))
         y = int(round(y))
         pg_color = pygame.Color(*color)
+
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
         if color.alpha == 255:
-            for i in six.moves.range(self.frames):
-                if frame is None or frame % self.frames == i:
-                    self.rd["baseimages"][i].set_at((x, y), pg_color)
+            for i in rng:
+                self.rd["baseimages"][i].set_at((x, y), pg_color)
         else:
             stamp = pygame.Surface((1, 1), pygame.SRCALPHA)
             stamp.fill(pg_color)
-            for i in six.moves.range(self.frames):
-                if frame is None or frame % self.frames == i:
-                    self.rd["baseimages"][i].blit(stamp, (x, y))
+            for i in rng:
+                self.rd["baseimages"][i].blit(stamp, (x, y))
 
         s_refresh(self)
 
@@ -714,15 +718,19 @@ class Sprite(object):
         pg_color = pygame.Color(*color)
         thickness = abs(thickness)
 
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
         if color.alpha == 255:
-            for i in six.moves.range(self.frames):
-                if frame is None or frame % self.frames == i:
-                    if anti_alias and thickness == 1:
-                        pygame.draw.aaline(self.rd["baseimages"][i], pg_color,
-                                           (x1, y1), (x2, y2))
-                    else:
-                        pygame.draw.line(self.rd["baseimages"][i], pg_color,
-                                         (x1, y1), (x2, y2), thickness)
+            for i in rng:
+                if anti_alias and thickness == 1:
+                    pygame.draw.aaline(self.rd["baseimages"][i], pg_color,
+                                       (x1, y1), (x2, y2))
+                else:
+                    pygame.draw.line(self.rd["baseimages"][i], pg_color,
+                                     (x1, y1), (x2, y2), thickness)
         else:
             stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             stamp.fill(pygame.Color(0, 0, 0, 0))
@@ -732,9 +740,8 @@ class Sprite(object):
                 pygame.draw.line(stamp, pg_color, (x1, y1), (x2, y2),
                                  thickness)
 
-            for i in six.moves.range(self.frames):
-                if frame is None or frame % self.frames == i:
-                    self.rd["baseimages"][i].blit(stamp, (0, 0))
+            for i in rng:
+                self.rd["baseimages"][i].blit(stamp, (0, 0))
 
         s_refresh(self)
 
@@ -782,16 +789,20 @@ class Sprite(object):
         if outline is not None:
             pg_outl = pygame.Color(*outline)
 
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
         if ((fill is None or fill.alpha == 255) and
                 (outline is None or outline.alpha == 255)):
-            for i in six.moves.range(self.frames):
-                if frame is None or frame % self.frames == i:
-                    if fill is not None:
-                        self.rd["baseimages"][i].fill(pg_fill, rect)
+            for i in rng:
+                if fill is not None:
+                    self.rd["baseimages"][i].fill(pg_fill, rect)
 
-                    if outline is not None:
-                        pygame.draw.rect(self.rd["baseimages"][i], pg_outl,
-                                         rect, outline_thickness)
+                if outline is not None:
+                    pygame.draw.rect(self.rd["baseimages"][i], pg_outl,
+                                     rect, outline_thickness)
         else:
             stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             stamp.fill(pygame.Color(0, 0, 0, 0))
@@ -800,9 +811,8 @@ class Sprite(object):
             if outline is not None:
                 pygame.draw.rect(stamp, pg_outl, rect, outline_thickness)
 
-            for i in six.moves.range(self.frames):
-                if frame is None or frame % self.frames == i:
-                    self.rd["baseimages"][i].blit(stamp, (0, 0))
+            for i in rng:
+                self.rd["baseimages"][i].blit(stamp, (0, 0))
 
         s_refresh(self)
 
@@ -851,17 +861,21 @@ class Sprite(object):
         if outline is not None:
             pg_outl = pygame.Color(*outline)
 
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
         if ((fill is None or fill.alpha == 255) and
                 (outline is None or outline.alpha == 255)):
-            for i in six.moves.range(self.frames):
-                if frame is None or frame % self.frames == i:
-                    if fill is not None:
-                        pygame.draw.ellipse(self.rd["baseimages"][i], pg_fill,
-                                            rect)
+            for i in rng:
+                if fill is not None:
+                    pygame.draw.ellipse(self.rd["baseimages"][i], pg_fill,
+                                        rect)
 
-                    if outline is not None:
-                        pygame.draw.ellipse(self.rd["baseimages"][i], pg_outl,
-                                            rect, outline_thickness)
+                if outline is not None:
+                    pygame.draw.ellipse(self.rd["baseimages"][i], pg_outl,
+                                        rect, outline_thickness)
         else:
             stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             stamp.fill(pygame.Color(0, 0, 0, 0))
@@ -870,9 +884,8 @@ class Sprite(object):
             if outline is not None:
                 pygame.draw.ellipse(stamp, pg_outl, rect, outline_thickness)
 
-            for i in six.moves.range(self.frames):
-                if frame is None or frame % self.frames == i:
-                    self.rd["baseimages"][i].blit(stamp, (0, 0))
+            for i in rng:
+                self.rd["baseimages"][i].blit(stamp, (0, 0))
 
         s_refresh(self)
 
@@ -918,17 +931,21 @@ class Sprite(object):
         if outline is not None:
             pg_outl = pygame.Color(*outline)
 
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
         if ((fill is None or fill.alpha == 255) and
                 (outline is None or outline.alpha == 255)):
-            for i in six.moves.range(self.frames):
-                if frame is None or frame % self.frames == i:
-                    if fill is not None:
-                        pygame.draw.circle(self.rd["baseimages"][i], pg_fill,
-                                           (x, y), radius)
+            for i in rng:
+                if fill is not None:
+                    pygame.draw.circle(self.rd["baseimages"][i], pg_fill,
+                                       (x, y), radius)
 
-                    if outline is not None:
-                        pygame.draw.circle(self.rd["baseimages"][i], pg_outl,
-                                           (x, y), radius, outline_thickness)
+                if outline is not None:
+                    pygame.draw.circle(self.rd["baseimages"][i], pg_outl,
+                                       (x, y), radius, outline_thickness)
         else:
             stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             stamp.fill(pygame.Color(0, 0, 0, 0))
@@ -938,9 +955,8 @@ class Sprite(object):
                 pygame.draw.circle(stamp, pg_outl, (x, y), radius,
                                    outline_thickness)
 
-            for i in six.moves.range(self.frames):
-                if frame is None or frame % self.frames == i:
-                    self.rd["baseimages"][i].blit(stamp, (0, 0))
+            for i in rng:
+                self.rd["baseimages"][i].blit(stamp, (0, 0))
 
         s_refresh(self)
 
@@ -983,22 +999,26 @@ class Sprite(object):
         if outline is not None:
             pg_outl = pygame.Color(*outline)
 
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
         if ((fill is None or fill.alpha == 255) and
                 (outline is None or outline.alpha == 255)):
-            for i in six.moves.range(self.frames):
-                if frame is None or frame % self.frames == i:
-                    if fill is not None:
-                        pygame.draw.polygon(self.rd["baseimages"][i], pg_fill,
-                                            points, 0)
+            for i in rng:
+                if fill is not None:
+                    pygame.draw.polygon(self.rd["baseimages"][i], pg_fill,
+                                        points, 0)
 
-                    if outline is not None:
-                        if anti_alias and outline_thickness == 1:
-                            pygame.draw.aalines(self.rd["baseimages"][i],
-                                                pg_outl, True, points)
-                        else:
-                            pygame.draw.polygon(self.rd["baseimages"][i],
-                                                pg_outl, points,
-                                                outline_thickness)
+                if outline is not None:
+                    if anti_alias and outline_thickness == 1:
+                        pygame.draw.aalines(self.rd["baseimages"][i],
+                                            pg_outl, True, points)
+                    else:
+                        pygame.draw.polygon(self.rd["baseimages"][i],
+                                            pg_outl, points,
+                                            outline_thickness)
         else:
             stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             stamp.fill(pygame.Color(0, 0, 0, 0))
@@ -1011,9 +1031,8 @@ class Sprite(object):
                     pygame.draw.polygon(stamp, pg_outl, points,
                                         outline_thickness)
 
-            for i in six.moves.range(self.frames):
-                if frame is None or frame % self.frames == i:
-                    self.rd["baseimages"][i].blit(stamp, (0, 0))
+            for i in rng:
+                self.rd["baseimages"][i].blit(stamp, (0, 0))
 
         s_refresh(self)
 
@@ -1060,20 +1079,24 @@ class Sprite(object):
 
         pygame_flags = _get_blend_flags(blend_mode)
 
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
         for i in six.moves.range(self.frames):
-            if frame is None or frame % self.frames == i:
-                dsurf = self.rd["baseimages"][i]
-                if isinstance(sprite, sge.gfx.Sprite):
-                    ssurf = s_set_transparency(sprite,
-                                               sprite.rd["baseimages"][image])
-                    if blend_mode == sge.BLEND_RGB_SCREEN:
-                        _screen_blend(dsurf, ssurf, x, y, False)
-                    elif blend_mode == sge.BLEND_RGBA_SCREEN:
-                        _screen_blend(dsurf, ssurf, x, y, True)
-                    else:
-                        dsurf.blit(ssurf, (x, y), None, pygame_flags)
-                elif isinstance(sprite, sge.gfx.TileGrid):
-                    tg_blit(sprite, dsurf, x, y)
+            dsurf = self.rd["baseimages"][i]
+            if isinstance(sprite, sge.gfx.Sprite):
+                ssurf = s_set_transparency(sprite,
+                                           sprite.rd["baseimages"][image])
+                if blend_mode == sge.BLEND_RGB_SCREEN:
+                    _screen_blend(dsurf, ssurf, x, y, False)
+                elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                    _screen_blend(dsurf, ssurf, x, y, True)
+                else:
+                    dsurf.blit(ssurf, (x, y), None, pygame_flags)
+            elif isinstance(sprite, sge.gfx.TileGrid):
+                tg_blit(sprite, dsurf, x, y)
 
         s_refresh(self)
 
@@ -1198,9 +1221,13 @@ class Sprite(object):
         else:
             box_rect.top = y
 
-        for i in six.moves.range(self.frames):
-            if frame is None or frame % self.frames == i:
-                self.rd["baseimages"][i].blit(box_surf, box_rect)
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
+        for i in rng:
+            self.rd["baseimages"][i].blit(box_surf, box_rect)
 
         s_refresh(self)
 
@@ -1220,15 +1247,19 @@ class Sprite(object):
           ``0`` is the first frame; set to :const:`None` to erase from
           all frames.
         """
-        for i in six.moves.range(self.frames):
-            if frame is None or frame % self.frames == i:
-                if self.rd["baseimages"][i].get_flags() & pygame.SRCALPHA:
-                    color = pygame.Color(0, 0, 0, 0)
-                else:
-                    color = self.rd["baseimages"][i].get_colorkey()
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
 
-                rect = pygame.Rect(x, y, width, height)
-                self.rd["baseimages"][i].fill(color, rect)
+        for i in rng:
+            if self.rd["baseimages"][i].get_flags() & pygame.SRCALPHA:
+                color = pygame.Color(0, 0, 0, 0)
+            else:
+                color = self.rd["baseimages"][i].get_colorkey()
+
+            rect = pygame.Rect(x, y, width, height)
+            self.rd["baseimages"][i].fill(color, rect)
 
         s_refresh(self)
 
@@ -1290,11 +1321,14 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to mirror, where ``0`` is
           the first frame; set to :const:`None` to mirror all frames.
         """
-        for i in six.moves.range(self.frames):
-            if frame is None or frame % self.frames == i:
-                img = self.rd["baseimages"][i]
-                self.rd["baseimages"][i] = pygame.transform.flip(img, True,
-                                                                 False)
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
+        for i in rng:
+            img = self.rd["baseimages"][i]
+            self.rd["baseimages"][i] = pygame.transform.flip(img, True, False)
 
         s_refresh(self)
 
@@ -1307,11 +1341,14 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to flip, where ``0`` is
           the first frame; set to :const:`None` to flip all frames.
         """
-        for i in six.moves.range(self.frames):
-            if frame is None or frame % self.frames == i:
-                img = self.rd["baseimages"][i]
-                self.rd["baseimages"][i] = pygame.transform.flip(img, False,
-                                                                 True)
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
+        for i in rng:
+            img = self.rd["baseimages"][i]
+            self.rd["baseimages"][i] = pygame.transform.flip(img, False, True)
 
         s_refresh(self)
 
@@ -1364,7 +1401,8 @@ class Sprite(object):
             self.origin_y *= yscale
 
         for i in six.moves.range(self.frames):
-            new_surf = pygame.Surface((new_w, new_h))
+            new_surf = pygame.Surface((new_w, new_h), pygame.SRCALPHA)
+            new_surf.fill(pygame.Color(0, 0, 0, 0))
             x = 0
             y = 0
             if frame is None or frame % self.frames == i:
@@ -1417,18 +1455,23 @@ class Sprite(object):
         """
         new_w = self.width
         new_h = self.height
-        for i in six.moves.range(self.frames):
-            if frame is None or frame % self.frames == i:
-                img = pygame.transform.rotate(self.rd["baseimages"][i], -x)
-                new_w = img.get_width()
-                new_h = img.get_height()
-                if adaptive_resize:
-                    self.rd["baseimages"][i] = img
-                else:
-                    x = -(new_w - self.__w) / 2
-                    y = -(new_h - self.__h) / 2
-                    self.rd["baseimages"][i].fill(pygame.Color(0, 0, 0, 0))
-                    self.rd["baseimages"][i].blit(img, (x, y))
+
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
+        for i in rng:
+            img = pygame.transform.rotate(self.rd["baseimages"][i], -x)
+            new_w = img.get_width()
+            new_h = img.get_height()
+            if adaptive_resize:
+                self.rd["baseimages"][i] = img
+            else:
+                x = -(new_w - self.__w) / 2
+                y = -(new_h - self.__h) / 2
+                self.rd["baseimages"][i].fill(pygame.Color(0, 0, 0, 0))
+                self.rd["baseimages"][i].blit(img, (x, y))
 
         if adaptive_resize:
             xdiff = (new_w - self.__w) / 2
