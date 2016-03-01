@@ -1454,9 +1454,9 @@ class Sprite(object):
           resized to accomodate rotation.  If this is :const:`True`,
           rotation amounts other than multiples of 180 will result in
           the size of the sprite being adapted to fit the whole rotated
-          image.  The origin will also be adjusted so that the rotation
-          is about the center, and any frames which have not been
-          rotated will be moved accordingly.
+          image.  The origin and any frames which have not been rotated
+          will also be moved so that their location relative to the
+          rotated image(s) is the same.
         - ``frame`` -- The frame of the sprite to rotate, where ``0`` is
           the first frame; set to :const:`None` to rotate all frames.
 
@@ -1598,8 +1598,14 @@ class Sprite(object):
         if fps is None:
             fps = sprite.fps
 
-        tween_spr = cls(width=(sprite.width * xscale),
-                        height=(sprite.height * yscale),
+        new_w = max(sprite.width, sprite.width * xscale)
+        new_h = max(sprite.height, sprite.height * yscale)
+
+        if rotation:
+            new_w = math.hypot(new_w, new_h)
+            new_h = new_w
+
+        tween_spr = cls(width=new_w, height=new_h,
                         transparent=sprite.transparent,
                         origin_x=(sprite.origin_x * xscale),
                         origin_y=(sprite.origin_y * yscale), fps=fps,
@@ -1627,7 +1633,7 @@ class Sprite(object):
                 tween_spr.scale(xs, ys, frame=i)
 
             if rotation is not None:
-                tween_spr.rotate(rotation * progress, adaptive_resize=True,
+                tween_spr.rotate(rotation * progress, adaptive_resize=False,
                                  frame=i)
 
             if blend is not None:
