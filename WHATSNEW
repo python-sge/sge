@@ -16,6 +16,7 @@ Specification additions:
 + sge.gfx.Sprite.get_pixels
 + sge.gfx.Sprite.scale
 + sge.gfx.Sprite.from_tween
++ sge.gfx.Sprite.resize_canvas
 
 Specification misc changes:
 * sge.dsp.Game.scale is now defined to suggest what resolution to use in

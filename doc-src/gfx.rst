@@ -67,6 +67,8 @@ sge.gfx.Sprite Methods
 
 .. automethod:: sge.gfx.Sprite.flip
 
+.. automethod:: sge.gfx.Sprite.resize_canvas
+
 .. automethod:: sge.gfx.Sprite.scale
 
 .. automethod:: sge.gfx.Sprite.rotate

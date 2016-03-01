@@ -1084,7 +1084,7 @@ class Sprite(object):
         else:
             rng = [frame % self.frames]
 
-        for i in six.moves.range(self.frames):
+        for i in rng:
             dsurf = self.rd["baseimages"][i]
             if isinstance(sprite, sge.gfx.Sprite):
                 ssurf = s_set_transparency(sprite,
@@ -1352,24 +1352,51 @@ class Sprite(object):
 
         s_refresh(self)
 
-    def scale(self, xscale, yscale, frame=None):
+    def resize_canvas(self, width, height):
+        """
+        Resize the sprite by adding empty space instead of scaling.
+
+        After resizing the canvas:
+
+        1. The horizontal location of the origin is multiplied by the
+           new width divided by the old width.
+        2. The vertical location of the origin is multiplied by the new
+           height divided by the old height.
+        3. All frames are repositioned within the sprite such that their
+           position relative to the origin is the same as before.
+
+        Arguments:
+
+        - ``width`` -- The width to set the sprite to.
+        - ``height`` -- The height to set the sprite to.
+        """
+        xscale = width / self.width
+        yscale = height / self.height
+        xdiff = self.origin_x * xscale - self.origin_x
+        ydiff = self.origin_y * yscale - self.origin_y
+
+        for i in six.moves.range(self.frames):
+            new_surf = pygame.Surface((width, height), pygame.SRCALPHA)
+            new_surf.fill(pygame.Color(0, 0, 0, 0))
+            new_surf.blit(self.rd["baseimages"][i], (xdiff, ydiff))
+            self.rd["baseimages"][i] = new_surf
+
+        self.__w = width
+        self.__h = height
+        self.origin_x *= xscale
+        self.origin_y *= yscale
+
+        s_refresh(self)
+
+    def scale(self, xscale=1, yscale=1, frame=None):
         """
         Scale the sprite to a different size.
 
-        This function has a similar effect to changing :attr:`width` and
-        :attr:`height`, but with some key differences:
-
-        1. It is possible to use this function to scale only one frame.
-
-        2. Scaling down does not result in the actual size of the sprite
-           changing.  In this case, any scaled frames are repositioned
-           so that the positions of their top-left corners relative to
-           the origin are multiplied by ``xscale`` and ``yscale``.
-
-        3. If the sprite is scaled up, the origin of the sprite is
-           multiplied by ``xscale`` and ``yscale`` and any unscaled
-           frames are repositioned so that their position relative to
-           the origin is the same.
+        Unlike changing :attr:`width` and :attr:`height`, this function
+        does not result in the actual size of the sprite changing.
+        Instead, any scaled frames are repositioned so that the
+        positions of their top-left corners relative to the origin are
+        multiplied by ``xscale`` and ``yscale``.
 
         Arguments:
 
@@ -1386,44 +1413,32 @@ class Sprite(object):
            value for routine scaling.  Use the :attr:`image_xscale` and
            :attr:`image_yscale` attributes of a :class:`sge.dsp.Object`
            object instead.
+
+        .. note::
+
+           Because this function does not alter the actual size of the
+           sprite, scaling up may result in some parts of the image
+           being cropped off.
         """
         xscale = abs(xscale)
         yscale = abs(yscale)
         scale_w = max(1, int(self.width * xscale))
         scale_h = max(1, int(self.height * yscale))
-        new_w = max(self.width, scale_w)
-        new_h = max(self.height, scale_h)
         xdiff = self.origin_x * xscale - self.origin_x
         ydiff = self.origin_y * yscale - self.origin_y
-        if xscale > 1:
-            self.origin_x *= xscale
-        if yscale > 1:
-            self.origin_y *= yscale
 
-        for i in six.moves.range(self.frames):
-            new_surf = pygame.Surface((new_w, new_h), pygame.SRCALPHA)
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
+        for i in rng:
+            new_surf = pygame.Surface((self.width, self.height),
+                                      pygame.SRCALPHA)
             new_surf.fill(pygame.Color(0, 0, 0, 0))
-            x = 0
-            y = 0
-            if frame is None or frame % self.frames == i:
-                surf = _scale(self.rd["baseimages"][i], scale_w, scale_h)
-
-                if xscale < 1:
-                    x = xdiff
-                if yscale < 1:
-                    y = ydiff
-            else:
-                surf = self.rd["baseimages"][i]
-                if xscale > 1:
-                    x = xdiff
-                if yscale > 1:
-                    y = ydiff
-
-            new_surf.blit(surf, (x, y))
+            surf = _scale(self.rd["baseimages"][i], scale_w, scale_h)
+            new_surf.blit(surf, (xdiff, ydiff))
             self.rd["baseimages"][i] = new_surf
-
-        self.__w = new_w
-        self.__h = new_h
 
         s_refresh(self)
 
@@ -1541,7 +1556,8 @@ class Sprite(object):
 
     @classmethod
     def from_tween(cls, sprite, frames, fps=None, xscale=None, yscale=None,
-                   rotation=None, blend=None):
+                   rotation=None, blend=None, bbox_x=None, bbox_y=None,
+                   bbox_width=None, bbox_height=None):
         """
         Create a sprite based on tweening an existing sprite.
 
@@ -1574,28 +1590,39 @@ class Sprite(object):
           color to blend with the sprite (using RGBA Multiply blending)
           at the end of the tween.  If set to :const:`None`, color
           blending will not be included in the tweening process.
+
+        All other arguments set the respective initial attributes of the
+        tween.  See the documentation for :class:`sge.gfx.Sprite` for
+        more information.
         """
         if fps is None:
             fps = sprite.fps
 
-        tween_spr = cls(width=sprite.width, height=sprite.height, fps=fps)
-        for i in six.moves.range(frames):
-            while tween_spr.frames < i:
-                tween_spr.append_frame()
+        tween_spr = cls(width=(sprite.width * xscale),
+                        height=(sprite.height * yscale),
+                        transparent=sprite.transparent,
+                        origin_x=(sprite.origin_x * xscale),
+                        origin_y=(sprite.origin_y * yscale), fps=fps,
+                        bbox_x=bbox_x, bbox_y=bbox_y, bbox_width=bbox_width,
+                        bbox_height=bbox_height)
+        while tween_spr.frames < frames:
+            tween_spr.append_frame()
 
+        for i in six.moves.range(frames):
             tween_spr.draw_sprite(sprite, i, 0, 0, frame=i)
 
-            progress = i / frames
+            progress = i / (frames - 1)
 
             if xscale is not None or yscale is not None:
-                if xscale is None:
+                if xscale is None or xscale == 1:
                     xs = 1
                 else:
-                    xs = xscale * progress
-                if yscale is None:
+                    xs = 1 + (xscale - 1) * progress
+
+                if yscale is None or yscale == 1:
                     ys = 1
                 else:
-                    ys = yscale * progress
+                    ys = 1 + (yscale - 1) * progress
 
                 tween_spr.scale(xs, ys, frame=i)
 
