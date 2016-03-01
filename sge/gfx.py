@@ -1281,23 +1281,115 @@ class Sprite(object):
             self.rd["locked"] = False
             s_refresh(self)
 
-    def mirror(self):
-        """Mirror the sprite horizontally."""
+    def mirror(self, frame=None):
+        """
+        Mirror the sprite horizontally.
+
+        Arguments:
+
+        - ``frame`` -- The frame of the sprite to mirror, where ``0`` is
+          the first frame; set to :const:`None` to mirror all frames.
+        """
         for i in six.moves.range(self.frames):
-            img = self.rd["baseimages"][i]
-            self.rd["baseimages"][i] = pygame.transform.flip(img, True, False)
+            if frame is None or frame % self.frames == i:
+                img = self.rd["baseimages"][i]
+                self.rd["baseimages"][i] = pygame.transform.flip(img, True,
+                                                                 False)
 
         s_refresh(self)
 
-    def flip(self):
-        """Flip the sprite vertically."""
+    def flip(self, frame=None):
+        """
+        Flip the sprite vertically.
+
+        Arguments:
+
+        - ``frame`` -- The frame of the sprite to flip, where ``0`` is
+          the first frame; set to :const:`None` to flip all frames.
+        """
         for i in six.moves.range(self.frames):
-            img = self.rd["baseimages"][i]
-            self.rd["baseimages"][i] = pygame.transform.flip(img, False, True)
+            if frame is None or frame % self.frames == i:
+                img = self.rd["baseimages"][i]
+                self.rd["baseimages"][i] = pygame.transform.flip(img, False,
+                                                                 True)
 
         s_refresh(self)
 
-    def rotate(self, x, adaptive_resize=True):
+    def scale(self, xscale, yscale, frame=None):
+        """
+        Scale the sprite to a different size.
+
+        This function has a similar effect to changing :attr:`width` and
+        :attr:`height`, but with some key differences:
+
+        1. It is possible to use this function to scale only one frame.
+
+        2. Scaling down does not result in the actual size of the sprite
+           changing.  In this case, any scaled frames are repositioned
+           so that the positions of their top-left corners relative to
+           the origin are multiplied by ``xscale`` and ``yscale``.
+
+        3. If the sprite is scaled up, the origin of the sprite is
+           multiplied by ``xscale`` and ``yscale`` and any unscaled
+           frames are repositioned so that their position relative to
+           the origin is the same.
+
+        Arguments:
+
+        - ``xscale`` -- The horizontal scale factor.
+        - ``yscale`` -- The vertical scale factor.
+        - ``frame`` -- The frame of the sprite to rotate, where ``0`` is
+          the first frame; set to :const:`None` to rotate all frames.
+
+        .. note::
+
+           This is a destructive transformation: it can result in loss
+           of pixel information, especially if it is done repeatedly.
+           Because of this, it is advised that you do not adjust this
+           value for routine scaling.  Use the :attr:`image_xscale` and
+           :attr:`image_yscale` attributes of a :class:`sge.dsp.Object`
+           object instead.
+        """
+        xscale = abs(xscale)
+        yscale = abs(yscale)
+        scale_w = max(1, int(self.width * xscale))
+        scale_h = max(1, int(self.height * yscale))
+        new_w = max(self.width, scale_w)
+        new_h = max(self.height, scale_h)
+        xdiff = self.origin_x * xscale - self.origin_x
+        ydiff = self.origin_y * yscale - self.origin_y
+        if xscale > 1:
+            self.origin_x *= xscale
+        if yscale > 1:
+            self.origin_y *= yscale
+
+        for i in six.moves.range(self.frames):
+            new_surf = pygame.Surface((new_w, new_h))
+            x = 0
+            y = 0
+            if frame is None or frame % self.frames == i:
+                surf = _scale(self.rd["baseimages"][i], scale_w, scale_h)
+
+                if xscale < 1:
+                    x = xdiff
+                if yscale < 1:
+                    y = ydiff
+            else:
+                surf = self.rd["baseimages"][i]
+                if xscale > 1:
+                    x = xdiff
+                if yscale > 1:
+                    y = ydiff
+
+            new_surf.blit(surf, (x, y))
+            self.rd["baseimages"][i] = new_surf
+
+        self.__w = new_w
+        self.__h = new_h
+
+        s_refresh(self)
+
+    def rotate(self, x, adaptive_resize=True, frame=None):
         """
         Rotate the sprite about the center.
 
@@ -1310,7 +1402,10 @@ class Sprite(object):
           rotation amounts other than multiples of 180 will result in
           the size of the sprite being adapted to fit the whole rotated
           image.  The origin will also be adjusted so that the rotation
-          is about the center.
+          is about the center, and any frames which have not been
+          rotated will be moved accordingly.
+        - ``frame`` -- The frame of the sprite to rotate, where ``0`` is
+          the first frame; set to :const:`None` to rotate all frames.
 
         .. note::
 
@@ -1323,22 +1418,35 @@ class Sprite(object):
         new_w = self.width
         new_h = self.height
         for i in six.moves.range(self.frames):
-            img = pygame.transform.rotate(self.rd["baseimages"][i], -x)
-            new_w = img.get_width()
-            new_h = img.get_height()
-            if adaptive_resize:
-                self.rd["baseimages"][i] = img
-            else:
-                x = -(new_w - self.__w) / 2
-                y = -(new_h - self.__h) / 2
-                self.rd["baseimages"][i].fill(pygame.Color(0, 0, 0, 0))
-                self.rd["baseimages"][i].blit(img, (x, y))
+            if frame is None or frame % self.frames == i:
+                img = pygame.transform.rotate(self.rd["baseimages"][i], -x)
+                new_w = img.get_width()
+                new_h = img.get_height()
+                if adaptive_resize:
+                    self.rd["baseimages"][i] = img
+                else:
+                    x = -(new_w - self.__w) / 2
+                    y = -(new_h - self.__h) / 2
+                    self.rd["baseimages"][i].fill(pygame.Color(0, 0, 0, 0))
+                    self.rd["baseimages"][i].blit(img, (x, y))
 
         if adaptive_resize:
-            self.origin_x += (new_w - self.__w) / 2
-            self.origin_y += (new_h - self.__h) / 2
+            xdiff = (new_w - self.__w) / 2
+            ydiff = (new_h - self.__h) / 2
+            self.origin_x += xdiff
+            self.origin_y += ydiff
             self.__w = new_w
             self.__h = new_h
+
+            if frame is not None:
+                # Need to go back and correct the positions of frames
+                # that weren't rotated.
+                for i in six.moves.range(self.frames):
+                    if frame % self.frames != i:
+                        surf = pygame.Surface((new_w, new_h), pygame.SRCALPHA)
+                        surf.fill(pygame.Color(0, 0, 0, 0))
+                        surf.blit(self.rd["baseimages"][i], (xdiff, ydiff))
+                        self.rd["baseimages"][i] = surf
 
         s_refresh(self)
 
@@ -1387,6 +1495,84 @@ class Sprite(object):
             m = 'Couldn\'t save to "{}"'.format(
                 os.path.normpath(os.path.realpath(fname)))
             raise IOError(m)
+
+    @classmethod
+    def from_tween(cls, sprite, frames, fps=None, xscale=None, yscale=None,
+                   rotation=None, blend=None):
+        """
+        Create a sprite based on tweening an existing sprite.
+
+        "Tweening" refers to creating an animation from gradual
+        transformations to an image.  For example, this can be used to
+        generate an animation of an object growing to a particular size.
+        The animation generated is called a "tween".
+
+        Arguments:
+
+        - ``sprite`` -- The sprite to base the tween on.  If the sprite
+          includes multiple frames, all frames will be used in sequence
+          until the end of the tween.
+        - ``frames`` -- The number of frames the to make the tween take
+          up.
+        - ``fps`` -- The suggested rate of animation for the tween in
+          frames per second.  If set to :const:`None`, the suggested
+          animation rate of the base sprite is used.
+        - ``xscale`` -- The horizontal scale factor at the end of the
+          tween.  If set to :const:`None`, horizontal scaling will not
+          be included in the tweening process.
+        - ``yscale`` -- The vertical scale factor at the end of the
+          tween.  If set to :const:`None`, vertical scaling will not be
+          included in the tweening process.
+        - ``rotation`` -- The total clockwise rotation amount in degrees
+          at the end of the tween.  Can be negative to indicate
+          counter-clockwise rotation instead.  If set to :const:`None`,
+          rotation will not be included in the tweening process.
+        - ``blend`` -- A :class:`sge.gfx.Color` object representing the
+          color to blend with the sprite (using RGBA Multiply blending)
+          at the end of the tween.  If set to :const:`None`, color
+          blending will not be included in the tweening process.
+        """
+        if fps is None:
+            fps = sprite.fps
+
+        tween_spr = cls(width=sprite.width, height=sprite.height, fps=fps)
+        for i in six.moves.range(frames):
+            while tween_spr.frames < i:
+                tween_spr.append_frame()
+
+            tween_spr.draw_sprite(sprite, i, 0, 0, frame=i)
+
+            progress = i / frames
+
+            if xscale is not None or yscale is not None:
+                if xscale is None:
+                    xs = 1
+                else:
+                    xs = xscale * progress
+                if yscale is None:
+                    ys = 1
+                else:
+                    ys = yscale * progress
+
+                tween_spr.scale(xs, ys, frame=i)
+
+            if rotation is not None:
+                tween_spr.rotate(rotation * progress, adaptive_resize=True,
+                                 frame=i)
+
+            if blend is not None:
+                blender = Sprite(width=tween_spr.width, height=tween_spr.height)
+                r = int(255 - (255 - blend.red) * progress)
+                g = int(255 - (255 - blend.green) * progress)
+                b = int(255 - (255 - blend.blue) * progress)
+                a = int(255 - (255 - blend.alpha) * progress)
+                color = Color((r, g, b, a))
+                blender.draw_rectangle(0, 0, blender.width, blender.height,
+                                       fill=color)
+                tween_spr.draw_sprite(blender, 0, 0, 0, frame=i,
+                                      blend_mode=sge.BLEND_RGBA_MULTIPLY)
+
+        return tween_spr
 
     @classmethod
     def from_text(cls, font, text, width=None, height=None,

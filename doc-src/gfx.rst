@@ -67,11 +67,15 @@ sge.gfx.Sprite Methods
 
 .. automethod:: sge.gfx.Sprite.flip
 
+.. automethod:: sge.gfx.Sprite.scale
+
 .. automethod:: sge.gfx.Sprite.rotate
 
 .. automethod:: sge.gfx.Sprite.copy
 
 .. automethod:: sge.gfx.Sprite.save
+
+.. automethod:: sge.gfx.Sprite.from_tween
 
 .. automethod:: sge.gfx.Sprite.from_text
 

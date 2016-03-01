@@ -2888,11 +2888,13 @@ class Object(object):
 
     .. attribute:: image_xscale
 
-       The horizontal scale factor for the sprite.
+       The horizontal scale factor for the sprite.  If this is negative,
+       the sprite will also be mirrored horizontally.
 
     .. attribute:: image_yscale
 
-       The vertical scale factor for the sprite.
+       The vertical scale factor for the sprite.  If this is negative,
+       the sprite will also be flipped vertically.
 
     .. attribute:: image_rotation
 
@@ -2912,7 +2914,8 @@ class Object(object):
     .. attribute:: image_blend
 
        A :class:`sge.gfx.Color` object representing the color to blend
-       with the sprite.  Set to :const:`None` for no color blending.
+       with the sprite (using RGBA Multiply blending).  Set to
+       :const:`None` for no color blending.
 
     .. attribute:: alarms
 
