@@ -3285,7 +3285,7 @@ class Object(object):
                     mask = [[True for y in six.moves.range(self.bbox_height)]
                             for x in six.moves.range(self.bbox_width)]
 
-            cache.add(i, mask)
+            r.cache.add(i, mask)
             return mask
 
     @property
