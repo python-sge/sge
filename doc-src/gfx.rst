@@ -33,6 +33,8 @@ sge.gfx.Sprite Methods
 
 .. automethod:: sge.gfx.Sprite.insert_frame
 
+.. automethod:: sge.gfx.Sprite.extend
+
 .. automethod:: sge.gfx.Sprite.delete_frame
 
 .. automethod:: sge.gfx.Sprite.get_pixel

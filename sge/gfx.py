@@ -580,6 +580,7 @@ class Sprite(object):
         img = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         img.fill(pygame.Color(0, 0, 0, 0))
         self.rd["baseimages"].append(img)
+        s_refresh(self)
 
     def insert_frame(self, frame):
         """
@@ -593,6 +594,22 @@ class Sprite(object):
         img = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         img.fill(pygame.Color(0, 0, 0, 0))
         self.rd["baseimages"].insert(frame, img)
+        s_refresh(self)
+
+    def extend(self, sprite):
+        """
+        Extend this sprite with the frames of another sprite.
+
+        If the size of the frames added is different from the size of
+        this sprite, they are scaled to this sprite's size.
+
+        Arguments:
+
+        - ``sprite`` -- The sprite to add the frames of to this sprite.
+        """
+        self.rd["baseimages"].extend(sprite.rd["baseimages"])
+        s_set_size(self)
+        s_refresh(self)
 
     def delete_frame(self, frame):
         """
