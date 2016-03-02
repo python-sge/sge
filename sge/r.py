@@ -1002,8 +1002,16 @@ def s_set_size(self):
     width = int(round(self.width))
     height = int(round(self.height))
     for i in six.moves.range(self.frames):
-        self.rd["baseimages"][i] = _scale(self.rd["baseimages"][i], width,
-                                          height)
+        if sge.game.scale_smooth:
+            try:
+                self.rd["baseimages"][i] = pygame.transform.smoothscale(
+                    self.rd["baseimages"][i], (width, height))
+            except (pygame.error, ValueError):
+                self.rd["baseimages"][i] = pygame.transform.scale(
+                    self.rd["baseimages"][i], (width, height))
+        else:
+            self.rd["baseimages"][i] = pygame.transform.scale(
+                self.rd["baseimages"][i], (width, height))
 
 
 def s_refresh(self):
