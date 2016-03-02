@@ -549,7 +549,9 @@ class Sprite(object):
             # Choose name
             self.name = "sge-pygame-dynamicsprite"
 
-            self.append_frame()
+            img = pygame.Surface((width, height), pygame.SRCALPHA)
+            img.fill(pygame.Color(0, 0, 0, 0))
+            self.rd["baseimages"].append(img)
 
         if width is None:
             width = 1
