@@ -12,6 +12,7 @@ without any warranty.
 
 Pygame SGE bugfixes:
 - Background layers sometimes being positioned a pixel off
+- Transparency of some image formats being incorrectly accounted for
 
 
 0.22

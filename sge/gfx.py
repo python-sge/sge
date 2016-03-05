@@ -455,6 +455,15 @@ class Sprite(object):
         errlist = []
 
         if name is not None:
+            def check_alpha(surface):
+                # Check whether the surface has a colorkey.  If it does,
+                # return the surface converted to use alpha
+                # transparency.  Otherwise, return the surface.
+                if surface.get_colorkey() is not None:
+                    return surface.convert_alpha()
+
+                return surface
+
             if not directory:
                 directory = os.curdir
             for fname in os.listdir(directory):
@@ -490,7 +499,7 @@ class Sprite(object):
                     except pygame.error as e:
                         errlist.append(e)
                     else:
-                        self.rd["baseimages"].append(img)
+                        self.rd["baseimages"].append(check_alpha(img))
 
             if not self.rd["baseimages"] and any(fname_frames):
                 # Load the multiple images
@@ -501,7 +510,7 @@ class Sprite(object):
                         except pygame.error as e:
                             errlist.append(e)
                         else:
-                            self.rd["baseimages"].append(img)
+                            self.rd["baseimages"].append(check_alpha(img))
 
             if not self.rd["baseimages"] and any(fname_strip):
                 # Load the strip (sprite sheet)
@@ -520,6 +529,7 @@ class Sprite(object):
                     except pygame.error as e:
                         errlist.append(e)
                     else:
+                        sheet = check_alpha(sheet)
                         assert split[1][5:].isdigit()
                         n = int(split[1][5:])
 

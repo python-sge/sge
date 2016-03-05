@@ -340,17 +340,6 @@ fullscreen with the mouse.  This can be a button somewhere on the screen
 if the game uses the mouse cursor, or it can be a simple mouse button
 click otherwise.
 
-Image Transparency
-~~~~~~~~~~~~~~~~~~
-
-There are some cases where a Pygame surface returned by
-:func:`pygame.image.load` based on an image with an alpha channel can
-not have the :data:`pygame.SRCALPHA` flag set.  The Pygame SGE depends
-on this flag to detect whether or not an image has alpha transparency,
-so if this happens, colorkey transparency ends up being used by
-accident, and this may have undesirable visual effects.  Exactly what
-causes this to happen is currently unknown.
-
 Saving PNG Images
 ~~~~~~~~~~~~~~~~~
 
