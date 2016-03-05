@@ -1024,23 +1024,25 @@ def s_refresh(self):
 def s_set_transparency(self, image):
     # Return a copy of the surface with transparency properly set
     # for this sprite's settings.
-    colorkey = None
-    if self.transparent and image.get_width() > 0:
+    if isinstance(self.transparent, sge.gfx.Color):
+        img = image.convert()
+        color = pygame.Color(*self.transparent)
+        img.set_colorkey(color, pygame.RLEACCEL)
+        return img
+    elif self.transparent and image.get_width() > 0:
         if image.get_flags() & pygame.SRCALPHA:
-            img = image.convert_alpha()
+            return image.convert_alpha()
         else:
             img = image.convert()
-            colorkey = image.get_at((image.get_width() - 1, 0))
+            color = image.get_at((image.get_width() - 1, 0))
+            img.set_colorkey(color, pygame.RLEACCEL)
+            return img
     else:
-        img = image.convert()
+        return image.convert()
 
-    if isinstance(self.force_colorkey, sge.gfx.Color):
-        colorkey = pygame.Color(*self.force_colorkey)
-
-    if colorkey is not None:
-        img.set_colorkey(colorkey, pygame.RLEACCEL)
-
-    return img
+    # Should not happen!
+    warnings.warn("Failed to account for transparency")
+    return image.convert()
 
 
 def s_get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,

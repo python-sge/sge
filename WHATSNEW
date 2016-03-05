@@ -18,13 +18,14 @@ Specification additions:
 + sge.gfx.Sprite.from_tween
 + sge.gfx.Sprite.resize_canvas
 + sge.gfx.Sprite.extend
-+ sge.gfx.Sprite.force_colorkey
 
 Specification misc changes:
 * sge.dsp.Game.scale is now defined to suggest what resolution to use in
   fullscreen mode.
 * Mirroring, flipping, and rotation of sprites can now be done on a
   specific frame.
+* sge.gfx.Sprite.transparent can now be set to a color, in which case it
+  defines the colorkey to use.
 
 
 0.23

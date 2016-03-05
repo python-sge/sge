@@ -254,12 +254,8 @@ class Sprite(object):
        being the color of the top-rightmost pixel of the respective
        frame.
 
-    .. attribute:: force_colorkey
-
        If this is a :class:`sge.gfx.Color` object, the indicated color
-       will be used as a colorkey, regardless of the value of
-       :attr:`transparent` and overriding any automatic colorkey
-       assignment resulting from the value of :attr:`transparent`.
+       will be used as a colorkey.
 
     .. attribute:: origin_x
 
@@ -355,16 +351,6 @@ class Sprite(object):
             s_refresh(self)
 
     @property
-    def force_colorkey(self):
-        return self.__force_colorkey
-
-    @force_colorkey.setter
-    def force_colorkey(self, value):
-        if self.__force_colorkey != value:
-            self.__force_Colorkey = value
-            s_refresh(self)
-
-    @property
     def speed(self):
         return self.fps / sge.game.fps
 
@@ -421,9 +407,8 @@ class Sprite(object):
         return len(self.rd["baseimages"])
 
     def __init__(self, name=None, directory="", width=None, height=None,
-                 transparent=True, force_colorkey=None, origin_x=0, origin_y=0,
-                 fps=60, bbox_x=None, bbox_y=None, bbox_width=None,
-                 bbox_height=None):
+                 transparent=True, origin_x=0, origin_y=0, fps=60, bbox_x=None,
+                 bbox_y=None, bbox_width=None, bbox_height=None):
         """
         Arguments:
 
@@ -587,7 +572,6 @@ class Sprite(object):
         self.origin_x = origin_x
         self.origin_y = origin_y
         self.__transparent = transparent
-        self.__force_colorkey = force_colorkey
         self.fps = fps
         self.bbox_x = bbox_x
         self.bbox_y = bbox_y
