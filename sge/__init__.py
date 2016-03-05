@@ -305,6 +305,13 @@ cases.  No other drawing or projecting methods support anti-aliasing.
 Known Problems
 --------------
 
+Since the Pygame SGE uses Pygame, it necessarily inherits Pygame's bugs.
+Below, some notable bugs in Pygame 1.9.1 (the latest Pygame release) are
+indicated.
+
+Keyboard Lock-up
+~~~~~~~~~~~~~~~~
+
 There is a bug in either Pygame or SDL, most likely SDL, which sometimes
 causes keyboard input to stop working.  In Pygame programs such as this
 one, this occurs when pygame.display.set_mode is called multiple times,
@@ -332,6 +339,26 @@ you to provide some method of either exiting the game or exiting
 fullscreen with the mouse.  This can be a button somewhere on the screen
 if the game uses the mouse cursor, or it can be a simple mouse button
 click otherwise.
+
+Image Transparency
+~~~~~~~~~~~~~~~~~~
+
+There are some cases where a Pygame surface returned by
+:func:`pygame.image.load` based on an image with an alpha channel can
+not have the :data:`pygame.SRCALPHA` flag set.  The Pygame SGE depends
+on this flag to detect whether or not an image has alpha transparency,
+so if this happens, colorkey transparency ends up being used by
+accident, and this may have undesirable visual effects.  Exactly what
+causes this to happen is currently unknown.
+
+Saving PNG Images
+~~~~~~~~~~~~~~~~~
+
+Some versions of Pygame have problems saving color information of PNG
+images correctly.  As a result, depending on your exact version of
+Pygame, images saves with :meth:`sge.gfx.Sprite.save` may be discolored.
+The best workaround is to choose a different format, such as BMP, GIF,
+or JPEG.
 """
 
 from __future__ import division
