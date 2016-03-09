@@ -34,8 +34,8 @@ Which mode the mouse is in depends on the values of
    position of the mouse in the room, based on its proximity to the view
    it is in.  Otherwise, they will return ``-1``.
 
-   This attribute can be assigned to safely, but doing so will not have
-   any effect.
+   These attributes can be assigned to safely, but doing so will not
+   have any effect.
 
 .. attribute:: sge.game.mouse.z
 
