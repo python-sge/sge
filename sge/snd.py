@@ -227,11 +227,6 @@ class Sound(object):
         for channel in self.__channels:
             channel.unpause()
 
-    @staticmethod
-    def stop_all():
-        """Stop playback of all sounds."""
-        pygame.mixer.stop()
-
 
 class Music(object):
 
@@ -418,3 +413,9 @@ class Music(object):
     def clear_queue():
         """Clear the music queue."""
         r.music_queue = []
+
+
+def stop_all():
+    """Stop playback of all sounds."""
+    pygame.mixer.stop()
+

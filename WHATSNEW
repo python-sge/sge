@@ -18,6 +18,10 @@ Specification additions:
 + sge.gfx.Sprite.from_tween
 + sge.gfx.Sprite.resize_canvas
 + sge.gfx.Sprite.extend
++ sge.snd.stop_all
+
+Specification removals:
+- sge.snd.Sound.stop_all
 
 Specification misc changes:
 * sge.dsp.Game.scale is now defined to suggest what resolution to use in

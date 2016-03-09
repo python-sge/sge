@@ -32,8 +32,6 @@ sge.snd.Sound Methods
 
 .. automethod:: sge.snd.Sound.unpause
 
-.. automethod:: sge.snd.Sound.stop_all
-
 sge.snd.Music
 -------------
 
@@ -55,4 +53,12 @@ sge.snd.Music Methods
 .. automethod:: sge.snd.Music.unpause
 
 .. automethod:: sge.snd.Music.clear_queue
+
+sge.snd Functions
+=================
+
+sge.snd.stop_all
+----------------
+
+.. autofunction:: sge.snd.Sound.stop_all
 
