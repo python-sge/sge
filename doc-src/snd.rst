@@ -60,5 +60,5 @@ sge.snd Functions
 sge.snd.stop_all
 ----------------
 
-.. autofunction:: sge.snd.Sound.stop_all
+.. autofunction:: sge.snd.stop_all
 

@@ -33,7 +33,7 @@ from sge import r
 from sge.r import _get_channel, _release_channel
 
 
-__all__ = ["Sound", "Music"]
+__all__ = ["Sound", "Music", "stop_all"]
 
 
 class Sound(object):
