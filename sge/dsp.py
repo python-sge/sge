@@ -1059,8 +1059,8 @@ class Game(object):
         for view in self.current_room.views:
             view_surf = pygame.Surface((view.width, view.height))
             view_surf.fill(pygame.Color(*self.current_room.background.color))
-            view_x = round(view.x)
-            view_y = round(view.y)
+            view_x = view.x
+            view_y = view.y
             view_width = view.width
             view_height = view.height
             vx = view_x - sge.game.current_room.background_x
@@ -1070,8 +1070,8 @@ class Game(object):
 
             for layer in self.current_room.background.layers:
                 img = bl_get_image(layer)
-                x = layer.x - (vx * layer.xscroll_rate)
-                y = layer.y - (vy * layer.yscroll_rate)
+                x = layer.x - vx * layer.xscroll_rate
+                y = layer.y - vy * layer.yscroll_rate
                 if isinstance(img, sge.gfx.TileGrid):
                     img_w = max(1, img.width)
                     img_h = max(1, img.height)
@@ -1094,28 +1094,28 @@ class Game(object):
                     y = (y % img_h) + img_h * math.ceil(view_height / img_h)
 
                 if layer.repeat_right and (layer.repeat_left or x < view_width):
-                    hrange = six.moves.range(int(x),
+                    hrange = six.moves.range(int(math.floor(x)),
                                              int(view.width + img_w), img_w)
                 elif layer.repeat_left and x + img_w > 0:
-                    hrange = six.moves.range(int(x), -img_w, -img_w)
+                    hrange = six.moves.range(int(math.floor(x)), -img_w, -img_w)
                 else:
-                    hrange = [x]
+                    hrange = [int(math.floor(x))]
 
                 if layer.repeat_down and (layer.repeat_up or y < view_height):
-                    vrange = six.moves.range(int(y),
+                    vrange = six.moves.range(int(math.floor(y)),
                                              int(view_height + img_h), img_h)
                 elif layer.repeat_up and y + img_h > 0:
-                    vrange = six.moves.range(int(y), -img_h, -img_h)
+                    vrange = six.moves.range(int(math.floor(y)), -img_h, -img_h)
                 else:
-                    vrange = [y]
+                    vrange = [int(math.floor(y))]
 
                 for y in vrange:
                     for x in hrange:
-                        images.append((img, x + view_x, y + view_y, layer.z,
-                                       None))
+                        images.append((img, x + math.floor(view_x),
+                                       y + math.floor(view_y), layer.z, None))
 
             for obj in self.current_room.get_objects_at(
-                    view.x, view.y, view.width, view.height):
+                    view_x, view_y, view_width, view_height):
                 if obj.visible and obj is not self.mouse:
                     if isinstance(obj.sprite, sge.gfx.Sprite):
                         img = s_get_image(obj.sprite, obj.image_index,
