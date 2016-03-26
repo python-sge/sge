@@ -1,4 +1,4 @@
-# Copyright (C) 2012-2015 onpon4 <onpon4@riseup.net>
+# Copyright (C) 2012-2016 onpon4 <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -32,7 +32,7 @@ from sge import r
 
 
 __all__ = ["refresh", "get_axis", "get_hat_x", "get_hat_y",
-           "get_button_pressed", "get_value", "get_joysticks", "get_name",
+           "get_pressed", "get_value", "get_joysticks", "get_name",
            "get_id", "get_axes", "get_hats", "get_trackballs", "get_buttons"]
 
 

@@ -22,6 +22,7 @@ SGE Game Engine documentation
    joystick
    keyboard
    mouse
+   s
 
 Indices and tables
 ==================

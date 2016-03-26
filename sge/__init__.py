@@ -355,7 +355,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.24.1a0"
+__version__ = "0.25a0"
 
 import sys
 import os
@@ -454,7 +454,8 @@ MOUSE_BUTTON_NAMES = {}
 for pair in MOUSE_BUTTONS.items():
     MOUSE_BUTTON_NAMES[pair[1]] = pair[0]
 
-from sge import collision, dsp, gfx, input, joystick, keyboard, mouse, snd, r
+from sge import (collision, dsp, gfx, input, joystick, keyboard, mouse, snd, s,
+                 r)
 
 
 __all__ = [
