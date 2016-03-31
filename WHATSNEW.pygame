@@ -12,6 +12,7 @@ without any warranty.
 
 Pygame SGE bugfixes:
 - More cases of background layers being positioned wrongly
+- Text drawing not supporting alpha transparency
 
 
 0.24

@@ -1337,6 +1337,10 @@ class Sprite(object):
         for i in six.moves.range(len(lines)):
             rendered_text = font.rd["font"].render(lines[i], anti_alias,
                                                    pygame.Color(*color))
+            if color.alpha < 255:
+                rendered_text = rendered_text.convert_alpha()
+                rendered_text.fill((0, 0, 0, 255 - color.alpha), None,
+                                   pygame.BLEND_RGBA_SUB)
             rect = rendered_text.get_rect()
             rect.top = i * font.rd["font"].get_linesize()
 
