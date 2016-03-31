@@ -13,6 +13,9 @@ without any warranty.
 Specification additions:
 + sge.s
 
+Specification misc changes:
+* All drawing and projecting methods now support blend modes.
+
 
 0.24
 ------------------------------------------------------------------------

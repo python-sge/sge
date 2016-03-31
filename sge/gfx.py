@@ -680,7 +680,7 @@ class Sprite(object):
         surf.unlock()
         return pixels
 
-    def draw_dot(self, x, y, color, frame=None):
+    def draw_dot(self, x, y, color, frame=None, blend_mode=None):
         """
         Draw a single-pixel dot on the sprite.
 
@@ -695,6 +695,24 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
+        - ``blend_mode`` -- The blend mode to use.  Possible blend modes
+          are:
+
+          - :data:`sge.BLEND_NORMAL`
+          - :data:`sge.BLEND_RGBA_ADD`
+          - :data:`sge.BLEND_RGBA_SUBTRACT`
+          - :data:`sge.BLEND_RGBA_MULTIPLY`
+          - :data:`sge.BLEND_RGBA_SCREEN`
+          - :data:`sge.BLEND_RGBA_MINIMUM`
+          - :data:`sge.BLEND_RGBA_MAXIMUM`
+          - :data:`sge.BLEND_RGB_ADD`
+          - :data:`sge.BLEND_RGB_SUBTRACT`
+          - :data:`sge.BLEND_RGB_MULTIPLY`
+          - :data:`sge.BLEND_RGB_SCREEN`
+          - :data:`sge.BLEND_RGB_MINIMUM`
+          - :data:`sge.BLEND_RGB_MAXIMUM`
+
+          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(color)
 
@@ -707,19 +725,27 @@ class Sprite(object):
         else:
             rng = [frame % self.frames]
 
-        if color.alpha == 255:
+        pygame_flags = _get_blend_flags(blend_mode)
+
+        if color.alpha == 255 and not pygame_flags:
             for i in rng:
                 self.rd["baseimages"][i].set_at((x, y), pg_color)
         else:
             stamp = pygame.Surface((1, 1), pygame.SRCALPHA)
             stamp.fill(pg_color)
             for i in rng:
-                self.rd["baseimages"][i].blit(stamp, (x, y))
+                dsurf = self.rd["baseimages"][i]
+                if blend_mode == sge.BLEND_RGB_SCREEN:
+                    _screen_blend(dsurf, stamp, x, y, False)
+                elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                    _screen_blend(dsurf, stamp, x, y, True)
+                else:
+                    dsurf.blit(stamp, (x, y), None, pygame_flags)
 
         s_refresh(self)
 
     def draw_line(self, x1, y1, x2, y2, color, thickness=1, anti_alias=False,
-                  frame=None):
+                  frame=None, blend_mode=None):
         """
         Draw a line segment on the sprite.
 
@@ -740,6 +766,24 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
+        - ``blend_mode`` -- The blend mode to use.  Possible blend modes
+          are:
+
+          - :data:`sge.BLEND_NORMAL`
+          - :data:`sge.BLEND_RGBA_ADD`
+          - :data:`sge.BLEND_RGBA_SUBTRACT`
+          - :data:`sge.BLEND_RGBA_MULTIPLY`
+          - :data:`sge.BLEND_RGBA_SCREEN`
+          - :data:`sge.BLEND_RGBA_MINIMUM`
+          - :data:`sge.BLEND_RGBA_MAXIMUM`
+          - :data:`sge.BLEND_RGB_ADD`
+          - :data:`sge.BLEND_RGB_SUBTRACT`
+          - :data:`sge.BLEND_RGB_MULTIPLY`
+          - :data:`sge.BLEND_RGB_SCREEN`
+          - :data:`sge.BLEND_RGB_MINIMUM`
+          - :data:`sge.BLEND_RGB_MAXIMUM`
+
+          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(color)
 
@@ -756,30 +800,29 @@ class Sprite(object):
         else:
             rng = [frame % self.frames]
 
-        if color.alpha == 255:
-            for i in rng:
-                if anti_alias and thickness == 1:
-                    pygame.draw.aaline(self.rd["baseimages"][i], pg_color,
-                                       (x1, y1), (x2, y2))
-                else:
-                    pygame.draw.line(self.rd["baseimages"][i], pg_color,
-                                     (x1, y1), (x2, y2), thickness)
-        else:
-            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-            stamp.fill(pygame.Color(0, 0, 0, 0))
-            if anti_alias and thickness == 1:
-                pygame.draw.aaline(stamp, pg_color, (x1, y1), (x2, y2))
-            else:
-                pygame.draw.line(stamp, pg_color, (x1, y1), (x2, y2),
-                                 thickness)
+        pygame_flags = _get_blend_flags(blend_mode)
 
-            for i in rng:
-                self.rd["baseimages"][i].blit(stamp, (0, 0))
+        stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        stamp.fill(pygame.Color(0, 0, 0, 0))
+        if anti_alias and thickness == 1:
+            pygame.draw.aaline(stamp, pg_color, (x1, y1), (x2, y2))
+        else:
+            pygame.draw.line(stamp, pg_color, (x1, y1), (x2, y2),
+                             thickness)
+
+        for i in rng:
+            dsurf = self.rd["baseimages"][i]
+            if blend_mode == sge.BLEND_RGB_SCREEN:
+                _screen_blend(dsurf, stamp, 0, 0, False)
+            elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                _screen_blend(dsurf, stamp, 0, 0, True)
+            else:
+                dsurf.blit(stamp, (0, 0), None, pygame_flags)
 
         s_refresh(self)
 
     def draw_rectangle(self, x, y, width, height, fill=None, outline=None,
-                       outline_thickness=1, frame=None):
+                       outline_thickness=1, frame=None, blend_mode=None):
         """
         Draw a rectangle on the sprite.
 
@@ -800,6 +843,24 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
+        - ``blend_mode`` -- The blend mode to use.  Possible blend modes
+          are:
+
+          - :data:`sge.BLEND_NORMAL`
+          - :data:`sge.BLEND_RGBA_ADD`
+          - :data:`sge.BLEND_RGBA_SUBTRACT`
+          - :data:`sge.BLEND_RGBA_MULTIPLY`
+          - :data:`sge.BLEND_RGBA_SCREEN`
+          - :data:`sge.BLEND_RGBA_MINIMUM`
+          - :data:`sge.BLEND_RGBA_MAXIMUM`
+          - :data:`sge.BLEND_RGB_ADD`
+          - :data:`sge.BLEND_RGB_SUBTRACT`
+          - :data:`sge.BLEND_RGB_MULTIPLY`
+          - :data:`sge.BLEND_RGB_SCREEN`
+          - :data:`sge.BLEND_RGB_MINIMUM`
+          - :data:`sge.BLEND_RGB_MAXIMUM`
+
+          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(fill)
         _check_color(outline)
@@ -827,30 +888,29 @@ class Sprite(object):
         else:
             rng = [frame % self.frames]
 
-        if ((fill is None or fill.alpha == 255) and
-                (outline is None or outline.alpha == 255)):
-            for i in rng:
-                if fill is not None:
-                    self.rd["baseimages"][i].fill(pg_fill, rect)
+        pygame_flags = _get_blend_flags(blend_mode)
 
-                if outline is not None:
-                    pygame.draw.rect(self.rd["baseimages"][i], pg_outl,
-                                     rect, outline_thickness)
-        else:
-            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-            stamp.fill(pygame.Color(0, 0, 0, 0))
-            if fill is not None:
-                stamp.fill(pg_fill, rect)
-            if outline is not None:
-                pygame.draw.rect(stamp, pg_outl, rect, outline_thickness)
+        stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        stamp.fill(pygame.Color(0, 0, 0, 0))
+        if fill is not None:
+            stamp.fill(pg_fill, rect)
+        if outline is not None:
+            pygame.draw.rect(stamp, pg_outl, rect, outline_thickness)
 
-            for i in rng:
-                self.rd["baseimages"][i].blit(stamp, (0, 0))
+        for i in rng:
+            dsurf = self.rd["baseimages"][i]
+            if blend_mode == sge.BLEND_RGB_SCREEN:
+                _screen_blend(dsurf, stamp, 0, 0, False)
+            elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                _screen_blend(dsurf, stamp, 0, 0, True)
+            else:
+                dsurf.blit(stamp, (0, 0), None, pygame_flags)
 
         s_refresh(self)
 
     def draw_ellipse(self, x, y, width, height, fill=None, outline=None,
-                     outline_thickness=1, anti_alias=False, frame=None):
+                     outline_thickness=1, anti_alias=False, frame=None,
+                     blend_mode=None):
         """
         Draw an ellipse on the sprite.
 
@@ -872,6 +932,24 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
+        - ``blend_mode`` -- The blend mode to use.  Possible blend modes
+          are:
+
+          - :data:`sge.BLEND_NORMAL`
+          - :data:`sge.BLEND_RGBA_ADD`
+          - :data:`sge.BLEND_RGBA_SUBTRACT`
+          - :data:`sge.BLEND_RGBA_MULTIPLY`
+          - :data:`sge.BLEND_RGBA_SCREEN`
+          - :data:`sge.BLEND_RGBA_MINIMUM`
+          - :data:`sge.BLEND_RGBA_MAXIMUM`
+          - :data:`sge.BLEND_RGB_ADD`
+          - :data:`sge.BLEND_RGB_SUBTRACT`
+          - :data:`sge.BLEND_RGB_MULTIPLY`
+          - :data:`sge.BLEND_RGB_SCREEN`
+          - :data:`sge.BLEND_RGB_MINIMUM`
+          - :data:`sge.BLEND_RGB_MAXIMUM`
+
+          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(fill)
         _check_color(outline)
@@ -899,31 +977,29 @@ class Sprite(object):
         else:
             rng = [frame % self.frames]
 
-        if ((fill is None or fill.alpha == 255) and
-                (outline is None or outline.alpha == 255)):
-            for i in rng:
-                if fill is not None:
-                    pygame.draw.ellipse(self.rd["baseimages"][i], pg_fill,
-                                        rect)
+        pygame_flags = _get_blend_flags(blend_mode)
 
-                if outline is not None:
-                    pygame.draw.ellipse(self.rd["baseimages"][i], pg_outl,
-                                        rect, outline_thickness)
-        else:
-            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-            stamp.fill(pygame.Color(0, 0, 0, 0))
-            if fill is not None:
-                pygame.draw.ellipse(stamp, pg_fill, rect)
-            if outline is not None:
-                pygame.draw.ellipse(stamp, pg_outl, rect, outline_thickness)
+        stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        stamp.fill(pygame.Color(0, 0, 0, 0))
+        if fill is not None:
+            pygame.draw.ellipse(stamp, pg_fill, rect)
+        if outline is not None:
+            pygame.draw.ellipse(stamp, pg_outl, rect, outline_thickness)
 
-            for i in rng:
-                self.rd["baseimages"][i].blit(stamp, (0, 0))
+        for i in rng:
+            dsurf = self.rd["baseimages"][i]
+            if blend_mode == sge.BLEND_RGB_SCREEN:
+                _screen_blend(dsurf, stamp, 0, 0, False)
+            elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                _screen_blend(dsurf, stamp, 0, 0, True)
+            else:
+                dsurf.blit(stamp, (0, 0), None, pygame_flags)
 
         s_refresh(self)
 
     def draw_circle(self, x, y, radius, fill=None, outline=None,
-                    outline_thickness=1, anti_alias=False, frame=None):
+                    outline_thickness=1, anti_alias=False, frame=None,
+                    blend_mode=None):
         """
         Draw a circle on the sprite.
 
@@ -944,6 +1020,24 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
+        - ``blend_mode`` -- The blend mode to use.  Possible blend modes
+          are:
+
+          - :data:`sge.BLEND_NORMAL`
+          - :data:`sge.BLEND_RGBA_ADD`
+          - :data:`sge.BLEND_RGBA_SUBTRACT`
+          - :data:`sge.BLEND_RGBA_MULTIPLY`
+          - :data:`sge.BLEND_RGBA_SCREEN`
+          - :data:`sge.BLEND_RGBA_MINIMUM`
+          - :data:`sge.BLEND_RGBA_MAXIMUM`
+          - :data:`sge.BLEND_RGB_ADD`
+          - :data:`sge.BLEND_RGB_SUBTRACT`
+          - :data:`sge.BLEND_RGB_MULTIPLY`
+          - :data:`sge.BLEND_RGB_SCREEN`
+          - :data:`sge.BLEND_RGB_MINIMUM`
+          - :data:`sge.BLEND_RGB_MAXIMUM`
+
+          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(fill)
         _check_color(outline)
@@ -969,32 +1063,30 @@ class Sprite(object):
         else:
             rng = [frame % self.frames]
 
-        if ((fill is None or fill.alpha == 255) and
-                (outline is None or outline.alpha == 255)):
-            for i in rng:
-                if fill is not None:
-                    pygame.draw.circle(self.rd["baseimages"][i], pg_fill,
-                                       (x, y), radius)
+        pygame_flags = _get_blend_flags(blend_mode)
 
-                if outline is not None:
-                    pygame.draw.circle(self.rd["baseimages"][i], pg_outl,
-                                       (x, y), radius, outline_thickness)
-        else:
-            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-            stamp.fill(pygame.Color(0, 0, 0, 0))
-            if fill is not None:
-                pygame.draw.circle(stamp, pg_fill, (x, y), radius)
-            if outline is not None:
-                pygame.draw.circle(stamp, pg_outl, (x, y), radius,
-                                   outline_thickness)
+        stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        stamp.fill(pygame.Color(0, 0, 0, 0))
+        if fill is not None:
+            pygame.draw.circle(stamp, pg_fill, (x, y), radius)
+        if outline is not None:
+            pygame.draw.circle(stamp, pg_outl, (x, y), radius,
+                               outline_thickness)
 
-            for i in rng:
-                self.rd["baseimages"][i].blit(stamp, (0, 0))
+        for i in rng:
+            dsurf = self.rd["baseimages"][i]
+            if blend_mode == sge.BLEND_RGB_SCREEN:
+                _screen_blend(dsurf, stamp, 0, 0, False)
+            elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                _screen_blend(dsurf, stamp, 0, 0, True)
+            else:
+                dsurf.blit(stamp, (0, 0), None, pygame_flags)
 
         s_refresh(self)
 
     def draw_polygon(self, points, fill=None, outline=None,
-                     outline_thickness=1, anti_alias=False, frame=None):
+                     outline_thickness=1, anti_alias=False, frame=None,
+                     blend_mode=None):
         """
         Draw a polygon on the sprite.
 
@@ -1014,6 +1106,24 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
+        - ``blend_mode`` -- The blend mode to use.  Possible blend modes
+          are:
+
+          - :data:`sge.BLEND_NORMAL`
+          - :data:`sge.BLEND_RGBA_ADD`
+          - :data:`sge.BLEND_RGBA_SUBTRACT`
+          - :data:`sge.BLEND_RGBA_MULTIPLY`
+          - :data:`sge.BLEND_RGBA_SCREEN`
+          - :data:`sge.BLEND_RGBA_MINIMUM`
+          - :data:`sge.BLEND_RGBA_MAXIMUM`
+          - :data:`sge.BLEND_RGB_ADD`
+          - :data:`sge.BLEND_RGB_SUBTRACT`
+          - :data:`sge.BLEND_RGB_MULTIPLY`
+          - :data:`sge.BLEND_RGB_SCREEN`
+          - :data:`sge.BLEND_RGB_MINIMUM`
+          - :data:`sge.BLEND_RGB_MAXIMUM`
+
+          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(fill)
         _check_color(outline)
@@ -1037,35 +1147,27 @@ class Sprite(object):
         else:
             rng = [frame % self.frames]
 
-        if ((fill is None or fill.alpha == 255) and
-                (outline is None or outline.alpha == 255)):
-            for i in rng:
-                if fill is not None:
-                    pygame.draw.polygon(self.rd["baseimages"][i], pg_fill,
-                                        points, 0)
+        pygame_flags = _get_blend_flags(blend_mode)
 
-                if outline is not None:
-                    if anti_alias and outline_thickness == 1:
-                        pygame.draw.aalines(self.rd["baseimages"][i],
-                                            pg_outl, True, points)
-                    else:
-                        pygame.draw.polygon(self.rd["baseimages"][i],
-                                            pg_outl, points,
-                                            outline_thickness)
-        else:
-            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-            stamp.fill(pygame.Color(0, 0, 0, 0))
-            if fill is not None:
-                pygame.draw.polygon(stamp, pg_fill, points, 0)
-            if outline is not None:
-                if anti_alias and outline_thickness == 1:
-                    pygame.draw.aalines(stamp, pg_outl, True, points)
-                else:
-                    pygame.draw.polygon(stamp, pg_outl, points,
-                                        outline_thickness)
+        stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        stamp.fill(pygame.Color(0, 0, 0, 0))
+        if fill is not None:
+            pygame.draw.polygon(stamp, pg_fill, points, 0)
+        if outline is not None:
+            if anti_alias and outline_thickness == 1:
+                pygame.draw.aalines(stamp, pg_outl, True, points)
+            else:
+                pygame.draw.polygon(stamp, pg_outl, points,
+                                    outline_thickness)
 
-            for i in rng:
-                self.rd["baseimages"][i].blit(stamp, (0, 0))
+        for i in rng:
+            dsurf = self.rd["baseimages"][i]
+            if blend_mode == sge.BLEND_RGB_SCREEN:
+                _screen_blend(dsurf, stamp, 0, 0, False)
+            elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                _screen_blend(dsurf, stamp, 0, 0, True)
+            else:
+                dsurf.blit(stamp, (0, 0), None, pygame_flags)
 
         s_refresh(self)
 
@@ -1135,7 +1237,7 @@ class Sprite(object):
 
     def draw_text(self, font, text, x, y, width=None, height=None,
                   color=Color("white"), halign="left", valign="top",
-                  anti_alias=True, frame=None):
+                  anti_alias=True, frame=None, blend_mode=None):
         """
         Draw text on the sprite.
 
@@ -1196,6 +1298,24 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to :const:`None` to draw on all
           frames.
+        - ``blend_mode`` -- The blend mode to use.  Possible blend modes
+          are:
+
+          - :data:`sge.BLEND_NORMAL`
+          - :data:`sge.BLEND_RGBA_ADD`
+          - :data:`sge.BLEND_RGBA_SUBTRACT`
+          - :data:`sge.BLEND_RGBA_MULTIPLY`
+          - :data:`sge.BLEND_RGBA_SCREEN`
+          - :data:`sge.BLEND_RGBA_MINIMUM`
+          - :data:`sge.BLEND_RGBA_MAXIMUM`
+          - :data:`sge.BLEND_RGB_ADD`
+          - :data:`sge.BLEND_RGB_SUBTRACT`
+          - :data:`sge.BLEND_RGB_MULTIPLY`
+          - :data:`sge.BLEND_RGB_SCREEN`
+          - :data:`sge.BLEND_RGB_MINIMUM`
+          - :data:`sge.BLEND_RGB_MAXIMUM`
+
+          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(color)
 
@@ -1211,6 +1331,8 @@ class Sprite(object):
         box_surf = pygame.Surface((width, height), pygame.SRCALPHA)
         text_rect = text_surf.get_rect()
         box_rect = box_surf.get_rect()
+
+        pygame_flags = _get_blend_flags(blend_mode)
 
         for i in six.moves.range(len(lines)):
             rendered_text = font.rd["font"].render(lines[i], anti_alias,
@@ -1260,7 +1382,15 @@ class Sprite(object):
             rng = [frame % self.frames]
 
         for i in rng:
-            self.rd["baseimages"][i].blit(box_surf, box_rect)
+            dsurf = self.rd["baseimages"][i]
+            if blend_mode == sge.BLEND_RGB_SCREEN:
+                _screen_blend(dsurf, box_surf, box_rect.left, box_rect.top,
+                              False)
+            elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                _screen_blend(dsurf, box_surf, box_rect.left, box_rect.top,
+                              True)
+            else:
+                dsurf.blit(box_surf, box_rect, None, pygame_flags)
 
         s_refresh(self)
 

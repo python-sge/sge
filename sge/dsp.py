@@ -1193,7 +1193,7 @@ class Game(object):
 
         pygame.display.flip()
 
-    def project_dot(self, x, y, color, z=0):
+    def project_dot(self, x, y, color, z=0, blend_mode=None):
         """
         Project a single-pixel dot onto the game window.
 
@@ -1220,10 +1220,10 @@ class Game(object):
         """
         _check_color(color)
         sprite = _get_dot_sprite(color)
-        self.project_sprite(sprite, 0, x, y, z)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def project_line(self, x1, y1, x2, y2, color, z=0, thickness=1,
-                     anti_alias=False):
+                     anti_alias=False, blend_mode=None):
         """
         Project a line segment onto the game window.
 
@@ -1254,10 +1254,10 @@ class Game(object):
         y2 -= y
 
         sprite = _get_line_sprite(x1, y1, x2, y2, color, thickness, anti_alias)
-        self.project_sprite(sprite, 0, x, y, z)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def project_rectangle(self, x, y, width, height, z=0, fill=None,
-                          outline=None, outline_thickness=1):
+                          outline=None, outline_thickness=1, blend_mode=None):
         """
         Project a rectangle onto the game window.
 
@@ -1282,10 +1282,11 @@ class Game(object):
         y -= draw_y
         sprite = _get_rectangle_sprite(width, height, fill, outline,
                                        outline_thickness)
-        self.project_sprite(sprite, 0, x, y, z)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def project_ellipse(self, x, y, width, height, z=0, fill=None,
-                        outline=None, outline_thickness=1, anti_alias=False):
+                        outline=None, outline_thickness=1, anti_alias=False,
+                        blend_mode=None):
         """
         Project an ellipse onto the game window.
 
@@ -1320,10 +1321,10 @@ class Game(object):
         y -= draw_y
         sprite = _get_ellipse_sprite(width, height, fill, outline,
                                      outline_thickness, anti_alias)
-        self.project_sprite(sprite, 0, x, y, z)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def project_circle(self, x, y, radius, z=0, fill=None, outline=None,
-                       outline_thickness=1, anti_alias=False):
+                       outline_thickness=1, anti_alias=False, blend_mode=None):
         """
         Project a circle onto the game window.
 
@@ -1343,10 +1344,10 @@ class Game(object):
         _check_color(outline)
         sprite = _get_circle_sprite(radius, fill, outline, outline_thickness,
                                     anti_alias)
-        self.project_sprite(sprite, 0, x - radius, y - radius, z)
+        self.project_sprite(sprite, 0, x - radius, y - radius, z, blend_mode)
 
     def project_polygon(self, points, z=0, fill=None, outline=None,
-                        outline_thickness=1, anti_alias=False):
+                        outline_thickness=1, anti_alias=False, blend_mode=None):
         """
         Draw a polygon on the sprite.
 
@@ -1375,7 +1376,7 @@ class Game(object):
 
         sprite = _get_polygon_sprite(points, fill, outline, outline_thickness,
                                      anti_alias)
-        self.project_sprite(sprite, 0, x, y, z)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def project_sprite(self, sprite, image, x, y, z=0, blend_mode=None):
         """
@@ -1400,7 +1401,7 @@ class Game(object):
 
     def project_text(self, font, text, x, y, z=0, width=None, height=None,
                     color=gfx.Color("white"), halign="left",
-                    valign="top", anti_alias=True):
+                    valign="top", anti_alias=True, blend_mode=None):
         """
         Project text onto the game window.
 
@@ -1419,7 +1420,7 @@ class Game(object):
         _check_color(color)
         sprite = gfx.Sprite.from_text(font, text, width, height, color, halign,
                                       valign, anti_alias)
-        self.project_sprite(sprite, 0, x, y, z)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def event_step(self, time_passed, delta_mult):
         """
@@ -2046,7 +2047,7 @@ class Room(object):
         return area
             
 
-    def project_dot(self, x, y, z, color):
+    def project_dot(self, x, y, z, color, blend_mode=None):
         """
         Project a single-pixel dot onto the room.
 
@@ -2063,10 +2064,10 @@ class Room(object):
         """
         _check_color(color)
         sprite = _get_dot_sprite(color)
-        self.project_sprite(sprite, 0, x, y, z)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def project_line(self, x1, y1, x2, y2, z, color, thickness=1,
-                     anti_alias=False):
+                     anti_alias=False, blend_mode=None):
         """
         Project a line segment onto the room.
 
@@ -2096,10 +2097,10 @@ class Room(object):
         y2 -= y
 
         sprite = _get_line_sprite(x1, y1, x2, y2, color, thickness, anti_alias)
-        self.project_sprite(sprite, 0, x, y, z)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def project_rectangle(self, x, y, z, width, height, fill=None,
-                          outline=None, outline_thickness=1):
+                          outline=None, outline_thickness=1, blend_mode=None):
         """
         Project a rectangle onto the room.
 
@@ -2123,10 +2124,11 @@ class Room(object):
         y -= draw_y
         sprite = _get_rectangle_sprite(width, height, fill, outline,
                                        outline_thickness)
-        self.project_sprite(sprite, 0, x, y, z)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def project_ellipse(self, x, y, z, width, height, fill=None,
-                        outline=None, outline_thickness=1, anti_alias=False):
+                        outline=None, outline_thickness=1, anti_alias=False,
+                        blend_mode=None):
         """
         Project an ellipse onto the room.
 
@@ -2155,10 +2157,10 @@ class Room(object):
         y -= draw_y
         sprite = _get_ellipse_sprite(width, height, fill, outline,
                                      outline_thickness, anti_alias)
-        self.project_sprite(sprite, 0, x, y, z)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def project_circle(self, x, y, z, radius, fill=None, outline=None,
-                       outline_thickness=1, anti_alias=False):
+                       outline_thickness=1, anti_alias=False, blend_mode=None):
         """
         Project a circle onto the room.
 
@@ -2177,10 +2179,10 @@ class Room(object):
         _check_color(outline)
         sprite = _get_circle_sprite(radius, fill, outline, outline_thickness,
                                     anti_alias)
-        self.project_sprite(sprite, 0, x - radius, y - radius, z)
+        self.project_sprite(sprite, 0, x - radius, y - radius, z, blend_mode)
 
     def project_polygon(self, points, z, fill=None, outline=None,
-                        outline_thickness=1, anti_alias=False):
+                        outline_thickness=1, anti_alias=False, blend_mode=None):
         """
         Draw a polygon on the sprite.
 
@@ -2208,7 +2210,7 @@ class Room(object):
 
         sprite = _get_polygon_sprite(points, fill, outline, outline_thickness,
                                      anti_alias)
-        self.project_sprite(sprite, 0, x, y, z)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def project_sprite(self, sprite, image, x, y, z, blend_mode=None):
         """
@@ -2232,7 +2234,7 @@ class Room(object):
 
     def project_text(self, font, text, x, y, z, width=None, height=None,
                     color=sge.gfx.Color("white"), halign="left",
-                    valign="top", anti_alias=True):
+                    valign="top", anti_alias=True, blend_mode=None):
         """
         Project text onto the room.
 
@@ -2250,7 +2252,7 @@ class Room(object):
         _check_color(color)
         sprite = sge.gfx.Sprite.from_text(font, text, width, height, color,
                                           halign, valign, anti_alias)
-        self.project_sprite(sprite, 0, x, y, z)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def event_room_start(self):
         """
