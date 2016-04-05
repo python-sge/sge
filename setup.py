@@ -33,13 +33,13 @@ This implementation of the SGE uses Pygame as a backend.
 """.strip()
 
 setup(name="sge-pygame",
-      version="0.25a0",
+      version="1.0rc1",
       description="A 2-D game engine for Python",
       long_description=long_description,
       author="onpon4",
       author_email="onpon4@riseup.net",
       url="http://stellarengine.nongnu.org",
-      classifiers=["Development Status :: 4 - Beta",
+      classifiers=["Development Status :: 5 - Production/Stable",
                    "Intended Audience :: Developers",
                    "License :: DFSG approved",
                    "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",

@@ -155,6 +155,7 @@ value of ``"1984"``.
 .. data:: sge.s.middle
 .. data:: sge.s.mode
 .. data:: sge.s.navy
+.. data:: sge.s.noblur
 .. data:: sge.s.num_lock
 .. data:: sge.s.olive
 .. data:: sge.s.pagedown
@@ -179,6 +180,7 @@ value of ``"1984"``.
 .. data:: sge.s.shift_right
 .. data:: sge.s.silver
 .. data:: sge.s.slash
+.. data:: sge.s.smooth
 .. data:: sge.s.space
 .. data:: sge.s.super_left
 .. data:: sge.s.super_right
@@ -240,6 +242,10 @@ aqua = "aqua"
 olive = "olive"
 purple = "purple"
 teal = "teal"
+
+# Scale methods
+noblur = "noblur"
+smooth = "smooth"
 
 # Key names
 _0 = "0"
