@@ -81,7 +81,7 @@ def main():
     global circle_sprite
 
     # Create Game object
-    Game(width=240, height=240, scale_smooth=True,
+    Game(width=240, height=240, scale_method="smooth",
          collision_events_enabled=False)
 
     # Load sprites

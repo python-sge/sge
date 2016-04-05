@@ -131,6 +131,15 @@ Global Variables and Constants
 
    A string indicating the name of the SGE implementation.
 
+.. data:: sge.SCALE_METHODS
+
+   A list of specific scale methods supported by the SGE implementation.
+
+   .. note::
+
+      This list does not include the generic scale methods, ``"noblur"``
+      and ``"smooth"``.  It is also possible for this list to be empty.
+
 .. data:: sge.BLEND_NORMAL
 
    Flag indicating normal blending.
@@ -364,6 +373,7 @@ import pygame
 
 # Constants
 IMPLEMENTATION = "Pygame SGE"
+SCALE_METHODS = ["scale2x"]
 
 BLEND_NORMAL = None
 BLEND_ALPHA = 1

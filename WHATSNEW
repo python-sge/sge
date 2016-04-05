@@ -12,6 +12,11 @@ without any warranty.
 
 Specification additions:
 + sge.s
++ sge.SCALE_METHODS
++ sge.dsp.Game.scale_method
+
+Specification removals:
+- sge.dsp.Game.scale_smooth
 
 Specification misc changes:
 * All drawing and projecting methods now support blend modes.

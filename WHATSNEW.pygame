@@ -10,6 +10,9 @@ without any warranty.
 0.25
 ------------------------------------------------------------------------
 
+Pygame SGE additions:
++ Support for the Scale2x algorithm
+
 Pygame SGE bugfixes:
 - More cases of background layers being positioned wrongly
 - Text drawing not supporting alpha transparency

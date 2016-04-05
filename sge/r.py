@@ -117,10 +117,18 @@ def _scale(surface, width, height):
 
     width = int(round(width))
     height = int(round(height))
-    if sge.game.scale_smooth:
+    if sge.game.scale_method == "smooth":
         try:
             new_surf = pygame.transform.smoothscale(surface, (width, height))
         except (pygame.error, ValueError):
+            new_surf = pygame.transform.scale(surface, (width, height))
+    elif sge.game.scale_method == "scale2x":
+        new_surf = surface
+        while (width / new_surf.get_width() >= 2 and
+               height / new_surf.get_height() >= 2):
+            new_surf = pygame.transform.scale2x(new_surf)
+
+        if new_surf.get_width() != width or new_surf.get_height() != height:
             new_surf = pygame.transform.scale(surface, (width, height))
     else:
         new_surf = pygame.transform.scale(surface, (width, height))
@@ -812,8 +820,8 @@ def r_update_pixelate(self, complete):
     transition_sprite = self.rd["t_sprite"]
     w = transition_sprite.width
     h = transition_sprite.height
-    smooth = sge.game.scale_smooth
-    sge.game.scale_smooth = False
+    scale_method = sge.game.scale_method
+    sge.game.scale_method = None
 
     if complete < 0.8:
         complete *= 1.25
@@ -831,7 +839,7 @@ def r_update_pixelate(self, complete):
         transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                       blend_mode=sge.BLEND_RGBA_SUBTRACT)
 
-    sge.game.scale_smooth = smooth
+    sge.game.scale_method = scale_method
 
 
 def r_update_wipe_left(self, complete):
@@ -1002,13 +1010,23 @@ def s_set_size(self):
     width = int(round(self.width))
     height = int(round(self.height))
     for i in six.moves.range(self.frames):
-        if sge.game.scale_smooth:
+        if sge.game.scale_method == "smooth":
             try:
                 self.rd["baseimages"][i] = pygame.transform.smoothscale(
                     self.rd["baseimages"][i], (width, height))
             except (pygame.error, ValueError):
                 self.rd["baseimages"][i] = pygame.transform.scale(
                     self.rd["baseimages"][i], (width, height))
+        elif sge.game.scale_method == "scale2x":
+            new_surf = surface
+            while (width / new_surf.get_width() >= 2 and
+                   height / new_surf.get_height() >= 2):
+                new_surf = pygame.transform.scale2x(new_surf)
+
+            if new_surf.get_width() != width or new_surf.get_height() != height:
+                new_surf = pygame.transform.scale(surface, (width, height))
+
+            self.rd["baseimages"][i] = new_surf
         else:
             self.rd["baseimages"][i] = pygame.transform.scale(
                 self.rd["baseimages"][i], (width, height))

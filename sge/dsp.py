@@ -99,10 +99,23 @@ class Game(object):
        the game window or screen.  This has no effect unless
        :attr:`scale` is :const:`None` or ``0``.
 
-    .. attribute:: scale_smooth
+    .. attribute:: scale_method
 
-       Whether or not a smooth scaling algorithm (as opposed to a simple
-       scaling algorithm such as nearest-neighbor) should be used.
+       A string indicating the type of scaling method to use.  Can be
+       one of the following:
+
+       - ``"noblur"`` -- Request a non-blurry scale method, generally
+         optimal for pixel art.
+       - ``"smooth"`` -- Request a smooth scale method, generally
+         optimal for images other than pixel art.
+
+       Alternatively, this attribute can be set to one of the values in
+       :data:`sge.SCALE_METHODS` to request an exact scale method to
+       use.
+
+       The value of this attribute is only a request.  If this value is
+       either an unsupported value or :const:`None`, the fastest
+       available scale method is chosen.
 
     .. attribute:: fps
 
@@ -259,13 +272,13 @@ class Game(object):
             _set_mode()
 
     @property
-    def scale_smooth(self):
-        return r.game_scale_smooth
+    def scale_method(self):
+        return r.game_scale_method
 
-    @scale_smooth.setter
-    def scale_smooth(self, value):
-        if value != r.game_scale_smooth:
-            r.game_scale_smooth = value
+    @scale_method.setter
+    def scale_method(self, value):
+        if value != r.game_scale_method:
+            r.game_scale_method = value
             _set_mode()
 
     @property
@@ -301,7 +314,7 @@ class Game(object):
                 pygame.display.set_icon(image)
 
     def __init__(self, width=640, height=480, fullscreen=False, scale=None,
-                 scale_proportional=True, scale_smooth=False, fps=60,
+                 scale_proportional=True, scale_method=None, fps=60,
                  delta=False, delta_min=15, delta_max=None, grab_input=False,
                  window_text=None, window_icon=None,
                  collision_events_enabled=True):
@@ -328,7 +341,7 @@ class Game(object):
         r.game_fullscreen = fullscreen
         r.game_scale = scale
         r.game_scale_proportional = scale_proportional
-        r.game_scale_smooth = scale_smooth
+        r.game_scale_method = scale_method
         r.game_new_room = None
         self.fps = fps
         self.delta = delta
