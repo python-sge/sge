@@ -866,19 +866,20 @@ class Game(object):
                     self.input_events.append(input_event)
             elif event.type == pygame.JOYAXISMOTION:
                 jsname = r.game_js_names[event.joy]
-                a = abs(min(0, event.value))
-                b = max(0, event.value)
-                z = 1 - abs(event.value)
+                value = max(-1.0, min(event.value, 1.0))
+                a = abs(min(0, value))
+                b = max(0, value)
+                z = 1 - abs(value)
 
                 axis_id = (event.joy, event.axis)
                 valuep = r._prev_axes.get(axis_id, 0)
-                r._prev_axes[axis_id] = event.value
+                r._prev_axes[axis_id] = value
                 ap = abs(min(0, valuep))
                 bp = max(0, valuep)
                 zp = 1 - abs(valuep)
 
                 input_event = sge.input.JoystickAxisMove(
-                    jsname, event.joy, event.axis, event.value)
+                    jsname, event.joy, event.axis, value)
                 self.input_events.append(input_event)
 
                 if a != ap:
