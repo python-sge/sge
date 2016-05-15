@@ -17,6 +17,7 @@ Pygame SGE bugfixes:
 - More cases of background layers being positioned wrongly
 - Text drawing not supporting alpha transparency
 - Some joystick axis values being able to go outside the allowed range
+- Failure to cap joystick values in some cases
 
 
 0.24
