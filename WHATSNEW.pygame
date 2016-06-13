@@ -10,6 +10,10 @@ without any warranty.
 1.0.1
 ------------------------------------------------------------------------
 
+Pygame SGE misc changes:
+* The amount of time things like images are cached has been reduced from
+  30 seconds to 15 seconds.
+
 Pygame SGE bugfixes:
 - Text projections not using the cache properly, wasting RAM
 - Cache causing a delay of garbage collection for unused sprites

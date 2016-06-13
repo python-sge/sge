@@ -42,6 +42,9 @@ import sge
 # How often to call cache.prune in milliseconds.
 CACHE_PRUNE_TIME = 8000
 
+# How long cached items should remain cached by default in seconds.
+CACHE_DEFAULT_LIFE = 15
+
 # Lists of objects that are tangible and objects that check for
 # collisions; makes collision detection more efficient.
 _colliders = []
@@ -63,7 +66,7 @@ class cache(object):
     _prune = {}
 
     @classmethod
-    def add(cls, i, value, prune_time=30):
+    def add(cls, i, value, prune_time=CACHE_DEFAULT_LIFE):
         # Add value with index ``i`` to cache as ``value``.
         # Automatically deleted after ``prune_time`` seconds.
         cls._cache[i] = value
