@@ -31,6 +31,7 @@ import math
 import random
 import time
 import warnings
+import weakref
 
 import pygame
 import six
@@ -1068,8 +1069,9 @@ def s_get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,
     if isinstance(self, sge.gfx.Sprite):
         num %= self.frames
 
-        i = ("s_image", self, self.rd["drawcycle"], num, xscale, yscale,
-             rotation, alpha, tuple(blend) if blend is not None else None)
+        i = ("s_image", weakref.ref(self), self.rd["drawcycle"], num, xscale,
+             yscale, rotation, alpha,
+             tuple(blend) if blend is not None else None)
         img = cache.get(i)
         if img is None:
             if xscale != 0 and yscale != 0:
@@ -1107,8 +1109,8 @@ def s_get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,
 def s_get_precise_mask(self, num, xscale, yscale, rotation):
     # Return a precise mask (2D list of True/False values) for the
     # given image index.
-    i = ("s_mask", self, self.width, self.height, self.rd["drawcycle"],
-         num, xscale, yscale, rotation)
+    i = ("s_mask", weakref.ref(self), self.width, self.height,
+         self.rd["drawcycle"], num, xscale, yscale, rotation)
     mask = cache.get(i)
     if mask is None:
         image = s_set_transparency(self, self.rd["baseimages"][num])

@@ -12,6 +12,7 @@ without any warranty.
 
 Pygame SGE bugfixes:
 - Text projections not using the cache properly, wasting RAM
+- Cache causing a delay of garbage collection for unused sprites
 
 
 1.0
