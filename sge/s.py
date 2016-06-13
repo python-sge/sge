@@ -63,7 +63,6 @@ value of ``"1984"``.
 .. data:: sge.s.y
 .. data:: sge.s.z
 .. data:: sge.s._break
-.. data:: sge.s.absolute_import
 .. data:: sge.s.alt_left
 .. data:: sge.s.alt_right
 .. data:: sge.s.ampersand
@@ -91,7 +90,6 @@ value of ``"1984"``.
 .. data:: sge.s.ctrl_right
 .. data:: sge.s.delete
 .. data:: sge.s.dissolve
-.. data:: sge.s.division
 .. data:: sge.s.dollar
 .. data:: sge.s.down
 .. data:: sge.s.end
@@ -167,7 +165,6 @@ value of ``"1984"``.
 .. data:: sge.s.pixelate
 .. data:: sge.s.plus
 .. data:: sge.s.power
-.. data:: sge.s.print_function
 .. data:: sge.s.print_screen
 .. data:: sge.s.purple
 .. data:: sge.s.question
@@ -193,7 +190,6 @@ value of ``"1984"``.
 .. data:: sge.s.trackball_right
 .. data:: sge.s.trackball_up
 .. data:: sge.s.underscore
-.. data:: sge.s.unicode_literals
 .. data:: sge.s.up
 .. data:: sge.s.wheel_down
 .. data:: sge.s.wheel_left
