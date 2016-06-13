@@ -1140,6 +1140,28 @@ def s_get_precise_mask(self, num, xscale, yscale, rotation):
     return mask
 
 
+def s_from_text(cls, font, text, width, height, color, halign, valign,
+                anti_alias):
+    # Version of gfx.Sprite.from_text which always returns the same
+    # sprite, to avoid unnecessary duplication for things like
+    # projections.
+    f_name = tuple(font.name) if font.name is not None else None
+    i = ("text_sprite", cls, f_name, font.size, font.underline, font.bold,
+         font.italic, text, width, height, str(color), halign, valign,
+         anti_alias)
+    s = cache.get(i)
+    if s is None:
+        w = font.get_width(text, width, height)
+        h = font.get_height(text, width, height)
+        x = {"left": 0, "right": w, "center": w / 2}.get(halign.lower(), 0)
+        y = {"top": 0, "bottom": h, "middle": h / 2}.get(valign.lower(), 0)
+        s = cls(width=w, height=h, origin_x=x, origin_y=y)
+        s.draw_text(font, text, x, y, width, height, color, halign, valign)
+
+    cache.add(i, s)
+    return s
+
+
 def tg_blit(self, dest, x, y):
     # Blit the tile grid onto a Pygame surface.
     # Note: origin is NOT taken into account here!

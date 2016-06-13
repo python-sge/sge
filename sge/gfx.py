@@ -35,7 +35,7 @@ import sge
 from sge import r
 from sge.r import (_check_color_input, _check_color, _scale, _get_blend_flags,
                    _screen_blend, f_split_text, s_get_image, s_set_size,
-                   s_refresh, s_set_transparency, tg_blit)
+                   s_refresh, s_set_transparency, s_from_text, tg_blit)
 
 COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
           'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
@@ -1843,21 +1843,8 @@ class Sprite(object):
 
         The sprite's origin is set based on ``halign`` and ``valign``.
         """
-        f_name = tuple(font.name) if font.name is not None else None
-        i = ("text_sprite", cls, f_name, font.size, font.underline, font.bold,
-             font.italic, text, width, height, str(color), halign, valign,
-             anti_alias)
-        s = r.cache.get(i)
-        if s is None:
-            w = font.get_width(text, width, height)
-            h = font.get_height(text, width, height)
-            x = {"left": 0, "right": w, "center": w / 2}.get(halign.lower(), 0)
-            y = {"top": 0, "bottom": h, "middle": h / 2}.get(valign.lower(), 0)
-            s = cls(width=w, height=h, origin_x=x, origin_y=y)
-            s.draw_text(font, text, x, y, width, height, color, halign, valign)
-
-        r.cache.add(i, s)
-        return s.copy()
+        return s_from_text(cls, font, text, width, height, color, halign,
+                           valign, anti_alias).copy()
 
     @classmethod
     def from_tileset(cls, fname, x=0, y=0, columns=1, rows=1, xsep=0, ysep=0,

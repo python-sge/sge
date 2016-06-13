@@ -41,12 +41,13 @@ from sge.r import (
     _get_ellipse_sprite, _get_circle_sprite, _get_polygon_sprite, bl_update,
     bl_get_image, o_update, o_detect_collisions, o_update_collision_lists,
     o_update_object_areas, o_is_other, o_get_origin_offset, o_set_speed,
-    s_get_image, s_get_precise_mask, tg_blit, r_get_rectangle_object_areas,
-    r_set_object_areas, r_update_fade, r_update_dissolve, r_update_pixelate,
-    r_update_wipe_left, r_update_wipe_right, r_update_wipe_up,
-    r_update_wipe_down, r_update_wipe_upleft, r_update_wipe_upright,
-    r_update_wipe_downleft, r_update_wipe_downright, r_update_wipe_matrix,
-    r_update_iris_in, r_update_iris_out, v_limit)
+    s_get_image, s_get_precise_mask, s_from_text, tg_blit,
+    r_get_rectangle_object_areas, r_set_object_areas, r_update_fade,
+    r_update_dissolve, r_update_pixelate, r_update_wipe_left,
+    r_update_wipe_right, r_update_wipe_up, r_update_wipe_down,
+    r_update_wipe_upleft, r_update_wipe_upright, r_update_wipe_downleft,
+    r_update_wipe_downright, r_update_wipe_matrix, r_update_iris_in,
+    r_update_iris_out, v_limit)
 
 
 __all__ = ["Game", "Room", "View", "Object"]
@@ -1432,8 +1433,8 @@ class Game(object):
         :meth:`sge.dsp.Game.project_dot` for more information.
         """
         _check_color(color)
-        sprite = gfx.Sprite.from_text(font, text, width, height, color, halign,
-                                      valign, anti_alias)
+        sprite = s_from_text(gfx.Sprite, font, text, width, height, color,
+                             halign, valign, anti_alias)
         self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def event_step(self, time_passed, delta_mult):
@@ -2264,8 +2265,8 @@ class Room(object):
         more information.
         """
         _check_color(color)
-        sprite = sge.gfx.Sprite.from_text(font, text, width, height, color,
-                                          halign, valign, anti_alias)
+        sprite = s_from_text(gfx.Sprite, font, text, width, height, color,
+                             halign, valign, anti_alias)
         self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def event_room_start(self):
