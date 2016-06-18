@@ -213,8 +213,8 @@ def _set_mode():
         force_auto_scale = False
 
         if game.scale:
-            target_width = game.width * game.scale
-            target_height = game.height * game.scale
+            target_width = int(game.width * game.scale)
+            target_height = int(game.height * game.scale)
             if (target_width, target_height) in modes:
                 game_window_width = target_width
                 game_window_height = target_height
