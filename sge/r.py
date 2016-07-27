@@ -1022,7 +1022,7 @@ def s_set_size(self):
                 self.rd["baseimages"][i] = pygame.transform.scale(
                     self.rd["baseimages"][i], (width, height))
         elif sge.game.scale_method == "scale2x":
-            new_surf = surface
+            new_surf = self.rd["baseimages"][i]
             while (width / new_surf.get_width() >= 2 and
                    height / new_surf.get_height() >= 2):
                 new_surf = pygame.transform.scale2x(new_surf)
