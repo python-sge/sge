@@ -1028,7 +1028,8 @@ def s_set_size(self):
                 new_surf = pygame.transform.scale2x(new_surf)
 
             if new_surf.get_width() != width or new_surf.get_height() != height:
-                new_surf = pygame.transform.scale(surface, (width, height))
+                new_surf = pygame.transform.scale(self.rd["baseimages"][i],
+                                                  (width, height))
 
             self.rd["baseimages"][i] = new_surf
         else:
