@@ -128,9 +128,12 @@ def _scale(surface, width, height):
             new_surf = pygame.transform.scale(surface, (width, height))
     elif sge.game.scale_method == "scale2x":
         new_surf = surface
-        while (width / new_surf.get_width() >= 2 and
-               height / new_surf.get_height() >= 2):
-            new_surf = pygame.transform.scale2x(new_surf)
+        while (width > new_surf.get_width() or
+               height > new_surf.get_height()):
+            try:
+                new_surf = pygame.transform.scale2x(new_surf)
+            except pygame.error:
+                break
 
         if new_surf.get_width() != width or new_surf.get_height() != height:
             new_surf = pygame.transform.scale(surface, (width, height))
@@ -1023,9 +1026,12 @@ def s_set_size(self):
                     self.rd["baseimages"][i], (width, height))
         elif sge.game.scale_method == "scale2x":
             new_surf = self.rd["baseimages"][i]
-            while (width / new_surf.get_width() >= 2 and
-                   height / new_surf.get_height() >= 2):
-                new_surf = pygame.transform.scale2x(new_surf)
+            while (width > new_surf.get_width() or
+                   height > new_surf.get_height()):
+                try:
+                    new_surf = pygame.transform.scale2x(new_surf)
+                except pygame.error:
+                    break
 
             if new_surf.get_width() != width or new_surf.get_height() != height:
                 new_surf = pygame.transform.scale(self.rd["baseimages"][i],
