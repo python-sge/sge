@@ -228,135 +228,6 @@ Global Variables and Constants
    Stores the current :class:`sge.dsp.Game` object.  If there is no
    :class:`sge.dsp.Game` object currently, this variable is set to
    :const:`None`.
-
-Information specific to the Pygame SGE
-======================================
-
-License
--------
-
-The Pygame SGE is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-The Pygame SGE is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
-
-Dependencies
-------------
-
-- Python 2 (2.7 or later) or 3 (3.1 or later) <http://www.python.org>
-- Pygame 1.9.1 or later <http://pygame.org>
-
-Formats Support
----------------
-
-:class:`sge.gfx.Sprite` supports the following image formats:
-
-- PNG
-- JPEG
-- Non-animated GIF
-- BMP
-- PCX
-- Uncompressed Truevision TGA
-- TIFF
-- ILBM
-- Netpbm
-- X Pixmap
-
-If Pygame is built without full image support, :class:`sge.gfx.Sprite`
-will only be able to load uncompressed BMP images.
-
-:class:`sge.snd.Sound` supports the following audio formats:
-
-- Uncompressed WAV
-- Ogg Vorbis
-
-:class:`sge.snd.Music` supports the following audio formats:
-
-- Ogg Vorbis
-- MOD
-- XM
-- MIDI
-
-MP3 is also supported on some systems, but not all, due to software idea
-patents which restrict use of this format.  On some systems, attempting
-to load an unsupported format can crash the game.  Since MP3 support is
-not available on all systems, it is best to avoid using it; consider
-using Ogg Vorbis instead.
-
-For starting position in MOD files, the pattern order number is used
-instead of the number of milliseconds.
-
-The pygame.mixer module, which is used for all audio playback, is
-optional and depends on SDL_mixer; if pygame.mixer is unavailable,
-sounds and music will not play.
-
-Missing Features
-----------------
-
-:meth:`sge.gfx.Sprite.draw_line`, :meth:`sge.dsp.Room.project_line`, and
-:meth:`sge.dsp.Game.project_line` support anti-aliasing for lines with a
-thickness of 1 only.  :meth:`sge.gfx.Sprite.draw_polygon`,
-:meth:`sge.dsp.Room.project_polygon`, and
-:meth:`sge.dsp.Game.project_polygon` support anti-aliasing for outlines
-of polygons with a thickness of 1 only.
-:meth:`sge.gfx.Sprite.draw_text`, :meth:`sge.dsp.Room.project_text`,
-and :meth:`sge.dsp.Game.project_text` support anti-aliasing in all
-cases.  No other drawing or projecting methods support anti-aliasing.
-
-Known Problems
---------------
-
-Since the Pygame SGE uses Pygame, it necessarily inherits Pygame's bugs.
-Below, some notable bugs in Pygame 1.9.1 (the latest Pygame release) are
-indicated.
-
-Keyboard Lock-up
-~~~~~~~~~~~~~~~~
-
-There is a bug in either Pygame or SDL, most likely SDL, which sometimes
-causes keyboard input to stop working.  In Pygame programs such as this
-one, this occurs when pygame.display.set_mode is called multiple times,
-which in the Pygame SGE occurs any time either the size of the window or
-the video mode (windowed or fullscreen) changes.  See this post from the
-SGE blog for more information:
-
-https://savannah.nongnu.org/forum/forum.php?forum_id=8113
-
-You may also be interested in this report on the Pygame issue tracker:
-
-https://bitbucket.org/pygame/pygame/issue/212/
-
-As mentioned in the post on the SGE blog, this is a particularly serious
-problem for anyone using the X Window System (e.g. pretty much any
-GNU/Linux user), or any other window system that gives complete control
-to fullscreen SDL applications.  On these systems, if the game requires
-keyboard input to either leave fullscreen or exit, the system will
-become unresponsive to everything that isn't sent directly to the kernel
-(such as the magic SysRq key in Linux systems).
-
-Luckily, the bug doesn't seem to affect mouse input, so if you allow the
-player to enter fullscreen mode in-game, it is highly recommended for
-you to provide some method of either exiting the game or exiting
-fullscreen with the mouse.  This can be a button somewhere on the screen
-if the game uses the mouse cursor, or it can be a simple mouse button
-click otherwise.
-
-Saving PNG Images
-~~~~~~~~~~~~~~~~~
-
-Some versions of Pygame have problems saving color information of PNG
-images correctly.  As a result, depending on your exact version of
-Pygame, images saves with :meth:`sge.gfx.Sprite.save` may be discolored.
-The best workaround is to choose a different format, such as BMP, GIF,
-or JPEG.
 """
 
 from __future__ import division
@@ -364,7 +235,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.0.3a0"
+__version__ = "1.1a0"
 
 import sys
 import os

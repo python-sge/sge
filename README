@@ -1,4 +1,4 @@
-Copyright (C) 2013, 2014, 2015 onpon4 <onpon4@riseup.net>
+Copyright (C) 2013, 2014, 2015, 2016 onpon4 <onpon4@riseup.net>
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -22,6 +22,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
+
 INSTALLATION
 
 First, install the dependencies:
@@ -38,6 +39,12 @@ directory as the Python program that uses it. This can be a good idea
 for the distribution of a game, since it reduces the number of
 dependencies the user needs to install.
 
+
 USAGE
 
 See the "doc" folder for detailed documentation on how to use the SGE.
+
+
+PYGAME SGE IMPLEMENTATION DETAILS
+
+See README.pygame for information specific to the Pygame SGE.

@@ -7,6 +7,15 @@ without any warranty.
 
 ========================================================================
 
+1.1
+------------------------------------------------------------------------
+
+Specification misc changes:
+* Removed the docstring section discussing implementation details.
+  Instead, these details should now be discussed in a README
+  accompanying the implementation.
+
+
 1.0
 ------------------------------------------------------------------------
 
