@@ -555,6 +555,8 @@ class Sprite(object):
                 width = 32
             if height is None:
                 height = 32
+            width = int(round(width))
+            height = int(round(height))
 
             self.__w = width
             self.__h = height
@@ -576,8 +578,8 @@ class Sprite(object):
             for image in self.rd["baseimages"]:
                 height = max(height, image.get_height())
 
-        self.__w = width
-        self.__h = height
+        self.__w = int(round(width))
+        self.__h = int(round(height))
         s_set_size(self)
         self.origin_x = origin_x
         self.origin_y = origin_y

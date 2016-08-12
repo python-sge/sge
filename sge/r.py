@@ -1095,6 +1095,7 @@ def s_get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,
                 if rotation != 0:
                     img = pygame.transform.rotate(img, -rotation)
 
+                alpha = int(alpha)
                 if alpha < 255:
                     if img.get_flags() & pygame.SRCALPHA:
                         # Have to do this the more difficult way.

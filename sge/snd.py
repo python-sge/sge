@@ -176,7 +176,7 @@ class Sound(object):
             loops -= 1
 
             # Calculate volume for each speaker
-            left_volume = self.volume * volume
+            left_volume = min(1, self.volume * volume)
             right_volume = left_volume
             if balance < 0:
                 right_volume *= 1 - abs(balance)
