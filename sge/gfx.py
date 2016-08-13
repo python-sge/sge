@@ -530,14 +530,15 @@ class Sprite(object):
                         errlist.append(e)
                     else:
                         sheet = check_alpha(sheet)
+                        flags = sheet.get_flags()
                         assert split[1][5:].isdigit()
                         n = int(split[1][5:])
 
                         img_w = max(1, sheet.get_width()) // n
                         img_h = max(1, sheet.get_height())
                         for x in six.moves.range(0, img_w * n, img_w):
-                            rect = pygame.Rect(x, 0, img_w, img_h)
-                            img = sheet.subsurface(rect)
+                            img = pygame.Surface((img_w, img_h), flags)
+                            img.blit(sheet, (-x, 0))
                             self.rd["baseimages"].append(img)
 
             if not self.rd["baseimages"]:
@@ -1325,9 +1326,9 @@ class Sprite(object):
         y = int(round(y))
 
         lines = f_split_text(font, text, width)
-        width = font.get_width(text, width, height)
-        height = font.get_height(text, width, height)
-        fake_height = font.get_height(text, width)
+        width = int(font.get_width(text, width, height))
+        height = int(font.get_height(text, width, height))
+        fake_height = int(font.get_height(text, width))
 
         text_surf = pygame.Surface((width, fake_height), pygame.SRCALPHA)
         box_surf = pygame.Surface((width, height), pygame.SRCALPHA)
@@ -2664,8 +2665,8 @@ class _PygameSpriteFont(pygame.font.Font):
         self.italic = False
 
     def render(self, text, antialias, color, background=None):
-        w = (self.width + self.hsep) * len(text)
-        h = self.height + self.vsep
+        w = int((self.width + self.hsep) * len(text))
+        h = int(self.height + self.vsep)
         xscale = (self.width / self.sprite.width if self.sprite.width > 0
                   else 1)
         yscale = (self.height / self.sprite.height if self.sprite.height > 0
