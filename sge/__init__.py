@@ -349,9 +349,6 @@ __all__ = [
     'BLEND_RGBA_MAXIMUM', 'BLEND_RGB_ADD', 'BLEND_RGB_SUBTRACT',
     'BLEND_RGB_MULTIPLY', 'BLEND_RGB_SCREEN', 'BLEND_RGB_MINIMUM',
     'BLEND_RGB_MAXIMUM',
-
-    # Classes
-    'Game', 'Sound', 'Music', 'Object', 'Room', 'View',
     ]
 
 # Global variables

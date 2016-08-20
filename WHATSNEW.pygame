@@ -12,6 +12,7 @@ without any warranty.
 
 Pygame SGE bugfixes:
 - Some gratuitous incompatibilities with Pygame-cffi
+- Cruft in __all__ left over from previous SGE versions
 
 
 1.1
