@@ -1,4 +1,4 @@
-# Copyright (C) 2014 onpon4 <onpon4@riseup.net>
+# Copyright (C) 2014, 2016 onpon4 <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -158,8 +158,8 @@ def ellipse(x, y, w, h, other=None):
     mask = r.cache.get(mask_id)
 
     if mask is None:
-        mask = [[False for j in six.moves.range(h)]
-                for i in six.moves.range(w)]
+        mask = [[False for j in six.moves.range(int(h))]
+                for i in six.moves.range(int(w))]
         a = len(mask) / 2
         b = len(mask[0]) / 2 if mask else 0
 
@@ -200,8 +200,8 @@ def circle(x, y, radius, other=None):
     mask = r.cache.get(mask_id)
 
     if mask is None:
-        mask = [[False for j in six.moves.range(diameter)]
-                for i in six.moves.range(diameter)]
+        mask = [[False for j in six.moves.range(int(diameter))]
+                for i in six.moves.range(int(diameter))]
 
         for i in six.moves.range(len(mask)):
             for j in six.moves.range(len(mask[i])):
@@ -249,8 +249,8 @@ def line(x1, y1, x2, y2, other=None):
     mask = r.cache.get(mask_id)
 
     if mask is None:
-        mask = [[False for j in six.moves.range(h)]
-                for i in six.moves.range(w)]
+        mask = [[False for j in six.moves.range(int(h))]
+                for i in six.moves.range(int(w))]
         m = h / w
         b = y1 - m * x1
 
