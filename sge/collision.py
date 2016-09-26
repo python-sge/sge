@@ -117,7 +117,8 @@ def rectangle(x, y, w, h, other=None):
 
     mask = r.cache.get(mask_id)
     if mask is None:
-        mask = [[True for j in six.moves.range(h)] for i in six.moves.range(w)]
+        mask = [[True for j in six.moves.range(int(h))]
+                for i in six.moves.range(int(w))]
 
     r.cache.add(mask_id, mask)
 
