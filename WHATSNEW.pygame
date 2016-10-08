@@ -12,6 +12,7 @@ without any warranty.
 
 Pygame SGE bugfixes:
 - Collision functions not working with floats
+- Incorrect sizes reported for text of sprite fonts
 
 
 1.1.1

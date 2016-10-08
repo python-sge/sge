@@ -2665,8 +2665,7 @@ class _PygameSpriteFont(pygame.font.Font):
         self.italic = False
 
     def render(self, text, antialias, color, background=None):
-        w = int((self.width + self.hsep) * len(text))
-        h = int(self.height + self.vsep)
+        w, h = self.size(text)
         xscale = (self.width / self.sprite.width if self.sprite.width > 0
                   else 1)
         yscale = (self.height / self.sprite.height if self.sprite.height > 0
@@ -2698,7 +2697,12 @@ class _PygameSpriteFont(pygame.font.Font):
             return rsurf
 
     def size(self, text):
-        return ((self.width + self.hsep) * len(text), self.height + self.vsep)
+        # XXX: I don't understand why, but adding an extra pixel to both
+        # the width and the height is necessary.  Without this extra
+        # pixel of width and height, the rightmost column and bottom row
+        # of pixels end up not being displayed.
+        return (int(self.width * len(text) + self.hsep * (len(text) - 1)) + 1,
+                int(self.height) + 1)
 
     def set_underline(self, bool_):
         self.underline = bool_
