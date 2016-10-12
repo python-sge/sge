@@ -7,6 +7,17 @@ without any warranty.
 
 ========================================================================
 
+1.2
+------------------------------------------------------------------------
+
+Specification misc changes:
+* When a sprite is specified as transparent, the SGE no longer tries to
+  check whether or not the actual image file has transparency and apply
+  arbitrary colorkey transparency otherwise.  This system was just too
+  prone to errors caused by tools like Trimage removing alpha channels,
+  and caused a bug in the Pygame SGE that could not be fixed.
+
+
 1.1
 ------------------------------------------------------------------------
 

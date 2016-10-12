@@ -249,13 +249,12 @@ class Sprite(object):
     .. attribute:: transparent
 
        Whether or not the image should be partially transparent, based
-       on the image's alpha channel. If an image does not have an alpha
-       channel, a colorkey will be used, with the transparent color
-       being the color of the top-rightmost pixel of the respective
-       frame.
+       on the image's alpha channel.  If this is :const:`False`, all
+       pixels in the image will be treated as fully opaque regardless
+       of what the image file says their opacity should be.
 
-       If this is a :class:`sge.gfx.Color` object, the indicated color
-       will be used as a colorkey.
+       This can also be set to a :class:`sge.gfx.Color` object, which
+       will cause the indicated color to be used as a colorkey.
 
     .. attribute:: origin_x
 

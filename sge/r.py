@@ -1058,14 +1058,8 @@ def s_set_transparency(self, image):
         color = pygame.Color(*self.transparent)
         img.set_colorkey(color, pygame.RLEACCEL)
         return img
-    elif self.transparent and image.get_width() > 0:
-        if image.get_flags() & pygame.SRCALPHA:
-            return image.convert_alpha()
-        else:
-            img = image.convert()
-            color = image.get_at((image.get_width() - 1, 0))
-            img.set_colorkey(color, pygame.RLEACCEL)
-            return img
+    elif self.transparent:
+        return image.convert_alpha()
     else:
         return image.convert()
 
