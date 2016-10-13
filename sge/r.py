@@ -1094,8 +1094,8 @@ def s_get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,
                 if alpha < 255:
                     if img.get_flags() & pygame.SRCALPHA:
                         # Have to do this the more difficult way.
-                        img.fill((0, 0, 0, 255 - alpha), None,
-                                 pygame.BLEND_RGBA_SUB)
+                        img.fill((255, 255, 255, alpha), None,
+                                 pygame.BLEND_RGBA_MULT)
                     else:
                         img.set_alpha(alpha, pygame.RLEACCEL)
 
