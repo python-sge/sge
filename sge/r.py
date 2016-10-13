@@ -780,7 +780,7 @@ def r_get_rectangle_object_areas(self, x, y, width, height):
     return areas
 
 
-def r_set_object_areas(self):
+def r_set_object_areas(self, update_objects=True):
     self.object_areas = []
     for i in six.moves.range(0, self.width, self.object_area_width):
         column = [set() for j in six.moves.range(0, self.height,
@@ -789,8 +789,9 @@ def r_set_object_areas(self):
 
     self.object_area_void = set()
 
-    for obj in self.objects:
-        o_update_object_areas(obj)
+    if update_objects:
+        for obj in self.objects:
+            o_update_object_areas(obj)
 
 
 def r_update_fade(self, complete):

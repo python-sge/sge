@@ -13,6 +13,7 @@ without any warranty.
 Pygame SGE bugfixes:
 - Collision functions not working with floats
 - Incorrect sizes reported for text of sprite fonts
+- Warning message that showed up when switching rooms
 
 
 1.1.1

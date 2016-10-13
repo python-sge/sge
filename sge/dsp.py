@@ -407,7 +407,7 @@ class Game(object):
                     r._collision_checkers = []
                     r._active_objects = set()
 
-                    r_set_object_areas(new_room)
+                    r_set_object_areas(new_room, False)
                     for obj in new_room.objects:
                         obj.rd["object_areas"] = set()
                         o_update_object_areas(obj)
