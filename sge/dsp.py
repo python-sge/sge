@@ -1136,7 +1136,8 @@ class Game(object):
                         img = s_get_image(obj.sprite, obj.image_index,
                                           obj.image_xscale, obj.image_yscale,
                                           obj.image_rotation, obj.image_alpha,
-                                          obj.image_blend)
+                                          obj.image_blend,
+                                          obj.image_blend_mode)
                         w = img.get_width()
                         h = img.get_height()
                         x = obj.x - obj.image_origin_x
@@ -2934,6 +2935,27 @@ class Object(object):
        with the sprite (using RGBA Multiply blending).  Set to
        :const:`None` for no color blending.
 
+    .. attribute:: image_blend_mode
+
+       The blend mode to use with :attr:`image_blend`.  Possible blend
+       modes are:
+
+       - :data:`sge.BLEND_NORMAL`
+       - :data:`sge.BLEND_RGBA_ADD`
+       - :data:`sge.BLEND_RGBA_SUBTRACT`
+       - :data:`sge.BLEND_RGBA_MULTIPLY`
+       - :data:`sge.BLEND_RGBA_SCREEN`
+       - :data:`sge.BLEND_RGBA_MINIMUM`
+       - :data:`sge.BLEND_RGBA_MAXIMUM`
+       - :data:`sge.BLEND_RGB_ADD`
+       - :data:`sge.BLEND_RGB_SUBTRACT`
+       - :data:`sge.BLEND_RGB_MULTIPLY`
+       - :data:`sge.BLEND_RGB_SCREEN`
+       - :data:`sge.BLEND_RGB_MINIMUM`
+       - :data:`sge.BLEND_RGB_MAXIMUM`
+
+       :const:`None` is treated as :data:`sge.BLEND_RGB_MULTIPLY`.
+
     .. attribute:: alarms
 
        A dictionary containing the alarms of the object.  Each value
@@ -3366,7 +3388,7 @@ class Object(object):
                  ydeceleration=0, image_index=0, image_origin_x=None,
                  image_origin_y=None, image_fps=None, image_xscale=1,
                  image_yscale=1, image_rotation=0, image_alpha=255,
-                 image_blend=None):
+                 image_blend=None, image_blend_mode=None):
         """
         Arugments set the respective initial attributes of the object.
         See the documentation for :class:`sge.dsp.Object` for more
@@ -3398,6 +3420,7 @@ class Object(object):
         self.image_rotation = image_rotation
         self.image_alpha = image_alpha
         self.image_blend = image_blend
+        self.image_blend_mode = image_blend_mode
         self.alarms = {}
         self.xstart = x
         self.ystart = y
@@ -3957,7 +3980,8 @@ class Mouse(Object):
                 self.sprite is not None):
             img = s_get_image(self.sprite, self.image_index, self.image_xscale,
                               self.image_yscale, self.image_rotation,
-                              self.image_alpha, self.image_blend)
+                              self.image_alpha, self.image_blend,
+                              self.image_blend_mode)
             x = sge.mouse.get_x()
             y = sge.mouse.get_y()
 

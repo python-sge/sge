@@ -1070,13 +1070,15 @@ def s_set_transparency(self, image):
 
 
 def s_get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,
-                blend=None):
+                blend=None, blend_mode=None):
     if isinstance(self, sge.gfx.Sprite):
         num %= self.frames
+        if blend_mode is None:
+            blend_mode = sge.BLEND_RGB_MULTIPLY
 
         i = ("s_image", weakref.ref(self), self.rd["drawcycle"], num, xscale,
              yscale, rotation, alpha,
-             tuple(blend) if blend is not None else None)
+             tuple(blend) if blend is not None else None, blend_mode)
         img = cache.get(i)
         if img is None:
             if xscale != 0 and yscale != 0:
@@ -1100,8 +1102,8 @@ def s_get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,
                         img.set_alpha(alpha, pygame.RLEACCEL)
 
                 if blend is not None:
-                    img.fill(pygame.Color(*blend), None,
-                             pygame.BLEND_RGB_MULT)
+                    pygame_flags = _get_blend_flags(blend_mode)
+                    img.fill(pygame.Color(*blend), None, pygame_flags)
             else:
                 img = pygame.Surface((1, 1))
                 img.set_colorkey((0, 0, 0), pygame.RLEACCEL)

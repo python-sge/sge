@@ -10,6 +10,9 @@ without any warranty.
 1.2
 ------------------------------------------------------------------------
 
+Specification additions:
++ sge.dsp.Object.image_blend_mode
+
 Specification misc changes:
 * When a sprite is specified as transparent, the SGE no longer tries to
   check whether or not the actual image file has transparency and apply
