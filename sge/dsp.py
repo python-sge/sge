@@ -2906,12 +2906,22 @@ class Object(object):
 
     .. attribute:: image_xscale
 
-       The horizontal scale factor for the sprite.  If this is negative,
+       The horizontal scale factor of the sprite.  If this is negative,
        the sprite will also be mirrored horizontally.
 
     .. attribute:: image_yscale
 
-       The vertical scale factor for the sprite.  If this is negative,
+       The vertical scale factor of the sprite.  If this is negative,
+       the sprite will also be flipped vertically.
+
+    .. attribute:: image_width
+
+       The total (scaled) width of the sprite.  If this is negative, the
+       sprite will also be mirrored horizontally.
+
+    .. attribute:: image_height
+
+       The total (scaled) height of the sprite.  If this is negative,
        the sprite will also be flipped vertically.
 
     .. attribute:: image_rotation
@@ -2955,6 +2965,36 @@ class Object(object):
        - :data:`sge.BLEND_RGB_MAXIMUM`
 
        :const:`None` is treated as :data:`sge.BLEND_RGB_MULTIPLY`.
+
+    .. attribute:: image_left
+
+       The horizontal position of the left edge of the object's sprite
+       in the room.
+
+    .. attribute:: image_right
+
+       The horizontal position of the right edge of the object's sprite
+       in the room.
+
+    .. attribute:: image_xcenter
+
+       The horizontal position of the center of the object's sprite in
+       the room.
+
+    .. attribute:: image_top
+
+       The vertical position of the top edge of the object's sprite in
+       the room.
+
+    .. attribute:: image_bottom
+
+       The vertical position of the bottom edge of the object's sprite
+       in the room.
+
+    .. attribute:: image_ycenter
+
+       The vertical position of the center of the object's sprite in the
+       room.
 
     .. attribute:: alarms
 
@@ -3287,6 +3327,28 @@ class Object(object):
         self.image_fps = value * sge.game.fps
 
     @property
+    def image_width(self):
+        return self.sprite.width * self.image_xscale
+
+    @image_width.setter
+    def image_width(self, value):
+        if self.sprite.width:
+            self.image_xscale = value / self.sprite.width
+        else:
+            self.image_xscale = 1
+
+    @property
+    def image_height(self):
+        return self.sprite.height * self.image_yscale
+
+    @image_height.setter
+    def image_height(self, value):
+        if self.sprite.height:
+            self.image_yscale = value / self.sprite.height
+        else:
+            self.image_yscale = 1
+
+    @property
     def image_blend(self):
         return self.__image_blend
 
@@ -3294,6 +3356,54 @@ class Object(object):
     def image_blend(self, value):
         _check_color(value)
         self.__image_blend = value
+
+    @property
+    def image_left(self):
+        return self.x - self.image_origin_x
+
+    @image_left.setter
+    def image_left(self, value):
+        self.x = value + self.image_origin_x
+
+    @property
+    def image_right(self):
+        return self.image_left + self.image_width
+
+    @image_right.setter
+    def image_right(self, value):
+        self.image_left = value - self.image_width
+
+    @property
+    def image_xcenter(self):
+        return self.image_left + int(self.image_width / 2)
+
+    @image_xcenter.setter
+    def image_xcenter(self, value):
+        self.image_left = value - int(self.image_width / 2)
+
+    @property
+    def image_top(self):
+        return self.y - self.image_origin_y
+
+    @image_top.setter
+    def image_top(self, value):
+        self.y = value + self.image_origin_y
+
+    @property
+    def image_bottom(self):
+        return self.image_top + self.image_height
+
+    @image_bottom.setter
+    def image_bottom(self, value):
+        self.image_top = value - self.image_height
+
+    @property
+    def image_ycenter(self):
+        return self.image_top + int(self.image_height / 2)
+
+    @image_ycenter.setter
+    def image_ycenter(self, value):
+        self.image_top = value - int(self.image_height / 2)
 
     @property
     def mask(self):

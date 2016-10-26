@@ -7,6 +7,20 @@ without any warranty.
 
 ========================================================================
 
+1.3
+------------------------------------------------------------------------
+
+Specification additions:
++ sge.dsp.Object.image_width
++ sge.dsp.Object.image_height
++ sge.dsp.Object.image_left
++ sge.dsp.Object.image_right
++ sge.dsp.Object.image_xcenter
++ sge.dsp.Object.image_top
++ sge.dsp.Object.image_bottom
++ sge.dsp.Object.image_ycenter
+
+
 1.2
 ------------------------------------------------------------------------
 
