@@ -1,4 +1,4 @@
-# Copyright (C) 2014, 2016 onpon4 <onpon4@riseup.net>
+# Copyright (C) 2014, 2016 Julie Marchant <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -123,7 +123,7 @@ def rectangle(x, y, w, h, other=None):
     r.cache.add(mask_id, mask)
 
     for obj in others:
-        if r.o_is_other(obj, other):
+        if obj.tangible and r.o_is_other(obj, other):
             if obj.collision_precise or obj.collision_ellipse:
                 if masks_collide(x, y, mask, obj.mask_x, obj.mask_y, obj.mask):
                     collisions.append(obj)
@@ -172,7 +172,7 @@ def ellipse(x, y, w, h, other=None):
     r.cache.add(mask_id, mask)
 
     for obj in others:
-        if (r.o_is_other(obj, other) and
+        if (obj.tangible and r.o_is_other(obj, other) and
                 masks_collide(x, y, mask, obj.mask_x, obj.mask_y, obj.mask)):
             collisions.append(obj)
 
@@ -212,7 +212,7 @@ def circle(x, y, radius, other=None):
     r.cache.add(mask_id, mask)
 
     for obj in others:
-        if (r.o_is_other(obj, other) and
+        if (obj.tangible and r.o_is_other(obj, other) and
                 masks_collide(x - radius, y - radius, mask, obj.mask_x,
                               obj.mask_y, obj.mask)):
             collisions.append(obj)
@@ -263,7 +263,7 @@ def line(x1, y1, x2, y2, other=None):
     r.cache.add(mask_id, mask)
 
     for obj in others:
-        if (r.o_is_other(obj, other) and
+        if (obj.tangible and r.o_is_other(obj, other) and
                 masks_collide(x, y, mask, obj.mask_x, obj.mask_y, obj.mask)):
             collisions.append(obj)
 
