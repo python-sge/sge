@@ -12,6 +12,7 @@ without any warranty.
 
 Pygame SGE bugfixes:
 - Collision functions detecting collisions with intangible objects
+- Failure to remove objects as collision checkers properly
 
 
 1.2

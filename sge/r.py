@@ -1,4 +1,4 @@
-# Copyright (C) 2012-2016 onpon4 <onpon4@riseup.net>
+# Copyright (C) 2012-2016 Julie Marchant <onpon4@riseup.net>
 #
 # This file is part of the Pygame SGE.
 #
@@ -618,6 +618,11 @@ def o_update_collision_lists(self):
         if (self.checks_collisions and self not in _collision_checkers):
             collision_checkers = _collision_checkers[:]
             collision_checkers.append(self)
+            _collision_checkers = collision_checkers
+        else:
+            collision_checkers = _collision_checkers[:]
+            while self in collision_checkers:
+                collision_checkers.remove(self)
             _collision_checkers = collision_checkers
     else:
         colliders = _colliders[:]
