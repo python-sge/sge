@@ -2914,16 +2914,6 @@ class Object(object):
        The vertical scale factor of the sprite.  If this is negative,
        the sprite will also be flipped vertically.
 
-    .. attribute:: image_width
-
-       The total (scaled) width of the sprite.  If this is negative, the
-       sprite will also be mirrored horizontally.
-
-    .. attribute:: image_height
-
-       The total (scaled) height of the sprite.  If this is negative,
-       the sprite will also be flipped vertically.
-
     .. attribute:: image_rotation
 
        The rotation of the sprite in degrees, with rotation in a
@@ -3003,6 +2993,18 @@ class Object(object):
        enabled).  When a value is at or below 0, :meth:`event_alarm` is
        executed with ``alarm_id`` set to the respective key, and the
        item is deleted from this dictionary.
+
+    .. attribute:: image_width
+
+       The total width of the object's displayed image as it appears on
+       the screen, including the effects of scaling and rotation.
+       (Read-only)
+
+    .. attribute:: image_height
+
+       The total height of the object's displayed image as it appears on
+       the screen, including the effects of scaling and rotation.
+       (Read-only)
 
     .. attribute:: mask
 
@@ -3327,28 +3329,6 @@ class Object(object):
         self.image_fps = value * sge.game.fps
 
     @property
-    def image_width(self):
-        return self.sprite.width * self.image_xscale
-
-    @image_width.setter
-    def image_width(self, value):
-        if self.sprite.width:
-            self.image_xscale = value / self.sprite.width
-        else:
-            self.image_xscale = 1
-
-    @property
-    def image_height(self):
-        return self.sprite.height * self.image_yscale
-
-    @image_height.setter
-    def image_height(self, value):
-        if self.sprite.height:
-            self.image_yscale = value / self.sprite.height
-        else:
-            self.image_yscale = 1
-
-    @property
     def image_blend(self):
         return self.__image_blend
 
@@ -3404,6 +3384,18 @@ class Object(object):
     @image_ycenter.setter
     def image_ycenter(self, value):
         self.image_top = value - int(self.image_height / 2)
+
+    @property
+    def image_width(self):
+        img = s_get_image(self.sprite, self.image_index, self.image_xscale,
+                          self.image_yscale, self.image_rotation)
+        return img.get_width()
+
+    @property
+    def image_height(self):
+        img = s_get_image(self.sprite, self.image_index, self.image_xscale,
+                          self.image_yscale, self.image_rotation)
+        return img.get_height()
 
     @property
     def mask(self):
