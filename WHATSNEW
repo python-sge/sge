@@ -20,6 +20,9 @@ Specification additions:
 + sge.dsp.Object.image_bottom
 + sge.dsp.Object.image_ycenter
 
+Specification misc changes:
+* sge.gfx.Sprite.from_tween now supports all blend modes.
+
 
 1.2
 ------------------------------------------------------------------------

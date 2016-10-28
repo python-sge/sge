@@ -1725,7 +1725,7 @@ class Sprite(object):
     @classmethod
     def from_tween(cls, sprite, frames, fps=None, xscale=None, yscale=None,
                    rotation=None, blend=None, bbox_x=None, bbox_y=None,
-                   bbox_width=None, bbox_height=None):
+                   bbox_width=None, bbox_height=None, blend_mode=None):
         """
         Create a sprite based on tweening an existing sprite.
 
@@ -1760,9 +1760,27 @@ class Sprite(object):
           counter-clockwise rotation instead.  If set to :const:`None`,
           rotation will not be included in the tweening process.
         - ``blend`` -- A :class:`sge.gfx.Color` object representing the
-          color to blend with the sprite (using RGBA Multiply blending)
-          at the end of the tween.  If set to :const:`None`, color
-          blending will not be included in the tweening process.
+          color to blend with the sprite at the end of the tween.  If
+          set to :const:`None`, color blending will not be included in
+          the tweening process.
+        - ``blend_mode`` -- The blend mode to use with ``blend``.
+          Possible blend modes are:
+
+          - :data:`sge.BLEND_NORMAL`
+          - :data:`sge.BLEND_RGBA_ADD`
+          - :data:`sge.BLEND_RGBA_SUBTRACT`
+          - :data:`sge.BLEND_RGBA_MULTIPLY`
+          - :data:`sge.BLEND_RGBA_SCREEN`
+          - :data:`sge.BLEND_RGBA_MINIMUM`
+          - :data:`sge.BLEND_RGBA_MAXIMUM`
+          - :data:`sge.BLEND_RGB_ADD`
+          - :data:`sge.BLEND_RGB_SUBTRACT`
+          - :data:`sge.BLEND_RGB_MULTIPLY`
+          - :data:`sge.BLEND_RGB_SCREEN`
+          - :data:`sge.BLEND_RGB_MINIMUM`
+          - :data:`sge.BLEND_RGB_MAXIMUM`
+
+          :const:`None` is treated as :data:`sge.BLEND_RGBA_MULTIPLY`.
 
         All other arguments set the respective initial attributes of the
         tween.  See the documentation for :class:`sge.gfx.Sprite` for
@@ -1770,6 +1788,9 @@ class Sprite(object):
         """
         if fps is None:
             fps = sprite.fps
+
+        if blend_mode is None:
+            blend_mode = sge.BLEND_RGBA_MULTIPLY
 
         new_w = sprite.width
         new_h = sprite.height
@@ -1822,15 +1843,38 @@ class Sprite(object):
 
             if blend is not None:
                 blender = Sprite(width=tween_spr.width, height=tween_spr.height)
-                r = int(255 - (255 - blend.red) * progress)
-                g = int(255 - (255 - blend.green) * progress)
-                b = int(255 - (255 - blend.blue) * progress)
-                a = int(255 - (255 - blend.alpha) * progress)
+
+                if blend_mode in {sge.BLEND_RGBA_MULTIPLY,
+                                  sge.BLEND_RGBA_MINIMUM,
+                                  sge.BLEND_RGB_MULTIPLY,
+                                  sge.BLEND_RGB_MINIMUM}:
+                    r = int(255 - (255 - blend.red) * progress)
+                    g = int(255 - (255 - blend.green) * progress)
+                    b = int(255 - (255 - blend.blue) * progress)
+                    a = int(255 - (255 - blend.alpha) * progress)
+                elif blend_mode in {sge.BLEND_RGBA_ADD,
+                                    sge.BLEND_RGBA_SUBTRACT,
+                                    sge.BLEND_RGBA_SCREEN,
+                                    sge.BLEND_RGBA_MAXIMUM,
+                                    sge.BLEND_RGB_ADD,
+                                    sge.BLEND_RGB_SUBTRACT,
+                                    sge.BLEND_RGB_SCREEN,
+                                    sge.BLEND_RGB_MAXIMUM}:
+                    r = int(blend.red * progress)
+                    g = int(blend.green * progress)
+                    b = int(blend.blue * progress)
+                    a = int(blend.alpha * progress)
+                else:
+                    r = blend.red
+                    g = blend.green
+                    b = blend.blue
+                    a = int(blend.alpha * progress)
+
                 color = Color((r, g, b, a))
                 blender.draw_rectangle(0, 0, blender.width, blender.height,
                                        fill=color)
                 tween_spr.draw_sprite(blender, 0, 0, 0, frame=i,
-                                      blend_mode=sge.BLEND_RGBA_MULTIPLY)
+                                      blend_mode=blend_mode)
 
         return tween_spr
 
