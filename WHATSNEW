@@ -22,6 +22,10 @@ Specification additions:
 
 Specification misc changes:
 * sge.gfx.Sprite.from_tween now supports all blend modes.
+* sge.gfx.Font.from_sprite now offers an alternative, more fine-tuned
+  way to map characters to the sprite's frames.
+* It is now possible to specify a fallback character for sprite fonts
+  for use when the character is not available in the font.
 
 
 1.2

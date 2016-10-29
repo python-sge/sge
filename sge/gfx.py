@@ -2640,13 +2640,26 @@ class Font(object):
 
         - ``sprite`` -- The :class:`sge.gfx.Sprite` object to derive the
           font from.
-        - ``chars`` -- A list of characters to set the sprite's frames
-          to.  For example, ``['A', 'B', 'C']`` would assign the first
-          frame to the letter "A", the second frame to the letter "B",
-          and the third frame to the letter "C".  Any character not
-          listed here will be rendered as its differently-cased
-          counterpart if possible (e.g. "A" as "a") or as a blank space
-          otherwise.
+
+        - ``chars`` -- A dictionary mapping each supported text
+          character to the corresponding frame of the sprite.  For
+          example, ``{'A': 0, 'B': 1, 'C': 2}`` would assign the letter
+          "A' to the first frame, the letter "B" to the second frame,
+          and the letter "C" to the third frame.
+
+          Alternatively, this can be given as a list of characters to
+          assign to the frames corresponding to the characters' indexes
+          within the list.  For example, ``['A', 'B', 'C']`` would
+          assign the letter "A" to the first frame, the letter "B" to
+          the second frame, and the letter "C" to the third frame.
+
+          Any character not explicitly mapped to a frame will be
+          rendered as its differently-cased counterpart if possible
+          (e.g. "A" as "a"). Otherwise, it will be rendered using the
+          frame mapped to :const:`None`.  If :const:`None` has not been
+          explicitly mapped to a frame, it is implied to be a blank
+          space.
+
         - ``hsep`` -- The amount of horizontal space to place between
           characters when text is rendered.
         - ``vsep`` -- The amount of vertical space to place between
@@ -2693,12 +2706,15 @@ class _PygameSpriteFont(pygame.font.Font):
 
     def __init__(self, sprite, chars, hsep, vsep, size):
         self.sprite = sprite
-        self.chars = {}
         self.hsep = hsep
         self.vsep = vsep
 
-        for i in six.moves.range(len(chars)):
-            self.chars[chars[i]] = i
+        if isinstance(chars, dict):
+            self.chars = chars
+        else:
+            self.chars = {}
+            for i in six.moves.range(len(chars)):
+                self.chars[chars[i]] = i
 
         self.width = self.sprite.width
         self.height = self.sprite.height
@@ -2727,6 +2743,11 @@ class _PygameSpriteFont(pygame.font.Font):
                 surf.blit(cimg, (i * (self.width + self.hsep), 0))
             elif text[i].swapcase() in self.chars:
                 cimg = s_get_image(self.sprite, self.chars[text[i].swapcase()],
+                                   xscale=xscale, yscale=yscale,
+                                   blend=sge_color)
+                surf.blit(cimg, (i * (self.width + self.hsep), 0))
+            elif None in self.chars:
+                cimg = s_get_image(self.sprite, self.chars[None],
                                    xscale=xscale, yscale=yscale,
                                    blend=sge_color)
                 surf.blit(cimg, (i * (self.width + self.hsep), 0))
