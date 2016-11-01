@@ -1,4 +1,4 @@
-# Copyright (C) 2012-2014, 2016 onpon4 <onpon4@riseup.net>
+# Copyright (C) 2012-2014, 2016 Julie Marchant <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -190,9 +190,9 @@ class Sound(object):
                         channel.set_volume(left_volume, right_volume)
                         break
                 else:
-                    self.__channels[0].play(self.__sound, loops, maxtime,
-                                            fade_time)
-                    self.__channels[0].set_volume(left_volume, right_volume)
+                    channel = random.choice(self.__channels)
+                    channel.play(self.__sound, loops, maxtime, fade_time)
+                    channel.set_volume(left_volume, right_volume)
             else:
                 channel = _get_channel()
                 channel.play(self.__sound, loops, maxtime, fade_time)

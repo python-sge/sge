@@ -10,6 +10,9 @@ without any warranty.
 1.3
 ------------------------------------------------------------------------
 
+Pygame SGE misc changes:
+* Changed the way the channel used when none are free is decided.
+
 Pygame SGE bugfixes:
 - Collision functions detecting collisions with intangible objects
 - Failure to remove objects as collision checkers properly
