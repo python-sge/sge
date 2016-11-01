@@ -177,8 +177,12 @@ class Sound(object):
         self.__temp_channels = []
         self.fname = fname
         self.volume = volume
-        self.__max_play = max_play
-        self.parent = parent
+        self.__parent = None
+        if parent is None:
+            self.max_play = max_play
+        else:
+            self.__max_play = max_play
+            self.parent = parent
 
     def play(self, loops=1, volume=1, balance=0, maxtime=None,
              fade_time=None, force=True):
