@@ -143,7 +143,7 @@ class Sound(object):
         self.max_play = max_play
 
     def play(self, loops=1, volume=1, balance=0, maxtime=None,
-             fade_time=None):
+             fade_time=None, force=True):
         """
         Play the sound.
 
@@ -163,6 +163,11 @@ class Sound(object):
         - ``fade_time`` -- The time in milliseconds over which to fade
           the sound in; set to :const:`None` or ``0`` to immediately
           play the sound at full volume.
+        - ``force`` -- Whether or not the sound should be played even if
+          it is already playing the maximum number of times.  If set to
+          :const:`True` and the sound is already playing the maximum
+          number of times, one of the instances of the sound already
+          playing will be stopped.
         """
         if self.__sound is not None:
             if not loops:
@@ -190,9 +195,10 @@ class Sound(object):
                         channel.set_volume(left_volume, right_volume)
                         break
                 else:
-                    channel = random.choice(self.__channels)
-                    channel.play(self.__sound, loops, maxtime, fade_time)
-                    channel.set_volume(left_volume, right_volume)
+                    if force:
+                        channel = random.choice(self.__channels)
+                        channel.play(self.__sound, loops, maxtime, fade_time)
+                        channel.set_volume(left_volume, right_volume)
             else:
                 channel = _get_channel()
                 channel.play(self.__sound, loops, maxtime, fade_time)

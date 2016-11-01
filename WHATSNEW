@@ -26,6 +26,9 @@ Specification misc changes:
   way to map characters to the sprite's frames.
 * It is now possible to specify a fallback character for sprite fonts
   for use when the character is not available in the font.
+* sge.snd.Sound.play now supports the "force" argument to control
+  whether or not the sound should play anyway if the maximum number of
+  instances is playing (overriding existing instances).
 
 
 1.2
