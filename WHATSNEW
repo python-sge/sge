@@ -19,6 +19,7 @@ Specification additions:
 + sge.dsp.Object.image_top
 + sge.dsp.Object.image_bottom
 + sge.dsp.Object.image_ycenter
++ sge.snd.Sound.parent
 
 Specification misc changes:
 * sge.gfx.Sprite.from_tween now supports all blend modes.

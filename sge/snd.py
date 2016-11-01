@@ -62,6 +62,24 @@ class Sound(object):
        will be stopped before playing the new instance.  Set to
        :const:`None` for no limit.
 
+    .. attribute:: parent
+
+       Indicates another sound which is treated as being the same sound
+       as this one for the purpose of determining whether or not, and
+       how many times, the sound is playing.  Set to :const:`None` for
+       no parent.
+
+       If the sound has a parent, :attr:`max_play` will have no effect
+       and instead the parent sound's :attr:`max_play` will apply to
+       both the parent sound and this sound.
+
+       .. warning::
+
+          It is acceptable for a sound to both be a parent and have a
+          parent.  However, there MUST be a parent at the top which has
+          no parent.  The behavior of circular parenting, such as making
+          two sounds parents of each other, is undefined.
+
     .. attribute:: fname
 
        The file name of the sound given when it was created.
@@ -82,19 +100,37 @@ class Sound(object):
 
     @property
     def max_play(self):
-        return len(self.__channels)
+        return len(self.rd["channels"]) if self.rd["channels"] else None
 
     @max_play.setter
     def max_play(self, value):
+        self.__max_play = value
+
         if value is None:
             value = 0
 
-        if self.__sound is not None:
+        if self.__sound is not None and self.parent is None:
             value = max(0, value)
-            while len(self.__channels) < value:
-                self.__channels.append(_get_channel())
-            while len(self.__channels) > value:
-                _release_channel(self.__channels.pop(-1))
+            while len(self.rd["channels"]) < value:
+                self.rd["channels"].append(_get_channel())
+            while len(self.rd["channels"]) > value:
+                _release_channel(self.rd["channels"].pop(-1))
+
+    @property
+    def parent(self):
+        return self.__parent
+
+    @parent.setter
+    def parent(self, value):
+        if value != self.__parent:
+            self.__parent = value
+            if value is None:
+                self.rd["channels"] = []
+                self.max_play = self.__max_play
+            else:
+                while self.rd["channels"]:
+                    _release_channel(self.rd["channels"].pop(-1))
+                self.rd["channels"] = value.rd["channels"]
 
     @property
     def length(self):
@@ -106,13 +142,13 @@ class Sound(object):
     @property
     def playing(self):
         n = 0
-        for channel in self.__channels + self.__temp_channels:
+        for channel in self.rd["channels"] + self.__temp_channels:
             if channel.get_busy():
                 n += 1
 
         return n
 
-    def __init__(self, fname, volume=1, max_play=1):
+    def __init__(self, fname, volume=1, max_play=1, parent=None):
         """
         Arguments:
 
@@ -137,10 +173,11 @@ class Sound(object):
         else:
             self.__sound = None
 
-        self.__channels = []
+        self.rd["channels"] = []
         self.__temp_channels = []
         self.fname = fname
         self.volume = volume
+        self.__parent = parent
         self.max_play = max_play
 
     def play(self, loops=1, volume=1, balance=0, maxtime=None,
@@ -190,14 +227,14 @@ class Sound(object):
                 left_volume *= 1 - abs(balance)
 
             if self.max_play:
-                for channel in self.__channels:
+                for channel in self.rd["channels"]:
                     if not channel.get_busy():
                         channel.play(self.__sound, loops, maxtime, fade_time)
                         channel.set_volume(left_volume, right_volume)
                         break
                 else:
                     if force:
-                        channel = random.choice(self.__channels)
+                        channel = random.choice(self.rd["channels"])
                         channel.play(self.__sound, loops, maxtime, fade_time)
                         channel.set_volume(left_volume, right_volume)
             else:
@@ -226,12 +263,12 @@ class Sound(object):
 
     def pause(self):
         """Pause playback of the sound."""
-        for channel in self.__channels:
+        for channel in self.rd["channels"]:
             channel.pause()
 
     def unpause(self):
         """Resume playback of the sound if paused."""
-        for channel in self.__channels:
+        for channel in self.rd["channels"]:
             channel.unpause()
 
 
