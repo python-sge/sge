@@ -10,6 +10,9 @@ without any warranty.
 1.4
 ------------------------------------------------------------------------
 
+Specification misc changes:
+* Replaced uses of IOError with uses of OSError.
+
 Specification bugfixes:
 - Universal joystick events not being listed in generated documentation
 

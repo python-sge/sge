@@ -167,7 +167,7 @@ class Game(object):
 
        The path to the image file to use as the window icon.  If set
        to :const:`None`, the SGE chooses the icon.  If the file
-       specified does not exist, :exc:`IOError` is raised.
+       specified does not exist, :exc:`OSError` is raised.
 
     .. attribute:: collision_events_enabled
 
@@ -310,7 +310,7 @@ class Game(object):
             try:
                 image = pygame.image.load(value)
             except pygame.error as e:
-                raise IOError(e)
+                raise OSError(e)
             else:
                 pygame.display.set_icon(image)
 
@@ -661,7 +661,7 @@ class Game(object):
         if sprite is None:
             try:
                 sprite = gfx.Sprite("pause", os.path.dirname(__file__))
-            except IOError:
+            except OSError:
                 font = gfx.Font("Droid Sans", size=24)
                 sprite = gfx.Sprite(width=320, height=240)
                 sprite.draw_text(font, "Paused", 160, 120, halign="center",

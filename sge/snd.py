@@ -155,7 +155,7 @@ class Sound(object):
         - ``fname`` -- The path to the sound file.  If set to
           :const:`None`, this object will not actually play any sound.
           If this is neither a valid sound file nor :const:`None`,
-          :exc:`IOError` is raised.
+          :exc:`OSError` is raised.
 
         All other arguments set the respective initial attributes of the
         sound.  See the documentation for :class:`sge.snd.Sound` for
@@ -168,7 +168,7 @@ class Sound(object):
             try:
                 self.__sound = pygame.mixer.Sound(fname)
             except pygame.error as e:
-                raise IOError(e)
+                raise OSError(e)
 
         else:
             self.__sound = None
@@ -364,7 +364,7 @@ class Music(object):
         - ``fname`` -- The path to the sound file.  If set to
           :const:`None`, this object will not actually play any music.
           If this is neither a valid sound file nor :const:`None`,
-          :exc:`IOError` is raised.
+          :exc:`OSError` is raised.
 
         All other arguments set the respective initial attributes of the
         music.  See the documentation for :class:`sge.snd.Music` for
@@ -374,7 +374,10 @@ class Music(object):
         if fname is None or os.path.isfile(fname):
             self.fname = fname
         else:
-            raise IOError('File "{}" not found.'.format(fname))
+            if six.PY2:
+                raise OSError('File "{}" not found.'.format(fname))
+            else:
+                raise FileNotFoundError('File "{}" not found.'.format(fname))
         self.volume = volume
         self.rd["timeout"] = None
         self.rd["fade_time"] = None

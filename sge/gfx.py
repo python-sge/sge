@@ -434,7 +434,7 @@ class Sprite(object):
             sprite's :attr:`name` attribute in this case, but it will
             always be a string.
 
-          If none of the above rules can be used, :exc:`IOError` is
+          If none of the above rules can be used, :exc:`OSError` is
           raised.
 
         - ``directory`` -- The directory to search for image files in.
@@ -548,7 +548,7 @@ class Sprite(object):
                 else:
                     print("None")
                 msg = 'Supported file(s) for sprite name "{}" not found in {}'.format(name, directory)
-                raise IOError(msg)
+                raise OSError(msg)
         else:
             # Name is None; default to a blank rectangle.
             if width is None:
@@ -1698,7 +1698,7 @@ class Sprite(object):
         Arguments:
 
         - ``fname`` -- The path of the file to save the sprite to.  If
-          it is not a path that can be saved to, :exc:`IOError` is
+          it is not a path that can be saved to, :exc:`OSError` is
           raised.
 
         If the sprite has multiple frames, the image file saved will be
@@ -1720,7 +1720,7 @@ class Sprite(object):
         except pygame.error:
             m = 'Couldn\'t save to "{}"'.format(
                 os.path.normpath(os.path.realpath(fname)))
-            raise IOError(m)
+            raise OSError(m)
 
     @classmethod
     def from_tween(cls, sprite, frames, fps=None, xscale=None, yscale=None,
@@ -1930,7 +1930,7 @@ class Sprite(object):
         try:
             tileset = pygame.image.load(fname)
         except pygame.error as e:
-            raise IOError(e)
+            raise OSError(e)
 
         for i in six.moves.range(1, rows * columns):
             self.append_frame()
