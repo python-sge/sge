@@ -1,5 +1,5 @@
 # setup.py
-# Copyright (C) 2012-2016 onpon4 <onpon4@riseup.net>
+# Copyright (C) 2012-2016 Julie Marchant <onpon4@riseup.net>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -36,7 +36,7 @@ setup(name="sge-pygame",
       version="1.4a0",
       description="A 2-D game engine for Python",
       long_description=long_description,
-      author="onpon4",
+      author="Julie Marchant",
       author_email="onpon4@riseup.net",
       url="http://stellarengine.nongnu.org",
       classifiers=["Development Status :: 5 - Production/Stable",
@@ -52,7 +52,7 @@ setup(name="sge-pygame",
       license="GNU Lesser General Public License",
       packages=["sge"],
       package_dir={"sge": "sge"},
-      package_data={"sge": ["*.png", "COPYING", "COPYING.LESSER", "LICENSES"]},
+      package_data={"sge": ["COPYING", "COPYING.LESSER"]},
       requires=["pygame (>=1.9.1)", "six (>=1.4.0)"],
       provides=["sge"],
       )

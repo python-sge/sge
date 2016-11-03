@@ -28,6 +28,7 @@ import os
 import random
 
 import pygame
+import six
 
 import sge
 from sge import r

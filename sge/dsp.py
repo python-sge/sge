@@ -659,13 +659,8 @@ class Game(object):
         with them.
         """
         if sprite is None:
-            try:
-                sprite = gfx.Sprite("pause", os.path.dirname(__file__))
-            except OSError:
-                font = gfx.Font("Droid Sans", size=24)
-                sprite = gfx.Sprite(width=320, height=240)
-                sprite.draw_text(font, "Paused", 160, 120, halign="center",
-                                 valign="middle")
+            font = gfx.Font("Droid Sans", size=64)
+            sprite = gfx.Sprite.from_text(font, "Paused")
 
         r.game_paused = True
 
