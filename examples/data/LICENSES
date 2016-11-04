@@ -1,6 +1,11 @@
 This file lists the licenses, authors, and sources for all the
 non-functional data files found in this directory.
 
+This file itself has been dedicated to the public domain, to the extent
+possible under applicable law, via CC0. See
+http://creativecommons.org/publicdomain/zero/1.0/ for more
+information. This file is offered as-is, without any warranty.
+
 ========================================================================
 
 circle.png
@@ -20,12 +25,6 @@ circle_pop-12.png
 fence.png
 light.png
 rotator.png
-
-Author: onpon4 <http://onpon4.github.io>
-License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-
-------------------------------------------------------------------------
-
 bounce.wav
 bounce_wall.wav
 score.wav

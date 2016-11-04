@@ -408,7 +408,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
     #!/usr/bin/env python3
 
     # Pong Example
-    # Written in 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net>
+    # Written in 2013-2015 by Julie Marchant <onpon4@riseup.net>
     #
     # To the extent possible under law, the author(s) have dedicated all
     # copyright and related and neighboring rights to this software to the
