@@ -13,6 +13,8 @@ without any warranty.
 Pygame SGE misc changes:
 * Removed the default "paused" image; simple text is used by default
   instead.
+* When the game attempts to load an unsupported music format, this is
+  caught and ignored with a warning printed.
 
 
 1.3

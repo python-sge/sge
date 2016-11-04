@@ -26,6 +26,7 @@ from __future__ import unicode_literals
 
 import os
 import random
+import warnings
 
 import pygame
 import six
@@ -399,7 +400,10 @@ class Music(object):
         """
         if self.fname is not None:
             if not self.playing:
-                pygame.mixer.music.load(self.fname)
+                try:
+                    pygame.mixer.music.load(self.fname)
+                except pygame.error as e:
+                    warnings.warn(e)
 
             if not loops:
                 loops = -1
