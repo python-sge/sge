@@ -75,6 +75,8 @@ sge.gfx.Sprite Methods
 
 .. automethod:: sge.gfx.Sprite.rotate
 
+.. automethod:: sge.gfx.Sprite.swap_color
+
 .. automethod:: sge.gfx.Sprite.copy
 
 .. automethod:: sge.gfx.Sprite.save

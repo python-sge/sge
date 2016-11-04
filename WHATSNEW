@@ -8,6 +8,9 @@ information. This file is offered as-is, without any warranty.
 1.4
 ------------------------------------------------------------------------
 
+Specification additions:
++ sge.gfx.Sprite.swap_color
+
 Specification misc changes:
 * Replaced uses of IOError with uses of OSError.
 

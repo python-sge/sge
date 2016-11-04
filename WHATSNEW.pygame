@@ -14,6 +14,9 @@ Pygame SGE misc changes:
 * When the game attempts to load an unsupported music format, this is
   caught and ignored with a warning printed.
 
+Pygame SGE bugfixes:
+- Two of the same color not being treated as equal
+
 
 1.3
 ------------------------------------------------------------------------

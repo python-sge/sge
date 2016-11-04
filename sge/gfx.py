@@ -198,6 +198,9 @@ class Color(object):
     def __str__(self):
         return COLOR_NAMES.get(self.hex_string, self.hex_string)
 
+    def __eq__(self, other):
+        return str(self) == str(other)
+
     def __getitem__(self, index):
         return tuple(self)[index]
 
@@ -1675,6 +1678,58 @@ class Sprite(object):
                         self.rd["baseimages"][i] = surf
 
         s_refresh(self)
+
+    def swap_color(self, old_color, new_color, frame=None):
+        """
+        Change all pixels of one color to another color.
+
+        Arguments:
+
+        - ``old_color`` -- A :class:`sge.gfx.Color` object indicating
+          the color of pixels to change.
+        - ``new_color`` -- A :class:`sge.gfx.Color` object indicating
+          the color to change the pixels to.
+        - ``frame`` -- The frame of the sprite to rotate, where ``0`` is
+          the first frame; set to :const:`None` to rotate all frames.
+
+        .. note::
+
+           While this method can be used on any image, it is likely to
+           be most efficient when used on images based on palettes
+           (such as 8-bit images).  The SGE cannot implicitly convert
+           high bit depth images to low bit depths, so if you plan on
+           using this method frequently, you should ensure that you
+           save your images in a low bit depth.
+        """
+        _check_color(old_color)
+        _check_color(new_color)
+        if old_color is None or new_color is None:
+            return
+
+        if frame is None:
+            rng = six.moves.range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
+        pg_new_color = pygame.Color(*new_color)
+
+        for i in rng:
+            img = self.rd["baseimages"][i]
+            try:
+                palette = img.get_palette()
+            except pygame.error:
+                img.lock()
+                for y in six.moves.range(img.get_height()):
+                    for x in six.moves.range(img.get_width()):
+                        if old_color == Color(tuple(img.get_at((x, y)))):
+                            img.set_at((x, y), pg_new_color)
+                img.unlock()
+            else:
+                for j in six.moves.range(len(palette)):
+                    if old_color == Color(tuple(palette[j])):
+                        palette[j] = pg_new_color
+
+                img.set_palette(palette)
 
     def copy(self):
         """Return a copy of the sprite."""
