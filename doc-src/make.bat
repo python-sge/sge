@@ -1,26 +1,9 @@
 @ECHO OFF
 
-REM Command file for Sphinx documentation
-REM Copyright (C) 2014, 2015 Julian Marchant <onpon4@riseup.net>
-REM
-REM Permission is hereby granted, free of charge, to any person obtaining
-REM a copy of this software and associated documentation files (the
-REM "Software"), to deal in the Software without restriction, including
-REM without limitation the rights to use, copy, modify, merge, publish,
-REM distribute, sublicense, and/or sell copies of the Software, and to
-REM permit persons to whom the Software is furnished to do so, subject to
-REM the following conditions:
-REM
-REM The above copyright notice and this permission notice shall be included
-REM in all copies or substantial portions of the Software.
-REM
-REM THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-REM EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-REM MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-REM IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-REM CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-REM TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-REM SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+REM This file has been dedicated to the public domain, to the extent
+REM possible under applicable law, via CC0. See
+REM http://creativecommons.org/publicdomain/zero/1.0/ for more
+REM information. This file is offered as-is, without any warranty.
 
 if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
