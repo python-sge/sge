@@ -403,7 +403,7 @@ class Music(object):
                 try:
                     pygame.mixer.music.load(self.fname)
                 except pygame.error as e:
-                    warnings.warn(e)
+                    warnings.warn(str(e))
 
             if not loops:
                 loops = -1
