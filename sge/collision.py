@@ -32,6 +32,7 @@ import six
 
 import sge
 from sge import r
+from sge.r import s_get_precise_mask
 
 
 __all__ = ["rectangles_collide", "masks_collide", "rectangle", "ellipse",
@@ -241,24 +242,22 @@ def line(x1, y1, x2, y2, other=None):
     room = sge.game.current_room
     x = min(x1, x2)
     y = min(y1, y2)
-    w = abs(x2 - x1)
-    h = abs(y2 - y1)
-    others = room.get_objects_at(x , y, w, h)
+    w = abs(x2 - x1) + 1
+    h = abs(y2 - y1) + 1
+
+    if w <= 1 or h <= 1:
+        return rectangle(x, y, w, h)
+
+    others = room.get_objects_at(x, y, w, h)
     collisions = []
-    mask_id = ("line_masks", w, h)
+    mask_id = ("line_masks", x1 - x, y1 - y, x2 - x, y2 - y, w, h)
 
     mask = r.cache.get(mask_id)
 
     if mask is None:
-        mask = [[False for j in six.moves.range(int(h))]
-                for i in six.moves.range(int(w))]
-        m = h / w
-        b = y1 - m * x1
-
-        for i in six.moves.range(len(mask)):
-            j = int(round(m * i + b))
-            if 0 <= j < len(mask[i]):
-                mask[i][j] = True
+        sp = sge.gfx.Sprite(width=w, height=h)
+        sp.draw_line(x1 - x, y1 - y, x2 - x, y2 - y, sge.gfx.Color("white"))
+        mask = s_get_precise_mask(sp, 0, 1, 1, 0)
 
     r.cache.add(mask_id, mask)
 
