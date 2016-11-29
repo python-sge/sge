@@ -235,12 +235,21 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.4.2"
+__version__ = "1.4.3a0"
 
 import sys
 import os
 
-import pygame
+try:
+    import pygame
+except ImportError as e:
+    try:
+        import pygame_sdl2
+    except ImportError:
+        raise e
+    else:
+        pygame_sdl2.import_as_pygame()
+        import pygame
 
 # Constants
 IMPLEMENTATION = "Pygame SGE"

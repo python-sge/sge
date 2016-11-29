@@ -5,6 +5,13 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.4.3
+------------------------------------------------------------------------
+
+Pygame SGE misc changes:
+* Added support for using pygame_sdl2 if pygame is unavailable.
+
+
 1.4.2
 ------------------------------------------------------------------------
 
