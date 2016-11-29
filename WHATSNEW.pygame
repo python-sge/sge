@@ -10,6 +10,7 @@ information. This file is offered as-is, without any warranty.
 
 Pygame SGE bugfixes:
 - Broken collision_line function
+- Scale2x only working with exact multiples of 2
 
 
 1.4.1

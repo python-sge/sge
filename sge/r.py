@@ -136,7 +136,7 @@ def _scale(surface, width, height):
                 break
 
         if new_surf.get_width() != width or new_surf.get_height() != height:
-            new_surf = pygame.transform.scale(surface, (width, height))
+            new_surf = pygame.transform.scale(new_surf, (width, height))
     else:
         new_surf = pygame.transform.scale(surface, (width, height))
 
