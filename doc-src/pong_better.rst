@@ -419,6 +419,7 @@ Our final Pong game now has scores, sounds, and even joystick support::
     # along with this software. If not, see
     # <http://creativecommons.org/publicdomain/zero/1.0/>.
 
+    import os
     import random
 
     import sge

@@ -5,6 +5,13 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.4.2
+------------------------------------------------------------------------
+
+Specification bugfixes:
+- Failure to import os in the "Better Pong" tutorial.
+
+
 1.4
 ------------------------------------------------------------------------
 
