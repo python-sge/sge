@@ -540,7 +540,7 @@ class Sprite(object):
                         img_h = max(1, sheet.get_height())
                         for x in six.moves.range(0, img_w * n, img_w):
                             img = pygame.Surface((img_w, img_h), flags)
-                            img.blit(sheet, (-x, 0))
+                            img.blit(sheet, (int(-x), 0))
                             self.rd["baseimages"].append(img)
 
             if not self.rd["baseimages"]:
@@ -1550,7 +1550,7 @@ class Sprite(object):
         for i in six.moves.range(self.frames):
             new_surf = pygame.Surface((width, height), pygame.SRCALPHA)
             new_surf.fill(pygame.Color(0, 0, 0, 0))
-            new_surf.blit(self.rd["baseimages"][i], (xdiff, ydiff))
+            new_surf.blit(self.rd["baseimages"][i], (int(xdiff), int(ydiff)))
             self.rd["baseimages"][i] = new_surf
 
         self.__w = width
@@ -1608,7 +1608,7 @@ class Sprite(object):
                                       pygame.SRCALPHA)
             new_surf.fill(pygame.Color(0, 0, 0, 0))
             surf = _scale(self.rd["baseimages"][i], scale_w, scale_h)
-            new_surf.blit(surf, (xdiff, ydiff))
+            new_surf.blit(surf, (int(xdiff), int(ydiff)))
             self.rd["baseimages"][i] = new_surf
 
         s_refresh(self)
@@ -1657,7 +1657,7 @@ class Sprite(object):
                 x = -(new_w - self.__w) / 2
                 y = -(new_h - self.__h) / 2
                 self.rd["baseimages"][i].fill(pygame.Color(0, 0, 0, 0))
-                self.rd["baseimages"][i].blit(img, (x, y))
+                self.rd["baseimages"][i].blit(img, (int(x), int(y)))
 
         if adaptive_resize:
             xdiff = (new_w - self.__w) / 2
@@ -1674,7 +1674,8 @@ class Sprite(object):
                     if frame % self.frames != i:
                         surf = pygame.Surface((new_w, new_h), pygame.SRCALPHA)
                         surf.fill(pygame.Color(0, 0, 0, 0))
-                        surf.blit(self.rd["baseimages"][i], (xdiff, ydiff))
+                        surf.blit(self.rd["baseimages"][i],
+                                  (int(xdiff), int(ydiff)))
                         self.rd["baseimages"][i] = surf
 
         s_refresh(self)
@@ -1768,7 +1769,7 @@ class Sprite(object):
         reel.fill(pygame.Color(0, 0, 0, 0))
 
         for i in six.moves.range(self.frames):
-            reel.blit(self.rd["baseimages"][i], (self.width * i, 0))
+            reel.blit(self.rd["baseimages"][i], (int(self.width * i), 0))
 
         try:
             pygame.image.save(reel, fname)
@@ -1996,7 +1997,7 @@ class Sprite(object):
                 x_ = x + (width + xsep) * j
                 y_ = y + (height + ysep) * i
                 self.rd["baseimages"][frame].blit(
-                    s_set_transparency(self, tileset), (-x_, -y_))
+                    s_set_transparency(self, tileset), (int(-x_), int(-y_)))
 
         s_refresh(self)
         return self
@@ -2030,7 +2031,8 @@ class Sprite(object):
             height = sge.game.height - y
 
         sprite = cls(width=width, height=height)
-        sprite.rd["baseimages"][0].blit(r.game_display_surface, (-x, -y))
+        sprite.rd["baseimages"][0].blit(r.game_display_surface,
+                                        (int(-x), int(-y)))
         s_refresh(sprite)
         return sprite
 
@@ -2795,17 +2797,17 @@ class _PygameSpriteFont(pygame.font.Font):
                 cimg = s_get_image(self.sprite, self.chars[text[i]],
                                    xscale=xscale, yscale=yscale,
                                    blend=sge_color)
-                surf.blit(cimg, (i * (self.width + self.hsep), 0))
+                surf.blit(cimg, (int(i * (self.width + self.hsep)), 0))
             elif text[i].swapcase() in self.chars:
                 cimg = s_get_image(self.sprite, self.chars[text[i].swapcase()],
                                    xscale=xscale, yscale=yscale,
                                    blend=sge_color)
-                surf.blit(cimg, (i * (self.width + self.hsep), 0))
+                surf.blit(cimg, (int(i * (self.width + self.hsep)), 0))
             elif None in self.chars:
                 cimg = s_get_image(self.sprite, self.chars[None],
                                    xscale=xscale, yscale=yscale,
                                    blend=sge_color)
-                surf.blit(cimg, (i * (self.width + self.hsep), 0))
+                surf.blit(cimg, (int(i * (self.width + self.hsep)), 0))
 
         if background is None:
             return surf

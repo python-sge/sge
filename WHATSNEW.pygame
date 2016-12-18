@@ -12,6 +12,9 @@ Pygame SGE misc changes:
 * Added support for using pygame_sdl2 if pygame is unavailable.
 * Changed the way specific scaling amounts in fullscreen are handled.
 
+Pygame SGE bugfixes:
+- Some incompatibilities with pygame-cffi
+
 
 1.4.2
 ------------------------------------------------------------------------

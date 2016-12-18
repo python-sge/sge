@@ -1171,11 +1171,11 @@ class Game(object):
                         _screen_blend(view_surf, surf, x, y, True)
                     else:
                         flags = _get_blend_flags(blend_mode)
-                        view_surf.blit(surf, (x, y), None, flags)
+                        view_surf.blit(surf, (int(x), int(y)), None, flags)
 
             r.game_display_surface.blit(
                 _scale(view_surf, view.wport, view.hport),
-                (view.xport, view.yport))
+                (int(view.xport), int(view.yport)))
 
         self.current_room.rd["projections"] = []
 
@@ -1184,6 +1184,8 @@ class Game(object):
         r.game_window_projections.sort(key=lambda img: img[3])
         for projection in r.game_window_projections:
             image, x, y, z, blend_mode = projection
+            x = int(x)
+            y = int(y)
             if isinstance(image, sge.gfx.TileGrid):
                 tg_blit(image, r.game_display_surface, x, y)
             else:
@@ -1200,7 +1202,7 @@ class Game(object):
         # Scale/blit display surface
         r.game_window.blit(
             _scale(r.game_display_surface, self.width * r.game_xscale,
-                   self.height * r.game_yscale), (r.game_x, r.game_y))
+                   self.height * r.game_yscale), (int(r.game_x), int(r.game_y)))
 
         pygame.display.flip()
 

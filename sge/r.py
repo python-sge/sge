@@ -1220,7 +1220,7 @@ def tg_blit(self, dest, x, y):
                     y = sy + j * self.tile_height
 
                 ssurf = s_set_transparency(sprite, sprite.rd["baseimages"][0])
-                dest.blit(ssurf, (x, y))
+                dest.blit(ssurf, (int(x), int(y)))
 
 
 def v_limit(self):
