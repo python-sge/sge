@@ -216,24 +216,19 @@ def _set_mode():
         force_auto_scale = False
 
         if game.scale:
-            target_width = int(game.width * game.scale)
-            target_height = int(game.height * game.scale)
-            if (target_width, target_height) in modes:
-                game_window_width = target_width
-                game_window_height = target_height
-            else:
-                for mode in reversed(modes):
-                    if mode[0] >= target_width and mode[1] >= target_height:
-                        game_window_width, game_window_height = mode
-                        break
-                else:
-                    game_window_width, game_window_height = modes[0]
-                    force_auto_scale = True
+            game_window_width = int(game.width * game.scale)
+            game_window_height = int(game.height * game.scale)
         else:
             game_window_width, game_window_height = modes[0]
 
-        game_window = pygame.display.set_mode(
-            (game_window_width, game_window_height), flags)
+        try:
+            game_window = pygame.display.set_mode(
+                (game_window_width, game_window_height), flags)
+        except pygame.error:
+            game_window_width, game_window_height = modes[0]
+            force_auto_scale = True
+            game_window = pygame.display.set_mode(
+                (game_window_width, game_window_height), flags)
 
         if not game.scale or force_auto_scale:
             game_xscale = game_window_width / game.width
