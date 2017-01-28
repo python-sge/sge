@@ -207,7 +207,7 @@ def _set_mode():
     if game.fullscreen or not info.wm:
         flags = pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
 
-        modes = pygame.display.list_modes()
+        modes = pygame.display.list_modes(0, flags)
         if modes == -1 or not modes:
             w = "Couldn't find out the maximum resolution! Assuming 1024x768."
             warnings.warn(w)
