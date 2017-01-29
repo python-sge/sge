@@ -58,6 +58,9 @@ _active_objects = set()
 _prev_axes = {}
 _prev_hats = {}
 
+# Display info
+_display_info = None
+
 
 class cache(object):
 
@@ -198,13 +201,12 @@ def _set_mode():
     global game_y
     game = sge.game
     game_display_surface = _scale(game_display_surface, game.width, game.height)
-    info = pygame.display.Info()
 
     if game.scale:
         game_xscale = game.scale
         game_yscale = game.scale
 
-    if game.fullscreen or not info.wm:
+    if game.fullscreen or not _display_info.wm:
         flags = pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
 
         modes = pygame.display.list_modes(0, flags)
@@ -218,17 +220,17 @@ def _set_mode():
         if game.scale:
             game_window_width = int(game.width * game.scale)
             game_window_height = int(game.height * game.scale)
+            if not pygame.display.mode_ok(
+                    (game_window_width, game_window_height), flags):
+                game_window_width = _display_info.current_w
+                game_window_height = _display_info.current_h
+                force_auto_scale = True
         else:
-            game_window_width, game_window_height = modes[0]
+            game_window_width = _display_info.current_w
+            game_window_height = _display_info.current_h
 
-        try:
-            game_window = pygame.display.set_mode(
-                (game_window_width, game_window_height), flags)
-        except pygame.error:
-            game_window_width, game_window_height = modes[0]
-            force_auto_scale = True
-            game_window = pygame.display.set_mode(
-                (game_window_width, game_window_height), flags)
+        game_window = pygame.display.set_mode(
+            (game_window_width, game_window_height), flags)
 
         if not game.scale or force_auto_scale:
             game_xscale = game_window_width / game.width

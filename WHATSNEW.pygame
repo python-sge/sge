@@ -11,6 +11,9 @@ information. This file is offered as-is, without any warranty.
 Pygame SGE misc changes:
 * Added support for using pygame_sdl2 if pygame is unavailable.
 * Changed the way specific scaling amounts in fullscreen are handled.
+* Use the "current" (as of the game start) screen resolution for auto-
+  scaling. This avoids problems with using higher resolutions in some
+  systems.
 
 Pygame SGE bugfixes:
 - Some incompatibilities with pygame-cffi

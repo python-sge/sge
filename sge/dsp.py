@@ -1,4 +1,4 @@
-# Copyright (C) 2012-2016 Julie Marchant <onpon4@riseup.net>
+# Copyright (C) 2012-2017 Julie Marchant <onpon4@riseup.net>
 # 
 # This file is part of the Pygame SGE.
 # 
@@ -332,6 +332,8 @@ class Game(object):
         pygame.init()
 
         pygame.mixer.music.set_endevent(sge.MUSIC_END_EVENT)
+
+        r._display_info = pygame.display.Info()
 
         sge.game = self
 
