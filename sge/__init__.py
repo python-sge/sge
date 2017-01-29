@@ -1,4 +1,4 @@
-# Copyright (C) 2012-2016 Julie Marchant <onpon4@riseup.net>
+# Copyright (C) 2012-2017 Julie Marchant <onpon4@riseup.net>
 #
 # This file is part of the Pygame SGE.
 #
@@ -235,7 +235,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.4.3a0"
+__version__ = "1.4.3"
 
 import sys
 import os
