@@ -408,7 +408,7 @@ def _get_circle_sprite(radius, fill, outline, outline_thickness, anti_alias):
 
 
 def _get_polygon_sprite(points, fill, outline, outline_thickness, anti_alias):
-    # Return a sprite for the given rectangle.
+    # Return a sprite for the given polygon.
     i = ("poly_sprite", tuple(points),
          tuple(fill) if fill is not None else None,
          tuple(outline) if outline is not None else None,
