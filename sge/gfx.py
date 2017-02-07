@@ -2030,9 +2030,14 @@ class Sprite(object):
         if height is None:
             height = sge.game.height - y
 
+        if (r.game_x == 0 and r.game_y == 0 and r.game_xscale == 1 and
+                r.game_yscale == 1):
+            display_surface = r.game_window
+        else:
+            display_surface = r.game_display_surface
+
         sprite = cls(width=width, height=height)
-        sprite.rd["baseimages"][0].blit(r.game_display_surface,
-                                        (int(-x), int(-y)))
+        sprite.rd["baseimages"][0].blit(display_surface, (int(-x), int(-y)))
         s_refresh(sprite)
         return sprite
 
