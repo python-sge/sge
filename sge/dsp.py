@@ -1064,15 +1064,21 @@ class Game(object):
         # Music control
         _handle_music()
 
+        if (r.game_x == 0 and r.game_y == 0 and r.game_xscale == 1 and
+                r.game_yscale == 1):
+            display_surface = r.game_window
+        else:
+            display_surface = r.game_display_surface
+
         # Clear display surface
-        r.game_display_surface.fill((0, 0, 0))
+        display_surface.fill((0, 0, 0))
 
         # Draw views
         for view in self.current_room.views:
             if (view.xport == 0 and view.yport == 0 and
                     view.wport == view.width == self.width and
                     view.hport == view.height == self.height):
-                view_surf = r.game_display_surface
+                view_surf = display_surface
             else:
                 view_surf = pygame.Surface((view.width, view.height))
             view_surf.fill(pygame.Color(*self.current_room.background.color))
@@ -1180,8 +1186,8 @@ class Game(object):
                         flags = _get_blend_flags(blend_mode)
                         view_surf.blit(surf, (int(x), int(y)), None, flags)
 
-            if view_surf is not r.game_display_surface:
-                r.game_display_surface.blit(
+            if view_surf is not display_surface:
+                display_surface.blit(
                     _scale(view_surf, view.wport, view.hport),
                     (int(view.xport), int(view.yport)))
 
@@ -1195,22 +1201,24 @@ class Game(object):
             x = int(x)
             y = int(y)
             if isinstance(image, sge.gfx.TileGrid):
-                tg_blit(image, r.game_display_surface, x, y)
+                tg_blit(image, display_surface, x, y)
             else:
                 if blend_mode == sge.BLEND_RGB_SCREEN:
-                    _screen_blend(r.game_display_surface, image, x, y, False)
+                    _screen_blend(display_surface, image, x, y, False)
                 elif blend_mode == sge.BLEND_RGBA_SCREEN:
-                    _screen_blend(r.game_display_surface, image, x, y, True)
+                    _screen_blend(display_surface, image, x, y, True)
                 else:
                     flags = _get_blend_flags(blend_mode)
-                    r.game_display_surface.blit(image, (x, y), None, flags)
+                    display_surface.blit(image, (x, y), None, flags)
 
         r.game_window_projections = []
 
         # Scale/blit display surface
-        r.game_window.blit(
-            _scale(r.game_display_surface, self.width * r.game_xscale,
-                   self.height * r.game_yscale), (int(r.game_x), int(r.game_y)))
+        if display_surface is not r.game_window:
+            r.game_window.blit(
+                _scale(display_surface, self.width * r.game_xscale,
+                       self.height * r.game_yscale), (int(r.game_x),
+                       int(r.game_y)))
 
         pygame.display.flip()
 
