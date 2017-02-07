@@ -2340,7 +2340,7 @@ class TileGrid(object):
            limited.
         """
         rendered_sprite = Sprite(width=self.width, height=self.height)
-        g_blit(self, rendered_sprite, (0, 0))
+        tg_blit(self, rendered_sprite, (0, 0))
         s_refresh(rendered_sprite)
         return rendered_sprite
 

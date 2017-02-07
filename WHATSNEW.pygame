@@ -5,6 +5,16 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.4.4
+------------------------------------------------------------------------
+
+Pygame SGE misc changes:
+* Added some optimizations when certain SGE features are not being used.
+
+Pygame SGE bugfixes:
+- Crash when attempting to use gfx.TileGrid.render
+
+
 1.4.3
 ------------------------------------------------------------------------
 
