@@ -1069,7 +1069,12 @@ class Game(object):
 
         # Draw views
         for view in self.current_room.views:
-            view_surf = pygame.Surface((view.width, view.height))
+            if (view.xport == 0 and view.yport == 0 and
+                    view.wport == view.width == self.width and
+                    view.hport == view.height == self.height):
+                view_surf = r.game_display_surface
+            else:
+                view_surf = pygame.Surface((view.width, view.height))
             view_surf.fill(pygame.Color(*self.current_room.background.color))
             view_x = view.x
             view_y = view.y
@@ -1175,9 +1180,10 @@ class Game(object):
                         flags = _get_blend_flags(blend_mode)
                         view_surf.blit(surf, (int(x), int(y)), None, flags)
 
-            r.game_display_surface.blit(
-                _scale(view_surf, view.wport, view.hport),
-                (int(view.xport), int(view.yport)))
+            if view_surf is not r.game_display_surface:
+                r.game_display_surface.blit(
+                    _scale(view_surf, view.wport, view.hport),
+                    (int(view.xport), int(view.yport)))
 
         self.current_room.rd["projections"] = []
 
