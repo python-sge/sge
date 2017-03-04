@@ -3087,7 +3087,7 @@ class Object(object):
         if self.rd["sprite"] != value:
             self.rd["sprite"] = value
             if value is not None:
-                self.image_index = self.image_index % value.frames
+                self.image_index %= value.frames
             o_update_object_areas(self)
 
     @property
@@ -3260,6 +3260,16 @@ class Object(object):
             self.rd["mv_dir"] = value
             self.rd["xv"] = math.cos(math.radians(value)) * self.rd["speed"]
             self.rd["yv"] = math.sin(math.radians(value)) * self.rd["speed"]
+
+    @property
+    def image_index(self):
+        return self.rd["image_index"]
+
+    @image_index.setter
+    def image_index(self, value):
+        if value != self.rd["image_index"]:
+            self.rd["image_index"] = value
+            self.rd["anim_count"] = 0
 
     @property
     def image_origin_x(self):
@@ -3527,6 +3537,7 @@ class Object(object):
         self.yacceleration = yacceleration
         self.xdeceleration = xdeceleration
         self.ydeceleration = ydeceleration
+        self.rd["image_index"] = None
         self.image_index = image_index
         self.image_origin_x = image_origin_x
         self.image_origin_y = image_origin_y
@@ -3550,7 +3561,7 @@ class Object(object):
 
         self.rd["sprite"] = sprite
         if sprite is not None:
-            self.image_index = self.image_index % sprite.frames
+            self.image_index %= sprite.frames
             sprite_bbox_x = self.sprite.bbox_x
             sprite_bbox_y = self.sprite.bbox_y
             sprite_bbox_width = self.sprite.bbox_width

@@ -507,15 +507,15 @@ def o_update(self, time_passed, delta_mult):
     # Update the animation frame.
     if self.image_fps and isinstance(self.sprite, sge.gfx.Sprite):
         self.rd["anim_count"] += time_passed
-        self.image_index += int(self.rd["anim_count"] / self.rd["frame_time"])
+        self.rd["image_index"] += int(self.rd["anim_count"] / self.rd["frame_time"])
         self.rd["anim_count"] %= abs(self.rd["frame_time"])
 
         if self.sprite is not None:
-            while self.image_index >= self.sprite.frames:
-                self.image_index -= self.sprite.frames
+            while self.rd["image_index"] >= self.sprite.frames:
+                self.rd["image_index"] -= self.sprite.frames
                 self.event_animation_end()
-            while self.image_index < 0:
-                self.image_index += self.sprite.frames
+            while self.rd["image_index"] < 0:
+                self.rd["image_index"] += self.sprite.frames
                 self.event_animation_end()
 
     # Alarms
