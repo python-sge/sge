@@ -14,6 +14,7 @@ Pygame SGE misc changes:
 Pygame SGE bugfixes:
 - Crash when attempting to use gfx.TileGrid.render
 - Loss of frames when changing frame rate and image index sequentially
+- Incorrect error when passing a non-color as a color
 
 
 1.4.3

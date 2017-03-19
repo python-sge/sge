@@ -113,7 +113,7 @@ def _check_color_input(value):
 def _check_color(value):
     # Make sure a value is either None or a color.
     if value is not None and not isinstance(value, sge.gfx.Color):
-        e = "`{}` is not a Color object.".format(repr(fill))
+        e = "`{}` is not a Color object.".format(repr(value))
         raise TypeError(e)
 
 
