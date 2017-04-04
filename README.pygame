@@ -103,7 +103,7 @@ DISCOLORED PNG IMAGES
 
 Some versions of Pygame have problems saving color information of PNG
 images correctly.  As a result, depending on your exact version of
-Pygame, images saves with sge.gfx.Sprite.save may be discolored.  The
+Pygame, images saved with sge.gfx.Sprite.save may be discolored.  The
 best workaround is to choose a different format, such as BMP, GIF, or
 JPEG.
 
