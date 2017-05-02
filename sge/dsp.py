@@ -826,21 +826,18 @@ class Game(object):
                 try:
                     k = sge.KEY_NAMES[event.key]
                 except KeyError:
-                    w = "Don't know how to handle the key, ``{}``.".format(
-                        event.key)
-                    warnings.warn(w)
-                else:
-                    input_event = sge.input.KeyPress(k, event.unicode)
-                    self.input_events.append(input_event)
+                    k = "undef_{}".format(event.key)
+
+                input_event = sge.input.KeyPress(k, event.unicode)
+                self.input_events.append(input_event)
             elif event.type == pygame.KEYUP:
                 try:
                     k = sge.KEY_NAMES[event.key]
                 except KeyError:
-                    w = "Don't know how to handle the key, ``{}``.".format(
-                        event.key)
-                else:
-                    input_event = sge.input.KeyRelease(k)
-                    self.input_events.append(input_event)
+                    k = "undef_{}".format(event.key)
+
+                input_event = sge.input.KeyRelease(k)
+                self.input_events.append(input_event)
             elif event.type == pygame.MOUSEMOTION:
                 input_event = sge.input.MouseMove(*event.rel)
                 self.input_events.append(input_event)

@@ -5,6 +5,17 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.5
+------------------------------------------------------------------------
+
+Specification misc changes:
+* Changed the way keys are handled to be more generalized and less
+  flexible, in particular allowing for extra keys and removing some
+  odd keys which had been inherited from Pygame from the standard list.
+  The main reason I did this is because typing with input methods was
+  broken as it was before.
+
+
 1.4.2
 ------------------------------------------------------------------------
 

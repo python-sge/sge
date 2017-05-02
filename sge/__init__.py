@@ -235,7 +235,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.4.4"
+__version__ = "1.5a0"
 
 import sys
 import os
@@ -289,7 +289,7 @@ KEYS = {"0": pygame.K_0, "1": pygame.K_1, "2": pygame.K_2, "3": pygame.K_3,
         "backtick": pygame.K_BACKQUOTE, "bracket_left": pygame.K_LEFTBRACKET,
         "bracket_right": pygame.K_RIGHTBRACKET, "break": pygame.K_BREAK,
         "caps_lock": pygame.K_CAPSLOCK, "caret": pygame.K_CARET,
-        "clear": pygame.K_CLEAR, "colon": pygame.K_COLON,
+        "undef_clear": pygame.K_CLEAR, "colon": pygame.K_COLON,
         "comma": pygame.K_COMMA, "ctrl_left": pygame.K_LCTRL,
         "ctrl_right": pygame.K_RCTRL, "delete": pygame.K_DELETE,
         "dollar": pygame.K_DOLLAR, "down": pygame.K_DOWN, "end": pygame.K_END,
@@ -300,8 +300,9 @@ KEYS = {"0": pygame.K_0, "1": pygame.K_1, "2": pygame.K_2, "3": pygame.K_3,
         "f6": pygame.K_F6, "f7": pygame.K_F7, "f8": pygame.K_F8,
         "f9": pygame.K_F9, "f10": pygame.K_F10, "f11": pygame.K_F11,
         "f12": pygame.K_F12, "greater_than": pygame.K_GREATER,
-        "hash": pygame.K_HASH, "help": pygame.K_HELP, "home": pygame.K_HOME,
-        "hyphen": pygame.K_MINUS, "insert": pygame.K_INSERT,
+        "hash": pygame.K_HASH, "undef_help": pygame.K_HELP,
+        "home": pygame.K_HOME, "hyphen": pygame.K_MINUS,
+        "insert": pygame.K_INSERT,
         "kp_0": pygame.K_KP0, "kp_1": pygame.K_KP1, "kp_2": pygame.K_KP2,
         "kp_3": pygame.K_KP3, "kp_4": pygame.K_KP4, "kp_5": pygame.K_KP5,
         "kp_6": pygame.K_KP6, "kp_7": pygame.K_KP7, "kp_8": pygame.K_KP8,
@@ -311,18 +312,18 @@ KEYS = {"0": pygame.K_0, "1": pygame.K_1, "2": pygame.K_2, "3": pygame.K_3,
         "kp_plus": pygame.K_KP_PLUS, "kp_point": pygame.K_KP_PERIOD,
         "left": pygame.K_LEFT, "less_than": pygame.K_LESS,
         "menu": pygame.K_MENU, "meta_left": pygame.K_LMETA,
-        "meta_right": pygame.K_RMETA, "mode": pygame.K_MODE,
+        "meta_right": pygame.K_RMETA, "undef_mode": pygame.K_MODE,
         "num_lock": pygame.K_NUMLOCK, "pagedown": pygame.K_PAGEDOWN,
         "pageup": pygame.K_PAGEUP, "parenthesis_left": pygame.K_LEFTPAREN,
         "parenthesis_right": pygame.K_RIGHTPAREN, "pause": pygame.K_PAUSE,
         "period": pygame.K_PERIOD, "plus": pygame.K_PLUS,
-        "power": pygame.K_POWER, "print_screen": pygame.K_PRINT,
+        "undef_power": pygame.K_POWER, "print_screen": pygame.K_PRINT,
         "question": pygame.K_QUESTION, "quote": pygame.K_QUOTEDBL,
         "right": pygame.K_RIGHT, "scroll_lock": pygame.K_SCROLLOCK,
         "semicolon": pygame.K_SEMICOLON, "shift_left": pygame.K_LSHIFT,
         "shift_right": pygame.K_RSHIFT, "slash": pygame.K_SLASH,
-        "space": pygame.K_SPACE, "super_left": pygame.K_LSUPER,
-        "super_right": pygame.K_RSUPER, "sysrq": pygame.K_SYSREQ,
+        "space": pygame.K_SPACE, "undef_super_left": pygame.K_LSUPER,
+        "undef_super_right": pygame.K_RSUPER, "sysrq": pygame.K_SYSREQ,
         "tab": pygame.K_TAB, "underscore": pygame.K_UNDERSCORE,
         "up": pygame.K_UP}
 KEY_NAMES = {}
