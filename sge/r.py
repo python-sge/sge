@@ -1105,7 +1105,16 @@ def s_get_image(self, num, xscale=1, yscale=1, rotation=0, alpha=255,
 
                 if blend is not None:
                     pygame_flags = _get_blend_flags(blend_mode)
-                    img.fill(pygame.Color(*blend), None, pygame_flags)
+                    if blend_mode == sge.BLEND_RGB_SCREEN:
+                        ssurf = pygame.Surface(img.get_size(), pygame.SRCALPHA)
+                        ssurf.fill(pygame.Color(*blend))
+                        _screen_blend(img, ssurf, 0, 0, False)
+                    elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                        ssurf = pygame.Surface(img.get_size(), pygame.SRCALPHA)
+                        ssurf.fill(pygame.Color(*blend))
+                        _screen_blend(img, ssurf, 0, 0, True)
+                    else:
+                        img.fill(pygame.Color(*blend), None, pygame_flags)
             else:
                 img = pygame.Surface((1, 1))
                 img.set_colorkey((0, 0, 0), pygame.RLEACCEL)

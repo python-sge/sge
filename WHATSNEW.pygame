@@ -5,6 +5,13 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.5
+------------------------------------------------------------------------
+
+Pygame SGE bugfixes:
+- Failure to support screen blending with objects
+
+
 1.4.4
 ------------------------------------------------------------------------
 
