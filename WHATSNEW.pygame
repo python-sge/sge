@@ -10,6 +10,7 @@ information. This file is offered as-is, without any warranty.
 
 Pygame SGE bugfixes:
 - Failure to support screen blending with objects
+- Typo in the documentation for sge.gfx.Sprite.swap_color
 
 
 1.4.4

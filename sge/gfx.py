@@ -1690,8 +1690,8 @@ class Sprite(object):
           the color of pixels to change.
         - ``new_color`` -- A :class:`sge.gfx.Color` object indicating
           the color to change the pixels to.
-        - ``frame`` -- The frame of the sprite to rotate, where ``0`` is
-          the first frame; set to :const:`None` to rotate all frames.
+        - ``frame`` -- The frame of the sprite to modify, where ``0`` is
+          the first frame; set to :const:`None` to modify all frames.
 
         .. note::
 
