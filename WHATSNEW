@@ -14,6 +14,11 @@ Specification misc changes:
   odd keys which had been inherited from Pygame from the standard list.
   The main reason I did this is because typing with input methods was
   broken as it was before.
+* Changed the way lines are automatically split, using the uniseg
+  module, so that it is done properly.
+
+Specification bugfixes:
+- Typo in the documentation for sge.gfx.Sprite.swap_color
 
 
 1.4.2
