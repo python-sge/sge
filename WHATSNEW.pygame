@@ -8,6 +8,10 @@ information. This file is offered as-is, without any warranty.
 1.5
 ------------------------------------------------------------------------
 
+Pygame SGE misc changes:
+* Changed the way lines are automatically split, using the uniseg
+  module, so that it is done properly.
+
 Pygame SGE bugfixes:
 - Failure to support screen blending with objects
 

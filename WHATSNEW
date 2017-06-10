@@ -9,13 +9,11 @@ information. This file is offered as-is, without any warranty.
 ------------------------------------------------------------------------
 
 Specification misc changes:
-* Changed the way keys are handled to be more generalized and less
+* Changed the way keys are handled to be more generalized and
   flexible, in particular allowing for extra keys and removing some
   odd keys which had been inherited from Pygame from the standard list.
   The main reason I did this is because typing with input methods was
   broken as it was before.
-* Changed the way lines are automatically split, using the uniseg
-  module, so that it is done properly.
 
 Specification bugfixes:
 - Typo in the documentation for sge.gfx.Sprite.swap_color
