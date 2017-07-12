@@ -35,7 +35,12 @@ import weakref
 
 import pygame
 import six
-from uniseg.linebreak import line_break_units
+
+try:
+    from uniseg.linebreak import line_break_units
+    USE_UNISEG = True
+except ImportError:
+    USE_UNISEG = False
 
 import sge
 
@@ -492,7 +497,13 @@ def f_split_text(self, text, width=None):
             if self.rd["font"].size(line)[0] <= width:
                 split_text.append(line)
             else:
-                words = list(line_break_units(line))
+                if USE_UNISEG:
+                    words = list(line_break_units(line))
+                    jchar = ''
+                else:
+                    jchar = ' '
+                    words = line.split(jchar)
+
                 while words:
                     current_line = words.pop(0)
                     while self.rd["font"].size(current_line)[0] > width:
@@ -503,10 +514,10 @@ def f_split_text(self, text, width=None):
                             current_line = current_line[1:]
                         split_text.append(start)
 
-                    while (words and self.rd["font"].size(''.join(
+                    while (words and self.rd["font"].size(jchar.join(
                             [current_line, words[0]]).rstrip())[0] <= width):
-                        current_line = ''.join([current_line,
-                                                words.pop(0)])
+                        current_line = jchar.join([current_line,
+                                                   words.pop(0)])
                     split_text.append(current_line.rstrip())
                         
         return split_text
