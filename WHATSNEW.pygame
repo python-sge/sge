@@ -10,6 +10,7 @@ information. This file is offered as-is, without any warranty.
 
 Pygame SGE misc changes:
 * Made the uniseg dependency optional.
+* Altered the way fonts are handled.
 
 
 1.5

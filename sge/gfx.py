@@ -2547,44 +2547,31 @@ class Font(object):
         self.__size = value
         self.rd["font"] = None
 
-        name = self.name
-        if isinstance(name, six.string_types):
-            name = [name]
-
-        names = []
-        compatible_fonts = [
-            ["liberation serif", "tinos", "nimbus roman no9 l", "nimbus roman",
-             "freeserif", "dejavu serif", "droid serif", "bitstream charter",
-             "times new roman"],
-            ["droid sans", "liberation sans", "arimo", "nimbus sans l",
-             "freesans", "dejavu sans", "droid sans fallback", "arial"],
-            ["liberation sans narrow", "freecondensed",
-             "sans condensed uralic", "arial narrow"],
-            ["liberation mono", "cousine", "nimbus mono l", "freemono",
-             "texgyrecursor", "courier prime", "dejavu sans mono",
-             "droid sans mono", "courier new", "courier"]]
-
-        try:
-            for n in name:
-                names.append(n)
-                for fonts in compatible_fonts:
-                    if n.lower() in fonts:
-                        for font in fonts:
-                            if font not in names:
-                                names.append(font)
-                        break
-        except TypeError:
-            # Most likely a non-iterable value, such as None, so we
-            # assume the default font is to be used.
-            names = ['']
+        if isinstance(self.name, six.string_types):
+            names = [self.name]
+        else:
+            try:
+                names = list(self.name)
+            except TypeError:
+                # Most likely a non-iterable value, such as None, so we
+                # assume the default font is to be used.
+                names = []
 
         for name in names:
             if os.path.isfile(name):
                 self.rd["font"] = pygame.font.Font(name, self.__size)
                 break
-
-        if self.rd.get("font") is None:
-            self.rd["font"] = pygame.font.SysFont(','.join(names), self.__size)
+            elif pygame.font.match_font(name):
+                self.rd["font"] = pygame.font.SysFont(
+                    ','.join(names), self.__size)
+                break
+        else:
+            default_names = [
+                "courier", "courier new", "courier prime", "freemono",
+                "liberation mono", "dejavu sans mono", "droid sans mono",
+                "nimbus mono l", "cousine", "texgyrecursor"]
+            self.rd["font"] = pygame.font.SysFont(
+                ','.join(default_names), self.__size)
 
         # Restore underline, bold, and italic settings.
         self.underline = underline

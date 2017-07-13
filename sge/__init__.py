@@ -364,6 +364,8 @@ __all__ = [
 # Global variables
 game = None
 
+os.environ['PYGAME_FREETYPE'] = '1'
+
 # Uncomment this line to tell SDL to center the window.  Disabled by
 # default because it seems to cause some weird behavior with window
 # resizing on at least some systems.
