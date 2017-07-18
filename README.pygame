@@ -40,11 +40,10 @@ sge.snd.Music supports the following audio formats:
 - XM
 - MIDI
 
-MP3 is also supported on some systems, but not all, due to software idea
-patents which restrict use of this format.  On some systems, attempting
-to load an unsupported format can crash the game.  Since MP3 support is
-not available on all systems, it is best to avoid using it; consider
-using Ogg Vorbis instead.
+MP3 is also supported on some systems, but not all.  On some systems,
+attempting to load an unsupported format can crash the game.  Since MP3
+support is not available on all systems, it is best to avoid using it;
+consider using Ogg Vorbis instead.
 
 For starting position in MOD files, the pattern order number is used
 instead of the number of milliseconds.
