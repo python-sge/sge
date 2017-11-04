@@ -821,6 +821,7 @@ class Game(object):
         only need to use this function directly if you take control away
         from the SGE's main loop, e.g. to create your own loop.
         """
+        # FIXME: This sometimes fails to grab events on time. WHYYYYYY
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 try:
