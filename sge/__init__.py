@@ -109,10 +109,14 @@ general game loop structure::
         # Refresh
         sge.game.refresh()
 
-:meth:`sge.dsp.Game.pump_input` should be called every frame regardless
-of whether or not user input is needed.  Failing to call it will cause
-the queue to build up, but more importantly, the OS may decide that the
-program has locked up if it doesn't get a response for a long time.
+:meth:`sge.dsp.Game.pump_input` should be called frequently at all times
+regardless of whether or not user input is needed.  This means it should
+be called every frame.  It also means that should any task halt the loop
+for any noticeable period of time, arrangements should be made to call
+this  method frequently during that time. Failing to call this method
+for a substantial period of time will cause the queue to build up, but
+more importantly, the OS may decide that the program has locked up if
+you wait for too long.
 
 :meth:`sge.dsp.Game.regulate_speed` limits the frame rate of the game
 and tells you how much time has passed since the last frame.  It is not
