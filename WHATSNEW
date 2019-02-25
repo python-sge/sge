@@ -5,6 +5,17 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.6
+------------------------------------------------------------------------
+
+Specification additions:
++ sge.s.isometric
++ sge.s.orthogonal
+
+Specification bugfixes:
+- Misspelling of "backgrounds" as "bckgrounds"
+
+
 1.5
 ------------------------------------------------------------------------
 

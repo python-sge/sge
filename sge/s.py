@@ -1,17 +1,17 @@
-# Copyright (C) 2016 Julie Marchant <onpon4@riseup.net>
-# 
+# Copyright (C) 2016-2019 Julie Marchant <onpon4@riseup.net>
+#
 # This file is part of the Pygame SGE.
-# 
+#
 # The Pygame SGE is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # The Pygame SGE is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Lesser General Public License
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -129,6 +129,7 @@ value of ``"1984"``.
 .. data:: sge.s.insert
 .. data:: sge.s.iris_in
 .. data:: sge.s.iris_out
+.. data:: sge.s.isometric
 .. data:: sge.s.kp_0
 .. data:: sge.s.kp_1
 .. data:: sge.s.kp_2
@@ -157,6 +158,7 @@ value of ``"1984"``.
 .. data:: sge.s.noblur
 .. data:: sge.s.num_lock
 .. data:: sge.s.olive
+.. data:: sge.s.orthogonal
 .. data:: sge.s.pagedown
 .. data:: sge.s.pageup
 .. data:: sge.s.parenthesis_left
@@ -410,3 +412,8 @@ wipe_downright = "wipe_downright"
 wipe_matrix = "wipe_matrix"
 iris_in = "iris_in"
 iris_out = "iris_out"
+
+# Tile grids
+isometric = "isometric"
+orthogonal = "orthogonal"
+

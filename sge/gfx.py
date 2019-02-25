@@ -1,4 +1,4 @@
-# Copyright (C) 2012-2016 Julie Marchant <onpon4@riseup.net>
+# Copyright (C) 2012-2019 Julie Marchant <onpon4@riseup.net>
 #
 # This file is part of the Pygame SGE.
 #
@@ -2052,7 +2052,7 @@ class TileGrid(object):
 
     """
     This class represents a grid of individual sprites.  This is useful
-    for tiled bckgrounds; it is faster than making each tile as its own
+    for tiled backgrounds; it is faster than making each tile as its own
     object and likely uses less RAM than drawing the tiles onto a single
     large sprite.
 

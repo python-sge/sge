@@ -16,7 +16,7 @@ This implementation of the SGE uses Pygame as a backend.
 """.strip()
 
 setup(name="sge-pygame",
-      version="1.5.1",
+      version="1.6a0",
       description="A 2-D game engine for Python",
       long_description=long_description,
       author="Julie Marchant",
