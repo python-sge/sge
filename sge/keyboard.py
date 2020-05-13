@@ -1,5 +1,3 @@
-# Copyright (C) 2012-2014 Julie Marchant <onpon4@riseup.net>
-# 
 # This file is part of the Pygame SGE.
 # 
 # The Pygame SGE is free software: you can redistribute it and/or modify
@@ -167,18 +165,15 @@ F12                  ``"f12"``               ``""``
 ==================== ======================= ==============
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
+
+__all__ = ["get_pressed", "get_modifier", "get_focused", "set_repeat",
+           "get_repeat_enabled", "get_repeat_interval", "get_repeat_delay"]
+
 
 import pygame
 
 import sge
 
-
-__all__ = ["get_pressed", "get_modifier", "get_focused", "set_repeat",
-           "get_repeat_enabled", "get_repeat_interval", "get_repeat_delay"]
 
 _repeat_enabled = False
 

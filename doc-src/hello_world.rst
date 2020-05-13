@@ -55,7 +55,6 @@ license.  You can learn about various free/libre software licenses at
 The license text I am using for CC0 is::
 
     # Hello, world!
-    # Written in 2013 by Julian Marchant <onpon4@riseup.net>
     #
     # To the extent possible under law, the author(s) have dedicated all
     # copyright and related and neighboring rights to this software to the
@@ -246,7 +245,6 @@ This is the completed Hello World program::
     #!/usr/bin/env python3
 
     # Hello, world!
-    # Written in 2013 by Julian Marchant <onpon4@riseup.net>
     #
     # To the extent possible under law, the author(s) have dedicated all
     # copyright and related and neighboring rights to this software to the

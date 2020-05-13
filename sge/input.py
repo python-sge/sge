@@ -1,5 +1,3 @@
-# Copyright (C) 2014, 2015 Julie Marchant <onpon4@riseup.net>
-# 
 # This file is part of the Pygame SGE.
 # 
 # The Pygame SGE is free software: you can redistribute it and/or modify
@@ -25,11 +23,6 @@ events are handled automatically in each frame of the SGE's main loop.
 You only need to use input event objects directly if you take control
 away from the SGE's main loop, e.g. to create your own loop.
 """
-
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 
 __all__ = ["KeyPress", "KeyRelease", "MouseMove", "MouseButtonPress",

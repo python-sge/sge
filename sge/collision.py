@@ -1,5 +1,3 @@
-# Copyright (C) 2014, 2016 Julie Marchant <onpon4@riseup.net>
-# 
 # This file is part of the Pygame SGE.
 # 
 # The Pygame SGE is free software: you can redistribute it and/or modify
@@ -21,14 +19,8 @@ basic rectangle-based collision detection to shape-based collision
 detection.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import math
-
-import six
 
 import sge
 from sge import r
@@ -89,8 +81,8 @@ def masks_collide(x1, y1, mask1, x2, y2, mask2):
         h2 = len(mask2[0])
 
         if rectangles_collide(x1, y1, w1, h1, x2, y2, w2, h2):
-            for i in six.moves.range(max(x1, x2), min(x1 + w1, x2 + w2)):
-                for j in six.moves.range(max(y1, y2), min(y1 + h1, y2 + h2)):
+            for i in range(max(x1, x2), min(x1 + w1, x2 + w2)):
+                for j in range(max(y1, y2), min(y1 + h1, y2 + h2)):
                     if (mask1[i - x1][j - y1] and mask2[i - x2][j - y2]):
                         return True
 
@@ -118,8 +110,7 @@ def rectangle(x, y, w, h, other=None):
 
     mask = r.cache.get(mask_id)
     if mask is None:
-        mask = [[True for j in six.moves.range(int(h))]
-                for i in six.moves.range(int(w))]
+        mask = [[True for j in range(int(h))] for i in range(int(w))]
 
     r.cache.add(mask_id, mask)
 
@@ -160,13 +151,12 @@ def ellipse(x, y, w, h, other=None):
     mask = r.cache.get(mask_id)
 
     if mask is None:
-        mask = [[False for j in six.moves.range(int(h))]
-                for i in six.moves.range(int(w))]
+        mask = [[False for j in range(int(h))] for i in range(int(w))]
         a = len(mask) / 2
         b = len(mask[0]) / 2 if mask else 0
 
-        for i in six.moves.range(len(mask)):
-            for j in six.moves.range(len(mask[i])):
+        for i in range(len(mask)):
+            for j in range(len(mask[i])):
                 if ((i - a) / a) ** 2 + ((j - b) / b) ** 2 <= 1:
                     mask[i][j] = True
 
@@ -202,11 +192,11 @@ def circle(x, y, radius, other=None):
     mask = r.cache.get(mask_id)
 
     if mask is None:
-        mask = [[False for j in six.moves.range(int(diameter))]
-                for i in six.moves.range(int(diameter))]
+        mask = [[False for j in range(int(diameter))]
+                for i in range(int(diameter))]
 
-        for i in six.moves.range(len(mask)):
-            for j in six.moves.range(len(mask[i])):
+        for i in range(len(mask)):
+            for j in range(len(mask[i])):
                 if (i - x) ** 2 + (j - y) ** 2 <= radius ** 2:
                     mask[i][j] = True
 

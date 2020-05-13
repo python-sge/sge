@@ -69,42 +69,31 @@ request for anti-aliasing.
 
 KEYBOARD LOCK-UP
 
-There is a bug in either Pygame or SDL, most likely SDL, which sometimes
-causes keyboard input to stop working.  In Pygame programs such as this
-one, this occurs when pygame.display.set_mode is called multiple times,
-which in the Pygame SGE occurs any time either the size of the window or
-the video mode (windowed or fullscreen) changes.  See this post from the
-SGE blog for more information:
-
-https://savannah.nongnu.org/forum/forum.php?forum_id=8113
-
-You may also be interested in this report on the Pygame issue tracker:
+There is a bug seemingly in SDL 1.2 which sometimes causes keyboard
+input to stop working.  In Pygame programs such as this one, this occurs
+when pygame.display.set_mode is called multiple times, which in the
+Pygame SGE occurs any time either the size of the window or the video
+mode (windowed or fullscreen) changes.  See this bug report on the
+Pygame issue tracker for more information:
 
 https://bitbucket.org/pygame/pygame/issue/212/
 
-As mentioned in the post on the SGE blog, this is a particularly serious
-problem for anyone using the X Window System (e.g. pretty much any
-GNU/Linux user), or any other window system that gives complete control
-to fullscreen SDL applications.  On these systems, if the game requires
-keyboard input to either leave fullscreen or exit, the system will
-become unresponsive to everything that isn't sent directly to the kernel
-(such as the magic SysRq key in Linux systems).
+This is a particularly serious problem for anyone using the X Window
+System (e.g. pretty much any GNU/Linux user), or any other window system
+that gives complete control to fullscreen SDL applications.  On these
+systems, if the game requires keyboard input to either leave fullscreen
+or exit, the system will become unresponsive to everything that isn't
+sent directly to the kernel (such as the magic SysRq key in Linux
+systems).
 
-Luckily, the bug doesn't seem to affect mouse input, so if you allow the
-player to enter fullscreen mode in-game, it is highly recommended for
-you to provide some method of either exiting the game or exiting
-fullscreen with the mouse.  This can be a button somewhere on the screen
-if the game uses the mouse cursor, or it can be a simple mouse button
-click otherwise.
-
-
-DISCOLORED PNG IMAGES
-
-Some versions of Pygame have problems saving color information of PNG
-images correctly.  As a result, depending on your exact version of
-Pygame, images saved with sge.gfx.Sprite.save may be discolored.  The
-best workaround is to choose a different format, such as BMP, GIF, or
-JPEG.
+Hopefully the bug should go away with usage of SDL2 instead of SDL 1.2;
+Pygame 2, when released, will use SDL2 by default.  In the meantime, you
+may want to work around this bug to ensure minimal frustration for
+users.  Luckily, the bug doesn't seem to affect mouse input, so if you
+provide some method of either exiting the game or exiting fullscreen
+with the mouse, that should at least prevent users from being forced to
+reboot.  This can be a button somewhere on the screen if the game uses
+the mouse cursor, or it can be a simple mouse button click otherwise.
 
 
 RESOLUTION INCONSISTENCIES

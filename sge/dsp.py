@@ -1,5 +1,3 @@
-# Copyright (C) 2012-2017 Julie Marchant <onpon4@riseup.net>
-# 
 # This file is part of the Pygame SGE.
 # 
 # The Pygame SGE is free software: you can redistribute it and/or modify
@@ -19,10 +17,9 @@
 This module provides classes related to the graphical display.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
+
+__all__ = ["Game", "Room", "View", "Object"]
+
 
 import math
 import os
@@ -31,7 +28,6 @@ import traceback
 import warnings
 
 import pygame
-import six
 
 import sge
 from sge import gfx, r
@@ -50,10 +46,7 @@ from sge.r import (
     r_update_iris_out, v_limit)
 
 
-__all__ = ["Game", "Room", "View", "Object"]
-
-
-class Game(object):
+class Game:
 
     """
     This class handles most parts of the game which operate on a global
@@ -85,8 +78,8 @@ class Game(object):
     .. attribute:: scale
 
        A number indicating a fixed scale factor (e.g. ``1`` for no
-       scaling, ``2`` for doubled size).  If set to :const:`None` or
-       ``0``, scaling is automatic (causes the game to fit the window or
+       scaling, ``2`` for doubled size).  If set to ``None`` or ``0``,
+       scaling is automatic (causes the game to fit the window or
        screen).
 
        If a fixed scale factor is defined and the game is in fullscreen
@@ -98,7 +91,7 @@ class Game(object):
        If set to :const:`True`, scaling is always proportional.  If set
        to :const:`False`, the image will be distorted to completely fill
        the game window or screen.  This has no effect unless
-       :attr:`scale` is :const:`None` or ``0``.
+       :attr:`scale` is ``None`` or ``0``.
 
     .. attribute:: scale_method
 
@@ -115,8 +108,8 @@ class Game(object):
        use.
 
        The value of this attribute is only a request.  If this value is
-       either an unsupported value or :const:`None`, the fastest
-       available scale method is chosen.
+       either an unsupported value or ``None``, the fastest available
+       scale method is chosen.
 
     .. attribute:: fps
 
@@ -143,7 +136,7 @@ class Game(object):
 
        Indicates a higher frame rate cap than :attr:`fps` to allow the
        game to reach by using delta timing to slow object speeds,
-       animation rates, and alarms down.  If set to :const:`None`, this
+       animation rates, and alarms down.  If set to ``None``, this
        feature is disabled and the game will not be permitted to run
        faster than :attr:`fps`.
 
@@ -160,14 +153,14 @@ class Game(object):
     .. attribute:: window_text
 
        The text for the OS to display as the window title, e.g. in the
-       frame of the window.  If set to :const:`None`, the SGE chooses
-       the text.
+       frame of the window.  If set to ``None``, the SGE chooses the
+       text.
 
     .. attribute:: window_icon
 
        The path to the image file to use as the window icon.  If set
-       to :const:`None`, the SGE chooses the icon.  If the file
-       specified does not exist, :exc:`OSError` is raised.
+       to ``None``, the SGE chooses the icon.  If the file specified
+       does not exist, :exc:`FileNotFoundError` is raised.
 
     .. attribute:: collision_events_enabled
 
@@ -310,7 +303,7 @@ class Game(object):
             try:
                 image = pygame.image.load(value)
             except pygame.error as e:
-                raise OSError(e)
+                raise FileNotFoundError(e)
             else:
                 pygame.display.set_icon(image)
 
@@ -372,7 +365,7 @@ class Game(object):
         # Setup sound channels
         r.game_available_channels = []
         if pygame.mixer.get_init():
-            for i in six.moves.range(pygame.mixer.get_num_channels()):
+            for i in range(pygame.mixer.get_num_channels()):
                 r.game_available_channels.append(pygame.mixer.Channel(i))
         else:
             w = "pygame.mixer module not initialized! Are you missing SDL_mixer?"
@@ -651,8 +644,8 @@ class Game(object):
         Arguments:
 
         - ``sprite`` -- The sprite to show in the center of the screen
-          while the game is paused.  If set to :const:`None`, the SGE
-          chooses the image.
+          while the game is paused.  If set to ``None``, the SGE chooses
+          the image.
 
         Normal events are not executed while the game is paused.
         Instead, events with the same name, but prefixed with
@@ -1019,7 +1012,7 @@ class Game(object):
         Arguments:
 
         - ``fps`` -- The target frame rate in frames per second.  Set to
-          :const:`None` to target the current value of :attr:`fps`.
+          ``None`` to target the current value of :attr:`fps`.
 
         When this method is called, the program will sleep long enough
         so that the game runs at ``fps`` frames per second, then return
@@ -1114,18 +1107,18 @@ class Game(object):
                     y = (y % img_h) + img_h * math.ceil(view_height / img_h)
 
                 if layer.repeat_right and (layer.repeat_left or x < view_width):
-                    hrange = six.moves.range(int(math.floor(x)),
+                    hrange = range(int(math.floor(x)),
                                              int(view.width + img_w), img_w)
                 elif layer.repeat_left and x + img_w > 0:
-                    hrange = six.moves.range(int(math.floor(x)), -img_w, -img_w)
+                    hrange = range(int(math.floor(x)), -img_w, -img_w)
                 else:
                     hrange = [int(math.floor(x))]
 
                 if layer.repeat_down and (layer.repeat_up or y < view_height):
-                    vrange = six.moves.range(int(math.floor(y)),
+                    vrange = range(int(math.floor(y)),
                                              int(view_height + img_h), img_h)
                 elif layer.repeat_up and y + img_h > 0:
-                    vrange = six.moves.range(int(math.floor(y)), -img_h, -img_h)
+                    vrange = range(int(math.floor(y)), -img_h, -img_h)
                 else:
                     vrange = [int(math.floor(y))]
 
@@ -1715,7 +1708,7 @@ class Game(object):
         pass
 
 
-class Room(object):
+class Room:
 
     """
     This class stores the settings and objects found in a room.  Rooms
@@ -1724,12 +1717,12 @@ class Room(object):
 
     .. attribute:: width
 
-       The width of the room in pixels.  If set to :const:`None`,
+       The width of the room in pixels.  If set to ``None``,
        :attr:`sge.game.width` is used.
 
     .. attribute:: height
 
-       The height of the room in pixels.  If set to :const:`None`,
+       The height of the room in pixels.  If set to ``None``,
        :attr:`sge.game.height` is used.
 
     .. attribute:: views
@@ -1751,14 +1744,14 @@ class Room(object):
     .. attribute:: object_area_width
 
        The width of this room's object areas in pixels.  If set to
-       :const:`None`, :attr:`sge.game.width` is used.  For optimum
+       ``None``, :attr:`sge.game.width` is used.  For optimum
        performance, this should generally be about the average width of
        objects in the room which check for collisions.
 
     .. attribute:: object_area_height
 
        The height of this room's object areas in pixels.  If set to
-       :const:`None`, :attr:`sge.game.height` is used.  For optimum
+       ``None``, :attr:`sge.game.height` is used.  For optimum
        performance, this should generally be about the average height of
        objects in the room which check for collisions.
 
@@ -1858,11 +1851,11 @@ class Room(object):
         Arguments:
 
         - ``views`` -- A list containing all :class:`sge.dsp.View`
-          objects in the room.  If set to :const:`None`, a new view will
-          be created with ``x=0``, ``y=0``, and all other arguments
+          objects in the room.  If set to ``None``, a new view will be
+          created with ``x=0``, ``y=0``, and all other arguments
           unspecified, which will become the first view of the room.
         - ``background`` -- The :class:`sge.gfx.Background` object used.
-          If set to :const:`None`, a new background will be created with
+          If set to ``None``, a new background will be created with
           no layers and the color set to black.
 
         All other arguments set the respective initial attributes of the
@@ -1982,7 +1975,7 @@ class Room(object):
         - ``transition`` -- The type of transition to use.  Should be
           one of the following:
 
-          - :const:`None` (no transition)
+          - ``None`` (no transition)
           - ``"fade"`` (fade to black)
           - ``"dissolve"``
           - ``"pixelate"``
@@ -1998,11 +1991,10 @@ class Room(object):
           - ``"iris_in"``
           - ``"iris_out"``
 
-          If an unsupported value is given, default to :const:`None`.
+          If an unsupported value is given, default to ``None``.
 
         - ``transition_time`` -- The time the transition should take in
-          milliseconds.  Has no effect if ``transition`` is
-          :const:`None`.
+          milliseconds.  Has no effect if ``transition`` is ``None``.
 
         - ``transition_arg`` -- An arbitrary argument that can be used
           by the following transitions:
@@ -2557,7 +2549,7 @@ class Room(object):
         pass
 
 
-class View(object):
+class View:
 
     """
     This class controls what the player sees in a room at any given
@@ -2598,16 +2590,15 @@ class View(object):
 
     .. attribute:: wport
 
-       The width of the view port.  Set to :const:`None` to make it the
-       same as :attr:`width`.  If this value differs from :attr:`width`,
-       the image will be horizontally scaled so that it fills the port.
+       The width of the view port.  Set to ``None`` to make it the same
+       as :attr:`width`.  If this value differs from :attr:`width`, the
+       image will be horizontally scaled so that it fills the port.
 
     .. attribute:: hport
 
-       The height of the view port.  Set to :const:`None` to make it the
-       same as :attr:`height`.  If this value differs from
-       :attr:`height`, the image will be vertically scaled so that it
-       fills the port.
+       The height of the view port.  Set to ``None`` to make it the same
+       as :attr:`height`.  If this value differs from :attr:`height`,
+       the image will be vertically scaled so that it fills the port.
 
     .. attribute:: rd
 
@@ -2671,10 +2662,10 @@ class View(object):
         """
         Arguments:
 
-        - ``width`` -- The width of the view.  If set to :const:`None`,
-          it will become ``sge.game.width - xport``.
-        - ``height`` -- The height of the view.  If set to
-          :const:`None`, it will become ``sge.game.height - yport``.
+        - ``width`` -- The width of the view.  If set to ``None``, it
+          will become ``sge.game.width - xport``.
+        - ``height`` -- The height of the view.  If set to ``None``, it
+          will become ``sge.game.height - yport``.
 
         All other arugments set the respective initial attributes of the
         view.  See the documentation for :class:`sge.dsp.View` for more
@@ -2692,7 +2683,7 @@ class View(object):
         self.hport = hport
 
 
-class Object(object):
+class Object:
 
     """
     This class is used for game objects, such as the player, enemies,
@@ -2715,7 +2706,7 @@ class Object(object):
 
        The sprite currently in use by this object.  Can be either a
        :class:`sge.gfx.Sprite` object or a :class:`sge.gfx.TileGrid`
-       object.  Set to :const:`None` for no sprite.
+       object.  Set to ``None`` for no sprite.
 
     .. attribute:: visible
 
@@ -2779,24 +2770,24 @@ class Object(object):
     .. attribute:: bbox_x
 
        The horizontal location of the bounding box relative to the
-       object's position.  If set to :const:`None`, the value
-       recommended by the sprite is used.
+       object's position.  If set to ``None``, the value recommended by
+       the sprite is used.
 
     .. attribute:: bbox_y
 
        The vertical location of the bounding box relative to the
-       object's position.  If set to :const:`None`, the value
-       recommended by the sprite is used.
+       object's position.  If set to ``None``, the value recommended by
+       the sprite is used.
 
     .. attribute:: bbox_width
 
-       The width of the bounding box in pixels.  If set to
-       :const:`None`, the value recommended by the sprite is used.
+       The width of the bounding box in pixels.  If set to ``None``, the
+       value recommended by the sprite is used.
 
     .. attribute:: bbox_height
 
-       The height of the bounding box in pixels.  If set to
-       :const:`None`, the value recommended by the sprite is used.
+       The height of the bounding box in pixels.  If set to ``None``,
+       the value recommended by the sprite is used.
 
     .. attribute:: regulate_origin
 
@@ -2893,26 +2884,26 @@ class Object(object):
     .. attribute:: image_origin_x
 
        The horizontal location of the origin relative to the left edge
-       of the images.  If set to :const:`None`, the value recommended by
-       the sprite is used.
+       of the images.  If set to ``None``, the value recommended by the
+       sprite is used.
 
     .. attribute:: image_origin_y
 
        The vertical location of the origin relative to the top edge of
-       the images.  If set to :const:`None`, the value recommended by
-       the sprite is used.
+       the images.  If set to ``None``, the value recommended by the
+       sprite is used.
 
     .. attribute:: image_fps
 
        The animation rate in frames per second.  Can be negative, in
-       which case animation will be reversed.  If set to :const:`None`,
-       the value recommended by the sprite is used.
+       which case animation will be reversed.  If set to ``None``, the
+       value recommended by the sprite is used.
 
     .. attribute:: image_speed
 
        The animation rate as a factor of :attr:`sge.game.fps`.  Can be
        negative, in which case animation will be reversed.  If set to
-       :const:`None`, the value recommended by the sprite is used.
+       ``None``, the value recommended by the sprite is used.
 
     .. attribute:: image_xscale
 
@@ -2942,8 +2933,8 @@ class Object(object):
     .. attribute:: image_blend
 
        A :class:`sge.gfx.Color` object representing the color to blend
-       with the sprite (using RGBA Multiply blending).  Set to
-       :const:`None` for no color blending.
+       with the sprite (using RGBA Multiply blending).  Set to ``None``
+       for no color blending.
 
     .. attribute:: image_blend_mode
 
@@ -2964,7 +2955,7 @@ class Object(object):
        - :data:`sge.BLEND_RGB_MINIMUM`
        - :data:`sge.BLEND_RGB_MAXIMUM`
 
-       :const:`None` is treated as :data:`sge.BLEND_RGB_MULTIPLY`.
+       ``None`` is treated as :data:`sge.BLEND_RGB_MULTIPLY`.
 
     .. attribute:: image_left
 
@@ -3432,19 +3423,19 @@ class Object(object):
             if mask is None:
                 if self.collision_ellipse:
                     # Elliptical mask based on bounding box.
-                    mask = [[False for y in six.moves.range(self.bbox_height)]
-                            for x in six.moves.range(self.bbox_width)]
+                    mask = [[False for y in range(self.bbox_height)]
+                            for x in range(self.bbox_width)]
                     a = len(mask) / 2
                     b = len(mask[0]) / 2 if mask else 0
 
-                    for x in six.moves.range(len(mask)):
-                        for y in six.moves.range(len(mask[x])):
+                    for x in range(len(mask)):
+                        for y in range(len(mask[x])):
                             if ((x - a) / a) ** 2 + ((y - b) / b) ** 2 <= 1:
                                 mask[x][y] = True
                 else:
                     # Mask is all pixels in the bounding box.
-                    mask = [[True for y in six.moves.range(self.bbox_height)]
-                            for x in six.moves.range(self.bbox_width)]
+                    mask = [[True for y in range(self.bbox_height)]
+                            for x in range(self.bbox_width)]
 
             r.cache.add(i, mask)
             return mask
@@ -3626,14 +3617,14 @@ class Object(object):
           - A :class:`sge.dsp.Object` object.
           - A list of :class:`sge.dsp.Object` objects.
           - A class derived from :class:`sge.dsp.Object`.
-          - :const:`None`: Check for collisions with all objects.
+          - ``None``: Check for collisions with all objects.
 
         - ``x`` -- The horizontal position to pretend this object is at
           for the purpose of the collision detection.  If set to
-          :const:`None`, :attr:`x` will be used.
+          ``None``, :attr:`x` will be used.
         - ``y`` -- The vertical position to pretend this object is at
           for the purpose of the collision detection.  If set to
-          :const:`None`, :attr:`y` will be used.
+          ``None``, :attr:`y` will be used.
         """
         room = sge.game.current_room
         if self.tangible and self in room.objects:

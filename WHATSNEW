@@ -11,9 +11,13 @@ information. This file is offered as-is, without any warranty.
 Specification additions:
 + sge.s.isometric
 + sge.s.orthogonal
++ sge.gfx.Sprite.get_spritelist
 
 Specification bugfixes:
 - Misspelling of "backgrounds" as "bckgrounds"
+
+Specification misc changes:
+* Full name changed from "SGE Game Engine" to "Seclusion Game Engine"
 
 
 1.5

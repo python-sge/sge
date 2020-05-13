@@ -1,5 +1,3 @@
-# Copyright (C) 2012-2016 Julie Marchant <onpon4@riseup.net>
-# 
 # This file is part of the Pygame SGE.
 # 
 # The Pygame SGE is free software: you can redistribute it and/or modify
@@ -19,21 +17,16 @@
 This module provides functions related to joystick input.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
-import pygame
-import six
-
-import sge
-from sge import r
-
 
 __all__ = ["refresh", "get_axis", "get_hat_x", "get_hat_y",
            "get_pressed", "get_value", "get_joysticks", "get_name",
            "get_id", "get_axes", "get_hats", "get_trackballs", "get_buttons"]
+
+
+import pygame
+
+import sge
+from sge import r
 
 
 def refresh():
@@ -50,7 +43,7 @@ def refresh():
     pygame.joystick.init()
 
     if pygame.joystick.get_init():
-        for i in six.moves.range(pygame.joystick.get_count()):
+        for i in range(pygame.joystick.get_count()):
             joy = pygame.joystick.Joystick(i)
             joy.init()
             n = joy.get_name()
@@ -172,7 +165,7 @@ def get_value(joystick, input_type, input_id):
         vertically centered.
       - ``"button"`` -- Whether or not a joystick button is pressed.
 
-      If an invalid type is specified, :const:`None` is returned.
+      If an invalid type is specified, ``None`` is returned.
 
     - ``input_id`` -- The number of the control to check, where ``0`` is
       the first control of its type on the joystick.
@@ -208,15 +201,15 @@ def get_joysticks():
 
 def get_name(joystick):
     """
-    Return the name of a joystick, or :const:`None` if the requested
-    joystick does not exist.
+    Return the name of a joystick, or ``None`` if the requested joystick
+    does not exist.
 
     Arguments:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
     """
-    if isinstance(joystick, six.integer_types):
+    if isinstance(joystick, int):
         return r.game_js_names.setdefault(joystick)
     elif joystick in r.game_js_names.values():
         return joystick
@@ -227,14 +220,14 @@ def get_name(joystick):
 def get_id(joystick):
     """
     Return the number of a joystick, where ``0`` is the first joystick,
-    or :const:`None` if the requested joystick does not exist.
+    or ``None`` if the requested joystick does not exist.
 
     Arguments:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
     """
-    if not isinstance(joystick, six.integer_types):
+    if not isinstance(joystick, int):
         return r.game_js_ids.setdefault(joystick)
     elif joystick in r.game_js_names:
         return joystick

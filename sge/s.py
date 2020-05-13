@@ -1,5 +1,3 @@
-# Copyright (C) 2016-2019 Julie Marchant <onpon4@riseup.net>
-#
 # This file is part of the Pygame SGE.
 #
 # The Pygame SGE is free software: you can redistribute it and/or modify
@@ -209,10 +207,6 @@ value of ``"1984"``.
 .. data:: sge.s.yellow
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 # Alignment indicators
 left = "left"

@@ -237,9 +237,9 @@ position of an object when it was first created, which in the case of
 :class:`Ball` objects is in the center of the screen.
 
 For the second task, we have an argument called ``direction``.  If it is
-:const:`None`, it randomly becomes either ``1`` or ``-1``.  The
-value is then multiplied by a constant called :const:`BALL_START_SPEED`,
-which we will set to ``2``, and this becomes the ball's
+``None``, it randomly becomes either ``1`` or ``-1``.  The value is then
+multiplied by a constant called :const:`BALL_START_SPEED`, which we will
+set to ``2``, and this becomes the ball's
 :attr:`sge.dsp.Object.xvelocity` value.  The ball's
 :attr:`sge.dsp.Object.yvelocity` value is then set to ``0``.
 
@@ -462,7 +462,6 @@ You should now have a script that looks something like this::
     #!/usr/bin/env python3
 
     # Pong Example
-    # Written in 2013-2015 by Julie Marchant <onpon4@riseup.net>
     #
     # To the extent possible under law, the author(s) have dedicated all
     # copyright and related and neighboring rights to this software to the

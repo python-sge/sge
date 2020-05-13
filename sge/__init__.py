@@ -1,5 +1,3 @@
-# Copyright (C) 2012-2017 Julie Marchant <onpon4@riseup.net>
-#
 # This file is part of the Pygame SGE.
 #
 # The Pygame SGE is free software: you can redistribute it and/or modify
@@ -16,20 +14,18 @@
 # along with the Pygame SGE.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-The SGE Game Engine ("SGE", pronounced like "Sage") is a general-purpose
-2-D game engine.  It takes care of several details for you so you can
-focus on the game itself.  This makes more rapid game development
-possible, and it also makes the SGE easy to learn.
+The Seclusion Game Engine ("SGE") is a general-purpose 2-D game engine.
+It takes care of several details for you so you can focus on the game
+itself.  This makes more rapid game development possible, and it also
+makes the SGE easy to learn.
 
-The SGE is `libre software <http://gnu.org/philosophy/free-sw.html>`_,
-and the SGE documentation (including all docstrings) is released to the
-public domain via CC0.
+The SGE is libre open source software, and the SGE documentation
+(including all docstrings) is released to the public domain via CC0.
 
-Although it isn't required, you are encouraged to release your games'
-code under a libre software license, such as the GNU General Public
-License, the Expat License, or the Apache License.  Doing so is easy,
-does not negatively affect you, and is highly appreciated as a
-contribution to a free society.
+Although it isn't required, please consider releasing your games' code
+under a libre software license, such as the GNU General Public License
+or the Apache License.  Doing so is easy and typically does not
+negatively affect you.  It's also just a real great thing to do.
 
 SGE Concepts
 ============
@@ -231,15 +227,36 @@ Global Variables and Constants
 
    Stores the current :class:`sge.dsp.Game` object.  If there is no
    :class:`sge.dsp.Game` object currently, this variable is set to
-   :const:`None`.
+   ``None``.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 __version__ = "1.6a0"
+__all__ = [
+    # Modules
+    "collision",
+    "gfx",
+    "input",
+    "joystick",
+    "keyboard",
+    "mouse",
+
+    # Constants
+    'IMPLEMENTATION',
+    'BLEND_RGBA_ADD',
+    'BLEND_RGBA_SUBTRACT',
+    'BLEND_RGBA_MULTIPLY',
+    'BLEND_RGBA_SCREEN',
+    'BLEND_RGBA_MINIMUM',
+    'BLEND_RGBA_MAXIMUM',
+    'BLEND_RGB_ADD',
+    'BLEND_RGB_SUBTRACT',
+    'BLEND_RGB_MULTIPLY',
+    'BLEND_RGB_SCREEN',
+    'BLEND_RGB_MINIMUM',
+    'BLEND_RGB_MAXIMUM',
+]
+
 
 import sys
 import os
@@ -254,6 +271,7 @@ except ImportError as e:
     else:
         pygame_sdl2.import_as_pygame()
         import pygame
+
 
 # Constants
 IMPLEMENTATION = "Pygame SGE"
@@ -349,21 +367,10 @@ MOUSE_BUTTON_NAMES = {}
 for pair in MOUSE_BUTTONS.items():
     MOUSE_BUTTON_NAMES[pair[1]] = pair[0]
 
+
 from sge import (collision, dsp, gfx, input, joystick, keyboard, mouse, snd, s,
                  r)
 
-
-__all__ = [
-    # Modules
-    "collision", "gfx", "input", "joystick", "keyboard", "mouse",
-
-    # Constants
-    'IMPLEMENTATION', 'BLEND_RGBA_ADD', 'BLEND_RGBA_SUBTRACT',
-    'BLEND_RGBA_MULTIPLY', 'BLEND_RGBA_SCREEN', 'BLEND_RGBA_MINIMUM',
-    'BLEND_RGBA_MAXIMUM', 'BLEND_RGB_ADD', 'BLEND_RGB_SUBTRACT',
-    'BLEND_RGB_MULTIPLY', 'BLEND_RGB_SCREEN', 'BLEND_RGB_MINIMUM',
-    'BLEND_RGB_MAXIMUM',
-    ]
 
 # Global variables
 game = None

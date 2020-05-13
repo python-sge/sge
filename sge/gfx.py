@@ -1,5 +1,3 @@
-# Copyright (C) 2012-2019 Julie Marchant <onpon4@riseup.net>
-#
 # This file is part of the Pygame SGE.
 #
 # The Pygame SGE is free software: you can redistribute it and/or modify
@@ -19,17 +17,12 @@
 This module provides classes related to rendering graphics.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import math
 import os
 import warnings
 
 import pygame
-import six
 
 import sge
 from sge import r
@@ -114,26 +107,26 @@ class Color(object):
             order.
         """
         self.alpha = 255
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             value = COLORS.get(value, value)[1:]
             if len(value) == 3:
-                r, g, b = [int(value[i] * 2, 16) for i in six.moves.range(3)]
+                r, g, b = [int(value[i] * 2, 16) for i in range(3)]
                 self.red, self.green, self.blue = r, g, b
             elif len(value) == 4:
                 r, g, b, a = [int(value[i] * 2, 16) for i in range(4)]
                 self.red, self.green, self.blue, self.alpha = r, g, b, a
             elif len(value) == 6:
                 r, g, b = [int(value[i:(i + 2)], 16)
-                           for i in six.moves.range(0, 6, 2)]
+                           for i in range(0, 6, 2)]
                 self.red, self.green, self.blue = r, g, b
             elif len(value) == 8:
                 r, g, b, a = [int(value[i:(i + 2)], 16) for i in range(0, 8, 2)]
                 self.red, self.green, self.blue, self.alpha = r, g, b, a
             else:
                 raise ValueError("Invalid color string.")
-        elif isinstance(value, six.integer_types):
+        elif isinstance(value, int):
             b, g, r = [(value & 256 ** (i + 1) - 1) // 256 ** i
-                       for i in six.moves.range(3)]
+                       for i in range(3)]
             self.red, self.green, self.blue = r, g, b
         elif isinstance(value, (list, tuple)):
             if len(value) >= 3:
@@ -283,29 +276,28 @@ class Sprite(object):
     .. attribute:: bbox_x
 
        The horizontal location relative to the sprite of the suggested
-       bounding box to use with it.  If set to :const:`None`, it will
-       become equal to ``-origin_x`` (which is always the left edge of
-       the image).
+       bounding box to use with it.  If set to ``None``, it will become
+       equal to ``-origin_x`` (which is always the left edge of the
+       image).
 
     .. attribute:: bbox_y
 
        The vertical location relative to the sprite of the suggested
-       bounding box to use with it.  If set to :const:`None`, it will
-       become equal to ``-origin_y`` (which is always the top edge of
-       the image).
+       bounding box to use with it.  If set to ``None``, it will become
+       equal to ``-origin_y`` (which is always the top edge of the
+       image).
 
     .. attribute:: bbox_width
 
-       The width of the suggested bounding box.  If set to
-       :const:`None`, it will become equal to ``width - bbox_x``
-       (which is always everything on the image to the right of
-       :attr:`bbox_x`).
+       The width of the suggested bounding box.  If set to ``None``, it
+       will become equal to ``width - bbox_x`` (which is always
+       everything on the image to the right of :attr:`bbox_x`).
 
     .. attribute:: bbox_height
 
-       The height of the suggested bounding box.  If set to
-       :const:`None`, it will become equal to ``height - bbox_y``
-       (which is always everything on the image below :attr:`bbox_y`).
+       The height of the suggested bounding box.  If set to ``None``, it
+       will become equal to ``height - bbox_y`` (which is always
+       everything on the image below :attr:`bbox_y`).
 
     .. attribute:: name
 
@@ -430,15 +422,15 @@ class Sprite(object):
             this rule is used, the image will be treated as an animation
             read as a horizontal reel from left to right, split into the
             number of frames indicated by the integer.
-          - If the base name is :const:`None`, the sprite will be a
-            fully transparent rectangle at the specified size (with both
+          - If the base name is ``None``, the sprite will be a fully
+            transparent rectangle at the specified size (with both
             ``width`` and ``height`` defaulting to 32 if they are set to
-            :const:`None`).  The SGE decides what to assign to the
-            sprite's :attr:`name` attribute in this case, but it will
-            always be a string.
+            ``None``).  The SGE decides what to assign to the sprite's
+            :attr:`name` attribute in this case, but it will always be a
+            string.
 
-          If none of the above rules can be used, :exc:`OSError` is
-          raised.
+          If none of the above rules can be used,
+          :exc:`FileNotFoundError` is raised.
 
         - ``directory`` -- The directory to search for image files in.
 
@@ -538,7 +530,7 @@ class Sprite(object):
 
                         img_w = max(1, sheet.get_width()) // n
                         img_h = max(1, sheet.get_height())
-                        for x in six.moves.range(0, img_w * n, img_w):
+                        for x in range(0, img_w * n, img_w):
                             img = pygame.Surface((img_w, img_h), flags)
                             img.blit(sheet, (int(-x), 0))
                             self.rd["baseimages"].append(img)
@@ -551,7 +543,7 @@ class Sprite(object):
                 else:
                     print("None")
                 msg = 'Supported file(s) for sprite name "{}" not found in {}'.format(name, directory)
-                raise OSError(msg)
+                raise FileNotFoundError(msg)
         else:
             # Name is None; default to a blank rectangle.
             if width is None:
@@ -680,8 +672,8 @@ class Sprite(object):
         surf = self.rd["baseimages"][frame]
         surf.lock()
         w, h = surf.get_size()
-        pixels = [[Color(tuple(surf.get_at(x, y))) for y in six.moves.range(h)]
-                  for x in six.moves.range(w)]
+        pixels = [[Color(tuple(surf.get_at(x, y))) for y in range(h)]
+                  for x in range(w)]
         surf.unlock()
         return pixels
 
@@ -698,8 +690,7 @@ class Sprite(object):
         - ``color`` -- A :class:`sge.gfx.Color` object representing the
           color of the dot.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to :const:`None` to draw on all
-          frames.
+          is the first frame; set to ``None`` to draw on all frames.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
@@ -717,7 +708,7 @@ class Sprite(object):
           - :data:`sge.BLEND_RGB_MINIMUM`
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
-          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
+          ``None`` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(color)
 
@@ -726,7 +717,7 @@ class Sprite(object):
         pg_color = pygame.Color(*color)
 
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -769,8 +760,7 @@ class Sprite(object):
         - ``thickness`` -- The thickness of the line segment.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to :const:`None` to draw on all
-          frames.
+          is the first frame; set to ``None`` to draw on all frames.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
@@ -788,7 +778,7 @@ class Sprite(object):
           - :data:`sge.BLEND_RGB_MINIMUM`
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
-          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
+          ``None`` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(color)
 
@@ -801,7 +791,7 @@ class Sprite(object):
         thickness = abs(thickness)
 
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -846,8 +836,7 @@ class Sprite(object):
         - ``outline_thickness`` -- The thickness of the outline of the
           rectangle.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to :const:`None` to draw on all
-          frames.
+          is the first frame; set to ``None`` to draw on all frames.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
@@ -865,7 +854,7 @@ class Sprite(object):
           - :data:`sge.BLEND_RGB_MINIMUM`
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
-          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
+          ``None`` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(fill)
         _check_color(outline)
@@ -889,7 +878,7 @@ class Sprite(object):
             pg_outl = pygame.Color(*outline)
 
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -935,8 +924,7 @@ class Sprite(object):
           ellipse.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to :const:`None` to draw on all
-          frames.
+          is the first frame; set to ``None`` to draw on all frames.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
@@ -954,7 +942,7 @@ class Sprite(object):
           - :data:`sge.BLEND_RGB_MINIMUM`
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
-          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
+          ``None`` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(fill)
         _check_color(outline)
@@ -978,7 +966,7 @@ class Sprite(object):
             pg_outl = pygame.Color(*outline)
 
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -1023,8 +1011,7 @@ class Sprite(object):
           circle.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to :const:`None` to draw on all
-          frames.
+          is the first frame; set to ``None`` to draw on all frames.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
@@ -1042,7 +1029,7 @@ class Sprite(object):
           - :data:`sge.BLEND_RGB_MINIMUM`
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
-          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
+          ``None`` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(fill)
         _check_color(outline)
@@ -1064,7 +1051,7 @@ class Sprite(object):
             pg_outl = pygame.Color(*outline)
 
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -1109,8 +1096,7 @@ class Sprite(object):
           polygon.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to :const:`None` to draw on all
-          frames.
+          is the first frame; set to ``None`` to draw on all frames.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
@@ -1128,7 +1114,7 @@ class Sprite(object):
           - :data:`sge.BLEND_RGB_MINIMUM`
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
-          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
+          ``None`` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(fill)
         _check_color(outline)
@@ -1148,7 +1134,7 @@ class Sprite(object):
             pg_outl = pygame.Color(*outline)
 
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -1191,8 +1177,7 @@ class Sprite(object):
         - ``y`` -- The vertical location relative to ``self`` to
           position the origin of ``sprite``.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to :const:`None` to draw on all
-          frames.
+          is the first frame; set to ``None`` to draw on all frames.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
@@ -1210,7 +1195,7 @@ class Sprite(object):
           - :data:`sge.BLEND_RGB_MINIMUM`
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
-          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
+          ``None`` is treated as :data:`sge.BLEND_NORMAL`.
         """
         x = int(round(x - sprite.origin_x))
         y = int(round(y - sprite.origin_y))
@@ -1220,7 +1205,7 @@ class Sprite(object):
         pygame_flags = _get_blend_flags(blend_mode)
 
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -1255,14 +1240,14 @@ class Sprite(object):
         - ``y`` -- The vertical location relative to the sprite to draw
           the text.
         - ``width`` -- The width of the imaginary rectangle the text is
-          drawn in; set to :const:`None` to make the rectangle as wide
-          as needed to contain the text without additional line breaks.
-          If set to something other than :const:`None`, a line which
-          does not fit will be automatically split into multiple lines
-          that do fit.
+          drawn in; set to ``None`` to make the rectangle as wide as
+          needed to contain the text without additional line breaks.  If
+          set to something other than ``None``, a line which does not
+          fit will be automatically split into multiple lines that do
+          fit.
         - ``height`` -- The height of the imaginary rectangle the text
-          is drawn in; set to :const:`None` to make the rectangle as
-          tall as needed to contain the text.
+          is drawn in; set to ``None`` to make the rectangle as tall as
+          needed to contain the text.
         - ``color`` -- A :class:`sge.gfx.Color` object representing the
           color of the text.
         - ``halign`` -- The horizontal alignment of the text and the
@@ -1301,8 +1286,7 @@ class Sprite(object):
 
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to :const:`None` to draw on all
-          frames.
+          is the first frame; set to ``None`` to draw on all frames.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
@@ -1320,7 +1304,7 @@ class Sprite(object):
           - :data:`sge.BLEND_RGB_MINIMUM`
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
-          :const:`None` is treated as :data:`sge.BLEND_NORMAL`.
+          ``None`` is treated as :data:`sge.BLEND_NORMAL`.
         """
         _check_color(color)
 
@@ -1339,7 +1323,7 @@ class Sprite(object):
 
         pygame_flags = _get_blend_flags(blend_mode)
 
-        for i in six.moves.range(len(lines)):
+        for i in range(len(lines)):
             rendered_text = font.rd["font"].render(lines[i], anti_alias,
                                                    pygame.Color(*color))
             if color.alpha < 255:
@@ -1386,7 +1370,7 @@ class Sprite(object):
             box_rect.top = y
 
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -1416,11 +1400,11 @@ class Sprite(object):
         - ``width`` -- The width of the area to erase.
         - ``height`` -- The height of the area to erase.
         - ``frame`` -- The frame of the sprite to erase from, where
-          ``0`` is the first frame; set to :const:`None` to erase from
-          all frames.
+          ``0`` is the first frame; set to ``None`` to erase from all
+          frames.
         """
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -1442,7 +1426,7 @@ class Sprite(object):
         Arguments:
 
         - ``frame`` -- The frame of the sprite to clear, where ``0`` is
-          the first frame; set to :const:`None` to clear all frames.
+          the first frame; set to ``None`` to clear all frames.
         """
         self.draw_erase(0, 0, self.width, self.height, frame)
 
@@ -1491,10 +1475,10 @@ class Sprite(object):
         Arguments:
 
         - ``frame`` -- The frame of the sprite to mirror, where ``0`` is
-          the first frame; set to :const:`None` to mirror all frames.
+          the first frame; set to ``None`` to mirror all frames.
         """
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -1511,10 +1495,10 @@ class Sprite(object):
         Arguments:
 
         - ``frame`` -- The frame of the sprite to flip, where ``0`` is
-          the first frame; set to :const:`None` to flip all frames.
+          the first frame; set to ``None`` to flip all frames.
         """
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -1547,7 +1531,7 @@ class Sprite(object):
         xdiff = self.origin_x * xscale - self.origin_x
         ydiff = self.origin_y * yscale - self.origin_y
 
-        for i in six.moves.range(self.frames):
+        for i in range(self.frames):
             new_surf = pygame.Surface((width, height), pygame.SRCALPHA)
             new_surf.fill(pygame.Color(0, 0, 0, 0))
             new_surf.blit(self.rd["baseimages"][i], (int(xdiff), int(ydiff)))
@@ -1574,7 +1558,7 @@ class Sprite(object):
         - ``xscale`` -- The horizontal scale factor.
         - ``yscale`` -- The vertical scale factor.
         - ``frame`` -- The frame of the sprite to rotate, where ``0`` is
-          the first frame; set to :const:`None` to rotate all frames.
+          the first frame; set to ``None`` to rotate all frames.
 
         .. note::
 
@@ -1599,7 +1583,7 @@ class Sprite(object):
         ydiff = self.origin_y - self.origin_y * yscale
 
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -1629,7 +1613,7 @@ class Sprite(object):
           will also be moved so that their location relative to the
           rotated image(s) is the same.
         - ``frame`` -- The frame of the sprite to rotate, where ``0`` is
-          the first frame; set to :const:`None` to rotate all frames.
+          the first frame; set to ``None`` to rotate all frames.
 
         .. note::
 
@@ -1643,7 +1627,7 @@ class Sprite(object):
         new_h = self.height
 
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -1670,7 +1654,7 @@ class Sprite(object):
             if frame is not None:
                 # Need to go back and correct the positions of frames
                 # that weren't rotated.
-                for i in six.moves.range(self.frames):
+                for i in range(self.frames):
                     if frame % self.frames != i:
                         surf = pygame.Surface((new_w, new_h), pygame.SRCALPHA)
                         surf.fill(pygame.Color(0, 0, 0, 0))
@@ -1691,7 +1675,7 @@ class Sprite(object):
         - ``new_color`` -- A :class:`sge.gfx.Color` object indicating
           the color to change the pixels to.
         - ``frame`` -- The frame of the sprite to modify, where ``0`` is
-          the first frame; set to :const:`None` to modify all frames.
+          the first frame; set to ``None`` to modify all frames.
 
         .. note::
 
@@ -1708,7 +1692,7 @@ class Sprite(object):
             return
 
         if frame is None:
-            rng = six.moves.range(self.frames)
+            rng = range(self.frames)
         else:
             rng = [frame % self.frames]
 
@@ -1720,13 +1704,13 @@ class Sprite(object):
                 palette = img.get_palette()
             except pygame.error:
                 img.lock()
-                for y in six.moves.range(img.get_height()):
-                    for x in six.moves.range(img.get_width()):
+                for y in range(img.get_height()):
+                    for x in range(img.get_width()):
                         if old_color == Color(tuple(img.get_at((x, y)))):
                             img.set_at((x, y), pg_new_color)
                 img.unlock()
             else:
-                for j in six.moves.range(len(palette)):
+                for j in range(len(palette)):
                     if old_color == Color(tuple(palette[j])):
                         palette[j] = pg_new_color
 
@@ -1734,18 +1718,38 @@ class Sprite(object):
 
     def copy(self):
         """Return a copy of the sprite."""
-        new_copy = Sprite(width=self.width, height=self.height,
-                          transparent=self.transparent, origin_x=self.origin_x,
-                          origin_y=self.origin_y, fps=self.fps,
-                          bbox_x=self.bbox_x, bbox_y=self.bbox_y,
-                          bbox_width=self.bbox_width,
-                          bbox_height=self.bbox_height)
+        new_copy = self.__class__(
+            width=self.width, height=self.height, transparent=self.transparent,
+            origin_x=self.origin_x, origin_y=self.origin_y, fps=self.fps,
+            bbox_x=self.bbox_x, bbox_y=self.bbox_y, bbox_width=self.bbox_width,
+            bbox_height=self.bbox_height)
         for i in range(1, self.frames):
             new_copy.append_frame()
         for i in range(self.frames):
             new_copy.draw_sprite(self, i, self.origin_x, self.origin_y, i)
 
         return new_copy
+
+    def get_spritelist(self):
+        """
+        Return a list of sprites based on this one.
+
+        The list returns one sprite for each of this sprite's frames,
+        containing only said frame.  This effectively splits an animated
+        sprite into several stillframe sprites.
+        """
+        spritelist = []
+        for i in range(self.frames):
+            frame_sprite = self.__class__(
+                width=self.width, height=self.height,
+                transparent=self.transparent, origin_x=self.origin_x,
+                origin_y=self.origin_y, fps=self.fps, bbox_x=self.bbox_x,
+                bbox_y=self.bbox_y, bbox_width=self.bbox_width,
+                bbox_height=self.bbox_height)
+            frame_sprite.draw_sprite(self, i, self.origin_x, self.origin_y)
+            spritelist.append(frame_sprite)
+
+        return spritelist
 
     def save(self, fname):
         """
@@ -1768,7 +1772,7 @@ class Sprite(object):
         reel = pygame.Surface((w, h), pygame.SRCALPHA)
         reel.fill(pygame.Color(0, 0, 0, 0))
 
-        for i in six.moves.range(self.frames):
+        for i in range(self.frames):
             reel.blit(self.rd["baseimages"][i], (int(self.width * i), 0))
 
         try:
@@ -1803,22 +1807,22 @@ class Sprite(object):
         - ``frames`` -- The number of frames the to make the tween take
           up.
         - ``fps`` -- The suggested rate of animation for the tween in
-          frames per second.  If set to :const:`None`, the suggested
+          frames per second.  If set to ``None``, the suggested
           animation rate of the base sprite is used.
         - ``xscale`` -- The horizontal scale factor at the end of the
-          tween.  If set to :const:`None`, horizontal scaling will not
-          be included in the tweening process.
+          tween.  If set to ``None``, horizontal scaling will not be
+          included in the tweening process.
         - ``yscale`` -- The vertical scale factor at the end of the
-          tween.  If set to :const:`None`, vertical scaling will not be
+          tween.  If set to ``None``, vertical scaling will not be
           included in the tweening process.
         - ``rotation`` -- The total clockwise rotation amount in degrees
           at the end of the tween.  Can be negative to indicate
-          counter-clockwise rotation instead.  If set to :const:`None`,
+          counter-clockwise rotation instead.  If set to ``None``,
           rotation will not be included in the tweening process.
         - ``blend`` -- A :class:`sge.gfx.Color` object representing the
           color to blend with the sprite at the end of the tween.  If
-          set to :const:`None`, color blending will not be included in
-          the tweening process.
+          set to ``None``, color blending will not be included in the
+          tweening process.
         - ``blend_mode`` -- The blend mode to use with ``blend``.
           Possible blend modes are:
 
@@ -1836,7 +1840,7 @@ class Sprite(object):
           - :data:`sge.BLEND_RGB_MINIMUM`
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
-          :const:`None` is treated as :data:`sge.BLEND_RGBA_MULTIPLY`.
+          ``None`` is treated as :data:`sge.BLEND_RGBA_MULTIPLY`.
 
         All other arguments set the respective initial attributes of the
         tween.  See the documentation for :class:`sge.gfx.Sprite` for
@@ -1874,7 +1878,7 @@ class Sprite(object):
         while tween_spr.frames < frames:
             tween_spr.append_frame()
 
-        for i in six.moves.range(frames):
+        for i in range(frames):
             tween_spr.draw_sprite(sprite, i, new_origin_x, new_origin_y,
                                   frame=i)
 
@@ -1986,13 +1990,13 @@ class Sprite(object):
         try:
             tileset = pygame.image.load(fname)
         except pygame.error as e:
-            raise OSError(e)
+            raise OSError_(e)
 
-        for i in six.moves.range(1, rows * columns):
+        for i in range(1, rows * columns):
             self.append_frame()
 
-        for i in six.moves.range(rows):
-            for j in six.moves.range(columns):
+        for i in range(rows):
+            for j in range(columns):
                 frame = i * columns + j
                 x_ = x + (width + xsep) * j
                 y_ = y + (height + ysep) * i
@@ -2017,7 +2021,7 @@ class Sprite(object):
           set to None for all of the area to the right of ``x`` to be
           included.
         - ``height`` -- The height of the area to take a screenshot of;
-          set to :const:`None` for all of the area below ``y`` to be
+          set to ``None`` for all of the area below ``y`` to be
           included.
 
         If you only wish to save a screenshot (of the entire screen) to
@@ -2078,8 +2082,8 @@ class TileGrid(object):
 
        A list of :class:`sge.gfx.Sprite` objects to use as tiles.  How
        exactly they are displayed is dependent on the values of
-       :attr:`render_method` and :attr:`section_length`.  Use
-       :const:`None` where no tile should be displayed.
+       :attr:`render_method` and :attr:`section_length`.  Use ``None``
+       where no tile should be displayed.
 
     .. attribute:: render_method
 
@@ -2099,7 +2103,7 @@ class TileGrid(object):
          odd-numbered section to the right of the even-numbered sections
          by ``tile_width / 2`` pixels.
 
-       If this is set to an invalid value or :const:`None`, it becomes
+       If this is set to an invalid value or ``None``, it becomes
        ``"orthogonal"``.
 
        .. note::
@@ -2165,29 +2169,28 @@ class TileGrid(object):
     .. attribute:: bbox_x
 
        The horizontal location relative to the grid of the suggested
-       bounding box to use with it.  If set to :const:`None`, it will
-       become equal to ``-origin_x`` (which is always the left edge of
-       the grid).
+       bounding box to use with it.  If set to ``None``, it will become
+       equal to ``-origin_x`` (which is always the left edge of the
+       grid).
 
     .. attribute:: bbox_y
 
        The vertical location relative to the grid of the suggested
-       bounding box to use with it.  If set to :const:`None`, it will
-       become equal to ``-origin_y`` (which is always the top edge of
-       the grid).
+       bounding box to use with it.  If set to ``None``, it will become
+       equal to ``-origin_y`` (which is always the top edge of the
+       grid).
 
     .. attribute:: bbox_width
 
-       The width of the suggested bounding box.  If set to
-       :const:`None`, it will become equal to ``width - bbox_x``
-       (which is always everything on the grid to the right of
-       :attr:`bbox_x`).
+       The width of the suggested bounding box.  If set to ``None``, it
+       will become equal to ``width - bbox_x`` (which is always
+       everything on the grid to the right of :attr:`bbox_x`).
 
     .. attribute:: bbox_height
 
-       The height of the suggested bounding box.  If set to
-       :const:`None`, it will become equal to ``height - bbox_y``
-       (which is always everything on the grid below :attr:`bbox_y`).
+       The height of the suggested bounding box.  If set to ``None``, it
+       will become equal to ``height - bbox_y`` (which is always
+       everything on the grid below :attr:`bbox_y`).
 
     .. attribute:: transparent
 
@@ -2206,7 +2209,7 @@ class TileGrid(object):
 
     .. attribute:: name
 
-       Defined as :const:`None`.  Provided for compatibility with
+       Defined as ``None``.  Provided for compatibility with
        :class:`sge.gfx.Sprite`.  (Read-only)
 
     .. attribute:: frames
@@ -2547,7 +2550,7 @@ class Font(object):
         self.__size = value
         self.rd["font"] = None
 
-        if isinstance(self.name, six.string_types):
+        if isinstance(self.name, str):
             names = [self.name]
         else:
             try:
@@ -2705,9 +2708,8 @@ class Font(object):
           Any character not explicitly mapped to a frame will be
           rendered as its differently-cased counterpart if possible
           (e.g. "A" as "a"). Otherwise, it will be rendered using the
-          frame mapped to :const:`None`.  If :const:`None` has not been
-          explicitly mapped to a frame, it is implied to be a blank
-          space.
+          frame mapped to ``None``.  If ``None`` has not been explicitly
+          mapped to a frame, it is implied to be a blank space.
 
         - ``hsep`` -- The amount of horizontal space to place between
           characters when text is rendered.
@@ -2762,7 +2764,7 @@ class _PygameSpriteFont(pygame.font.Font):
             self.chars = chars
         else:
             self.chars = {}
-            for i in six.moves.range(len(chars)):
+            for i in range(len(chars)):
                 self.chars[chars[i]] = i
 
         self.width = self.sprite.width
@@ -2784,7 +2786,7 @@ class _PygameSpriteFont(pygame.font.Font):
             color = pygame.Color(color)
         sge_color = Color((color.r, color.g, color.b, color.a))
 
-        for i in six.moves.range(len(text)):
+        for i in range(len(text)):
             if text[i] in self.chars:
                 cimg = s_get_image(self.sprite, self.chars[text[i]],
                                    xscale=xscale, yscale=yscale,

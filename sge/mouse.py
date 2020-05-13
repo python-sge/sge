@@ -1,5 +1,3 @@
-# Copyright (C) 2012-2014 Julie Marchant <onpon4@riseup.net>
-# 
 # This file is part of the Pygame SGE.
 # 
 # The Pygame SGE is free software: you can redistribute it and/or modify
@@ -45,7 +43,7 @@ Which mode the mouse is in depends on the values of
 .. attribute:: sge.game.mouse.sprite
 
    Determines what sprite will be used to represent the mouse cursor.
-   Set to :const:`None` for the default mouse cursor.
+   Set to ``None`` for the default mouse cursor.
 
 .. attribute:: sge.game.mouse.visible
 
@@ -55,18 +53,14 @@ Which mode the mouse is in depends on the values of
    absolute mode.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
+
+__all__ = ["get_pressed", "get_x", "get_y", "set_x", "set_y"]
+
 
 import pygame
 
 import sge
 from sge import r
-
-
-__all__ = ["get_pressed", "get_x", "get_y", "set_x", "set_y"]
 
 
 def get_pressed(button):
@@ -89,7 +83,7 @@ def get_x():
 
     The location returned is relative to the window, excluding any
     scaling, pillarboxes, and letterboxes.  If the mouse is in
-    relative mode, this function returns :const:`None`.
+    relative mode, this function returns ``None``.
     """
     if sge.game.grab_input and not sge.game.mouse.visible:
         return None
@@ -103,7 +97,7 @@ def get_y():
 
     The location returned is relative to the window, excluding any
     scaling, pillarboxes, and letterboxes.  If the mouse is in
-    relative mode, this function returns :const:`None`.
+    relative mode, this function returns ``None``.
     """
     if sge.game.grab_input and not sge.game.mouse.visible:
         return None

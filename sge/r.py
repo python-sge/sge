@@ -1,5 +1,3 @@
-# Copyright (C) 2012-2017 Julie Marchant <onpon4@riseup.net>
-#
 # This file is part of the Pygame SGE.
 #
 # The Pygame SGE is free software: you can redistribute it and/or modify
@@ -21,10 +19,6 @@ avoid cluttering up the sge namespace.  Use this for all non-standard
 functions and variables.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import inspect
 import math
@@ -34,7 +28,6 @@ import warnings
 import weakref
 
 import pygame
-import six
 
 try:
     from uniseg.linebreak import line_break_units
@@ -110,7 +103,7 @@ class cache(object):
 
 def _check_color_input(value):
     # Make sure a color value is between 0 and 255.
-    if value in six.moves.range(256):
+    if value in range(256):
         return value
     else:
         raise ValueError("Color values must be between 0 and 255.")
@@ -173,9 +166,9 @@ def _get_blend_flags(blend_mode):
 def _screen_blend(dest, source, dest_x, dest_y, alpha=False):
     dest.lock()
     source.lock()
-    for y in six.moves.range(source.get_height()):
+    for y in range(source.get_height()):
         if 0 <= dest_y + y < dest.get_height():
-            for x in six.moves.range(source.get_width()):
+            for x in range(source.get_width()):
                 if 0 <= dest_x + x < dest.get_width():
                     dc = dest.get_at((dest_x + x, dest_y + y))
                     sc = source.get_at((x, y))
@@ -302,7 +295,7 @@ def _add_channels():
     new_num_channels = old_num_channels + 4
     pygame.mixer.set_num_channels(new_num_channels)
 
-    for i in six.moves.range(old_num_channels, new_num_channels):
+    for i in range(old_num_channels, new_num_channels):
         game_available_channels.append(pygame.mixer.Channel(i))
 
 
@@ -794,8 +787,8 @@ def r_get_rectangle_object_areas(self, x, y, width, height):
         if use_void:
             areas.add(None)
 
-        for xi in six.moves.range(xis, xie):
-            for yi in six.moves.range(yis, yie):
+        for xi in range(xis, xie):
+            for yi in range(yis, yie):
                 areas.add((xi, yi))
     else:
         areas.add(None)
@@ -805,9 +798,9 @@ def r_get_rectangle_object_areas(self, x, y, width, height):
 
 def r_set_object_areas(self, update_objects=True):
     self.object_areas = []
-    for i in six.moves.range(0, self.width, self.object_area_width):
-        column = [set() for j in six.moves.range(0, self.height,
-                                                 self.object_area_height)]
+    for i in range(0, self.width, self.object_area_width):
+        column = [set() for j in range(0, self.height,
+                                       self.object_area_height)]
         self.object_areas.append(column)
 
     self.object_area_void = set()
@@ -972,8 +965,8 @@ def r_update_wipe_matrix(self, complete):
     remaining = self.rd["t_matrix_remaining"]
     if remaining is None:
         remaining = []
-        for x in six.moves.range(mw):
-            for y in six.moves.range(mh):
+        for x in range(mw):
+            for y in range(mh):
                 remaining.append((x, y))
 
     diff = complete - self.rd["t_complete_last"]
@@ -1040,7 +1033,7 @@ def s_set_size(self):
     # ``height`` are set.
     width = int(round(self.width))
     height = int(round(self.height))
-    for i in six.moves.range(self.frames):
+    for i in range(self.frames):
         if sge.game.scale_method == "smooth":
             try:
                 self.rd["baseimages"][i] = pygame.transform.smoothscale(
@@ -1166,15 +1159,15 @@ def s_get_precise_mask(self, num, xscale, yscale, rotation):
         image.lock()
         mask = []
         if image.get_flags() & pygame.SRCALPHA:
-            for x in six.moves.range(image.get_width()):
+            for x in range(image.get_width()):
                 mask.append([])
-                for y in six.moves.range(image.get_height()):
+                for y in range(image.get_height()):
                     mask[x].append(image.get_at((x, y)).a > 0)
         else:
             colorkey = image.get_colorkey()
-            for x in six.moves.range(image.get_width()):
+            for x in range(image.get_width()):
                 mask.append([])
-                for y in six.moves.range(image.get_height()):
+                for y in range(image.get_height()):
                     mask[x].append(image.get_at((x, y)) == colorkey)
         image.unlock()
 
@@ -1235,8 +1228,8 @@ def tg_blit(self, dest, x, y):
         jmax = min(int(len(self.tiles) // self.section_length),
                    y + int(math.ceil(dest.get_height() / self.tile_height)) + 1)
 
-    irng = six.moves.range(imin, imax)
-    jrng = six.moves.range(jmin, jmax)
+    irng = range(imin, imax)
+    jrng = range(jmin, jmax)
 
     for i in irng:
         for j in jrng:

@@ -1,5 +1,3 @@
-# Copyright (C) 2012-2014, 2016 Julie Marchant <onpon4@riseup.net>
-# 
 # This file is part of the Pygame SGE.
 # 
 # The Pygame SGE is free software: you can redistribute it and/or modify
@@ -19,17 +17,12 @@
 This module provides classes related to the sound system.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import os
 import random
 import warnings
 
 import pygame
-import six
 
 import sge
 from sge import r
@@ -61,15 +54,15 @@ class Sound(object):
        The maximum number of instances of this sound playing permitted.
        If a sound is played while this number of the instances of the
        same sound are already playing, one of the already playing sounds
-       will be stopped before playing the new instance.  Set to
-       :const:`None` for no limit.
+       will be stopped before playing the new instance.  Set to ``None``
+       for no limit.
 
     .. attribute:: parent
 
        Indicates another sound which is treated as being the same sound
        as this one for the purpose of determining whether or not, and
-       how many times, the sound is playing.  Set to :const:`None` for
-       no parent.
+       how many times, the sound is playing.  Set to ``None`` for no
+       parent.
 
        If the sound has a parent, :attr:`max_play` will have no effect
        and instead the parent sound's :attr:`max_play` will apply to
@@ -155,9 +148,9 @@ class Sound(object):
         Arguments:
 
         - ``fname`` -- The path to the sound file.  If set to
-          :const:`None`, this object will not actually play any sound.
-          If this is neither a valid sound file nor :const:`None`,
-          :exc:`OSError` is raised.
+          ``None``, this object will not actually play any sound. If
+          this is neither a valid sound file nor ``None``,
+          :exc:`FileNotFoundError` is raised.
 
         All other arguments set the respective initial attributes of the
         sound.  See the documentation for :class:`sge.snd.Sound` for
@@ -170,7 +163,7 @@ class Sound(object):
             try:
                 self.__sound = pygame.mixer.Sound(fname)
             except pygame.error as e:
-                raise OSError(e)
+                raise FileNotFoundError(e)
 
         else:
             self.__sound = None
@@ -194,7 +187,7 @@ class Sound(object):
         Arguments:
 
         - ``loops`` -- The number of times to play the sound; set to
-          :const:`None` or ``0`` to loop indefinitely.
+          ``None`` or ``0`` to loop indefinitely.
         - ``volume`` -- The volume to play the sound at as a factor
           of :attr:`self.volume` (``0`` for no sound, ``1`` for
           :attr:`self.volume`).
@@ -203,10 +196,10 @@ class Sound(object):
           centered (full volume in both speakers), ``1`` is entirely in
           the right speaker, and ``-1`` is entirely in the left speaker.
         - ``maxtime`` -- The maximum amount of time to play the sound in
-          milliseconds; set to :const:`None` for no limit.
+          milliseconds; set to ``None`` for no limit.
         - ``fade_time`` -- The time in milliseconds over which to fade
-          the sound in; set to :const:`None` or ``0`` to immediately
-          play the sound at full volume.
+          the sound in; set to ``None`` or ``0`` to immediately play the
+          sound at full volume.
         - ``force`` -- Whether or not the sound should be played even if
           it is already playing the maximum number of times.  If set to
           :const:`True` and the sound is already playing the maximum
@@ -261,8 +254,8 @@ class Sound(object):
         Arguments:
 
         - ``fade_time`` -- The time in milliseconds over which to fade
-          the sound out before stopping; set to :const:`None` or ``0``
-          to immediately stop the sound.
+          the sound out before stopping; set to ``None`` or ``0`` to
+          immediately stop the sound.
         """
         if self.__sound is not None:
             self.__sound.stop()
@@ -363,10 +356,10 @@ class Music(object):
         """
         Arguments:
 
-        - ``fname`` -- The path to the sound file.  If set to
-          :const:`None`, this object will not actually play any music.
-          If this is neither a valid sound file nor :const:`None`,
-          :exc:`OSError` is raised.
+        - ``fname`` -- The path to the sound file.  If set to ``None``,
+          this object will not actually play any music.  If this is
+          neither a valid sound file nor ``None``,
+          :exc:`FileNotFoundError` is raised.
 
         All other arguments set the respective initial attributes of the
         music.  See the documentation for :class:`sge.snd.Music` for
@@ -376,10 +369,7 @@ class Music(object):
         if fname is None or os.path.isfile(fname):
             self.fname = fname
         else:
-            if six.PY2:
-                raise OSError('File "{}" not found.'.format(fname))
-            else:
-                raise FileNotFoundError('File "{}" not found.'.format(fname))
+            raise FileNotFoundError('File "{}" not found.'.format(fname))
         self.volume = volume
         self.rd["timeout"] = None
         self.rd["fade_time"] = None

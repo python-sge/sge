@@ -25,9 +25,8 @@ INSTALLATION
 
 First, install the dependencies:
 
-- Python 2 (2.7 or later) or 3 (3.1 or later) <http://www.python.org>
+- Python 3.6 or later <http://www.python.org>
 - Pygame 1.9.1 or later <http://pygame.org>
-- Six 1.4.0 or later <https://pypi.python.org/pypi/six>
 - uniseg <https://pypi.python.org/pypi/uniseg>
 
 Once you have all the dependencies, install the SGE with the included
