@@ -15,9 +15,9 @@ makes the SGE easy to learn.
 This implementation of the SGE uses Pygame as a backend.
 """.strip()
 
-setup(name="sge-pygame",
+setup(name="sge",
       version="1.6a0",
-      description="A 2-D game engine for Python",
+      description="Seclusion Game Engine (Pygame implementation)",
       long_description=long_description,
       author="Layla Marchant",
       author_email="diligentcircle@riseup.net",
