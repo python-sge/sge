@@ -5,6 +5,13 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.6.1
+------------------------------------------------------------------------
+
+Specification bugfixes:
+- Missing documentation for sge.gfx.Sprite.get_spritelist
+
+
 1.6
 ------------------------------------------------------------------------
 

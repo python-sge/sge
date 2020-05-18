@@ -24,9 +24,9 @@ copyright = ''
 author = 'Layla Marchant'
 
 # The short X.Y version
-version = ''
+version = '1.6'
 # The full version, including alpha/beta/rc tags
-release = '1.6'
+release = '1.6.1'
 
 
 # -- General configuration ---------------------------------------------------

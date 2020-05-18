@@ -79,6 +79,8 @@ sge.gfx.Sprite Methods
 
 .. automethod:: sge.gfx.Sprite.copy
 
+.. automethod:: sge.gfx.Sprite.get_spritelist
+
 .. automethod:: sge.gfx.Sprite.save
 
 .. automethod:: sge.gfx.Sprite.from_tween
