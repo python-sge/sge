@@ -10,6 +10,7 @@ information. This file is offered as-is, without any warranty.
 
 Specification bugfixes:
 - Missing documentation for sge.gfx.Sprite.get_spritelist
+- Missing documentation for sge.gfx.Color.__init__
 
 
 1.6
