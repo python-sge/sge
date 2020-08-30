@@ -19,15 +19,17 @@ sge.gfx.Color
 
 .. autoclass:: sge.gfx.Color
 
+.. automethod:: sge.gfx.Color.__init__
+
 sge.gfx.Sprite
 --------------
 
 .. autoclass:: sge.gfx.Sprite
 
+.. automethod:: sge.gfx.Sprite.__init__
+
 sge.gfx.Sprite Methods
 ~~~~~~~~~~~~~~~~~~~~~~
-
-.. automethod:: sge.gfx.Sprite.__init__
 
 .. automethod:: sge.gfx.Sprite.append_frame
 
@@ -96,10 +98,10 @@ sge.gfx.Font
 
 .. autoclass:: sge.gfx.Font
 
+.. automethod:: sge.gfx.Font.__init__
+
 sge.gfx.Font Methods
 ~~~~~~~~~~~~~~~~~~~~
-
-.. automethod:: sge.gfx.Font.__init__
 
 .. automethod:: sge.gfx.Font.get_width
 
@@ -112,9 +114,6 @@ sge.gfx.BackgroundLayer
 
 .. autoclass:: sge.gfx.BackgroundLayer
 
-sge.gfx.BackgroundLayer Methods
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 .. automethod:: sge.gfx.BackgroundLayer.__init__
 
 sge.gfx.Background
@@ -122,8 +121,4 @@ sge.gfx.Background
 
 .. autoclass:: sge.gfx.Background
 
-sge.gfx.Background Methods
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 .. automethod:: sge.gfx.Background.__init__
-

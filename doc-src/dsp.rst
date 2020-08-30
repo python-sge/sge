@@ -19,10 +19,10 @@ sge.dsp.Game
 
 .. autoclass:: sge.dsp.Game
 
+.. automethod:: sge.dsp.Game.__init__
+
 sge.dsp.Game Methods
 ~~~~~~~~~~~~~~~~~~~~
-
-.. automethod:: sge.dsp.Game.__init__
 
 .. automethod:: sge.dsp.Game.start
 
@@ -134,10 +134,10 @@ sge.dsp.Room
 
 .. autoclass:: sge.dsp.Room
 
+.. automethod:: sge.dsp.Room.__init__
+
 sge.dsp.Room Methods
 ~~~~~~~~~~~~~~~~~~~~
-
-.. automethod:: sge.dsp.Room.__init__
 
 .. automethod:: sge.dsp.Room.add
 
@@ -247,9 +247,6 @@ sge.dsp.View
 
 .. autoclass:: sge.dsp.View
 
-sge.dsp.View Methods
-~~~~~~~~~~~~~~~~~~~~
-
 .. automethod:: sge.dsp.View.__init__
 
 sge.dsp.Object
@@ -257,10 +254,10 @@ sge.dsp.Object
 
 .. autoclass:: sge.dsp.Object
 
+.. automethod:: sge.dsp.Object.__init__
+
 sge.dsp.Object Methods
 ~~~~~~~~~~~~~~~~~~~~~~
-
-.. automethod:: sge.dsp.Object.__init__
 
 .. automethod:: sge.dsp.Object.move_x
 

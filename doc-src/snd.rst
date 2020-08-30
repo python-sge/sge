@@ -19,10 +19,10 @@ sge.snd.Sound
 
 .. autoclass:: sge.snd.Sound
 
+.. automethod:: sge.snd.Sound.__init__
+
 sge.snd.Sound Methods
 ~~~~~~~~~~~~~~~~~~~~~
-
-.. automethod:: sge.snd.Sound.__init__
 
 .. automethod:: sge.snd.Sound.play
 
@@ -37,10 +37,10 @@ sge.snd.Music
 
 .. autoclass:: sge.snd.Music
 
+.. automethod:: sge.snd.Music.__init__
+
 sge.snd.Music Methods
 ~~~~~~~~~~~~~~~~~~~~~
-
-.. automethod:: sge.snd.Music.__init__
 
 .. automethod:: sge.snd.Music.play
 
@@ -56,9 +56,6 @@ sge.snd.Music Methods
 
 sge.snd Functions
 =================
-
-sge.snd.stop_all
-----------------
 
 .. autofunction:: sge.snd.stop_all
 
