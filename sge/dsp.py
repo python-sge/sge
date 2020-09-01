@@ -1419,8 +1419,9 @@ class Game:
         r.game_window_projections.append((img, x, y, z, blend_mode))
 
     def project_text(self, font, text, x, y, z=0, width=None, height=None,
-                    color=gfx.Color("white"), halign="left",
-                    valign="top", anti_alias=True, blend_mode=None):
+                     color=gfx.Color("white"), halign="left",
+                     valign="top", anti_alias=True, blend_mode=None,
+                     outline=None, outline_thickness=0):
         """
         Project text onto the game window.
 
@@ -1438,7 +1439,8 @@ class Game:
         """
         _check_color(color)
         sprite = s_from_text(gfx.Sprite, font, text, width, height, color,
-                             halign, valign, anti_alias)
+                             halign, valign, anti_alias, outline,
+                             outline_thickness)
         self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def event_step(self, time_passed, delta_mult):
@@ -2251,8 +2253,9 @@ class Room:
         self.rd["projections"].append((img, x, y, z, blend_mode))
 
     def project_text(self, font, text, x, y, z, width=None, height=None,
-                    color=sge.gfx.Color("white"), halign="left",
-                    valign="top", anti_alias=True, blend_mode=None):
+                     color=sge.gfx.Color("white"), halign="left",
+                     valign="top", anti_alias=True, blend_mode=None,
+                     outline=None, outline_thickness=0):
         """
         Project text onto the room.
 
@@ -2269,7 +2272,8 @@ class Room:
         """
         _check_color(color)
         sprite = s_from_text(gfx.Sprite, font, text, width, height, color,
-                             halign, valign, anti_alias)
+                             halign, valign, anti_alias, outline,
+                             outline_thickness)
         self.project_sprite(sprite, 0, x, y, z, blend_mode)
 
     def event_room_start(self):

@@ -1227,7 +1227,8 @@ class Sprite(object):
 
     def draw_text(self, font, text, x, y, width=None, height=None,
                   color=Color("white"), halign="left", valign="top",
-                  anti_alias=True, frame=None, blend_mode=None):
+                  anti_alias=True, frame=None, blend_mode=None, outline=None,
+                  outline_thickness=0):
         """
         Draw text on the sprite.
 
@@ -1305,11 +1306,18 @@ class Sprite(object):
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
           ``None`` is treated as :data:`sge.BLEND_NORMAL`.
+        - ``outline`` -- A :class:`sge.gfx.Color` object representing the
+          color of the text's outline.  Set to ``None`` for no outline.
+        - ``outline_thickness`` -- The thickness of the outline in
+          pixels.  A value of ``0`` means no outline will be drawn.
         """
         _check_color(color)
 
-        x = int(round(x))
-        y = int(round(y))
+        x = round(x)
+        y = round(y)
+        halign = halign.lower()
+        valign = valign.lower()
+        outline_thickness = abs(round(outline_thickness))
 
         lines = f_split_text(font, text, width)
         width = int(font.get_width(text, width, height))
@@ -1323,6 +1331,43 @@ class Sprite(object):
 
         pygame_flags = _get_blend_flags(blend_mode)
 
+        if outline is not None and outline_thickness:
+            # We do a separate loop here so that if it overlaps itself,
+            # the outline won't cover up real text.
+            for i in range(len(lines)):
+                ol_part = font.rd["font"].render(
+                    lines[i], anti_alias, pygame.Color(*outline))
+
+                rect = rendered_outline.get_rect()
+                rect.top = i*font.rd["font"].get_linesize() + outline_thickness
+                if halign == "left":
+                    rect.left = text_rect.left + outline_thickness
+                elif halign == "right:
+                    rect.right = text_rect.right - outline_thickness
+                elif halign == "center":
+                    rect.centerx = text_rect.centerx
+
+                rendered_outline = pygame.Surface(rect.size, pygame.SRCALPHA)
+                ol_range = range(-outline_thickness, outline_thickness + 1)
+                for xx in ol_range:
+                    for yy in ol_range:
+                        # We exclude positions where the distance from
+                        # the real text is greater than the outline
+                        # thickness to create a round outline rather
+                        # than a square one (a^2 + b^2 = c^2).
+                        if math.sqrt(xx**2 + yy**2) < outline_thickness:
+                            brect = rect.copy()
+                            brect.left += xx
+                            brect.top += yy
+                            rendered_outline.blit(ol_part, brect)
+
+                if outline.alpha < 255:
+                    rendered_outline = rendered_outline.convert_alpha()
+                    rendered_outline.fill((0, 0, 0, 255 - outline.alpha), None,
+                                          pygame.BLEND_RGBA_SUB)
+
+                text_surf.blit(rendered_outline, rect)
+
         for i in range(len(lines)):
             rendered_text = font.rd["font"].render(lines[i], anti_alias,
                                                    pygame.Color(*color))
@@ -1331,40 +1376,39 @@ class Sprite(object):
                 rendered_text.fill((0, 0, 0, 255 - color.alpha), None,
                                    pygame.BLEND_RGBA_SUB)
             rect = rendered_text.get_rect()
-            rect.top = i * font.rd["font"].get_linesize()
-
-            if halign.lower() == "left":
-                rect.left = text_rect.left
-            elif halign.lower() == "right":
-                rect.right = text_rect.right
-            elif halign.lower() == "center":
+            rect.top = i*font.rd["font"].get_linesize() + outline_thickness
+            if halign == "left":
+                rect.left = text_rect.left + outline_thickness
+            elif halign == "right":
+                rect.right = text_rect.right - outline_thickness
+            elif halign == "center":
                 rect.centerx = text_rect.centerx
 
             text_surf.blit(rendered_text, rect)
 
-        if valign.lower() == "top":
+        if valign == "top":
             text_rect.top = box_rect.top
-        elif valign.lower() == "bottom":
+        elif valign == "bottom":
             text_rect.bottom = box_rect.bottom
-        elif valign.lower() == "middle":
+        elif valign == "middle":
             text_rect.centery = box_rect.centery
 
         box_surf.blit(text_surf, text_rect)
 
-        if halign.lower() == "left":
+        if halign == "left":
             box_rect.left = x
-        elif halign.lower() == "right":
+        elif halign == "right":
             box_rect.right = x
-        elif halign.lower() == "center":
+        elif halign == "center":
             box_rect.centerx = x
         else:
             box_rect.left = x
 
-        if valign.lower() == "top":
+        if valign == "top":
             box_rect.top = y
-        elif valign.lower() == "bottom":
+        elif valign == "bottom":
             box_rect.bottom = y
-        elif valign.lower() == "middle":
+        elif valign == "middle":
             box_rect.centery = y
         else:
             box_rect.top = y
@@ -1941,7 +1985,7 @@ class Sprite(object):
     @classmethod
     def from_text(cls, font, text, width=None, height=None,
                   color=Color("white"), halign="left", valign="top",
-                  anti_alias=True):
+                  anti_alias=True, outline=None, outline_thickness=0):
         """
         Create a sprite, draw the given text on it, and return the
         sprite.  See the documentation for
@@ -1949,8 +1993,9 @@ class Sprite(object):
 
         The sprite's origin is set based on ``halign`` and ``valign``.
         """
-        return s_from_text(cls, font, text, width, height, color, halign,
-                           valign, anti_alias).copy()
+        return s_from_text(
+            cls, font, text, width, height, color, halign, valign, anti_alias,
+            outline, outline_thickness).copy()
 
     @classmethod
     def from_tileset(cls, fname, x=0, y=0, columns=1, rows=1, xsep=0, ysep=0,
@@ -2521,6 +2566,11 @@ class Font(object):
           italic font rather than enabling italic rendering, if
           possible.
 
+    .. attribute:: linesize
+
+       The size of a line of text, i.e. the distance between the top of
+       one line and the top of the line that follows it.  (Read-only)
+
     .. attribute:: name
 
        The name of the font as specified when it was created.
@@ -2605,6 +2655,10 @@ class Font(object):
     def italic(self, value):
         self.rd["font"].set_italic(bool(value))
 
+    @property
+    def linesize(self):
+        return self.rd["font"].get_linesize()
+
     def __init__(self, name=None, size=12, underline=False, bold=False,
                  italic=False):
         """
@@ -2644,7 +2698,7 @@ class Font(object):
         self.bold = bold
         self.italic = italic
 
-    def get_width(self, text, width=None, height=None):
+    def get_width(self, text, width=None, height=None, outline_thickness=0):
         """
         Return the width of a certain string of text when rendered.
 
@@ -2652,6 +2706,8 @@ class Font(object):
         more information.
 
         """
+        outline_thickness = abs(round(outline_thickness))
+
         lines = f_split_text(self, text, width)
         text_width = 0
         for line in lines:
@@ -2660,9 +2716,9 @@ class Font(object):
         if width is not None:
             text_width = min(text_width, width)
 
-        return text_width
+        return text_width + 2*outline_thickness
 
-    def get_height(self, text, width=None, height=None):
+    def get_height(self, text, width=None, height=None, outline_thickness=0):
         """
         Return the height of a certain string of text when rendered.
 
@@ -2680,7 +2736,7 @@ class Font(object):
         if height is not None:
             text_height = min(text_height, height)
 
-        return text_height
+        return text_height + 2*outline_thickness
 
     @classmethod
     def from_sprite(cls, sprite, chars, hsep=0, vsep=0, size=12,

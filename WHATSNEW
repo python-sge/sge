@@ -5,8 +5,15 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
-1.6.1
+1.7
 ------------------------------------------------------------------------
+
+Specification additions:
++ sge.gfx.Font.linesize
+
+Specification misc changes:
+* Added an outline and outline_thickness argument to
+  sge.gfx.Sprite.draw_text and related methods.
 
 Specification bugfixes:
 - Missing documentation for sge.gfx.Sprite.get_spritelist
@@ -21,11 +28,11 @@ Specification additions:
 + sge.s.orthogonal
 + sge.gfx.Sprite.get_spritelist
 
-Specification bugfixes:
-- Misspelling of "backgrounds" as "bckgrounds"
-
 Specification misc changes:
 * Full name changed from "SGE Game Engine" to "Seclusion Game Engine"
+
+Specification bugfixes:
+- Misspelling of "backgrounds" as "bckgrounds"
 
 
 1.5
