@@ -1342,7 +1342,7 @@ class Sprite(object):
                 rect.top = i*font.rd["font"].get_linesize() + outline_thickness
                 if halign == "left":
                     rect.left = text_rect.left + outline_thickness
-                elif halign == "right:
+                elif halign == "right":
                     rect.right = text_rect.right - outline_thickness
                 elif halign == "center":
                     rect.centerx = text_rect.centerx
@@ -1601,8 +1601,8 @@ class Sprite(object):
 
         - ``xscale`` -- The horizontal scale factor.
         - ``yscale`` -- The vertical scale factor.
-        - ``frame`` -- The frame of the sprite to rotate, where ``0`` is
-          the first frame; set to ``None`` to rotate all frames.
+        - ``frame`` -- The frame of the sprite to scale, where ``0`` is
+          the first frame; set to ``None`` to scale all frames.
 
         .. note::
 
@@ -2035,7 +2035,7 @@ class Sprite(object):
         try:
             tileset = pygame.image.load(fname)
         except pygame.error as e:
-            raise OSError_(e)
+            raise OSError(e)
 
         for i in range(1, rows * columns):
             self.append_frame()

@@ -18,6 +18,7 @@ Specification misc changes:
 Specification bugfixes:
 - Missing documentation for sge.gfx.Sprite.get_spritelist
 - Missing documentation for sge.gfx.Color.__init__
+- sge.gfx.Sprite.scale docs talking about rotation rather than scaling
 
 
 1.6
