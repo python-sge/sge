@@ -1338,7 +1338,7 @@ class Sprite(object):
                 ol_part = font.rd["font"].render(
                     lines[i], anti_alias, pygame.Color(*outline))
 
-                rect = rendered_outline.get_rect()
+                rect = ol_part.get_rect()
                 rect.top = i*font.rd["font"].get_linesize() + outline_thickness
                 if halign == "left":
                     rect.left = text_rect.left + outline_thickness
