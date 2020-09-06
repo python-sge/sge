@@ -2001,6 +2001,10 @@ class Room:
         - ``transition_arg`` -- An arbitrary argument that can be used
           by the following transitions:
 
+          - ``"pixelate"`` -- The time in miliseconds in between each
+            pixelation update.  Larger values can reduce jitter, but
+            will result in a less smoth transition.  Default is 0 (as
+            little time as possible).
           - ``"wipe_matrix"`` -- The size of each square in the matrix
             transition as a tuple in the form ``(w, h)``, where ``w`` is
             the width and ``h`` is the height.  Default is ``(4, 4)``.
@@ -2025,8 +2029,10 @@ class Room:
         if transition in transitions and transition_time > 0:
             self.rd["t_update"] = transitions[transition]
             self.rd["t_sprite"] = gfx.Sprite.from_screenshot()
+            self.rd["t_sprite_original"] = self.rd["t_sprite"].copy()
             self.rd["t_duration"] = transition_time
             self.rd["t_arg"] = transition_arg
+            self.rd["t_meta"] = None
             self.rd["t_time_passed"] = 0
             self.rd["t_complete_last"] = 0
             self.rd["t_matrix_remaining"] = None

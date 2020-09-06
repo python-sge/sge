@@ -15,6 +15,8 @@ Specification additions:
 Specification misc changes:
 * Added an outline and outline_thickness argument to
   sge.gfx.Sprite.draw_text and related methods.
+* Added use of an argument by the pixelate transition to control rate
+  of pixelation updates.
 
 Specification bugfixes:
 - Missing documentation for sge.gfx.Sprite.get_spritelist

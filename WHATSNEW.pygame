@@ -5,6 +5,13 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.7
+------------------------------------------------------------------------
+
+Pygame SGE misc changes:
+* Improved the implementation of the pixelate transition.
+
+
 1.6
 ------------------------------------------------------------------------
 

@@ -841,18 +841,26 @@ def r_update_dissolve(self, complete):
 
 
 def r_update_pixelate(self, complete):
+    if not self.rd["t_meta"]:
+        self.rd["t_meta"] = 0
+    if not self.rd["t_arg"]:
+        self.rd["t_arg"] = 0
     transition_sprite = self.rd["t_sprite"]
     w = transition_sprite.width
     h = transition_sprite.height
     scale_method = sge.game.scale_method
     sge.game.scale_method = None
 
-    if complete < 0.8:
-        complete *= 1.25
-        swidth = max(1, w * (1 - complete))
-        sheight = max(1, h * (1 - complete))
-        transition_sprite.size = swidth, sheight
-        transition_sprite.size = w, h
+    if complete < 0.9:
+        if self.rd["t_time_passed"] - self.rd["t_meta"] > self.rd["t_arg"]:
+            self.rd["t_meta"] = self.rd["t_time_passed"]
+            transition_sprite = self.rd["t_sprite_original"].copy()
+            complete /= 0.9
+            swidth = max(w / 20, w * (1 - complete))
+            sheight = max(h / 20, h * (1 - complete))
+            transition_sprite.size = swidth, sheight
+            transition_sprite.size = w, h
+            self.rd["t_sprite"] = transition_sprite
     else:
         diff = (complete - self.rd["t_complete_last"]) * 5
         c = sge.gfx.Color((0, 0, 0, int(round(diff * 255))))
@@ -1029,8 +1037,8 @@ def s_set_size(self):
     # destructive and irreversible.  It is necessary for the drawing
     # methods to work properly, specifically whenever ``width`` and
     # ``height`` are set.
-    width = int(round(self.width))
-    height = int(round(self.height))
+    width = round(self.width)
+    height = round(self.height)
     for i in range(self.frames):
         if sge.game.scale_method == "smooth":
             try:
