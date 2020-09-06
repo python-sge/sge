@@ -1320,9 +1320,9 @@ class Sprite(object):
         outline_thickness = abs(round(outline_thickness))
 
         lines = f_split_text(font, text, width)
-        width = int(font.get_width(text, width, height))
-        height = int(font.get_height(text, width, height))
-        fake_height = int(font.get_height(text, width))
+        width = int(font.get_width(text, width, height)) + 2*outline_thickness
+        height = int(font.get_height(text, width, height)) + 2*outline_thickness
+        fake_height = int(font.get_height(text, width)) + 2*outline_thickness
 
         text_surf = pygame.Surface((width, fake_height), pygame.SRCALPHA)
         box_surf = pygame.Surface((width, height), pygame.SRCALPHA)
@@ -1338,16 +1338,27 @@ class Sprite(object):
                 ol_part = font.rd["font"].render(
                     lines[i], anti_alias, pygame.Color(*outline))
 
-                rect = ol_part.get_rect()
-                rect.top = i*font.rd["font"].get_linesize() + outline_thickness
+                part_rect = ol_part.get_rect()
+                part_rect.top += outline_thickness
                 if halign == "left":
-                    rect.left = text_rect.left + outline_thickness
+                    part_rect.left = text_rect.left + outline_thickness
                 elif halign == "right":
-                    rect.right = text_rect.right - outline_thickness
+                    part_rect.right = text_rect.right - outline_thickness
+                elif halign == "center":
+                    part_rect.centerx = text_rect.centerx
+
+                rendered_outline = pygame.Surface(text_rect.size,
+                                                  pygame.SRCALPHA)
+
+                rect = rendered_outline.get_rect()
+                rect.top = i*font.rd["font"].get_linesize()
+                if halign == "left":
+                    rect.left = text_rect.left
+                elif halign == "right":
+                    rect.right = text_rect.right
                 elif halign == "center":
                     rect.centerx = text_rect.centerx
 
-                rendered_outline = pygame.Surface(rect.size, pygame.SRCALPHA)
                 ol_range = range(-outline_thickness, outline_thickness + 1)
                 for xx in ol_range:
                     for yy in ol_range:
@@ -1355,8 +1366,8 @@ class Sprite(object):
                         # the real text is greater than the outline
                         # thickness to create a round outline rather
                         # than a square one (a^2 + b^2 = c^2).
-                        if math.sqrt(xx**2 + yy**2) < outline_thickness:
-                            brect = rect.copy()
+                        if math.sqrt(xx**2 + yy**2) <= outline_thickness:
+                            brect = part_rect.copy()
                             brect.left += xx
                             brect.top += yy
                             rendered_outline.blit(ol_part, brect)

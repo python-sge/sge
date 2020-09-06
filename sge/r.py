@@ -1183,11 +1183,11 @@ def s_from_text(cls, font, text, width, height, color, halign, valign,
     f_name = tuple(font.name) if font.name is not None else None
     i = ("text_sprite", cls, f_name, font.size, font.underline, font.bold,
          font.italic, text, width, height, str(color), halign, valign,
-         anti_alias, tuple(outline), outline_thickness)
+         anti_alias, str(outline), outline_thickness)
     s = cache.get(i)
     if s is None:
-        w = font.get_width(text, width, height)
-        h = font.get_height(text, width, height)
+        w = font.get_width(text, width, height) + 2*outline_thickness
+        h = font.get_height(text, width, height) + 2*outline_thickness
         x = {"left": 0, "right": w, "center": w / 2}.get(halign.lower(), 0)
         y = {"top": 0, "bottom": h, "middle": h / 2}.get(valign.lower(), 0)
         s = cls(width=w, height=h, origin_x=x, origin_y=y)
