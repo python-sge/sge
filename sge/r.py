@@ -1183,7 +1183,7 @@ def s_from_text(cls, font, text, width, height, color, halign, valign,
     f_name = tuple(font.name) if font.name is not None else None
     i = ("text_sprite", cls, f_name, font.size, font.underline, font.bold,
          font.italic, text, width, height, str(color), halign, valign,
-         anti_alias, outline, outline_thickness)
+         anti_alias, tuple(outline), outline_thickness)
     s = cache.get(i)
     if s is None:
         w = font.get_width(text, width, height)
