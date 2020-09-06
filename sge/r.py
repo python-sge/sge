@@ -851,10 +851,8 @@ def r_update_pixelate(self, complete):
         complete *= 1.25
         swidth = max(1, w * (1 - complete))
         sheight = max(1, h * (1 - complete))
-        transition_sprite.width = swidth
-        transition_sprite.height = sheight
-        transition_sprite.width = w
-        transition_sprite.height = h
+        transition_sprite.size = swidth, sheight
+        transition_sprite.size = w, h
     else:
         diff = (complete - self.rd["t_complete_last"]) * 5
         c = sge.gfx.Color((0, 0, 0, int(round(diff * 255))))

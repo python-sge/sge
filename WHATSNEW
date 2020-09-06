@@ -10,6 +10,7 @@ information. This file is offered as-is, without any warranty.
 
 Specification additions:
 + sge.gfx.Font.linesize
+- sge.gfx.Sprite.size
 
 Specification misc changes:
 * Added an outline and outline_thickness argument to

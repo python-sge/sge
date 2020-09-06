@@ -242,6 +242,24 @@ class Sprite(object):
           :attr:`image_yscale` attribute of a :class:`sge.dsp.Object`
           object instead.
 
+    .. attribute:: size
+
+       A two-part tuple containing the width and height, respectively,
+       of the sprite.  Each value in the tuple functions the same as
+       :attr:`width` and :attr:`height`, but assigning to this value
+       will set both to the desired size at the same time, scaling the
+       image in one operation rather than two.
+
+       .. note::
+
+          Changing this attribute will cause the sprite to be scaled.
+          This is a destructive transformation: it can result in loss of
+          pixel information, especially if it is done repeatedly.
+          Because of this, it is advised that you do not adjust this
+          value for routine scaling.  Use the :attr:`image_xscale` and
+          :attr:`image_yscale` attributes of a :class:`sge.dsp.Object`
+          object instead.
+
     .. attribute:: transparent
 
        Whether or not the image should be partially transparent, based
@@ -319,7 +337,7 @@ class Sprite(object):
     @width.setter
     def width(self, value):
         if self.__w != value:
-            self.__w = int(round(value))
+            self.__w = round(value)
             s_set_size(self)
             s_refresh(self)
 
@@ -330,7 +348,20 @@ class Sprite(object):
     @height.setter
     def height(self, value):
         if self.__h != value:
-            self.__h = int(round(value))
+            self.__h = round(value)
+            s_set_size(self)
+            s_refresh(self)
+
+    @property
+    def size(self):
+        return (self.__w, self.__h)
+
+    @size.setter
+    def size(self, value):
+        w, h = value
+        if self.__w != w or self.__h != h:
+            self.__w = round(w)
+            self.__h = round(h)
             s_set_size(self)
             s_refresh(self)
 
