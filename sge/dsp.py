@@ -2003,7 +2003,7 @@ class Room:
 
           - ``"pixelate"`` -- The time in miliseconds in between each
             pixelation update.  Larger values can reduce jitter, but
-            will result in a less smoth transition.  Default is 0 (as
+            will result in a less smooth transition.  Default is 0 (as
             little time as possible).
           - ``"wipe_matrix"`` -- The size of each square in the matrix
             transition as a tuple in the form ``(w, h)``, where ``w`` is

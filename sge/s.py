@@ -24,6 +24,17 @@ preceding underscore.  For example, a variable called ``spam`` would
 have a value of ``"spam"``, and a variable called ``_1984`` would have a
 value of ``"1984"``.
 
+This module only contains these variable assignments and nothing else,
+so if it is useful to you, you can add assignments to this module as
+long as said assignments conform with the specification above.
+
+.. note::
+
+   This module does not use the convention of marking "private" members
+   with a leading underscore; rather, a leading underscore is used to
+   ensure that strings starting with numeric characters can be
+   supported.  All variables in this module are available for use.
+
 .. data:: sge.s._0
 .. data:: sge.s._1
 .. data:: sge.s._2

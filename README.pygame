@@ -87,13 +87,13 @@ sent directly to the kernel (such as the magic SysRq key in Linux
 systems).
 
 Hopefully the bug should go away with usage of SDL2 instead of SDL 1.2;
-Pygame 2, when released, will use SDL2 by default.  In the meantime, you
-may want to work around this bug to ensure minimal frustration for
-users.  Luckily, the bug doesn't seem to affect mouse input, so if you
-provide some method of either exiting the game or exiting fullscreen
-with the mouse, that should at least prevent users from being forced to
-reboot.  This can be a button somewhere on the screen if the game uses
-the mouse cursor, or it can be a simple mouse button click otherwise.
+Pygame 2 uses SDL2 by default.  In the meantime, you may want to work
+around this bug to ensure minimal frustration for users.  Luckily, the
+bug doesn't seem to affect mouse input, so if you provide some method of
+either exiting the game or exiting fullscreen with the mouse, that
+should at least prevent users from being forced to reboot.  This can be
+a button somewhere on the screen if the game uses the mouse cursor, or
+it can be a simple mouse button click otherwise.
 
 
 RESOLUTION INCONSISTENCIES

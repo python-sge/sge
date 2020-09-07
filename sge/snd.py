@@ -283,14 +283,6 @@ class Music(object):
     implementation-specific information for a full list of supported
     formats.
 
-    .. note::
-
-       You should avoid the temptation to use MP3 files; MP3 is a
-       patent-encumbered format, so many systems do not support it and
-       royalties to the patent holders may be required for commercial
-       use.  There are many programs which can convert your MP3 files to
-       the free Ogg Vorbis format.
-
     .. attribute:: volume
 
        The volume of the music as a value from ``0`` to ``1`` (``0`` for

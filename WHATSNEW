@@ -17,6 +17,10 @@ Specification misc changes:
   sge.gfx.Sprite.draw_text and related methods.
 * Added use of an argument by the pixelate transition to control rate
   of pixelation updates.
+* Specified that extending sge.s with additional string variables is
+  allowed.
+* Removed the warning about use of MP3 files in the documentation since
+  MP3 patents expired a couple years ago.
 
 Specification bugfixes:
 - Missing documentation for sge.gfx.Sprite.get_spritelist
