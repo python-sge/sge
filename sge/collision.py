@@ -71,12 +71,12 @@ def masks_collide(x1, y1, mask1, x2, y2, mask2):
     ``y`` is the row.
     """
     if mask1 and mask2 and mask1[0] and mask2[0]:
-        x1 = int(round(x1))
-        y1 = int(round(y1))
+        x1 = round(x1)
+        y1 = round(y1)
         w1 = len(mask1)
         h1 = len(mask1[0])
-        x2 = int(round(x2))
-        y2 = int(round(y2))
+        x2 = round(x2)
+        y2 = round(y2)
         w2 = len(mask2)
         h2 = len(mask2[0])
 

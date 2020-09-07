@@ -581,8 +581,8 @@ class Sprite(object):
                 width = 32
             if height is None:
                 height = 32
-            width = int(round(width))
-            height = int(round(height))
+            width = round(width)
+            height = round(height)
 
             self.__w = width
             self.__h = height
@@ -604,8 +604,8 @@ class Sprite(object):
             for image in self.rd["baseimages"]:
                 height = max(height, image.get_height())
 
-        self.__w = int(round(width))
-        self.__h = int(round(height))
+        self.__w = round(width)
+        self.__h = round(height)
         s_set_size(self)
         self.origin_x = origin_x
         self.origin_y = origin_y
@@ -679,8 +679,8 @@ class Sprite(object):
         - ``frame`` -- The frame of the sprite to check, where ``0`` is
           the first frame.
         """
-        x = int(round(x))
-        y = int(round(y))
+        x = round(x)
+        y = round(y)
         frame %= self.frames
         pg_color = self.rd["baseimages"][frame].get_at((x, y))
         return Color(tuple(pg_color))
@@ -743,8 +743,8 @@ class Sprite(object):
         """
         _check_color(color)
 
-        x = int(round(x))
-        y = int(round(y))
+        x = round(x)
+        y = round(y)
         pg_color = pygame.Color(*color)
 
         if frame is None:
@@ -813,11 +813,11 @@ class Sprite(object):
         """
         _check_color(color)
 
-        x1 = int(round(x1))
-        y1 = int(round(y1))
-        x2 = int(round(x2))
-        y2 = int(round(y2))
-        thickness = int(round(thickness))
+        x1 = round(x1)
+        y1 = round(y1)
+        x2 = round(x2)
+        y2 = round(y2)
+        thickness = round(thickness)
         pg_color = pygame.Color(*color)
         thickness = abs(thickness)
 
@@ -890,10 +890,10 @@ class Sprite(object):
         _check_color(fill)
         _check_color(outline)
 
-        x = int(round(x))
-        y = int(round(y))
-        width = int(round(width))
-        height = int(round(height))
+        x = round(x)
+        y = round(y)
+        width = round(width)
+        height = round(height)
         outline_thickness = abs(outline_thickness)
         if outline_thickness == 0:
             outline = None
@@ -978,10 +978,10 @@ class Sprite(object):
         _check_color(fill)
         _check_color(outline)
 
-        x = int(round(x))
-        y = int(round(y))
-        width = int(round(width))
-        height = int(round(height))
+        x = round(x)
+        y = round(y)
+        width = round(width)
+        height = round(height)
         outline_thickness = abs(outline_thickness)
         if outline_thickness == 0:
             outline = None
@@ -1065,9 +1065,9 @@ class Sprite(object):
         _check_color(fill)
         _check_color(outline)
 
-        x = int(round(x))
-        y = int(round(y))
-        radius = int(round(radius))
+        x = round(x)
+        y = round(y)
+        radius = round(radius)
         outline_thickness = abs(outline_thickness)
         if outline_thickness == 0:
             outline = None
@@ -1150,7 +1150,7 @@ class Sprite(object):
         _check_color(fill)
         _check_color(outline)
 
-        points = [(int(round(x)), int(round(y))) for (x, y) in points]
+        points = [(round(x), round(y)) for (x, y) in points]
         outline_thickness = abs(outline_thickness)
         if outline_thickness == 0:
             outline = None
@@ -1228,8 +1228,8 @@ class Sprite(object):
 
           ``None`` is treated as :data:`sge.BLEND_NORMAL`.
         """
-        x = int(round(x - sprite.origin_x))
-        y = int(round(y - sprite.origin_y))
+        x = round(x - sprite.origin_x)
+        y = round(y - sprite.origin_y)
 
         image %= sprite.frames
 

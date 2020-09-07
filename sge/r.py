@@ -121,8 +121,8 @@ def _scale(surface, width, height):
     if surface.get_width() == width and surface.get_height() == height:
         return surface.copy()
 
-    width = int(round(width))
-    height = int(round(height))
+    width = round(width)
+    height = round(height)
     if sge.game.scale_method == "smooth":
         try:
             new_surf = pygame.transform.smoothscale(surface, (width, height))
@@ -241,8 +241,8 @@ def _set_mode():
 
         w = max(1, game_window.get_width())
         h = max(1, game_window.get_height())
-        game_x = int(round((w - game.width * game_xscale) / 2))
-        game_y = int(round((h - game.height * game_yscale) / 2))
+        game_x = round((w - game.width*game_xscale) / 2)
+        game_y = round((h - game.height*game_yscale) / 2)
     else:
         game_x = 0
         game_y = 0
@@ -267,8 +267,8 @@ def _set_mode():
 
         w = max(1, game_window.get_width())
         h = max(1, game_window.get_height())
-        game_x = int(round((w - game.width * game_xscale) / 2))
-        game_y = int(round((h - game.height * game_yscale) / 2))
+        game_x = round((w - game.width*game_xscale) / 2)
+        game_y = round((h - game.height*game_yscale) / 2)
 
 
 def _get_channel():
@@ -333,8 +333,8 @@ def _get_dot_sprite(color):
 
 def _get_line_sprite(x1, y1, x2, y2, color, thickness, anti_alias):
     # Return a sprite for the given line.
-    w = int(round(abs(x2 - x1) + thickness))
-    h = int(round(abs(y2 - y1) + thickness))
+    w = round(abs(x2 - x1) + thickness)
+    h = round(abs(y2 - y1) + thickness)
     i = ("line_sprite", x1, y1, x2, y2, tuple(color), thickness, anti_alias)
     sprite = cache.get(i)
     if sprite is None:
@@ -816,14 +816,14 @@ def r_update_fade(self, complete):
     h = transition_sprite.height
     if complete < 0.5:
         diff = (complete - self.rd["t_complete_last"]) * 2
-        c = sge.gfx.Color([int(round(diff * 255))] * 3)
+        c = sge.gfx.Color([round(diff * 255)] * 3)
         darkener = sge.gfx.Sprite(width=w, height=h)
         darkener.draw_rectangle(0, 0, w, h, c)
         transition_sprite.draw_sprite(darkener, 0, 0, 0,
                                       blend_mode=sge.BLEND_RGB_SUBTRACT)
     else:
         complete = (complete - 0.5) * 2
-        c = sge.gfx.Color((0, 0, 0, int(round(255 - complete * 255))))
+        c = sge.gfx.Color((0, 0, 0, round(255 - complete * 255)))
         transition_sprite.draw_clear()
         transition_sprite.draw_rectangle(0, 0, w, h, fill=c)
 
@@ -833,7 +833,7 @@ def r_update_dissolve(self, complete):
     w = transition_sprite.width
     h = transition_sprite.height
     diff = complete - self.rd["t_complete_last"]
-    c = sge.gfx.Color((0, 0, 0, int(round(diff * 255))))
+    c = sge.gfx.Color((0, 0, 0, round(diff * 255)))
     eraser = sge.gfx.Sprite(width=w, height=h)
     eraser.draw_rectangle(0, 0, w, h, c)
     transition_sprite.draw_sprite(eraser, 0, 0, 0,
@@ -863,7 +863,7 @@ def r_update_pixelate(self, complete):
             self.rd["t_sprite"] = transition_sprite
     else:
         diff = (complete - self.rd["t_complete_last"]) * 5
-        c = sge.gfx.Color((0, 0, 0, int(round(diff * 255))))
+        c = sge.gfx.Color((0, 0, 0, round(diff * 255)))
         eraser = sge.gfx.Sprite(width=w, height=h)
         eraser.draw_rectangle(0, 0, w, h, c)
         transition_sprite.draw_sprite(eraser, 0, 0, 0,
@@ -1156,8 +1156,8 @@ def s_get_precise_mask(self, num, xscale, yscale, rotation):
         xflip = xscale < 0
         yflip = yscale < 0
         image = pygame.transform.flip(image, xflip, yflip)
-        w = int(round(self.width * abs(xscale)))
-        h = int(round(self.height * abs(yscale)))
+        w = round(self.width * abs(xscale))
+        h = round(self.height * abs(yscale))
         image = pygame.transform.scale(image, (w, h))
         if rotation:
             image = pygame.transform.rotate(image, -rotation)

@@ -4083,7 +4083,7 @@ class Mouse(Object):
 
     def __init__(self):
         self.__visible = True
-        super(Mouse, self).__init__(0, 0, 10000)
+        super().__init__(0, 0, 10000)
 
     def event_step(self, time_passed, delta_mult):
         o_update_object_areas(self)
