@@ -133,6 +133,10 @@ class Room(sge.dsp.Room):
         text = "I am amazing text!\n\nYaaaaaaaaaaay~!"
         self.project_text(glob.font, text, 320, 0, 3,
                           color=sge.gfx.Color("black"), halign="center")
+        self.project_text(glob.font, text, 320, 80, 3,
+                          color=sge.gfx.Color("white"), halign="center",
+                          outline=sge.gfx.Color("black"),
+                          outline_thickness=30)
 
         if sge.keyboard.get_pressed("left"):
             self.views[0].xport -= 1
