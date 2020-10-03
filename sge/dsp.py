@@ -1108,7 +1108,7 @@ class Game:
 
                 if layer.repeat_right and (layer.repeat_left or x < view_width):
                     hrange = range(int(math.floor(x)),
-                                             int(view.width + img_w), img_w)
+                                   int(view.width + img_w), img_w)
                 elif layer.repeat_left and x + img_w > 0:
                     hrange = range(int(math.floor(x)), -img_w, -img_w)
                 else:
@@ -1116,7 +1116,7 @@ class Game:
 
                 if layer.repeat_down and (layer.repeat_up or y < view_height):
                     vrange = range(int(math.floor(y)),
-                                             int(view_height + img_h), img_h)
+                                   int(view_height + img_h), img_h)
                 elif layer.repeat_up and y + img_h > 0:
                     vrange = range(int(math.floor(y)), -img_h, -img_h)
                 else:
