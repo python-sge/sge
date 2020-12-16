@@ -2833,9 +2833,11 @@ class Font(object):
                            italic)
 
 
-class _PygameSpriteFont(pygame.font.Font):
+class _PygameSpriteFont:
 
     # Special font class that returns good values for a sprite font.
+    # Designed to emulate the behavior of pygame.font.Font, but not
+    # derived so as to avoid causing problems.
 
     @property
     def vsize(self):
