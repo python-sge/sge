@@ -294,6 +294,7 @@ BLEND_RGBA_MINIMUM = BLEND_ALPHA | BLEND_RGB_MINIMUM
 BLEND_RGBA_MAXIMUM = BLEND_ALPHA | BLEND_RGB_MAXIMUM
 
 MUSIC_END_EVENT = pygame.USEREVENT + 1
+MUSIC_END_BLOCK_EVENT = pygame.USEREVENT + 2
 
 KEYS = {"0": pygame.K_0, "1": pygame.K_1, "2": pygame.K_2, "3": pygame.K_3,
         "4": pygame.K_4, "5": pygame.K_5, "6": pygame.K_6, "7": pygame.K_7,

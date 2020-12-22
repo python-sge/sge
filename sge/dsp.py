@@ -825,6 +825,8 @@ class Game:
         only need to use this function directly if you take control away
         from the SGE's main loop, e.g. to create your own loop.
         """
+        music_end_blocked = pygame.event.peek(sge.MUSIC_END_BLOCK_EVENT)
+
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 try:
@@ -1012,7 +1014,7 @@ class Game:
                 r.game_window_height = event.h
                 _set_mode()
             elif event.type == sge.MUSIC_END_EVENT:
-                if r.music_queue:
+                if not music_end_blocked and r.music_queue:
                     music = r.music_queue.pop(0)
                     music[0].play(*music[1:])
 

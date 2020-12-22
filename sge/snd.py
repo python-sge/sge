@@ -438,6 +438,14 @@ class Music(object):
         else:
             pygame.mixer.music.stop()
 
+            # ``pygame.mixer.music.stop()`` should push
+            # ``sge.MUSIC_END_EVENT``, which could cause a track to be
+            # skipped in the music queue if we're starting a new one. so
+            # if we have an empty queue, block that event.
+            if not r.music_queue:
+                block_event = pygame.event.Event(sge.MUSIC_END_BLOCK_EVENT)
+                pygame.event.post(block_event)
+
     @staticmethod
     def pause():
         """Pause playback of the currently playing music."""
@@ -452,6 +460,13 @@ class Music(object):
     def clear_queue():
         """Clear the music queue."""
         r.music_queue = []
+
+        # Block any existing music end events that have been posted,
+        # just in case a new music queue is started immediately after in
+        # the same frame.
+        if pygame.event.peek(sge.MUSIC_END_EVENT):
+            block_event = pygame.event.Event(sge.MUSIC_END_BLOCK_EVENT)
+            pygame.event.post(block_event)
 
 
 def stop_all():

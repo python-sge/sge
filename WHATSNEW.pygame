@@ -5,6 +5,13 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.8
+------------------------------------------------------------------------
+
+Pygame SGE bugfixes:
+- Future queue cleared by previously playing music that was stopped
+
+
 1.7.1
 ------------------------------------------------------------------------
 
