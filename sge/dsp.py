@@ -199,6 +199,14 @@ class Game:
 
        The room which is currently active.  (Read-only)
 
+    .. attribute:: sampling_frequency
+
+       The audio output sampling frequency in Hz.  (Read-only)
+
+    .. attribute:: stereo
+
+       Whether or not stereo output is enabled.  (Read-only)
+
     .. attribute:: mouse
 
        A :class:`sge.dsp.Object` object which represents the mouse
@@ -311,7 +319,8 @@ class Game:
                  scale_proportional=True, scale_method=None, fps=60,
                  delta=False, delta_min=15, delta_max=None, grab_input=False,
                  window_text=None, window_icon=None,
-                 collision_events_enabled=True):
+                 collision_events_enabled=True, sampling_frequency=44100,
+                 stereo=True):
         """
         Arguments set the respective initial attributes of the game.
         See the documentation for :class:`sge.dsp.Game` for more
@@ -320,8 +329,10 @@ class Game:
         The created :class:`sge.dsp.Game` object is automatically
         assigned to :data:`sge.game`.
         """
-        # Settings use a smaller buffer size for less lag.
-        pygame.mixer.pre_init(22050, -16, 2, 1024)
+        self.sampling_frequency = sampling_frequency
+        self.stereo = stereo
+
+        pygame.mixer.pre_init(sampling_frequency, -16, 2 if stereo else 1, 512)
         pygame.init()
 
         pygame.mixer.music.set_endevent(sge.MUSIC_END_EVENT)

@@ -5,12 +5,20 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.8
+------------------------------------------------------------------------
+
+Specification additions:
++ sge.dsp.Game.sampling_frequency
++ sge.dsp.Game.stereo
+
+
 1.7
 ------------------------------------------------------------------------
 
 Specification additions:
 + sge.gfx.Font.linesize
-- sge.gfx.Sprite.size
++ sge.gfx.Sprite.size
 
 Specification misc changes:
 * Added an outline and outline_thickness argument to
