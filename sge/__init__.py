@@ -363,7 +363,7 @@ MODS = {"alt": pygame.KMOD_ALT, "alt_left": pygame.KMOD_LALT,
         "shift_right": pygame.KMOD_RSHIFT}
 
 MOUSE_BUTTONS = {"left": 1, "right": 3, "middle": 2, "wheel_up": 4,
-                 "wheel_down": 5, "wheel_left": 6, "wheel_right": 7}
+                 "wheel_down": 5, "extra1": 6, "extra2": 7}
 MOUSE_BUTTON_NAMES = {}
 for pair in MOUSE_BUTTONS.items():
     MOUSE_BUTTON_NAMES[pair[1]] = pair[0]

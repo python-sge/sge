@@ -108,6 +108,8 @@ long as said assignments conform with the specification above.
 .. data:: sge.s.escape
 .. data:: sge.s.euro
 .. data:: sge.s.exclamation
+.. data:: sge.s.extra1
+.. data:: sge.s.extra2
 .. data:: sge.s.f0
 .. data:: sge.s.f1
 .. data:: sge.s.f2
@@ -386,6 +388,8 @@ wheel_up = "wheel_up"
 wheel_down = "wheel_down"
 wheel_left = "wheel_left"
 wheel_right = "wheel_right"
+extra1 = "extra1"
+extra2 = "extra2"
 
 # Joystick input types
 # "axis+" and "axis-" unfortunately must be excluded.

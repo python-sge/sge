@@ -11,6 +11,19 @@ information. This file is offered as-is, without any warranty.
 Specification additions:
 + sge.dsp.Game.sampling_frequency
 + sge.dsp.Game.stereo
++ sge.input.MouseWheelMove
++ sge.dsp.Game.event_mouse_wheel_move
++ sge.dsp.Room.event_mouse_wheel_move
++ sge.dsp.Object.event_mouse_wheel_move
++ sge.s.extra1
++ sge.s.extra2
+
+Specification misc changes:
+* Mouse button press events with the "wheel_up" and "wheel_down" button
+  identifiers are no longer called; instead, mouse wheel input is now
+  handled by new mouse wheel move events.
+* Mouse button events with the "extra1" and "extra2" identifiers are now
+  called; these are used for 5-button mouse support.
 
 
 1.7

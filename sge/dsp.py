@@ -472,6 +472,12 @@ class Game:
                             event.button)
                         for obj in r._active_objects.copy():
                             obj.event_mouse_button_release(event.button)
+                    elif isinstance(event, sge.input.MouseWheelMove):
+                        self.event_mouse_wheel_move(event.x, event.y)
+                        self.current_room.event_mouse_wheel_move(event.x,
+                                                                 event.y)
+                        for obj in r._active_objects.copy():
+                            obj.event_mouse_wheel_move(event.x, event.y)
                     elif isinstance(event, sge.input.JoystickAxisMove):
                         self.event_joystick_axis_move(
                             event.js_name, event.js_id, event.axis,
@@ -832,7 +838,7 @@ class Game:
                 try:
                     k = sge.KEY_NAMES[event.key]
                 except KeyError:
-                    k = "undef_{}".format(event.key)
+                    k = f"undef_{event.key}"
 
                 input_event = sge.input.KeyPress(k, event.unicode)
                 self.input_events.append(input_event)
@@ -840,7 +846,7 @@ class Game:
                 try:
                     k = sge.KEY_NAMES[event.key]
                 except KeyError:
-                    k = "undef_{}".format(event.key)
+                    k = f"undef_{event.key}"
 
                 input_event = sge.input.KeyRelease(k)
                 self.input_events.append(input_event)
@@ -848,20 +854,28 @@ class Game:
                 input_event = sge.input.MouseMove(*event.rel)
                 self.input_events.append(input_event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                try:
-                    b = sge.MOUSE_BUTTON_NAMES[event.button]
-                except KeyError:
-                    w = "Don't know how to handle mouse button {}.".format(
-                        event.button)
-                else:
-                    input_event = sge.input.MouseButtonPress(b)
-                    self.input_events.append(input_event)
+                if pygame.version.vernum[0] < 2:
+                    if event.button == 4:
+                        input_event = sge.input.MouseWheel(0, -1)
+                        self.input_events.append(input_event)
+                    elif event.button == 5:
+                        input_event = sge.input.MouseWheel(0, 1)
+                        self.input_events.append(input_event)
+                elif event.button != 4 and event.button != 5:
+                    try:
+                        b = sge.MOUSE_BUTTON_NAMES[event.button]
+                    except KeyError:
+                        w = ("Don't know how to handle mouse button "
+                             f"{event.button}.")
+                    else:
+                        input_event = sge.input.MouseButtonPress(b)
+                        self.input_events.append(input_event)
             elif event.type == pygame.MOUSEBUTTONUP:
                 try:
                     b = sge.MOUSE_BUTTON_NAMES[event.button]
                 except KeyError:
-                    w = "Don't know how to handle mouse button {}.".format(
-                        event.button)
+                    w = ("Don't know how to handle mouse button "
+                         f"{event.button}.")
                 else:
                     input_event = sge.input.MouseButtonRelease(b)
                     self.input_events.append(input_event)
@@ -1017,6 +1031,17 @@ class Game:
                 if not music_end_blocked and r.music_queue:
                     music = r.music_queue.pop(0)
                     music[0].play(*music[1:])
+            elif pygame.version.vernum[0] >= 2:
+                # Pygame 2 exclusive events
+                if event.type == pygame.MOUSEWHEEL:
+                    x = event.x
+                    y = event.y
+                    if event.flipped:
+                        x *= -1
+                    else:
+                        y *= -1
+
+                    self.input_events.append(sge.input.MouseWheelMove(x, y))
 
     def regulate_speed(self, fps=None):
         """
@@ -1513,6 +1538,12 @@ class Game:
         for more information.
         """
         pass
+
+    def event_mouse_wheel_move(self, x, y):
+        """
+        See the documentation for :class:`sge.input.MouseWheelMove` for
+        more information.
+        """
 
     def event_joystick_axis_move(self, js_name, js_id, axis, value):
         """
@@ -2370,6 +2401,12 @@ class Room:
         for more information.
         """
         pass
+
+    def event_mouse_wheel_move(self, x, y):
+        """
+        See the documentation for :class:`sge.input.MouseWheelMove` for
+        more information.
+        """
 
     def event_joystick_axis_move(self, js_name, js_id, axis, value):
         """
@@ -3806,6 +3843,12 @@ class Object:
         for more information.
         """
         pass
+
+    def event_mouse_wheel_move(self, x, y):
+        """
+        See the documentation for :class:`sge.input.MouseWheelMove` for
+        more information.
+        """
 
     def event_joystick_axis_move(self, js_name, js_id, axis, value):
         """

@@ -33,7 +33,7 @@ __all__ = ["KeyPress", "KeyRelease", "MouseMove", "MouseButtonPress",
            "QuitRequest"]
 
 
-class KeyPress(object):
+class KeyPress:
 
     """
     This input event represents a key on the keyboard being pressed.
@@ -55,7 +55,7 @@ class KeyPress(object):
         self.char = char
 
 
-class KeyRelease(object):
+class KeyRelease:
 
     """
     This input event represents a key on the keyboard being released.
@@ -70,7 +70,7 @@ class KeyRelease(object):
         self.key = key
 
 
-class MouseMove(object):
+class MouseMove:
 
     """
     This input event represents the mouse being moved.
@@ -89,7 +89,7 @@ class MouseMove(object):
         self.y = y
 
 
-class MouseButtonPress(object):
+class MouseButtonPress:
 
     """
     This input event represents a mouse button being pressed.
@@ -105,10 +105,8 @@ class MouseButtonPress(object):
     Left mouse button      ``"left"``
     Right mouse button     ``"right"``
     Middle mouse button    ``"middle"``
-    Mouse wheel up         ``"wheel_up"``
-    Mouse wheel down       ``"wheel_down"``
-    Mouse wheel tilt left  ``"wheel_left"``
-    Mouse wheel tilt right ``"wheel_right"``
+    Extra mouse button 1   ``"extra1"``
+    Extra mouse button 2   ``"extra2"``
     ====================== =================
     """
 
@@ -116,7 +114,7 @@ class MouseButtonPress(object):
         self.button = button
 
 
-class MouseButtonRelease(object):
+class MouseButtonRelease:
 
     """
     This input event represents a mouse button being released.
@@ -132,7 +130,28 @@ class MouseButtonRelease(object):
         self.button = button
 
 
-class JoystickAxisMove(object):
+class MouseWheelMove:
+
+    """
+    This input event represents a mouse wheel moving.
+
+    .. attribute:: x
+
+       The horizontal scroll amount, where ``-1`` is to the left, ``1``
+       is to the right, and ``0`` is no horizontal scrolling.
+
+    .. attribute:: y
+
+       The vertical scroll amount, where ``-1`` is up, ``1`` is down,
+       and ``0`` is no vertical scrolling.
+    """
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
+class JoystickAxisMove:
 
     """
     This input event represents a joystick axis moving.
@@ -164,7 +183,7 @@ class JoystickAxisMove(object):
         self.value = max(-1.0, min(value, 1.0))
 
 
-class JoystickHatMove(object):
+class JoystickHatMove:
 
     """
     This input event represents a joystick hat moving.
@@ -201,7 +220,7 @@ class JoystickHatMove(object):
         self.y = y
 
 
-class JoystickTrackballMove(object):
+class JoystickTrackballMove:
 
     """
     This input event represents a joystick trackball moving.
@@ -236,7 +255,7 @@ class JoystickTrackballMove(object):
         self.y = y
 
 
-class JoystickButtonPress(object):
+class JoystickButtonPress:
 
     """
     This input event represents a joystick button being pressed.
@@ -261,7 +280,7 @@ class JoystickButtonPress(object):
         self.button = button
 
 
-class JoystickButtonRelease(object):
+class JoystickButtonRelease:
 
     """
     This input event represents a joystick button being released.
@@ -286,7 +305,7 @@ class JoystickButtonRelease(object):
         self.button = button
 
 
-class JoystickEvent(object):
+class JoystickEvent:
 
     """
     This input event represents the movement of any joystick input.
@@ -354,7 +373,7 @@ class JoystickEvent(object):
         self.value = value
 
 
-class KeyboardFocusGain(object):
+class KeyboardFocusGain:
 
     """
     This input event represents the game window gaining keyboard focus.
@@ -373,7 +392,7 @@ class KeyboardFocusGain(object):
     """
 
 
-class KeyboardFocusLose(object):
+class KeyboardFocusLose:
 
     """
     This input event represents the game window losing keyboard focus.
@@ -386,7 +405,7 @@ class KeyboardFocusLose(object):
     """
 
 
-class MouseFocusGain(object):
+class MouseFocusGain:
 
     """
     This input event represents the game window gaining mouse focus.
@@ -399,7 +418,7 @@ class MouseFocusGain(object):
     """
 
 
-class MouseFocusLose(object):
+class MouseFocusLose:
 
     """
     This input event represents the game window losing mouse focus.
@@ -412,7 +431,7 @@ class MouseFocusLose(object):
     """
 
 
-class QuitRequest(object):
+class QuitRequest:
 
     """
     This input event represents the OS requesting for the program to
