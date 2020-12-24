@@ -45,7 +45,7 @@ __all__ = ["Color", "Sprite", "TileGrid", "Font", "BackgroundLayer",
            "Background"]
 
 
-class Color(object):
+class Color:
 
     """
     This class stores color information.
@@ -203,7 +203,7 @@ class Color(object):
         self.red, self.green, self.blue, self.alpha = c
 
 
-class Sprite(object):
+class Sprite:
 
     """
     This class stores images and information about how the SGE is to use
@@ -2139,7 +2139,7 @@ class Sprite(object):
         return self.copy()
 
 
-class TileGrid(object):
+class TileGrid:
 
     """
     This class represents a grid of individual sprites.  This is useful
@@ -2572,7 +2572,7 @@ class TileGrid(object):
             bbox_height=self.bbox_height)
 
 
-class Font(object):
+class Font:
 
     """
     This class stores a font for use by text drawing methods.
@@ -2976,7 +2976,7 @@ class _SpriteFont(Font):
         self.italic = italic
 
 
-class BackgroundLayer(object):
+class BackgroundLayer:
 
     """
     This class stores a sprite and certain information for a layer of a
@@ -3058,7 +3058,7 @@ class BackgroundLayer(object):
         self.rd["frame_time"] = None
 
 
-class Background(object):
+class Background:
 
     """
     This class stores the layers that make up the background (which

@@ -32,7 +32,7 @@ from sge.r import _get_channel, _release_channel
 __all__ = ["Sound", "Music", "stop_all"]
 
 
-class Sound(object):
+class Sound:
 
     """
     This class stores and plays sound effects.  Note that this is
@@ -271,7 +271,7 @@ class Sound(object):
             channel.unpause()
 
 
-class Music(object):
+class Music:
 
     """
     This class stores and plays music.  Music is very similar to sound
