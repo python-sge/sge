@@ -187,7 +187,7 @@ def _screen_blend(dest, source, dest_x, dest_y, alpha=False):
     source.unlock()
 
 
-def _set_mode():
+def _set_mode(resize_only=False):
     # Set the mode of the screen based on self.width, self.height,
     # and self.fullscreen.
     global game_display_surface
@@ -262,8 +262,13 @@ def _set_mode():
 
             flags |= pygame.RESIZABLE
 
-        game_window = pygame.display.set_mode(
-            (game_window_width, game_window_height), flags)
+        # If we're just resizing the window and using SDL2, don't call
+        # set_mode(), since it's unnecessary and can cause problems on
+        # GNOME, described here:
+        # https://github.com/pygame/pygame/issues/2418
+        if not resize_only or pygame.get_sdl_version()[0] < 2:
+            game_window = pygame.display.set_mode(
+                (game_window_width, game_window_height), flags)
 
         w = max(1, game_window.get_width())
         h = max(1, game_window.get_height())

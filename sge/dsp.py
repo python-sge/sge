@@ -1026,7 +1026,7 @@ class Game:
             elif event.type == pygame.VIDEORESIZE:
                 r.game_window_width = event.w
                 r.game_window_height = event.h
-                _set_mode()
+                _set_mode(True)
             elif event.type == sge.MUSIC_END_EVENT:
                 if not music_end_blocked and r.music_queue:
                     music = r.music_queue.pop(0)
