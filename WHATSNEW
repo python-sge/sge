@@ -17,6 +17,10 @@ Specification additions:
 + sge.dsp.Object.event_mouse_wheel_move
 + sge.s.extra1
 + sge.s.extra2
++ sge.dsp.Game.scale_integer
++ sge.dsp.Game.window_width
++ sge.dsp.Game.window_height
++ sge.dsp.Game.window_size
 
 Specification misc changes:
 * Mouse button press events with the "wheel_up" and "wheel_down" button

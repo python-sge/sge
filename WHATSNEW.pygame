@@ -10,6 +10,7 @@ information. This file is offered as-is, without any warranty.
 
 Pygame SGE bugfixes:
 - Future queue cleared by previously playing music that was stopped
+- Nonfunctional implementation of resolution changing
 
 
 1.7.1

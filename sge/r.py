@@ -213,6 +213,7 @@ def _set_mode(resize_only=False):
             w = "Couldn't find out the maximum resolution! Assuming 1024x768."
             warnings.warn(w)
             modes = [(1024, 768)]
+        modes.sort(key=lambda m: (m[1], m[0]))
 
         force_auto_scale = False
 
@@ -221,9 +222,16 @@ def _set_mode(resize_only=False):
             game_window_height = int(game.height * game.scale)
             if not pygame.display.mode_ok(
                     (game_window_width, game_window_height), flags):
-                game_window_width = _display_info.current_w
-                game_window_height = _display_info.current_h
-                force_auto_scale = True
+                for mode in modes:
+                    if (mode[0] >= game_window_width
+                            and mode[1] >= game_window_height
+                            and pygame.display.mode_ok(mode, flags)):
+                        game_window_width, game_window_height = mode
+                        break
+                else:
+                    game_window_width = _display_info.current_w
+                    game_window_height = _display_info.current_h
+                    force_auto_scale = True
         else:
             game_window_width = _display_info.current_w
             game_window_height = _display_info.current_h
@@ -238,6 +246,12 @@ def _set_mode(resize_only=False):
             if game.scale_proportional:
                 game_xscale = min(game_xscale, game_yscale)
                 game_yscale = game_xscale
+
+            if game.scale_integer:
+                if game_xscale > 1:
+                    game_xscale = math.floor(game_xscale)
+                if game_yscale > 1:
+                    game_yscale = math.floor(game_yscale)
 
         w = max(1, game_window.get_width())
         h = max(1, game_window.get_height())
@@ -259,6 +273,12 @@ def _set_mode(resize_only=False):
             if game.scale_proportional:
                 game_xscale = min(game_xscale, game_yscale)
                 game_yscale = game_xscale
+
+            if game.scale_integer:
+                if game_xscale > 1:
+                    game_xscale = math.floor(game_xscale)
+                if game_yscale > 1:
+                    game_yscale = math.floor(game_yscale)
 
             flags |= pygame.RESIZABLE
 

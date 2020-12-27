@@ -71,6 +71,29 @@ class Game:
 
        The height of the game's display.
 
+    .. attribute:: window_width
+
+       The width of the actual window the game is contained within.
+       This can be changed to cause the actual window dimensions to
+       change, but this will only have an effect if :attr:`fullscreen`
+       is ``False``.
+
+    .. attribute:: window_height
+
+       The height of the actual window the game is contained within.
+       This can be changed to cause the actual window dimensions to
+       change, but this will only have an effect if :attr:`fullscreen`
+       is ``False``.
+
+    .. attribute:: window_size
+
+       A two-part tuple containing the width and height, respectively,
+       of the actual window the game is contained within.  Each value in
+       the tuple functions the same as :attr:`window_width` and
+       :attr:`window_height`, but assigning to this value will set both
+       to the desired size at the same time, resizing the window in one
+       operation rather than two.
+
     .. attribute:: fullscreen
 
        Whether or not the game should be in fullscreen mode.
@@ -88,10 +111,23 @@ class Game:
 
     .. attribute:: scale_proportional
 
-       If set to :const:`True`, scaling is always proportional.  If set
-       to :const:`False`, the image will be distorted to completely fill
-       the game window or screen.  This has no effect unless
-       :attr:`scale` is ``None`` or ``0``.
+       If set to ``True``, scaling is always proportional.  If set to
+       ``False``, the image will be distorted to completely fill the
+       game window or screen.  This has no effect unless :attr:`scale`
+       is ``None`` or ``0``.
+
+    .. attribute:: scale_integer
+
+       If set to ``True``, only integer scaling is ever used; if the
+       window size would otherwise cause non-integer scaling, the
+       display is windowboxed to make it scale by an integer amount.
+       This has no effect unless :attr:`scale` is ``None`` or ``0``.
+
+       .. note::
+
+          This does not guarantee on its own that pixels will remain
+          squares. To guarantee that, you must set both this and
+          :attr:`scale_proportional` to ``True``.
 
     .. attribute:: scale_method
 
@@ -240,6 +276,38 @@ class Game:
             _set_mode()
 
     @property
+    def window_width(self):
+        return r.game_window_width
+
+    @window_width.setter
+    def window_width(self, value):
+        if value != r.game_window_width:
+            r.game_window_width = round(value)
+            _set_mode()
+
+    @property
+    def window_height(self):
+        return r.game_window_height
+
+    @window_height.setter
+    def window_height(self, value):
+        if value != r.game_window_height:
+            r.game_window_height = round(value)
+            _set_mode()
+
+    @property
+    def window_size(self):
+        return (r.game_window_width, r.game_window_height)
+
+    @window_size.setter
+    def window_size(self, value):
+        w, h = value
+        if w != r.game_window_width or h != r.game_window_height:
+            r.game_window_width = round(w)
+            r.game_window_height = round(h)
+            _set_mode()
+
+    @property
     def fullscreen(self):
         return r.game_fullscreen
 
@@ -271,6 +339,16 @@ class Game:
     def scale_proportional(self, value):
         if value != r.game_scale_proportional:
             r.game_scale_proportional = value
+            _set_mode()
+
+    @property
+    def scale_integer(self):
+        return r.game_scale_integer
+
+    @scale_integer.setter
+    def scale_integer(self, value):
+        if value != r.game_scale_integer:
+            r.game_scale_integer = value
             _set_mode()
 
     @property
@@ -319,8 +397,8 @@ class Game:
                  scale_proportional=True, scale_method=None, fps=60,
                  delta=False, delta_min=15, delta_max=None, grab_input=False,
                  window_text=None, window_icon=None,
-                 collision_events_enabled=True, sampling_frequency=44100,
-                 stereo=True):
+                 collision_events_enabled=True, scale_integer=False,
+                 sampling_frequency=44100, stereo=True):
         """
         Arguments set the respective initial attributes of the game.
         See the documentation for :class:`sge.dsp.Game` for more
@@ -348,6 +426,7 @@ class Game:
         r.game_fullscreen = fullscreen
         r.game_scale = scale
         r.game_scale_proportional = scale_proportional
+        r.game_scale_integer = scale_integer
         r.game_scale_method = scale_method
         r.game_new_room = None
         self.fps = fps
