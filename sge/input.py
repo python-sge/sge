@@ -431,6 +431,13 @@ class MouseFocusLose:
     """
 
 
+class WindowResize:
+
+    """
+    This input event represents the player resizing the window.
+    """
+
+
 class QuitRequest:
 
     """

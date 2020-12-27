@@ -629,6 +629,8 @@ class Game:
                     elif isinstance(event, sge.input.MouseFocusLose):
                         self.event_lose_mouse_focus()
                         self.current_room.event_lose_mouse_focus()
+                    elif isinstance(event, sge.input.WindowResize):
+                        self.event_window_resize()
                     elif isinstance(event, sge.input.QuitRequest):
                         self.current_room.event_close()
                         self.event_close()
@@ -789,6 +791,12 @@ class Game:
                         event.button)
                     for obj in self.current_room.objects:
                         obj.event_paused_mouse_button_release(event.button)
+                elif isinstance(event, sge.input.MouseWheelMove):
+                    self.event_paused_mouse_wheel_move(event.x, event.y)
+                    self.current_room.event_paused_mouse_wheel_move(event.x,
+                                                                    event.y)
+                    for obj in r._active_objects.copy():
+                        obj.event_paused_mouse_wheel_move(event.x, event.y)
                 elif isinstance(event, sge.input.JoystickAxisMove):
                     self.event_paused_joystick_axis_move(
                         event.js_name, event.js_id, event.axis, event.value)
@@ -859,6 +867,8 @@ class Game:
                 elif isinstance(event, sge.input.MouseFocusLose):
                     self.event_paused_lose_mouse_focus()
                     self.current_room.event_paused_lose_mouse_focus()
+                elif isinstance(event, sge.input.WindowResize):
+                    self.event_paused_window_resize()
                 elif isinstance(event, sge.input.QuitRequest):
                     self.current_room.event_paused_close()
                     self.event_paused_close()
@@ -1100,12 +1110,13 @@ class Game:
                     if 1 & event.state:
                         # Lose mouse focus
                         self.input_events.append(sge.input.MouseFocusLose())
-            elif event.type == pygame.QUIT:
-                self.input_events.append(sge.input.QuitRequest())
             elif event.type == pygame.VIDEORESIZE:
+                self.input_events.append(sge.input.WindowResize())
                 r.game_window_width = event.w
                 r.game_window_height = event.h
                 _set_mode(True)
+            elif event.type == pygame.QUIT:
+                self.input_events.append(sge.input.QuitRequest())
             elif event.type == sge.MUSIC_END_EVENT:
                 if not music_end_blocked and r.music_queue:
                     music = r.music_queue.pop(0)
@@ -1623,6 +1634,7 @@ class Game:
         See the documentation for :class:`sge.input.MouseWheelMove` for
         more information.
         """
+        pass
 
     def event_joystick_axis_move(self, js_name, js_id, axis, value):
         """
@@ -1694,6 +1706,13 @@ class Game:
         """
         pass
 
+    def event_window_resize(self):
+        """
+        See the documentation for :class:`sge.input.WindowResize` for
+        more information.
+        """
+        pass
+
     def event_close(self):
         """
         See the documentation for :class:`sge.input.QuitRequest` for
@@ -1751,6 +1770,13 @@ class Game:
         """
         See the documentation for :class:`sge.input.MouseButtonRelease`
         for more information.
+        """
+        pass
+
+    def event_paused_mouse_wheel_move(self, x, y):
+        """
+        See the documentation for :class:`sge.input.MouseWheelMove` for
+        more information.
         """
         pass
 
@@ -1821,6 +1847,13 @@ class Game:
     def event_paused_lose_mouse_focus(self):
         """
         See the documentation for :class:`sge.input.MouseFocusLose` for
+        more information.
+        """
+        pass
+
+    def event_paused_window_resize(self):
+        """
+        See the documentation for :class:`sge.input.WindowResize` for
         more information.
         """
         pass
@@ -2486,6 +2519,7 @@ class Room:
         See the documentation for :class:`sge.input.MouseWheelMove` for
         more information.
         """
+        pass
 
     def event_joystick_axis_move(self, js_name, js_id, axis, value):
         """
@@ -2606,6 +2640,13 @@ class Room:
         """
         See the documentation for :class:`sge.input.MouseButtonRelease`
         for more information.
+        """
+        pass
+
+    def event_paused_mouse_wheel_move(self, x, y):
+        """
+        See the documentation for :class:`sge.input.MouseWheelMove` for
+        more information.
         """
         pass
 
@@ -3928,6 +3969,7 @@ class Object:
         See the documentation for :class:`sge.input.MouseWheelMove` for
         more information.
         """
+        pass
 
     def event_joystick_axis_move(self, js_name, js_id, axis, value):
         """
@@ -4086,6 +4128,13 @@ class Object:
         """
         See the documentation for :class:`sge.input.MouseButtonRelease`
         for more information.
+        """
+        pass
+
+    def event_paused_mouse_wheel_move(self, x, y):
+        """
+        See the documentation for :class:`sge.input.MouseWheelMove` for
+        more information.
         """
         pass
 
