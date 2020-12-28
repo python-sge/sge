@@ -73,7 +73,9 @@ Because of some shortcomings in the Pygame API, when sge.game.fullscreen
 is True and sge.game.scale is None, the resolution as it was at the time
 the game started will always be used, even if the user changes their
 resolution while the game is running. With Pygame 2, this may simply
-result in windowboxing in some cases, but should otherwise be harmless.
-With Pygame 1 on some systems and in some situations, this can cause the
-game to crash when switching to fullscreen, so you should be mindful of
-this if your user base might be using Pygame 1.
+result in windowboxing or creating a display that's too large to fit on
+the screen in some cases, but should not cause any fatal errors (do keep
+in mind though that this may prevent the user from clicking in some
+areas).  With Pygame 1 on some systems and in some situations, this can
+cause the game to crash when switching to fullscreen.  You should be
+mindful of these potential effects and plan accordingly.
