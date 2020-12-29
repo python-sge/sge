@@ -229,15 +229,16 @@ def _set_mode(resize_only=False):
                         game_window_width, game_window_height = mode
                         break
                 else:
-                    game_window_width = _display_info.current_w
-                    game_window_height = _display_info.current_h
+                    game_window_width = 0
+                    game_window_height = 0
                     force_auto_scale = True
         else:
-            game_window_width = _display_info.current_w
-            game_window_height = _display_info.current_h
+            game_window_width = 0
+            game_window_height = 0
 
         game_window = pygame.display.set_mode(
             (game_window_width, game_window_height), flags)
+        game_window_width, game_window_height = game_window.get_size()
 
         if not game.scale or force_auto_scale:
             game_xscale = game_window_width / game.width
@@ -289,6 +290,7 @@ def _set_mode(resize_only=False):
         if not resize_only or pygame.get_sdl_version()[0] < 2:
             game_window = pygame.display.set_mode(
                 (game_window_width, game_window_height), flags)
+            game_window_width, game_window_height = game_window.get_size()
 
         w = max(1, game_window.get_width())
         h = max(1, game_window.get_height())
