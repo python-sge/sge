@@ -1333,6 +1333,7 @@ class Game:
 
         # Scale/blit display surface
         if display_surface is not r.game_window:
+            r.game_window.fill((0, 0, 0))
             r.game_window.blit(
                 _scale(display_surface, self.width * r.game_xscale,
                        self.height * r.game_yscale), (int(r.game_x),
