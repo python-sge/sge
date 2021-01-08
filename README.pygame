@@ -65,3 +65,4 @@ sge.dsp.Game.project_text support anti-aliasing in all cases.  No other
 drawing or projecting methods support anti-aliasing.  If anti-aliasing
 is unsupported for a particular case, the Pygame SGE will ignore the
 request for anti-aliasing.
+

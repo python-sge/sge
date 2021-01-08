@@ -61,7 +61,7 @@ _prev_hats = {}
 _display_info = None
 
 
-class cache(object):
+class cache:
 
     prune_time = 0
     _cache = {}
