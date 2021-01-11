@@ -5,7 +5,7 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
-1.8
+2.0
 ------------------------------------------------------------------------
 
 Specification additions:
@@ -36,6 +36,12 @@ Specification misc changes:
   handled by new mouse wheel move events.
 * Mouse button events with the "extra1" and "extra2" identifiers are now
   called; these are used for 5-button mouse support.
+* Most methods now require certain arguments to be keyword arguments.
+  This breaks compatibility, but it also makes code which simply passes
+  on arguments much cleaner (you can now simply use ``**kwargs`` for
+  those cases), and it makes it possible to ensure that these arguments
+  are sorted in a logical way without further breaking backward
+  compatibility down the line.
 
 
 1.7

@@ -431,7 +431,7 @@ class Sprite:
     def frames(self):
         return len(self.rd["baseimages"])
 
-    def __init__(self, name=None, directory="", width=None, height=None,
+    def __init__(self, name=None, directory="", *, width=None, height=None,
                  transparent=True, origin_x=0, origin_y=0, fps=60, bbox_x=None,
                  bbox_y=None, bbox_width=None, bbox_height=None):
         """
@@ -708,7 +708,7 @@ class Sprite:
         surf.unlock()
         return pixels
 
-    def draw_dot(self, x, y, color, frame=None, blend_mode=None):
+    def draw_dot(self, x, y, color, frame=None, *, blend_mode=None):
         """
         Draw a single-pixel dot on the sprite.
 
@@ -771,8 +771,8 @@ class Sprite:
 
         s_refresh(self)
 
-    def draw_line(self, x1, y1, x2, y2, color, thickness=1, anti_alias=False,
-                  frame=None, blend_mode=None):
+    def draw_line(self, x1, y1, x2, y2, color, thickness=1, frame=None, *,
+                  anti_alias=False, blend_mode=None):
         """
         Draw a line segment on the sprite.
 
@@ -847,8 +847,8 @@ class Sprite:
 
         s_refresh(self)
 
-    def draw_rectangle(self, x, y, width, height, fill=None, outline=None,
-                       outline_thickness=1, frame=None, blend_mode=None):
+    def draw_rectangle(self, x, y, width, height, frame=None, *, fill=None,
+                       outline=None, outline_thickness=1, blend_mode=None):
         """
         Draw a rectangle on the sprite.
 
@@ -933,8 +933,8 @@ class Sprite:
 
         s_refresh(self)
 
-    def draw_ellipse(self, x, y, width, height, fill=None, outline=None,
-                     outline_thickness=1, anti_alias=False, frame=None,
+    def draw_ellipse(self, x, y, width, height, frame=None, *, fill=None,
+                     outline=None, outline_thickness=1, anti_alias=False,
                      blend_mode=None):
         """
         Draw an ellipse on the sprite.
@@ -1021,9 +1021,8 @@ class Sprite:
 
         s_refresh(self)
 
-    def draw_circle(self, x, y, radius, fill=None, outline=None,
-                    outline_thickness=1, anti_alias=False, frame=None,
-                    blend_mode=None):
+    def draw_circle(self, x, y, radius, frame=None, *, fill=None, outline=None,
+                    outline_thickness=1, anti_alias=False, blend_mode=None):
         """
         Draw a circle on the sprite.
 
@@ -1107,9 +1106,8 @@ class Sprite:
 
         s_refresh(self)
 
-    def draw_polygon(self, points, fill=None, outline=None,
-                     outline_thickness=1, anti_alias=False, frame=None,
-                     blend_mode=None):
+    def draw_polygon(self, points, frame=None, *, fill=None, outline=None,
+                     outline_thickness=1, anti_alias=False, blend_mode=None):
         """
         Draw a polygon on the sprite.
 
@@ -1193,7 +1191,7 @@ class Sprite:
 
         s_refresh(self)
 
-    def draw_sprite(self, sprite, image, x, y, frame=None, blend_mode=None):
+    def draw_sprite(self, sprite, image, x, y, frame=None, *, blend_mode=None):
         """
         Draw another sprite on the sprite.
 
@@ -1258,8 +1256,8 @@ class Sprite:
 
     def draw_text(self, font, text, x, y, width=None, height=None,
                   color=Color("white"), halign="left", valign="top",
-                  anti_alias=True, frame=None, blend_mode=None, outline=None,
-                  outline_thickness=0):
+                  frame=None, *, anti_alias=True, blend_mode=None,
+                  outline=None, outline_thickness=0):
         """
         Draw text on the sprite.
 
@@ -1869,7 +1867,7 @@ class Sprite:
             raise OSError(m)
 
     @classmethod
-    def from_tween(cls, sprite, frames, fps=None, xscale=None, yscale=None,
+    def from_tween(cls, sprite, frames, fps=None, *, xscale=None, yscale=None,
                    rotation=None, blend=None, bbox_x=None, bbox_y=None,
                    bbox_width=None, bbox_height=None, blend_mode=None):
         """
@@ -2026,7 +2024,7 @@ class Sprite:
 
     @classmethod
     def from_text(cls, font, text, width=None, height=None,
-                  color=Color("white"), halign="left", valign="top",
+                  color=Color("white"), halign="left", valign="top", *,
                   anti_alias=True, outline=None, outline_thickness=0):
         """
         Create a sprite, draw the given text on it, and return the
@@ -2379,7 +2377,7 @@ class TileGrid:
             self.__bbox_height = self.height - self.bbox_y
 
     def __init__(self, tiles, render_method=None, section_length=1,
-                 tile_width=16, tile_height=16, origin_x=0, origin_y=0,
+                 tile_width=16, tile_height=16, *, origin_x=0, origin_y=0,
                  bbox_x=None, bbox_y=None, bbox_width=None, bbox_height=None):
         """
         Arguments set the respective initial attributes of the grid.
@@ -2701,7 +2699,7 @@ class Font:
     def linesize(self):
         return self.rd["font"].get_linesize()
 
-    def __init__(self, name=None, size=12, underline=False, bold=False,
+    def __init__(self, name=None, size=12, *, underline=False, bold=False,
                  italic=False):
         """
         Arguments:
@@ -2740,7 +2738,7 @@ class Font:
         self.bold = bold
         self.italic = italic
 
-    def get_width(self, text, width=None, height=None, outline_thickness=0):
+    def get_width(self, text, width=None, height=None, *, outline_thickness=0):
         """
         Return the width of a certain string of text when rendered.
 
@@ -2760,7 +2758,7 @@ class Font:
 
         return text_width + 2*outline_thickness
 
-    def get_height(self, text, width=None, height=None, outline_thickness=0):
+    def get_height(self, text, width=None, height=None, *, outline_thickness=0):
         """
         Return the height of a certain string of text when rendered.
 
@@ -2781,7 +2779,7 @@ class Font:
         return text_height + 2*outline_thickness
 
     @classmethod
-    def from_sprite(cls, sprite, chars, hsep=0, vsep=0, size=12,
+    def from_sprite(cls, sprite, chars, hsep=0, vsep=0, size=12, *,
                     underline=False, bold=False, italic=False):
         """
         Return a font derived from a sprite.
@@ -3032,7 +3030,7 @@ class BackgroundLayer:
        Reserved dictionary for internal use by the SGE.  (Read-only)
     """
 
-    def __init__(self, sprite, x, y, z=0, xscroll_rate=1, yscroll_rate=1,
+    def __init__(self, sprite, x, y, z=0, *, xscroll_rate=1, yscroll_rate=1,
                  repeat_left=False, repeat_right=False, repeat_up=False,
                  repeat_down=False):
         """
