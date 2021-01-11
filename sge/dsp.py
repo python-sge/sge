@@ -4298,3 +4298,50 @@ class Mouse(Object):
                 x -= self.image_origin_x
                 y -= self.image_origin_y
                 r.game_window_projections.append((img, x, y, self.z, None))
+
+
+def list_fullscreen_modes():
+    """
+    Return a list of possible display modes that can be used for a
+    fullscreen display.  Each display mode is listed as a tuple in the
+    form of ``(width, height)``, where ``width`` is the width of the
+    display mode and ``height`` is the height of the display mode.  The
+    list is sorted by total number of pixels contained in the display
+    resolution (i.e. ``width * height``) in descending order, i.e.
+    starting with the resolution containing the greatest number of total
+    pixels and ending with the resolution containing the least number of
+    total pixels.
+
+    .. note::
+
+       This function is allowed to return an empty list, in which case
+       the SGE was unable to determine what fullscreen modes are
+       available.
+    """
+    modes = pygame.display.list_modes()
+    if modes == -1:
+        w = _display_info.current_w
+        h = _display_info.current_h
+        if w != -1 and h != -1:
+            modes = [(w, h)]
+        else:
+            modes = []
+    elif not modes:
+        modes = []
+
+    return sorted(set(modes), key=lambda T: T[0] * T[1], reverse=True)
+
+
+def fullscreen_mode_ok(width, height):
+    """
+    Return whether or not a given fullscreen display size is supported.
+
+    Arguments:
+
+    - ``width`` -- The width of the fullscreen display size to check.
+    - ``height`` -- The height of the fullscreen display size to check.
+
+    See also: :func:`sge.dsp.list_modes`
+    """
+    return bool(pygame.display.mode_ok(
+        (int(width), int(height)), pygame.FULLSCREEN))

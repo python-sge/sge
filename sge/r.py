@@ -208,12 +208,11 @@ def _set_mode(resize_only=False):
     if game.fullscreen or not _display_info.wm:
         flags = pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
 
-        modes = pygame.display.list_modes(0, flags)
-        if modes == -1 or not modes:
+        modes = sge.dsp.list_fullscreen_modes()
+        if not modes:
             w = "Couldn't find out the maximum resolution! Assuming 1024x768."
             warnings.warn(w)
             modes = [(1024, 768)]
-        modes.sort(key=lambda m: (m[1], m[0]))
 
         force_auto_scale = False
 

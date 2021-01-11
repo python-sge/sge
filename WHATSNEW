@@ -27,6 +27,8 @@ Specification additions:
 + sge.input.WindowResize
 + sge.dsp.Game.event_window_resize
 + sge.dsp.Game.event_paused_window_resize
++ sge.dsp.list_fullscreen_modes
++ sge.dsp.fullscreen_mode_ok
 
 Specification misc changes:
 * Mouse button press events with the "wheel_up" and "wheel_down" button
