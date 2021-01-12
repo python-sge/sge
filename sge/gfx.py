@@ -1963,8 +1963,7 @@ class Sprite:
             tween_spr.append_frame()
 
         for i in range(frames):
-            tween_spr.draw_sprite(sprite, i, new_origin_x, new_origin_y,
-                                  frame=i)
+            tween_spr.draw_sprite(sprite, i, new_origin_x, new_origin_y, i)
 
             progress = i / (frames - 1)
 

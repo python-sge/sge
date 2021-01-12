@@ -176,7 +176,7 @@ class Room(sge.dsp.Room):
 
 def main():
     # Create Game object
-    Game(640, 480)
+    Game(width=640, height=480)
 
     # Load sprites
     glob.js_selection_sprite = sge.gfx.Sprite(width=sge.game.width,

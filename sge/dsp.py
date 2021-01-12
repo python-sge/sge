@@ -1368,7 +1368,7 @@ class Game:
         """
         _check_color(color)
         sprite = _get_dot_sprite(color)
-        self.project_sprite(sprite, 0, x, y, z, blend_mode)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
 
     def project_line(self, x1, y1, x2, y2, color, z=0, thickness=1, *,
                      anti_alias=False, blend_mode=None):
@@ -1402,7 +1402,7 @@ class Game:
         y2 -= y
 
         sprite = _get_line_sprite(x1, y1, x2, y2, color, thickness, anti_alias)
-        self.project_sprite(sprite, 0, x, y, z, blend_mode)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
 
     def project_rectangle(self, x, y, width, height, z=0, *, fill=None,
                           outline=None, outline_thickness=1, blend_mode=None):
@@ -1430,7 +1430,7 @@ class Game:
         y -= draw_y
         sprite = _get_rectangle_sprite(width, height, fill, outline,
                                        outline_thickness)
-        self.project_sprite(sprite, 0, x, y, z, blend_mode)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
 
     def project_ellipse(self, x, y, width, height, z=0, *, fill=None,
                         outline=None, outline_thickness=1, anti_alias=False,
@@ -1469,7 +1469,7 @@ class Game:
         y -= draw_y
         sprite = _get_ellipse_sprite(width, height, fill, outline,
                                      outline_thickness, anti_alias)
-        self.project_sprite(sprite, 0, x, y, z, blend_mode)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
 
     def project_circle(self, x, y, radius, z=0, *, fill=None, outline=None,
                        outline_thickness=1, anti_alias=False, blend_mode=None):
@@ -1492,7 +1492,8 @@ class Game:
         _check_color(outline)
         sprite = _get_circle_sprite(radius, fill, outline, outline_thickness,
                                     anti_alias)
-        self.project_sprite(sprite, 0, x - radius, y - radius, z, blend_mode)
+        self.project_sprite(sprite, 0, x - radius, y - radius, z,
+                            blend_mode=blend_mode)
 
     def project_polygon(self, points, z=0, *, fill=None, outline=None,
                         outline_thickness=1, anti_alias=False, blend_mode=None):
@@ -1524,7 +1525,7 @@ class Game:
 
         sprite = _get_polygon_sprite(points, fill, outline, outline_thickness,
                                      anti_alias)
-        self.project_sprite(sprite, 0, x, y, z, blend_mode)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
 
     def project_sprite(self, sprite, image, x, y, z=0, *, blend_mode=None):
         """
@@ -1570,7 +1571,7 @@ class Game:
         sprite = s_from_text(gfx.Sprite, font, text, width, height, color,
                              halign, valign, anti_alias, outline,
                              outline_thickness)
-        self.project_sprite(sprite, 0, x, y, z, blend_mode)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
 
     def event_step(self, time_passed, delta_mult):
         """
@@ -2247,7 +2248,7 @@ class Room:
         """
         _check_color(color)
         sprite = _get_dot_sprite(color)
-        self.project_sprite(sprite, 0, x, y, z, blend_mode)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
 
     def project_line(self, x1, y1, x2, y2, z, color, thickness=1, *,
                      anti_alias=False, blend_mode=None):
@@ -2280,7 +2281,7 @@ class Room:
         y2 -= y
 
         sprite = _get_line_sprite(x1, y1, x2, y2, color, thickness, anti_alias)
-        self.project_sprite(sprite, 0, x, y, z, blend_mode)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
 
     def project_rectangle(self, x, y, z, width, height, *, fill=None,
                           outline=None, outline_thickness=1, blend_mode=None):
@@ -2307,7 +2308,7 @@ class Room:
         y -= draw_y
         sprite = _get_rectangle_sprite(width, height, fill, outline,
                                        outline_thickness)
-        self.project_sprite(sprite, 0, x, y, z, blend_mode)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
 
     def project_ellipse(self, x, y, z, width, height, *, fill=None,
                         outline=None, outline_thickness=1, anti_alias=False,
@@ -2340,7 +2341,7 @@ class Room:
         y -= draw_y
         sprite = _get_ellipse_sprite(width, height, fill, outline,
                                      outline_thickness, anti_alias)
-        self.project_sprite(sprite, 0, x, y, z, blend_mode)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
 
     def project_circle(self, x, y, z, radius, *, fill=None, outline=None,
                        outline_thickness=1, anti_alias=False, blend_mode=None):
@@ -2362,7 +2363,8 @@ class Room:
         _check_color(outline)
         sprite = _get_circle_sprite(radius, fill, outline, outline_thickness,
                                     anti_alias)
-        self.project_sprite(sprite, 0, x - radius, y - radius, z, blend_mode)
+        self.project_sprite(sprite, 0, x - radius, y - radius, z,
+                            blend_mode=blend_mode)
 
     def project_polygon(self, points, z, *, fill=None, outline=None,
                         outline_thickness=1, anti_alias=False, blend_mode=None):
@@ -2393,7 +2395,7 @@ class Room:
 
         sprite = _get_polygon_sprite(points, fill, outline, outline_thickness,
                                      anti_alias)
-        self.project_sprite(sprite, 0, x, y, z, blend_mode)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
 
     def project_sprite(self, sprite, image, x, y, z, *, blend_mode=None):
         """
@@ -2437,7 +2439,7 @@ class Room:
         sprite = s_from_text(gfx.Sprite, font, text, width, height, color,
                              halign, valign, anti_alias, outline,
                              outline_thickness)
-        self.project_sprite(sprite, 0, x, y, z, blend_mode)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
 
     def event_room_start(self):
         """

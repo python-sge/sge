@@ -385,8 +385,9 @@ def _get_rectangle_sprite(width, height, fill, outline, outline_thickness):
         w = width + outline_thickness
         h = height + outline_thickness
         sprite = sge.gfx.Sprite(None, width=w, height=h)
-        sprite.draw_rectangle(draw_x, draw_y, width, height, fill, outline,
-                              outline_thickness)
+        sprite.draw_rectangle(
+            draw_x, draw_y, width, height, fill=fill, outline=outline,
+            outline_thickness=outline_thickness)
 
     cache.add(i, sprite)
     return sprite
@@ -407,8 +408,9 @@ def _get_ellipse_sprite(width, height, fill, outline, outline_thickness,
         w = width + outline_thickness
         h = height + outline_thickness
         sprite = sge.gfx.Sprite(None, width=w, height=h)
-        sprite.draw_ellipse(draw_x, draw_y, width, height, fill, outline,
-                            outline_thickness)
+        sprite.draw_ellipse(
+            draw_x, draw_y, width, height, fill=fill, outline=outline,
+            outline_thickness=outline_thickness)
 
     cache.add(i, sprite)
     return sprite
@@ -425,8 +427,9 @@ def _get_circle_sprite(radius, fill, outline, outline_thickness, anti_alias):
         xy = radius + outline_thickness // 2
         wh = 2 * radius + outline_thickness
         sprite = sge.gfx.Sprite(None, width=wh, height=wh)
-        sprite.draw_circle(xy, xy, radius, fill, outline, outline_thickness,
-                           anti_alias)
+        sprite.draw_circle(
+            xy, xy, radius, fill=fill, outline=outline,
+            outline_thickness=outline_thickness, anti_alias=anti_alias)
 
     cache.add(i, sprite)
     return sprite
@@ -458,8 +461,9 @@ def _get_polygon_sprite(points, fill, outline, outline_thickness, anti_alias):
         h = height + outline_thickness
         sprite = sge.gfx.Sprite(None, width=w, height=h, origin_x=draw_x,
                                 origin_y=draw_y)
-        sprite.draw_polygon(dpoints, fill, outline, outline_thickness,
-                            anti_alias)
+        sprite.draw_polygon(
+            dpoints, fill=fill, outline=outline,
+            outline_thickness=outline_thickness, anti_alias=anti_alias)
 
     cache.add(i, sprite)
     return sprite

@@ -125,7 +125,8 @@ def main():
             views.append(sge.dsp.View(0, 0, 320 * x, 240 * y, 320, 240))
 
     # Create rooms
-    sge.game.start_room = sge.dsp.Room(objects, 1280, 1024, views, background)
+    sge.game.start_room = sge.dsp.Room(objects, width=1280, height=1024,
+                                       views=views, background=background)
 
     sge.game.start()
 
