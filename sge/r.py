@@ -365,7 +365,8 @@ def _get_line_sprite(x1, y1, x2, y2, color, thickness, anti_alias):
     sprite = cache.get(i)
     if sprite is None:
         sprite = sge.gfx.Sprite(None, width=w, height=h)
-        sprite.draw_line(x1, y1, x2, y2, color, thickness, anti_alias)
+        sprite.draw_line(x1, y1, x2, y2, color, thickness,
+                         anti_alias=anti_alias)
 
     cache.add(i, sprite)
     return sprite
@@ -848,7 +849,7 @@ def r_update_fade(self, complete):
         diff = (complete - self.rd["t_complete_last"]) * 2
         c = sge.gfx.Color([round(diff * 255)] * 3)
         darkener = sge.gfx.Sprite(width=w, height=h)
-        darkener.draw_rectangle(0, 0, w, h, c)
+        darkener.draw_rectangle(0, 0, w, h, fill=c)
         transition_sprite.draw_sprite(darkener, 0, 0, 0,
                                       blend_mode=sge.BLEND_RGB_SUBTRACT)
     else:
@@ -865,7 +866,7 @@ def r_update_dissolve(self, complete):
     diff = complete - self.rd["t_complete_last"]
     c = sge.gfx.Color((0, 0, 0, round(diff * 255)))
     eraser = sge.gfx.Sprite(width=w, height=h)
-    eraser.draw_rectangle(0, 0, w, h, c)
+    eraser.draw_rectangle(0, 0, w, h, fill=c)
     transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                   blend_mode=sge.BLEND_RGBA_SUBTRACT)
 
@@ -895,7 +896,7 @@ def r_update_pixelate(self, complete):
         diff = (complete - self.rd["t_complete_last"]) * 5
         c = sge.gfx.Color((0, 0, 0, round(diff * 255)))
         eraser = sge.gfx.Sprite(width=w, height=h)
-        eraser.draw_rectangle(0, 0, w, h, c)
+        eraser.draw_rectangle(0, 0, w, h, fill=c)
         transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                       blend_mode=sge.BLEND_RGBA_SUBTRACT)
 
