@@ -21,6 +21,7 @@ This module provides classes related to rendering graphics.
 import math
 import os
 import warnings
+from typing import Union
 
 import pygame
 
@@ -86,7 +87,7 @@ class Color:
        An HTML hex string representation of the color.  (Read-only)
     """
 
-    def __init__(self, value):
+    def __init__(self, value: Union[str, int, list, tuple]) -> None:
         """
         Arguments:
 
