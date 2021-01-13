@@ -21,6 +21,7 @@ This module provides classes related to rendering graphics.
 import math
 import os
 import warnings
+from typing import Any, Optional
 
 import pygame
 
@@ -431,9 +432,12 @@ class Sprite:
     def frames(self):
         return len(self.rd["baseimages"])
 
-    def __init__(self, name=None, directory="", *, width=None, height=None,
-                 transparent=True, origin_x=0, origin_y=0, fps=60, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None):
+    def __init__(self, name: Optional[str] = None, directory: str = "", *,
+                 width: int = 32, height: int = 32, transparent: Any = True,
+                 origin_x: int = 0, origin_y: int = 0, fps: float = 60,
+                 bbox_x: Optional[int] = None, bbox_y: Optional[int] = None,
+                 bbox_width: Optional[int] = None,
+                 bbox_height: Optional[int] = None) -> None:
         """
         Arguments:
 
@@ -618,14 +622,14 @@ class Sprite:
         self.rd["locked"] = False
         s_refresh(self)
 
-    def append_frame(self):
+    def append_frame(self) -> None:
         """Append a new blank frame to the end of the sprite."""
         img = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         img.fill(pygame.Color(0, 0, 0, 0))
         self.rd["baseimages"].append(img)
         s_refresh(self)
 
-    def insert_frame(self, frame):
+    def insert_frame(self, frame: int) -> None:
         """
         Insert a new blank frame into the sprite.
 
@@ -639,7 +643,7 @@ class Sprite:
         self.rd["baseimages"].insert(frame, img)
         s_refresh(self)
 
-    def extend(self, sprite):
+    def extend(self, sprite: Sprite) -> None:
         """
         Extend this sprite with the frames of another sprite.
 
@@ -654,7 +658,7 @@ class Sprite:
         s_set_size(self)
         s_refresh(self)
 
-    def delete_frame(self, frame):
+    def delete_frame(self, frame: int) -> None:
         """
         Delete a frame from the sprite.
 
@@ -665,7 +669,7 @@ class Sprite:
         """
         del self.rd["baseimages"][frame]
 
-    def get_pixel(self, x, y, frame=0):
+    def get_pixel(self, x: float, y: float, frame: int = 0) -> Color:
         """
         Return a :class:`sge.gfx.Color` object indicating the color of a
         particular pixel on the sprite.
@@ -685,7 +689,7 @@ class Sprite:
         pg_color = self.rd["baseimages"][frame].get_at((x, y))
         return Color(tuple(pg_color))
 
-    def get_pixels(self, frame=0):
+    def get_pixels(self, frame: int = 0) -> list:
         """
         Return a two-dimensional list of :class`sge.gfx.Color` objects
         indicating the colors of a particular frame's pixels.
@@ -708,7 +712,8 @@ class Sprite:
         surf.unlock()
         return pixels
 
-    def draw_dot(self, x, y, color, frame=None, *, blend_mode=None):
+    def draw_dot(self, x: float, y: float, color: Color,
+                 frame: Optional[int] = None, *, blend_mode=None) -> None:
         """
         Draw a single-pixel dot on the sprite.
 
