@@ -42,6 +42,17 @@ Specification misc changes:
   those cases), and it makes it possible to ensure that these arguments
   are sorted in a logical way without further breaking backward
   compatibility down the line.
+* The frame argument in most draw methods of sge.gfx.Sprite has been
+  repositioned as an earlier argument.  This can cause invisible
+  compatibility breakage, as attempting to pass one too many positional
+  arguments to these functions will result in the extra argument being
+  treated as the frame to use, but was necessary to ensure that the
+  frame argument could be specified as a positional argument.  Affected
+  methods include draw_line, draw_rectangle, draw_ellipse, draw_circle,
+  and draw_text.  Recommended course of action is to manually check all
+  calls to these methods and ensure that they aren't passing an invalid
+  positional frame argument.  (For backward compatibility with previous
+  SGE versions, specify the frame argument as a keyword argument.)
 
 
 1.7

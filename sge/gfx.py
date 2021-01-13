@@ -789,9 +789,9 @@ class Sprite:
         - ``color`` -- A :class:`sge.gfx.Color` object representing the
           color of the line segment.
         - ``thickness`` -- The thickness of the line segment.
-        - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to ``None`` to draw on all frames.
+        - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
@@ -860,14 +860,14 @@ class Sprite:
           the rectangle.
         - ``width`` -- The width of the rectangle.
         - ``height`` -- The height of the rectangle.
+        - ``frame`` -- The frame of the sprite to draw on, where ``0``
+          is the first frame; set to ``None`` to draw on all frames.
         - ``fill`` -- A :class:`sge.gfx.Color` object representing the
           color of the fill of the rectangle.
         - ``outline`` -- A :class:`sge.gfx.Color` object representing
           the color of the outline of the rectangle.
         - ``outline_thickness`` -- The thickness of the outline of the
           rectangle.
-        - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to ``None`` to draw on all frames.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
@@ -947,6 +947,8 @@ class Sprite:
           position the imaginary rectangle containing the ellipse.
         - ``width`` -- The width of the ellipse.
         - ``height`` -- The height of the ellipse.
+        - ``frame`` -- The frame of the sprite to draw on, where ``0``
+          is the first frame; set to ``None`` to draw on all frames.
         - ``fill`` -- A :class:`sge.gfx.Color` object representing the
           color of the fill of the ellipse.
         - ``outline`` -- A :class:`sge.gfx.Color` object representing
@@ -954,8 +956,6 @@ class Sprite:
         - ``outline_thickness`` -- The thickness of the outline of the
           ellipse.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
-        - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to ``None`` to draw on all frames.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
@@ -1033,6 +1033,8 @@ class Sprite:
         - ``y`` -- The vertical location relative to the sprite to
           position the center of the circle.
         - ``radius`` -- The radius of the circle.
+        - ``frame`` -- The frame of the sprite to draw on, where ``0``
+          is the first frame; set to ``None`` to draw on all frames.
         - ``fill`` -- A :class:`sge.gfx.Color` object representing the
           color of the fill of the circle.
         - ``outline`` -- A :class:`sge.gfx.Color` object representing
@@ -1040,8 +1042,6 @@ class Sprite:
         - ``outline_thickness`` -- The thickness of the outline of the
           circle.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
-        - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to ``None`` to draw on all frames.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
@@ -1117,6 +1117,8 @@ class Sprite:
           position each of the polygon's angles.  Each point should be a
           tuple in the form ``(x, y)``, where x is the horizontal
           location and y is the vertical location.
+        - ``frame`` -- The frame of the sprite to draw on, where ``0``
+          is the first frame; set to ``None`` to draw on all frames.
         - ``fill`` -- A :class:`sge.gfx.Color` object representing the
           color of the fill of the polygon.
         - ``outline`` -- A :class:`sge.gfx.Color` object representing
@@ -1124,8 +1126,6 @@ class Sprite:
         - ``outline_thickness`` -- The thickness of the outline of the
           polygon.
         - ``anti_alias`` -- Whether or not anti-aliasing should be used.
-        - ``frame`` -- The frame of the sprite to draw on, where ``0``
-          is the first frame; set to ``None`` to draw on all frames.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
@@ -1314,9 +1314,9 @@ class Sprite:
             rectangle is not tall enough to contain all of the text, cut
             text off from the top.
 
-        - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to ``None`` to draw on all frames.
+        - ``anti_alias`` -- Whether or not anti-aliasing should be used.
         - ``blend_mode`` -- The blend mode to use.  Possible blend modes
           are:
 
