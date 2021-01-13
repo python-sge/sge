@@ -33,6 +33,9 @@ __all__ = ["KeyPress", "KeyRelease", "MouseMove", "MouseButtonPress",
            "QuitRequest"]
 
 
+from typing import Union
+
+
 class KeyPress:
 
     """
@@ -50,7 +53,7 @@ class KeyPress:
        See the table in the documentation for :mod:`sge.keyboard`.
     """
 
-    def __init__(self, key, char):
+    def __init__(self, key: str, char: str) -> None:
         self.key = key
         self.char = char
 
@@ -66,7 +69,7 @@ class KeyRelease:
        table in the documentation for :class:`sge.input.KeyPress`.
     """
 
-    def __init__(self, key):
+    def __init__(self, key: str) -> None:
         self.key = key
 
 
@@ -74,6 +77,14 @@ class MouseMove:
 
     """
     This input event represents the mouse being moved.
+
+    .. note::
+
+       The attributes of this event should generally only be used while
+       the mouse is in relative mode.  They are *not* appropriate for
+       use with things that have to do with the mouse's absolute
+       position within the window; for that, see :func:`sge.mouse.get_x`
+       and :func:`sge.mouse.get_y`.
 
     .. attribute:: x
 
@@ -84,7 +95,7 @@ class MouseMove:
        The vertical relative movement of the mouse.
     """
 
-    def __init__(self, x, y):
+    def __init__(self, x: float, y: float) -> None:
         self.x = x
         self.y = y
 
@@ -110,7 +121,7 @@ class MouseButtonPress:
     ====================== =================
     """
 
-    def __init__(self, button):
+    def __init__(self, button: str) -> None:
         self.button = button
 
 
@@ -126,7 +137,7 @@ class MouseButtonRelease:
        :class:`sge.input.MouseButtonPress`.
     """
 
-    def __init__(self, button):
+    def __init__(self, button: str) -> None:
         self.button = button
 
 
@@ -146,7 +157,7 @@ class MouseWheelMove:
        and ``0`` is no vertical scrolling.
     """
 
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int) -> None:
         self.x = x
         self.y = y
 
@@ -176,7 +187,8 @@ class JoystickAxisMove:
        is all the way to the right or down.
     """
 
-    def __init__(self, js_name, js_id, axis, value):
+    def __init__(self, js_name: str, js_id: int, axis: int,
+                 value: float) -> None:
         self.js_name = js_name
         self.js_id = js_id
         self.axis = axis
@@ -212,7 +224,8 @@ class JoystickHatMove:
        is up, and ``1`` is down.
     """
 
-    def __init__(self, js_name, js_id, hat, x, y):
+    def __init__(self, js_name: str, js_id: int, hat: int, x: int,
+                 y: int) -> None:
         self.js_name = js_name
         self.js_id = js_id
         self.hat = hat
@@ -247,7 +260,8 @@ class JoystickTrackballMove:
        The vertical relative movement of the trackball.
     """
 
-    def __init__(self, js_name, js_id, ball, x, y):
+    def __init__(self, js_name: str, js_id: int, ball: int, x: float,
+                 y: float) -> None:
         self.js_name = js_name
         self.js_id = js_id
         self.ball = ball
@@ -274,7 +288,7 @@ class JoystickButtonPress:
        first button on the joystick.
     """
 
-    def __init__(self, js_name, js_id, button):
+    def __init__(self, js_name: str, js_id: int, button: int) -> None:
         self.js_name = js_name
         self.js_id = js_id
         self.button = button
@@ -299,7 +313,7 @@ class JoystickButtonRelease:
        first button on the joystick.
     """
 
-    def __init__(self, js_name, js_id, button):
+    def __init__(self, js_name: str, js_id: int, button: int) -> None:
         self.js_name = js_name
         self.js_id = js_id
         self.button = button
@@ -365,7 +379,8 @@ class JoystickEvent:
        :func:`sge.joystick.get_value` for more information.
     """
 
-    def __init__(self, js_name, js_id, input_type, input_id, value):
+    def __init__(self, js_name: str, js_id: int, input_type: str,
+                 input_id: int, value: Union[int, float, bool]) -> None:
         self.js_name = js_name
         self.js_id = js_id
         self.input_type = input_type

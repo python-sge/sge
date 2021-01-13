@@ -18,7 +18,13 @@ This module provides classes related to the graphical display.
 """
 
 
-__all__ = ["Game", "Room", "View", "Object"]
+__all__ = ["Game",
+           "Room",
+           "View",
+           "Object",
+           "list_fullscreen_modes",
+           "fullscreen_mode_ok",
+           ]
 
 
 import math
@@ -4302,7 +4308,7 @@ class Mouse(Object):
                 r.game_window_projections.append((img, x, y, self.z, None))
 
 
-def list_fullscreen_modes():
+def list_fullscreen_modes() -> list:
     """
     Return a list of possible display modes that can be used for a
     fullscreen display.  Each display mode is listed as a tuple in the
@@ -4334,7 +4340,7 @@ def list_fullscreen_modes():
     return sorted(set(modes), key=lambda T: T[0] * T[1], reverse=True)
 
 
-def fullscreen_mode_ok(width, height):
+def fullscreen_mode_ok(width: int, height: int) -> bool:
     """
     Return whether or not a given fullscreen display size is supported.
 

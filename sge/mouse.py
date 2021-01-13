@@ -57,13 +57,15 @@ Which mode the mouse is in depends on the values of
 __all__ = ["get_pressed", "get_x", "get_y", "set_x", "set_y"]
 
 
+from typing import Optional
+
 import pygame
 
 import sge
 from sge import r
 
 
-def get_pressed(button):
+def get_pressed(button: str) -> bool:
     """
     Return whether or not a mouse button is pressed.
 
@@ -77,7 +79,7 @@ def get_pressed(button):
         return False
 
 
-def get_x():
+def get_x() -> Optional[float]:
     """
     Return the horizontal location of the mouse cursor.
 
@@ -91,7 +93,7 @@ def get_x():
         return (pygame.mouse.get_pos()[0] - r.game_x) / r.game_xscale
 
 
-def get_y():
+def get_y() -> Optional[float]:
     """
     Return the vertical location of the mouse cursor.
 
@@ -105,26 +107,26 @@ def get_y():
         return (pygame.mouse.get_pos()[1] - r.game_y) / r.game_yscale
 
 
-def set_x(value):
+def set_x(value: float) -> None:
     """
     Set the horizontal location of the mouse cursor.
 
-    The location returned is relative to the window, excluding any
-    scaling, pillarboxes, and letterboxes.  If the mouse is in
-    relative mode, this function has no effect.
+    The location set is relative to the window, excluding any scaling,
+    pillarboxes, and letterboxes.  If the mouse is in relative mode,
+    this function has no effect.
     """
     if not sge.game.grab_input or sge.game.mouse.visible:
         pygame.mouse.set_pos(value * r.game_xscale + r.game_x,
                              pygame.mouse.get_pos()[1])
 
 
-def set_y(value):
+def set_y(value: float) -> None:
     """
     Set the vertical location of the mouse cursor.
 
-    The location returned is relative to the window, excluding any
-    scaling, pillarboxes, and letterboxes.  If the mouse is in
-    relative mode, this function has no effect.
+    The location set is relative to the window, excluding any scaling,
+    pillarboxes, and letterboxes.  If the mouse is in relative mode,
+    this function has no effect.
     """
     if not sge.game.grab_input or sge.game.mouse.visible:
         pygame.mouse.set_pos(pygame.mouse.get_pos()[0],
