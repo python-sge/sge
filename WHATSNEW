@@ -56,6 +56,8 @@ Specification misc changes:
   calls to these methods and ensure that they aren't passing an invalid
   positional frame argument.  (For backward compatibility with previous
   SGE versions, specify the frame argument as a keyword argument.)
+* sge.gfx.Color is now defined to raise TypeError when an invalid type
+  is given (it previously raised ValueError).
 
 
 1.7

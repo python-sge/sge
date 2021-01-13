@@ -106,6 +106,9 @@ class Color:
           - A list or tuple indicating the red, green, and blue
             components, and optionally the alpha component, in that
             order.
+
+          If this is any type other than those specified above,
+          :exc:`TypeError` is raised.
         """
         self.alpha = 255
         if isinstance(value, str):
@@ -126,8 +129,7 @@ class Color:
             else:
                 raise ValueError("Invalid color string.")
         elif isinstance(value, int):
-            b, g, r = [(value & 256 ** (i + 1) - 1) // 256 ** i
-                       for i in range(3)]
+            b, g, r = [(value >> 8*i) & 255 for i in range(3)]
             self.red, self.green, self.blue = r, g, b
         elif isinstance(value, (list, tuple)):
             if len(value) >= 3:
@@ -137,7 +139,7 @@ class Color:
             else:
                 raise ValueError("Invalid color tuple.")
         else:
-            raise ValueError("Invalid color value.")
+            raise TypeError("Invalid color value.")
 
     @property
     def red(self):
