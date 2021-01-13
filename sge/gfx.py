@@ -818,6 +818,10 @@ class Sprite:
         x2 = round(x2)
         y2 = round(y2)
         pg_color = pygame.Color(*color)
+        # We choose the transparent color so that it matches the line
+        # color.  This is necessary to ensure that smoothscale() doesn't
+        # produce ugly artifacts with anti-aliasing.
+        tcol = pygame.Color(pg_color.r, pg_color.g, pg_color.b, 0)
         thickness = abs(round(thickness))
 
         if frame is None:
@@ -827,13 +831,26 @@ class Sprite:
 
         pygame_flags = _get_blend_flags(blend_mode)
 
-        stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        stamp.fill(pygame.Color(0, 0, 0, 0))
+        f = 4 if anti_alias else 1
+
         if anti_alias and thickness == 1:
+            stamp = pygame.Surface((self.width, self.height),
+                                   pygame.SRCALPHA)
+            stamp.fill(tcol)
             pygame.draw.aaline(stamp, pg_color, (x1, y1), (x2, y2))
         else:
-            pygame.draw.line(stamp, pg_color, (x1, y1), (x2, y2),
-                             thickness)
+            stamp = pygame.Surface((self.width * f, self.height * f),
+                                   pygame.SRCALPHA)
+            stamp.fill(tcol)
+            pygame.draw.line(stamp, pg_color, (x1 * f, y1 * f),
+                             (x2 * f, y2 * f), thickness * f)
+
+            if f != 1:
+                size = (self.width, self.height)
+                try:
+                    stamp = pygame.transform.smoothscale(stamp, size)
+                except (pygame.error, ValueError):
+                    stamp = pygame.transform.scale(stamp, size)
 
         for i in rng:
             dsurf = self.rd["baseimages"][i]
@@ -989,11 +1006,17 @@ class Sprite:
             # There's no point in trying in this case.
             return
 
-        rect = pygame.Rect(x, y, width, height)
+        # We choose the transparent color so that it matches either the
+        # outline color if available, or the fill color otherwise.  This
+        # is necessary to ensure that smoothscale() doesn't produce ugly
+        # artifacts with anti-aliasing.
+        tcol = pygame.Color(0, 0, 0, 0)
         if fill is not None:
             pg_fill = pygame.Color(*fill)
+            tcol = pygame.Color(pg_fill.r, pg_fill.g, pg_fill.b, 0)
         if outline is not None:
             pg_outl = pygame.Color(*outline)
+            tcol = pygame.Color(pg_outl.r, pg_outl.g, pg_outl.b, 0)
 
         if frame is None:
             rng = range(self.frames)
@@ -1002,12 +1025,23 @@ class Sprite:
 
         pygame_flags = _get_blend_flags(blend_mode)
 
-        stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        stamp.fill(pygame.Color(0, 0, 0, 0))
+        f = 4 if anti_alias else 1
+        rect = pygame.Rect(x * f, y * f, width * f, height * f)
+
+        stamp = pygame.Surface((self.width * f, self.height * f),
+                               pygame.SRCALPHA)
+        stamp.fill(tcol)
         if fill is not None:
             pygame.draw.ellipse(stamp, pg_fill, rect)
         if outline is not None:
-            pygame.draw.ellipse(stamp, pg_outl, rect, outline_thickness)
+            pygame.draw.ellipse(stamp, pg_outl, rect, outline_thickness * f)
+
+        if f != 1:
+            size = (self.width, self.height)
+            try:
+                stamp = pygame.transform.smoothscale(stamp, size)
+            except (pygame.error, ValueError):
+                stamp = pygame.transform.scale(stamp, size)
 
         for i in rng:
             dsurf = self.rd["baseimages"][i]
@@ -1074,10 +1108,17 @@ class Sprite:
             # There's no point in trying in this case.
             return
 
+        # We choose the transparent color so that it matches either the
+        # outline color if available, or the fill color otherwise.  This
+        # is necessary to ensure that smoothscale() doesn't produce ugly
+        # artifacts with anti-aliasing.
+        tcol = pygame.Color(0, 0, 0, 0)
         if fill is not None:
             pg_fill = pygame.Color(*fill)
+            tcol = pygame.Color(pg_fill.r, pg_fill.g, pg_fill.b, 0)
         if outline is not None:
             pg_outl = pygame.Color(*outline)
+            tcol = pygame.Color(pg_outl.r, pg_outl.g, pg_outl.b, 0)
 
         if frame is None:
             rng = range(self.frames)
@@ -1086,13 +1127,23 @@ class Sprite:
 
         pygame_flags = _get_blend_flags(blend_mode)
 
-        stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        stamp.fill(pygame.Color(0, 0, 0, 0))
+        f = 4 if anti_alias else 1
+
+        stamp = pygame.Surface((self.width * f, self.height * f),
+                               pygame.SRCALPHA)
+        stamp.fill(tcol)
         if fill is not None:
-            pygame.draw.circle(stamp, pg_fill, (x, y), radius)
+            pygame.draw.circle(stamp, pg_fill, (x * f, y * f), radius * f)
         if outline is not None:
-            pygame.draw.circle(stamp, pg_outl, (x, y), radius,
-                               outline_thickness)
+            pygame.draw.circle(stamp, pg_outl, (x * f, y * f), radius * f,
+                               outline_thickness * f)
+
+        if f != 1:
+            size = (self.width, self.height)
+            try:
+                stamp = pygame.transform.smoothscale(stamp, size)
+            except (pygame.error, ValueError):
+                stamp = pygame.transform.scale(stamp, size)
 
         for i in rng:
             dsurf = self.rd["baseimages"][i]
@@ -1144,6 +1195,10 @@ class Sprite:
         _check_color(color)
 
         pg_color = pygame.Color(*color)
+        # We choose the transparent color so that it matches the line
+        # color.  This is necessary to ensure that smoothscale() doesn't
+        # produce ugly artifacts with anti-aliasing.
+        tcol = pygame.Color(pg_color.r, pg_color.g, pg_color.b, 0)
         thickness = abs(round(thickness))
 
         if frame is None:
@@ -1153,12 +1208,28 @@ class Sprite:
 
         pygame_flags = _get_blend_flags(blend_mode)
 
-        stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        stamp.fill(pygame.Color(0, 0, 0, 0))
+        f = 4 if anti_alias else 1
+
         if anti_alias and thickness == 1:
+            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            stamp.fill(tcol)
             pygame.draw.aalines(stamp, pg_color, False, points)
         else:
-            pygame.draw.lines(stamp, pg_color, False, points, thickness)
+            stamp = pygame.Surface((self.width * f, self.height * f),
+                                   pygame.SRCALPHA)
+            stamp.fill(tcol)
+
+            if f != 1:
+                points = [(point[0] * f, point[1] * f) for point in points]
+                pygame.draw.lines(stamp, pg_color, False, points, thickness * f)
+
+                size = (self.width, self.height)
+                try:
+                    stamp = pygame.transform.smoothscale(stamp, size)
+                except (pygame.error, ValueError):
+                    stamp = pygame.transform.scale(stamp, size)
+            else:
+                pygame.draw.lines(stamp, pg_color, False, points, thickness)
 
         for i in rng:
             dsurf = self.rd["baseimages"][i]
@@ -1221,10 +1292,17 @@ class Sprite:
             # There's no point in trying in this case.
             return
 
+        # We choose the transparent color so that it matches either the
+        # outline color if available, or the fill color otherwise.  This
+        # is necessary to ensure that smoothscale() doesn't produce ugly
+        # artifacts with anti-aliasing.
+        tcol = pygame.Color(0, 0, 0, 0)
         if fill is not None:
             pg_fill = pygame.Color(*fill)
+            tcol = pygame.Color(pg_fill.r, pg_fill.g, pg_fill.b, 0)
         if outline is not None:
             pg_outl = pygame.Color(*outline)
+            tcol = pygame.Color(pg_outl.r, pg_outl.g, pg_outl.b, 0)
 
         if frame is None:
             rng = range(self.frames)
@@ -1233,16 +1311,33 @@ class Sprite:
 
         pygame_flags = _get_blend_flags(blend_mode)
 
-        stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        stamp.fill(pygame.Color(0, 0, 0, 0))
-        if fill is not None:
-            pygame.draw.polygon(stamp, pg_fill, points, 0)
-        if outline is not None:
-            if anti_alias and outline_thickness == 1:
-                pygame.draw.aalines(stamp, pg_outl, True, points)
+        if (fill is None and outline is not None and anti_alias
+                and outline_thickness == 1):
+            stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            stamp.fill(tcol)
+            pygame.draw.aalines(stamp, pg_outl, True, points)
+        else:
+            if anti_alias:
+                f = 4
+                points = [(point[0] * f, point[1] * f) for point in points]
             else:
+                f = 1
+
+            stamp = pygame.Surface((self.width * f, self.height * f),
+                                   pygame.SRCALPHA)
+            stamp.fill(tcol)
+            if fill is not None:
+                pygame.draw.polygon(stamp, pg_fill, points, 0)
+            if outline is not None:
                 pygame.draw.polygon(stamp, pg_outl, points,
-                                    outline_thickness)
+                                    outline_thickness * f)
+
+            if f != 1:
+                size = (self.width, self.height)
+                try:
+                    stamp = pygame.transform.smoothscale(stamp, size)
+                except (pygame.error, ValueError):
+                    stamp = pygame.transform.scale(stamp, size)
 
         for i in rng:
             dsurf = self.rd["baseimages"][i]

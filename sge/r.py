@@ -411,7 +411,7 @@ def _get_ellipse_sprite(width, height, fill, outline, outline_thickness,
         sprite = sge.gfx.Sprite(None, width=w, height=h)
         sprite.draw_ellipse(
             draw_x, draw_y, width, height, fill=fill, outline=outline,
-            outline_thickness=outline_thickness)
+            outline_thickness=outline_thickness, anti_alias=anti_alias)
 
     cache.add(i, sprite)
     return sprite

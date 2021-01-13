@@ -52,17 +52,3 @@ The pygame.mixer module, which is used for all audio playback, is
 optional and depends on SDL_mixer; if pygame.mixer is unavailable,
 sounds and music will not play.
 
-
-MISSING FEATURES
-
-sge.gfx.Sprite.draw_line, sge.dsp.Room.project_line, and
-sge.dsp.Game.project_line support anti-aliasing for lines with a
-thickness of 1 only.  sge.gfx.Sprite.draw_polygon,
-sge.dsp.Room.project_polygon, and sge.dsp.Game.project_polygon support
-anti-aliasing for outlines of polygons with a thickness of 1 only.
-sge.gfx.Sprite.draw_text, sge.dsp.Room.project_text, and
-sge.dsp.Game.project_text support anti-aliasing in all cases.  No other
-drawing or projecting methods support anti-aliasing.  If anti-aliasing
-is unsupported for a particular case, the Pygame SGE will ignore the
-request for anti-aliasing.
-

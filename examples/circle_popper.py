@@ -108,17 +108,17 @@ class Room(sge.dsp.Room):
         self.event_room_resume()
 
     def event_room_resume(self):
-        glob.music.play(loops=None)
+        pass#glob.music.play(loops=None)
 
     def event_step(self, time_passed, delta_mult):
         self.project_rectangle(5, 5, 3, 32, 32, fill=sge.gfx.Color("red"),
                                outline=sge.gfx.Color("green"),
                                outline_thickness=3.4)
-        self.project_ellipse(16, 100, 3, 64, 64, fill=sge.gfx.Color("yellow"),
+        self.project_ellipse(16, 100, 3, 84, 64, fill=sge.gfx.Color("yellow"),
                              outline=sge.gfx.Color("fuchsia"),
-                             outline_thickness=3.9)
+                             outline_thickness=3.9, anti_alias=True)
         self.project_line(64, 64, 78, 100, 3, sge.gfx.Color("black"),
-                          thickness=2.2)
+                          thickness=2.2, anti_alias=True)
         self.project_dot(90, 32, 3, sge.gfx.Color("maroon"))
         self.project_dot(91, 32, 3, sge.gfx.Color("maroon"))
         self.project_dot(92, 32, 3, sge.gfx.Color("maroon"))
@@ -132,9 +132,14 @@ class Room(sge.dsp.Room):
         self.project_polygon([(128.2, 128), (124, 160.1), (160, 140.9)], 3,
                              fill=sge.gfx.Color("gray"),
                              outline=sge.gfx.Color("red"),
-                             outline_thickness=3.1)
+                             outline_thickness=3, anti_alias=True)
         self.project_polyline([(228.2, 128), (224, 260.1), (260, 140.9)], 5,
-                              sge.gfx.Color("red"), thickness=3.1)
+                              sge.gfx.Color("red"), thickness=3.1,
+                              anti_alias=True)
+        self.project_circle(500, 100, 3, 30,
+                            fill=sge.gfx.Color("gray"),
+                            outline=sge.gfx.Color("maroon"),
+                            outline_thickness=10, anti_alias=True)
         text = "I am amazing text!\n\nYaaaaaaaaaaay~!"
         self.project_text(glob.font, text, 320, 0, 3,
                           color=sge.gfx.Color("black"), halign="center")

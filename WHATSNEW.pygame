@@ -14,6 +14,7 @@ Pygame SGE bugfixes:
 
 Pygame SGE misc changes:
 * Made more robust against Pygame giving a wrong display size.
+* All drawing methods now support anti-aliasing.
 
 
 1.7.1
