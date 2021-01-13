@@ -108,7 +108,7 @@ class Room(sge.dsp.Room):
         self.event_room_resume()
 
     def event_room_resume(self):
-        pass#glob.music.play(loops=None)
+        glob.music.play(loops=None)
 
     def event_step(self, time_passed, delta_mult):
         self.project_rectangle(5, 5, 3, 32, 32, fill=sge.gfx.Color("red"),
