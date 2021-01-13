@@ -18,7 +18,8 @@ This module provides classes related to the graphical display.
 """
 
 
-__all__ = ["Game", "Room", "View", "Object"]
+__all__ = ["Game", "Room", "View", "Object", "list_fullscreen_modes",
+           "fullscreen_mode_ok"]
 
 
 import math
