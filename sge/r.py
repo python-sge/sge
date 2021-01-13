@@ -436,9 +436,38 @@ def _get_circle_sprite(radius, fill, outline, outline_thickness, anti_alias):
     return sprite
 
 
+def _get_polyline_sprite(points, color, thickness, anti_alias):
+    # Return a sprite for the given polygon.
+    i = ("polyline_sprite", tuple(points), tuple(color), thickness, anti_alias)
+    sprite = cache.get(i)
+    if sprite is None:
+        xlist = []
+        ylist = []
+        for point in points:
+            xlist.append(point[0])
+            ylist.append(point[1])
+        x = min(xlist)
+        y = min(ylist)
+        width = max(xlist) - x
+        height = max(ylist) - y
+
+        thickness = abs(thickness)
+        draw_x = thickness // 2
+        draw_y = thickness // 2
+        dpoints = [(a - x + draw_x, b - y + draw_y) for (a, b) in points]
+        w = width + thickness
+        h = height + thickness
+        sprite = sge.gfx.Sprite(None, width=w, height=h, origin_x=draw_x,
+                                origin_y=draw_y)
+        sprite.draw_polyline(dpoints, color, thickness, anti_alias=anti_alias)
+
+    cache.add(i, sprite)
+    return sprite
+
+
 def _get_polygon_sprite(points, fill, outline, outline_thickness, anti_alias):
     # Return a sprite for the given polygon.
-    i = ("poly_sprite", tuple(points),
+    i = ("polygon_sprite", tuple(points),
          tuple(fill) if fill is not None else None,
          tuple(outline) if outline is not None else None,
          outline_thickness, anti_alias)

@@ -35,7 +35,8 @@ from sge import gfx, r
 from sge.r import (
     _check_color, _scale, _get_blend_flags, _screen_blend, _set_mode,
     _handle_music, _get_dot_sprite, _get_line_sprite, _get_rectangle_sprite,
-    _get_ellipse_sprite, _get_circle_sprite, _get_polygon_sprite, bl_update,
+    _get_ellipse_sprite, _get_circle_sprite, _get_polyline_sprite,
+    _get_polygon_sprite, bl_update,
     bl_get_image, o_update, o_detect_collisions, o_update_collision_lists,
     o_update_object_areas, o_is_other, o_get_origin_offset, o_set_speed,
     s_get_image, s_get_precise_mask, s_from_text, tg_blit,
@@ -1496,14 +1497,45 @@ class Game:
         self.project_sprite(sprite, 0, x - radius, y - radius, z,
                             blend_mode=blend_mode)
 
-    def project_polygon(self, points, z=0, *, fill=None, outline=None,
-                        outline_thickness=1, anti_alias=False, blend_mode=None):
+    def project_polyline(self, points, color, z=0, thickness=1, *,
+                         anti_alias=False, blend_mode=None):
         """
-        Draw a polygon on the sprite.
+        Project a series of contiguous straight lines onto the game
+        window.
 
         Arguments:
 
-        - ``points`` -- A list of points relative to the room to
+        - ``points`` -- A list of points relative to the window to
+          position each of the polyline's angles.  Each point should be
+          a tuple in the form ``(x, y)``, where ``x`` is the horizontal
+          location and ``y`` is the vertical location.
+        - ``z`` -- The Z-axis position of the projection in relation to
+          other window projections.
+
+        See the documentation for :meth:`sge.gfx.Sprite.draw_polygon`
+        and :meth:`sge.dsp.Game.project_dot` for more information.
+        """
+        _check_color(color)
+
+        xlist = []
+        ylist = []
+        for point in points:
+            xlist.append(point[0])
+            ylist.append(point[1])
+        x = min(xlist)
+        y = min(ylist)
+
+        sprite = _get_polyline_sprite(points, color, thickness, anti_alias)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
+
+    def project_polygon(self, points, z=0, *, fill=None, outline=None,
+                        outline_thickness=1, anti_alias=False, blend_mode=None):
+        """
+        Project a polygon onto the game window.
+
+        Arguments:
+
+        - ``points`` -- A list of points relative to the window to
           position each of the polygon's angles.  Each point should be a
           tuple in the form ``(x, y)``, where x is the horizontal
           location and y is the vertical location.
@@ -2366,6 +2398,35 @@ class Room:
                                     anti_alias)
         self.project_sprite(sprite, 0, x - radius, y - radius, z,
                             blend_mode=blend_mode)
+
+    def project_polyline(self, points, z, color, thickness=1, *,
+                         anti_alias=False, blend_mode=None):
+        """
+        Project a series of contiguous straight lines onto the room.
+
+        Arguments:
+
+        - ``points`` -- A list of points relative to the room to
+          position each of the polyline's angles.  Each point should be
+          a tuple in the form ``(x, y)``, where ``x`` is the horizontal
+          location and ``y`` is the vertical location.
+        - ``z`` -- The Z-axis position of the projection in the room.
+
+        See the documentation for :meth:`sge.gfx.Sprite.draw_polyline`
+        for more information.
+        """
+        _check_color(color)
+
+        xlist = []
+        ylist = []
+        for point in points:
+            xlist.append(point[0])
+            ylist.append(point[1])
+        x = min(xlist)
+        y = min(ylist)
+
+        sprite = _get_polyline_sprite(points, color, thickness, anti_alias)
+        self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
 
     def project_polygon(self, points, z, *, fill=None, outline=None,
                         outline_thickness=1, anti_alias=False, blend_mode=None):

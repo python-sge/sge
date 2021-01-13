@@ -29,6 +29,9 @@ Specification additions:
 + sge.dsp.Game.event_paused_window_resize
 + sge.dsp.list_fullscreen_modes
 + sge.dsp.fullscreen_mode_ok
++ sge.gfx.Sprite.draw_polyline
++ sge.dsp.Game.project_polyline
++ sge.dsp.Room.project_polyline
 
 Specification misc changes:
 * Mouse button press events with the "wheel_up" and "wheel_down" button

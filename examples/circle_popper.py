@@ -43,6 +43,8 @@ class Game(sge.dsp.Game):
 
         self.project_text(glob.font, self.fps_text, self.width - 8, 8,
                           color=sge.gfx.Color("#000"), halign="right")
+        self.project_polyline([(428.2, 328), (424, 460.1), (460, 340.9)],
+                              sge.gfx.Color("red"), thickness=3.1)
 
     def event_key_press(self, key, char):
         if key == 'escape':
@@ -111,12 +113,12 @@ class Room(sge.dsp.Room):
     def event_step(self, time_passed, delta_mult):
         self.project_rectangle(5, 5, 3, 32, 32, fill=sge.gfx.Color("red"),
                                outline=sge.gfx.Color("green"),
-                               outline_thickness=3)
+                               outline_thickness=3.4)
         self.project_ellipse(16, 100, 3, 64, 64, fill=sge.gfx.Color("yellow"),
                              outline=sge.gfx.Color("fuchsia"),
-                             outline_thickness=4)
+                             outline_thickness=3.9)
         self.project_line(64, 64, 78, 100, 3, sge.gfx.Color("black"),
-                          thickness=2)
+                          thickness=2.2)
         self.project_dot(90, 32, 3, sge.gfx.Color("maroon"))
         self.project_dot(91, 32, 3, sge.gfx.Color("maroon"))
         self.project_dot(92, 32, 3, sge.gfx.Color("maroon"))
@@ -127,16 +129,19 @@ class Room(sge.dsp.Room):
         self.project_dot(90, 34, 3, sge.gfx.Color("maroon"))
         self.project_dot(91, 34, 3, sge.gfx.Color("maroon"))
         self.project_dot(90, 35, 3, sge.gfx.Color("maroon"))
-        self.project_polygon([(128, 128), (124, 160), (160, 140)], 3,
+        self.project_polygon([(128.2, 128), (124, 160.1), (160, 140.9)], 3,
                              fill=sge.gfx.Color("gray"),
-                             outline=sge.gfx.Color("red"), outline_thickness=3)
+                             outline=sge.gfx.Color("red"),
+                             outline_thickness=3.1)
+        self.project_polyline([(228.2, 128), (224, 260.1), (260, 140.9)], 5,
+                              sge.gfx.Color("red"), thickness=3.1)
         text = "I am amazing text!\n\nYaaaaaaaaaaay~!"
         self.project_text(glob.font, text, 320, 0, 3,
                           color=sge.gfx.Color("black"), halign="center")
         self.project_text(glob.font, text, 320, 80, 3,
                           color=sge.gfx.Color("white"), halign="center",
                           outline=sge.gfx.Color("black"),
-                          outline_thickness=30)
+                          outline_thickness=30.4)
 
         if sge.keyboard.get_pressed("left"):
             self.views[0].xport -= 1

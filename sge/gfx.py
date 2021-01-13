@@ -817,9 +817,8 @@ class Sprite:
         y1 = round(y1)
         x2 = round(x2)
         y2 = round(y2)
-        thickness = round(thickness)
         pg_color = pygame.Color(*color)
-        thickness = abs(thickness)
+        thickness = abs(round(thickness))
 
         if frame is None:
             rng = range(self.frames)
@@ -894,7 +893,7 @@ class Sprite:
         y = round(y)
         width = round(width)
         height = round(height)
-        outline_thickness = abs(outline_thickness)
+        outline_thickness = abs(round(outline_thickness))
         if outline_thickness == 0:
             outline = None
 
@@ -982,7 +981,7 @@ class Sprite:
         y = round(y)
         width = round(width)
         height = round(height)
-        outline_thickness = abs(outline_thickness)
+        outline_thickness = abs(round(outline_thickness))
         if outline_thickness == 0:
             outline = None
 
@@ -1106,6 +1105,72 @@ class Sprite:
 
         s_refresh(self)
 
+    def draw_polyline(self, points, color, thickness=1, frame=None, *,
+                      anti_alias=False, blend_mode=None):
+        """
+        Draw a sequence of contiguous straight lines on the sprite.
+
+        Arguments:
+
+        - ``points`` -- A list of points relative to the sprite to
+          position each of the polyline's angles.  Each point should be
+          a tuple in the form ``(x, y)``, where ``x`` is the horizontal
+          location and ``y`` is the vertical location.
+        - ``color`` -- A :class:`sge.gfx.Color` object representing the
+          color of the line segment.
+        - ``thickness`` -- The thickness of the line segment.
+        - ``frame`` -- The frame of the sprite to draw on, where ``0``
+          is the first frame; set to ``None`` to draw on all frames.
+        - ``anti_alias`` -- Whether or not anti-aliasing should be used.
+        - ``blend_mode`` -- The blend mode to use.  Possible blend modes
+          are:
+
+          - :data:`sge.BLEND_NORMAL`
+          - :data:`sge.BLEND_RGBA_ADD`
+          - :data:`sge.BLEND_RGBA_SUBTRACT`
+          - :data:`sge.BLEND_RGBA_MULTIPLY`
+          - :data:`sge.BLEND_RGBA_SCREEN`
+          - :data:`sge.BLEND_RGBA_MINIMUM`
+          - :data:`sge.BLEND_RGBA_MAXIMUM`
+          - :data:`sge.BLEND_RGB_ADD`
+          - :data:`sge.BLEND_RGB_SUBTRACT`
+          - :data:`sge.BLEND_RGB_MULTIPLY`
+          - :data:`sge.BLEND_RGB_SCREEN`
+          - :data:`sge.BLEND_RGB_MINIMUM`
+          - :data:`sge.BLEND_RGB_MAXIMUM`
+
+          ``None`` is treated as :data:`sge.BLEND_NORMAL`.
+        """
+        _check_color(color)
+
+        pg_color = pygame.Color(*color)
+        thickness = abs(round(thickness))
+
+        if frame is None:
+            rng = range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
+        pygame_flags = _get_blend_flags(blend_mode)
+
+        stamp = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        stamp.fill(pygame.Color(0, 0, 0, 0))
+        if anti_alias and thickness == 1:
+            pygame.draw.aalines(stamp, pg_color, False, points)
+        else:
+            pygame.draw.lines(stamp, pg_color, False, points, thickness)
+
+        for i in rng:
+            dsurf = self.rd["baseimages"][i]
+            if blend_mode == sge.BLEND_RGB_SCREEN:
+                _screen_blend(dsurf, stamp, 0, 0, False)
+            elif blend_mode == sge.BLEND_RGBA_SCREEN:
+                _screen_blend(dsurf, stamp, 0, 0, True)
+            else:
+                dsurf.blit(stamp, (0, 0), None, pygame_flags)
+
+        s_refresh(self)
+
     def draw_polygon(self, points, frame=None, *, fill=None, outline=None,
                      outline_thickness=1, anti_alias=False, blend_mode=None):
         """
@@ -1115,8 +1180,8 @@ class Sprite:
 
         - ``points`` -- A list of points relative to the sprite to
           position each of the polygon's angles.  Each point should be a
-          tuple in the form ``(x, y)``, where x is the horizontal
-          location and y is the vertical location.
+          tuple in the form ``(x, y)``, where ``x`` is the horizontal
+          location and ``y`` is the vertical location.
         - ``frame`` -- The frame of the sprite to draw on, where ``0``
           is the first frame; set to ``None`` to draw on all frames.
         - ``fill`` -- A :class:`sge.gfx.Color` object representing the
@@ -1148,8 +1213,7 @@ class Sprite:
         _check_color(fill)
         _check_color(outline)
 
-        points = [(round(x), round(y)) for (x, y) in points]
-        outline_thickness = abs(outline_thickness)
+        outline_thickness = abs(round(outline_thickness))
         if outline_thickness == 0:
             outline = None
 
