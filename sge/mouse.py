@@ -57,15 +57,13 @@ Which mode the mouse is in depends on the values of
 __all__ = ["get_pressed", "get_x", "get_y", "set_x", "set_y"]
 
 
-from typing import Optional
-
 import pygame
 
 import sge
 from sge import r
 
 
-def get_pressed(button: str) -> bool:
+def get_pressed(button):
     """
     Return whether or not a mouse button is pressed.
 
@@ -79,7 +77,7 @@ def get_pressed(button: str) -> bool:
         return False
 
 
-def get_x() -> Optional[float]:
+def get_x():
     """
     Return the horizontal location of the mouse cursor.
 
@@ -93,7 +91,7 @@ def get_x() -> Optional[float]:
         return (pygame.mouse.get_pos()[0] - r.game_x) / r.game_xscale
 
 
-def get_y() -> Optional[float]:
+def get_y():
     """
     Return the vertical location of the mouse cursor.
 
@@ -107,26 +105,26 @@ def get_y() -> Optional[float]:
         return (pygame.mouse.get_pos()[1] - r.game_y) / r.game_yscale
 
 
-def set_x(value: float) -> None:
+def set_x(value):
     """
     Set the horizontal location of the mouse cursor.
 
-    The location set is relative to the window, excluding any scaling,
-    pillarboxes, and letterboxes.  If the mouse is in relative mode,
-    this function has no effect.
+    The location returned is relative to the window, excluding any
+    scaling, pillarboxes, and letterboxes.  If the mouse is in
+    relative mode, this function has no effect.
     """
     if not sge.game.grab_input or sge.game.mouse.visible:
         pygame.mouse.set_pos(value * r.game_xscale + r.game_x,
                              pygame.mouse.get_pos()[1])
 
 
-def set_y(value: float) -> None:
+def set_y(value):
     """
     Set the vertical location of the mouse cursor.
 
-    The location set is relative to the window, excluding any scaling,
-    pillarboxes, and letterboxes.  If the mouse is in relative mode,
-    this function has no effect.
+    The location returned is relative to the window, excluding any
+    scaling, pillarboxes, and letterboxes.  If the mouse is in
+    relative mode, this function has no effect.
     """
     if not sge.game.grab_input or sge.game.mouse.visible:
         pygame.mouse.set_pos(pygame.mouse.get_pos()[0],

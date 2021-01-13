@@ -170,8 +170,6 @@ __all__ = ["get_pressed", "get_modifier", "get_focused", "set_repeat",
            "get_repeat_enabled", "get_repeat_interval", "get_repeat_delay"]
 
 
-from typing import Any
-
 import pygame
 
 import sge
@@ -180,7 +178,7 @@ import sge
 _repeat_enabled = False
 
 
-def get_pressed(key: str) -> bool:
+def get_pressed(key):
     """
     Return whether or not a key is pressed.
 
@@ -196,7 +194,7 @@ def get_pressed(key: str) -> bool:
         return False
 
 
-def get_modifier(key: str) -> bool:
+def get_modifier(key):
     """
     Return whether or not a modifier key is being held.
 
@@ -232,13 +230,12 @@ def get_modifier(key: str) -> bool:
         return False
 
 
-def get_focused() -> bool:
+def get_focused():
     """Return whether or not the game has keyboard focus."""
     return pygame.key.get_focused()
 
 
-def set_repeat(enabled: Any = True, interval: int = 0,
-               delay: int = 0) -> None:
+def set_repeat(enabled=True, interval=0, delay=0):
     """
     Set repetition of key press events.
 
@@ -258,12 +255,12 @@ def set_repeat(enabled: Any = True, interval: int = 0,
     global _repeat_enabled
     _repeat_enabled = enabled
     if enabled:
-        pygame.key.set_repeat(int(delay), int(interval))
+        pygame.key.set_repeat(delay, interval)
     else:
         pygame.key.set_repeat()
 
 
-def get_repeat_enabled() -> bool:
+def get_repeat_enabled():
     """
     Return whether or not repetition of key press events is enabled.
 
@@ -273,7 +270,7 @@ def get_repeat_enabled() -> bool:
     return _repeat_enabled
 
 
-def get_repeat_interval() -> int:
+def get_repeat_interval():
     """
     Return the interval in between each repeated key press event.
 
@@ -283,7 +280,7 @@ def get_repeat_interval() -> int:
     return pygame.key.get_repeat()[1]
 
 
-def get_repeat_delay() -> int:
+def get_repeat_delay():
     """
     Return the delay before repeating key press events.
 

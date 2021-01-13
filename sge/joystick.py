@@ -23,15 +23,13 @@ __all__ = ["refresh", "get_axis", "get_hat_x", "get_hat_y",
            "get_id", "get_axes", "get_hats", "get_trackballs", "get_buttons"]
 
 
-from typing import Optional, Union
-
 import pygame
 
 import sge
 from sge import r
 
 
-def refresh() -> None:
+def refresh():
     """
     Refresh the SGE's knowledge of joysticks.
 
@@ -55,7 +53,7 @@ def refresh() -> None:
                 r.game_js_ids[n] = i
 
 
-def get_axis(joystick: Union[int, str], axis: int) -> float:
+def get_axis(joystick, axis):
     """
     Return the position of a joystick axis as a float from ``-1`` to
     ``1``, where ``0`` is centered, ``-1`` is all the way to the left or
@@ -78,7 +76,7 @@ def get_axis(joystick: Union[int, str], axis: int) -> float:
         return 0
 
 
-def get_hat_x(joystick: Union[int, str], hat: int) -> int:
+def get_hat_x(joystick, hat):
     """
     Return the horizontal position of a joystick hat (d-pad).  Can be
     ``-1`` (left), ``0`` (centered), or ``1`` (right).  Return ``0`` if
@@ -94,7 +92,7 @@ def get_hat_x(joystick: Union[int, str], hat: int) -> int:
     return r._get_hat(get_id(joystick), hat)[0]
 
 
-def get_hat_y(joystick: Union[int, str], hat: int) -> int:
+def get_hat_y(joystick, hat):
     """
     Return the vertical position of a joystick hat (d-pad).  Can be
     ``-1`` (up), ``0`` (centered), or ``1`` (down).  Return ``0`` if the
@@ -110,7 +108,7 @@ def get_hat_y(joystick: Union[int, str], hat: int) -> int:
     return -r._get_hat(get_id(joystick), hat)[1]
 
 
-def get_pressed(joystick: Union[int, str], button: int) -> bool:
+def get_pressed(joystick, button):
     """
     Return whether or not a joystick button is pressed, or
     :const:`False` if the requested joystick or button does not exist.
@@ -131,8 +129,7 @@ def get_pressed(joystick: Union[int, str], button: int) -> bool:
         return False
 
 
-def get_value(joystick: Union[int, str], input_type: str,
-              input_id: int) -> Union[int, float, bool, None]:
+def get_value(joystick, input_type, input_id):
     """
     Return the value of any joystick control.  This function makes it
     possible to treat all joystick inputs the same way, which can be
@@ -197,12 +194,12 @@ def get_value(joystick: Union[int, str], input_type: str,
         return None
 
 
-def get_joysticks() -> int:
+def get_joysticks():
     """Return the number of joysticks available."""
     return len(r.game_joysticks)
 
 
-def get_name(joystick: Union[int, str]) -> Optional[str]:
+def get_name(joystick):
     """
     Return the name of a joystick, or ``None`` if the requested joystick
     does not exist.
@@ -220,7 +217,7 @@ def get_name(joystick: Union[int, str]) -> Optional[str]:
         return None
 
 
-def get_id(joystick: Union[int, str]) -> Optional[int]:
+def get_id(joystick):
     """
     Return the number of a joystick, where ``0`` is the first joystick,
     or ``None`` if the requested joystick does not exist.
@@ -238,7 +235,7 @@ def get_id(joystick: Union[int, str]) -> Optional[int]:
         return None
 
 
-def get_axes(joystick: Union[int, str]) -> int:
+def get_axes(joystick):
     """
     Return the number of axes available on a joystick, or ``0`` if the
     requested joystick does not exist.
@@ -256,7 +253,7 @@ def get_axes(joystick: Union[int, str]) -> int:
         return 0
 
 
-def get_hats(joystick: Union[int, str]) -> int:
+def get_hats(joystick):
     """
     Return the number of hats (d-pads) available on a joystick, or ``0``
     if the requested joystick does not exist.
@@ -274,7 +271,7 @@ def get_hats(joystick: Union[int, str]) -> int:
         return 0
 
 
-def get_trackballs(joystick: Union[int, str]) -> int:
+def get_trackballs(joystick):
     """
     Return the number of trackballs available on a joystick, or ``0`` if
     the requested joystick does not exist.
@@ -292,7 +289,7 @@ def get_trackballs(joystick: Union[int, str]) -> int:
         return 0
 
 
-def get_buttons(joystick: Union[int, str]) -> int:
+def get_buttons(joystick):
     """
     Return the number of buttons available on a joystick, or ``0`` if
     the requested joystick does not exist.
