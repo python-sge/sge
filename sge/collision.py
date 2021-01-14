@@ -155,8 +155,8 @@ def ellipse(x, y, w, h, other=None):
         a = len(mask) / 2
         b = len(mask[0]) / 2 if mask else 0
 
-        for i in range(len(mask)):
-            for j in range(len(mask[i])):
+        for i, column in enumerate(mask):
+            for j, row in enumerate(column):
                 if ((i - a) / a) ** 2 + ((j - b) / b) ** 2 <= 1:
                     mask[i][j] = True
 
@@ -195,8 +195,8 @@ def circle(x, y, radius, other=None):
         mask = [[False for j in range(int(diameter))]
                 for i in range(int(diameter))]
 
-        for i in range(len(mask)):
-            for j in range(len(mask[i])):
+        for i, column in enumerate(mask):
+            for j, row in enumerate(column):
                 if (i - x) ** 2 + (j - y) ** 2 <= radius ** 2:
                     mask[i][j] = True
 

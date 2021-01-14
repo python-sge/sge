@@ -103,7 +103,7 @@ class cache:
 
 def _check_color_input(value):
     # Make sure a color value is between 0 and 255.
-    if value in range(256):
+    if 0 <= value <= 255:
         return value
     else:
         raise ValueError("Color values must be between 0 and 255.")

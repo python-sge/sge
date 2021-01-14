@@ -147,7 +147,7 @@ class Color:
 
     @red.setter
     def red(self, value):
-        self._r = _check_color_input(value)
+        self._r = _check_color_input(round(value))
 
     @property
     def green(self):
@@ -155,7 +155,7 @@ class Color:
 
     @green.setter
     def green(self, value):
-        self._g = _check_color_input(value)
+        self._g = _check_color_input(round(value))
 
     @property
     def blue(self):
@@ -163,7 +163,7 @@ class Color:
 
     @blue.setter
     def blue(self, value):
-        self._b = _check_color_input(value)
+        self._b = _check_color_input(round(value))
 
     @property
     def alpha(self):
@@ -171,7 +171,7 @@ class Color:
 
     @alpha.setter
     def alpha(self, value):
-        self._a = _check_color_input(value)
+        self._a = _check_color_input(round(value))
 
     @property
     def hex_string(self):
@@ -1525,9 +1525,9 @@ class Sprite:
         if outline is not None and outline_thickness:
             # We do a separate loop here so that if it overlaps itself,
             # the outline won't cover up real text.
-            for i in range(len(lines)):
-                ol_part = font.rd["font"].render(
-                    lines[i], anti_alias, pygame.Color(*outline))
+            for i, line in enumerate(lines):
+                ol_part = font.rd["font"].render(line, anti_alias,
+                                                 pygame.Color(*outline))
 
                 part_rect = ol_part.get_rect()
                 part_rect.top += outline_thickness
@@ -1570,8 +1570,8 @@ class Sprite:
 
                 text_surf.blit(rendered_outline, rect)
 
-        for i in range(len(lines)):
-            rendered_text = font.rd["font"].render(lines[i], anti_alias,
+        for i, line in enumerate(lines):
+            rendered_text = font.rd["font"].render(line, anti_alias,
                                                    pygame.Color(*color))
             if color.alpha < 255:
                 rendered_text = rendered_text.convert_alpha()
@@ -1956,8 +1956,8 @@ class Sprite:
                             img.set_at((x, y), pg_new_color)
                 img.unlock()
             else:
-                for j in range(len(palette)):
-                    if old_color == Color(tuple(palette[j])):
+                for j, color in enumerate(palette):
+                    if old_color == Color(tuple(color)):
                         palette[j] = pg_new_color
 
                 img.set_palette(palette)
@@ -3023,8 +3023,8 @@ class _PygameSpriteFont:
             self.chars = chars
         else:
             self.chars = {}
-            for i in range(len(chars)):
-                self.chars[chars[i]] = i
+            for i, char in enumerate(chars):
+                self.chars[char] = i
 
         self.width = self.sprite.width
         self.height = self.sprite.height
@@ -3045,22 +3045,22 @@ class _PygameSpriteFont:
             color = pygame.Color(color)
         sge_color = Color((color.r, color.g, color.b, color.a))
 
-        for i in range(len(text)):
+        for i, char in enumerate(text):
             if text[i] in self.chars:
-                cimg = s_get_image(self.sprite, self.chars[text[i]],
+                cimg = s_get_image(self.sprite, self.chars[char],
                                    xscale=xscale, yscale=yscale,
                                    blend=sge_color)
-                surf.blit(cimg, (int(i * (self.width + self.hsep)), 0))
+                surf.blit(cimg, (int(i * (self.width+self.hsep)), 0))
             elif text[i].swapcase() in self.chars:
-                cimg = s_get_image(self.sprite, self.chars[text[i].swapcase()],
+                cimg = s_get_image(self.sprite, self.chars[char.swapcase()],
                                    xscale=xscale, yscale=yscale,
                                    blend=sge_color)
-                surf.blit(cimg, (int(i * (self.width + self.hsep)), 0))
+                surf.blit(cimg, (int(i * (self.width+self.hsep)), 0))
             elif None in self.chars:
                 cimg = s_get_image(self.sprite, self.chars[None],
                                    xscale=xscale, yscale=yscale,
                                    blend=sge_color)
-                surf.blit(cimg, (int(i * (self.width + self.hsep)), 0))
+                surf.blit(cimg, (int(i * (self.width+self.hsep)), 0))
 
         if background is None:
             return surf
@@ -3075,7 +3075,7 @@ class _PygameSpriteFont:
         # the width and the height is necessary.  Without this extra
         # pixel of width and height, the rightmost column and bottom row
         # of pixels end up not being displayed.
-        return (int(self.width * len(text) + self.hsep * (len(text) - 1)) + 1,
+        return (int(self.width*len(text) + self.hsep*(len(text)-1)) + 1,
                 int(self.height) + 1)
 
     def set_underline(self, bool_):

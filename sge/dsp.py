@@ -3673,8 +3673,8 @@ class Object:
                     a = len(mask) / 2
                     b = len(mask[0]) / 2 if mask else 0
 
-                    for x in range(len(mask)):
-                        for y in range(len(mask[x])):
+                    for x, column in enumerate(mask):
+                        for y, row in enumerate(column):
                             if ((x - a) / a) ** 2 + ((y - b) / b) ** 2 <= 1:
                                 mask[x][y] = True
                 else:
