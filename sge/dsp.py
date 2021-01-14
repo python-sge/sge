@@ -395,7 +395,7 @@ class Game:
             else:
                 pygame.display.set_icon(image)
 
-    def __init__(self, *, width=640, height=480, fullscreen=False, scale=None,
+    def __init__(self, width=640, height=480, *, fullscreen=False, scale=None,
                  scale_proportional=True, scale_integer=False,
                  scale_method=None, fps=60, delta=False, delta_min=15,
                  delta_max=None, grab_input=False, window_text=None,
