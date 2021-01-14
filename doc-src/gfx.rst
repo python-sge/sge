@@ -53,6 +53,8 @@ sge.gfx.Sprite Methods
 
 .. automethod:: sge.gfx.Sprite.draw_circle
 
+.. automethod:: sge.gfx.Sprite.draw_polyline
+
 .. automethod:: sge.gfx.Sprite.draw_polygon
 
 .. automethod:: sge.gfx.Sprite.draw_sprite

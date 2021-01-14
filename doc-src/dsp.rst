@@ -71,6 +71,8 @@ sge.dsp.Game Event Methods
 
 .. automethod:: sge.dsp.Game.event_mouse_button_release
 
+.. automethod:: sge.dsp.Game.event_mouse_wheel_move
+
 .. automethod:: sge.dsp.Game.event_joystick
 
 .. automethod:: sge.dsp.Game.event_joystick_axis_move
@@ -91,6 +93,8 @@ sge.dsp.Game Event Methods
 
 .. automethod:: sge.dsp.Game.event_lose_mouse_focus
 
+.. automethod:: sge.dsp.Game.event_window_resize
+
 .. automethod:: sge.dsp.Game.event_close
 
 .. automethod:: sge.dsp.Game.event_mouse_collision
@@ -106,6 +110,8 @@ sge.dsp.Game Event Methods
 .. automethod:: sge.dsp.Game.event_paused_mouse_button_press
 
 .. automethod:: sge.dsp.Game.event_paused_mouse_button_release
+
+.. automethod:: sge.dsp.Game.event_paused_mouse_wheel_move
 
 .. automethod:: sge.dsp.Game.event_paused_joystick
 
@@ -126,6 +132,8 @@ sge.dsp.Game Event Methods
 .. automethod:: sge.dsp.Game.event_paused_gain_mouse_focus
 
 .. automethod:: sge.dsp.Game.event_paused_lose_mouse_focus
+
+.. automethod:: sge.dsp.Game.event_paused_window_resize
 
 .. automethod:: sge.dsp.Game.event_paused_close
 
@@ -186,6 +194,8 @@ sge.dsp.Room Event Methods
 
 .. automethod:: sge.dsp.Room.event_mouse_button_release
 
+.. automethod:: sge.dsp.Room.event_mouse_wheel_move
+
 .. automethod:: sge.dsp.Room.event_joystick
 
 .. automethod:: sge.dsp.Room.event_joystick_axis_move
@@ -219,6 +229,8 @@ sge.dsp.Room Event Methods
 .. automethod:: sge.dsp.Room.event_paused_mouse_button_press
 
 .. automethod:: sge.dsp.Room.event_paused_mouse_button_release
+
+.. automethod:: sge.dsp.Room.event_paused_mouse_wheel_move
 
 .. automethod:: sge.dsp.Room.event_paused_joystick
 
@@ -292,6 +304,8 @@ sge.dsp.Object Event Methods
 
 .. automethod:: sge.dsp.Object.event_mouse_button_release
 
+.. automethod:: sge.dsp.Object.event_mouse_wheel_move
+
 .. automethod:: sge.dsp.Object.event_joystick
 
 .. automethod:: sge.dsp.Object.event_joystick_axis_move
@@ -320,6 +334,8 @@ sge.dsp.Object Event Methods
 
 .. automethod:: sge.dsp.Object.event_paused_mouse_button_release
 
+.. automethod:: sge.dsp.Object.event_paused_mouse_wheel_move
+
 .. automethod:: sge.dsp.Object.event_paused_joystick
 
 .. automethod:: sge.dsp.Object.event_paused_joystick_axis_move
@@ -331,4 +347,11 @@ sge.dsp.Object Event Methods
 .. automethod:: sge.dsp.Object.event_paused_joystick_button_press
 
 .. automethod:: sge.dsp.Object.event_paused_joystick_button_release
+
+sge.dsp Functions
+=================
+
+.. autofunction:: sge.dsp.list_fullscreen_modes
+
+.. autofunction:: sge.dsp.fullscreen_mode_ok
 

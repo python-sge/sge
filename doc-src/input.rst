@@ -24,6 +24,8 @@ Input Event Classes
 
 .. autoclass:: sge.input.MouseButtonRelease
 
+.. autoclass:: sge.input.MouseWheelMove
+
 .. autoclass:: sge.input.JoystickAxisMove
 
 .. autoclass:: sge.input.JoystickHatMove
@@ -41,5 +43,7 @@ Input Event Classes
 .. autoclass:: sge.input.MouseFocusGain
 
 .. autoclass:: sge.input.MouseFocusLose
+
+.. autoclass:: sge.input.WindowResize
 
 .. autoclass:: sge.input.QuitRequest
