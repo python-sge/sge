@@ -59,7 +59,7 @@ Specification misc changes:
   SGE versions, specify the frame argument as a keyword argument.)
 * sge.gfx.Color is now defined to raise TypeError when an invalid type
   is given (it previously raised ValueError).
-* sge.gfx.TileGrid now supports a hexagonal tile rendering method.
+* sge.gfx.TileGrid now supports two hexagonal tiling methods.
 
 
 1.7

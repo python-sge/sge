@@ -141,6 +141,7 @@ long as said assignments conform with the specification above.
 .. data:: sge.s.insert
 .. data:: sge.s.iris_in
 .. data:: sge.s.iris_out
+.. data:: sge.s.isohex
 .. data:: sge.s.isometric
 .. data:: sge.s.kp_0
 .. data:: sge.s.kp_1
@@ -425,6 +426,7 @@ iris_out = "iris_out"
 
 # Tile grids
 hexagonal = "hexagonal"
+isohex = "isohex"
 isometric = "isometric"
 orthogonal = "orthogonal"
 
