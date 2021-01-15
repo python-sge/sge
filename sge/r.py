@@ -1308,13 +1308,13 @@ def tg_blit(self, dest, x, y):
                     if j % 2 != 0:
                         x += self.tile_width / 2
                 elif self.render_method == "hexagonal":
-                    x = sx + i*self.tile_width*2/3
+                    x = sx + i * (self.tile_width - self.meta)
                     y = sy + j*self.tile_height
                     if i % 2 != 0:
                         y += self.tile_height / 2
                 elif self.render_method == "isohex":
                     x = sx + i*self.tile_width
-                    y = sx + j*self.tile_height*2/3
+                    y = sx + j * (self.tile_height - self.meta)
                     if j % 2 != 0:
                         x += self.tile_width / 2
                 else:

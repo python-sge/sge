@@ -2351,19 +2351,23 @@ class TileGrid:
 
        - ``"hexagonal"`` -- Start in the top-left corner of the grid.
          Render each tile in a section to the right of the previous tile
-         by ``tile_width * 2 / 3`` pixels. Assuming the first tile in a
-         section has an index of ``0``, render each odd-numbered tile
-         below even-numbered tile in the same section by
-         ``tile_height / 2`` pixels.  Render each section downward from
-         the previous section by :attr:`tile_height` pixels.
+         by ``tile_width - meta`` pixels.  (:attr:`meta` corresponds to
+         the horizontal distance between the left point and top side of
+         the hexagon.)  Assuming the first tile in a section has an
+         index of ``0``, render each odd-numbered tile below
+         even-numbered tile in the same section by ``tile_height / 2``
+         pixels.  Render each section downward from the previous section
+         by :attr:`tile_height` pixels.
 
        - ``"isohex"`` -- Start in the top-left corner of the grid.
          Render each tile in a section to the right of the previous tile
          by :attr:`tile_width` pixels.  Render each section downward
-         from the previous section by ``tile_height * 2 / 3`` pixels.
-         Assuming the first section has an index of ``0``, render each
-         odd-numbered section to the right of the even-numbered sections
-         by ``tile_width / 2`` pixels.
+         from the previous section by ``tile_height - meta`` pixels.
+         (:attr:`meta` corresponds to the vertical distance between the
+         top point and left side of the hexagon.)  Assuming the first
+         section has an index of ``0``, render each odd-numbered section
+         to the right of the even-numbered sections by
+         ``tile_width / 2`` pixels.
 
        If this is set to an invalid value or ``None``, it becomes
        ``"orthogonal"``.
@@ -2377,6 +2381,11 @@ class TileGrid:
 
        The number of tiles in one section of tiles.  What constitutes a
        section is defined by the value of :attr:`render_method`.
+
+    .. attribute:: meta
+
+       A variable used for tile drawing.  The exact meaning of this
+       depends on the value of :attr:`render_method`.
 
     .. attribute:: tile_width
 
@@ -2554,8 +2563,9 @@ class TileGrid:
             self.__bbox_height = self.height - self.bbox_y
 
     def __init__(self, tiles, render_method=None, section_length=1,
-                 tile_width=16, tile_height=16, *, origin_x=0, origin_y=0,
-                 bbox_x=None, bbox_y=None, bbox_width=None, bbox_height=None):
+                 tile_width=16, tile_height=16, meta=0, *, origin_x=0,
+                 origin_y=0, bbox_x=None, bbox_y=None, bbox_width=None,
+                 bbox_height=None):
         """
         Arguments set the respective initial attributes of the grid.
         See the documentation for :class:`xsge.gfx.TileGrid` for more
@@ -2567,6 +2577,7 @@ class TileGrid:
         self.section_length = section_length
         self.tile_width = tile_width
         self.tile_height = tile_height
+        self.meta = meta
         self.origin_x = origin_x
         self.origin_y = origin_y
         self.bbox_x = bbox_x
