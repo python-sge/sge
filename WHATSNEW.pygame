@@ -11,6 +11,7 @@ information. This file is offered as-is, without any warranty.
 Pygame SGE bugfixes:
 - Future queue cleared by previously playing music that was stopped
 - Nonfunctional implementation of resolution changing
+- Incorrect isometric tiling implementation
 
 Pygame SGE misc changes:
 * Made more robust against Pygame giving a wrong display size.

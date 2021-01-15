@@ -2349,6 +2349,14 @@ class TileGrid:
          odd-numbered section to the right of the even-numbered sections
          by ``tile_width / 2`` pixels.
 
+       - ``"hexagonal"`` -- Start in the top-left corner of the grid.
+         Render each tile in a section to the right of the previous tile
+         by :attr:`tile_width` pixels.  Render each section downward
+         from the previous section by ``tile_height * 0.75`` pixels.
+         Assuming the first section has an index of ``0``, render each
+         odd-numbered section to the right of the even-numbered sections
+         by ``tile_width / 2`` pixels.
+
        If this is set to an invalid value or ``None``, it becomes
        ``"orthogonal"``.
 

@@ -135,6 +135,7 @@ long as said assignments conform with the specification above.
 .. data:: sge.s.hat_left
 .. data:: sge.s.hat_right
 .. data:: sge.s.hat_up
+.. data:: sge.s.hexagonal
 .. data:: sge.s.home
 .. data:: sge.s.hyphen
 .. data:: sge.s.insert
@@ -423,6 +424,7 @@ iris_in = "iris_in"
 iris_out = "iris_out"
 
 # Tile grids
+hexagonal = "hexagonal"
 isometric = "isometric"
 orthogonal = "orthogonal"
 

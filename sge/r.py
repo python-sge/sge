@@ -1303,13 +1303,16 @@ def tg_blit(self, dest, x, y):
             sprite = get_tile(i, j)
             if sprite is not None:
                 if self.render_method == "isometric":
-                    x = sx + i * self.tile_width
-                    y = sx + j * self.tile_height / 2
-                    if i / 2 != i // 2:
-                        x += i * self.tile_width / 2
+                    x = sx + i*self.tile_width
+                    y = sx + j*self.tile_height/2
+                    if j % 2 != 0:
+                        x += self.tile_width / 2
+                elif self.render_method == "hexagonal":
+                    x = sx + i*self.tile_width
+                    y = sx + j*self.tile_height*0.75
                 else:
-                    x = sx + i * self.tile_width
-                    y = sy + j * self.tile_height
+                    x = sx + i*self.tile_width
+                    y = sy + j*self.tile_height
 
                 ssurf = s_set_transparency(sprite, sprite.rd["baseimages"][0])
                 dest.blit(ssurf, (int(x), int(y)))
