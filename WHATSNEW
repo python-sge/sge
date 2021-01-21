@@ -33,6 +33,7 @@ Specification additions:
 + sge.dsp.Game.project_polyline
 + sge.dsp.Room.project_polyline
 + sge.s.hexagonal
++ sge.s.isohex
 
 Specification misc changes:
 * Mouse button press events with the "wheel_up" and "wheel_down" button
