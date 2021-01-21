@@ -51,13 +51,24 @@ class Color:
     """
     This class stores color information.
 
-    Objects of this class can be converted to iterables indicating the
-    object's :attr:`red`, :attr:`green`, :attr:`blue`, and :attr:`alpha`
-    values, respectively; to integers which can be interpreted as a
-    hexadecimal representation of the color, excluding alpha
-    transparency; and to strings which indicate the English name of the
-    color (in all lowercase) if possible, and :attr:`hex_string`
-    otherwise.
+    Objects of this class support the following standard operations
+    (where ``c`` is an object of this class):
+
+    - ``iter(c)`` -- Return an iterable containing the object's
+      :attr:`red`, :attr:`green`, :attr:`blue`, and :attr:`alpha`
+      values, respectively.
+    - ``int(c)`` -- Return an integer which can be interpreted as a
+      hexadecimal representation in the form of ``0xRRGGBB`` (where "RR"
+      is red, "GG" is green, and "BB" is blue).
+    - ``str(c)`` -- Return a string which indicates the English name of
+      the color (in all lowercase) if possible, or :attr:`hex_string`
+      otherwise.
+    - ``c == c2`` -- Equivalent to ``str(c) == str(c2)``.
+    - ``c[i]`` -- Equivalent to ``tuple(c)[i]``.
+    - ``c[i] = v`` -- Equivalent to converting ``c`` to list ``L``,
+      setting ``L[i]`` to ``v``, and then setting the object's
+      :attr:`red`, :attr:`green`, :attr:`blue`, and :attr:`alpha`
+      values, respectively, to the values contained in ``L``.
 
     .. attribute:: red
 
