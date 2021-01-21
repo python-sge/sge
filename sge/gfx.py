@@ -186,7 +186,7 @@ class Color:
         return iter([self.red, self.green, self.blue, self.alpha])
 
     def __int__(self):
-        return self.red * 256 ** 2 | self.green * 256 | self.blue
+        return self.red << 2 | self.green << 1 | self.blue
 
     def __repr__(self):
         return 'sge.gfx.Color("{}")'.format(str(self))
