@@ -1644,6 +1644,59 @@ class Sprite:
 
         s_refresh(self)
 
+    def draw_shader(self, x, y, width, height, shader, frame=None):
+        """
+        Apply a pixel shader to the sprite.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location relative to the sprite of the
+          area to apply the shader to.
+        - ``y`` -- The vertical location relative to the sprite of the
+          area to apply the shader to.
+        - ``width`` -- The width of the area to apply the shader to.
+        - ``height`` -- The height of the area to apply the shader to.
+        - ``shader`` -- A callback function for the shader. (See below.)
+        - ``frame`` -- The frame of the sprite to apply the shader to,
+          where ``0`` is the first frame; set to ``None`` to erase from
+          all frames.
+
+        The ``shader`` argument is a callback function which must
+        contain the following arguments:
+
+        - ``x`` -- The horizontal location of the pixel relative to the
+          area the shader is being applied to.
+        - ``y`` -- The vertical location of the pixel relative to the
+          area the shader is being applied to.
+        - ``color`` -- The initial color of the pixel.
+
+        The callback function must modify ``color`` in-place; it will
+        then be applied to the image in the respective location.
+
+        For example, the following function would serve as a shader that
+        applies a green gradient to a 32x32 area::
+
+            def shader(x, y, color):
+                color.red = 255
+                color.green = 255 * x / 32
+                color.blue = 255
+        """
+        if frame is None:
+            rng = range(self.frames)
+        else:
+            rng = [frame % self.frames]
+
+        for i in rng:
+            img = self.rd["baseimages"][i]
+            img.lock()
+            for yy in range(y, height):
+                for xx in range(x, width):
+                    color = img.get_at((xx, yy))
+                    shader(xx, yy, color)
+                    pg_color = pygame.Color(*color)
+                    img.set_at((xx, yy), pg_color)
+            img.unlock()
+
     def draw_erase(self, x, y, width, height, frame=None):
         """
         Erase part of the sprite.

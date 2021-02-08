@@ -34,6 +34,7 @@ Specification additions:
 + sge.dsp.Room.project_polyline
 + sge.s.hexagonal
 + sge.s.isohex
++ sge.gfx.Sprite.draw_shader
 
 Specification misc changes:
 * Mouse button press events with the "wheel_up" and "wheel_down" button

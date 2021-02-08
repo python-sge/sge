@@ -61,6 +61,8 @@ sge.gfx.Sprite Methods
 
 .. automethod:: sge.gfx.Sprite.draw_text
 
+.. automethod:: sge.gfx.Sprite.draw_shader
+
 .. automethod:: sge.gfx.Sprite.draw_erase
 
 .. automethod:: sge.gfx.Sprite.draw_clear
