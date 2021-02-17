@@ -46,6 +46,13 @@ class Game(sge.dsp.Game):
         self.project_polyline([(428.2, 328), (424, 460.1), (460, 340.9)],
                               sge.gfx.Color("red"), thickness=3.1)
 
+        def invert(x, y, color):
+            color.red = 255 - color.red
+            color.green = 255 - color.green
+            color.blue = 255 - color.blue
+
+        self.project_shader(0, self.height - 32, 32, 32, invert)
+
     def event_key_press(self, key, char):
         if key == 'escape':
             self.end()

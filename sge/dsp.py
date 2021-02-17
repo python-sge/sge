@@ -1350,7 +1350,7 @@ class Game:
                 x, y, width, height, shader = r.game_shaders.pop(0)
                 for yy in range(y, y + height):
                     for xx in range(x, x + width):
-                        color = img.get_at((xx, yy))
+                        color = sge.gfx.Color(tuple(img.get_at((xx, yy))))
                         shader(xx, yy, color)
                         pg_color = pygame.Color(*color)
                         img.set_at((xx, yy), pg_color)
