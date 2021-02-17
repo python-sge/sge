@@ -22,6 +22,8 @@ functions and variables.
 
 import inspect
 import math
+import multiprocessing
+import os
 import random
 import time
 import warnings
@@ -197,15 +199,33 @@ def _screen_blend(dest, source, dest_x, dest_y, alpha=False):
     source.unlock()
 
 
+def _apply_shader_part(dest, pixarray, x, y, width, height, shader):
+    for xx in range(max(x, 0), min(x + width, dest.get_width())):
+        for yy in range(max(y, 0), min(y + height, dest.get_height())):
+            red, green, blue, alpha = tuple(dest.unmap_rgb(pixarray[xx, yy]))
+            color = dest.map_rgb(shader(xx, yy, red, green, blue, alpha))
+            pixarray[xx, yy] = color
+
+
 def _apply_shader(dest, x, y, width, height, shader):
     # Apply a shader to surface ``dest``.  Note: caller must lock() and
     # unlock() ``dest``.
     pixarray = pygame.PixelArray(dest)
-    for xx in range(x, x + width):
-        for yy, in range(y, y + height):
-            red, green, blue, alpha = tuple(dest.unmap_rgb(pixarray[xx, yy]))
-            color = dest.map_rgb(shader(xx, yy, red, green, blue, alpha))
-            pixarray[xx, yy] = color
+
+    parts = min(len(os.sched_getaffinity(0)), width)
+    part_size = math.ceil(width / parts)
+    proc = []
+    for i in range(parts):
+        xx = x + i*part_size
+        p = multiprocessing.Process(
+            target=_apply_shader_part,
+            args=(dest, pixarray, xx, y, part_size, height, shader))
+        proc.append(p)
+        p.start()
+
+    for p in proc:
+        p.join()
+
     pixarray.close()
 
 

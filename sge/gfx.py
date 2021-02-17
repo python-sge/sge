@@ -1696,21 +1696,10 @@ class Sprite:
         else:
             rng = [frame % self.frames]
 
-        if x < 0:
-            width += x
-            x = 0
-        if y < 0:
-            height += y
-            y = 0
-        if x + width > self.width:
-            width = self.width - x
-        if y + height > self.height:
-            height = self.height - y
-
         for i in rng:
             img = self.rd["baseimages"][i]
             img.lock()
-            _apply_shader(img, x, y, width, height, shader)
+            _apply_shader(img, int(x), int(y), int(width), int(height), shader)
             img.unlock()
 
     def draw_erase(self, x, y, width, height, frame=None):

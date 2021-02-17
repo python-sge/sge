@@ -1335,19 +1335,29 @@ class Game:
         r.game_window_projections = []
 
         # Scale/blit display surface
+        real_w = self.width * r.game_xscale
+        real_h = self.height * r.game_yscale
         if display_surface is not r.game_window:
             r.game_window.fill((0, 0, 0))
             r.game_window.blit(
-                _scale(display_surface, self.width * r.game_xscale,
-                       self.height * r.game_yscale), (int(r.game_x),
-                       int(r.game_y)))
+                _scale(display_surface, real_w, real_h),
+                (int(r.game_x), int(r.game_y)))
 
         # Apply shaders
         if r.game_shaders:
             r.game_window.lock()
+            real_w = r.game_window.get_width()
+            real_h = r.game_window.get_height()
+
             while r.game_shaders:
                 x, y, width, height, shader = r.game_shaders.pop(0)
+                x = int(r.game_x + x*r.game_xscale)
+                width = math.ceil(width * r.game_xscale)
+                y = int(r.game_y + y*r.game_yscale)
+                height = math.ceil(height * r.game_yscale)
+
                 _apply_shader(r.game_window, x, y, width, height, shader)
+
             r.game_window.unlock()
 
         pygame.display.flip()
@@ -1646,17 +1656,6 @@ class Game:
            instead using sprites and blending, which is likely to be
            more efficient.
         """
-        if x < 0:
-            width += x
-            x = 0
-        if y < 0:
-            height += y
-            y = 0
-        if x + width > self.width:
-            width = self.width - x
-        if y + height > self.height:
-            height = self.height - y
-
         r.game_shaders.append((x, y, width, height, shader))
 
     def event_step(self, time_passed, delta_mult):
