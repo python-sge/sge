@@ -166,23 +166,25 @@ def _get_blend_flags(blend_mode):
 def _screen_blend(dest, source, dest_x, dest_y, alpha=False):
     dest.lock()
     source.lock()
-    for y in range(source.get_height()):
-        if 0 <= dest_y + y < dest.get_height():
-            for x in range(source.get_width()):
-                if 0 <= dest_x + x < dest.get_width():
-                    dc = dest.get_at((dest_x + x, dest_y + y))
-                    sc = source.get_at((x, y))
+    xmin = max(0, dest_x)
+    ymin = max(0, dest_y)
+    xlen = min(source.get_width(), dest.get_width() - dest_x)
+    ylen = min(source.get_height(), dest.get_height() - dest_y)
+    for y in range(ymin, ylen):
+        for x in range(xmin, xlen):
+            dc = dest.get_at((dest_x + x, dest_y + y))
+            sc = source.get_at((x, y))
 
-                    def blended_component(c1, c2):
-                        return int(255 - (((255 - c1) / 255) *
-                                          ((255 - c2) / 255) * 255))
+            def blended_component(c1, c2):
+                return int(255 - (((255 - c1) / 255) *
+                                  ((255 - c2) / 255) * 255))
 
-                    r = blended_component(dc.r, sc.r)
-                    g = blended_component(dc.g, sc.g)
-                    b = blended_component(dc.b, sc.b)
-                    a = blended_component(dc.a, sc.a) if alpha else dc.a
+            r = blended_component(dc.r, sc.r)
+            g = blended_component(dc.g, sc.g)
+            b = blended_component(dc.b, sc.b)
+            a = blended_component(dc.a, sc.a) if alpha else dc.a
 
-                    dest.set_at((dest_x + x, dest_y + y), pygame.Color(r, g, b, a))
+            dest.set_at((dest_x + x, dest_y + y), pygame.Color(r, g, b, a))
     dest.unlock()
     source.unlock()
 
