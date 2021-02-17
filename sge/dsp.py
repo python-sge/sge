@@ -33,10 +33,10 @@ import pygame
 import sge
 from sge import gfx, r
 from sge.r import (
-    _check_color, _scale, _get_blend_flags, _screen_blend, _set_mode,
-    _handle_music, _get_dot_sprite, _get_line_sprite, _get_rectangle_sprite,
-    _get_ellipse_sprite, _get_circle_sprite, _get_polyline_sprite,
-    _get_polygon_sprite, bl_update,
+    _check_color, _scale, _get_blend_flags, _screen_blend, _apply_shader,
+    _set_mode, _handle_music, _get_dot_sprite, _get_line_sprite,
+    _get_rectangle_sprite, _get_ellipse_sprite, _get_circle_sprite,
+    _get_polyline_sprite, _get_polygon_sprite, bl_update,
     bl_get_image, o_update, o_detect_collisions, o_update_collision_lists,
     o_update_object_areas, o_is_other, o_get_origin_offset, o_set_speed,
     s_get_image, s_get_precise_mask, s_from_text, tg_blit,
@@ -1344,17 +1344,11 @@ class Game:
 
         # Apply shaders
         if r.game_shaders:
-            img = r.game_window
-            img.lock()
+            r.game_window.lock()
             while r.game_shaders:
                 x, y, width, height, shader = r.game_shaders.pop(0)
-                for yy in range(y, y + height):
-                    for xx in range(x, x + width):
-                        color = sge.gfx.Color(tuple(img.get_at((xx, yy))))
-                        shader(xx, yy, color)
-                        pg_color = pygame.Color(*color)
-                        img.set_at((xx, yy), pg_color)
-            img.unlock()
+                _apply_shader(r.game_window, x, y, width, height, shader)
+            r.game_window.unlock()
 
         pygame.display.flip()
 

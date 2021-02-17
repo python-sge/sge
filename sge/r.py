@@ -187,6 +187,17 @@ def _screen_blend(dest, source, dest_x, dest_y, alpha=False):
     source.unlock()
 
 
+def _apply_shader(dest, x, y, width, height, shader):
+    # Apply a shader to surface ``dest``.  Note: caller must lock() and
+    # unlock() ``dest``.
+    for yy in range(y, y + height):
+        for xx in range(x, x + width):
+            red, green, blue, alpha = tuple(dest.get_at((xx, yy)))
+            color = shader(xx, yy, red, green, blue, alpha)
+            pg_color = pygame.Color(*color)
+            dest.set_at((xx, yy), pg_color)
+
+
 def _set_mode(resize_only=False):
     # Set the mode of the screen based on self.width, self.height,
     # and self.fullscreen.

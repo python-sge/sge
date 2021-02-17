@@ -1668,18 +1668,28 @@ class Sprite:
           area the shader is being applied to.
         - ``y`` -- The vertical location of the pixel relative to the
           area the shader is being applied to.
-        - ``color`` -- The initial color of the pixel.
+        - ``red`` -- The red component of the initial color as an
+          integer, where ``0`` indicates no red intensity and ``255``
+          indicates full red intensity.
+        - ``green`` -- The green component of the initial color as an
+          integer, where ``0`` indicates no green intensity and ``255``
+          indicates full red intensity.
+        - ``blue`` -- The blue component of the initial color as an
+          integer, where ``0`` indicates no blue intensity and ``255``
+          indicates full red intensity.
+        - ``alpha`` -- The alpha component of the initial color as an
+          integer, where ``0`` indicates fully transparent and ``255``
+          indicates fully opaque.
 
-        The callback function must modify ``color`` in-place; it will
-        then be applied to the image in the respective location.
+        The callback function must return the new color components of
+        the respective pixel containing the modified ``red``, ``green``,
+        ``blue``, and ``alpha`` values, respectively.
 
         For example, the following function would serve as a shader that
-        applies a green gradient to a 32x32 area::
+        inverts all colors::
 
-            def shader(x, y, color):
-                color.red = 255
-                color.green = 255 * x / 32
-                color.blue = 255
+            def shader(x, y, red, green, blue, alpha):
+                return (255 - red, 255 - green, 255 - blue, alpha)
         """
         if frame is None:
             rng = range(self.frames)
@@ -1700,12 +1710,7 @@ class Sprite:
         for i in rng:
             img = self.rd["baseimages"][i]
             img.lock()
-            for yy in range(y, y + height):
-                for xx in range(x, x + width):
-                    color = Color(tuple(img.get_at((xx, yy))))
-                    shader(xx, yy, color)
-                    pg_color = pygame.Color(*color)
-                    img.set_at((xx, yy), pg_color)
+            _apply_shader(img, x, y, width, height, shader)
             img.unlock()
 
     def draw_erase(self, x, y, width, height, frame=None):
