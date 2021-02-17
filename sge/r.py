@@ -166,14 +166,19 @@ def _get_blend_flags(blend_mode):
 def _screen_blend(dest, source, dest_x, dest_y, alpha=False):
     dest.lock()
     source.lock()
+    destpix = pygame.PixelArray(dest)
+    sourcepix = pygame.PixelArray(source)
     xmin = max(0, dest_x)
     ymin = max(0, dest_y)
     xlen = min(source.get_width(), dest.get_width() - dest_x)
     ylen = min(source.get_height(), dest.get_height() - dest_y)
-    for y in range(ymin, ylen):
-        for x in range(xmin, xlen):
-            dc = dest.get_at((dest_x + x, dest_y + y))
-            sc = source.get_at((x, y))
+
+    for x in range(xmin, xlen):
+        for y in range(ymin, ylen):
+            dx = dest_x + x
+            dy = dest_y + y
+            dc = dest.unmap_rgb(destpix[dx, dy])
+            sc = source.unmap_rgb(sourcepix[x, y])
 
             def blended_component(c1, c2):
                 return int(255 - (((255 - c1) / 255) *
@@ -184,7 +189,10 @@ def _screen_blend(dest, source, dest_x, dest_y, alpha=False):
             b = blended_component(dc.b, sc.b)
             a = blended_component(dc.a, sc.a) if alpha else dc.a
 
-            dest.set_at((dest_x + x, dest_y + y), pygame.Color(r, g, b, a))
+            destpix[dx, dy] = dest.map_rgb((r, g, b, a))
+
+    destpix.close()
+    sourcepix.close()
     dest.unlock()
     source.unlock()
 
@@ -192,12 +200,13 @@ def _screen_blend(dest, source, dest_x, dest_y, alpha=False):
 def _apply_shader(dest, x, y, width, height, shader):
     # Apply a shader to surface ``dest``.  Note: caller must lock() and
     # unlock() ``dest``.
-    for yy in range(y, y + height):
-        for xx in range(x, x + width):
-            red, green, blue, alpha = tuple(dest.get_at((xx, yy)))
-            color = shader(xx, yy, red, green, blue, alpha)
-            pg_color = pygame.Color(*color)
-            dest.set_at((xx, yy), pg_color)
+    pixarray = pygame.PixelArray(dest)
+    for xx in range(x, x + width):
+        for yy, in range(y, y + height):
+            red, green, blue, alpha = tuple(dest.unmap_rgb(pixarray[xx, yy]))
+            color = dest.map_rgb(shader(xx, yy, red, green, blue, alpha))
+            pixarray[xx, yy] = color
+    pixarray.close()
 
 
 def _set_mode(resize_only=False):
