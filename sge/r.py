@@ -62,6 +62,12 @@ _prev_hats = {}
 # Display info
 _display_info = None
 
+# Number of processors
+try:
+    _nproc = len(os.sched_getaffinity(0))
+except (AttributeError, NotImplementedError):
+    _nproc = 4
+
 
 class cache:
 
@@ -212,19 +218,23 @@ def _apply_shader(dest, x, y, width, height, shader):
     # unlock() ``dest``.
     pixarray = pygame.PixelArray(dest)
 
-    parts = min(len(os.sched_getaffinity(0)), width)
-    part_size = math.ceil(width / parts)
-    proc = []
-    for i in range(parts):
-        xx = x + i*part_size
-        p = multiprocessing.Process(
-            target=_apply_shader_part,
-            args=(dest, pixarray, xx, y, part_size, height, shader))
-        proc.append(p)
-        p.start()
+    parts = min(_nproc, width)
 
-    for p in proc:
-        p.join()
+    if parts > 1:
+        part_size = math.ceil(width / parts)
+        proc = []
+        for i in range(parts):
+            xx = x + i*part_size
+            p = multiprocessing.Process(
+                target=_apply_shader_part,
+                args=(dest, pixarray, xx, y, part_size, height, shader))
+            proc.append(p)
+            p.start()
+
+        for p in proc:
+            p.join()
+    else:
+        _apply_shader_part(dest, pixarray, x, y, width, height, shader)
 
     pixarray.close()
 
