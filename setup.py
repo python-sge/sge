@@ -35,6 +35,6 @@ setup(name="sge",
       packages=["sge"],
       package_dir={"sge": "sge"},
       package_data={"sge": ["COPYING", "COPYING.LESSER"]},
-      requires=["pygame (>=1.9.1)", "uniseg"],
+      requires=["pygame (>=2.0)", "uniseg"],
       provides=["sge"],
       )

@@ -261,16 +261,7 @@ __all__ = [
 import sys
 import os
 
-try:
-    import pygame
-except ImportError as e:
-    try:
-        import pygame_sdl2
-    except ImportError:
-        raise e
-    else:
-        pygame_sdl2.import_as_pygame()
-        import pygame
+import pygame
 
 
 # Constants
