@@ -1656,7 +1656,7 @@ class Sprite:
           area to apply the shader to.
         - ``width`` -- The width of the area to apply the shader to.
         - ``height`` -- The height of the area to apply the shader to.
-        - ``shader`` -- A callback function for the shader. (See below.)
+        - ``shader`` -- A callback function for the shader (see below).
         - ``frame`` -- The frame of the sprite to apply the shader to,
           where ``0`` is the first frame; set to ``None`` to erase from
           all frames.
@@ -1686,11 +1686,22 @@ class Sprite:
         else:
             rng = [frame % self.frames]
 
+        if x < 0:
+            width += x
+            x = 0
+        if y < 0:
+            height += y
+            y = 0
+        if x + width > self.width:
+            width = self.width - x
+        if y + height > self.height:
+            height = self.height - y
+
         for i in rng:
             img = self.rd["baseimages"][i]
             img.lock()
-            for yy in range(y, height):
-                for xx in range(x, width):
+            for yy in range(y, y + height):
+                for xx in range(x, x + width):
                     color = img.get_at((xx, yy))
                     shader(xx, yy, color)
                     pg_color = pygame.Color(*color)
