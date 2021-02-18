@@ -62,11 +62,15 @@ _prev_hats = {}
 # Display info
 _display_info = None
 
-# Number of processors
+# Number of processors to use for multiprocessing.
 try:
     _nproc = len(os.sched_getaffinity(0))
 except (AttributeError, NotImplementedError):
     _nproc = 4
+
+# Forking is necessary to use multiprocessing to speed up shaders.
+_willfork = (multiprocessing.get_all_start_methods()
+             and multiprocessing.get_all_start_methods()[0] == "fork")
 
 
 class cache:
@@ -218,9 +222,11 @@ def _apply_shader(dest, x, y, width, height, shader):
     # unlock() ``dest``.
     pixarray = pygame.PixelArray(dest)
 
+    # The "fork" start method is required here because of the shared
+    # PixelArray.  If we aren't using the "fork" start method, we must
+    # use regular single-core processing of the shader.
     parts = min(_nproc, width)
-
-    if parts > 1:
+    if _willfork and parts > 1:
         part_size = math.ceil(width / parts)
         proc = []
         for i in range(parts):
@@ -228,8 +234,8 @@ def _apply_shader(dest, x, y, width, height, shader):
             p = multiprocessing.Process(
                 target=_apply_shader_part,
                 args=(dest, pixarray, xx, y, part_size, height, shader))
-            proc.append(p)
             p.start()
+            proc.append(p)
 
         for p in proc:
             p.join()
