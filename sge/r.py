@@ -22,7 +22,6 @@ functions and variables.
 
 import inspect
 import math
-import multiprocessing
 import os
 import random
 import time
@@ -209,39 +208,17 @@ def _screen_blend(dest, source, dest_x, dest_y, alpha=False):
     source.unlock()
 
 
-def _apply_shader_part(dest, pixarray, x, y, width, height, shader):
-    for xx in range(max(x, 0), min(x + width, dest.get_width())):
-        for yy in range(max(y, 0), min(y + height, dest.get_height())):
-            red, green, blue, alpha = tuple(dest.unmap_rgb(pixarray[xx, yy]))
-            color = dest.map_rgb(shader(xx, yy, red, green, blue, alpha))
-            pixarray[xx, yy] = color
-
-
 def _apply_shader(dest, x, y, width, height, shader):
     # Apply a shader to surface ``dest``.  Note: caller must lock() and
     # unlock() ``dest``.
     pixarray = pygame.PixelArray(dest)
-
-    # The "fork" start method is required here because of the shared
-    # PixelArray.  If we aren't using the "fork" start method, we must
-    # use regular single-core processing of the shader.
-    parts = min(_nproc, width)
-    if _willfork and parts > 1:
-        part_size = math.ceil(width / parts)
-        proc = []
-        for i in range(parts):
-            xx = x + i*part_size
-            p = multiprocessing.Process(
-                target=_apply_shader_part,
-                args=(dest, pixarray, xx, y, part_size, height, shader))
-            p.start()
-            proc.append(p)
-
-        for p in proc:
-            p.join()
-    else:
-        _apply_shader_part(dest, pixarray, x, y, width, height, shader)
-
+    range_x = range(max(x, 0), min(x + width, dest.get_width()))
+    range_y = range(max(y, 0), min(y + height, dest.get_height()))
+    for xx in range_x:
+        for yy in range_y:
+            red, green, blue, alpha = dest.unmap_rgb(pixarray[xx, yy])
+            color = dest.map_rgb(shader(xx, yy, red, green, blue, alpha))
+            pixarray[xx, yy] = color
     pixarray.close()
 
 
