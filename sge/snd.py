@@ -18,6 +18,9 @@ This module provides classes related to the sound system.
 """
 
 
+__all__ = ["Sound", "Music", "stop_all"]
+
+
 import os
 import random
 import warnings
@@ -27,9 +30,6 @@ import pygame
 import sge
 from sge import r
 from sge.r import _get_channel, _release_channel
-
-
-__all__ = ["Sound", "Music", "stop_all"]
 
 
 class Sound:
@@ -163,8 +163,8 @@ class Sound:
             try:
                 self.__sound = pygame.mixer.Sound(fname)
             except pygame.error as e:
+                self.__sound = None
                 raise FileNotFoundError(e)
-
         else:
             self.__sound = None
 
