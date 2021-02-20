@@ -61,16 +61,6 @@ _prev_hats = {}
 # Display info
 _display_info = None
 
-# Number of processors to use for multiprocessing.
-try:
-    _nproc = len(os.sched_getaffinity(0))
-except (AttributeError, NotImplementedError):
-    _nproc = 4
-
-# Forking is necessary to use multiprocessing to speed up shaders.
-_willfork = (multiprocessing.get_all_start_methods()
-             and multiprocessing.get_all_start_methods()[0] == "fork")
-
 
 class cache:
 
