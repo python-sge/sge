@@ -34,9 +34,9 @@ import sge
 from sge import gfx, r
 from sge.r import (
     _check_color, _scale, _get_blend_flags, _screen_blend, _apply_shader,
-    _set_mode, _handle_music, _get_dot_sprite, _get_line_sprite,
-    _get_rectangle_sprite, _get_ellipse_sprite, _get_circle_sprite,
-    _get_polyline_sprite, _get_polygon_sprite, bl_update,
+    _set_mode, _handle_music, _deinit_sound, _reinit_sound, _get_dot_sprite,
+    _get_line_sprite, _get_rectangle_sprite, _get_ellipse_sprite,
+    _get_circle_sprite, _get_polyline_sprite, _get_polygon_sprite, bl_update,
     bl_get_image, o_update, o_detect_collisions, o_update_collision_lists,
     o_update_object_areas, o_is_other, o_get_origin_offset, o_set_speed,
     s_get_image, s_get_precise_mask, s_from_text, tg_blit,
@@ -233,17 +233,17 @@ class Game:
        it restarts.  Must be set exactly once, before the game first
        starts, and should not be set again afterwards.
 
-    .. attribute:: current_room
-
-       The room which is currently active.  (Read-only)
-
     .. attribute:: sampling_frequency
 
-       The audio output sampling frequency in Hz.  (Read-only)
+       The audio output sampling frequency in Hz.
 
     .. attribute:: stereo
 
-       Whether or not stereo output is enabled.  (Read-only)
+       Whether or not stereo output is enabled.
+
+    .. attribute:: current_room
+
+       The room which is currently active.  (Read-only)
 
     .. attribute:: mouse
 
@@ -395,6 +395,26 @@ class Game:
             else:
                 pygame.display.set_icon(image)
 
+    @property
+    def sampling_frequency(self):
+        return r.game_sampling_frequency
+
+    @sampling_frequency.setter
+    def sampling_frequency(self, value):
+        _deinit_sound()
+        r.game_sampling_frequency = value
+        _reinit_sound()
+
+    @property
+    def stereo(self):
+        return r.game_stereo
+
+    @stereo.setter
+    def stereo(self, value):
+        _deinit_sound()
+        r.game_stereo = value
+        _reinit_sound()
+
     def __init__(self, width=640, height=480, *, fullscreen=False, scale=None,
                  scale_proportional=True, scale_integer=False,
                  scale_method=None, fps=60, delta=False, delta_min=15,
@@ -409,8 +429,8 @@ class Game:
         The created :class:`sge.dsp.Game` object is automatically
         assigned to :data:`sge.game`.
         """
-        self.sampling_frequency = sampling_frequency
-        self.stereo = stereo
+        r.game_sampling_frequency = sampling_frequency
+        r.game_stereo = stereo
 
         pygame.mixer.pre_init(sampling_frequency, -16, 2 if stereo else 1, 512)
         pygame.init()

@@ -163,11 +163,13 @@ class Sound:
             try:
                 self.__sound = pygame.mixer.Sound(fname)
             except pygame.error as e:
+                fname = None
                 self.__sound = None
                 raise FileNotFoundError(e)
         else:
             self.__sound = None
 
+        self.__sound_init = r.sound_init
         self.rd["channels"] = []
         self.__temp_channels = []
         self.fname = fname
@@ -206,46 +208,60 @@ class Sound:
           number of times, one of the instances of the sound already
           playing will be stopped.
         """
-        if self.__sound is not None:
-            if not loops:
-                loops = 0
-            if maxtime is None:
-                maxtime = 0
-            if fade_time is None:
-                fade_time = 0
+        if not pygame.mixer.get_init():
+            return
 
-            # Adjust for the way Pygame does repeats
-            loops -= 1
-
-            # Calculate volume for each speaker
-            left_volume = min(1, self.volume * volume)
-            right_volume = left_volume
-            if balance < 0:
-                right_volume *= 1 - abs(balance)
-            elif balance > 0:
-                left_volume *= 1 - abs(balance)
-
-            if self.max_play:
-                for channel in self.rd["channels"]:
-                    if not channel.get_busy():
-                        channel.play(self.__sound, loops, maxtime, fade_time)
-                        channel.set_volume(left_volume, right_volume)
-                        break
-                else:
-                    if force:
-                        channel = random.choice(self.rd["channels"])
-                        channel.play(self.__sound, loops, maxtime, fade_time)
-                        channel.set_volume(left_volume, right_volume)
+        if self.__sound_init < r.sound_init:
+            if self.fname is not None:
+                try:
+                    self.__sound = pygame.mixer.Sound(self.fname)
+                except pygame.error as e:
+                    self.__sound = None
             else:
-                channel = _get_channel()
-                channel.play(self.__sound, loops, maxtime, fade_time)
-                channel.set_volume(left_volume, right_volume)
-                self.__temp_channels.append(channel)
+                self.__sound = None
 
-            # Clean up old temporary channels
-            while (self.__temp_channels and
-                   not self.__temp_channels[0].get_busy()):
-                _release_channel(self.__temp_channels.pop(0))
+        if self.__sound is None:
+            return
+
+        if not loops:
+            loops = 0
+        if maxtime is None:
+            maxtime = 0
+        if fade_time is None:
+            fade_time = 0
+
+        # Adjust for the way Pygame does repeats
+        loops -= 1
+
+        # Calculate volume for each speaker
+        left_volume = min(1, self.volume * volume)
+        right_volume = left_volume
+        if balance < 0:
+            right_volume *= 1 - abs(balance)
+        elif balance > 0:
+            left_volume *= 1 - abs(balance)
+
+        if self.max_play:
+            for channel in self.rd["channels"]:
+                if not channel.get_busy():
+                    channel.play(self.__sound, loops, maxtime, fade_time)
+                    channel.set_volume(left_volume, right_volume)
+                    break
+            else:
+                if force:
+                    channel = random.choice(self.rd["channels"])
+                    channel.play(self.__sound, loops, maxtime, fade_time)
+                    channel.set_volume(left_volume, right_volume)
+        else:
+            channel = _get_channel()
+            channel.play(self.__sound, loops, maxtime, fade_time)
+            channel.set_volume(left_volume, right_volume)
+            self.__temp_channels.append(channel)
+
+        # Clean up old temporary channels
+        while (self.__temp_channels and
+               not self.__temp_channels[0].get_busy()):
+            _release_channel(self.__temp_channels.pop(0))
 
     def stop(self, fade_time=None):
         """
@@ -257,7 +273,7 @@ class Sound:
           the sound out before stopping; set to ``None`` or ``0`` to
           immediately stop the sound.
         """
-        if self.__sound is not None:
+        if self.__sound is not None and pygame.mixer.get_init():
             self.__sound.stop()
 
     def pause(self):
@@ -380,38 +396,40 @@ class Music:
         See the documentation for :meth:`sge.snd.Sound.play` for more
         information.
         """
-        if self.fname is not None:
-            if not self.playing:
-                try:
-                    pygame.mixer.music.load(self.fname)
-                except pygame.error as e:
-                    warnings.warn(str(e))
-                    return
+        if self.fname is None or not pygame.mixer.get_init():
+            return
 
-            if not loops:
-                loops = -1
+        if not self.playing:
+            try:
+                pygame.mixer.music.load(self.fname)
+            except pygame.error as e:
+                warnings.warn(str(e))
+                return
 
-            r.music = self
-            self.rd["timeout"] = maxtime
-            self.rd["fade_time"] = fade_time
+        if not loops:
+            loops = -1
 
-            if fade_time is not None and fade_time > 0:
-                pygame.mixer.music.set_volume(0)
-            else:
-                pygame.mixer.music.set_volume(self.volume)
+        r.music = self
+        self.rd["timeout"] = maxtime
+        self.rd["fade_time"] = fade_time
 
-            if self.fname.lower().endswith(".mod"):
-                # MOD music is handled differently in Pygame: it uses
-                # the pattern order number rather than the time to
-                # indicate the start time.
-                self._start = 0
-                pygame.mixer.music.play(loops, start)
-            else:
-                self.__start = start
-                try:
-                    pygame.mixer.music.play(loops, start / 1000)
-                except NotImplementedError:
-                    pygame.mixer.music.play(loops)
+        if fade_time is not None and fade_time > 0:
+            pygame.mixer.music.set_volume(0)
+        else:
+            pygame.mixer.music.set_volume(self.volume)
+
+        if self.fname.lower().endswith(".mod"):
+            # MOD music is handled differently in Pygame: it uses
+            # the pattern order number rather than the time to
+            # indicate the start time.
+            self._start = 0
+            pygame.mixer.music.play(loops, start)
+        else:
+            self.__start = start
+            try:
+                pygame.mixer.music.play(loops, start / 1000)
+            except NotImplementedError:
+                pygame.mixer.music.play(loops)
 
     def queue(self, start=0, loops=1, maxtime=None, fade_time=None):
         """
@@ -433,6 +451,9 @@ class Music:
         See the documentation for :meth:`sge.snd.Sound.stop` for more
         information.
         """
+        if not pygame.mixer.get_init():
+            return
+
         if fade_time:
             pygame.mixer.music.fadeout(fade_time)
         else:

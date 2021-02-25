@@ -63,6 +63,8 @@ Specification misc changes:
 * sge.gfx.Color is now defined to raise TypeError when an invalid type
   is given (it previously raised ValueError).
 * sge.gfx.TileGrid now supports two hexagonal tiling methods.
+* sge.dsp.Game.sampling_frequency and sge.dsp.Game.stereo can now be
+  set to at any time.
 
 
 1.7

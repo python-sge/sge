@@ -61,6 +61,9 @@ _prev_hats = {}
 # Display info
 _display_info = None
 
+# Index of sound initialization
+sound_init = 0
+
 
 class cache:
 
@@ -368,6 +371,20 @@ def _handle_music():
 
             if timeout and time_played >= timeout:
                 music.stop()
+
+
+def _deinit_sound():
+    # Uninitialize audio.
+    pygame.mixer.stop()
+    pygame.mixer.quit()
+
+
+def _reinit_sound():
+    # Re-initialize audio after it has been uninitialized.
+    global sound_init
+    pygame.mixer.init(sge.game.sampling_frequency, -16,
+                      2 if sge.game.stereo else 1, 512)
+    sound_init += 1
 
 
 def _get_dot_sprite(color):
