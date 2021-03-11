@@ -2917,8 +2917,9 @@ class Font:
                 break
         else:
             default_names = [
-                "courier", "courier new", "courier prime", "freemono",
-                "liberation mono", "dejavu sans mono", "droid sans mono",
+                "courier", "courier new", "courier prime", "noto sans mono",
+                "noto mono", "hack", "roboto mono", "freemono",
+                "dejavu sans mono", "liberation mono", "droid sans mono",
                 "nimbus mono l", "cousine", "texgyrecursor"]
             self.rd["font"] = pygame.font.SysFont(
                 ','.join(default_names), self.__size)
@@ -2966,7 +2967,7 @@ class Font:
 
           - A string indicating the path to the font file.
           - A string indicating the case-insensitive name of a system
-            font, e.g. ``"Liberation Serif"``.
+            font, e.g. ``"Roboto"``.
           - A list or tuple of strings indicating either a font file or
             a system font to choose from in order of preference.
 
