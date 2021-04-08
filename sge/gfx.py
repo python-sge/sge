@@ -100,7 +100,7 @@ class Color:
 
     def __init__(self, value: Union[str, int, list, tuple]) -> None:
         """
-        Arguments:
+        Parameters:
 
         - ``value`` -- The value indicating the color represented by
           this object.  Should be one of the following:
@@ -449,7 +449,7 @@ class Sprite:
                  transparent=True, origin_x=0, origin_y=0, fps=60, bbox_x=None,
                  bbox_y=None, bbox_width=None, bbox_height=None):
         """
-        Arguments:
+        Parameters:
 
         - ``name`` -- The base name of the image files, used to find all
           individual image files that make up the sprite's animation`.
@@ -643,7 +643,7 @@ class Sprite:
         """
         Insert a new blank frame into the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``frame`` -- The frame of the sprite to insert the new frame
           in front of, where ``0`` is the first frame.
@@ -660,7 +660,7 @@ class Sprite:
         If the size of the frames added is different from the size of
         this sprite, they are scaled to this sprite's size.
 
-        Arguments:
+        Parameters:
 
         - ``sprite`` -- The sprite to add the frames of to this sprite.
         """
@@ -672,7 +672,7 @@ class Sprite:
         """
         Delete a frame from the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``frame`` -- The frame of the sprite to delete, where ``0`` is
           the first frame.
@@ -684,7 +684,7 @@ class Sprite:
         Return a :class:`sge.gfx.Color` object indicating the color of a
         particular pixel on the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the sprite of the
           pixel to check.
@@ -708,7 +708,7 @@ class Sprite:
         ``pixels[x][y]``, where ``x`` is the horizontal location of the
         pixel and ``y`` is the vertical location of the pixel.
 
-        Arguments:
+        Parameters:
 
         - ``frame`` -- The frame of the sprite to check, where ``0`` is
           the first frame.
@@ -726,7 +726,7 @@ class Sprite:
         """
         Draw a single-pixel dot on the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the sprite to
           draw the dot.
@@ -790,7 +790,7 @@ class Sprite:
         """
         Draw a line segment on the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``x1`` -- The horizontal location relative to the sprite of
           the first end point of the line segment.
@@ -824,6 +824,11 @@ class Sprite:
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
           ``None`` is treated as :data:`sge.BLEND_NORMAL`.
+
+        .. versionchanged:: 2.0
+
+           Repositioned the ``frame`` parameter to where the
+           ``anti_alias`` parameter used to be.
         """
         _check_color(color)
 
@@ -882,7 +887,7 @@ class Sprite:
         """
         Draw a rectangle on the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the sprite to
           draw the rectangle.
@@ -916,6 +921,11 @@ class Sprite:
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
           ``None`` is treated as :data:`sge.BLEND_NORMAL`.
+
+        .. versionchanged:: 2.0
+
+           Repositioned the ``frame`` parameter to where the ``fill``
+           parameter used to be.
         """
         _check_color(fill)
         _check_color(outline)
@@ -969,7 +979,7 @@ class Sprite:
         """
         Draw an ellipse on the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the sprite to
           position the imaginary rectangle containing the ellipse.
@@ -1004,6 +1014,11 @@ class Sprite:
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
           ``None`` is treated as :data:`sge.BLEND_NORMAL`.
+
+        .. versionchanged:: 2.0
+
+           Repositioned the ``frame`` parameter to where the ``fill``
+           parameter used to be.
         """
         _check_color(fill)
         _check_color(outline)
@@ -1073,7 +1088,7 @@ class Sprite:
         """
         Draw a circle on the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the sprite to
           position the center of the circle.
@@ -1107,6 +1122,11 @@ class Sprite:
           - :data:`sge.BLEND_RGB_MAXIMUM`
 
           ``None`` is treated as :data:`sge.BLEND_NORMAL`.
+
+        .. versionchanged:: 2.0
+
+           Repositioned the ``frame`` parameter to where the ``fill``
+           parameter used to be.
         """
         _check_color(fill)
         _check_color(outline)
@@ -1175,7 +1195,7 @@ class Sprite:
         """
         Draw a sequence of contiguous straight lines on the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``points`` -- A list of points relative to the sprite to
           position each of the polyline's angles.  Each point should be
@@ -1261,7 +1281,7 @@ class Sprite:
         """
         Draw a polygon on the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``points`` -- A list of points relative to the sprite to
           position each of the polygon's angles.  Each point should be a
@@ -1368,7 +1388,7 @@ class Sprite:
         """
         Draw another sprite on the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``sprite`` -- The :class:`sge.gfx.Sprite` or
           :class:`sge.gfx.TileGrid` object to draw with.
@@ -1434,7 +1454,7 @@ class Sprite:
         """
         Draw text on the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``font`` -- The font to use to draw the text.
         - ``text`` -- The text (as a string) to draw.
@@ -1512,6 +1532,11 @@ class Sprite:
           color of the text's outline.  Set to ``None`` for no outline.
         - ``outline_thickness`` -- The thickness of the outline in
           pixels.  A value of ``0`` means no outline will be drawn.
+
+        .. versionchanged:: 2.0
+
+           Repositioned the ``frame`` parameter to where the
+           ``anti_alias`` parameter used to be.
         """
         _check_color(color)
 
@@ -1648,7 +1673,7 @@ class Sprite:
         """
         Apply a pixel shader to the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the sprite of the
           area to apply the shader to.
@@ -1662,7 +1687,7 @@ class Sprite:
           all frames.
 
         The ``shader`` argument is a callback function which must
-        contain the following arguments:
+        contain the following Parameters:
 
         - ``x`` -- The horizontal location of the pixel relative to the
           area the shader is being applied to.
@@ -1706,7 +1731,7 @@ class Sprite:
         """
         Erase part of the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the sprite of the
           area to erase.
@@ -1738,7 +1763,7 @@ class Sprite:
         """
         Erase everything from the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``frame`` -- The frame of the sprite to clear, where ``0`` is
           the first frame; set to ``None`` to clear all frames.
@@ -1787,7 +1812,7 @@ class Sprite:
         """
         Mirror the sprite horizontally.
 
-        Arguments:
+        Parameters:
 
         - ``frame`` -- The frame of the sprite to mirror, where ``0`` is
           the first frame; set to ``None`` to mirror all frames.
@@ -1807,7 +1832,7 @@ class Sprite:
         """
         Flip the sprite vertically.
 
-        Arguments:
+        Parameters:
 
         - ``frame`` -- The frame of the sprite to flip, where ``0`` is
           the first frame; set to ``None`` to flip all frames.
@@ -1836,7 +1861,7 @@ class Sprite:
         3. All frames are repositioned within the sprite such that their
            position relative to the origin is the same as before.
 
-        Arguments:
+        Parameters:
 
         - ``width`` -- The width to set the sprite to.
         - ``height`` -- The height to set the sprite to.
@@ -1868,7 +1893,7 @@ class Sprite:
         Instead, any scaled frames are repositioned so that the pixel
         which was at the origin before scaling remains at the origin.
 
-        Arguments:
+        Parameters:
 
         - ``xscale`` -- The horizontal scale factor.
         - ``yscale`` -- The vertical scale factor.
@@ -1916,7 +1941,7 @@ class Sprite:
         """
         Rotate the sprite about the center.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The rotation amount in degrees, with rotation in a
           positive direction being clockwise.
@@ -1983,7 +2008,7 @@ class Sprite:
         """
         Change all pixels of one color to another color.
 
-        Arguments:
+        Parameters:
 
         - ``old_color`` -- A :class:`sge.gfx.Color` object indicating
           the color of pixels to change.
@@ -2070,7 +2095,7 @@ class Sprite:
         """
         Save the sprite to an image file.
 
-        Arguments:
+        Parameters:
 
         - ``fname`` -- The path of the file to save the sprite to.  If
           it is not a path that can be saved to, :exc:`OSError` is
@@ -2109,7 +2134,7 @@ class Sprite:
         generate an animation of an object growing to a particular size.
         The animation generated is called a "tween".
 
-        Arguments:
+        Parameters:
 
         - ``sprite`` -- The sprite to base the tween on.  If the sprite
           includes multiple frames, all frames will be used in sequence
@@ -2275,7 +2300,7 @@ class Sprite:
         """
         Return a sprite based on the tiles in a tileset.
 
-        Arguments:
+        Parameters:
 
         - ``fname`` -- The path to the image file containing the
           tileset.
@@ -2326,7 +2351,7 @@ class Sprite:
         """
         Return the current display on the screen as a sprite.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location of the rectangular area to
           take a screenshot of.
@@ -2960,7 +2985,7 @@ class Font:
     def __init__(self, name=None, size=12, *, underline=False, bold=False,
                  italic=False):
         """
-        Arguments:
+        Parameters:
 
         - ``name`` -- The name of the font.  Can be one of the
           following:
@@ -3042,7 +3067,7 @@ class Font:
         """
         Return a font derived from a sprite.
 
-        Arguments:
+        Parameters:
 
         - ``sprite`` -- The :class:`sge.gfx.Sprite` object to derive the
           font from.

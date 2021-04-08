@@ -35,7 +35,7 @@ def rectangles_collide(x1, y1, w1, h1, x2, y2, w2, h2):
     """
     Return whether or not two rectangles collide.
 
-    Arguments:
+    Parameters:
 
     - ``x1`` -- The horizontal position of the first rectangle.
     - ``y1`` -- The vertical position of the first rectangle.
@@ -53,7 +53,7 @@ def masks_collide(x1, y1, mask1, x2, y2, mask2):
     """
     Return whether or not two masks collide.
 
-    Arguments:
+    Parameters:
 
     - ``x1`` -- The horizontal position of the first mask.
     - ``y1`` -- The vertical position of the first mask.
@@ -93,7 +93,7 @@ def rectangle(x, y, w, h, other=None):
     """
     Return a list of objects colliding with a rectangle.
 
-    Arguments:
+    Parameters:
 
     - ``x`` -- The horizontal position of the rectangle.
     - ``y`` -- The vertical position of the rectangle.
@@ -131,7 +131,7 @@ def ellipse(x, y, w, h, other=None):
     """
     Return a list of objects colliding with an ellipse.
 
-    Arguments:
+    Parameters:
 
     - ``x`` -- The horizontal position of the imaginary rectangle
       containing the ellipse.
@@ -174,7 +174,7 @@ def circle(x, y, radius, other=None):
     """
     Return a list of objects colliding with a circle.
 
-    Arguments:
+    Parameters:
 
     - ``x`` -- The horizontal position of the center of the circle.
     - ``y`` -- The vertical position of the center of the circle.
@@ -215,7 +215,7 @@ def line(x1, y1, x2, y2, other=None):
     """
     Return a list of objects colliding with a line segment.
 
-    Arguments:
+    Parameters:
 
     - ``x1`` -- The horizontal position of the first endpoint of the
       line segment.

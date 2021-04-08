@@ -60,7 +60,7 @@ def get_axis(joystick, axis):
     up, and ``1`` is all the way to the right or down.  Return ``0`` if
     the requested joystick or axis does not exist.
 
-    Arguments:
+    Parameters:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
@@ -82,7 +82,7 @@ def get_hat_x(joystick, hat):
     ``-1`` (left), ``0`` (centered), or ``1`` (right).  Return ``0`` if
     the requested joystick or hat does not exist.
 
-    Arguments:
+    Parameters:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
@@ -98,7 +98,7 @@ def get_hat_y(joystick, hat):
     ``-1`` (up), ``0`` (centered), or ``1`` (down).  Return ``0`` if the
     requested joystick or hat does not exist.
 
-    Arguments:
+    Parameters:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
@@ -113,7 +113,7 @@ def get_pressed(joystick, button):
     Return whether or not a joystick button is pressed, or
     :const:`False` if the requested joystick or button does not exist.
 
-    Arguments:
+    Parameters:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
@@ -135,7 +135,7 @@ def get_value(joystick, input_type, input_id):
     possible to treat all joystick inputs the same way, which can be
     used to simplify things like control customization.
 
-    Arguments:
+    Parameters:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
@@ -204,7 +204,7 @@ def get_name(joystick):
     Return the name of a joystick, or ``None`` if the requested joystick
     does not exist.
 
-    Arguments:
+    Parameters:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
@@ -222,7 +222,7 @@ def get_id(joystick):
     Return the number of a joystick, where ``0`` is the first joystick,
     or ``None`` if the requested joystick does not exist.
 
-    Arguments:
+    Parameters:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
@@ -240,7 +240,7 @@ def get_axes(joystick):
     Return the number of axes available on a joystick, or ``0`` if the
     requested joystick does not exist.
 
-    Arguments:
+    Parameters:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
@@ -258,7 +258,7 @@ def get_hats(joystick):
     Return the number of hats (d-pads) available on a joystick, or ``0``
     if the requested joystick does not exist.
 
-    Arguments:
+    Parameters:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
@@ -276,7 +276,7 @@ def get_trackballs(joystick):
     Return the number of trackballs available on a joystick, or ``0`` if
     the requested joystick does not exist.
 
-    Arguments:
+    Parameters:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.
@@ -294,7 +294,7 @@ def get_buttons(joystick):
     Return the number of buttons available on a joystick, or ``0`` if
     the requested joystick does not exist.
 
-    Arguments:
+    Parameters:
 
     - ``joystick`` -- The number of the joystick to check, where ``0``
       is the first joystick, or the name of the joystick to check.

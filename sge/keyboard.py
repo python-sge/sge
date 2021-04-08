@@ -182,7 +182,7 @@ def get_pressed(key):
     """
     Return whether or not a key is pressed.
 
-    Arguments:
+    Parameters:
 
     - ``key`` -- The identifier string of the modifier key to check; see
       the table in the documentation for :mod:`sge.keyboard`.
@@ -198,7 +198,7 @@ def get_modifier(key):
     """
     Return whether or not a modifier key is being held.
 
-    Arguments:
+    Parameters:
 
     - ``key`` -- The identifier string of the modifier key to check; see
       the table below.
@@ -239,7 +239,7 @@ def set_repeat(enabled=True, interval=0, delay=0):
     """
     Set repetition of key press events.
 
-    Arguments:
+    Parameters:
 
     - ``enabled`` -- Whether or not to enable repetition of key press
       events.

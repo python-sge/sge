@@ -145,7 +145,7 @@ class Sound:
 
     def __init__(self, fname, volume=1, max_play=1, parent=None):
         """
-        Arguments:
+        Parameters:
 
         - ``fname`` -- The path to the sound file.  If set to
           ``None``, this object will not actually play any sound. If
@@ -186,7 +186,7 @@ class Sound:
         """
         Play the sound.
 
-        Arguments:
+        Parameters:
 
         - ``loops`` -- The number of times to play the sound; set to
           ``None`` or ``0`` to loop indefinitely.
@@ -267,7 +267,7 @@ class Sound:
         """
         Stop the sound.
 
-        Arguments:
+        Parameters:
 
         - ``fade_time`` -- The time in milliseconds over which to fade
           the sound out before stopping; set to ``None`` or ``0`` to
@@ -291,13 +291,21 @@ class Music:
 
     """
     This class stores and plays music.  Music is very similar to sound
-    effects, but only one music file can be played at a time, and it is
-    more efficient for larger files than :class:`sge.snd.Sound`.
+    effects, it is more efficient for larger files than
+    :class:`sge.snd.Sound`.
 
     What music formats are supported depends on the implementation of
     the SGE, but Ogg Vorbis is generally a good choice.  See the
     implementation-specific information for a full list of supported
     formats.
+
+    .. note::
+
+       It is currently only possible to play one music file at a time
+       using this API.  Playing a piece of music will immediately halt
+       previously playing music.  Support for playing multiple music
+       tracks simultaneously (necessary for effects like crossfading) is
+       planned for the future.
 
     .. attribute:: volume
 
@@ -362,7 +370,7 @@ class Music:
 
     def __init__(self, fname, volume=1):
         """
-        Arguments:
+        Parameters:
 
         - ``fname`` -- The path to the sound file.  If set to ``None``,
           this object will not actually play any music.  If this is
@@ -388,7 +396,7 @@ class Music:
         """
         Play the music.
 
-        Arguments:
+        Parameters:
 
         - ``start`` -- The number of milliseconds from the beginning to
           start playing at.
@@ -443,29 +451,20 @@ class Music:
         """
         r.music_queue.append((self, start, loops, maxtime, fade_time))
 
-    @staticmethod
-    def stop(fade_time=None):
+    def stop(self, fade_time=None):
         """
-        Stop the currently playing music.
+        Stop the music if it is currently playing.
 
         See the documentation for :meth:`sge.snd.Sound.stop` for more
         information.
+
+        .. versionchanged:: 2.0
+
+           No longer a static method and now only stops the music if it
+           is currently playing.
         """
-        if not pygame.mixer.get_init():
-            return
-
-        if fade_time:
-            pygame.mixer.music.fadeout(fade_time)
-        else:
-            pygame.mixer.music.stop()
-
-            # ``pygame.mixer.music.stop()`` should push
-            # ``sge.MUSIC_END_EVENT``, which could cause a track to be
-            # skipped in the music queue if we're starting a new one. so
-            # if we have an empty queue, block that event.
-            if not r.music_queue:
-                block_event = pygame.event.Event(sge.MUSIC_END_BLOCK_EVENT)
-                pygame.event.post(block_event)
+        if self.playing:
+            stop_all_music(fade_time)
 
     @staticmethod
     def pause():
@@ -494,3 +493,26 @@ def stop_all():
     """Stop playback of all sounds."""
     pygame.mixer.stop()
 
+
+def stop_all_music(fade_time=None):
+    """
+    Stop any currently playing music.
+
+    See the documentation for :meth:`sge.snd.Sound.stop` for more
+    information.
+    """
+    if not pygame.mixer.get_init():
+        return
+
+    if fade_time:
+        pygame.mixer.music.fadeout(fade_time)
+    else:
+        pygame.mixer.music.stop()
+
+        # ``pygame.mixer.music.stop()`` should push
+        # ``sge.MUSIC_END_EVENT``, which could cause a track to be
+        # skipped in the music queue if we're starting a new one. so
+        # if we have an empty queue, block that event.
+        if not r.music_queue:
+            block_event = pygame.event.Event(sge.MUSIC_END_BLOCK_EVENT)
+            pygame.event.post(block_event)

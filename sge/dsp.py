@@ -762,7 +762,7 @@ class Game:
         """
         Pause the game.
 
-        Arguments:
+        Parameters:
 
         - ``sprite`` -- The sprite to show in the center of the screen
           while the game is paused.  If set to ``None``, the SGE chooses
@@ -1160,7 +1160,7 @@ class Game:
         """
         Regulate the SGE's running speed and return the time passed.
 
-        Arguments:
+        Parameters:
 
         - ``fps`` -- The target frame rate in frames per second.  Set to
           ``None`` to target the current value of :attr:`fps`.
@@ -1386,7 +1386,7 @@ class Game:
         """
         Project a single-pixel dot onto the game window.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the window to
           project the dot.
@@ -1416,7 +1416,7 @@ class Game:
         """
         Project a line segment onto the game window.
 
-        Arguments:
+        Parameters:
 
         - ``x1`` -- The horizontal location relative to the window of
           the first endpoint of the projected line segment.
@@ -1450,7 +1450,7 @@ class Game:
         """
         Project a rectangle onto the game window.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the window to
           project the rectangle.
@@ -1479,7 +1479,7 @@ class Game:
         """
         Project an ellipse onto the game window.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the window to
           position the imaginary rectangle containing the ellipse.
@@ -1517,7 +1517,7 @@ class Game:
         """
         Project a circle onto the game window.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the window to
           position the center of the circle.
@@ -1542,7 +1542,7 @@ class Game:
         Project a series of contiguous straight lines onto the game
         window.
 
-        Arguments:
+        Parameters:
 
         - ``points`` -- A list of points relative to the window to
           position each of the polyline's angles.  Each point should be
@@ -1572,7 +1572,7 @@ class Game:
         """
         Project a polygon onto the game window.
 
-        Arguments:
+        Parameters:
 
         - ``points`` -- A list of points relative to the window to
           position each of the polygon's angles.  Each point should be a
@@ -1603,7 +1603,7 @@ class Game:
         """
         Project a sprite onto the game window.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the window to
           project ``sprite``.
@@ -1627,7 +1627,7 @@ class Game:
         """
         Project text onto the game window.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the window to
           project the text.
@@ -1649,7 +1649,7 @@ class Game:
         """
         Apply a pixel shader to the current frame of the game window.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the window of the
           area to apply the shader to.
@@ -1682,7 +1682,7 @@ class Game:
         """
         Called once each frame.
 
-        Arguments:
+        Parameters:
 
         - ``time_passed`` -- The number of milliseconds that have passed
           during the last frame.
@@ -2113,7 +2113,7 @@ class Room:
                  background=None, background_x=0, background_y=0,
                  object_area_width=None, object_area_height=None):
         """
-        Arguments:
+        Parameters:
 
         - ``views`` -- A list containing all :class:`sge.dsp.View`
           objects in the room.  If set to ``None``, a new view will be
@@ -2169,7 +2169,7 @@ class Room:
         """
         Add an object to the room.
 
-        Arguments:
+        Parameters:
 
         - ``obj`` -- The :class:`sge.dsp.Object` object to add.
 
@@ -2203,7 +2203,7 @@ class Room:
         """
         Remove an object from the room.
 
-        Arguments:
+        Parameters:
 
         - ``obj`` -- The :class:`sge.dsp.Object` object to remove.
 
@@ -2235,7 +2235,7 @@ class Room:
         """
         Start the room.
 
-        Arguments:
+        Parameters:
 
         - ``transition`` -- The type of transition to use.  Should be
           one of the following:
@@ -2308,7 +2308,7 @@ class Room:
         """
         Return a set of objects near a particular area.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the room of the
           left edge of the area.
@@ -2340,7 +2340,7 @@ class Room:
         """
         Project a single-pixel dot onto the room.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the room to
           project the dot.
@@ -2360,7 +2360,7 @@ class Room:
         """
         Project a line segment onto the room.
 
-        Arguments:
+        Parameters:
 
         - ``x1`` -- The horizontal location relative to the room of the
           first endpoint of the projected line segment.
@@ -2393,7 +2393,7 @@ class Room:
         """
         Project a rectangle onto the room.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the room to
           project the rectangle.
@@ -2421,7 +2421,7 @@ class Room:
         """
         Project an ellipse onto the room.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the room to
           position the imaginary rectangle containing the ellipse.
@@ -2453,7 +2453,7 @@ class Room:
         """
         Project a circle onto the room.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the room to
           position the center of the circle.
@@ -2476,7 +2476,7 @@ class Room:
         """
         Project a series of contiguous straight lines onto the room.
 
-        Arguments:
+        Parameters:
 
         - ``points`` -- A list of points relative to the room to
           position each of the polyline's angles.  Each point should be
@@ -2505,7 +2505,7 @@ class Room:
         """
         Draw a polygon on the sprite.
 
-        Arguments:
+        Parameters:
 
         - ``points`` -- A list of points relative to the room to
           position each of the polygon's angles.  Each point should be a
@@ -2535,7 +2535,7 @@ class Room:
         """
         Project a sprite onto the room.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the room to
           project ``sprite``.
@@ -2558,7 +2558,7 @@ class Room:
         """
         Project text onto the room.
 
-        Arguments:
+        Parameters:
 
         - ``x`` -- The horizontal location relative to the room to
           project the text.
@@ -2977,7 +2977,7 @@ class View:
     def __init__(self, x, y, xport=0, yport=0, width=None, height=None,
                  wport=None, hport=None):
         """
-        Arguments:
+        Parameters:
 
         - ``width`` -- The width of the view.  If set to ``None``, it
           will become ``sge.game.width - xport``.
@@ -3895,7 +3895,7 @@ class Object:
         Currently, it is used in the default implementation of
         :meth:`event_update_position`.
 
-        Arguments:
+        Parameters:
 
         - ``move`` -- The amount to add to :attr:`x`.
 
@@ -3912,7 +3912,7 @@ class Object:
         Currently, it is used in the default implementation of
         :meth:`event_update_position`.
 
-        Arguments:
+        Parameters:
 
         - ``move`` -- The amount to add to :attr:`y`.
 
@@ -3926,7 +3926,7 @@ class Object:
         """
         Return a list of objects colliding with this object.
 
-        Arguments:
+        Parameters:
 
         - ``other`` -- What to check for collisions with.  Can be one of
           the following:
@@ -4208,7 +4208,7 @@ class Object:
         """
         Called when this object collides with another object.
 
-        Arguments:
+        Parameters:
 
         - ``other`` -- The other object which was collided with.
         - ``xdirection`` -- The horizontal direction of the collision
@@ -4472,7 +4472,7 @@ def fullscreen_mode_ok(width, height):
     """
     Return whether or not a given fullscreen display size is supported.
 
-    Arguments:
+    Parameters:
 
     - ``width`` -- The width of the fullscreen display size to check.
     - ``height`` -- The height of the fullscreen display size to check.
