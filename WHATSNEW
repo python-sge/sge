@@ -66,11 +66,6 @@ Specification misc changes:
 * sge.gfx.TileGrid now supports two hexagonal tiling methods.
 * sge.dsp.Game.sampling_frequency and sge.dsp.Game.stereo can now be
   set to at any time.
-* sge.snd.Music.stop is no longer a static method and now only stops
-  the music if it is currently playing.  The new sge.snd.stop_all_music
-  now functions as sge.snd.Music.stop previously did.  (This change is
-  preparation for adding support for playing multiple music streams at
-  once in the future.)
 
 
 1.7
