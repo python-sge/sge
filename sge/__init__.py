@@ -231,7 +231,7 @@ Global Variables and Constants
 """
 
 
-__version__ = "2.0a0"
+__version__ = "2.0"
 __all__ = [
     # Modules
     "collision",
