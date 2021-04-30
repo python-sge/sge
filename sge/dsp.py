@@ -450,7 +450,6 @@ class Game:
         r.game_scale_proportional = scale_proportional
         r.game_scale_integer = scale_integer
         r.game_scale_method = scale_method
-        r.game_shaders = []
         r.game_new_room = None
         self.fps = fps
         self.delta = delta
@@ -1363,23 +1362,6 @@ class Game:
                 _scale(display_surface, real_w, real_h),
                 (int(r.game_x), int(r.game_y)))
 
-        # Apply shaders
-        if r.game_shaders:
-            r.game_window.lock()
-            real_w = r.game_window.get_width()
-            real_h = r.game_window.get_height()
-
-            while r.game_shaders:
-                x, y, width, height, shader = r.game_shaders.pop(0)
-                x = int(r.game_x + x*r.game_xscale)
-                width = math.ceil(width * r.game_xscale)
-                y = int(r.game_y + y*r.game_yscale)
-                height = math.ceil(height * r.game_yscale)
-
-                _apply_shader(r.game_window, x, y, width, height, shader)
-
-            r.game_window.unlock()
-
         pygame.display.flip()
 
     def project_dot(self, x, y, color, z=0, *, blend_mode=None):
@@ -1644,39 +1626,6 @@ class Game:
                              halign, valign, anti_alias, outline,
                              outline_thickness)
         self.project_sprite(sprite, 0, x, y, z, blend_mode=blend_mode)
-
-    def project_shader(self, x, y, width, height, shader):
-        """
-        Apply a pixel shader to the current frame of the game window.
-
-        Parameters:
-
-        - ``x`` -- The horizontal location relative to the window of the
-          area to apply the shader to.
-        - ``y`` -- The vertical location relative to the window of the
-          area to apply the shader to.
-        - ``width`` -- The width of the area to apply the shader to.
-        - ``height`` -- The height of the area to apply the shader to.
-        - ``shader`` -- A callback function for the shader.  See the
-          documentation for :meth:`sge.gfx.Sprite.draw_shader` for more
-          information.
-
-        The pixel shader is applied to the fully drawn screen the next
-        time :meth:`refresh` is called.  If this method is called
-        multiple times before :meth:`refresh` is called, all shaders are
-        applied in the same order as the calls to this method.
-
-        .. note::
-
-           Applying shaders to the entire screen in this way is likely
-           to be very inefficient as the shaders are Python code handled
-           by the CPU.  In most cases, it will be better to apply
-           shaders to individual sprites which are kept and reused.  If
-           you need to apply effects to the entire screen, consider
-           instead using sprites and blending, which is likely to be
-           more efficient.
-        """
-        r.game_shaders.append((x, y, width, height, shader))
 
     def event_step(self, time_passed, delta_mult):
         """

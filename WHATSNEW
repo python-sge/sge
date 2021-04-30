@@ -35,8 +35,6 @@ Specification additions:
 + sge.s.hexagonal
 + sge.s.isohex
 + sge.gfx.Sprite.draw_shader
-+ sge.dsp.Game.project_shader
-+ sge.snd.stop_all_music
 
 Specification misc changes:
 * Mouse button press events with the "wheel_up" and "wheel_down" button

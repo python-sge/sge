@@ -28,8 +28,9 @@ import pygame
 import sge
 from sge import r
 from sge.r import (_check_color_input, _check_color, _scale, _get_blend_flags,
-                   _screen_blend, f_split_text, s_get_image, s_set_size,
-                   s_refresh, s_set_transparency, s_from_text, tg_blit)
+                   _screen_blend, _apply_shader, f_split_text, s_get_image,
+                   s_set_size, s_refresh, s_set_transparency, s_from_text,
+                   tg_blit)
 
 COLORS = {'white': '#ffffff', 'silver': '#c0c0c0', 'gray': '#808080',
           'black': '#000000', 'red': '#ff0000', 'maroon': '#800000',
@@ -1715,6 +1716,13 @@ class Sprite:
 
             def shader(x, y, red, green, blue, alpha):
                 return (255 - red, 255 - green, 255 - blue, alpha)
+
+        .. note::
+
+           Due to use of the CPU, applying these shaders is highly
+           inefficient. To compensate, it is important to apply shaders
+           to sprites as infrequently as possible, preferably just once
+           at the start, and reuse the sprites they were applied to.
         """
         if frame is None:
             rng = range(self.frames)

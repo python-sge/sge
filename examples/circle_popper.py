@@ -46,11 +46,6 @@ class Game(sge.dsp.Game):
         self.project_polyline([(428.2, 328), (424, 460.1), (460, 340.9)],
                               sge.gfx.Color("red"), thickness=3.1)
 
-        def invert(x, y, red, green, blue, alpha):
-            return 255 - red,  255 - green, 255 - blue, alpha
-
-        self.project_shader(0, self.height - 64, 64, 64, invert)
-
     def event_key_press(self, key, char):
         if key == 'escape':
             self.end()
@@ -190,6 +185,10 @@ class Room(sge.dsp.Room):
             self.event_alarm("shake")
 
 
+def invert(x, y, red, green, blue, alpha):
+    return 255 - red,  255 - green, 255 - blue, alpha
+
+
 def main():
     # Create Game object
     game = Game(delta=True, delta_max=4800, collision_events_enabled=False)
@@ -201,6 +200,8 @@ def main():
                                             height=64, origin_x=32,
                                             origin_y=32, fps=60)
     fence_sprite = sge.gfx.Sprite('fence', DATA)
+    fence_sprite.draw_shader(0, 0, fence_sprite.width, fence_sprite.height,
+                             invert)
 
     # Load backgrounds
     layers = [sge.gfx.BackgroundLayer(fence_sprite, 0, 380, 0,
