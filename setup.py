@@ -16,7 +16,7 @@ This implementation of the SGE uses Pygame as a backend.
 """.strip()
 
 setup(name="sge",
-      version="2.0",
+      version="2.0.post0",
       description="Seclusion Game Engine (Pygame implementation)",
       long_description=long_description,
       author="Layla Marchant",
