@@ -48,6 +48,8 @@ sge.dsp.Game Methods
 
 .. automethod:: sge.dsp.Game.project_circle
 
+.. automethod:: sge.dsp.Game.project_polyline
+
 .. automethod:: sge.dsp.Game.project_polygon
 
 .. automethod:: sge.dsp.Game.project_sprite
@@ -164,6 +166,8 @@ sge.dsp.Room Methods
 .. automethod:: sge.dsp.Room.project_ellipse
 
 .. automethod:: sge.dsp.Room.project_circle
+
+.. automethod:: sge.dsp.Game.project_polyline
 
 .. automethod:: sge.dsp.Room.project_polygon
 
