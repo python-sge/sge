@@ -965,7 +965,7 @@ def r_update_pixelate(self, complete):
             self.rd["t_sprite"] = transition_sprite
     else:
         diff = (complete - self.rd["t_complete_last"]) * 5
-        c = sge.gfx.Color((0, 0, 0, round(diff * 255)))
+        c = sge.gfx.Color((0, 0, 0, min(round(diff * 255), 255)))
         eraser = sge.gfx.Sprite(width=w, height=h)
         eraser.draw_rectangle(0, 0, w, h, fill=c)
         transition_sprite.draw_sprite(eraser, 0, 0, 0,
