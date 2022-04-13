@@ -2139,12 +2139,12 @@ class Room:
             self.objects.append(obj)
 
             if self is sge.game.current_room and self.rd["started"]:
-                obj.event_create()
                 obj.rd["object_areas"] = set()
                 o_update_object_areas(obj)
                 o_update_collision_lists(obj)
                 if obj.active:
                     r._active_objects.add(obj)
+                obj.event_create()
             else:
                 self.rd["new_objects"].append(obj)
 
