@@ -2027,12 +2027,8 @@ class Sprite:
 
         .. note::
 
-           While this method can be used on any image, it is likely to
-           be most efficient when used on images based on palettes
-           (such as 8-bit images).  The SGE cannot implicitly convert
-           high bit depth images to low bit depths, so if you plan on
-           using this method frequently, you should ensure that you
-           save your images in a low bit depth.
+           If you have to swap multiple colors, use of
+           :meth:`Sprite.draw_shader` will probably be more efficient.
         """
         _check_color(old_color)
         _check_color(new_color)
@@ -2044,25 +2040,21 @@ class Sprite:
         else:
             rng = [frame % self.frames]
 
-        pg_new_color = pygame.Color(*new_color)
+        new_color_t = tuple(new_color)
 
         for i in rng:
             img = self.rd["baseimages"][i]
-            try:
-                palette = img.get_palette()
-            except pygame.error:
-                img.lock()
+            img.lock()
+            pixarray = pygame.PixelArray(img)
+            for x in range(img.get_width()):
                 for y in range(img.get_height()):
-                    for x in range(img.get_width()):
-                        if old_color == Color(tuple(img.get_at((x, y)))):
-                            img.set_at((x, y), pg_new_color)
-                img.unlock()
-            else:
-                for j, color in enumerate(palette):
-                    if old_color == Color(tuple(color)):
-                        palette[j] = pg_new_color
-
-                img.set_palette(palette)
+                    red, green, blue, alpha = img.unmap_rgb(pixarray[x, y])
+                    if (red == old_color.red and green == old_color.green
+                            and blue == old_color.blue
+                            and alpha == old_color.alpha):
+                        pixarray[x, y] = img.map_rgb(new_color_t)
+            pixarray.close()
+            img.unlock()
 
     def copy(self):
         """Return a copy of the sprite."""
