@@ -5,6 +5,18 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+2.0.1
+------------------------------------------------------------------------
+
+Pygame SGE bugfixes:
+- Bad ordering of steps on room start leading to warnings
+- Broken conversion from sge.gfx.Color to int
+
+Pygame SGE misc changes:
+* Changed the method used for sge.gfx.Sprite.swap_color to massively
+  improve efficiency.
+
+
 2.0
 ------------------------------------------------------------------------
 

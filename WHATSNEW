@@ -5,6 +5,16 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+2.0.1
+------------------------------------------------------------------------
+
+Specification misc changes:
+* Reworked documentation for sge.gfx.Sprite.swap_color. The note
+  recommended something unnecessary and there was no mention of the fact
+  that using a shader is more efficient if you're swapping more than
+  one color.
+
+
 2.0
 ------------------------------------------------------------------------
 
