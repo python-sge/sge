@@ -991,13 +991,13 @@ class Game:
                     input_event = sge.input.MouseButtonRelease(b)
                     self.input_events.append(input_event)
             elif event.type == pygame.JOYAXISMOTION:
-                jsname = r.game_js_names[event.joy]
+                jsname = r.game_js_names[event.instance_id]
                 value = max(-1.0, min(event.value, 1.0))
                 a = abs(min(0, value))
                 b = max(0, value)
                 z = 1 - abs(value)
 
-                axis_id = (event.joy, event.axis)
+                axis_id = (event.instance_id, event.axis)
                 valuep = r._prev_axes.get(axis_id, 0)
                 r._prev_axes[axis_id] = value
                 ap = abs(min(0, valuep))
@@ -1005,23 +1005,23 @@ class Game:
                 zp = 1 - abs(valuep)
 
                 input_event = sge.input.JoystickAxisMove(
-                    jsname, event.joy, event.axis, value)
+                    jsname, event.instance_id, event.axis, value)
                 self.input_events.append(input_event)
 
                 if a != ap:
                     input_event = sge.input.JoystickEvent(
-                        jsname, event.joy, "axis-", event.axis, a)
+                        jsname, event.instance_id, "axis-", event.axis, a)
                     self.input_events.append(input_event)
                 if b != bp:
                     input_event = sge.input.JoystickEvent(
-                        jsname, event.joy, "axis+", event.axis, b)
+                        jsname, event.instance_id, "axis+", event.axis, b)
                     self.input_events.append(input_event)
                 if z != zp:
                     input_event = sge.input.JoystickEvent(
-                        jsname, event.joy, "axis0", event.axis, z)
+                        jsname, event.instance_id, "axis0", event.axis, z)
                     self.input_events.append(input_event)
             elif event.type == pygame.JOYHATMOTION:
-                jsname = r.game_js_names[event.joy]
+                jsname = r.game_js_names[event.instance_id]
                 x, y = event.value
                 y *= -1
                 left = abs(min(0, x))
@@ -1031,7 +1031,7 @@ class Game:
                 down = max(0, y)
                 center_y = 1 - abs(y)
 
-                hat_id = (event.joy, event.hat)
+                hat_id = (event.instance_id, event.hat)
                 xp, yp = r._prev_hats.get(hat_id, (0, 0))
                 r._prev_hats[hat_id] = (x, y)
                 leftp = abs(min(0, xp))
@@ -1042,100 +1042,99 @@ class Game:
                 center_yp = 1 - abs(yp)
 
                 input_event = sge.input.JoystickHatMove(
-                    jsname, event.joy, event.hat, x, y)
+                    jsname, event.instance_id, event.hat, x, y)
                 self.input_events.append(input_event)
 
                 if left != leftp:
                     input_event = sge.input.JoystickEvent(
-                        jsname, event.joy, "hat_left", event.hat, left)
+                        jsname, event.instance_id, "hat_left", event.hat,
+                        left)
                     self.input_events.append(input_event)
                 if right != rightp:
                     input_event = sge.input.JoystickEvent(
-                        jsname, event.joy, "hat_right", event.hat, right)
+                        jsname, event.instance_id, "hat_right", event.hat,
+                        right)
                     self.input_events.append(input_event)
                 if center_x != center_xp:
                     input_event = sge.input.JoystickEvent(
-                        jsname, event.joy, "hat_center_x", event.hat, center_x)
+                        jsname, event.instance_id, "hat_center_x", event.hat,
+                        center_x)
                     self.input_events.append(input_event)
                 if up != upp:
                     input_event = sge.input.JoystickEvent(
-                        jsname, event.joy, "hat_up", event.hat, up)
+                        jsname, event.instance_id, "hat_up", event.hat,
+                        up)
                     self.input_events.append(input_event)
                 if down != downp:
                     input_event = sge.input.JoystickEvent(
-                        jsname, event.joy, "hat_down", event.hat, down)
+                        jsname, event.instance_id, "hat_down", event.hat,
+                        down)
                     self.input_events.append(input_event)
                 if center_y != center_yp:
                     input_event = sge.input.JoystickEvent(
-                        jsname, event.joy, "hat_center_y", event.hat, center_y)
+                        jsname, event.instance_id, "hat_center_y", event.hat,
+                        center_y)
                     self.input_events.append(input_event)
             elif event.type == pygame.JOYBALLMOTION:
-                jsname = r.game_js_names[event.joy]
+                jsname = r.game_js_names[event.instance_id]
                 x, y = event.rel
 
                 input_event = sge.input.JoystickTrackballMove(
-                    jsname, event.joy, event.ball, x, y)
+                    jsname, event.instance_id, event.ball, x, y)
                 self.input_events.append(input_event)
 
                 if x < 0:
                     input_event = sge.input.JoystickEvent(
-                        jsname, event.joy, "trackball_left", event.ball,
-                        abs(x))
+                        jsname, event.instance_id, "trackball_left",
+                        event.ball, abs(x))
                     self.input_events.append(input_event)
                 elif x > 0:
                     input_event = sge.input.JoystickEvent(
-                        jsname, event.joy, "trackball_right", event.ball,
-                        abs(x))
+                        jsname, event.instance_id, "trackball_right",
+                        event.ball, abs(x))
                     self.input_events.append(input_event)
                 if y < 0:
                     input_event = sge.input.JoystickEvent(
-                        jsname, event.joy, "trackball_up", event.ball,
-                        abs(y))
+                        jsname, event.instance_id, "trackball_up",
+                        event.ball, abs(y))
                     self.input_events.append(input_event)
                 elif y > 0:
                     input_event = sge.input.JoystickEvent(
-                        jsname, event.joy, "trackball_down", event.ball,
-                        abs(y))
+                        jsname, event.instance_id, "trackball_down",
+                        event.ball, abs(y))
                     self.input_events.append(input_event)
             elif event.type == pygame.JOYBUTTONDOWN:
-                jsname = r.game_js_names[event.joy]
+                jsname = r.game_js_names[event.instance_id]
 
-                input_event = sge.input.JoystickButtonPress(jsname, event.joy,
-                                                            event.button)
+                input_event = sge.input.JoystickButtonPress(
+                    jsname, event.instance_id, event.button)
                 self.input_events.append(input_event)
 
                 input_event = sge.input.JoystickEvent(
-                    jsname, event.joy, "button", event.button, True)
+                    jsname, event.instance_id, "button", event.button, True)
                 self.input_events.append(input_event)
             elif event.type == pygame.JOYBUTTONUP:
-                jsname = r.game_js_names[event.joy]
+                jsname = r.game_js_names[event.instance_id]
 
                 input_event = sge.input.JoystickButtonRelease(
-                    jsname, event.joy, event.button)
+                    jsname, event.instance_id, event.button)
                 self.input_events.append(input_event)
 
                 input_event = sge.input.JoystickEvent(
-                    jsname, event.joy, "button", event.button, False)
+                    jsname, event.instance_id, "button", event.button, False)
                 self.input_events.append(input_event)
-            elif event.type == pygame.ACTIVEEVENT:
-                if event.gain:
-                    if 2 & event.state:
-                        # Gain keyboard focus
-                        self.input_events.append(sge.input.KeyboardFocusGain())
-                    if 1 & event.state:
-                        # Gain mouse focus
-                        self.input_events.append(sge.input.KeyboardFocusLose())
-                else:
-                    if 2 & event.state:
-                        # Lose keyboard focus
-                        self.input_events.append(sge.input.MouseFocusGain())
-                    if 1 & event.state:
-                        # Lose mouse focus
-                        self.input_events.append(sge.input.MouseFocusLose())
-            elif event.type == pygame.VIDEORESIZE:
+            elif event.type == pygame.WINDOWFOCUSGAINED:
+                self.input_events.append(sge.input.KeyboardFocusGain())
+            elif event.type == pygame.WINDOWFOCUSLOST:
+                self.input_events.append(sge.input.KeyboardFocusLose())
+            elif event.type == pygame.WINDOWENTER:
+                self.input_events.append(sge.input.MouseFocusGain())
+            elif event.type == pygame.WINDOWLEAVE:
+                self.input_events.append(sge.input.MouseFocusLose())
+            elif event.type == pygame.WINDOWRESIZED:
                 self.input_events.append(sge.input.WindowResize())
-                r.game_window_width = event.w
-                r.game_window_height = event.h
+                r.game_window_width = event.x
+                r.game_window_height = event.y
                 _set_mode(True)
             elif event.type == pygame.QUIT:
                 self.input_events.append(sge.input.QuitRequest())
@@ -1143,8 +1142,8 @@ class Game:
                 if not music_end_blocked and r.music_queue:
                     music = r.music_queue.pop(0)
                     music[0].play(*music[1:])
-            elif pygame.version.vernum[0] >= 2:
-                # Pygame 2 exclusive events
+            elif pygame.version.SDL.major >= 2:
+                # SDL2 exclusive events
                 if event.type == pygame.MOUSEWHEEL:
                     x = event.x
                     y = event.y

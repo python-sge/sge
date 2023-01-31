@@ -20,7 +20,7 @@ classifiers = [
   "Topic :: Software Development",
 ]
 dependencies = [
-  "pygame (>=2.0)",
+  "pygame (>=2.0.1)",
   "uniseg",
 ]
 

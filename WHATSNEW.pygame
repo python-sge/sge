@@ -5,6 +5,14 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+2.0.2
+------------------------------------------------------------------------
+
+Pygame SGE misc changes:
+* Updated the API to avoid deprecated (and seemingly very poorly
+  maintained) Pygame APIs.
+
+
 2.0.1
 ------------------------------------------------------------------------
 
