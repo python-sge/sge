@@ -1,4 +1,4 @@
-include README.* WHATSNEW WHATSNEW.* VERSION_NUMBERING MANIFEST.in
+include README.* WHATSNEW WHATSNEW.* VERSION_NUMBERING MANIFEST.in pyproject.toml
 recursive-include doc *
 recursive-include doc-src *
 recursive-include examples *

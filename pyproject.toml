@@ -1,0 +1,30 @@
+[project]
+name = "sge"
+version = "2.0.1"
+description = "Seclusion Game Engine (Pygame implementation)"
+readme = {file = "README", content-type = "text/plain"}
+requires-python = ">=3.6"
+license = {file = "sge/COPYING.LESSER"}
+authors = [
+  {name = "Diligent Circle", email = "diligentcircle@riseup.net"},
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "License :: DFSG approved",
+  "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Topic :: Games/Entertainment",
+  "Topic :: Software Development",
+]
+dependencies = [
+  "pygame (>=2.0)",
+  "uniseg",
+]
+
+[project.urls]
+homepage = "https://python-sge.github.io"
+documentation = "https://python-sge.github.io/doc/sge/index.html"
+repository = "https://github.com/python-sge/sge.git"
