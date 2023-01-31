@@ -167,7 +167,7 @@ sge.dsp.Room Methods
 
 .. automethod:: sge.dsp.Room.project_circle
 
-.. automethod:: sge.dsp.Game.project_polyline
+.. automethod:: sge.dsp.Room.project_polyline
 
 .. automethod:: sge.dsp.Room.project_polygon
 
