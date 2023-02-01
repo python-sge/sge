@@ -9,8 +9,8 @@ information. This file is offered as-is, without any warranty.
 ------------------------------------------------------------------------
 
 Pygame SGE misc changes:
-* Updated the API to avoid deprecated (and seemingly very poorly
-  maintained) Pygame APIs.
+* Updated to avoid deprecated (and seemingly very poorly maintained)
+  Pygame APIs where possible.
 
 
 2.0.1
