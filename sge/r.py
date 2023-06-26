@@ -943,6 +943,8 @@ def r_update_dissolve(self, complete):
 
 
 def r_update_pixelate(self, complete):
+    global game_scale_method
+
     if not self.rd["t_meta"]:
         self.rd["t_meta"] = 0
     if not self.rd["t_arg"]:
@@ -950,8 +952,8 @@ def r_update_pixelate(self, complete):
     transition_sprite = self.rd["t_sprite"]
     w = transition_sprite.width
     h = transition_sprite.height
-    scale_method = sge.game.scale_method
-    sge.game.scale_method = None
+    scale_method = game_scale_method
+    game_scale_method = None
 
     if complete < 0.9:
         if self.rd["t_time_passed"] - self.rd["t_meta"] > self.rd["t_arg"]:
@@ -971,7 +973,7 @@ def r_update_pixelate(self, complete):
         transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                       blend_mode=sge.BLEND_RGBA_SUBTRACT)
 
-    sge.game.scale_method = scale_method
+    game_scale_method = scale_method
 
 
 def r_update_wipe_left(self, complete):
