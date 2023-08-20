@@ -5,6 +5,13 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+2.0.3
+------------------------------------------------------------------------
+
+Pygame SGE bugfixes:
+- Potential cause for glitchy window behavior during transitions
+
+
 2.0.2
 ------------------------------------------------------------------------
 
